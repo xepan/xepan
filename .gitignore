@@ -1,0 +1,9 @@
+epans
+epan-components/*
+!epan-components/baseElements/
+*.zip
+config-default.php
+/nbproject/private/
+nbproject
+EpanCMSApp.php
+*.orig
