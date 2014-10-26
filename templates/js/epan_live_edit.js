@@ -703,7 +703,7 @@ $(function() {
     // Keep alive
     function keepalive() {
         $.ajax({
-            url: '?page=keepalive'
+            url: 'index.php?page=owner_keepalive&cut_page=1'
         });
     }
     setInterval(keepalive, 300000);
