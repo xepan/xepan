@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `epan` (
 --
 
 INSERT INTO `epan` (`id`, `name`, `staff_id`, `branch_id`, `password`, `fund_alloted`, `created_at`, `category_id`, `company_name`, `contact_person_name`, `mobile_no`, `address`, `city`, `state`, `country`, `email_id`, `keywords`, `description`, `website`, `is_active`, `is_approved`, `last_email_sent`, `allowed_aliases`, `parked_domain`, `email_host`, `email_port`, `email_username`, `email_password`, `email_reply_to`, `email_reply_to_name`, `email_from`, `email_from_name`, `is_frontent_regiatrstion_allowed`, `user_activation`, `email_threshold`, `user_registration_email_subject`, `user_registration_email_message_body`) VALUES
-(1, 'web', 1, 1, 'admin', '5000000', '2014-01-26', 1, 'Xavoc Technocrats Pvt. Ltd.', 'Xavoc Admin', '+91 8875191258', '18/436, Gayatri marg, Kanji Ka hata, Udaipur, Rajasthan , India', 'Udaipur', 'Rajasthan', 'India', '', 'xEpan CMS, an innovative approach towards Drag And Drop CMS.', 'World''s best and easiest cms :)', 'http://www.xavoc.com', 1, 1, NULL, 1, NULL, 'ssl://mail.xavoc.com', '465', 'developer@xavoc.com', 'Developer@123', 'developer@xavoc.com', 'xEpan Support System', 'developer@xavoc.com', 'xEpan Support System', 1, 'self_activated', '200', NULL, NULL);
+(1, 'web', 1, 1, 'admin', '5000000', '2014-01-26', 1, 'Xavoc Technocrats Pvt. Ltd.', 'Xavoc Admin', '+91 8875191258', '18/436, Gayatri marg, Kanji Ka hata, Udaipur, Rajasthan , India', 'Udaipur', 'Rajasthan', 'India', '', 'xEpan CMS, an innovative approach towards Drag And Drop CMS.', 'World''s best and easiest cms :)', '', 1, 1, NULL, 1, NULL, '', '', '', '', '', '', '', '', 1, 'self_activated', '200', NULL, NULL);
 
 -- --------------------------------------------------------
 
