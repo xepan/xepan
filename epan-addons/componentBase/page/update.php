@@ -17,10 +17,16 @@ class page_componentBase_page_update extends page_base_owner{
 
 		$component_path = getcwd().DS.'epan-components'.DS.$this->component_namespace;
 
-		if(file_exists($component_path.DS.'.git'))
-			$repo = Git::open($component_path);
-		else
-			$repo=Git::create($component_path);
+		try{
+			if(file_exists($component_path.DS.'.git'))
+				$repo = Git::open($component_path);
+			else
+				$repo=Git::create($component_path);
+		}catch(Exception $e){
+			// No Git Found ... So just return
+			return;
+		}
+
 
 		$remote_branches = $repo->list_remote_branches();
 

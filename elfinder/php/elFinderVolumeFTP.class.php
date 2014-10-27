@@ -63,6 +63,13 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	protected $tmp = '';
 	
 	/**
+	 * Net mount key
+	 *
+	 * @var string
+	 **/
+	public $netMountKey = '';
+	
+	/**
 	 * Constructor
 	 * Extend options with required fields
 	 *
@@ -83,7 +90,9 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 			'tmbPath'       => '',
 			'tmpPath'       => '',
 			'dirMode'       => 0755,
-			'fileMode'      => 0644
+			'fileMode'      => 0644,
+			'icon'          => (defined('ELFINDER_IMG_PARENT_URL')? (rtrim(ELFINDER_IMG_PARENT_URL, '/').'/') : '').'img/volume_icon_ftp.png'
+			
 		);
 		$this->options = array_merge($this->options, $opts); 
 		$this->options['mimeDetect'] = 'internal';
@@ -109,6 +118,9 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 			return $this->setError('Required options undefined.');
 		}
 		
+		// make ney mount key
+		$this->netMountKey = md5(join('-', array('ftp', $this->options['host'], $this->options['port'], $this->options['path'], $this->options['user'])));
+
 		if (!function_exists('ftp_connect')) {
 			return $this->setError('FTP extension not loaded.');
 		}
@@ -131,7 +143,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 
 		$this->rootName = $this->options['alias'];
 		$this->options['separator'] = '/';
-
+		
 		return $this->connect();
 		
 	}
@@ -981,14 +993,22 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 		$remoteDirectory = dirname($path);
 		chdir($tmpDir);
 		$command = escapeshellcmd($arc['cmd'] . ' ' . $arc['argc'] . ' "' . $basename . '"');
-		exec($command, $output, $return_value);
-		unlink($basename);
-		if ($return_value != 0) {
-			$this->setError(elFinder::ERROR_EXTRACT_EXEC, 'Command failed '.escapeshellarg($command));
-			$this->deleteDir($tmpDir); //cleanup
-			return false;
+		$descriptorspec = array(
+			0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
+			1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
+			2 => array("pipe", "w") // stderr is a file to write to
+		);
+
+			
+		$process = proc_open($command, $descriptorspec, $pipes, $cwd);
+
+		if (is_resource($process)) {
+			fclose($pipes[0]);
+			fclose($pipes[1]);
+			$return_value = proc_close($process);
 		}
 
+		unlink($basename);
 		$filesToProcess = elFinderVolumeFTP::listFilesInDirectory($tmpDir, true);
 		if(!$filesToProcess) {
 			$this->setError(elFinder::ERROR_EXTRACT_EXEC, $tmpDir." is not a directory");
@@ -1092,12 +1112,20 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 			$file_names_string = $file_names_string . '"' . $filename . '" ';
 		}
 		$command = escapeshellcmd($arc['cmd'] . ' ' . $arc['argc'] . ' "' . $name . '" ' . $file_names_string);
+		
+		$descriptorspec = array(
+			0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
+			1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
+			2 => array("pipe", "w") // stderr is a file to write to
+		);
 
-		exec($command, $output, $return_value);
-		if ($return_value != 0) {
-			$this->setError(elFinder::ERROR_ARCHIVE_EXEC, 'Command failed '.escapeshellarg($command));
-			$this->deleteDir($tmpDir); //cleanup
-			return false;
+			
+		$process = proc_open($command, $descriptorspec, $pipes, $cwd);
+
+		if (is_resource($process)) {
+			fclose($pipes[0]);
+			fclose($pipes[1]);
+			$return_value = proc_close($process);
 		}
 
 		$remoteArchiveFile = $dir . DIRECTORY_SEPARATOR . $name;
@@ -1136,7 +1164,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 			$this->setError(elFinder::ERROR_CREATING_TEMP_DIR, $this->tmp);
 			return false;
 		}
-		$success = mkdir($tempPath, 0755, true);
+		$success = mkdir($tempPath, 0700, true);
 		if (!$success) {
 			$this->setError(elFinder::ERROR_CREATING_TEMP_DIR, $this->tmp);
 			return false;
@@ -1154,7 +1182,7 @@ class elFinderVolumeFTP extends elFinderVolumeDriver {
 	 * <li>$item['type'] - either 'f' for file or 'd' for directory</li>
 	 * </ul>
 	 */
-	private function ftp_scan_dir($remote_directory)
+	protected function ftp_scan_dir($remote_directory)
 	{
 		$buff = ftp_rawlist($this->connect, $remote_directory, true);
 		$next_folder = false;
