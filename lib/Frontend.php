@@ -135,7 +135,6 @@ class Frontend extends ApiFrontend{
 				}
 
 
-				$this->add( 'Controller_EpanCMSApp' )->frontEnd();
 				
 				$this->current_website = $this->add( 'Model_Epan' )->tryLoadBy( 'name', $this->website_requested );
 				if ( $this->current_website->loaded() ) {
@@ -146,6 +145,8 @@ class Frontend extends ApiFrontend{
 					$this->exec_plugins( 'error404', $this->website_requested );
 				}
 
+				$this->add( 'Controller_EpanCMSApp' )->frontEnd();
+				
 				// MULTISITE CONTROLER
 				// $this->load_plugins();
 				// $this->add( 'Controller_EpanCMSApp' )->frontEnd();
