@@ -113,23 +113,25 @@ class page_install extends Page {
 		$email_form = $this->add('Form');
 		$email_form->addClass('xepan-installer-step-form');
 		$email_form->setFormClass('stacked atk-row');
-		$email_form->setModel($web,array('email_host','email_port','email_username','email_password','email_reply_to','email_reply_to_name','email_from','email_from_name'));
+		$email_form->setModel($web,array('email_transport','email_port','email_username','email_reply_to','from_email','encryption','email_host','email_password','email_reply_to_name','from_name'));
 		$email_form->addSubmit('Update: Go Next');
 
+		$email_form->getElement('email_transport');
 		$email_form->getElement('email_host')->setAttr('placeholder','i.e. ssl://mail.domain.com');
 		$email_form->getElement('email_port')->setAttr('placeholder','465');
 		$email_form->getElement('email_username')->setAttr('placeholder','your email id');
 		$email_form->getElement('email_password')->setAttr('placeholder','your email password');
 		$email_form->getElement('email_reply_to')->setAttr('placeholder','i.e. info@domain.com');
+		$email_form->getElement('encryption');
 		$email_form->getElement('email_reply_to_name')->setAttr('placeholder','Your Name');
-		$email_form->getElement('email_from')->setAttr('placeholder','Your email id');
-		$email_form->getElement('email_from_name')->setAttr('placeholder','Your Name');
+		$email_form->getElement('from_email')->setAttr('placeholder','Your email id');
+		$email_form->getElement('from_name')->setAttr('placeholder','Your Name');
 
 		$email_form->add('Order')
                 ->move($email_form->add('View')->addClass('text-center xepan-installer-info')->set('Email Basic Settings'),'first')
                 ->move($email_form->addSeparator('span6'),'first')
-                ->move($email_form->addSeparator('span5'),'before','email_reply_to')
-                ->move($email_form->add('View')->addClass('text-center xepan-installer-info')->set('Email Sender Details'),'before','email_reply_to')
+                ->move($email_form->addSeparator('span5'),'before','encryption')
+                ->move($email_form->add('View')->addClass('text-center xepan-installer-info')->set('Email Sender Details'),'before','encryption')
                 ->now();
 		$skip_button=$email_form->addSubmit('Skip: Go Next ( you can edit these settings later also)');
 
