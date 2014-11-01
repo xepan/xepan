@@ -1,6 +1,6 @@
 <?php
-class TMail_Transport_PHPMailer extends AbstractObject {
-    public $PHPMailer = null;
+class TMail_Transport_PHPMailer extends TMail_Transport_SwiftMailer {
+    /*public $PHPMailer = null;
     
     function init(){
         parent::init();
@@ -99,6 +99,6 @@ class TMail_Transport_PHPMailer extends AbstractObject {
 
     function __destruct(){
         $this->PHPMailer->SmtpClose();
-    }
+    }*/
 }
  
