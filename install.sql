@@ -286,18 +286,6 @@ CREATE TABLE IF NOT EXISTS `epan_installed_components` (
 -- Dumping data for table `epan_installed_components`
 --
 
-INSERT INTO `epan_installed_components` (`id`, `epan_id`, `component_id`, `enabled`, `params`, `installed_on`) VALUES
-(23, 1, 67, 1, NULL, '2014-09-28'),
-(25, 1, 69, 1, NULL, '2014-10-06'),
-(26, 1, 70, 1, NULL, '2014-10-17'),
-(27, 1, 71, 1, NULL, '2014-10-24'),
-(28, 1, 72, 1, NULL, '2014-10-24'),
-(29, 1, 73, 1, NULL, '2014-10-24'),
-(30, 1, 74, 1, NULL, '2014-10-24'),
-(31, 1, 75, 1, NULL, '2014-10-24'),
-(32, 1, 76, 1, NULL, '2014-10-24'),
-(33, 1, 77, 1, NULL, '2014-10-24');
-
 -- --------------------------------------------------------
 
 --
