@@ -205,17 +205,7 @@ CREATE TABLE IF NOT EXISTS `epan_components_marketplace` (
 --
 
 INSERT INTO `epan_components_marketplace` (`id`, `name`, `allowed_children`, `specific_to`, `namespace`, `type`, `is_system`, `description`, `default_enabled`, `has_toolbar_tools`, `has_owner_modules`, `has_plugins`, `has_live_edit_app_page`, `git_path`, `initialize_and_clone_from_git`, `category`) VALUES
-(51, 'Basic Web Elements And Plugins', '0', '0', 'baseElements', 'element', 1, '0', 1, 1, 0, NULL, 0, '', 0, NULL),
-(67, 'Developer Zone', '0', '0', 'developerZone', 'application', 0, '0', 1, 0, 0, NULL, 0, '0', 0, NULL),
-(71, 'Extended Element', '0', '0', 'ExtendedElement', 'module', 0, '0', 1, 1, 0, NULL, 0, '0', 0, NULL),
-(69, 'Enquiry And Subscriptions', '0', '0', 'xEnquiryNSubscription', 'application', 0, '0', 1, 1, 0, NULL, 0, '0', 0, NULL),
-(70, 'xAtrificial Intelligence', '0', '0', 'xAi', 'application', 0, '0', 1, 1, 1, NULL, 0, 'https://github.com/xepan/xAi.git', 1, NULL),
-(72, 'Slide Shows', '0', '0', 'slideShows', 'application', 0, '0', 1, 1, 0, NULL, 0, '0', 1, NULL),
-(73, 'Extended Images', '0', '0', 'extendedImages', 'module', 0, '0', 1, 1, 0, NULL, 0, '0', 0, NULL),
-(74, 'Image Galley', '0', '0', 'xImageGallery', 'application', 0, '0', 1, 1, 0, NULL, 0, 'https://github.com/xepan/xImageGallery', 1, NULL),
-(75, 'xMarketingCampaign', '0', '0', 'xMarketingCampaign', 'application', 0, '0', 1, 0, 0, NULL, 0, 'https://github.com/xepan/xMarketingCampaign', 0, NULL),
-(76, 'Menus', '0', '0', 'xMenus', 'application', 0, '0', 1, 1, 0, NULL, 0, '0', 0, NULL),
-(77, 'xShop', '0', '0', 'xShop', 'application', 0, '0', 1, 1, 0, NULL, 0, 'https://github.com/xepan/xShop', 1, NULL);
+(51, 'Basic Web Elements And Plugins', '0', '0', 'baseElements', 'element', 1, '0', 1, 1, 0, NULL, 0, '', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -266,38 +256,15 @@ CREATE TABLE IF NOT EXISTS `epan_components_tools` (
 --
 
 INSERT INTO `epan_components_tools` (`id`, `component_id`, `name`, `is_serverside`, `is_sortable`, `is_resizable`, `display_name`, `order`) VALUES
-(229, 77, 'ProductDetail', 1, 0, 0, '', 0),
-(220, 73, 'xSVG', 0, 0, 0, '', 0),
-(218, 72, 'ThumbnailSlider', 1, 0, 0, '', 0),
 (208, 51, 'User Panel', 1, 0, 0, NULL, NULL),
-(209, 70, 'IntelligentBlock', 0, 1, 0, 'IBlock', 0),
 (207, 51, 'Html Block', 0, 0, 0, NULL, NULL),
 (206, 51, 'Text', 0, 0, 0, NULL, NULL),
 (205, 51, 'Title', 0, 0, 0, NULL, NULL),
 (204, 51, 'Image', 0, 0, 0, NULL, NULL),
 (203, 51, 'Container', 0, 1, 0, NULL, NULL),
 (202, 51, 'Row', 0, 1, 0, NULL, NULL),
-(212, 69, 'CustomeForm', 1, 0, 0, '', 0),
-(211, 69, 'SubscriptionModule', 1, 0, 0, '', 0),
-(210, 69, 'EnquiryForm', 0, 0, 0, '', 0),
 (201, 51, 'Column', 0, 1, 0, NULL, NULL),
-(200, 51, 'Template Content Region', 0, 1, 0, NULL, NULL),
-(232, 71, 'Marquee', 0, 1, 0, '', 0),
-(217, 72, 'AwesomeSlider', 1, 0, 0, '', 0),
-(216, 72, 'BootStrap Carousel', 0, 0, 0, '', 0),
-(215, 72, 'WaterWheelCarousel', 1, 0, 0, '', 0),
-(214, 72, 'TransformGallery', 1, 0, 0, '3D transforms', 0),
-(219, 73, 'Image With Description 1', 0, 0, 0, '', 0),
-(221, 74, 'GoogleImageGallery', 1, 0, 0, '', 0),
-(230, 76, 'Bootstrap Menus', 0, 0, 0, '', 0),
-(228, 77, 'Product', 1, 0, 0, '', 0),
-(227, 77, 'Category', 1, 0, 0, '', 0),
-(226, 77, 'xCart', 1, 0, 0, '', 0),
-(225, 77, 'Search', 1, 0, 0, '', 0),
-(224, 77, 'Checkout', 1, 0, 0, '', 0),
-(223, 77, 'Member Account', 1, 0, 0, '', 0),
-(222, 77, 'Add Block', 1, 0, 0, '', 0),
-(231, 69, 'unSubscribe', 1, 0, 0, 'Un Subscriber', 0);
+(200, 51, 'Template Content Region', 0, 1, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
