@@ -240,8 +240,7 @@ CREATE TABLE IF NOT EXISTS `epan_components_plugins` (
 
 INSERT INTO `epan_components_plugins` (`id`, `component_id`, `name`, `event`, `params`, `is_system`) VALUES
 (53, 51, 'RemoveContentEditable', 'content-fetched', '$page', 1),
-(54, 51, 'RunServerSideComponent', 'content-fetched', '$page', 1),
-(52, 70, 'ImplementIntelligence', 'beforeTemplateInit', '$page', 0);
+(54, 51, 'RunServerSideComponent', 'content-fetched', '$page', 1);
 
 -- --------------------------------------------------------
 

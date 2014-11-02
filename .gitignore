@@ -5,5 +5,4 @@ epan-components/*
 config-default.php
 /nbproject/private/
 nbproject
-EpanCMSApp.php
 *.orig
