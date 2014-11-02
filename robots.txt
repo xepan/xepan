@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /admin
+Disallow: /atk4
+Disallow: /atk4-addons
+Disallow: /elfinder
+Disallow: /epan-addons
+Disallow: /epan-components
+Disallow: /lib
+Disallow: /page
+Disallow: /templates
