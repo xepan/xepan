@@ -29,7 +29,7 @@ class Model_UserCustomFields extends \Model_Table{
 
 		$this->hasMany('CustomFieldValue','usercustomefield_id');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function getCount($epan_id){

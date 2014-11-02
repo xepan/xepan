@@ -9,22 +9,28 @@ class page_owner_updater extends page_base_owner {
 		
 		$this->add('HR');
 
-		$update_btn = $this->add('Button')->set('Update');
-		
-		$update_btn->js('click',$update_btn->js()->text(' Updating ... '));
+                $form = $this->add('Form');
+                $form->addField('line','git_exec_path')->set('/usr/bin/git')->validateNotNull();
+                $form->addField('DropDown','git_branch')->setValueList(array('master'=>'master','develop'=>'develop'))->set('master')->validateNotNull();
+                $update_btn = $form->addSubmit('Update');
 
-		if($update_btn->isClicked()){
-			$this->update();
+                if($form->isSubmitted()){
+			$this->update(true,$form['git_exec_path'],$form['git_branch']);
 			$this->js(null, $update_btn->js()->text('Updated'))->univ()->successMessage('xEpan CMS Updated')->execute();
-		}
+                }
+
 	}
 
-	function update($dynamic_model_update=true){
+	function update($dynamic_model_update=true,$git_exec_path=null, $git_branch='master'){
 		if($this->git_path==null)
 			throw $this->exception('public variable git_path must be defined in page class');
 		
 		
 		$installation_path = getcwd();
+
+                if($git_exec_path){
+                        Git::set_bin($git_exec_path);
+                }
 
 		if(file_exists($installation_path.DS.'.git'))
 			$repo = Git::open($installation_path);
@@ -37,7 +43,7 @@ class page_owner_updater extends page_base_owner {
 			$repo->add_remote_address($this->git_path);
 
 		$repo->run('fetch --all');
-		$repo->run('reset --hard origin/master');
+		$repo->run('reset --hard origin/'.$git_branch);
 
 		if($dynamic_model_update){
 

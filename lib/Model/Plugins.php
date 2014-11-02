@@ -39,14 +39,17 @@ class Model_Plugins extends Model_Table {
 			throw $this->exception('The Plugin Name for this component is already used', 'ValidityCheck')->setField('name');
 
 
-		if(!$this->isInstalling)
+		if(!$this->isInstalling){
 			$this->createNewFiles();
+		}
 
 
 	}
 
 	function afterSave(){
-		$this->ref('component_id')->createPackage($bypasszip=true);
+		if(!$this->isInstalling){
+			$this->ref('component_id')->createPackage($bypasszip=true);
+		}
 	}
 
 	function createNewFiles(){

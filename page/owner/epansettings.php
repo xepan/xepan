@@ -19,19 +19,25 @@ class page_owner_epansettings extends page_base_owner {
 
 		$email_tab = $tabs->addTab('Email Settings');
 		$email_form = $email_tab->add('Form');
-		$email_form->setModel($this->api->current_website,array('email_host','email_port','email_username','email_password','email_reply_to','email_reply_to_name','email_from','email_from_name','email_threshold'));
+		$email_form->setModel($this->api->current_website,array('email_transport','encryption','email_host','email_port','email_username','email_password','email_reply_to','email_reply_to_name','from_email','from_name','sender_email','sender_name','return_path','smtp_auto_reconnect','email_threshold'));
 		$email_form->addSubmit('Update');
 
 		// Add Placeholder values
 		
+		$email_form->getElement('email_transport');
+		$email_form->getElement('encryption');
 		$email_form->getElement('email_host')->setAttr('placeholder','i.e. ssl://mail.domain.com');
 		$email_form->getElement('email_port')->setAttr('placeholder','465');
 		$email_form->getElement('email_username')->setAttr('placeholder','your email id');
 		$email_form->getElement('email_password')->setAttr('placeholder','your email password');
 		$email_form->getElement('email_reply_to')->setAttr('placeholder','i.e. info@domain.com');
 		$email_form->getElement('email_reply_to_name')->setAttr('placeholder','Your Name');
-		$email_form->getElement('email_from')->setAttr('placeholder','Your email id');
-		$email_form->getElement('email_from_name')->setAttr('placeholder','Your Name');
+		$email_form->getElement('from_email')->setAttr('placeholder','Your email id');
+		$email_form->getElement('from_name')->setAttr('placeholder','Your Name');
+		$email_form->getElement('sender_email')->setAttr('placeholder','Sender Email ID');
+		$email_form->getElement('sender_name')->setAttr('placeholder','Sender Name');
+		$email_form->getElement('return_path')->setAttr('placeholder','Return Path');
+		$email_form->getElement('smtp_auto_reconnect')->setAttr('placeholder','SMTP Auto Reconnect');
 		$email_form->getElement('email_threshold')->setAttr('placeholder','Maximum Emails allowed to send per hour for Mass Emaling');
 
 		if($email_form->isSubmitted()){

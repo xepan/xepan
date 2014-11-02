@@ -52,11 +52,15 @@ class page_componentBase_page_owner_main extends page_base_owner{
 		$update_page= $right->add( "VirtualPage" );
 		$update_page->set( function( $p )use( $match ) {
 				$p->add( 'View_Info')->set('Are you sure, you want to update this application');
-				$btn=$p->add('Button')->set('Yes');
-				if($btn->isClicked()){
-					$p->js()->univ()->frameURL( 'Update This Component', $p->api->url($p->api->url($match[1].'_page_owner_update')) )->execute();
-					// $p->api->redirect($p->api->url($match[1].'_page_owner_update'));
+				$form = $p->add('Form');
+				$form->addField('line','git_exec_path')->set('/usr/bin/git')->validateNotNull();
+				$form->addField('DropDown','git_branch')->setValueList(array('master'=>'master','develop'=>'develop'))->set('master')->validateNotNull();
+				$form->addSubmit('Update');
+
+				if($form->isSubmitted()){
+					$p->js()->univ()->frameURL( 'Update This Component', $p->api->url($p->api->url($match[1].'_page_owner_update',array('git_exec_path'=>$form['git_exec_path'],'git_branch'=>$form['git_branch']))) )->execute();
 				}
+
 			}
 		);
 

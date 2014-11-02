@@ -135,7 +135,6 @@ class Frontend extends ApiFrontend{
 				}
 
 
-				$this->add( 'Controller_EpanCMSApp' )->frontEnd();
 				
 				$this->current_website = $this->add( 'Model_Epan' )->tryLoadBy( 'name', $this->website_requested );
 				if ( $this->current_website->loaded() ) {
@@ -146,6 +145,8 @@ class Frontend extends ApiFrontend{
 					$this->exec_plugins( 'error404', $this->website_requested );
 				}
 
+				$this->add( 'Controller_EpanCMSApp' )->frontEnd();
+				
 				// MULTISITE CONTROLER
 				// $this->load_plugins();
 				// $this->add( 'Controller_EpanCMSApp' )->frontEnd();
@@ -169,11 +170,13 @@ class Frontend extends ApiFrontend{
 			}
 
 			$this->load_plugins();
-			$temp = array();
-			$this->exec_plugins('beforeTemplateInit',$temp);
 
 			// Global Template Setting
-			if(in_array('shared', $this->defaultTemplate())){
+			if(in_array('shared', $this->defaultTemplate()) and $this->page == 'index'){
+				
+				$temp = array();
+				$this->exec_plugins('beforeTemplateInit',$temp);
+
 				if($this->edit_template){
 					$current_template = $this->add('Model_EpanTemplates')->load($_GET['edit_template']);
 				}else{
@@ -226,18 +229,20 @@ class Frontend extends ApiFrontend{
 					$this->template->trySet('template_css',$current_template['css']);
 					$this->template->trySet('style',$current_template['body_attributes']);
 					
+					// if(isset($old_jui)) //DELETE
+					$this->api->jui  = $old_jui;
+					
 				}
 				
+				if ( $this->current_website->loaded() )
+					$this->exec_plugins( 'website-model-loaded', $this->api->current_website );
+				if ( $this->current_page->loaded() )
+					$this->exec_plugins( 'website-page-model-loaded', $this->api->page_requested );
+			
 			}
-			if(isset($old_jui))
-				$this->api->jui  = $old_jui;
 			// unset($this->api->jui);
 			// $this->add( 'jUI' );
 
-			if ( $this->current_website->loaded() )
-				$this->exec_plugins( 'website-model-loaded', $this->api->current_website );
-			if ( $this->current_page->loaded() )
-				$this->exec_plugins( 'website-page-model-loaded', $this->api->page_requested );
 
 			// A lot of the functionality in Agile Toolkit requires jUI
 			$this->js()
@@ -245,9 +250,6 @@ class Frontend extends ApiFrontend{
 			->_load( 'ui.atk4_notify' )
 			;
 
-			if(in_array("shared", $this->defaultTemplate())){
-				$this->template->appendHTML('js_include','<link type="text/css" href="templates/default/css/epan.css" rel="stylesheet" />'."\n");
-			}
 		}
 	}
 

@@ -1,6 +1,6 @@
 <?php
-class TMail_Transport_PHPMailer extends AbstractObject {
-    public $PHPMailer = null;
+class TMail_Transport_PHPMailer extends TMail_Transport_SwiftMailer {
+    /*public $PHPMailer = null;
     
     function init(){
         parent::init();
@@ -91,7 +91,7 @@ class TMail_Transport_PHPMailer extends AbstractObject {
             $arr = parse_url($m[1]);
             if (!isset($arr['host']) || !isset($arr['path']))continue;
             // add
-            $this->AddEmbeddedImage(getcwd().'/'.$arr['path'], $id, 'attachment', 'base64', 'image/jpeg');
+            $this->PHPMailer->AddEmbeddedImage(getcwd().'/'.$arr['path'], $id, 'attachment', 'base64', 'image/jpeg');
             $body = str_replace($img, '<img alt="" src="cid:'.$id.'" style="border: none;" />', $body); 
         }
         return $body;
@@ -99,6 +99,6 @@ class TMail_Transport_PHPMailer extends AbstractObject {
 
     function __destruct(){
         $this->PHPMailer->SmtpClose();
-    }
+    }*/
 }
  

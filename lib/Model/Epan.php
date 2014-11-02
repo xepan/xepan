@@ -30,15 +30,27 @@ class Model_Epan extends Model_Table {
 		$this->addField('description')->type('text');//->system(true);
 		$this->addField('last_email_sent')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		// Email Settings
+		$this->addField('email_transport')->setValueList(array('SmtpTransport'=>'SMTP Transport','SendmailTransport'=>'SendMail','MailTransport'=>'PHP Mail function'))->defaultValue('smtp');
+		$this->addField('encryption')->enum(array('none','ssl','tls'))->mandatory(true);
 		$this->addField('email_host');
 		$this->addField('email_port');
 		$this->addField('email_username');
 		$this->addField('email_password')->type('password');
 		$this->addField('email_reply_to');
 		$this->addField('email_reply_to_name');
-		$this->addField('email_from');
-		$this->addField('email_from_name');
-		$this->addField('email_threshold')->hint('Maximum Emails sending allowed per hour for mass emailing')->defaultValue(200);
+		$this->addField('from_email');
+		$this->addField('from_name');
+		$this->addField('sender_email');
+		$this->addField('sender_name');
+		$this->addField('return_path');
+		$this->addField('smtp_auto_reconnect')->type('int')->hint('Auto Reconnect by n number of emails');
+		$this->addField('email_threshold')->type('int')->hint('Threshold To send emails with this Email Configuration PER MINUTE');
+		$this->addField('emails_in_BCC')->type('int')->hint('Emails to be sent by bunch of Bcc emails, to will be used same as From, 0 to send each email in to field')->defaultValue(0)->system(true);
+		$this->addField('last_emailed_at')->type('datetime')->system(true);
+		$this->addField('email_sent_in_this_minute')->type('int')->system(true);
+
+
+
 		$this->addField('user_registration_email_subject')->defaultValue('Thank you for Registration');
 		$this->addField('user_registration_email_message_body')->type('text')->display(array('form'=>'RichText'))->defaultValue("Name:{{name}}Email:{{email}}User Name :{{user_name}}Password:{{password}}Activation code :{{activation_code}}Click here to activate:     {{click_here_to_activate}}")->hint("{{name}}, {{email}}, {{user_name}}, {{password}}, {{activation_code}}, {{click_here_to_activate}}");
 
@@ -71,7 +83,7 @@ class Model_Epan extends Model_Table {
 
 		$this->setOrder('created_at','desc');
 		$this->add('Controller_EpanCMSApp')->epanModel();
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
