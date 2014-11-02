@@ -9,9 +9,9 @@ class page_owner_updater extends page_base_owner {
 		
 		$this->add('HR');
 
-                $form = $p->add('Form');
+                $form = $this->add('Form');
                 $form->addField('line','git_exec_path')->set('/usr/bin/git')->validateNotNull();
-                $form->addField('DropDown','git_branch')->setValueList(array('master'=>'master','develop'=>'develop'))->defaultValue('master')->validateNotNull();
+                $form->addField('DropDown','git_branch')->setValueList(array('master'=>'master','develop'=>'develop'))->set('master')->validateNotNull();
                 $update_btn = $form->addSubmit('Update');
 
                 if($form->isSubmitted()){
