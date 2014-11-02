@@ -25,7 +25,8 @@ class Model_Tools extends Model_Table {
 	}
 
 	function afterSave(){
-		$this->ref('component_id')->createPackage($bypasszip=true);
+		if(!$this->isInstalling)
+			$this->ref('component_id')->createPackage($bypasszip=true);
 	}
 
 	function beforeSave(){
