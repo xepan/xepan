@@ -55,7 +55,8 @@ class page_componentBase_page_owner_main extends page_base_owner{
 				$form = $p->add('Form');
 				$form->addField('line','git_exec_path')->set('/usr/bin/git')->validateNotNull();
 				$form->addField('DropDown','git_branch')->setValueList(array('master'=>'master','develop'=>'develop'))->defaultValue('master')->validateNotNull();
-
+				$form->addSubmit('Update');
+				
 				if($form->isSubmitted()){
 					$p->js()->univ()->frameURL( 'Update This Component', $p->api->url($p->api->url($match[1].'_page_owner_update',array('git_exec_path'=>$form['git_exec_path'],'git_branch'=>$form['git_branch']))) )->execute();
 				}
