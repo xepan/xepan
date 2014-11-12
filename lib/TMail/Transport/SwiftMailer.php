@@ -41,6 +41,7 @@ class TMail_Transport_SwiftMailer extends AbstractObject {
 				$message->setReturnPath($email_settings['return_path']);
 
 			$email_body = $body;
+			$email_body = str_replace("{{email}}", is_array($to)?$to[0]:$to, $email_body);
 			$email_body = $this->convertImagesInline($message,$email_body);
 			$message->setBody($email_body,'text/html');
 
