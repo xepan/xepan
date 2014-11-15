@@ -109,7 +109,15 @@ class Frontend extends ApiFrontend{
 			 * Once set that can be accessed all CMS vise like
 			 * $this->api->current_website
 			 */
+
+			$auth=$this->add( 'BasicAuth' );
+			$auth->setModel( 'Users', 'username', 'password' );
+
 			if ( true /*page does not contain owner_ / branch_ or system_ */ ) {
+				// ALWAYS TRUE BECAUSE
+				// WE WANT PLUGINS TO BE AVAILABLE IN BACKEND AS WELL
+				// PLUGINS ARE BASED ON EPAN_ID so always need to run the code below
+
 				$site_parameter= $this->getConfig( 'url_site_parameter' );
 				$page_parameter= $this->getConfig( 'url_page_parameter' );
 
@@ -141,12 +149,15 @@ class Frontend extends ApiFrontend{
 					$this->current_page = $this->current_website->ref( 'EpanPage' )
 					->addCondition( 'name', $this->page_requested )
 					->tryLoadAny();
+
+					// LOAD DEFAULT PAGE IF NO SUCH PAGE FOUND OR 404 ERROR ???
+
 				}else {
 					$this->exec_plugins( 'error404', $this->website_requested );
 				}
 
 				$this->add( 'Controller_EpanCMSApp' )->frontEnd();
-				
+
 				// MULTISITE CONTROLER
 				// $this->load_plugins();
 				// $this->add( 'Controller_EpanCMSApp' )->frontEnd();
@@ -155,13 +166,20 @@ class Frontend extends ApiFrontend{
 				// if ( $this->current_page->loaded() )
 				// 	$this->exec_plugins( 'website-page-loaded', $this->api->page_requested );
 
+				// IS USER ALLOWED TO SEE THE PAGE ???
+
+				if($this->current_page['access_level'] > 0 and $this->current_page['access_level'] > ($this->api->auth->model['type']?:0)){
+					$this->api->redirect($this->api->url(null,array('login_required'=>1,$page_parameter=>$this->getConfig( 'default_page' ))));
+					exit;
+				}
+
 			}
-			$auth=$this->add( 'BasicAuth' );
-			$auth->setModel( 'Users', 'username', 'password' );
+			
 
 			if($this->api->auth->isLoggedIn() AND $this->api->auth->model->ref('epan_id')->get('name')==$this->api->website_requested AND $this->api->auth->model['type'] >= 80){
 				$this->edit_mode = true;
 			}
+
 
 			if($_GET['edit_template']){
 				$this->edit_template = true;
