@@ -57,6 +57,9 @@ class Model_EpanPage extends Model_Table {
 		if(strlen($this['name'])>60)
 			throw $this->exception('Max URL length: 60 Characters only, while it is '.strlen($this['name']));
 
+		if($this['name'] == 'home' and $this['access_level']!='public')
+			throw $this->exception('Home Page must be public','ValidityCheck')->setField('access_level');
+
 		// IF Title, Keywords or Description is not Fed, Take from Epan Details
 		if(trim($this['title'])=='') $this['title'] = $this->ref('epan_id')->get('name');
 		if(trim($this['keywords'])=='') $this['keywords'] = $this->ref('epan_id')->get('keywords');
