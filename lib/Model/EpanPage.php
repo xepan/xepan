@@ -25,7 +25,7 @@ class Model_EpanPage extends Model_Table {
 		$this->addField('created_on')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		$this->addField('updated_on')->type('datetime');
 
-		$this->addField('access_level')->setValueList(array("public"=>'Public',"registered_user"=>'Registered User',"backend_user"=>'Back End User',"super_user"=>'Super user'))->defaultValue('public')->mandatory(true);
+		$this->addField('access_level')->setValueList(array(0=>'Public',50=>'Registered User',80=>'Back End User',100=>'Super user'))->defaultValue('public')->mandatory(true);
 
 		$this->hasMany('EpanPageSnapshots','epan_page_id');
 		$this->hasMany('EpanPage','parent_page_id');
@@ -57,7 +57,7 @@ class Model_EpanPage extends Model_Table {
 		if(strlen($this['name'])>60)
 			throw $this->exception('Max URL length: 60 Characters only, while it is '.strlen($this['name']));
 
-		if($this['name'] == 'home' and $this['access_level']!='public')
+		if($this['name'] == 'home' and $this['access_level']!=0)
 			throw $this->exception('Home Page must be public','ValidityCheck')->setField('access_level');
 
 		// IF Title, Keywords or Description is not Fed, Take from Epan Details
