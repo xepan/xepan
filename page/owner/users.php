@@ -8,6 +8,7 @@ class page_owner_users extends page_base_owner {
 		$usr->addCondition('epan_id',$this->api->current_website->id);
 		
 		$crud->setModel($usr);
+		$crud->add('Controller_FormBeautifier',array('params'=>array('f/addClass'=>'stacked')));
 
 		if($crud->grid){
 			$crud->grid->addButton('Options')->js('click',$this->js()->univ()->frameURL('User Options',$this->api->url('./options')));

@@ -9,16 +9,16 @@ class Model_Users extends Model_Table {
 		
 		$this->addField('name');
 		$this->addField('email');
-		$this->addField('username');
-		$this->addField('password')->type('password');
+		$this->addField('username')->group('a/6');
+		$this->addField('password')->type('password')->group('a/6');
 		$this->addField('created_at')->type('date')->defaultValue(date('Y-m-d'));
 		// $this->addField('is_systemuser')->type('boolean')->defaultValue(false);
 		// $this->addField('is_frontenduser')->type('boolean')->defaultValue(false);
 		// $this->addField('is_backenduser')->type('boolean')->defaultValue(false);
 		$this->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(0);
 		$this->addField('is_active')->type('boolean')->defaultValue(false);
-		$this->addField('activation_code');
-		$this->addField('last_login_date')->type('date');
+		$this->addField('activation_code')->group('b/3');
+		$this->addField('last_login_date')->type('date')->group('b/9');
 
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
