@@ -1,8 +1,20 @@
 $.each({
-    xtinymce: function() {
+    xtinymce: function(obj) {
         tinymce.baseURL = "templates/js/tinymce";
+
+        console.log(tinymce);
+
+        
+        tinymce.editors=[];
+        tinymce.activeEditors=[];
+
+
+
         tinymce.init({
-            selector: "textarea.tinymce",
+            selector: 'textarea.tinymce',
+            init_instance_callback : function(editor) {
+                console.log("Editor: " + editor.id + " is now initialized.");
+            },
             file_browser_callback: function elFinderBrowser(field_name, url, type, win) {
                 $('<div/>').dialogelfinder({
                     url: 'elfinder/php/connector.php',
@@ -23,7 +35,7 @@ $.each({
             plugins: [
                 "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
                 "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-                "save table contextmenu directionality emoticons template paste textcolor"
+                "save table contextmenu directionality emoticons template paste textcolor colorpicker"
             ],
             toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
             // toolbar2: "print preview media | forecolor backcolor emoticons",
@@ -38,9 +50,3 @@ $.each({
         });
     }
 }, $.univ._import);
-
-$.widget("ui.dialog", $.ui.dialog, {
-    _allowInteraction: function(event) {
-        return !!$(event.target).closest(".mce-container").length || this._super(event);
-    }
-});

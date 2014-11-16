@@ -24,6 +24,11 @@
 				edit_template=<?edit_template?>false<?/edit_template?>;
 				<?$document_ready?>
 			});
+			$(document).on('focusin', function(event) {
+			    if ($(event.target).closest(".mce-window").length) {
+			        event.stopImmediatePropagation();
+			    }
+			});
 		</script>
 	</head>
 	<body style='<?$style?>;' class='<?$class?> ' component_type='Body '>
