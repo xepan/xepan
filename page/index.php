@@ -76,10 +76,6 @@ class page_index extends Page {
 			$this->api->template->appendHTML('js_include','<link type="text/css" href="elfinder/css/theme.css" rel="stylesheet" />'."\n");
 			$this->api->template->appendHTML('js_include','<script src="elfinder/js/elfinder.min.js"></script>'."\n");			
 	
-				$this->api->template->appendHTML('js_include','
-				<link rel="stylesheet" href="templates/js/elrte/css/elrte.min.css" type="text/css" media="screen" charset="utf-8">
-				  ');
-
 		}
 
 		$theme_css = 'epans/'.$this->api->current_website['name'].'/theme.css';
