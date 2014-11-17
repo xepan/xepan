@@ -40,7 +40,7 @@ class Controller_FormBeautifier extends AbstractController{
 
 			// if fld->group is same as last group and last group is not ""
 			if(isset($fld->group))
-				$group_details = explode("/", $fld->group);
+				$group_details = explode("~", $fld->group);
 			else
 				$group_details = array();
 
@@ -50,7 +50,7 @@ class Controller_FormBeautifier extends AbstractController{
 					$last_form_field=$elm;
 					$elm->addClass('form-control');
 					if(isset($fld->icon)){
-						$icon = explode("/", $fld->icon);
+						$icon = explode("~", $fld->icon);
 						$color='';
 
 						if(isset($icon[1])) $color= "style=' color:".$icon[1]."'";
@@ -64,7 +64,7 @@ class Controller_FormBeautifier extends AbstractController{
 			// beautify field by adding bootstrap classes
 			$elm->addClass('form-control');
 			if(isset($fld->icon)){
-				$icon = explode("/", $fld->icon);
+				$icon = explode("~", $fld->icon);
 				$color='';
 
 				if(isset($icon[1])) $color= "style=' color:".$icon[1]."'";
@@ -77,7 +77,7 @@ class Controller_FormBeautifier extends AbstractController{
 					$group_header = $this->form->add('View');
 					$group_header->addClass('panel panel-default');
 					// $fieldset = $running_cell->add('View');//->setElement('fieldset');
-					$group_header->add('H4')->set($group_details[2])->addClass('panel-heading');
+					$group_header->add('H4')->setHTML($group_details[2])->addClass('panel-heading');
 					$running_cell = $group_header->add('View')->addClass('panel-body');
 					$running_column = $running_cell->add('Columns');
 					$move = $group_header;
@@ -87,7 +87,7 @@ class Controller_FormBeautifier extends AbstractController{
 						$group_header = $running_cell->add('View');
 						$group_header->addClass('panel panel-warning');
 						// $fieldset = $running_cell->add('View');//->setElement('fieldset');
-						$group_header->add('H4')->set($group_details[2])->addClass('panel-heading');
+						$group_header->add('H4')->setHTML($group_details[2])->addClass('panel-heading');
 						$container = $group_header->add('View')->addClass('panel-body');
 						$running_column = $running_cell->add('Columns');
 						$running_cell = $running_column->addColumn($group_details[1]);

@@ -8,17 +8,17 @@ class Model_Epan extends Model_Table {
 		$this->hasOne('Staff','staff_id');
 		$this->hasOne('Branch','branch_id')->caption('Agency');
 		$f=$this->hasOne('EpanCategory','category_id')->mandatory('Please Select A Category');
-		$f->group='a/3';
+		$f->group='a~3';
 		
 		// Name is Default Alias for this epan
 		$this->addField('name')->caption('Epan Name')->hint('Any unique name for your website')->mandatory('Epan alias is must');
 		// $this->addField('alias2')->caption('Alias 2')->hint('Any unique name for your epan like your_epan_name.epan.in')->mandatory('Epan alias is must');
 		$this->addField('password')->mandatory('Password is must to proceed')->type('password');
 		$this->addField('fund_alloted');
-		$this->addField('company_name')->group('b/3/Company General Information');
-		$this->addField('contact_person_name')->group('b/3/0');
-		$this->addField('mobile_no')->group('b/3/0');
-		$this->addField('email_id')->group('b/3/0');
+		$this->addField('company_name')->group('b~3~<i class=\'fa fa-leaf fa-2x\' style="color: red"></i> Company General Information');
+		$this->addField('contact_person_name')->group('b~3');
+		$this->addField('mobile_no')->group('b~3');
+		$this->addField('email_id')->group('b~3');
 		$this->addField('address')->type('text')->group('c/6/Company Contact Information');
 		$this->addField('city')->group('c/6');
 		$this->addField('state')->group('c/6/bl');
