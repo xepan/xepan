@@ -278,7 +278,7 @@ abstract class Form_Field extends AbstractView {
         }
         if(!$this->error_template)$this->error_template = $this->form->template_chunks['field_error'];
         if((!property_exists($this, 'mandatory_template')) || (!$this->mandatory_template))$this->mandatory_template=$this->form->template_chunks['field_mandatory'];
-        $this->template->trySet('field_caption',$this->caption?($this->caption.$this->separator):'');
+        $this->template->trySetHTML('field_caption',$this->caption?($this->caption.$this->separator):'');
         $this->template->trySet('field_name',$this->name);
         $this->template->trySet('field_comment',$this->comment);
         // some fields may not have field_input tag at all...

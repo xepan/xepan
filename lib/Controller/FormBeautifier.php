@@ -5,6 +5,9 @@ class Controller_FormBeautifier extends AbstractController{
 	public $param=array();
 	public $form=false;
 
+	public $panel_or_fieldset='panel';
+
+
 	function init(){
 		parent::init();
 
@@ -46,12 +49,28 @@ class Controller_FormBeautifier extends AbstractController{
 				if($elm=$this->form->hasField($fld->short_name)){
 					$last_form_field=$elm;
 					$elm->addClass('form-control');
+					if(isset($fld->icon)){
+						$icon = explode("/", $fld->icon);
+						$color='';
+
+						if(isset($icon[1])) $color= "style=' color:".$icon[1]."'";
+
+						$elm->setCaption("<i class='".$icon[0]."' $color ></i> ".$fld->caption());
+					}
 				}
 				continue;
 			}
 
 			// beautify field by adding bootstrap classes
 			$elm->addClass('form-control');
+			if(isset($fld->icon)){
+				$icon = explode("/", $fld->icon);
+				$color='';
+
+				if(isset($icon[1])) $color= "style=' color:".$icon[1]."'";
+
+				$elm->setCaption("<i class='".$icon[0]."' $color ></i> ".$fld->caption());
+			}
 
 			if($group_details[0]!= $last_group){
 				if(isset($group_details[2]) and $group_details[2]!='bl'){
@@ -66,7 +85,7 @@ class Controller_FormBeautifier extends AbstractController{
 					if(isset($group_details[2]) and $group_details[2] !='bl'){
 						$running_cell = $running_column->addColumn(12);
 						$group_header = $running_cell->add('View');
-						$group_header->addClass('panel panel-default');
+						$group_header->addClass('panel panel-warning');
 						// $fieldset = $running_cell->add('View');//->setElement('fieldset');
 						$group_header->add('H4')->set($group_details[2])->addClass('panel-heading');
 						$container = $group_header->add('View')->addClass('panel-body');
@@ -105,7 +124,7 @@ class Controller_FormBeautifier extends AbstractController{
 
 		foreach ($this->form->elements as $ff) {
 			if($ff instanceof Form_Submit){
-				$ff->addClass('btn btn-warning btn-block');
+				// $ff->addClass('btn btn-warning btn-block');
 				// $this->form->getElement($ff->name)->addClass('btn btn-danger');
 			}
 		}

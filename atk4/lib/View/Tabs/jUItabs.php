@@ -98,7 +98,7 @@ class View_Tabs_jUItabs extends View_Tabs {
 
         $container=$this->add('View_HtmlElement',$name);
 
-        $this->tab_template->set(array(
+        $this->tab_template->setHTML(array(
                     'url'=>'#'.$container->name,
                     'tab_name'=>$title,
                     'tab_id'=>$container->short_name,

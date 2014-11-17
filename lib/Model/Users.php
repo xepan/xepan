@@ -7,12 +7,18 @@ class Model_Users extends Model_Table {
 		$this->hasOne('Epan','epan_id')->mandatory(true);
 		//$this->addCondition('epan_id',$this->api->current_website->id);
 		
-		$this->addField('name')->group('a/6');
+		$f=$this->addField('name')->group('a/6');
+		$f->icon='fa fa-heart';
+
 		$this->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(0)->group('a/6');
-		$this->addField('username')->group('b/6');
+		$f=$this->addField('username')->group('b/6');
+		$f->icon="fa fa-user/red";
+
 		$this->addField('password')->type('password')->group('b/6');
-		$this->addField('email');
-		$this->addField('created_at')->type('date')->defaultValue(date('Y-m-d'));
+		$f=$this->addField('email');
+		$f->icon = "fa fa-envelope/red";
+		$f=$this->addField('created_at')->type('date')->defaultValue(date('Y-m-d'));
+		$f->icon='fa fa-calendar/red';
 		// $this->addField('is_systemuser')->type('boolean')->defaultValue(false);
 		// $this->addField('is_frontenduser')->type('boolean')->defaultValue(false);
 		// $this->addField('is_backenduser')->type('boolean')->defaultValue(false);

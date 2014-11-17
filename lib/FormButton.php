@@ -1,6 +1,6 @@
 <?php
 
-class Button extends View_Button {
+class FormButton extends View_Button {
 
 	// function setIcon($icon)
  //    {
@@ -9,10 +9,11 @@ class Button extends View_Button {
  //        return $this;
  //    }
 
-	// function jsButton(){
+	function jsButton(){
 
- //        if ($this->icon) {
- //        }
-	
-	// }
+	}
+
+	function defaultTemplate(){
+		return array('button','button_normal');
+	}
 }
