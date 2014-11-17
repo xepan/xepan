@@ -21,6 +21,7 @@ class Controller_FormBeautifier extends AbstractController{
 		}
 
 		if(!$this->form) return;
+
 		$model_fields = $this->form->getModel();
 		
 		$last_group="";
@@ -30,14 +31,19 @@ class Controller_FormBeautifier extends AbstractController{
 		$order = $this->form->add('Order');
 
 		foreach ($model_fields->elements as $position => $fld) {
+			if(!($fld instanceof Field)) {
+				continue;
+			}
+
 			// if fld->group is same as last group and last group is not ""
 			if(isset($fld->group))
 				$group_details = explode("/", $fld->group);
 			else
 				$group_details = array();
 
-			if(count($group_details) < 2 or !($elm=$this->form->hasElement($fld->short_name))){
-				if($elm=$this->form->hasElement($fld->short_name)){
+			// echo $fld->short_name .' in form ?? ' . $this->form->hasField($fld->short_name). '<br/>';
+			if(count($group_details) < 2 or !($elm=$this->form->hasField($fld->short_name))){
+				if($elm=$this->form->hasField($fld->short_name)){
 					$last_form_field=$elm;
 					$elm->addClass('form-control');
 				}
@@ -48,29 +54,42 @@ class Controller_FormBeautifier extends AbstractController{
 			$elm->addClass('form-control');
 
 			if($group_details[0]!= $last_group){
-				$running_column = $this->form->add('Columns');
-				if(!$last_form_field){
-					$order->move($running_column,'first');
+				if(isset($group_details[2]) and $group_details[2]!='bl'){
+					$group_header = $this->form->add('View');
+					$group_header->addClass('panel panel-default');
+					// $fieldset = $running_cell->add('View');//->setElement('fieldset');
+					$group_header->add('H4')->set($group_details[2])->addClass('panel-heading');
+					$running_cell = $group_header->add('View')->addClass('panel-body');
+					$running_column = $running_cell->add('Columns');
+					$move = $group_header;
 				}else{
-					$order->move($running_column,'after',$elm->short_name);
+					if(isset($group_details[2]) and $group_details[2] !='bl'){
+						$running_cell = $running_column->addColumn(12);
+						$group_header = $running_cell->add('View');
+						$group_header->addClass('panel panel-default');
+						// $fieldset = $running_cell->add('View');//->setElement('fieldset');
+						$group_header->add('H4')->set($group_details[2])->addClass('panel-heading');
+						$container = $group_header->add('View')->addClass('panel-body');
+						$running_column = $running_cell->add('Columns');
+						$running_cell = $running_column->addColumn($group_details[1]);
+					}else{
+						$running_column = $this->form->add('Columns');
+					}
+					$move = $running_column;
+				}
+
+				if(!$last_form_field){
+					$order->move($move,'first');
+				}else{
+					$order->move($move,'after',$elm->short_name);
 				}
 			}
 
-			if(!isset($group_details[2])){
+			if(isset($group_details[2]) and $group_details[2] == 'bl'){ // Bellow Last Column
+				$running_cell->add($elm);
+			}else{
 				$running_cell = $running_column->addColumn($group_details[1]);
 				$running_cell->add($elm);
-			}
-			else{
-				if($group_details[2] !== '0'){
-					$running_cell = $running_column->addColumn($group_details[1]);
-					$running_cell->addClass('panel panel-default');
-					// $fieldset = $running_cell->add('View');//->setElement('fieldset');
-					$running_cell->add('H4')->set($group_details[2])->addClass('panel-heading');
-					$running_cell = $running_cell->add('View')->addClass('panel-body');
-					$running_cell->add($elm);
-				}else{
-					$running_cell->add($elm);
-				}
 			}
 
 			$last_group = $group_details[0];
@@ -83,6 +102,14 @@ class Controller_FormBeautifier extends AbstractController{
 
 		$order->now();
 		$this->form->addClass('stacked');
+
+		foreach ($this->form->elements as $ff) {
+			if($ff instanceof Form_Submit){
+				$ff->addClass('btn btn-warning btn-block');
+				// $this->form->getElement($ff->name)->addClass('btn btn-danger');
+			}
+		}
+
 	}
 
 }

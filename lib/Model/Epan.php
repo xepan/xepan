@@ -7,48 +7,52 @@ class Model_Epan extends Model_Table {
 
 		$this->hasOne('Staff','staff_id');
 		$this->hasOne('Branch','branch_id')->caption('Agency');
-		$this->hasOne('EpanCategory','category_id')->mandatory('Please Select A Category');
+		$f=$this->hasOne('EpanCategory','category_id')->mandatory('Please Select A Category');
+		$f->group='a/3';
 		
 		// Name is Default Alias for this epan
 		$this->addField('name')->caption('Epan Name')->hint('Any unique name for your website')->mandatory('Epan alias is must');
 		// $this->addField('alias2')->caption('Alias 2')->hint('Any unique name for your epan like your_epan_name.epan.in')->mandatory('Epan alias is must');
 		$this->addField('password')->mandatory('Password is must to proceed')->type('password');
 		$this->addField('fund_alloted');
-		$this->addField('company_name');
-		$this->addField('contact_person_name');
-		$this->addField('mobile_no');
-		$this->addField('address')->type('text');
-		$this->addField('city');
-		$this->addField('state');
-		$this->addField('country');
-		$this->addField('email_id');
+		$this->addField('company_name')->group('b/3/Company General Information');
+		$this->addField('contact_person_name')->group('b/3/0');
+		$this->addField('mobile_no')->group('b/3/0');
+		$this->addField('email_id')->group('b/3/0');
+		$this->addField('address')->type('text')->group('c/6/Company Contact Information');
+		$this->addField('city')->group('c/6');
+		$this->addField('state')->group('c/6/bl');
+		$this->addField('country')->group('c/6/bl');
 		$this->addField('website');
 		$this->addField('is_active')->type('boolean');
 		$this->addField('is_approved')->type('boolean')->defaultValue(false);
 		$this->addField('created_at')->defaultValue(date('Y-m-d H:i:s'))->sortable(true)->system(true);
-		$this->addField('keywords')->caption('Keywords')->type('text')->mandatory('');//->system(true);
-		$this->addField('description')->type('text');//->system(true);
+		$this->addField('keywords')->caption('Keywords')->type('text')->group('d/6/SEO Information');//->system(true);
+		$this->addField('description')->type('text')->group('d/6');//->system(true);
 		$this->addField('last_email_sent')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
+		
 		// Email Settings
-		$this->addField('email_transport')->setValueList(array('SmtpTransport'=>'SMTP Transport','SendmailTransport'=>'SendMail','MailTransport'=>'PHP Mail function'))->defaultValue('smtp');
-		$this->addField('encryption')->enum(array('none','ssl','tls'))->mandatory(true);
-		$this->addField('email_host');
-		$this->addField('email_port');
-		$this->addField('email_username');
-		$this->addField('email_password')->type('password');
-		$this->addField('email_reply_to');
-		$this->addField('email_reply_to_name');
-		$this->addField('from_email');
-		$this->addField('from_name');
-		$this->addField('sender_email');
-		$this->addField('sender_name');
-		$this->addField('return_path');
-		$this->addField('smtp_auto_reconnect')->type('int')->hint('Auto Reconnect by n number of emails');
-		$this->addField('email_threshold')->type('int')->hint('Threshold To send emails with this Email Configuration PER MINUTE');
+		$this->addField('email_transport')->setValueList(array('SmtpTransport'=>'SMTP Transport','SendmailTransport'=>'SendMail','MailTransport'=>'PHP Mail function'))->defaultValue('smtp')->group('es/6/Email Transporter To Use');
+		$this->addField('encryption')->enum(array('none','ssl','tls'))->mandatory(true)->group('ecs/1/Connection Settings');
+		$this->addField('email_host')->group('ecs/4/as');
+		$this->addField('email_port')->group('ecs/1');
+		$this->addField('email_username')->group('ecs/3');
+		$this->addField('email_password')->type('password')->group('ecs/3');
+		$this->addField('email_reply_to')->group('ert/6/Email Reply To Setting');
+		$this->addField('email_reply_to_name')->group('ert/6');
+
+		$this->addField('from_email')->group('efs/3/Email From : Sender Settings');
+		$this->addField('from_name')->group('efs/3');
+		$this->addField('sender_email')->group('efs/3/Sender');
+		$this->addField('sender_name')->group('efs/3');
+		
+		$this->addField('smtp_auto_reconnect')->type('int')->hint('Auto Reconnect by n number of emails')->group('et/6/Email Throtelling Settings');
+		$this->addField('email_threshold')->type('int')->hint('Threshold To send emails with this Email Configuration PER MINUTE')->group('et/6');
 		$this->addField('emails_in_BCC')->type('int')->hint('Emails to be sent by bunch of Bcc emails, to will be used same as From, 0 to send each email in to field')->defaultValue(0)->system(true);
 		$this->addField('last_emailed_at')->type('datetime')->system(true);
 		$this->addField('email_sent_in_this_minute')->type('int')->system(true);
 
+		$this->addField('return_path')->group('rp/12');
 
 
 		$this->addField('user_registration_email_subject')->defaultValue('Thank you for Registration');
@@ -61,8 +65,8 @@ class Model_Epan extends Model_Table {
 		$this->hasMany('Users','epan_id');
 		
 		// User options
-		$this->addField('is_frontent_regiatrstion_allowed')->type('boolean')->defaultValue(true);
-		$this->addField('user_activation')->setValueList(array('self_activated'=>'Self Activated','admin_activated'=>'Admin Activated',"default_activated"=>'Default Activated'))->defaultValue('self_activated')->mandatory(true);
+		$this->addField('user_activation')->setValueList(array('self_activated'=>'Self Activated','admin_activated'=>'Admin Activated',"default_activated"=>'Default Activated'))->defaultValue('self_activated')->mandatory(true)->group('u/6');
+		$this->addField('is_frontent_regiatrstion_allowed')->type('boolean')->defaultValue(true)->group('u/6/User Registration Options');
 
 
 		$this->hasMany('Aliases','epan_id'); 

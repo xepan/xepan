@@ -22,6 +22,7 @@ class page_owner_users extends page_base_owner {
 		$form->addClass('stacked');
 		$form->setModel($this->api->current_website,array('is_frontent_regiatrstion_allowed','user_activation'));
 		$form->addSubmit('Update');
+		$form->add('Controller_FormBeautifier');
 		if($form->isSubmitted()){
 			$form->update();
 			$form->js(null,$form->js()->univ()->successMessage('Options Updated'))->univ()->closeDialog()->execute();
