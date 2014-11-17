@@ -1,12 +1,12 @@
 <?$Misc?>
-<div id="<?$_name?>" class="atk-grid1 <?$class?>" style="<?$style?>" <?$attributes?>>
+<div id="<?$_name?>" class="atk-grid1 table-responsive <?$class?>" style="<?$style?>" <?$attributes?>>
   
   <?$top_1?>
   <div class="atk-grid-panel1 clearfix"><?$quick_search?><?$grid_buttons?></div>
   <?$top_2?>
   
   <?all_table?>
-  <table width="<?table_width?>100%<?/?>" class='table table-hover table-striped table-responsive'>
+  <table width="<?table_width?>100%<?/?>" class='table table-hover table-striped table-condensed'>
 
     <?header?>
     <thead class="ui-widget-header1"><tr>
@@ -23,7 +23,7 @@
       <?rows?>
       
       <?row?>
-      <tr class="<?$odd_even?>" data-id="<?$row_id?>" rel="<?$row_id?>">
+      <tr class="<?$row_class?> <?$odd_even?>" data-id="<?$row_id?>" rel="<?$row_id?>">
       <?cols?>
         <?col?>
         <td <?$tdparam?>><?$content?></td>
