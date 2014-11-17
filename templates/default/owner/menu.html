@@ -10,7 +10,7 @@
             <ul class="dropdown-menu" role="menu">
             <li class="<?$owner_dashboard?>"><a href="?page=owner_dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
             <li class="<?$owner_dashboard?>"><a href="?page=owner_users"><i class="fa fa-user"></i> Users Management</a></li>
-            <li class='<?$owner_epansettings?>'><a href="?page=owner_epansettings"><i class="fa fa-wrench"></i> xEpan General Settings</a></li>
+            <li class='<?$owner_epansettings?>'><a href="?page=owner_epansettings"><i class="fa fa-cogs"></i> xEpan General Settings</a></li>
             <li class='<?$owner_searchmarket?>'><a href="?page=owner_applicationrepository"><i class="glyphicon glyphicon-list-alt"></i> xEpan App Repository </a></li>
             <li class="divider"></li>
             <li class='<?$owner_searchmarket?>'><a href="?page=owner_updater"><i class="glyphicon glyphicon-chevron-up"></i> xEpan Update </a></li>
@@ -41,6 +41,7 @@
           <ul class="nav navbar-nav navbar-right navbar-user">         
             <?$message?>
             <?$alert?>
+            <li><a href="index.php?page=logout"><i class="fa fa-power-off"></i> Logout </a></li>
             <!-- <li class="dropdown user-dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?epan_name?>Epan Owner<?/epan_name?> <b class="caret"></b></a>
               <ul class="dropdown-menu">

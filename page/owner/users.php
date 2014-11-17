@@ -1,7 +1,7 @@
 <?php
 class page_owner_users extends page_base_owner {
 	function page_index(){
-		$this->add( 'H3' )->setHTML( "User Management <small>Manage your website / applications registered users</small>" );
+		$this->add( 'H3' )->setHTML( "<i class='fa fa-users'></i> User Management <small>Manage your website / applications registered users</small>" );
 
 		$crud=$this->add('CRUD');
 		$usr=$this->add('Model_Users');
@@ -12,7 +12,7 @@ class page_owner_users extends page_base_owner {
 
 		if($crud->grid){
 			$crud->grid->addButton('Options')->js('click',$this->js()->univ()->frameURL('User Options',$this->api->url('./options')));
-			$crud->grid->addButton('Email Config')->js('click',$this->js()->univ()->frameURL('User Email Configuration',$this->api->url('./emailconfig')));
+			// $crud->grid->addButton('Email Config')->js('click',$this->js()->univ()->frameURL('User Email Configuration',$this->api->url('./emailconfig')));
 			$crud->grid->addButton('User Custom Fields')->js('click',$this->js()->univ()->frameURL('User Custom Fields ',$this->api->url('./customfieldconfig')));
 		}
 	}
@@ -20,7 +20,7 @@ class page_owner_users extends page_base_owner {
 	function page_options(){
 		$form = $this->add('Form');
 		$form->addClass('stacked');
-		$form->setModel($this->api->current_website,array('is_frontent_regiatrstion_allowed','user_activation'));
+		$form->setModel($this->api->current_website,array('is_frontent_regiatrstion_allowed','user_activation','user_registration_email_subject','user_registration_email_message_body'));
 		$form->addSubmit('Update');
 		$form->add('Controller_FormBeautifier');
 		if($form->isSubmitted()){
@@ -44,6 +44,7 @@ class page_owner_users extends page_base_owner {
 		$usercustomfield_model = $this->add('Model_UserCustomFields');
 		$crud = $this->add('CRUD');
 		$crud->setModel($usercustomfield_model);
+		$crud->add('Controller_FormBeautifier');
 
 	}
 }
