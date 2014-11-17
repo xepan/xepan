@@ -7,9 +7,12 @@ class Model_MarketPlace extends Model_Table {
 	function init(){
 		parent::init();
 		
-		$this->addField('namespace')->hint('Variable style unique name')->mandatory();
-		$this->addField('type')->enum(array('element','module','application','plugin'));
-		$this->addField('name');
+		$f=$this->addField('namespace')->hint('Unique name, Variable rules applied')->mandatory(true)->group('a~4~<i class="fa fa-info"></i> Component Information');
+		$f->icon='fa fa-lock~red';
+		$f=$this->addField('type')->enum(array('element','module','application','plugin'))->group('a~4');
+		$f->icon='fa fa-question~red';
+		$f=$this->addField('name')->mandatory(true)->group('a~4');
+		$f->icon='fa fa-wrench~red';
 		// $this->addField('is_final')->type('boolean')->defaultValue(false);
 		// $this->addField('rate')->type('number');
 		$this->addField('allowed_children')->hint('comma separated ids of allowed children, mark final for none, and \'all\' for all');
@@ -19,13 +22,13 @@ class Model_MarketPlace extends Model_Table {
 		$this->addField('description')->type('text')->display(array('grid'=>'text'));
 		// $this->addField('plugin_hooked')->type('text');
 		$this->addField('default_enabled')->type('boolean')->defaultValue(true);
-		$this->addField('has_toolbar_tools')->type('boolean')->defaultValue(false)->caption('Tools');
-		$this->addField('has_owner_modules')->type('boolean')->defaultValue(false)->caption('Owner Module');
-		$this->addField('has_plugins')->type('boolean')->defaultValue(false)->caption('Plugins');
-		$this->addField('has_live_edit_app_page')->type('boolean')->defaultValue(false)->caption('Has Front App');
+		$this->addField('has_toolbar_tools')->type('boolean')->defaultValue(false)->caption('Tools')->group('b~3~<i class="fa fa-cog"></i> Component Options');
+		$this->addField('has_owner_modules')->type('boolean')->defaultValue(false)->caption('Owner Module')->group('b~3');
+		$this->addField('has_plugins')->type('boolean')->defaultValue(false)->caption('Plugins')->group('b~3');
+		$this->addField('has_live_edit_app_page')->type('boolean')->defaultValue(false)->caption('Has Front App')->group('b~3');
 
-		$this->addField('git_path');
-		$this->addField('initialize_and_clone_from_git')->type('boolean')->defaultValue(true);
+		$this->addField('git_path')->group('c~8~<i class="fa fa-github"></i> GitHub Configuration');
+		$this->addField('initialize_and_clone_from_git')->type('boolean')->defaultValue(true)->group('c~4');
 		$this->addField('category')->hint('admin,components,website,marketing or new ... If unique a new menu will get created.');
 
 		$this->hasMany('InstalledComponents','component_id');

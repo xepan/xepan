@@ -9,14 +9,21 @@ class Model_Tools extends Model_Table {
 
 		$this->hasOne('MarketPlace','component_id');
 		
-		$this->addField('name');
+		$f=$this->addField('name')->group('a~8~<i class="fa fa-wrench"></i> Component Tool')->mandatory(true);
+		$f->icon='fa fa-wrench~red';
 
-		$this->addField('display_name');
-		$this->addField('order')->type('int');
+		$f=$this->addField('display_name')->group('a~8~bl');
+		$f->icon='fa fa-eye~red';
 		
-		$this->addField('is_serverside')->type('boolean');
-		$this->addField('is_sortable')->type('boolean');
-		$this->addField('is_resizable')->type('boolean');
+		$f=$this->addField('order')->type('int')->group('a~8~bl');
+		$f->icon = 'fa fa-sort-amount-desc~blue';
+		
+		$f=$this->addField('is_serverside')->type('boolean')->group('a~4');
+		$f->icon='fa fa-exclamation~blue';
+		$f=$this->addField('is_sortable')->type('boolean')->group('a~4');
+		$f->icon='fa fa-exclamation~blue';
+		$f=$this->addField('is_resizable')->type('boolean')->group('a~4');
+		$f->icon='fa fa-exclamation~blue';
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);

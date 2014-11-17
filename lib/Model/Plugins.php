@@ -9,10 +9,10 @@ class Model_Plugins extends Model_Table {
 
 		$this->hasOne('MarketPlace','component_id');
 		
-		$this->addField('name');
-		$this->addField('event')->enum($this->api->getConfig('xepan/events'));
-		$this->addField('params')->defaultValue('$page');
-		$this->addField('is_system')->type('boolean')->defaultValue(false);
+		$this->addField('name')->mandatory(true)->group('a~6~<i class="fa fa-wrench"></i> Component Plugins');
+		$this->addField('params')->defaultValue('$page')->group('a~6~bl');
+		$this->addField('event')->enum($this->api->getConfig('xepan/events'))->group('a~6');
+		$this->addField('is_system')->type('boolean')->defaultValue(false)->group('a~6~bl');
 
 		
 		$this->addHook('beforeSave',$this);
