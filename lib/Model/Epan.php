@@ -9,54 +9,63 @@ class Model_Epan extends Model_Table {
 		$this->hasOne('Branch','branch_id')->caption('Agency');
 		$f=$this->hasOne('EpanCategory','category_id')->mandatory('Please Select A Category');
 		$f->group='a~3';
+		$f->icon = 'fa fa-folder~red';
 		
 		// Name is Default Alias for this epan
 		$this->addField('name')->caption('Epan Name')->hint('Any unique name for your website')->mandatory('Epan alias is must');
 		// $this->addField('alias2')->caption('Alias 2')->hint('Any unique name for your epan like your_epan_name.epan.in')->mandatory('Epan alias is must');
 		$this->addField('password')->mandatory('Password is must to proceed')->type('password');
 		$this->addField('fund_alloted');
-		$this->addField('company_name')->group('b~3~<i class=\'fa fa-leaf fa-2x\' style="color: red"></i> Company General Information');
-		$this->addField('contact_person_name')->group('b~3');
-		$this->addField('mobile_no')->group('b~3');
-		$this->addField('email_id')->group('b~3');
-		$this->addField('address')->type('text')->group('c/6/Company Contact Information');
-		$this->addField('city')->group('c/6');
-		$this->addField('state')->group('c/6/bl');
-		$this->addField('country')->group('c/6/bl');
+		$f=$this->addField('company_name')->group('b~3~<i class="fa fa-info "></i> Company General Information')->mandatory(true);
+		$f->icon='fa fa-info~red';
+
+		$f=$this->addField('contact_person_name')->group('b~3');
+		$f->icon='fa fa-user~red';
+		$f=$this->addField('mobile_no')->group('b~3');
+		$f->icon='fa fa-phone~red';
+		$f=$this->addField('email_id')->group('b~3');
+		$f->icon='fa fa-envelope~red';
+		$f=$this->addField('address')->type('text')->group('c~6~<i class="fa fa-map-marker "></i> Company Contact Information');
+		$f->icon='fa fa-map-marker~red';
+		$this->addField('city')->group('c~6');
+		$this->addField('state')->group('c~6~bl');
+		$this->addField('country')->group('c~6~bl');
 		$this->addField('website');
 		$this->addField('is_active')->type('boolean');
 		$this->addField('is_approved')->type('boolean')->defaultValue(false);
 		$this->addField('created_at')->defaultValue(date('Y-m-d H:i:s'))->sortable(true)->system(true);
-		$this->addField('keywords')->caption('Keywords')->type('text')->group('d/6/SEO Information');//->system(true);
-		$this->addField('description')->type('text')->group('d/6');//->system(true);
+		$f=$this->addField('keywords')->caption('Keywords')->type('text')->group('d~6~<i class="glyphicon glyphicon-globe "></i> SEO Information');//->system(true);
+		$f->icon='fa fa-tags~red';
+		$f=$this->addField('description')->type('text')->group('d~6');//->system(true);
+		$f->icon='fa fa-tags~red';
+		
 		$this->addField('last_email_sent')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		
 		// Email Settings
-		$this->addField('email_transport')->setValueList(array('SmtpTransport'=>'SMTP Transport','SendmailTransport'=>'SendMail','MailTransport'=>'PHP Mail function'))->defaultValue('smtp')->group('es/6/Email Transporter To Use');
-		$this->addField('encryption')->enum(array('none','ssl','tls'))->mandatory(true)->group('ecs/1/Connection Settings');
-		$this->addField('email_host')->group('ecs/4/as');
-		$this->addField('email_port')->group('ecs/1');
-		$this->addField('email_username')->group('ecs/3');
-		$this->addField('email_password')->type('password')->group('ecs/3');
-		$this->addField('email_reply_to')->group('ert/6/Email Reply To Setting');
-		$this->addField('email_reply_to_name')->group('ert/6');
+		$this->addField('email_transport')->setValueList(array('SmtpTransport'=>'SMTP Transport','SendmailTransport'=>'SendMail','MailTransport'=>'PHP Mail function'))->defaultValue('smtp')->group('es~6~<i class="fa fa-cog "></i> Email Transporter To Use');
+		$this->addField('encryption')->enum(array('none','ssl','tls'))->mandatory(true)->group('ecs~1~<i class="glyphicon glyphicon-link "></i> Connection Settings');
+		$this->addField('email_host')->group('ecs~4');
+		$this->addField('email_port')->group('ecs~1');
+		$this->addField('email_username')->group('ecs~3');
+		$this->addField('email_password')->type('password')->group('ecs~3');
+		$f=$this->addField('email_reply_to')->group('ert~6~<i class="fa fa-reply-all "></i> Email Reply To Setting');
+		$f=$this->addField('email_reply_to_name')->group('ert~6');
 
-		$this->addField('from_email')->group('efs/3/Email From : Sender Settings');
-		$this->addField('from_name')->group('efs/3');
-		$this->addField('sender_email')->group('efs/3/Sender');
-		$this->addField('sender_name')->group('efs/3');
+		$this->addField('from_email')->group('efs~3~<i class="fa fa-upload "></i> Email From : Sender Settings');
+		$this->addField('from_name')->group('efs~3');
+		$this->addField('sender_email')->group('efs~3');
+		$this->addField('sender_name')->group('efs~3');
 		
-		$this->addField('smtp_auto_reconnect')->type('int')->hint('Auto Reconnect by n number of emails')->group('et/6/Email Throtelling Settings');
-		$this->addField('email_threshold')->type('int')->hint('Threshold To send emails with this Email Configuration PER MINUTE')->group('et/6');
+		$this->addField('smtp_auto_reconnect')->type('int')->hint('Auto Reconnect by n number of emails')->group('et~6~<i class="fa fa-filter "></i> Email Throtelling Settings');
+		$this->addField('email_threshold')->type('int')->hint('Threshold To send emails with this Email Configuration PER MINUTE')->group('et~6');
 		$this->addField('emails_in_BCC')->type('int')->hint('Emails to be sent by bunch of Bcc emails, to will be used same as From, 0 to send each email in to field')->defaultValue(0)->system(true);
 		$this->addField('last_emailed_at')->type('datetime')->system(true);
 		$this->addField('email_sent_in_this_minute')->type('int')->system(true);
 
-		$this->addField('return_path')->group('rp/12');
+		$f=$this->addField('return_path')->group('rp~12');
+		$f->icon ='fa fa-backward~blue';
 
 
-		$this->addField('user_registration_email_subject')->defaultValue('Thank you for Registration');
-		$this->addField('user_registration_email_message_body')->type('text')->display(array('form'=>'RichText'))->defaultValue("Name:{{name}}Email:{{email}}User Name :{{user_name}}Password:{{password}}Activation code :{{activation_code}}Click here to activate:     {{click_here_to_activate}}")->hint("{{name}}, {{email}}, {{user_name}}, {{password}}, {{activation_code}}, {{click_here_to_activate}}");
 
 		$this->addField('parked_domain')->hint('Specify your domain in yourdomainname.com format');
 
@@ -65,9 +74,14 @@ class Model_Epan extends Model_Table {
 		$this->hasMany('Users','epan_id');
 		
 		// User options
-		$this->addField('user_activation')->setValueList(array('self_activated'=>'Self Activated','admin_activated'=>'Admin Activated',"default_activated"=>'Default Activated'))->defaultValue('self_activated')->mandatory(true)->group('u/6');
-		$this->addField('is_frontent_regiatrstion_allowed')->type('boolean')->defaultValue(true)->group('u/6/User Registration Options');
-
+		$f=$this->addField('is_frontent_regiatrstion_allowed')->type('boolean')->defaultValue(true)->group('u~6~<i class="fa fa-cog"></i> User Registration Options');
+		$f->icon = "fa fa-exclamation~red";
+		$f=$this->addField('user_activation')->setValueList(array('self_activated'=>'Self Activation Via Email','admin_activated'=>'Admin Activated',"default_activated"=>'Default Activated'))->defaultValue('self_activated')->mandatory(true)->group('u~6');
+		$f->icon = "fa fa-question~red";
+		$f=$this->addField('user_registration_email_subject')->defaultValue('Thank you for Registration')->group('ue~12~<i class="fa fa-envelope"></i> Email On Registration');
+		$f->icon ="fa fa-quote-left~red";
+		$f=$this->addField('user_registration_email_message_body')->type('text')->display(array('form'=>'RichText'))->defaultValue("Name:{{name}}Email:{{email}}User Name :{{user_name}}Password:{{password}}Activation code :{{activation_code}}Click here to activate:     {{click_here_to_activate}}")->hint("{{name}}, {{email}}, {{user_name}}, {{password}}, {{activation_code}}, {{click_here_to_activate}}")->group('ue~12~bl');
+		$f->icon = "fa fa-quote-left~red";
 
 		$this->hasMany('Aliases','epan_id'); 
 

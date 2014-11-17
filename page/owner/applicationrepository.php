@@ -5,7 +5,7 @@ class page_owner_applicationrepository extends page_base_owner {
 	function init(){
 		parent::init();
 
-		$this->add('H3')->setHtml('xEpan Components Repository <small>Search and install from components available </small>');
+		$this->add('H3')->setHtml('<i class="glyphicon glyphicon-list-alt"></i> xEpan Components Repository <small>Search and install from components available </small>');
 
 		$this->add_component_btn = $this->add('componentList/View_AddComponentToRepository');
 		//TODO keep the line below in single CMS

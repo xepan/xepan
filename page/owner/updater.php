@@ -4,6 +4,9 @@ class page_owner_updater extends page_base_owner {
 	public $git_path = 'https://github.com/xepan/xepan';
 
 	function page_index(){
+
+                $this->add('H3')->setHtml('<i class="glyphicon glyphicon-chevron-up"></i> xEpan Update <small>Update xEpan via git </small>');
+
 		$this->add('View_Error')->set('1 : You are strongly recommended to backup your database and files and folders first.');
 		$this->add('View_Error')->set('2 : Provide proper permissions to get files replaced');
 		

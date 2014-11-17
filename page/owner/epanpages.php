@@ -13,7 +13,7 @@ class page_owner_epanpages extends page_base_owner {
 			exit;
 		}
 
-		$this->add( 'H3' )->setHTML( strtoupper($this->api->current_website['name']) . " :: Pages <small>Pages and snapshots for your current website / application </small>" );
+		$this->add( 'H3' )->setHTML('<i class="fa fa-files-o"></i> '.  strtoupper($this->api->current_website['name']) . " :: Pages <small>Pages and snapshots for your current website / application </small>" );
 
 		$crud = $this->add('CRUD');
 		
@@ -67,6 +67,8 @@ class page_owner_epanpages extends page_base_owner {
 			$g->addClass('pages_grid');
 			$g->js('reload_me')->reload();
 		}
+
+		$crud->add('Controller_FormBeautifier');
 
 	}
 

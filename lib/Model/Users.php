@@ -7,24 +7,30 @@ class Model_Users extends Model_Table {
 		$this->hasOne('Epan','epan_id')->mandatory(true);
 		//$this->addCondition('epan_id',$this->api->current_website->id);
 		
-		$f=$this->addField('name')->group('a/6');
-		$f->icon='fa fa-heart';
+		$f=$this->addField('name')->group('a~6~<i class="fa fa-user"></i> User Info')->mandatory(true);
+		$f->icon='fa fa-user~red';
 
-		$this->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(0)->group('a/6');
-		$f=$this->addField('username')->group('b/6');
-		$f->icon="fa fa-user/red";
+		$f=$this->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(0)->group('a~6');
+		$f->icon="fa fa-question~red";
+		$f=$this->addField('username')->group('b~6~<i class="fa fa-lock"></i> Login Credentials')->mandatory(true);
+		$f->icon="fa fa-lock~red";
 
-		$this->addField('password')->type('password')->group('b/6');
-		$f=$this->addField('email');
-		$f->icon = "fa fa-envelope/red";
-		$f=$this->addField('created_at')->type('date')->defaultValue(date('Y-m-d'));
-		$f->icon='fa fa-calendar/red';
+		$f=$this->addField('password')->type('password')->group('b~6')->mandatory(true);
+		$f->icon="fa fa-key~red";
+		$f=$this->addField('email')->mandatory(true);
+		$f->icon = "fa fa-envelope~red";
+		$f=$this->addField('created_at')->type('date')->defaultValue(date('Y-m-d'))->display(array('form'=>'Readonly'))->group('c~6');
+		$f->icon='fa fa-calendar~blue';
 		// $this->addField('is_systemuser')->type('boolean')->defaultValue(false);
 		// $this->addField('is_frontenduser')->type('boolean')->defaultValue(false);
 		// $this->addField('is_backenduser')->type('boolean')->defaultValue(false);
-		$this->addField('is_active')->type('boolean')->defaultValue(false);
-		$this->addField('activation_code')->group('c/3');
-		$this->addField('last_login_date')->type('date')->group('c/9');
+		$f = $this->addField('is_active')->type('boolean')->defaultValue(false)->group('c~6');
+		$f->icon = "fa fa-exclamation~blue";
+
+		$f=$this->addField('activation_code')->group('d~3')->display(array('form'=>'Readonly'));
+		$f->icon = 'fa fa-unlock-alt~blue';
+		$f=$this->addField('last_login_date')->type('date')->group('d~9')->display(array('form'=>'Readonly'));
+		$f->icon='fa fa-calendar~blue';
 
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
