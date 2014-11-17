@@ -9,15 +9,26 @@ class Model_EpanPage extends Model_Table {
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		
-		$this->hasOne('EpanPage','parent_page_id')->defaultValue(0);
-		$this->hasOne('EpanTemplates','template_id');
-		$this->addField('name')->caption('Url'); // Menu name for this page default is 'Home'
-		$this->addField('menu_caption')->caption('Menu')->hint('Leave blank if you don\'t want page in menus'); // Menu name for this page default is 'Home'
+		$f=$this->hasOne('EpanPage','parent_page_id')->defaultValue(0);
+		$f->group = 'tmp~6';
+		$f->icon='fa fa-arrow-up~blue';
+		
+		$f=$this->hasOne('EpanTemplates','template_id');
+		$f->group='tmp~6';
+		$f->icon='fa fa-clipboard~blue';
+
+		$f=$this->addField('name')->caption('Url')->group('a~4~<i class="fa fa-link"></i> Page Access Details'); // Menu name for this page default is 'Home'
+		$f->icon="fa fa-anchor~red";
+		$f=$this->addField('menu_caption')->caption('Menu')->hint('Leave blank if you don\'t want page in menus')->group('a~4'); // Menu name for this page default is 'Home'
+		$f->icon = 'fa fa-eye~blue';
+
+		$f=$this->addField('access_level')->setValueList(array(0=>'Public',50=>'Registered User',80=>'Back End User',100=>'Super user'))->defaultValue('public')->mandatory(true)->group('a~4');
+		$f->icon= 'fa fa-unlock-alt~red';
 		$this->addField('is_template')->type('boolean')->defaultValue(false);
 
-		$this->addField('title')->type('text')->hint('Title shown at Title Bar for your Page, Imp for SEO');
-		$this->addField('description')->type('text')->hint('Title shown at Title Bar for your Page, Imp for SEO');
-		$this->addField('keywords')->type('text')->hint('Title shown at Title Bar for your Page, Imp for SEO');
+		$this->addField('title')->type('text')->hint('Title shown at Title Bar for your Page, Imp for SEO')->group('seo~12~<i class="fa fa-globe"></i> SEO Information');
+		$this->addField('description')->type('text')->hint('Title shown at Title Bar for your Page, Imp for SEO')->group('seo~12~bl');
+		$this->addField('keywords')->type('text')->hint('Title shown at Title Bar for your Page, Imp for SEO')->group('seo~12~bl');
 
 		$this->addField('content')->type('text');
 		$this->addField('body_attributes')->type('text');
@@ -25,7 +36,6 @@ class Model_EpanPage extends Model_Table {
 		$this->addField('created_on')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		$this->addField('updated_on')->type('datetime');
 
-		$this->addField('access_level')->setValueList(array(0=>'Public',50=>'Registered User',80=>'Back End User',100=>'Super user'))->defaultValue('public')->mandatory(true);
 
 		$this->hasMany('EpanPageSnapshots','epan_page_id');
 		$this->hasMany('EpanPage','parent_page_id');
