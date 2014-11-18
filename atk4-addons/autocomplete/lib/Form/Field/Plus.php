@@ -3,9 +3,9 @@ namespace autocomplete;
 
 class Form_Field_Plus extends Form_Field_Basic
 {
-    function init()
+    function setModel($model)
     {
-        parent::init();
+        parent::setModel($model);
         $self = $this;
 
         $f = $this->other_field;
@@ -21,11 +21,13 @@ class Form_Field_Plus extends Form_Field_Basic
                 ->set(function($page)use($self) {
                     $form = $page->add('Form');
                     $form->setModel($self->model);
+                    // echo $self->model;
+                    // return;
                     if ($form->isSubmitted()) {
                         $form->update();
                         $js = array();
-                        // $js[] = $self->js()->val($form->model[$self->id_field]);
-                        // $js[] = $self->other_field->js()->val($form->model[$self->title_field]);
+                        $js[] = $self->js()->val($form->model[$self->id_field]);
+                        $js[] = $self->other_field->js()->val($form->model[$self->title_field]);
                         $form->js(null, $js)->univ()->closeDialog()->execute();
                     }
                 });

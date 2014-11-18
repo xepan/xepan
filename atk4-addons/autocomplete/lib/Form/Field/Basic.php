@@ -25,10 +25,10 @@ class Form_Field_Basic extends \Form_Field_Hidden
     public $other_field;
 
     // Model ID field and title field names
-    public $id_field;
-    public $title_field;
+    protected $id_field;
+    protected $title_field;
 
-
+    public $send_other_fields=array();
 
     function init()
     {
@@ -37,10 +37,19 @@ class Form_Field_Basic extends \Form_Field_Hidden
         // add add-on locations to pathfinder
         $l = $this->api->locate('addons', __NAMESPACE__, 'location');
         $addon_location = $this->api->locate('addons', __NAMESPACE__);
-        $this->api->pathfinder->addLocation($addon_location, array(
-            'js'  => 'js',
-            'css' => 'templates/css',
-        ))->setParent($l);
+
+        $this->api->pathfinder->addLocation(array(
+            'js'=>'js',
+            'css'=>'templates/css'
+            ))
+            ->setBasePath($this->api->pathfinder->base_location->base_path.'/'.$addon_location)
+            ->setBaseURL($this->api->pm->base_path.'/../'.$addon_location);
+        ;
+
+        // $this->api->pathfinder->addLocation($addon_location, array(
+        //     'js'  => 'js',
+        //     'css' => 'templates/css',
+        // ))->setParent($l);
 
         // add additional form field
         $name = preg_replace('/_id$/', '', $this->short_name);
@@ -78,6 +87,12 @@ class Form_Field_Basic extends \Form_Field_Hidden
     function mustMatch()
     {
         $this->options = array_merge($this->options, array('mustMatch'=>'true'));
+        return $this;
+    }
+
+    function mustNotMatch()
+    {
+        $this->options = array_merge($this->options, array('mustNotMatch'=>'true'));
         return $this;
     }
 
@@ -122,21 +137,42 @@ class Form_Field_Basic extends \Form_Field_Hidden
         $this->id_field = $id_field ?: $this->model->id_field;
         $this->title_field = $title_field ?: $this->model->title_field;
 
+        return $this->model;        
+    }
+
+    function recursiveRender(){
         if ($_GET[$this->name]) {
 
             if ($_GET['term']) {
-                $this->addCondition($_GET['term']);
+                $this->addCondition(str_replace(" ", "%", $_GET['term']));
             }
 
             $data = $this->getData();
 
+            foreach ($data as &$row) {
+                //var_dump($row['_id']->__toString()); echo '<hr>';
+                $row[$this->id_field] = (string)$row[$this->id_field];
+            }
+
             echo json_encode($data);
             exit;
         }
+        parent::recursiveRender();
     }
 
     function render()
     {
+
+        $l=$this->api->locate('addons',__NAMESPACE__, 'location');
+        $this->api->pathfinder->addLocation(
+            $this->api->locate('addons',__NAMESPACE__),
+            array(
+                'template'=>'templates',
+                'css'=>'templates/css',
+                'js'=>'js'
+                )
+            )->setParent($l);
+
         $url = $this->api->url(null, array($this->name => 'ajax'));
         if ($this->value) { // on add new and inserting allow empty start value
             $this->model->tryLoad($this->value);
@@ -145,11 +181,27 @@ class Form_Field_Basic extends \Form_Field_Hidden
         }
 
         $this->other_field->js(true)
-            ->_load('autocomplete_univ')
+            ->_load('autocomplete_univ6')
             ->_css('autocomplete')
             ->univ()
-            ->myautocomplete($url, $this, $this->options, $this->id_field, $this->title_field);
+            ->myautocomplete($url, $this, $this->options, $this->id_field, $this->title_field, $this->send_other_fields);
 
         return parent::render();
+    }
+
+    function filter($array){
+
+        $scheme_join = $this->model->leftJoin('schemes','scheme_id');
+        $scheme_join->addField('schemeType','SchemeType');
+        $scheme_join->addField('schemeName','name');
+
+        $wq=$this->api->db->dsql()->orExpr();
+        $hq=$this->api->db->dsql()->orExpr();
+    
+        foreach ($array as $field => $value) {
+            
+            $wq->where($field,'like',$value);
+        }   
+        $this->model->addCondition($wq); 
     }
 }

@@ -13,7 +13,7 @@ class page_owner_users extends page_base_owner {
 		$crud->add('Controller_FormBeautifier',array('params'=>array('f/addClass'=>'stacked')));
 
 		if($crud->grid){
-			$crud->add_button->setIcon('ui-icon-plus');
+			$crud->add_button->setIcon('ui-icon-plusthick');
 			$op_btn = $crud->grid->addButton('Options');
 			$op_btn->setIcon('ui-icon-gear');
 			$op_btn->js('click',$this->js()->univ()->frameURL('User Options',$this->api->url('./options')));
@@ -51,7 +51,11 @@ class page_owner_users extends page_base_owner {
 		$usercustomfield_model = $this->add('Model_UserCustomFields');
 		$crud = $this->add('CRUD');
 		$crud->setModel($usercustomfield_model);
+		if($crud->grid){
+			$crud->add_button->setIcon('ui-icon-plusthick');
+		}
 		$crud->add('Controller_FormBeautifier');
+
 
 	}
 }
