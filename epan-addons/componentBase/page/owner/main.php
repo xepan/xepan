@@ -29,7 +29,7 @@ class page_componentBase_page_owner_main extends page_base_owner{
 		$left = $cols->addColumn( 6 );
 		$right = $cols->addColumn( 6 );
 
-		$this->h1 = $h1=$left->add( 'H1' )->set( $this->component_name );
+		$this->h1 = $h1=$left->add( 'H3' )->set( $this->component_name );
 
 		$this->toolbar = $right->add( 'ButtonSet' )->addClass( 'pull-right' );
 
