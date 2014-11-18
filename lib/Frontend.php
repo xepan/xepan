@@ -82,7 +82,7 @@ class Frontend extends ApiFrontend{
 
 			// This will add Epan Market Place Location
 			$this->addLocation( 'epan-addons', array(
-					'page'=>array( "." ),
+					'page'=>array( "." )
 				) );
 			// This will add Epan Market Place Location
 			$this->addLocation( 'epan-components', array(

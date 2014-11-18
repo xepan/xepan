@@ -1,6 +1,8 @@
 <?php
 class page_owner_users extends page_base_owner {
+
 	function page_index(){
+
 		$this->add( 'H3' )->setHTML( "<i class='fa fa-users'></i> User Management <small>Manage your website / applications registered users</small>" );
 
 		$crud=$this->add('CRUD');
@@ -11,9 +13,14 @@ class page_owner_users extends page_base_owner {
 		$crud->add('Controller_FormBeautifier',array('params'=>array('f/addClass'=>'stacked')));
 
 		if($crud->grid){
-			$crud->grid->addButton('Options')->js('click',$this->js()->univ()->frameURL('User Options',$this->api->url('./options')));
+			$crud->add_button->setIcon('ui-icon-plusthick');
+			$op_btn = $crud->grid->addButton('Options');
+			$op_btn->setIcon('ui-icon-gear');
+			$op_btn->js('click',$this->js()->univ()->frameURL('User Options',$this->api->url('./options')));
 			// $crud->grid->addButton('Email Config')->js('click',$this->js()->univ()->frameURL('User Email Configuration',$this->api->url('./emailconfig')));
-			$crud->grid->addButton('User Custom Fields')->js('click',$this->js()->univ()->frameURL('User Custom Fields ',$this->api->url('./customfieldconfig')));
+			$cust_btn = $crud->grid->addButton('User Custom Fields');
+			$cust_btn->setIcon('ui-icon-wrench');
+			$cust_btn->js('click',$this->js()->univ()->frameURL('User Custom Fields ',$this->api->url('./customfieldconfig')));
 		}
 	}
 
@@ -44,7 +51,11 @@ class page_owner_users extends page_base_owner {
 		$usercustomfield_model = $this->add('Model_UserCustomFields');
 		$crud = $this->add('CRUD');
 		$crud->setModel($usercustomfield_model);
+		if($crud->grid){
+			$crud->add_button->setIcon('ui-icon-plusthick');
+		}
 		$crud->add('Controller_FormBeautifier');
+
 
 	}
 }

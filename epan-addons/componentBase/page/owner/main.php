@@ -29,7 +29,7 @@ class page_componentBase_page_owner_main extends page_base_owner{
 		$left = $cols->addColumn( 6 );
 		$right = $cols->addColumn( 6 );
 
-		$this->h1 = $h1=$left->add( 'H1' )->set( $this->component_name );
+		$this->h1 = $h1=$left->add( 'H3' )->set( $this->component_name );
 
 		$this->toolbar = $right->add( 'ButtonSet' )->addClass( 'pull-right' );
 
@@ -64,9 +64,17 @@ class page_componentBase_page_owner_main extends page_base_owner{
 			}
 		);
 
-		$this->toolbar->addButton( 'Info' )->js( 'click', $this->js()->univ()->frameURL( 'About This Component', $about_page->getURL() ) );
-		$this->toolbar->addButton( 'Update' )->js( 'click', $this->js()->univ()->frameURL( 'Update This Component', $update_page->getURL() ) );
-		$this->toolbar->addButton( 'Uninstall' )->js( 'click', $this->js()->univ()->frameURL( 'Uninstall This Component', $uninstall_page->getURL() ) );
+		$i_b= $this->toolbar->addButton( 'Info' );
+		$i_b->setIcon('ui-icon-info');
+		$i_b->js( 'click', $this->js()->univ()->frameURL( 'About This Component', $about_page->getURL() ) );
+		
+		$u_b = $this->toolbar->addButton( 'Update' );
+		$u_b->setIcon('ui-icon-arrowthick-1-n');
+		$u_b->js( 'click', $this->js()->univ()->frameURL( 'Update This Component', $update_page->getURL() ) );
+		
+		$un_b=$this->toolbar->addButton( 'Uninstall' );
+		$un_b->seticon('ui-icon-cancel');
+		$un_b->js( 'click', $this->js()->univ()->frameURL( 'Uninstall This Component', $uninstall_page->getURL() ) );
 
 		if($this->api->isAjaxOutput() or $_GET['cut_page']){
 			$h1->destroy();

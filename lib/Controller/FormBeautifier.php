@@ -26,6 +26,10 @@ class Controller_FormBeautifier extends AbstractController{
 		if(!$this->form) return;
 
 		$model_fields = $this->form->getModel();
+
+		if(!$model_fields){
+			return;
+		}
 		
 		$last_group="";
 		$last_form_field=null;
