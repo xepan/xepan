@@ -105,7 +105,6 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 					
 					// check mandatories 
 					$form= $r_form;
-
 					$custome_field_mendatory_check = $this->add('Model_UserCustomFields');
 					$custome_field_mendatory_check->addCondition('epan_id',$this->api->current_website->id);
 
@@ -164,7 +163,7 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 						$user_model->save();
 						$user_model->sendVerificationMail($user_model['email'],null,$user_model['activation_code']);
 					}else{											
-						$user_model->save();
+						$user_model->save();						
 					}
 
 					$custome_field_model = $this->add('Model_UserCustomFields');
@@ -180,8 +179,7 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 					//Todo for executing plugin after user craeted in epan model
 					$user_model_value = array($user_model);
 					$this->api->exec_plugins('new_user_registered',$user_model_value);
-					// end of plugin call
-					
+					// end of plugin call				
 					$this->js(null,$this->js()->univ()->successMessage('Created Successfully'))->reload()->execute();		
 				}
 
@@ -203,9 +201,11 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 				}
 
 				if($verify_form->isSubmitted()){
-					$verify_user_model->verifyAccount($verify_form['email_id'],$verify_form['verification_code']);
+					if(!$verify_user_model->verifyAccount($verify_form['email_id'],$verify_form['verification_code'])){
+						$verify_form->js(null,$this->js()->univ()->errorMessage('Try Again'))->reload()->execute();		
+					}					
 					$this->api->stickyForget('verify_account');								
-					$verify_form->js(null,$this->js()->univ()->successMessage('Account Verify Successfully'))->reload()->execute();
+					$verify_form->js(null,$this->js()->univ()->successMessage('Account Verify Successfully'))->reload()->execute();	
 				} 
 			}
 			else{
@@ -226,39 +226,35 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 					$password_field->setAttr('placeHolder',$this->html_attributes['user_panel_password_placeholder']);
 				$cols = $form->add('Columns');
 				
-				if($this->html_attributes['show_remember_me']){
-					$col = $cols->addColumn(3);
-					$remeber_field = $form->addField('Checkbox','remember',$user_panel_remember_pass);
-					$col->add($remeber_field);
-					}
+				// if($this->html_attributes['show_remember_me']){
+				// 	$remeber_field = $form->addField('Checkbox','remember',$user_panel_remember_pass);				
+				// }
+				
 				if($this->html_attributes['show_forgot_password']){
-					$col = $cols->addColumn(3);
-					$forgot_field = $form->add('View')->set($user_panel_forgot_pass)->setElement('a')->setAttr('href','index.php');
-					$col->add($forgot_field);	
-					}	
-
-				if($this->html_attributes['show_register_new_user']){
-					$col = $cols->addColumn(3);
-					$sign_up_field = $form->add('Button')->set($user_panel_btn_registration_name);
-					$col->add($sign_up_field);
-					$sign_up_field->js('click',$this->js()->reload(array('new_registration'=>1)));
+					$forgot_field = $form->add('View')->setHTML($user_panel_forgot_pass)->setElement('a')->setAttr('href','index.php');	
 				}	
+				// $col = $cols->addColumn(12);
 				
 				if($this->html_attributes['user_panel_activation_code']){
-					$col=$cols->addColumn(3);
-					$activation_field = $form->add('View')->set($user_panel_activation_code)->setElement('a')->setAttr('href',$this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_activation_code'])));
-					$col->add($activation_field);
+					$activation_field = $form->add('View')->setHTML($user_panel_activation_code)->setElement('a')->setAttr('href',$this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_activation_code'])));
 				}	
 				
-				$col = $cols->addColumn(3);
-				$submit_field = $form->addSubmit($user_panel_btn_login_name);
+				if($this->html_attributes['show_register_new_user']){
+					$cols = $form->add('Columns');
+					$col = $cols->addColumn(12);
+					$sign_up_field = $form->add('View')->set($user_panel_btn_registration_name);
+					//  = $form->add('Button')->set($user_panel_btn_registration_name);
+					$col->add($sign_up_field);
+					$sign_up_field->js('click',$this->js()->reload(array('new_registration'=>1)));
+				}
 
-				$verify_account=$form->add('Button')->set($user_panel_btn_Verify_name);
+				$verify_account=$form->add('View')->setHTML($user_panel_btn_Verify_name);
 				$verify_account->js('click',$this->js()->reload(array('verify_account'=>1)));
 				
-				$submit_field->js(true)->appendTo($col);//->add($submit_field);
-				$form->js(true)->find('.atk-buttons')->removeClass('atk-buttons');
-				// $submit_field->js('click',$form->js()->submit());
+				// $submit_field->js(true)->appendTo($col);//->add($submit_field);
+				// $form->js(true)->find('.atk-buttons')->removeClass('atk-buttons');
+				$submit_field = $form->addSubmit($user_panel_btn_login_name);
+				$submit_field->js('click',$form->js()->submit());
 				
 				if($form->isSubmitted()){
 					$user_model = $this->add('Model_Users');
@@ -271,6 +267,9 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 
 					if(!$user_model['is_active'])
 						$form->displayError('username','Please Activate Your Account First');
+
+					//save into Cookies
+					//end of saving into cookies	
 
 					$this->api->auth->login($user_model);
 					// if reload page
