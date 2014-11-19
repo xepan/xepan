@@ -21,8 +21,6 @@ class Form_Field_Plus extends Form_Field_Basic
                 ->set(function($page)use($self) {
                     $form = $page->add('Form');
                     $form->setModel($self->model);
-                    // echo $self->model;
-                    // return;
                     if ($form->isSubmitted()) {
                         $form->update();
                         $js = array();

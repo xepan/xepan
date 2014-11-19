@@ -111,7 +111,7 @@ class View_Tabs_jUItabs extends View_Tabs {
         if(is_null($title)){
             $title=ucwords(preg_replace('/[_\/\.]+/',' ',$page));
         }
-        $this->tab_template->set(array(
+        $this->tab_template->setHTML(array(
                     'url'=>$this->api->url($page,array('cut_page'=>1)),
                     'tab_name'=>$title,
                     'tab_id'=>basename($page),

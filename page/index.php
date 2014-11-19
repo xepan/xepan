@@ -64,7 +64,7 @@ class page_index extends Page {
 
 			// POPLINE EDITING
 			$this->api->template->appendHTML('js_include','<link type="text/css" href="templates/js/popline/css/normalize.css" rel="stylesheet" />'."\n");
-			$this->api->template->appendHTML('js_include','<link type="text/css" href="templates/js/popline/font-awesome/css/font-awesome.min.css" rel="stylesheet" />'."\n");
+			$this->api->template->appendHTML('js_include','<link type="text/css" href="templates/default/font-awesome/css/font-awesome.min.css" rel="stylesheet" />'."\n");
 			$this->api->template->appendHTML('js_include','<link type="text/css" href="templates/js/popline/themes/default.css" rel="stylesheet" />'."\n");
 			$this->api->template->appendHTML('js_include','<script src="templates/js/popline/build/jquery.popline.min.js"></script>'."\n");
 
