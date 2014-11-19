@@ -5,7 +5,8 @@ class Controller_FormBeautifier extends AbstractController{
 	public $param=array();
 	public $form=false;
 
-	public $panel_or_fieldset='panel';
+	public $header_type='panel';
+	public $modifier='default';
 
 
 	function init(){
@@ -79,7 +80,7 @@ class Controller_FormBeautifier extends AbstractController{
 			if($group_details[0]!= $last_group){
 				if(isset($group_details[2]) and $group_details[2]!='bl'){
 					$group_header = $this->form->add('View');
-					$group_header->addClass('panel panel-default');
+					$group_header->addClass('panel panel-'. $this->modifier);
 					// $fieldset = $running_cell->add('View');//->setElement('fieldset');
 					$group_header->add('H4')->setHTML($group_details[2])->addClass('panel-heading');
 					$running_cell = $group_header->add('View')->addClass('panel-body');
@@ -89,7 +90,7 @@ class Controller_FormBeautifier extends AbstractController{
 					if(isset($group_details[2]) and $group_details[2] !='bl'){
 						$running_cell = $running_column->addColumn(12);
 						$group_header = $running_cell->add('View');
-						$group_header->addClass('panel panel-warning');
+						$group_header->addClass('panel panel-'.$this->modifier);
 						// $fieldset = $running_cell->add('View');//->setElement('fieldset');
 						$group_header->add('H4')->setHTML($group_details[2])->addClass('panel-heading');
 						$container = $group_header->add('View')->addClass('panel-body');
