@@ -12,6 +12,6 @@ class Model_Staff extends Model_Table {
 		$this->addField('access_level')->setValueList(array('100'=>'Company','80'=>'Branch Admin', '50'=>'Senior Staff', 30=>'Editor'));
 		$this->hasMany('Epan','staff_id');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 }
