@@ -11,10 +11,11 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 		$user_panel_pass="Password";
 		$user_panel_btn_login_name="Login";
 		$user_panel_btn_registration_name="registration";
-		$user_panel_remember_pass="Remember password";
-		$user_panel_forgot_pass="forgot password";
+		$user_panel_verify="Verify";
+		$user_panel_forgot_pass="Forgot password";
 		$user_panel_activation_code="Re send Activation Code";
 		$user_panel_btn_Verify_name="Verify";
+		$user_panel_login_btn_css = "btn-block btn btn-success";
 
 		if($this->html_attributes['user_panel_name'])
 			$user_panel_name=$this->html_attributes['user_panel_name'];
@@ -22,14 +23,14 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 		if($this->html_attributes['user_panel_pass'])
 			$user_panel_pass=$this->html_attributes['user_panel_pass'];
 
-		if($this->html_attributes['user_panel_remember_caption'])
-			$user_panel_remember_pass=$this->html_attributes['user_panel_remember_caption'];
+		if($this->html_attributes['user_panel_verify_caption'])
+			$user_panel_verify=$this->html_attributes['user_panel_verify_caption'];
 
 		if($this->html_attributes['user_panel_btn_login_name'])
 			$user_panel_btn_login_name=$this->html_attributes['user_panel_btn_login_name'];
 
-		if($this->html_attributes['user_panel_btn_Verify_name'])
-			$user_panel_btn_Verify_name=$this->html_attributes['user_panel_btn_Verify_name'];
+		if($this->html_attributes['user_panel_verify_caption'])
+			$user_panel_btn_Verify_name=$this->html_attributes['user_panel_verify_caption'];
 		
 		if($this->html_attributes['user_panel_forgot_pass'])
 			$user_panel_forgot_pass=$this->html_attributes['user_panel_forgot_pass'];
@@ -39,6 +40,9 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 
 		if($this->html_attributes['user_panel_btn_registration_name'])
 			$user_panel_btn_registration_name=$this->html_attributes['user_panel_btn_registration_name'];
+		
+		if($this->html_attributes['user_panel_login_btn_css'])
+			$user_panel_login_btn_css = $this->html_attributes['user_panel_login_btn_css'];
 		
 		
 		if(!$this->api->auth->isLoggedIn()){
@@ -208,15 +212,36 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 					$verify_form->js(null,$this->js()->univ()->successMessage('Account Verify Successfully'))->reload()->execute();	
 				} 
 			}
+			elseif($_GET['forgot_password_view']){
+				$this->api->stickyGET('forgot_password_view');
+				$resend_form = $this->add('Form');
+				$resend_form->addClass('stacked');
+				$email_field = $resend_form->addField('line','email','Registered Email Id')->validateNotNull()->validateField('filter_var($this->get(), FILTER_VALIDATE_EMAIL)');
+				$email_field->setAttr('PlaceHolder','Enter your Registerd E-mail Id.');
+				$btn = $resend_form->addSubmit('Send Activation Code');	
+				
+				if($resend_form->isSubmitted()){
+					$user = $this->add('Model_Users');
+					$user->addCondition('email',$resend_form['email']);
+					$user->tryLoadAny();
+					if($user->loaded())	{
+						$user->sendVerificationMail($resend_form['email'],null,$user['activation_code']);											
+						$resend_form->js(null,$this->js()->univ()->successMessage('Activation code Send to Registered Email id'))->reload(array('verify_account'=>1))->execute();							
+						// $this->js('click',$this->js()->reload(array('verify_account'=>1)));		
+					}
+					$resend_form->js(null,$this->js()->univ()->errorMessage('Wrong Email id'))->reload()->execute();							
+				}		
+			}
 			else{
 				// create login form
 				if($this->html_attributes['login_view']){
 					$this->add('View')->set('Login')->setElement('a')->setAttr('href','index.php?subpage='.$this->html_attributes['user_panel_redirect_page']);
 				}else{
+
 				$form=$this->add('Form');
 				if($this->html_attributes['form_stacked_on'])
 					$form->addClass('stacked');
-
+				
 				$username_field = $form->addField('line','username',$user_panel_name)->validateNotNull();
 				$password_field = $form->addField('password','password',$user_panel_pass)->validateNotNull();
 
@@ -224,37 +249,40 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 					$username_field->setAttr('placeHolder',$this->html_attributes['user_panel_username_placeholder']);
 				if($this->html_attributes['user_panel_password_placeholder'])
 					$password_field->setAttr('placeHolder',$this->html_attributes['user_panel_password_placeholder']);
-				$cols = $form->add('Columns');
 				
-				// if($this->html_attributes['show_remember_me']){
-				// 	$remeber_field = $form->addField('Checkbox','remember',$user_panel_remember_pass);				
-				// }
-				
-				if($this->html_attributes['show_forgot_password']){
-					$forgot_field = $form->add('View')->setHTML($user_panel_forgot_pass)->setElement('a')->setAttr('href','index.php');	
-				}	
-				// $col = $cols->addColumn(12);
-				
-				if($this->html_attributes['user_panel_activation_code']){
-					$activation_field = $form->add('View')->setHTML($user_panel_activation_code)->setElement('a')->setAttr('href',$this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_activation_code'])));
-				}	
-				
+				//add submit form
+				// $submit_field = $form->addSubmit($user_panel_btn_login_name);
+				$submit_field = $form->addButton($user_panel_btn_login_name);
+				$submit_field->addClass($user_panel_login_btn_css);
+				$submit_field->js('click',$form->js()->submit());
+				$cols = $this->add('Columns');
+
 				if($this->html_attributes['show_register_new_user']){
-					$cols = $form->add('Columns');
-					$col = $cols->addColumn(12);
-					$sign_up_field = $form->add('View')->set($user_panel_btn_registration_name);
+					$col = $cols->addColumn(4);
+					$sign_up_field = $col->add('View')->setHTML($user_panel_btn_registration_name);
 					//  = $form->add('Button')->set($user_panel_btn_registration_name);
-					$col->add($sign_up_field);
+					// $col->add($sign_up_field);
 					$sign_up_field->js('click',$this->js()->reload(array('new_registration'=>1)));
 				}
-
-				$verify_account=$form->add('View')->setHTML($user_panel_btn_Verify_name);
-				$verify_account->js('click',$this->js()->reload(array('verify_account'=>1)));
 				
+				if($this->html_attributes['show_forgot_password']){
+					$col = $cols->addColumn(4);
+					$forgot_field = $col->add('View')->setHTML($user_panel_forgot_pass);	
+					$this->html_attributes['show_forgot_password'] = 0;										
+					$forgot_field->js('click',$this->js()->reload(array('forgot_password_view'=>1)));
+				}	
+				
+				// if($this->html_attributes['user_panel_activation_code']){
+				// 	$activation_field = $form->add('View')->setHTML($user_panel_activation_code)->setElement('a')->setAttr('href',$this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_activation_code'])));
+				// }	
+				
+				if($this->html_attributes['show_verify_me']){
+					$col = $cols->addColumn(4);
+					$verify_account=$col->add('View')->setHTML($user_panel_btn_Verify_name);
+					$verify_account->js('click',$this->js()->reload(array('verify_account'=>1)));
+				}
 				// $submit_field->js(true)->appendTo($col);//->add($submit_field);
 				// $form->js(true)->find('.atk-buttons')->removeClass('atk-buttons');
-				$submit_field = $form->addSubmit($user_panel_btn_login_name);
-				$submit_field->js('click',$form->js()->submit());
 				
 				if($form->isSubmitted()){
 					$user_model = $this->add('Model_Users');

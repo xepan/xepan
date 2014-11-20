@@ -35,12 +35,12 @@
 											</td>
 											<td style='vertical-align:middle'>Stacked View</td>
 										</tr>
-										<!-- <tr>
+										<tr>
 											<td>
-											<input id="user_panel_remember_<?$id?>" type="checkbox"/>
+											<input id="user_panel_verify_<?$id?>" type="checkbox"/>
 											</td>
-											<td style='vertical-align:middle'>Remember Me</td>
-										</tr> -->
+											<td style='vertical-align:middle'>Verify</td>
+										</tr>
 										<tr>
 											<td>
 											<input id="user_panel_forgotpassword_<?$id?>" type="checkbox">
@@ -119,13 +119,13 @@
 									</td>
 								</tr>
 
-								<tr>
+<!-- 								<tr>
 									<td>Verify Button
 									</td>
 									<td>
 										<input id="user_panel_verify_btn_placeholder" type="text"/>
 									</td>
-								</tr>
+								</tr> -->
 
 								<tr>
 									<td>Forgot Pass.
@@ -144,10 +144,10 @@
 								</tr>
 								<tr>
 									<td>
-										Remember
+										Verify
 									</td>
 									<td>
-										<input id="user_panel_remember_caption" type="text"/>
+										<input id="user_panel_verify_caption" type="text"/>
 									</td>
 								</tr>
 								<tr>
@@ -182,6 +182,22 @@
 										<input id="user_panel_password_placeholder"/>						
 									</td>
 								</tr>
+								<tr>
+									<td>
+										<b>CSS Class</b>
+									</td>
+									<td>
+										&nbsp;
+									</td>
+								</tr>
+								<tr>
+									<td>
+										Login Button
+									</td>
+									<td>
+										<input id="user_panel_login_btn_css"/>						
+									</td>
+								</tr>
 							</tbody>
 						</table>
 					</div>					
@@ -208,8 +224,8 @@ $('#user_panel_form_stacked').change(function(event) {
 	if($('#user_panel_form_stacked').is(':checked')?$(current_selected_component).attr('form_stacked_on',1):$(current_selected_component).attr('form_stacked_on',0));
 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
-$('#user_panel_remember_<?$id?>').change(function(event) {
-if($('#user_panel_remember_<?$id?>').is(':checked')?$(current_selected_component).attr('show_remember_me',1):$(current_selected_component).attr('show_remember_me',0));
+$('#user_panel_verify_<?$id?>').change(function(event) {
+if($('#user_panel_verify_<?$id?>').is(':checked')?$(current_selected_component).attr('show_verify_me',1):$(current_selected_component).attr('show_verify_me',0));
 $(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
 $('#user_panel_username_placeholder').change(function(event) {
@@ -232,8 +248,8 @@ $('#user_panel_password_caption').change(function(event) {
 $(current_selected_component).attr('user_panel_pass',$('#user_panel_password_caption').val());
 $(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
-$('#user_panel_remember_caption').change(function(event) {
-$(current_selected_component).attr('user_panel_remember_caption',$('#user_panel_remember_caption').val());
+$('#user_panel_verify_caption').change(function(event) {
+$(current_selected_component).attr('user_panel_verify_caption',$('#user_panel_verify_caption').val());
 $(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
 $('#user_panel_forgotpassword_caption').change(function(event) {
@@ -268,6 +284,11 @@ $('#user_panel_after_login_page').change(function(event){
 $(current_selected_component).attr('user_panel_after_login_page',$(this).val());
 $(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
+
+$('#user_panel_login_btn_css').change(function(event){
+$(current_selected_component).attr('user_panel_login_btn_css',$(this).val());
+$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+});
 var <?$component_type?>_options = {
 show: function (){
 // ===== THIS CODE RUNS EVERY TIME YOU DOUBLE CLICK YOUR COMPONENT
@@ -279,8 +300,8 @@ $('#user_panel_redirect_page').val($(current_selected_component).attr('user_pane
 $('#user_panel_new_registration_<?$id?>').attr('checked',$(current_selected_component).attr("show_register_new_user")=='1'?true:false);
 $('#user_panel_forgotpassword_<?$id?>').attr('checked',$(current_selected_component).attr("show_forgot_password")=='1'?true:false);
 
-$('#user_panel_remember_<?$id?>').attr('checked',$(current_selected_component).attr("show_remember_me")=='1'?true:false);
-$('#user_panel_remember_caption').val($(current_selected_component).attr('user_panel_remember_caption'));
+$('#user_panel_verify_<?$id?>').attr('checked',$(current_selected_component).attr("show_verify_me")=='1'?true:false);
+$('#user_panel_verify_caption').val($(current_selected_component).attr('user_panel_verify_caption'));
 $('#user_panel_forgotpassword_caption').val($(current_selected_component).attr('user_panel_forgot_pass'));
 $('#user_panel_new_registration_caption').val($(current_selected_component).attr('user_panel_btn_registration_name'));
 $('#user_panel_login_caption').val($(current_selected_component).attr('user_panel_btn_login_name'));
@@ -291,6 +312,7 @@ $('#user_panel_username_placeholder').val($(current_selected_component).attr('us
 $('#user_panel_verify_btn_caption').val($(current_selected_component).attr('user_panel_btn_Verify_name'));
 $('#user_panel_show_logout_view').attr('checked',$(current_selected_component).attr("user_panel_show_logout_view")=='1'?true:false);
 $('#user_panel_after_login_page').val($(current_selected_component).attr("user_panel_after_login_page"));
-}
-}
+$('#user_panel_login_btn_css').val($(current_selected_component).attr("user_panel_login_btn_css")?$(current_selected_component).attr("user_panel_login_btn_css"):"btn btn-success btn-block");
+
+}}
 </script>
