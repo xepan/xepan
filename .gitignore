@@ -6,3 +6,4 @@ config-default.php
 /nbproject/private/
 nbproject
 *.orig
+ftpsync.settings
