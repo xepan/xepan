@@ -6,7 +6,7 @@
 // some of the values here, which are going to have affect
 // on your project
 
-
+error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
 $session_var='web';
 if(isset($_GET['page'])){
 	$page=$_GET['page'];
