@@ -236,9 +236,9 @@ class Model_Epan extends Model_Table {
 		// Set all Pages keywords and description as per this one and title to this->keywords
 		if($this->loaded()){
 			foreach($ep =$this->ref('EpanPage') as $junk){
-				$ep['title'] = $this['keywords'];
-				$ep['description'] = $this['description'];
-				$ep['keywords'] = $this['keywords'];
+				if($ep['title'] == $this['keywords']) $ep['title'] = $this['keywords'];
+				if($ep['description'] == $this['description']) $ep['description'] = $this['description'];
+				if($ep['keywords'] == $this['keywords']) $ep['keywords'] = $this['keywords'];
 				$ep->save();
 			}
 		}
