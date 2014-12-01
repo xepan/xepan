@@ -11,7 +11,18 @@ class Model_Plugins extends Model_Table {
 		
 		$this->addField('name')->mandatory(true)->group('a~6~<i class="fa fa-wrench"></i> Component Plugins');
 		$this->addField('params')->defaultValue('$page')->group('a~6~bl');
-		$this->addField('event')->enum($this->api->getConfig('xepan/events'))->group('a~6');
+		
+		$events=$this->api->getConfig('xepan/events');
+		$events_obj = new \StdClass;
+		$events_obj->events= $events;
+
+		if(count($this->api->website_plugins_array)!==0){
+			// This is called in load_plugins itself.. to avoid recursion just leav it for now.
+			$this->api->exec_plugins('register-event', $events_obj);
+			// throw $this->exception('i m called');
+		}
+
+		$this->addField('event')->enum($events_obj->events)->group('a~6');
 		$this->addField('is_system')->type('boolean')->defaultValue(false)->group('a~6~bl');
 
 		

@@ -300,15 +300,19 @@ class Frontend extends ApiFrontend{
 		}
 	}
 
+	function event($event_hook, &$param){
+		$this->exec_plugins($event_hook, $param);
+	}
+
 
 	function exec_plugins( $event_hook, &$param ) {
 		if ( !is_array( $param ) )
 			$param_array = array( &$param );
 		else
-			$param_array = $param;
+			$param_array =& $param;
 
 		// if(empty($this->website_plugins))
-		//  throw $this->exception("Plugins Not loaded");
+		 // throw $this->exception("param" .print_r($param,true));
 
 		foreach ( $this->website_plugins as $p ) {
 			// echo $event_hook. " on ". $p ."<br/>";
