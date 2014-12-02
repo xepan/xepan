@@ -37,6 +37,26 @@ class Grid extends Grid_Advanced{
         }
     }
 
+    function init_boolean_rev($field)
+    {
+        @$this->columns[$field]['thparam'] .= ' style="text-align: center"';
+    }
+
+    function format_boolean_rev($field)
+    {
+        if ($this->current_row[$field] && $this->current_row[$field] !== 'N') {
+            $this->current_row_html[$field] = '<div align=center>'.
+                    '<span class="fa fa-circle" style="color:red"></span>'.
+                '</div>';
+        } else {
+            $this->current_row_html[$field] =
+                '<div align=center>'.
+                    '<span class="fa fa-circle" style="color:green"></span>'.
+                '</div>';
+        }
+    }
+
+
 	function recursiveRender(){
 		if($this->hasColumn('edit'))
 			$this->order->move('edit','last');

@@ -6060,3 +6060,7 @@ th {
 {
     overflow-x: auto;
 }
+
+th span {
+  float: left;
+}
