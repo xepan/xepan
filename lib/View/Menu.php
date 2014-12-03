@@ -16,7 +16,13 @@ class View_Menu extends View{
 
 		$msg=$this->add("Model_Messages");
 		$msg->addCondition('epan_id',$this->api->current_website->id);
-		$msg->addCondition('is_read',false);
+		//$msg->addCondition('is_read',false);
+		$msg->_dsql()->having(
+	        	$msg->_dsql()->orExpr()
+	            	->where('is_read',false)
+	            	->where('watch',true)
+	   		 );
+		
 		$msg->tryLoadAny()->_dsql()->limit(3)->order('id','desc');
 
 		$alt=$this->add("Model_Alerts");

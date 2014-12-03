@@ -4,10 +4,10 @@ class Model_Alerts extends Model_Table{
 	function init(){
 		parent::init();
 		$this->hasOne('Epan','epan_id');
-		$this->addField('name')->caption('Title');
+		$this->addField('name')->caption('Title')->sortable(true);
 		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
-		$this->addField('is_read')->type('boolean')->defaultValue(false);
-		$this->addField('type')->enum(array('default','primary','success','info','warning','danger'));
+		$this->addField('is_read')->type('boolean')->defaultValue(false)->sortable(true);
+		$this->addField('type')->enum(array('default','primary','success','info','warning','danger'))->sortable(true);
 		$this->addField('sender_signature');
 
 		// $this->add('dynamic_model/Controller_AutoCreator');

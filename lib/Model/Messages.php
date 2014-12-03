@@ -9,6 +9,7 @@ class Model_Messages extends Model_Table{
 		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		$this->addField('is_read')->type('boolean')->defaultValue(false);
 		$this->addField('sender_signature');
+		$this->addField('watch')->type('boolean')->defaultValue(false);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
