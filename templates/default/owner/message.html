@@ -5,12 +5,12 @@
                 <?rows?>
                 <?row?>
                 <li class="message-preview">
-                  <a href="#">
+                  <a href="#" onclick="javascript:$(this).univ().frameURL('Message','index.php?page=owner_messagedetails&message_id=<?$id?>')">
                     <span class="avatar"><img !src="http://placehold.it/50x50"></span>
                     <span class="name"><?$name?></span>
-                    <span class="message"><?$message?></span>
-                    <span class="message"><?$sender_signature?></span>
-                    <span class="time"><i class="fa fa-clock-o"></i><?$created_at?></span>
+                    <!-- <span class="message"><?$message?></span>
+                    <span class="message"><?$sender_signature?></span> -->
+                    <span class="time"><i class="fa fa-clock-o"></i><?$created_at?></span> 
                   </a>
                 </li>
                 <?/row?>

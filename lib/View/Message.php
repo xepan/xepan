@@ -16,6 +16,7 @@ class View_Message extends CompleteLister{
 			$this->template->trySet('new_messages',$new_messages);
 			$b=$this->add('Button',null,'viewInbox')->setHTML('View Inbox');
 	}
+	
 
 	function defaultTemplate(){
 		return array('owner/message');

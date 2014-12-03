@@ -16,11 +16,13 @@ class page_owner_message extends page_base_owner{
 			$msg->saveAndUnload();
 		}
 		$crud=$this->add('CRUD',array('allow_add'=>false,'allow_edit'=>false));
-		$crud->setModel('Messages');
+		$crud->setModel('Messages',array('name','message','created_at',
+										'is_read','sender_signature','watch'));
 		
 		if($crud->grid){
 			$crud->grid->addQuickSearch(array('name','message','created_at'));
 			$watch = $crud->grid->addColumn('Button','watching');
+			// $crud->grid->setFormatter('message',"<a><a/>");
 		}
 				
 		
