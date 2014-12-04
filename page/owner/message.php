@@ -22,7 +22,11 @@ class page_owner_message extends page_base_owner{
 		if($crud->grid){
 			$crud->grid->addQuickSearch(array('name','message','created_at'));
 			$watch = $crud->grid->addColumn('Button','watching');
-			// $crud->grid->setFormatter('message',"<a><a/>");
+			$message_title = $crud->grid->setFormatter('name','template')
+			->setTemplate('<a href="#" onclick="javascript:$(this).univ().frameURL(\'Message\',\'index.php?page=owner_messagedetails&message_id=<?$id?>\')"><?$name?></a>');
+			//onclick="javascript:$(this).univ().frameURL('Message','index.php?page=owner_messagedetails&message_id=<?$id
+			// $message_title->js( 'click', $this->js()->univ()->frameURL("Message","index.php?page=owner_messagedetails&message_id="));
+			// throw new \Exception("hello".);		
 		}
 				
 		
