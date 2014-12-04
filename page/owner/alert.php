@@ -38,9 +38,9 @@ class page_owner_alert extends page_base_owner{
 			$alrt->saveAndUnload();
 		}
 		$crud=$this->add('CRUD',array('allow_add'=>false,'allow_edit'=>false));
-		$crud->setModel('Alerts');
+		$crud->setModel('Alerts',array('name','created_at','is_read','type','sender_signature'));
 		if($crud->grid){
-			$crud->grid->addQuickSearch(array('name','created_at','type'));
+			$crud->grid->addQuickSearch(array('name','created_at','type','sender_signature'));
 		}
 
 	}	
