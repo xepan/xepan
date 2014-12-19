@@ -1,0 +1,29 @@
+{
+    "name": "xepan/xepan",
+    "type": "project",
+    "version": "1.0.5",
+    "keywords": ["cms","xepan"],
+    "homepage": "http://xepan.org/",
+    "dist": {
+        "url": "http://xepan.org/xepan-master-1.0.5.zip",
+        "type": "zip"
+    },
+    "source": {
+        "url": "https://github.com/xepan/xepan.git",
+        "type": "git",
+        "reference": "origin/master"
+    },
+    "autoload": {
+        "psr-0": {"": "lib/"},
+        "files": ["/lib/static.php"]
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/xepan/atk4"
+        }
+    ],
+    "require": {
+        "atk4/atk4": "4.3.*@dev"
+    }
+}
