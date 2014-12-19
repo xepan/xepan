@@ -4,6 +4,7 @@
     "version": "1.0.5",
     "keywords": ["cms","xepan"],
     "homepage": "http://xepan.org/",
+    "license": "AGPL",
     "dist": {
         "url": "http://xepan.org/xepan-master-1.0.5.zip",
         "type": "zip"
@@ -25,5 +26,10 @@
     ],
     "require": {
         "atk4/atk4": "4.3.*@dev"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.5.x-dev"
+        }
     }
 }
