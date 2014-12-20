@@ -51,6 +51,20 @@ class Frontend extends ApiFrontend{
 	function init() {
 		parent::init();
 		$this->requires( 'atk', '4.2.0' );
+		
+		$this->addLocation(array(
+			'js'=>'atk4/public/atk4/js'
+			))->setParent( $this->pathfinder->base_location );
+
+		$this->addLocation(array(
+				'addons'=>array( 'epan-addons', 'epan-components', 'atk4-addons' ) )
+		)->setParent( $this->pathfinder->base_location );
+
+		$this->addLocation(array(
+            'page'=>array('epan-components','epan-addons'),
+            'js'=>array('templates/js'),
+            'css'=>array('templates/js','templates/css'),
+        ))->setParent($this->pathfinder->base_location);
 
 		if ( !file_exists('config-default.php') ) {
 			// Not installed and installation required
@@ -71,19 +85,6 @@ class Frontend extends ApiFrontend{
 			// already installed connect to provided settings and go on
 			$this->dbConnect();
 
-			$this->addLocation(array(
-				'js'=>'atk4/public/atk4/js'
-				))->setParent( $this->pathfinder->base_location );
-
-			$this->addLocation(array(
-					'addons'=>array( 'epan-addons', 'epan-components', 'atk4-addons' ) )
-			)->setParent( $this->pathfinder->base_location );
-
-			$this->addLocation(array(
-	            'page'=>array('epan-components','epan-addons'),
-	            'js'=>array('templates/js'),
-	            'css'=>array('templates/js','templates/css'),
-	        ))->setParent($this->pathfinder->base_location);
 
 			$this->add( 'jUI' );
 			$this->api->template->appendHTML('js_include','<script src="templates/js/jquery-migrate-1.2.1.min.js"></script>'."\n");
