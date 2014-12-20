@@ -134,7 +134,14 @@ class Model_Users extends Model_Table {
 		$first_super_user->loadAny();
 
 		return $this->id == $first_super_user->id;
+	}
 
+	function getDefaultSuperUser(){
+		$this->addCondition('type',100);
+		$this->setOrder('id');
+		$this->loadAny();
+		if($this->loaded()) return $this;
+		return false;
 	}
 
 	function isFrontEndUser(){
