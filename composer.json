@@ -18,15 +18,6 @@
         "psr-0": {"": "lib/"},
         "files": ["/lib/static.php"]
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/xepan/atk4"
-        }
-    ],
-    "require": {
-        "atk4/atk4": "4.3.*@dev"
-    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.5.x-dev"
