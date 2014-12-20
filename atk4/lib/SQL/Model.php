@@ -47,12 +47,13 @@
  * }else throw $user->exception('User with such email already exists');
  *
  * @license See http://agiletoolkit.org/about/license
- * 
+ *
 **/
-class SQL_Model extends Model {
+class SQL_Model extends Model implements Serializable {
 
     /** Master DSQL record which will be cloned by other operations. For low level use only. Use $this->dsql() when in doubt. */
-    protected $dsql; 
+    protected $dsql;
+    public $field_class='Field';
 
     /** If you wish that alias is used for the table when selected, you can define it here.
      * This will help to keep SQL syntax shorter, but will not impact functionality */
@@ -69,7 +70,7 @@ class SQL_Model extends Model {
     public $fast=null;          // set this to true to speed up model, but sacrifice some of the consistency
 
     // {{{ Basic Functionality, query initialization and actual field handling
-   
+
     /** Initialization of ID field, which must always be defined */
     function __construct(){
         if($this->entity_code){
@@ -89,16 +90,21 @@ class SQL_Model extends Model {
         if($this->owner instanceof Field_Reference && $this->owner->owner->relations){
             $this->relations =& $this->owner->owner->relations;
         }
-
-        $this->addField($this->id_field)->system(true);
     }
     function addField($name,$actual_field=null){
-        if($this->hasElement($name))throw $this->exception('Field with this name is already defined')
+        if ($this->hasElement($name)) {
+            if($name == $this->id_field) return $this->getElement($name);
+            throw $this->exception('Field with this name is already defined')
             ->addMoreInfo('field',$name);
+        }
         if($name=='deleted' && isset($this->api->compat)){
             return $this->add('Field_Deleted',$name)->enum(array('Y','N'));
         }
-        $f=parent::addField($name);
+
+        // $f=parent::addField($name);
+        $f = $this->add($this->field_class,$name);
+        //
+
         if(!is_null($actual_field))$f->actual($actual_field);
         return $f;
     }
@@ -108,7 +114,7 @@ class SQL_Model extends Model {
             ->addThis($this)
             ;
     }
-    /** Initializes base query for this model. 
+    /** Initializes base query for this model.
      * @link http://agiletoolkit.org/doc/modeltable/dsql */
     function initQuery(){
         if(!$this->table)throw $this->exception('$table property must be defined');
@@ -132,15 +138,17 @@ class SQL_Model extends Model {
             $this->dsql=clone $this->dsql;
         }
     }
-    /** Produces a close of Dynamic SQL object configured with table, conditions and joins of this model. 
+    /** Produces a close of Dynamic SQL object configured with table, conditions and joins of this model.
      * Use for statements you are going to execute manually. */
     function dsql(){
         return clone $this->_dsql();
     }
     /** Turns debugging mode on|off for this model. All database operations will be outputed */
     function debug($enabled = true){
-        $this->debug = $enabled;
-        if($this->dsql)$this->dsql->debug($enabled);
+        if($enabled===true) {
+            $this->debug = $enabled;
+            if($this->dsql)$this->dsql->debug($enabled);
+        } else  parent::debug($enabled);
         return $this;
     }
     /** Completes initialization of dsql() by adding fields and expressions. */
@@ -220,7 +228,10 @@ class SQL_Model extends Model {
     function hasOne($model,$our_field=null,$display_field=null,$as_field=null){
 
         // register reference, but don't create any fields there
-        parent::hasOne($model,null);
+        // parent::hasOne($model,null);
+        // model, our_field
+        $this->_references[null]=$model;
+
 
         if(!$our_field){
             if(!is_object($model)){
@@ -232,6 +243,7 @@ class SQL_Model extends Model {
 
         $r=$this->add('Field_Reference',array('name'=>$our_field,'dereferenced_field'=>$as_field));
         $r->setModel($model,$display_field);
+        $r->system(true)->editable(true);
         return $r;
     }
     /** Defines many to one association */
@@ -255,56 +267,134 @@ class SQL_Model extends Model {
     function getRef($name,$load=null){
         return $this->ref($name,$load);
     }
-    /** Adds a "WHERE" condition, but tries to be smart about where and how the field is defined */
-    function addCondition($field,$cond=undefined,$value=undefined){
+    /**
+     * Adds "WHERE" condition / conditions in underlying DSQL
+     *
+     * It tries to be smart about where and how the field is defined.
+     *
+     * $field can be passed as:
+     *      - string (field name in this model)
+     *      - Field object
+     *      - DSQL expression
+     *      - array (see note below)
+     *
+     * $cond can be passed as:
+     *      - string ('=', '>', '<=', etc.)
+     *      - value can be passed here, then it's used as $value with condition '='
+     *
+     * $value can be passed as:
+     *      - string, integer, boolean or any other simple data type
+     *      - Field object
+     *      - DSQL expreession
+     *
+     * NOTE: $field can be passed as array of conditions. Then all conditions
+     *      will be joined with `OR` using DSQLs orExpr method.
+     *      For example,
+     *          $model->addCondition(array(
+     *              array('profit', '=', null),
+     *              array('profit', '<', 1000),
+     *          ));
+     *      will generate "WHERE profit is null OR profit < 1000"
+     *
+     * EXAMPLES:
+     * you can pass [dsql, dsql, dsql ...] and this will be treated
+     * as (dsql OR dsql OR dsql) ...
+     *
+     * you can pass [[field,cond,value], [field,cond,value], ...] and this will
+     * be treated as (field=value OR field=value OR ...)
+     *
+     * BTW, you can mix these too :)
+     * [[field,cond,value], dsql, [field,cond,value], ...]
+     * will become (field=value OR dsql OR field=value)
+     *
+     * Value also can be DSQL expression, so following will work nicely:
+     * [dsql,'>',dsql] will become (dsql > dsql)
+     * [dsql, dsql] will become (dsql = dsql)
+     * [field, cond, dsql] will become (field = dsql)
+     *
+     * @todo Romans: refactor using parent::conditions (through array)
+     *
+     * @param mixed $field Field for comparing or array of conditions
+     * @param mixed $cond Condition
+     * @param mixed $value Value for comparing
+     * @param DSQL $dsql DSQL object to which conditions will be added
+     *
+     * @return this
+     */
+    function addCondition($field, $cond = undefined, $value = undefined, $dsql = null)
+    {
+        // by default add condition to models DSQL
+        if (! $dsql) {
+            $dsql = $this->_dsql();
+        }
 
-        // TODO: refactor using parent:: conditions (through array)
+        // if array passed, then create multiple conditions joined with OR
+        if (is_array($field)) {
+            $or = $this->dsql()->orExpr();
 
-        // You may pass plain "dsql" expressions as a first argument
-        if($field instanceof DB_dsql && $cond===undefined && $value===undefined){
-            $this->_dsql()->where($field);
+            foreach ($field as $row) {
+                if (! is_array($row)) {
+                    $row = array($row);
+                }
+                // add each condition to OR expression (not models DSQL)
+                $f = $row[0];
+                $c = array_key_exists(1, $row) ? $row[1] : undefined;
+                $v = array_key_exists(2, $row) ? $row[2] : undefined;
+
+                // recursively calls addCondition method, but adds conditions
+                // to OR expression not models DSQL object
+                $this->addCondition($f, $c, $v, $or);
+            }
+
+            // pass generated DSQL expression as "field"
+            $field = $or;
+            $cond = $value = undefined;
+        }
+
+        // You may pass DSQL expression as a first argument
+        if ($field instanceof DB_dsql) {
+            $dsql->where($field, $cond, $value);
             return $this;
         }
 
         // value should be specified
-        if($cond===undefined && $value===undefined)
+        if ($cond === undefined && $value === undefined) {
             throw $this->exception('Incorrect condition. Please specify value');
-
-        // get model field object
-        if(!$field instanceof Field){
-            $field=$this->getElement($field);
         }
 
-        if($cond!==undefined && $value===undefined) {
+        // get model field object
+        if (! $field instanceof Field) {
+            $field = $this->getElement($field);
+        }
+
+        if ($cond !== undefined && $value === undefined) {
             $value = $cond;
             $cond = '=';
         }
-        
-        if($field->type()=='boolean'){
-            $value=$field->getBooleanValue($value);
+        if ($field->type() == 'boolean') {
+            $value = $field->getBooleanValue($value);
         }
 
-        if($cond==='='){
+        if ($cond === '=' && !is_array($value)) {
             $field->defaultValue($value)->system(true)->editable(false);
         }
-        
-        $f = $field->actual_field?:$field->short_name;
-        if($field->calculated()){
+
+        $f = $field->actual_field ?: $field->short_name;
+
+        if ($field->calculated()) {
             // TODO: should we use expression in where?
 
-
-            $this->_dsql()->where($field->getExpr(),$cond,$value);
-
-
-            //$this->_dsql()->having($f,$cond,$value);
+            $dsql->where($field->getExpr(), $cond, $value);
+            //$dsql->having($f, $cond, $value);
             //$field->updateSelectQuery($this->dsql);
-        }elseif($field->relation){
-            $this->_dsql()->where($field->relation->short_name.'.'.$f,$cond,$value);
-        }elseif($this->relations){
-            $this->_dsql()->where(($this->table_alias?:$this->table).'.'.$f,$cond,$value);
-        }else{
-            $this->_dsql()->where(($this->table_alias?:$this->table).".".$f,$cond,$value);
+        } elseif ($field->relation) {
+            $dsql->where($field->relation->short_name . '.' . $f, $cond, $value);
+        } elseif ($this->relations) {
+            $dsql->where(($this->table_alias ?: $this->table) . '.' . $f, $cond, $value);
+        } else {
+            $dsql->where(($this->table_alias ?: $this->table) . '.' . $f, $cond, $value);
         }
+
         return $this;
     }
     /** Sets limit on query */
@@ -349,7 +439,7 @@ class SQL_Model extends Model {
     }
     // }}}
 
-    // {{{ Iterator support 
+    // {{{ Iterator support
 
     /* False: finished iterating. True, reset not yet fetched. Object=DSQL */
     protected $_iterating=false;
@@ -383,7 +473,7 @@ class SQL_Model extends Model {
         $this->hook('afterLoad');
     }
     function current(){
-        return $this->get();
+        return $this;
     }
     function key(){
         return $this->id;
@@ -416,9 +506,9 @@ class SQL_Model extends Model {
     }
     /**
      * Returns dynamic query selecting number of entries in the database
-     * 
+     *
      * @param string $alias Optional alias of count expression
-     * 
+     *
      * @return DSQL
      */
     function count($alias = null)
@@ -431,9 +521,9 @@ class SQL_Model extends Model {
     }
     /**
      * Returns dynamic query selecting sum of particular field or fields
-     * 
+     *
      * @param string|array|Field $field
-     * 
+     *
      * @return DSQL
      */
     function sum($field)
@@ -458,15 +548,15 @@ class SQL_Model extends Model {
         return $q;
     }
     /** @obsolete same as loaded() - returns if any record is currently loaded. */
-    function isInstanceLoaded(){ 
-        return $this->loaded(); 
+    function isInstanceLoaded(){
+        return $this->loaded();
     }
     /** Loads the first matching record from the model */
     function loadAny(){
         try{
             return $this->_load(null);
         }catch(BaseException $e){
-            throw $this->exception('No matching records found');
+            throw $this->exception('No matching records found',null,404);
         }
     }
     /** Try to load a matching record for the model. Will not raise exception if no records are found */
@@ -573,7 +663,7 @@ class SQL_Model extends Model {
         return $this;
     }
     /** @obsolete Backward-compatible. Will attempt to load but will not fail */
-    function loadData($id=null){ 
+    function loadData($id=null){
         if($id)$this->tryLoad($id);
         return $this;
     }
@@ -629,7 +719,7 @@ class SQL_Model extends Model {
 
             $f->updateInsertQuery($insert);
         }
-        $this->hook('beforeInsert',array($insert));
+        $this->hook('beforeInsert',array(&$insert));
         //delayed is not supported by INNODB, but what's worse - it shows error.
         //if($this->_save_as===false)$insert->option_insert('delayed');
         $id = $insert->insert();
@@ -664,7 +754,7 @@ class SQL_Model extends Model {
      */
     private function modify(){
         $modify = $this->dsql()->del('where');
-        $modify->where($this->id_field, $this->id);
+        $modify->where($this->getElement($this->id_field), $this->id);
 
         if(!$this->dirty)return $this;
 
@@ -676,7 +766,7 @@ class SQL_Model extends Model {
 
         // Performs the actual database changes. Throw exceptions if problem occurs
         $this->hook('beforeModify',array($modify));
-        if($modify->args['set'])$modify->do_update();
+        if($modify->args['set'])$modify->update();
 
         if($this->dirty[$this->id_field]){
             $this->id=$this->get($this->id_field);
@@ -709,7 +799,20 @@ class SQL_Model extends Model {
         }
         $this->hook('beforeUnload');
         $this->id=null;
-        parent::unload();
+        // parent::unload();
+
+        if ($this->_save_later) {
+            $this->_save_later=false;
+            $this->saveAndUnload();
+        }
+        if ($this->loaded()) {
+            $this->hook('beforeUnload');
+        }
+        $this->data = $this->dirty = array();
+        $this->id = null;
+        $this->hook('afterUnload');
+        //
+
         $this->hook('afterUnload');
         return $this;
     }
@@ -755,4 +858,257 @@ class SQL_Model extends Model {
     }
 
     // }}}
+
+
+
+    // Override all methods to keep back-compatible
+    function set($name,$value=undefined){
+        if(is_array($name)){
+            foreach($name as $key=>$val)$this->set($key,$val);
+            return $this;
+        }
+        if($name===false || $name===null){
+            return $this->reset();
+        }
+
+        // Verify if such a filed exists
+        if($this->strict_fields && !$this->hasElement($name))throw $this->exception('No such field','Logic')
+            ->addMoreInfo('name',$name);
+
+        if($value!==undefined
+            && (
+                is_object($value)
+                || is_object($this->data[$name])
+                || is_array($value)
+                || is_array($this->data[$name])
+                || (string)$value!=(string)$this->data[$name] // this is not nice..
+                || $value !== $this->data[$name] // considers case where value = false and data[$name] = null
+                || !isset($this->data[$name]) // considers case where data[$name] is not initialized at all (for example in model using array controller)
+            )
+        ) {
+            $this->data[$name]=$value;
+            $this->setDirty($name);
+        }
+        return $this;
+    }
+
+    function get($name=null){
+        if($name===null)return $this->data;
+
+        $f=$this->hasElement($name);
+
+        if($this->strict_fields && !$f)
+            throw $this->exception('No such field','Logic')->addMoreInfo('field',$name);
+
+        // See if we have data for the field
+        if(!$this->loaded() && !isset($this->data[$name])){ // && !$this->hasElement($name))
+
+            if($f && $f->has_default_value)return $f->defaultValue();
+
+
+            if($this->strict_fields)throw $this->exception('Model field was not loaded')
+                ->addMoreInfo('id',$this->id)
+                ->addMoreinfo('field',$name);
+
+            return null;
+        }
+        return $this->data[$name];
+    }
+
+function getActualFields($group = undefined)
+    {
+        if($group===undefined && $this->actual_fields) {
+            return $this->actual_fields;
+        }
+
+        $fields = array();
+
+        if (strpos($group, ',')!==false) {
+            $groups = explode(',', $group);
+
+            foreach($groups as $group) {
+                if($group[0]=='-') {
+                    $el = $this->getActualFields(substr($group, 1));
+                    $fields = array_diff($fields, $el);
+                } else {
+                    $el = $this->getActualFields($group);
+                    $fields = array_merge($fields, $el);
+                }
+            }
+        }
+
+        foreach($this->elements as $el) {
+            if($el instanceof Field && !$el->hidden()) {
+                if( $group===undefined ||
+                    $el->group()==$group ||
+                    (strtolower($group=='visible') && $el->visible()) ||
+                    (strtolower($group=='editable') && $el->editable())
+                ) {
+                    $fields[] = $el->short_name;
+                }
+            }
+        }
+
+        return $fields;
+    }
+
+
+
+function setActualFields(array $fields)
+    {
+        $this->actual_fields = $fields;
+        return $this;
+    }
+
+function setDirty($name)
+    {
+        $this->dirty[$name] = true;
+        return $this;
+    }
+    function isDirty($name){
+        return $this->dirty[$name] ||
+            (!$this->loaded() && $this->getElement($name)->has_default_value);
+    }
+    function reset()
+    {
+        return $this->unload();
+    }
+
+    function offsetExists($name){
+        return $this->hasElement($name);
+    }
+    function offsetGet($name){
+        return $this->get($name);
+    }
+    function offsetSet($name,$val){
+        $this->set($name,$val);
+    }
+    function offsetUnset($name){
+        unset($this->dirty[$name]);
+    }
+
+function setSource($controller, $table=null, $id=null){
+        if(is_string($controller)){
+            $controller=$this->api->normalizeClassName($controller,'Data');
+        } elseif(!$controller instanceof Controller_Data){
+            throw $this->exception('Inappropriate Controller. Must extend Controller_Data');
+        }
+        $this->controller=$this->setController($controller);
+
+        $this->controller->setSource($this,$table);
+
+        if($id)$this->load($id);
+        return $this;
+    }
+function addCache($controller, $table=null, $priority=5){
+        $controller=$this->api->normalizeClassName($controller,'Data');
+        return $this->setController($controller)
+            ->addHooks($this,$priority)
+            ->setSource($this,$table);
+    }
+
+function each($callable)
+    {
+        if (!($this instanceof Iterator)) {
+            throw $this->exception('Calling each() on non-iterative model');
+        }
+
+        if (is_string($callable)) {
+            foreach ($this as $value) {
+                $this->$callable();
+            }
+            return $this;
+        }
+
+        foreach ($this as $value) {
+            if (call_user_func($callable, $this) === false) {
+                break;
+            }
+        }
+        return $this;
+    }
+
+function newField($name){
+        return $this->addField($name);
+    }
+    function hasField($name){
+        return $this->hasElement($name);
+    }
+    function getField($f){
+        return $this->getElement($f);
+    }
+function _ref($ref,$class,$field,$val){
+        $m=$this
+            ->add($this->api->normalizeClassName($class,'Model'))
+            ->ref($ref);
+
+        // For one to many relation, create condition, otherwise do nothing,
+        // as load will follow
+        if($field){
+            $m->addCondition($field,$val);
+        }
+        return $m;
+    }
+    function _refBind($field_in,$expression,$field_out=null){
+
+        if($this->controller)return $this->controller->refBind($this,$field,$expression);
+
+        list($myref,$rest)=explode('/',$ref,2);
+
+        if(!$this->_references[$myref])throw $this->exception('No such relation')
+            ->addMoreInfo('ref',$myref)
+            ->addMoreInfo('rest',$rest);
+        // Determine and populate related model
+
+        if(is_array($this->_references[$myref])){
+            $m=$this->_references[$myref][0];
+        }else{
+            $m=$this->_references[$myref];
+        }
+        $m=$this->add($m);
+        if($rest)$m=$m->_ref($rest);
+        $this->_refGlue();
+
+
+        if(!isset($this->_references[$ref]))throw $this->exception('Unable to traverse, no reference defined by this name')
+            ->addMoreInfo('name',$ref);
+
+        $r=$this->_references[$ref];
+
+        if(is_array($r)){
+            list($m,$our_field,$their_field)=$r;
+
+            if(is_string($m)){
+                $m=$this->add($m);
+            }else{
+                $m=$m->newInstance();
+            }
+
+            return $m->addCondition($their_field,$this[$our_field]);
+        }
+
+
+        if(is_string($m)){
+            $m=$this->add($m);
+        }else{
+            $m=$m->newInstance();
+        }
+        return $m->load($this[$our_field]);
+    }
+
+
+
+    function serialize() {
+        return serialize(array(
+            'id'=>$this->id,
+            'data'=>$this->data
+        ));
+    }
+
+    function unserialize($data) {
+        $data=unserialize($data);
+        $this->id=$data['id'];
+        $this->data=$data['data'];
+    }
+
 }

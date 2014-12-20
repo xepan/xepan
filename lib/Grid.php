@@ -4,6 +4,8 @@ class Grid extends Grid_Advanced{
 	public $order=null;
 	public $sno=1;
 
+    public $show_epan=false;
+
 	function init(){
 		parent::init();
 		$this->order= $this->addOrder();
@@ -56,7 +58,6 @@ class Grid extends Grid_Advanced{
         }
     }
 
-
 	function recursiveRender(){
 		if($this->hasColumn('edit'))
 			$this->order->move('edit','last');
@@ -65,6 +66,9 @@ class Grid extends Grid_Advanced{
 			$this->order->move('delete','last');
 		
 		if($this->order) $this->order->now();
+
+        if(!$this->show_epan and $this->hasColumn('epan'))
+            $this->removeColumn('epan');
 
 		parent::recursiveRender();
 	}

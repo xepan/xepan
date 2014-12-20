@@ -47,6 +47,9 @@ class CompleteLister extends Lister
     /** Item ($item_tag) template */
     public $row_t;
 
+    /** Separator */
+    public $sep_html = null;
+
     /** Will contain accumulated totals for all fields */
     public $totals = false;
 
@@ -84,11 +87,29 @@ class CompleteLister extends Lister
     function init()
     {
         parent::init();
-        if (!$this->template->is_set($this->item_tag)) {
-            throw $this->exception('Template must have "'.$this->item_tag.'" tag');
+        if (!$this->template->hasTag($this->item_tag)) {
+
+            if(@$this->api->compat_42 and $this instanceof Menu_Basic) {
+                // look for MenuItem
+
+                $default = $this->item_tag;
+
+                $this->item_tag='MenuItem';
+                $this->container_tag='Item';
+                if (!$this->template->hasTag($this->item_tag)) {
+                    throw $this->template->exception('Template must have "'.$default.'" tag')
+                        ->addMoreInfo('compat','Also tried for compatibility reason "'.$this->item_tag.'" tag');
+                }
+            }else{
+                throw $this->template->exception('Template must have "'.$this->item_tag.'" tag');
+            }
         }
 
         $this->row_t = $this->template->cloneRegion($this->item_tag);
+
+        if($this->template->hasTag('sep')) {
+            $this->sep_html = $this->template->get('sep');
+        }
     }
 
     /**
@@ -105,6 +126,7 @@ class CompleteLister extends Lister
      * Enable totals calculation for specified array of fields
      *
      * If particular fields not specified, then all field totals are calculated.
+     * If you only need to count records, then pass null and no fields will be calculated.
      *
      * Be aware that if you use Paginator, then only records of current page
      * will be calculated. If you need grand totals for all records, then use
@@ -114,7 +136,7 @@ class CompleteLister extends Lister
      *
      * @return $this
      */
-    function addTotals($fields = null)
+    function addTotals($fields = UNDEFINED)
     {
         return $this->_addTotals($fields, 'onRender');
     }
@@ -123,6 +145,7 @@ class CompleteLister extends Lister
      * Enable totals calculation for specified array of fields
      *
      * If particular fields not specified, then all field totals are calculated.
+     * If you only need to count records, then pass null and no fields will be calculated.
      *
      * Be aware that this method works ONLY for SQL models set as data source
      * because this calculates grand totals using DSQL.
@@ -131,7 +154,7 @@ class CompleteLister extends Lister
      *
      * @return $this
      */
-    function addGrandTotals($fields = null)
+    function addGrandTotals($fields = UNDEFINED)
     {
         if (!$this->getIterator() instanceof SQL_Model) {
             throw $this->exception("Grand Totals can be used only with SQL_Model data source");
@@ -155,25 +178,26 @@ class CompleteLister extends Lister
      * of fields
      *
      * If particular fields not specified, then all field totals are calculated.
+     * If you only need to count records, then pass null and no fields will be calculated.
      *
      * @param array $fields optional array of fieldnames
      * @param string $type type of totals calculation (null|onRender|onRequest)
      *
      * @return $this
      */
-    protected function _addTotals($fields = null, $type = null)
+    protected function _addTotals($fields = UNDEFINED, $type = null)
     {
         // set type
         $this->totals_type = $type;
 
         // clone template chunk for totals
-        if ($this->template->is_set('totals')) {
+        if ($this->template->hasTag('totals')) {
             $this->totals_t = $this->template->cloneRegion('totals');
         }
 
         // if no fields defined then get available fields from model
         $iter = $this->getIterator();
-        if (!$fields && $iter->hasMethod('getActualFields')) {
+        if ($fields === UNDEFINED && $iter->hasMethod('getActualFields')) {
             $fields = $iter->getActualFields();
         }
 
@@ -181,7 +205,7 @@ class CompleteLister extends Lister
         if ($this->totals === false) {
             $this->totals = array();
         }
-        if ($fields) {
+        if (is_array($fields)) {
             foreach ($fields as $field) {
                 $this->totals[$field] = 0;
             }
@@ -220,24 +244,27 @@ class CompleteLister extends Lister
         $iter = $this->getIterator();
         foreach ($iter as $this->current_id=>$this->current_row) {
 
-            // if totals enabled, but specific fields are not specified with
-            // addTotals, then calculate totals for all available fields
-            if ($this->totals === array()) {
-                foreach ($this->current_row as $k=>$v) {
-                    $this->totals[$k] = 0;
-                }
+            if($this->current_row instanceof Model){
+                $this->current_row=$this->current_row->get();
+            }
+
+            $this->current_row_html=array();
+
+            if($this->sep_html && $this->total_rows) {
+                $this->renderSeparator();
             }
 
             // calculate rows so far
             $this->total_rows++;
 
-            // if onRender totals enabled, then execute
+            // if onRender totals enabled, then update totals
             if ($this->totals_type == 'onRender') {
                 $this->updateTotals();
             }
 
             // render data row
             $this->renderDataRow();
+
         }
         
         // calculate grand totals if needed
@@ -267,6 +294,14 @@ class CompleteLister extends Lister
         );
     }
 
+    function renderSeparator()
+    {
+        $this->template->appendHTML(
+            $this->container_tag,
+            $this->sep_html
+        );
+    }
+
     /**
      * Render Totals row
      *
@@ -284,6 +319,8 @@ class CompleteLister extends Lister
                 $this->container_tag,
                 $this->rowRender($this->totals_t)
             );
+        }else{
+            $this->template->tryDel('totals');
         }
     }
 
@@ -364,7 +401,15 @@ class CompleteLister extends Lister
 
         // create DSQL query for sum and count request
         $fields = array_keys($this->totals);
-        $q = $m->sum($fields)->del('limit');
+
+        // select as sub-query
+        $sub_q = $m->dsql()->del('limit')->del('order');
+        
+        $q = $this->api->db->dsql();//->debug();
+        $q->table($sub_q, 'grandTotals'); // alias is mandatory if you pass table as DSQL
+        foreach ($fields as $field) {
+            $q->field($q->sum($field), $field);
+        }
         $q->field($q->count(), 'total_cnt');
 
         // execute DSQL

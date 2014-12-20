@@ -1,14 +1,11 @@
 <?php
 
-class page_componentBase_page_owner_main extends page_base_owner{
+class page_componentBase_page_owner_main extends page_base_owner {
 	public $toolbar;
 	public $component_namespace;
 	public $component_name;
 
 	function init() {
-		parent::init();
-
-
 		$class = get_class( $this );
 		preg_match( '/page_(.*)_page_(.*)/', $class, $match );
 
@@ -16,30 +13,31 @@ class page_componentBase_page_owner_main extends page_base_owner{
 		$mp=$this->add('Model_MarketPlace')->loadBy('namespace',$this->component_namespace);
 		$this->component_name = $mp['name'];
 
-		$l=$this->api->locate( 'addons', $match[1], 'location' );
-		$this->api->pathfinder->addLocation(
-			$this->api->locate( 'addons', $match[1] ),
-			array(
-				'template'=>'templates',
-				'css'=>'templates/css'
-			)
-		)->setParent( $l );
+		// Parent page is now also having component_namespace and component_name if SET
+		parent::init();
 
-		$cols = $this->add( 'Columns' );
-		$left = $cols->addColumn( 6 );
-		$right = $cols->addColumn( 6 );
 
-		$this->h1 = $h1=$left->add( 'H3' )->set( $this->component_name );
+		// Check for Autheticity of current user to use this page base
+		if(!$this->api->auth->model->isAllowedApp($mp->ref('InstalledComponents')->tryLoadAny()->get('id'))){
+			$this->api->redirect('owner/not-allowed');
+			exit;
+		}
 
-		$this->toolbar = $right->add( 'ButtonSet' )->addClass( 'pull-right' );
-
-		$about_page= $right->add( "VirtualPage" );
-		$about_page->set( function( $p )use( $match ) {
-				$p->add( 'View', null, null, array( 'view/'.$match[1].'-about' ) );
-			}
+		$this->app->pathfinder->base_location->addRelativeLocation(
+		    'epan-components/'.$this->component_namespace, array(
+		        'php'=>'lib',
+		        'template'=>'templates',
+		        'css'=>'css',
+		        'js'=>'js',
+		    )
 		);
 
-		$uninstall_page= $right->add( "VirtualPage" );
+		$about_page= $this->add( "VirtualPage" );
+		$about_page->set( function( $p )use( $match ) {
+			$p->add( 'View', null, null, array( 'view/'.$match[1].'-about' ) );
+		});
+
+		$uninstall_page= $this->add( "VirtualPage" );
 		$uninstall_page->set( function( $p )use( $match ) {
 				$p->add( 'View_Error')->set('Are you sure, you want to uninstall this application');
 				$btn=$p->add('Button')->set('Yes');
@@ -49,7 +47,7 @@ class page_componentBase_page_owner_main extends page_base_owner{
 			}
 		);
 
-		$update_page= $right->add( "VirtualPage" );
+		$update_page= $this->add( "VirtualPage" );
 		$update_page->set( function( $p )use( $match ) {
 				$p->add( 'View_Info')->set('Are you sure, you want to update this application');
 				$form = $p->add('Form');
@@ -64,22 +62,16 @@ class page_componentBase_page_owner_main extends page_base_owner{
 			}
 		);
 
-		$i_b= $this->toolbar->addButton( 'Info' );
-		$i_b->setIcon('ui-icon-info');
-		$i_b->js( 'click', $this->js()->univ()->frameURL( 'About This Component', $about_page->getURL() ) );
-		
-		$u_b = $this->toolbar->addButton( 'Update' );
-		$u_b->setIcon('ui-icon-arrowthick-1-n');
-		$u_b->js( 'click', $this->js()->univ()->frameURL( 'Update This Component', $update_page->getURL() ) );
-		
-		$un_b=$this->toolbar->addButton( 'Uninstall' );
-		$un_b->seticon('ui-icon-cancel');
-		$un_b->js( 'click', $this->js()->univ()->frameURL( 'Uninstall This Component', $uninstall_page->getURL() ) );
+		// User Menu Setup 
+		$um=$this->app->layout->user_menu;
+		$this->api->component_common_menu = $component_common = $um->addMenu('Component');
+		$x=$component_common->addItem('About','#');
+		$x->js('click')->univ()->frameURL( 'About This Component', $about_page->getURL() );
+		$x=$component_common->addItem('Update','#');
+		$x->js('click')->univ()->frameURL( 'Update This Component', $update_page->getURL() );
+		$x=$component_common->addItem('Uninstall','#');
+		$x->js('click')->univ()->frameURL( 'Uninstall This Component', $uninstall_page->getURL() );
 
-		if($this->api->isAjaxOutput() or $_GET['cut_page']){
-			$h1->destroy();
-			$this->toolbar->destroy();
-		}
 
 	}
 }

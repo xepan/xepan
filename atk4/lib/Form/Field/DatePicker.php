@@ -29,8 +29,8 @@ class Form_Field_DatePicker extends Form_Field_Line {
     }
     function addCalendarIcon() {
         $this->addButton('',array('options'=>array('text'=>false)))
-            ->setHtml('&nbsp;')
-            ->setIcon('ui-icon-calendar')
+            ->setHtml('')
+            ->setIcon('calendar')
             ->js('click',$this->js()->datepicker('show'));
         $this->js('focus', $this->js()->datepicker('show'));
     }
@@ -57,6 +57,9 @@ class Form_Field_DatePicker extends Form_Field_Line {
     function set($value){
         // value can be valid date format, as in config['locale']['date']
         if(!$value)return parent::set(null);
+        if(is_int($value)){
+            return parent::set(date('Y-m-d',$value));
+        }
         @list($d,$m,$y)=explode('/',$value);
         if($y)$value=join('/',array($m,$d,$y));
         elseif($m)$value=join('/',array($m,$d));

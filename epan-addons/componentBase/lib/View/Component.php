@@ -50,15 +50,25 @@ class View_Component extends \View {
 		$this->component_type = $matches[2][0];
 
 		// Add Location for templates in Class Extending / Inherited  Component Base
-			$l=$this->api->locate('addons',$this->namespace, 'location');
-			$this->api->pathfinder->addLocation(
-			$this->api->locate('addons',$this->namespace),
-			array(
-		  		'template'=>'templates',
-		  		'css'=>'templates/css',
-		  		'js'=>'templates/js'
-				)
-			)->setParent($l);
+
+		$this->app->pathfinder->base_location->addRelativeLocation(
+		    'epan-components/'.$this->namespace, array(
+		        'php'=>'lib',
+		        'template'=>'templates',
+		        'css'=>'css',
+		        'js'=>'js',
+		    )
+		);
+
+			// $l=$this->api->locate('addons',$this->namespace, 'location');
+			// $this->api->pathfinder->addLocation(
+			// $this->api->locate('addons',$this->namespace),
+			// array(
+		 //  		'template'=>'templates',
+		 //  		'css'=>'templates/css',
+		 //  		'js'=>'templates/js'
+			// 	)
+			// )->setParent($l);
 
 
 		parent::initializeTemplate();
@@ -70,15 +80,15 @@ class View_Component extends \View {
 
 			// EDIT START
 			// Add Location for templates in component base
-			$l=$this->api->locate('addons',__NAMESPACE__, 'location');
-			$this->api->pathfinder->addLocation(
-			$this->api->locate('addons',__NAMESPACE__),
-			array(
-		  		'template'=>'templates',
-		  		'css'=>'templates/css',
-		  		'js'=>'templates/js'
-				)
-			)->setParent($l);		
+			// $l=$this->api->locate('addons',__NAMESPACE__, 'location');
+			// $this->api->pathfinder->addLocation(
+			// $this->api->locate('addons',__NAMESPACE__),
+			// array(
+		 //  		'template'=>'templates',
+		 //  		'css'=>'templates/css',
+		 //  		'js'=>'templates/js'
+			// 	)
+			// )->setParent($l);		
 			
 			if($this->is_sortable)
 				$this->template->append('class','epan-sortable-component ');

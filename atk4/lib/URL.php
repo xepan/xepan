@@ -32,7 +32,15 @@ class URL extends AbstractModel {
 
     function init(){
         parent::init();
-        $this->setPage(null);
+
+        if (!isset($this->api->pm)) {
+            throw $this->exception('You must initialize PageManager first');
+        }
+
+        if (!$this->api->pm->base_url) {
+            throw $this->exception('PageManager is did not parse request URL. Use either parseRequestedURL or setURL (if you are in CLI application)');
+        }
+
         $this->addStickyArguments();
         $this->extension=$this->api->getConfig('url_postfix',$this->extension);
     }
@@ -63,6 +71,9 @@ class URL extends AbstractModel {
            Produced URL will contain absolute, rather than relative address:
 http://mysite:123/install/dir/my/page.html
          */
+        return $this->absolute();
+    }
+    function absolute() {
         $this->absolute=true;
         return $this;
     }
@@ -81,9 +92,9 @@ http://mysite:123/install/dir/my/page.html
 
         $destination='';
 
-        if(substr($page,-1)=='/'){
-            return $this->setBaseURL(str_replace('//','/',$this->api->pm->base_path.$page));
-        }
+        //if(substr($page,-1)=='/'){
+            //return $this->setBaseURL(str_replace('//','/',$this->api->pm->base_path.$page));
+        //}
         if(is_null($page))$page='.';
         $path=explode('/',$page);
 
@@ -112,7 +123,7 @@ http://mysite:123/install/dir/my/page.html
             $destination=$destination?$destination.'/'.$component:$component;
 
         }
-        if($destination==='')$destination=$this->api->index_page;
+        if($destination==='')$destination=@$this->api->index_page;
 
         $this->page=$destination;
         return $this;

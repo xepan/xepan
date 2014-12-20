@@ -3,7 +3,7 @@
  * This is a Basic Grid implementation, which produces fully
  * functional HTML grid capable of filtering, sorting, paginating
  * and using multiple column formatters.
- * 
+ *
  * @link http://agiletoolkit.org/doc/grid
  *
  * Use:
@@ -27,17 +27,10 @@ class Grid_Advanced extends Grid_Basic
     /** Sorting */
     public $sortby = '0';
     public $sortby_db = null;
-    
+
     /** For totals */
     private $totals_title_field = null;
     private $totals_title = "";
-    
-    /**
-     * Grid buttons
-     *
-     * @see addButton()
-     */
-    public $buttonset = null;
 
     /** Static data source? */
     public $data = null;
@@ -47,7 +40,28 @@ class Grid_Advanced extends Grid_Basic
      *
      * @see addPaginator()
      */
-    protected $paginator = null;
+    public $paginator = null;
+
+    /**
+     * Paginator class name
+     *
+     * @see enablePaginator()
+     * */
+    public $paginator_class = 'Paginator';
+
+    /**
+     * QuickSearch object
+     *
+     * @see addQuickSearch()
+     */
+    public $quick_search = null;
+
+    /**
+     * QuickSearch class name
+     *
+     * @see enableQuickSearch()
+     * */
+    public $quick_search_class = 'QuickSearch';
 
     /**
      * $tdparam property is an array with cell parameters specified in td tag.
@@ -99,56 +113,85 @@ class Grid_Advanced extends Grid_Basic
 
     // {{{ Misc features
 
-    /**
-     * Adds button
-     *
-     * @param string $label label of button
-     * @param string $class optional name of button class
-     *
-     * @return Button
-     */
-    function addButton($label, $class = 'Button')
-    {
-        if (!$this->buttonset) {
-            $this->buttonset = $this->add('ButtonSet', null, 'grid_buttons');
-        }
-        return $this->buttonset
-            ->add($class, 'gbtn'.count($this->elements))
-            ->setLabel($label);
-    }
 
     /**
-     * Adds QuickSearch
-     * 
-     * @param array $fields array of fieldnames used in quick search
-     * @param string $class optional quick search object class
+     * Add default paginator to the grid
+     *
+     * @param int $rows row count per page
      * @param array $options optional options array
      *
-     * @return QuickSearch
+     * @return $this
      */
-    function addQuickSearch($fields,$class='QuickSearch',$options=null){
-        return $this->add($class,$options,'quick_search')
-            ->useWith($this)
-            ->useFields($fields);
+    function enablePaginator($rows = 25, $options = null)
+    {
+        $this->addPaginator($rows, $options);
+
+        return $this;
     }
 
     /**
      * Adds paginator to the grid
      *
-     * @param int $ipp row count per page
-     * @param array $options
+     * @param int $rows row count per page
+     * @param array $options optional options array
+     * @param string $class optional paginator class name
      *
-     * @return $this
+     * @return Paginator
+     *
+     * @todo decide, maybe we need to add $spot optional template spot like in addQuickSearch()
      */
-    function addPaginator($ipp = 25, $options = null)
+    function addPaginator($rows = 25, $options = null, $class = null)
     {
-        // adding ajax paginator
+        // add only once
+        // @todo decide, maybe we should destroy and recreate to keep last one
         if ($this->paginator) {
             return $this->paginator;
         }
-        $this->paginator = $this->add('Paginator', $options);
-        $this->paginator->ipp($ipp);
+
+        $this->paginator = $this->add($class ?: $this->paginator_class, $options);
+        $this->paginator->setRowsPerPage($rows);
+
+        return $this->paginator;
+    }
+
+    /**
+     * Adds default QuickSearch to the grid
+     *
+     * @param array $fields array of fieldnames used in quick search
+     * @param array $options optional options array
+     *
+     * @return $this
+     */
+    function enableQuickSearch($fields, $options = null)
+    {
+        $this->addQuickSearch($fields, $options);
+
         return $this;
+    }
+
+    /**
+     * Adds QuickSearch to the grid
+     *
+     * @param array $fields array of fieldnames used in quick search
+     * @param array $options optional options array
+     * @param string $class optional quick search object class
+     * @param string $spot optional template spot
+     *
+     * @return QuickSearch
+     */
+    function addQuickSearch($fields, $options = null, $class = null, $spot = null)
+    {
+        // add only once
+        // @todo decide, maybe we should destroy and recreate to keep last one
+        if ($this->quick_search) {
+            return $this->quick_search;
+        }
+
+        $this->quick_search = $this->add($class ?: $this->quick_search_class, $options, $spot ?: 'quick_search')
+            ->useWith($this)
+            ->useFields($fields);
+
+        return $this->quick_search;
     }
 
     /**
@@ -167,7 +210,7 @@ class Grid_Advanced extends Grid_Basic
 
     /**
      * Adds column with checkboxes on the basis of Model definition
-     * 
+     *
      * @param mixed $field should be Form_Field object or jQuery selector of
      *                     1 field. When passing it as jQuery selector don't
      *                     forget to use hash sign like "#myfield"
@@ -187,7 +230,7 @@ class Grid_Advanced extends Grid_Basic
     }
 
     // }}}
-    
+
     // {{{ Sorting
 
     /**
@@ -205,7 +248,7 @@ class Grid_Advanced extends Grid_Basic
             $order = ltrim($this->sortby_db, '-');
             $this->applySorting($iter, $order, $desc);
         }
-        
+
         return $iter;
     }
 
@@ -231,7 +274,7 @@ class Grid_Advanced extends Grid_Basic
         }
 
         switch ((string)$this->sortby) {
-            
+
             // we are already sorting by this column
             case $this->last_column:
                 $info = array('1', $reverse ? 0 : ("-".$this->last_column));
@@ -243,7 +286,7 @@ class Grid_Advanced extends Grid_Basic
                 $info = array('2', $reverse ? $this->last_column : '0');
                 $this->sortby_db = "-" . $db_sort;
                 break;
-            
+
             // we are not sorted by this column
             default:
                 $info = array('0', $reverse ? ("-" . $this->last_column) : $this->last_column);
@@ -261,7 +304,7 @@ class Grid_Advanced extends Grid_Basic
      *      and 0 if they are equal.
      *
      * Note that this comparison is case sensitive
-     * 
+     *
      * @param string $str1
      * @param string $str2
      *
@@ -322,7 +365,7 @@ class Grid_Advanced extends Grid_Basic
 
         parent::render();
     }
-    
+
     /**
      * Render Totals row
      *
@@ -359,7 +402,7 @@ class Grid_Advanced extends Grid_Basic
 
             // process formatters (additional to default formatters)
             $this->executeFormatters($field, $column, 'format_totals_', true);
- 
+
             // totals title displaying
             if ($field == $this->totals_title_field) {
                 $this->setTDParam($field, 'style/font-weight', 'bold');
@@ -419,7 +462,7 @@ class Grid_Advanced extends Grid_Basic
         if (!is_array($current_position)) {
             $current_position = array();
         }
-        
+
         foreach ($path as $part) {
             if (array_key_exists($part, $current_position)) {
                 $current_position = &$current_position[$part];
@@ -428,13 +471,13 @@ class Grid_Advanced extends Grid_Basic
                 $current_position = &$current_position[$part];
             }
         }
-        
+
         $current_position = $value;
     }
 
     /**
      * Apply TD parameters to appropriate template
-     * 
+     *
      * You can pass row template to use too. That's useful to set up totals rows, for example.
      *
      * @param string $field Fieldname
@@ -461,12 +504,12 @@ class Grid_Advanced extends Grid_Basic
                 $tdparam_str .= '" ';
                 unset($tdparam['style']);
             }
-            
+
             //walking and combining string
             foreach ($tdparam as $id=>$value) {
                 $tdparam_str .= $id . '="' . $value . '" ';
             }
-            
+
             // set TD param to appropriate row template
             $row_template->set("tdparam_$field", trim($tdparam_str));
         }
@@ -508,7 +551,7 @@ class Grid_Advanced extends Grid_Basic
      * Calculate grand totals of all rows
      *
      * Called one time on rendering phase - before renderRows() call.
-     * 
+     *
      * @return void
      */
     function updateGrandTotals()
@@ -518,7 +561,7 @@ class Grid_Advanced extends Grid_Basic
 
     /**
      * Additional formatting of number fields for totals row
-     * 
+     *
      * @param string $field
      *
      * @return void
@@ -527,7 +570,7 @@ class Grid_Advanced extends Grid_Basic
 
     /**
      * Additional formatting of money fields for totals row
-     * 
+     *
      * @param string $field
      *
      * @return void
@@ -536,7 +579,7 @@ class Grid_Advanced extends Grid_Basic
 
     /**
      * Additional formatting of real number fields for totals row
-     * 
+     *
      * @param string $field
      *
      * @return void
@@ -547,7 +590,7 @@ class Grid_Advanced extends Grid_Basic
      * Additional formatting of expander fields for totals row
      *
      * Basically we remove everything from such field
-     * 
+     *
      * @param string $field field name
      * @param array $column column configuration
      *
@@ -561,7 +604,7 @@ class Grid_Advanced extends Grid_Basic
      * Additional formatting of custom template fields for totals row
      *
      * Basically we remove everything from such field
-     * 
+     *
      * @param string $field field name
      * @param array $column column configuration
      *
@@ -572,10 +615,24 @@ class Grid_Advanced extends Grid_Basic
     }
 
     /**
+     * Additional formatting of checkbox fields column for totals row
+     *
+     * Basically we remove everything from such field
+     *
+     * @param string $field field name
+     * @param array $column column configuration
+     *
+     * @return void
+     */
+    function format_totals_checkbox($field, $column) {
+        @$this->current_row_html[$field] = '';
+    }
+
+    /**
      * Additional formatting of delete button fields for totals row
      *
      * Basically we remove everything from such field
-     * 
+     *
      * @param string $field field name
      * @param array $column column configuration
      *
@@ -636,11 +693,17 @@ class Grid_Advanced extends Grid_Basic
      */
     function format_expander($field, $column)
     {
+
+        $class = $this->columns[$field]['button_class'].' button_'.$field;
+        $icon = isset($this->columns[$field]['icon'])
+                    ? $this->columns[$field]['icon']
+                    : '';
+                    
         if (!@$this->current_row[$field]) {
             $this->current_row[$field] = $column['descr'];
         }
 
-        // TODO: 
+        // TODO:
         // reformat this using Button, once we have more advanced system to
         // bypass rendering of sub-elements.
         // $this->current_row[$field] = $this->add('Button',null,false)
@@ -648,8 +711,8 @@ class Grid_Advanced extends Grid_Basic
         $id    = $key . $this->api->normalizeName($this->model->id);
         $class = $key . 'expander';
 
-        @$this->current_row_html[$field] = 
-            '<input type="checkbox" '.
+        @$this->current_row_html[$field] =
+            '<button type="button" '.
                 'class="'.$class.'" '.
                 'id="'.$id.'" '.
                 'rel="'.$this->api->url(
@@ -663,8 +726,9 @@ class Grid_Advanced extends Grid_Basic
                         $this->columns[$field]['refid'].'_id' => $this->model->id
                     )
                 ).'" '.
-            '/>'.
-            '<label for="'.$id.'">' . $this->current_row[$field] . '</label>';
+            '>'.
+            $this->current_row[$field] . 
+            '</button>';
     }
     // }}}
 
@@ -745,13 +809,13 @@ class Grid_Advanced extends Grid_Basic
     {
         // use real number formatter
         $this->format_real($field);
-        
+
         // negative values show in red color
         if ($this->current_row[$field] < 0) {
             $this->setTDParam($field, 'style/color', 'red');
         }
     }
-    
+
     /**
      * Initialize column as boolean
      *
@@ -776,7 +840,7 @@ class Grid_Advanced extends Grid_Basic
         if ($this->current_row[$field] && $this->current_row[$field] !== 'N') {
             $this->current_row_html[$field] =
                 '<div align=center>'.
-                    '<span class="ui-icon ui-icon-check">yes</span>'.
+                    '<i class="icon-check">'.$this->api->_('yes').'</i>'.
                 '</div>';
         } else {
             $this->current_row_html[$field] = '';
@@ -894,7 +958,7 @@ class Grid_Advanced extends Grid_Basic
      */
     function format_nowrap($field)
     {
-        $this->setTDParam($field, 'style/white-space', 'nowrap');
+        $this->setTDParam($field, 'class', 'atk-text-nowrap');
     }
 
     /**
@@ -906,7 +970,7 @@ class Grid_Advanced extends Grid_Basic
      */
     function format_wrap($field)
     {
-        $this->setTDParam($field, 'style/white-space', 'wrap');
+        $this->setTDParam($field, 'class', 'atk-text-wrap');
     }
 
 
@@ -928,9 +992,9 @@ class Grid_Advanced extends Grid_Basic
         }
 
         $this->current_row[$field] = $text;
-        
+
         $this->setTDParam($field, 'title',
-            htmlspecialchars($this->current_row[$field.'_original']));
+            $this->api->encodeHtmlChars($this->current_row[$field.'_original']));
     }
 
     /**
@@ -1001,9 +1065,16 @@ class Grid_Advanced extends Grid_Basic
      */
     function init_button($field)
     {
-        $this->_url[$field] = $this->api->url();
+        $this->on('click','.do-'.$field)->univ()->ajaxec(array(
+            $this->api->url(),
+            $field=>$a=$this->js()->_selectorThis()->data('id'),
+            $this->name.'_'.$field => $a
+            ));
+
+        /*
         @$this->columns[$field]['thparam'] .= ' style="width: 40px; text-align: center"';
         $this->js(true)->find('.button_'.$field)->button();
+        */
     }
 
     /**
@@ -1015,7 +1086,11 @@ class Grid_Advanced extends Grid_Basic
      */
     function init_confirm($field)
     {
-        $this->init_button($field);
+        $this->on('click','.do-'.$field)->univ()->confirm('Are you sure?')->ajaxec(array(
+            $this->api->url(),
+            $field=>$a=$this->js()->_selectorThis()->data('id'),
+            $this->name.'_'.$field => $a
+        ));
     }
 
     /**
@@ -1028,7 +1103,7 @@ class Grid_Advanced extends Grid_Basic
     function init_prompt($field)
     {
         @$this->columns[$field]['thparam'] .= ' style="width: 40px; text-align: center"';
-        $this->js(true)->find('.button_'.$field)->button();
+        //$this->js(true)->find('.button_'.$field)->button();
     }
 
     /**
@@ -1040,22 +1115,17 @@ class Grid_Advanced extends Grid_Basic
      */
     function format_button($field)
     {
-        $url = clone $this->_url[$field];
-        $class = $this->columns[$field]['button_class'].' button_'.$field;
-        $icon = isset($this->columns[$field]['icon'])
-                    ? $this->columns[$field]['icon']
-                    : '';
+        $class = $this->columns[$field]['button_class'];
+
+        $icon=$this->columns[$field]['icon'];
+        if($icon) {
+            if($icon[0]!='<')$icon='<span class="icon-'.$icon.'"></span>';
+            $icon.='&nbsp;';
+        }
 
         $this->current_row_html[$field] =
-            '<button type="button" class="'.$class.'" '.
-                'onclick="$(this).univ().ajaxec(\'' .
-                    $url->set(array(
-                        $field => $this->current_id,
-                        $this->name.'_'.$field => $this->current_id
-                    )) . '\')"'.
-            '>'.
-                $icon.
-                $this->columns[$field]['descr'].
+            '<button class="atk-button-small do-'.$field.'  '.$class.'" data-id="'.$this->model->id.'">'.
+                $icon.$this->columns[$field]['descr'].
             '</button>';
     }
 
@@ -1068,6 +1138,8 @@ class Grid_Advanced extends Grid_Basic
      */
     function format_confirm($field)
     {
+        return $this->format_button($field);
+
         $url = clone $this->_url[$field];
         $class = $this->columns[$field]['button_class'].' button_'.$field;
         $icon = isset($this->columns[$field]['icon'])
@@ -1127,18 +1199,18 @@ class Grid_Advanced extends Grid_Basic
     function init_delete($field)
     {
         // set special CSS class for delete buttons to add some styling
-        $this->columns[$field]['button_class'] = 'atk-delete-button';
+        $this->columns[$field]['button_class'] = 'atk-effect-danger atk-delete-button';
+        $this->columns[$field]['icon'] = 'trash';
 
         // if this was clicked, then delete record
         if ($id = @$_GET[$this->name.'_'.$field]) {
-            
+
             // delete record
             $this->_performDelete($id);
-            
+
             // show message
             $this->js()->univ()
                 ->successMessage('Deleted Successfully')
-                ->getjQuery()
                 ->reload()
                 ->execute();
         }
@@ -1195,9 +1267,10 @@ class Grid_Advanced extends Grid_Basic
      *
      * @return $this
      */
-    function setTemplate($template)
+    function setTemplate($template, $field=null)
     {
-        $this->columns[$this->last_column]['template'] = $this->add('SMlite')
+        if($field === null)$field=$this->last_column;
+        $this->columns[$field]['template'] = $this->add('SMlite')
             ->loadTemplateFromString($template);
 
         return $this;
@@ -1232,7 +1305,7 @@ class Grid_Advanced extends Grid_Basic
      */
     function init_link($field)
     {
-        $this->setTemplate('<a href="<?$_link?>"><?$'.$field.'?></a>');
+        $this->setTemplate('<a href="<?$_link?>"><?$'.$field.'?></a>',$field);
     }
 
     /**
@@ -1244,8 +1317,13 @@ class Grid_Advanced extends Grid_Basic
      */
     function format_link($field)
     {
+        $page = $this->columns[$field]['page'] ?: './'.$field;
+        $attr = $this->columns[$field]['id_field'] ?: 'id';
         $this->current_row['_link'] =
-            $this->api->url('./'.$field, array('id' => $this->current_id));
+            $this->api->url($page, array($attr =>
+                $this->columns[$field]['id_value']
+                ? $this->model[$this->columns[$field]['id_value']]
+                : $this->current_id));
 
         if (!$this->current_row[$field]) {
             $this->current_row[$field] = $this->columns[$field]['descr'];

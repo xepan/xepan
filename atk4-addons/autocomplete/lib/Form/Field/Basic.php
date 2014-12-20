@@ -164,14 +164,23 @@ class Form_Field_Basic extends \Form_Field_Hidden
     {
 
         $l=$this->api->locate('addons',__NAMESPACE__, 'location');
-        $this->api->pathfinder->addLocation(
-            $this->api->locate('addons',__NAMESPACE__),
-            array(
+        $this->app->pathfinder->addLocation(
+            'atk4-addons/'.__NAMESPACE__, array(
+                'php'=>'lib',
                 'template'=>'templates',
-                'css'=>'templates/css',
-                'js'=>'js'
-                )
-            )->setParent($l);
+                'css'=>'css',
+                'js'=>'js',
+            )
+        )->setParent($l);
+
+        // $this->api->pathfinder->addLocation(
+        //     $this->api->locate('addons',__NAMESPACE__),
+        //     array(
+        //         'template'=>'templates',
+        //         'css'=>'templates/css',
+        //         'js'=>'js'
+        //         )
+        //     )->setParent($l);
 
         $url = $this->api->url(null, array($this->name => 'ajax'));
         if ($this->value) { // on add new and inserting allow empty start value

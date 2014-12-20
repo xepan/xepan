@@ -65,7 +65,7 @@ class DB_dsql extends AbstractModel implements Iterator {
     public $sql_templates=array(
         'select'=>"select [options] [field] [from] [table] [join] [where] [group] [having] [order] [limit]",
         'insert'=>"insert [options_insert] into [table_noalias] ([set_fields]) values ([set_values])",
-        'replace'=>"replace [options_replace] into [table_noalias] ([set_fields]) values ([set_value])",
+        'replace'=>"replace [options_replace] into [table_noalias] ([set_fields]) values ([set_values])",
         'update'=>"update [table_noalias] set [set] [where]",
         'delete'=>"delete from  [table_noalias] [where]",
         'truncate'=>'truncate table [table_noalias]',
@@ -85,29 +85,31 @@ class DB_dsql extends AbstractModel implements Iterator {
     {
         $this->stmt=null;
     }
+    private $to_stringing=false;
     function __toString()
     {
+        if($this->to_stringing)return 'Recursive __toString';
+        $this->to_stringing=true;
         try {
             if ($this->output_mode==='render') {
-                return $this->render();
+                $output=$this->render();
             } else {
-                return (string)$this->getOne();
+                $output=(string)$this->getOne();
             }
+            $this->to_stringing=false;
+            return $output;
         } catch (Exception $e) {
             $this->api->caughtException($e);
             //return "Exception: ".$e->getMessage();
         }
 
-        return $this->toString();
-
-        if ($this->expr) {
-            return $this->parseTemplate($this->expr);
-        }
-        return $this->select();
+        $output=$this->toString();
+        $this->to_stringing=false;
+        return $output;
     }
 
-    /** 
-     * Explicitly sets template to your query. Remember to change 
+    /**
+     * Explicitly sets template to your query. Remember to change
      * $this->mode if you switch this
      *
      * @param string $template New template to use by render
@@ -120,7 +122,7 @@ class DB_dsql extends AbstractModel implements Iterator {
         return $this;
     }
 
-    /** 
+    /**
      * Change prefix for parametric values. Not really useful.
      *
      * @param string $param_base prefix to use for param names
@@ -203,7 +205,7 @@ class DB_dsql extends AbstractModel implements Iterator {
         return $ret;
     }
 
-    /** 
+    /**
      * Defines a custom tag variable. WARNING: always backtick / escaped
      * argument if it's unsafe
      *
@@ -222,6 +224,32 @@ class DB_dsql extends AbstractModel implements Iterator {
         }
         $this->args['custom'][$tag]=$value;
         return $this;
+    }
+
+    /**
+     * This is identical to AbstractObject::debug(), but as an object
+     * will refer to the $owner. This is to avoid string-casting and
+     * messing up with the DSQL string.
+     *
+     * @param bool|string $msg  "true" to start debugging
+     *
+     * @return void
+     */
+    function debug($msg = true)
+    {
+        if (is_bool($msg)) {
+            $this->debug = $msg;
+            return $this;
+        }
+
+        if(is_object($msg))throw $this->exception('Do not debug objects');
+
+        // The rest of this method is obsolete
+        if ((isset($this->debug) && $this->debug)
+            || (isset($this->app->debug) && $this->app->debug)
+        ) {
+            $this->app->outputDebug($this->owner, $msg);
+        }
     }
 
     /**
@@ -252,7 +280,7 @@ class DB_dsql extends AbstractModel implements Iterator {
     // {{{ Dynamic Query Definition methods
 
     // {{{ Generic methods
-    /** 
+    /**
      * Returns new dynamic query and initializes it to use specific template.
      *
      * @param string $expr SQL Expression. Don't pass unverified input
@@ -293,8 +321,8 @@ class DB_dsql extends AbstractModel implements Iterator {
         return $this;
     }
 
-    /** 
-     * Shortcut to produce expression which concatinates "where" clauses with 
+    /**
+     * Shortcut to produce expression which concatinates "where" clauses with
      * "OR" operator
      *
      * @return DB_dsql New dynamic query, won't affect $this
@@ -316,8 +344,8 @@ class DB_dsql extends AbstractModel implements Iterator {
     }
 
     /**
-     * Return expression containing a properly escaped field. Use make 
-     * subquery condition reference parent query 
+     * Return expression containing a properly escaped field. Use make
+     * subquery condition reference parent query
      *
      * @param string $fld Field in SQL table
      *
@@ -338,7 +366,7 @@ class DB_dsql extends AbstractModel implements Iterator {
     }
     // }}}
     // {{{ table()
-    /** 
+    /**
      * Specifies which table to use in this dynamic query. You may specify
      * array to perform operation on multiple tables.
      *
@@ -350,7 +378,7 @@ class DB_dsql extends AbstractModel implements Iterator {
      *  $q->table(array('user','salary'),'user');
      *  $q->table(array('u'=>'user','s'=>'salary'));
      *
-     * If you specify multiple tables, you still need to make sure to add 
+     * If you specify multiple tables, you still need to make sure to add
      * proper "where" conditions. All the above examples return $q (for chaining)
      *
      * You can also call table without arguments, which will return current table:
@@ -419,7 +447,7 @@ class DB_dsql extends AbstractModel implements Iterator {
         return join(',', $ret);
     }
 
-    /** 
+    /**
      * Conditionally returns "from", only if table is Specified
      * Do not call directly
      *
@@ -433,7 +461,7 @@ class DB_dsql extends AbstractModel implements Iterator {
         return '';
     }
 
-    /** 
+    /**
      * Returns template component [table_noalias]
      *
      * @return string Parsed template chunk
@@ -454,7 +482,7 @@ class DB_dsql extends AbstractModel implements Iterator {
     // }}}
     // {{{ field()
     /**
-     * Adds new column to resulting select by querying $field. 
+     * Adds new column to resulting select by querying $field.
      *
      * Examples:
      *  $q->field('name');
@@ -524,7 +552,7 @@ class DB_dsql extends AbstractModel implements Iterator {
         return $q->del('fields')->field($field, $table, $alias);
     }
 
-    /** 
+    /**
      * Returns template component [field]
      *
      * @return string Parsed template chunk
@@ -562,7 +590,7 @@ class DB_dsql extends AbstractModel implements Iterator {
     }
     // }}}
     // {{{ where() and having()
-    /** 
+    /**
      * Adds condition to your query
      *
      * Examples:
@@ -584,14 +612,14 @@ class DB_dsql extends AbstractModel implements Iterator {
      *  $q->where($q->orExpr()->where('a',1)->where('b',1));
      *
      * you can also use the shortcut:
-     * 
+     *
      *  $q->where(array('a is null','b is null'));
      *
      * @param mixed  $field Field, array for OR or Expression
      * @param string $cond  Condition such as '=', '>' or 'is not'
      * @param string $value Value. Will be quoted unless you pass expression
      * @param string $kind  Do not use directly. Use having()
-     * 
+     *
      * @return DB_dsql $this
      */
     function where($field, $cond = UNDEFINED, $value = UNDEFINED, $kind = 'where')
@@ -603,8 +631,8 @@ class DB_dsql extends AbstractModel implements Iterator {
                 if (is_array($row)) {
                     $or->where(
                         $row[0],
-                        isset($row[1])?$row[1]:UNDEFINED,
-                        isset($row[2])?$row[2]:UNDEFINED
+                        array_key_exists(1, $row) ? $row[1] : UNDEFINED,
+                        array_key_exists(2, $row) ? $row[2] : UNDEFINED
                     );
                 } elseif (is_object($row)) {
                     $or->where($row);
@@ -659,7 +687,7 @@ class DB_dsql extends AbstractModel implements Iterator {
      * Subroutine which renders either [where] or [having]
      *
      * @param string $kind 'where' or 'having'
-     * 
+     *
      * @return array Parsed chunks of query
      */
     function _render_where($kind)
@@ -684,7 +712,7 @@ class DB_dsql extends AbstractModel implements Iterator {
                     $field=$this->bt($table);
                 }
             }
-            
+
             // no value or condition passed, so this should be SQL chunk itself
             if ($value===UNDEFINED && $cond===UNDEFINED) {
                 $r=$field;
@@ -720,7 +748,7 @@ class DB_dsql extends AbstractModel implements Iterator {
                 $value = explode(',', $value);
             }
 
-            // if value is array, then us IN or NOT IN as condition
+            // if value is array, then use IN or NOT IN as condition
             if (is_array($value)) {
                 $v=array();
                 foreach ($value as $vv) {
@@ -800,7 +828,7 @@ class DB_dsql extends AbstractModel implements Iterator {
     }
     // }}}
     // {{{ join()
-    /** 
+    /**
      * Joins your query with another table
      *
      * Examples:
@@ -822,7 +850,7 @@ class DB_dsql extends AbstractModel implements Iterator {
      *  $q->join(array('a'=>'address', 'p'=>'portfolio'));
      *
      * You can use expression for more complex joins
-     *  $q->join('address', 
+     *  $q->join('address',
      *      $q->orExpr()
      *          ->where('user.billing_id=address.id')
      *          ->where('user.technical_id=address.id')
@@ -978,7 +1006,7 @@ class DB_dsql extends AbstractModel implements Iterator {
     }
     // }}}
     // {{{ order()
-    /** 
+    /**
      * Orders results by field or Expression. See documentation for full
      * list of possible arguments
      *
@@ -1058,7 +1086,7 @@ class DB_dsql extends AbstractModel implements Iterator {
     }
     // }}}
     // {{{ option() and args()
-    /** 
+    /**
      * Defines query option, such as DISTINCT
      *
      * @param string|expresion $option Option to put after SELECT
@@ -1080,16 +1108,28 @@ class DB_dsql extends AbstractModel implements Iterator {
         return @implode(' ', $this->args['options']);
     }
 
-    /** 
+    /**
      * Defines insert query option, such as IGNORE
      *
-     * @param string|expresion $option Option to put after SELECT
+     * @param string|expresion $option Option to put after INSERT
      *
      * @return DB_dsql $this
      */
     function option_insert($option)
     {
         return $this->_setArray($option, 'options_insert');
+    }
+
+    /**
+     * Defines replace query option, such as IGNORE
+     *
+     * @param string|expresion $option Option to put after REPLACE
+     *
+     * @return DB_dsql $this
+     */
+    function option_replace($option)
+    {
+        return $this->_setArray($option, 'options_replace');
     }
 
     /**
@@ -1104,9 +1144,22 @@ class DB_dsql extends AbstractModel implements Iterator {
         }
         return implode(' ', $this->args['options_insert']);
     }
+
+    /**
+     * Renders [options_replace]
+     *
+     * @return string rendered SQL chunk
+     */
+    function render_options_replace()
+    {
+        if (!$this->args['options_replace']) {
+            return '';
+        }
+        return implode(' ', $this->args['options_replace']);
+    }
     // }}}
     // {{{  call() and function execution
-    /** 
+    /**
      * Sets a template for a user-defined method call with specified arguments
      *
      * @param string $fx   Name of the user defined method
@@ -1150,7 +1203,7 @@ class DB_dsql extends AbstractModel implements Iterator {
      * set arguments for call(). Used by fx() and call() but you can use This
      * with ->expr("in ([args])")->args($values);
      *
-     * @param array $args Array with mixed arguments 
+     * @param array $args Array with mixed arguments
      *
      * @return DB_dsql $this
      */
@@ -1176,7 +1229,7 @@ class DB_dsql extends AbstractModel implements Iterator {
     }
 
     /**
-     * Sets IGNORE option 
+     * Sets IGNORE option
      *
      * @return DB_dsql $this
      */
@@ -1211,7 +1264,7 @@ class DB_dsql extends AbstractModel implements Iterator {
     }
     // }}}
     // {{{ limit()
-    /** 
+    /**
      * Limit how many rows will be returned
      *
      * @param int $cnt   Number of rows to return
@@ -1244,7 +1297,7 @@ class DB_dsql extends AbstractModel implements Iterator {
     }
     // }}}
     // {{{ set()
-    /** 
+    /**
      * Sets field value for INSERT or UPDATE statements
      *
      * @param string $field Name of the field
@@ -1255,7 +1308,8 @@ class DB_dsql extends AbstractModel implements Iterator {
     function set($field, $value = UNDEFINED)
     {
         if ($value===false) {
-            throw $this->exception('Value "false" is not supported by SQL');
+            throw $this->exception('Value "false" is not supported by SQL')
+                ->addMoreInfo('field',$field);
         }
         if (is_array($field)) {
             foreach ($field as $key => $value) {
@@ -1289,6 +1343,7 @@ class DB_dsql extends AbstractModel implements Iterator {
                 if (is_object($value)) {
                     $value=$this->consume($value);
                 } else {
+                    if(is_array($value))$value=json_encode($value);
                     $value=$this->escape($value);
                 }
 
@@ -1333,6 +1388,7 @@ class DB_dsql extends AbstractModel implements Iterator {
                 if (is_object($value)) {
                     $value=$this->consume($value);
                 } else {
+                    if(is_array($value))$value=json_encode($value);
                     $value=$this->escape($value);
                 }
 
@@ -1407,11 +1463,11 @@ class DB_dsql extends AbstractModel implements Iterator {
     /**
      * Switch template for this query. Determines what would be done
      * on execute.
-     * 
+     *
      * By default it is in SELECT mode
      *
      * @param string $mode A key for $this->sql_templates
-     * 
+     *
      * @return DB_dsql $this
      */
     function SQLTemplate($mode)
@@ -1424,7 +1480,7 @@ class DB_dsql extends AbstractModel implements Iterator {
      * Return expression for concatinating multiple values
      * Accepts variable number of arguments, all of them would be
      * escaped
-     * 
+     *
      * @return DB_dsql clone of $this
      */
     function concat()
@@ -1439,7 +1495,7 @@ class DB_dsql extends AbstractModel implements Iterator {
      * structure, so result parsing is up to you
      *
      * @param string $table Table
-     * 
+     *
      * @return DB_dsql clone of $this
      */
     function describe($table = null)
@@ -1499,7 +1555,7 @@ class DB_dsql extends AbstractModel implements Iterator {
 
     // {{{ More complex query generations and specific cases
 
-    /** 
+    /**
      * Executes current query
      *
      * @return DB_dsql $this
@@ -1535,8 +1591,8 @@ class DB_dsql extends AbstractModel implements Iterator {
         return $this->SQLTemplate('select')->execute();
     }
 
-    /** 
-     * Executes insert query. Returns ID of new record. 
+    /**
+     * Executes insert query. Returns ID of new record.
      *
      * @return int new record ID (from last_id)
      */
@@ -1625,7 +1681,7 @@ class DB_dsql extends AbstractModel implements Iterator {
     // }}}
 
     // {{{ Data fetching modes
-    /** 
+    /**
      * Will execute DSQL query and return all results inside array of hashes
      *
      * @return array Array of associative arrays
@@ -1658,7 +1714,7 @@ class DB_dsql extends AbstractModel implements Iterator {
         return $res[0];
     }
     /**
-     * Will execute DSQL query and return first row as array (not hash). If 
+     * Will execute DSQL query and return first row as array (not hash). If
      * you call several times will return subsequent rows
      *
      * @return array Next row of your data (not hash)
@@ -1667,8 +1723,8 @@ class DB_dsql extends AbstractModel implements Iterator {
     {
         return $this->fetch(PDO::FETCH_NUM);
     }
-    /** 
-     * Will execute DSQL query and return first row as hash (column=>value) 
+    /**
+     * Will execute DSQL query and return first row as hash (column=>value)
      *
      * @return array Hash of next row in data stream
      */
@@ -1691,38 +1747,38 @@ class DB_dsql extends AbstractModel implements Iterator {
         }
         return $this->stmt->fetch($mode);
     }
-    // {{{ Obsolete functions 
+    // {{{ Obsolete functions
     /** @obsolete. Use get() */
     function fetchAll(){
         return $this->get();
     }
     /** @obsolete. Use getQne() */
     function do_getOne(){
-        return $this->getOne(); 
+        return $this->getOne();
     }
     /** @obsolete. Use get() */
-    function do_getAllHash(){ 
-        return $this->get(); 
+    function do_getAllHash(){
+        return $this->get();
     }
-    function do_getAll(){ 
-        return $this->get(); 
+    function do_getAll(){
+        return $this->get();
     }
     /** @obsolete. Use get() */
     function getAll(){
         return $this->get();
     }
     /** @obsolete. Use getRow() */
-    function do_getRow(){ 
+    function do_getRow(){
         return $this->getRow();
     }
     /** @obsolete. Use getHash() */
-    function do_getHash(){ 
-        return $this->getHash(); 
+    function do_getHash(){
+        return $this->getHash();
     }
     // }}}
 
 
-    /** 
+    /**
      * Sets flag to hint SQL (if supported) to prepare total number of columns.
      * Use foundRows() to read this afterwards
      *
@@ -1807,18 +1863,6 @@ class DB_dsql extends AbstractModel implements Iterator {
 
     // {{{ Rendering
     /**
-     * Will set a flag which will output query (echo) as it is being rendered.
-     *
-     * @param boolean $enable Optional flag value
-     *
-     * @return DB_dsql $this
-     */
-    function debug($enable = true)
-    {
-        $this->debug = $enable;
-        return $this;
-    }
-    /**
      * Return formatted debug output
      *
      * @param string $r Rendered material
@@ -1855,8 +1899,8 @@ class DB_dsql extends AbstractModel implements Iterator {
 
             $pp[]=$key;
         }
-        return "<font color='blue'>".$d."</font> <font color='gray'>[".
-            join(', ', $pp)."]</font><br/>";
+        return $d." <font color='gray'>[".
+            join(', ', $pp)."]</font>";
     }
     /**
      * Converts query into string format. This will contain parametric
@@ -1868,9 +1912,8 @@ class DB_dsql extends AbstractModel implements Iterator {
     {
         $this->params=$this->extra_params;
         $r=$this->_render();
-        if ($this->debug) {
-            echo $this->getDebugQuery($r);
-        }
+        $this->debug((string)$this->getDebugQuery($r));
+
         return $r;
     }
     /**

@@ -34,23 +34,31 @@ class Paginator_Basic extends CompleteLister {
     }
 
     /** Set number of items displayed per page */
-    function ipp($ipp){
-        $this->ipp=$ipp;
+    function setRowsPerPage($rows) {
+        $this->ipp = $rows;
         return $this;
+    }
+    // obsolete, should be removed in 4.4
+    function ipp($rows){
+        return $this->setRowsPerPage($rows);
     }
     /** Set a custom source. Must be an object with foundRows() method */
     function setSource($source){
         if($this->memorize){
-            $this->skip=$this->memorize('skip', @$_GET[$this->skip_var])+0;
+            if (isset($_GET[$this->skip_var])){
+                $this->skip=$this->memorize('skip', (int)$_GET[$this->skip_var]);
+            } else {
+                $this->skip=(int)$this->recall('skip');
+            }
         }else{
             $this->skip=@$_GET[$this->skip_var]+0;
         }
-        
+
         // Start iterating early ($source = DSQL of model)
         if($source instanceof SQL_Model){
             $source = $source->_preexec();
         }
-        
+
         if($source instanceof DB_dsql){
             $source->limit($this->ipp, $this->skip);
             $source->calcFoundRows();
@@ -58,7 +66,7 @@ class Paginator_Basic extends CompleteLister {
 
         }elseif($source instanceof Model){
             $this->source = $source->setLimit($this->ipp,$this->skip);
-            
+
         }else{
             // NOTE: no limiting enabled for unknown data source
             $this->source =& $source;
@@ -68,12 +76,12 @@ class Paginator_Basic extends CompleteLister {
 
         // get data source
         if (! $this->source) {
-            
+
             // force grid sorting implemented in Grid_Advanced
             if($this->owner instanceof Grid_Advanced) {
                 $this->owner->getIterator();
             }
-            
+
             // set data source for Paginator
             if ($this->owner->model) {
                 $this->setSource($this->owner->model);
@@ -100,7 +108,7 @@ class Paginator_Basic extends CompleteLister {
 
         // no need for paginator if there is only one page
         if($this->total_pages<=1)return $this->destroy();
-        
+
         if($this->cur_page>$this->total_pages || ($this->cur_page==1 && $this->skip!=0)){
             $this->cur_page=1;
             if($this->memorize){
@@ -127,7 +135,7 @@ class Paginator_Basic extends CompleteLister {
                 ->set('<')
                 ;
         }
-        
+
         if($this->cur_page<$this->total_pages){
             $this->add('View',null,'next')
                 ->setElement('a')
@@ -174,18 +182,23 @@ class Paginator_Basic extends CompleteLister {
                     ;
             }
         }
-        
+
         // generate source for Paginator Lister (pages, links, labels etc.)
         $data=array();
 
-        foreach(range(max(1,$this->cur_page-$this->range), min($this->total_pages, $this->cur_page+$this->range)) as $p){
-            $data[]=array(
+        //setting cur as array seems not working in atk4.3. String is working
+        $tplcur = $this->template->get('cur');
+        $tplcur = (isset($tplcur[0])) ? $tplcur[0] : '';
+
+        foreach(range(max(1,$this->cur_page-$this->range), min($this->total_pages, $this->cur_page+$this->range)) as $p)
+        {
+        	$data[]=array(
                 'href'=>$this->api->url($this->base_page,array($this->skip_var=>$pn=($p-1)*$this->ipp)),
                 'pn'=>$pn,
-                'cur'=>$p==$this->cur_page?$this->template->get('cur'):'',
+                'cur'=>$p==$this->cur_page?$tplcur:'',
                 'label'=>$p
             );
-        } 
+        }
 
         if($this->ajax_reload){
             $this->js('click',$this->owner->js()->reload(array($this->skip_var=>$this->js()->_selectorThis()->attr('data-skip'))))
@@ -199,6 +212,6 @@ class Paginator_Basic extends CompleteLister {
         return array('paginator42','paginator');
     }
     function defaultSpot(){
-        return 'paginator';
+        return 'Paginator';
     }
 }

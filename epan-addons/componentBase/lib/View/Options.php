@@ -20,14 +20,22 @@ class View_Options extends \View{
 	}
 
 	function defaultTemplate(){
-		$l=$this->api->locate('addons',$this->namespace, 'location');
-		$this->api->pathfinder->addLocation(
-			$this->api->locate('addons',$this->namespace),
-			array(
-		  		'template'=>'templates',
-		  		'css'=>'templates/css'
-				)
-			)->setParent($l);
+		$this->app->pathfinder->base_location->addRelativeLocation(
+		    'epan-components/'.$this->namespace, array(
+		        'php'=>'lib',
+		        'template'=>'templates',
+		        'css'=>'css',
+		        'js'=>'js',
+		    )
+		);
+		// $l=$this->api->locate('addons',$this->namespace, 'location');
+		// $this->api->pathfinder->addLocation(
+		// 	$this->api->locate('addons',$this->namespace),
+		// 	array(
+		//   		'template'=>'templates',
+		//   		'css'=>'templates/css'
+		// 		)
+		// 	)->setParent($l);
 		return array('view/'.$this->namespace.'-'.str_replace("View_Tools_", "", $this->component_type).'-options');
 	}
 }

@@ -10,13 +10,23 @@ class Chart extends \View {
 	private $xAxis=array();
 
 	function initializeTemplate(){
-		$l = $this->api->locate('addons',__NAMESPACE__,'location');
-		$addon_location = $this->api->locate('addons',__NAMESPACE__);
-		$this->api->pathfinder->addLocation($addon_location,array(
-			'js'=>'js',
-			'css'=>'css',
-			'template'=>'templates'
-		))->setParent($l);
+
+		$this->app->pathfinder->base_location->addRelativeLocation(
+		    'epan-addons/'.__NAMESPACE__, array(
+		        'php'=>'lib',
+		        'template'=>'templates',
+		        'css'=>'css',
+		        'js'=>'js',
+		    )
+		);
+
+		// $l = $this->api->locate('addons',__NAMESPACE__,'location');
+		// $addon_location = $this->api->locate('addons',__NAMESPACE__);
+		// $this->api->pathfinder->addLocation($addon_location,array(
+		// 	'js'=>'js',
+		// 	'css'=>'css',
+		// 	'template'=>'templates'
+		// ))->setParent($l);
 		parent::initializeTemplate();
 	}
 

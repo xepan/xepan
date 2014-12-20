@@ -37,15 +37,6 @@ class page_index extends Page {
 
 	function render(){
 
-		$this->api->template->appendHTML('js_include','<script src="templates/js/jquery.sharrre.js"></script>'."\n");
-
-		if($this->api->getConfig('css_mode')=='less'){
-			$this->api->template->appendHTML('js_include','<link type="text/css" href="templates/default/css/epan.less" rel="stylesheet/less" />'."\n");
-			$this->api->template->appendHTML('js_include','<script src="templates/default/js/less.min.js"></script>'."\n");
-		}else{
-			// Moved to FrontEnd
-			// $this->api->template->appendHTML('js_include','<link type="text/css" href="templates/default/css/epan.css" rel="stylesheet" />'."\n");
-		}
 
 		if($this->api->edit_mode){
 			/**
@@ -53,30 +44,33 @@ class page_index extends Page {
 			 */
 			$this->js()->_load('epan_live_edit');
 
-			// Add Div to stop being accessed before fully loaded
-			// $this->api->template->appendHTML('Content','<div id="overlay-dark"><H3 id="overlay-dark-message">Wait, Loading ...</h3> </div>');
-			$this->api->template->appendHTML('js_include','<link type="text/css" href="templates/default/css/epan_live.css" rel="stylesheet" />'."\n");
-			// $this->api->template->appendHTML('js_include','<link type="text/css" href="templates/js/jquery.jscrollpane.css" rel="stylesheet" />'."\n");
-			// $this->api->template->appendHTML('js_include','<script src="templates/js/jquery.jscrollpane.min.js"></script>'."\n");
+			$css=array(
+					// 'templates/css/compact.css',
+					'templates/css/epan_live.css',
+					// Popline
+					'templates/js/popline/css/normalize.css',
+					'templates/js/popline/themes/default.css',
+					'templates/font-awesome/css/font-awesome.min.css',
+					'templates/js/google-fonts/fontselect.css',
+					'elfinder/css/elfinder.min.css',
+					'elfinder/css/theme.css',
+				);
 
-			// SHORTCUTS
-			$this->api->template->appendHTML('js_include','<script src="templates/js/shortcut.js"></script>'."\n");
+			foreach ($css as $css_file) {
+				$this->api->template->appendHTML('js_include','<link type="text/css" href="'.$css_file.'" rel="stylesheet" />'."\n");
+			}
 
-			// POPLINE EDITING
-			$this->api->template->appendHTML('js_include','<link type="text/css" href="templates/js/popline/css/normalize.css" rel="stylesheet" />'."\n");
-			$this->api->template->appendHTML('js_include','<link type="text/css" href="templates/js/popline/themes/default.css" rel="stylesheet" />'."\n");
-			$this->api->template->appendHTML('js_include','<script src="templates/js/popline/build/jquery.popline.min.js"></script>'."\n");
-			$this->api->template->appendHTML('js_include','<link type="text/css" href="templates/js/popline/font-awesome/css/font-awesome.min.css" rel="stylesheet" />'."\n");
+			$scripts =array(
+					'templates/js/shortcut.js',
+					'templates/js/popline/build/jquery.popline.min.js',
+					'templates/js/google-fonts/jquery.fontselect.js',
+					'elfinder/js/elfinder.full.js',
+					'elfinder/js/jquery.dialogelfinder.js'
+				);
 
-			// Font Awsome
-			$this->api->template->appendHTML('js_include','<link type="text/css" href="templates/default/font-awesome/css/font-awesome.min.css" rel="stylesheet" />'."\n");
-			// Google font selector
-			$this->api->template->appendHTML('js_include','<link type="text/css" href="templates/js/fontselect.css" rel="stylesheet" />'."\n");
-			$this->api->template->appendHTML('js_include','<script src="templates/js/jquery.fontselect.js"></script>'."\n");			
-
-			$this->api->template->appendHTML('js_include','<link type="text/css" href="elfinder/css/elfinder.min.css" rel="stylesheet" />'."\n");
-			$this->api->template->appendHTML('js_include','<link type="text/css" href="elfinder/css/theme.css" rel="stylesheet" />'."\n");
-			$this->api->template->appendHTML('js_include','<script src="elfinder/js/elfinder.min.js"></script>'."\n");			
+			foreach ($scripts as $script_file) {
+				$this->api->template->appendHTML('js_include','<script src="'.$script_file.'"></script>'."\n");
+			}
 	
 		}
 

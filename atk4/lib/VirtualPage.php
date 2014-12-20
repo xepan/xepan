@@ -20,7 +20,7 @@
  *
  * VirtualPage is intelligent enough to act differently depending on where you
  * add it.
- * 
+ *
  * This way you can create popup on page load.
  *  $vp = $this->add('VirtualPage');
  *  $this->js(true)->univ()->frameURL('MyPopup',$vp->getURL());
@@ -90,7 +90,7 @@ class VirtualPage extends AbstractController
      *
      * @param string $arg Optionally ask for specific argument
      *
-     * @return boolean|string 
+     * @return boolean|string
      */
     function isActive($arg = null)
     {
@@ -121,11 +121,11 @@ class VirtualPage extends AbstractController
 
     /**
      * Associates code with the page. This code will be executed within
-     * a brand new page when called by URL. 
+     * a brand new page when called by URL.
      *
      * @param callable $method_or_arg Optional argument
      * @param callable $method        function($page){ .. }
-     * 
+     *
      * @return VirtualPage $this
      */
     function set($method_or_arg, $method = null)
@@ -138,20 +138,21 @@ class VirtualPage extends AbstractController
 
         if ($this->isActive($arg)) {
             $this->api->addHook('post-init', function () use ($method, $self) {
-                $page=$self->api->add(
-                    $self->page_class,
-                    $self->name,
-                    null,
-                    $self->page_template
-                );
+                $page = $self->getPage();
                 $page->id=$_GET[$self->name.'_id'];
-
-                $self->api->cut($page);
-                $self->api->stickyGET($self->name);
                 $self->api->stickyGET($self->name.'_id');
-                call_user_func($method, $page, $self);
-                $self->api->stickyForget($self->name.'_id');
-                $self->api->stickyForget($self->name);
+
+                try {
+                    call_user_func($method, $page, $self);
+                } catch (Exception $e){
+                    // exception occured possibly due to a nested page. We
+                    // are already executing from post-init, so
+                    // it's fine to ignore it.
+                }
+
+                //Imants: most likely forgetting is not needed, because we stop execution anyway
+                //$self->api->stickyForget($self->name.'_id');
+                //$self->api->stickyForget($self->name);
             });
             throw $this->exception('', 'StopInit');
         }
@@ -172,7 +173,8 @@ class VirtualPage extends AbstractController
             return $this->page;
         }
 
-        $this->api->_removeElement($this->api->page_object->short_name);
+        $this->api->page_object->destroy(false);
+
 
         $this->api->page_object = $this->page = $this->api->add(
             $this->page_class,
@@ -200,20 +202,32 @@ class VirtualPage extends AbstractController
             $grid=$this->owner;
         }
 
+        if(!is_array($buttontext)) {
+            $buttontext = array();
+        }
+        if(!$buttontext['descr'])$buttontext['descr']=$title?:ucwords(str_replace('_', ' ', $name));
+
+        $icon='';
+        if($buttontext['icon']) {
+            if($buttontext['icon'][0]!='<') {
+                $icon.='<i class="icon-'.
+                    $buttontext['icon'].'"></i>';
+            }else{
+                $icon.=$buttontext['icon'];
+            }
+            $icon.='&nbsp;';
+        }
+
         $grid->addColumn('template', $name, $buttontext?:$title)
             ->setTemplate(
-                '<button type="button" class="pb_'.$name.'">'.
-                htmlspecialchars(
-                    $buttontext?:$title?:ucwords(
-                        str_replace('_', ' ', $name)
-                    )
-                ).
+                '<button type="button" class="atk-button-small pb_'.$name.'">'.
+                    $icon.$this->app->encodeHtmlChars($buttontext['descr']).
                 '</button>'
             );
 
         $grid->columns[$name]['thparam'].=' style="width: 40px; text-align: center"';
 
-        $grid->js(true)->_selector('#'.$grid->name.' .pb_'.$name)->button();
+        //$grid->js(true)->_selector('#'.$grid->name.' .pb_'.$name)->button();
         $t=$this->type;
         $grid->js('click')->_selector('#'.$grid->name.' .pb_'.$name)->univ()
             ->$t($title, array($this->getURL($name),

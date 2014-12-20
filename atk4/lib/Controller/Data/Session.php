@@ -14,19 +14,21 @@
 
    See LICENSE or LICENSE_COM for more information
  =====================================================ATK4=*/
-/* 
-Implements connectivity between Model and Session 
+/*
+Implements connectivity between Model and Session
 */
 class Controller_Data_Session extends Controller_Data_Array {
 
-    function setSource($model,$data=undefined){
+    function setSource($model, $data) {
         $this->api->initializeSession();
-        if($data===undefined || $data === null)$data='-';
+        if($data===undefined || $data === null) {
+            $data='-';
+        }
 
-        if(!$_SESSION['ctl_data'][$data]){
+        if(!$_SESSION['ctl_data'][$data]) {
             $_SESSION['ctl_data'][$data]=array();
         }
-        if(!$_SESSION['ctl_data'][$data][$model->table]){
+        if(!$_SESSION['ctl_data'][$data][$model->table]) {
             $_SESSION['ctl_data'][$data][$model->table]=array();
         }
 

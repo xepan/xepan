@@ -33,16 +33,13 @@ abstract class Form_Field extends AbstractView {
     public $attr=array();
     public $no_save=null;
 
-    public $field_prepend='';
-    public $field_append='';
-
     public $comment='&nbsp;';
     protected $disabled=false;
     protected $mandatory=false;
     public $default_value=null;
 
     // Field customization
-    private $separator='';
+    private $separator=':';
     public $show_input_only;
     public $form=null;
 
@@ -54,12 +51,24 @@ abstract class Form_Field extends AbstractView {
         if(@$_GET[$this->owner->name.'_cut_field']==$this->name){
             $this->api->addHook('pre-render',array($this,'_cutField'));
         }
+
+        /** TODO: finish refactoring
+        // find the form
+        $obj=$this->owner;
+        while(!$obj instanceof Form){
+            if($obj === $this->app)throw $this->exception('You must add fields only inside Form');
+
+            $obj = $obj->owner;
+        }
+        $this->setForm($obj);
+         */
+
     }
     function setForm($form){
         $form->addHook('loadPOST',$this);
         $form->addHook('validate',$this);
         $this->form=$form;
-        $this->form->data[$this->short_name] = $this->value;
+        $this->form->data[$this->short_name] = ($this->value!==null ? $this->value : $this->default_value);
         $this->value =& $this->form->data[$this->short_name];
         return $this;
     }
@@ -88,6 +97,9 @@ abstract class Form_Field extends AbstractView {
     }
     function setCaption($_caption){
         $this->caption=$this->api->_($_caption);
+        if ($this->show_input_only || !$this->template->hasTag('field_caption')) {
+            $this->setAttr('placeholder',$this->caption);
+        }
         return $this;
     }
     function displayFieldError($msg=null){
@@ -129,36 +141,50 @@ abstract class Form_Field extends AbstractView {
             if(isset($options['position']))$position=$options['position'];
         }
         if($position=='after'){
-            return $this->afterField()->add('Button',$options)->setLabel($label);
+            $button = $this->afterField()->add('Button',$options)->set($label);
         }else{
-            return $this->beforeField()->add('Button',$options)->setLabel($label);
+            $button = $this->beforeField()->add('Button',$options)->set($label);
         }
+        $this->js('change', $button->js()->data('val', $this->js()->val()) );
+        return $button;
     }
-    function beforeField(){
-        if(!$this->template->hasTag('after_input')){
-            $el=$this->owner->add('HtmlElement');
-            $this->owner->add('Order')->move($el,'before',$this)->now();
-            return $el;
+
+    /** Layout changes in response to adding more elements before / after */
+
+    public $_icon=null;
+    /** Wraps input field into a <span> to align icon correctly */
+    function addIcon($icon,$link=null)
+    {
+        if(!$this->_icon){
+            $this->_icon=$this->add('Icon',null,'icon');
         }
-        if(!$this->button_prepend)return $this->button_prepend=$this
-            ->add('HtmlElement',null,'before_input')->addClass('input-cell');
-        return $this->button_prepend;
+        $this->_icon->set($icon);
+        if($link){
+            $this->_icon->setElement('a')
+                ->setAttr('href',$link);
+        }
+
+        $this->template->trySetHTML('before_input','<span class="atk-input-icon atk-jackscrew">');
+        $this->template->trySetHTML('after_input','</span>');
+
+        return $this->_icon;
+    }
+
+    /** Will enable field wrappin inside a atk-cells/atk-cell block */
+    public $_use_cells=false;
+    function beforeField(){
+        $this->_use_cells=true;
+        return $this->add('View',null,'before_field')->addClass('atk-cell');
     }
     function afterField(){
-        if(!$this->template->hasTag('after_input')){
-            $el=$this->owner->add('HtmlElement');
-            $this->owner->add('Order')->move($el,'after',$this)->now();
-            return $el;
-        }
-        if(!$this->button_append)return $this->button_append=$this
-            ->add('HtmlElement',null,'after_input')->addClass('input-cell');
-        return $this->button_append;
+        $this->_use_cells=true;
+        return $this->add('View',null,'after_field')->addClass('atk-cell');
     }
     function aboveField(){
-        return $this->add('HtmlElement',null,'before_field');
+        return $this->add('View',null,'above_field');
     }
     function belowField(){
-        return $this->add('HtmlElement',null,'after_field');
+        return $this->add('View',null,'below_field');
     }
     function setComment($text=''){
         $this->belowField()->setElement('ins')->set($text);
@@ -206,7 +232,7 @@ abstract class Form_Field extends AbstractView {
         $this->normalize();
     }
     function normalize(){
-        /* Normalization will make sure that entry conforms to the field type. 
+        /* Normalization will make sure that entry conforms to the field type.
            Possible trimming, rounding or length enforcements may happen. */
         $this->hook('normalize');
     }
@@ -278,17 +304,17 @@ abstract class Form_Field extends AbstractView {
         }
         if(!$this->error_template)$this->error_template = $this->form->template_chunks['field_error'];
         if((!property_exists($this, 'mandatory_template')) || (!$this->mandatory_template))$this->mandatory_template=$this->form->template_chunks['field_mandatory'];
-        $this->template->trySetHTML('field_caption',$this->caption?($this->caption.$this->separator):'');
+        $this->template->trySet('field_caption',$this->caption?($this->caption.$this->separator):'');
         $this->template->trySet('field_name',$this->name);
         $this->template->trySet('field_comment',$this->comment);
         // some fields may not have field_input tag at all...
-        if($this->button_prepend || $this->button_append){
-            $this->field_prepend.='<div class="input-cell expanded">';
-            $this->field_append='</div>'.$this->field_append;
-            $this->template->trySetHTML('input_row_start','<div class="input-row">');
-            $this->template->trySetHTML('input_row_stop','</div>');
+        if($this->_use_cells){
+            $this->template->trySetHTML('cells_start','<div class="atk-cells atk-input-combo">');
+            $this->template->trySetHTML('cells_stop','</div>');
+            $this->template->trySetHTML('input_cell_start','<div class="atk-cell atk-jackscrew">');
+            $this->template->trySetHTML('input_cell_stop','</div>');
         }
-        $this->template->trySetHTML('field_input',$this->field_prepend.$this->getInput().$this->field_append);
+        $this->template->trySetHTML('field_input',$this->getInput());
         $this->template->trySetHTML('field_error',
                 isset($this->form->errors[$this->short_name])?
                 $this->error_template->set('field_error_str',$this->form->errors[$this->short_name])->render()
@@ -380,17 +406,20 @@ abstract class Form_Field extends AbstractView {
             if($val === false) continue;
             if($val === true) $tmp[] = "$key";
             elseif($key === '')$tag=$val;
-            else $tmp[] = "$key=\"".htmlspecialchars($val)."\"";
+            else $tmp[] = "$key=\"".$this->api->encodeHtmlChars($val)."\"";
         }
         return "<$tag ".join(' ',$tmp).$postfix.">".($value?$value."</$tag>":"");
     }
 
-    function setSource(){
-        return call_user_func_array(array($this->form,'setSource'),func_get_args());
+    function destroy(){
+        parent::destroy();
+        if ($this->form != $this->owner) {
+            $this->form->_removeElement($this->short_name);
+        }
     }
-    function addField(){
-        return call_user_func_array(array($this->form,'addField'),func_get_args());
-        //throw new ObsoleteException('$form->addField() now returns Field object and not Form. Do not chain it.');
+
+    function defaultTemplate(){
+        return array('form_field');
     }
 }
 

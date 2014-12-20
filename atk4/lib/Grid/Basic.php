@@ -5,7 +5,7 @@
  * and using multiple column formatters.
  * Basic Grid no longer implements the column formatters, instead
  * they have been moved into Grid_Advanced.
- * 
+ *
  * @link http://agiletoolkit.org/doc/grid
  *
  * Use:
@@ -37,13 +37,20 @@ class Grid_Basic extends CompleteLister
 
     /** jQuery-UI icons to show as sort icons in header */
     public $sort_icons = array(
-        'ui-icon ui-icon-arrowthick-2-n-s',
-        'ui-icon ui-icon-arrowthick-1-n',
-        'ui-icon ui-icon-arrowthick-1-s',
+        'icon-sort',
+        'icon-up-dir',
+        'icon-down-dir',
     );
 
     /** Should we show header line */
     public $show_header = true;
+
+    /**
+     * Grid buttons
+     *
+     * @see addButton()
+     */
+    public $buttonset = null;
 
     /** No records message. See setNoRecords() */
     protected $no_records_message = "No matching records found";
@@ -67,6 +74,24 @@ class Grid_Basic extends CompleteLister
     {
     }
 
+    /**
+     * Adds button
+     *
+     * @param string $label label of button
+     * @param string $class optional name of button class
+     *
+     * @return Button
+     */
+    function addButton($label, $class = 'Button')
+    {
+        if (!$this->buttonset) {
+            $this->buttonset = $this->add('ButtonSet', null, 'grid_buttons')->setClass('atk-actions');
+        }
+        return $this->buttonset
+            ->add($class, 'gbtn'.count($this->elements))
+            ->set($label);
+    }
+
     // {{{ Columns
 
     /**
@@ -88,7 +113,11 @@ class Grid_Basic extends CompleteLister
         if ($descr === null) {
             $descr = ucwords(str_replace('_', ' ', $name));
         }
-        $descr = $this->api->_($descr);
+        if (is_array($descr)) {
+            $descr['descr'] = $this->api->_($descr['descr']);
+        } else {
+            $descr = $this->api->_($descr);
+        }
 
         $this->columns[$name] = array('type' => $formatters);
 
@@ -97,6 +126,14 @@ class Grid_Basic extends CompleteLister
         } else {
             $this->columns[$name]['descr'] = $descr;
         }
+
+        if($this->columns[$name]['icon']) {
+            if($this->columns[$name]['icon'][0]!='<') {
+                $this->columns[$name]['icon']='<i class="icon-'.
+                    $this->columns[$name]['icon'].'"></i>&nbsp;';
+            }else throw $this->exception('obsolete way of using icon. Do not specify HTML code, but juts the icon');
+        }
+
 
         $this->last_column = $name;
 
@@ -177,7 +214,7 @@ class Grid_Basic extends CompleteLister
 
         return $this;
     }
-    
+
     /**
      * Set caption of column
      *
@@ -194,7 +231,7 @@ class Grid_Basic extends CompleteLister
     // }}}
 
     // {{{ Misc
-    
+
     /**
      * Import fields using controller
      *
@@ -208,12 +245,12 @@ class Grid_Basic extends CompleteLister
         $this->add($this->default_controller)
             ->importFields($model, $fields);
     }
-    
+
     /**
      * Set message to show when no records are retrieved
      *
      * @param string $message
-     * 
+     *
      * @return $this
      */
     public function setNoRecordsMessage($message)
@@ -249,7 +286,7 @@ class Grid_Basic extends CompleteLister
 
     /**
      * Add extra formatter to existing field
-     * 
+     *
      * @param string $field
      * @param mixed $formatter
      * @param array $options
@@ -295,7 +332,7 @@ class Grid_Basic extends CompleteLister
 
     /**
      * Default formatter
-     * 
+     *
      * @param string $field
      *
      * @return void
@@ -327,7 +364,7 @@ class Grid_Basic extends CompleteLister
         if ($this->total_rows) {
             $this->template->del('not_found');
         } elseif ($this->no_records_message) {
-            $this->template->tryDel('all_table');
+            $this->template->del('header');
             $this->template->set('not_found_message', $this->no_records_message);
         }
     }
@@ -350,8 +387,8 @@ class Grid_Basic extends CompleteLister
         // data row and column
         $row = $this->row_t;
         $col = $row->cloneRegion('col');
-        $row->setHTML('row_id', '<?$id?>');
-        $row->trySetHTML('odd_even', '<?$odd_even?>');
+        $row->setHTML('row_id', '{$id}');
+        $row->trySetHTML('odd_even', '{$odd_even}');
         $row->del('cols');
 
         // totals row and column
@@ -362,7 +399,7 @@ class Grid_Basic extends CompleteLister
 
         // Add requested columns to row templates
         foreach ($this->columns as $name => $column) {
-            
+
             // header row
             $header_col
                 ->set('descr', $column['descr'])
@@ -384,6 +421,7 @@ class Grid_Basic extends CompleteLister
             } else {
                 $header_col
                     ->del('sort')
+                    ->tryDel('sortid')
                     ->tryDel('sort_del');
             }
 
@@ -397,16 +435,16 @@ class Grid_Basic extends CompleteLister
 
             // data row
             $col->del('content')
-                ->setHTML('content', '<?$'.$name.'?>')
-                ->setHTML('tdparam', '<?tdparam_'.$name.'?>style="white-space:nowrap"<?/?>');
+                ->setHTML('content', '{$'.$name.'}')
+                ->setHTML('tdparam', '{tdparam_'.$name.'}style="white-space:nowrap"{/}');
             $row->appendHTML('cols', $col->render());
 
             // totals row
             if (isset($t_row) && isset($t_col)) {
                 $t_col
                     ->del('content')
-                    ->setHTML('content', '<?$'.$name.'?>')
-                    ->trySetHTML('tdparam', '<?tdparam_'.$name.'?>style="white-space:nowrap"<?/?>');
+                    ->setHTML('content', '{$'.$name.'}')
+                    ->trySetHTML('tdparam', '{tdparam_'.$name.'}style="white-space:nowrap"{/}');
                 $t_row
                     ->appendHTML('cols', $t_col->render());
             }
@@ -419,13 +457,13 @@ class Grid_Basic extends CompleteLister
 
         // data row
         $this->row_t = $this->api
-            ->add('SMlite')
+            ->add('GiTemplate')
             ->loadTemplateFromString($row->render());
 
         // totals row
         if (isset($t_row) && $this->totals_t) {
             $this->totals_t = $this->api
-                ->add('SMlite')
+                ->add('GiTemplate')
                 ->loadTemplateFromString($t_row->render());
         }
     }
@@ -462,10 +500,10 @@ class Grid_Basic extends CompleteLister
 
         foreach ($this->columns as $field => $column) {
             $this->current_row[$field.'_original'] = @$this->current_row[$field];
-            
+
             // if model field has listData structure, then get value instead of key
             if ($this->model && $f=$this->model->hasElement($field)) {
-                if ($values = $f->listData()) {
+                if ($f->type() !== 'boolean' && $values = $f->listData()) {
                     $this->current_row[$field] = $values[$this->current_row[$field]];
                 }
             }
@@ -495,7 +533,7 @@ class Grid_Basic extends CompleteLister
             if (!$formatter) {
                 continue;
             }
-            
+
             if ($this->hasMethod($m = $formatter_prefix . $formatter)) {
                 // formatter method is included in this class
                 $this->$m($field, $column);
@@ -514,7 +552,7 @@ class Grid_Basic extends CompleteLister
 
     /**
      * Apply TD parameters in appropriate template
-     * 
+     *
      * You can pass row template too. That's useful to set up totals rows, for example.
      *
      * @param string $field Fieldname

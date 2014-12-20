@@ -1,9 +1,9 @@
-<div id="<?$_name?>" class=' epan-frontend-editing-toolbar <?$class?>'>
+<div id="{$_name}" class=' epan-frontend-editing-toolbar {$class}'>
 	<div class='row'>
 		<div class='col-md-7'>
 			<div class = 'components-section'>
 				<div class='tools-panel content'>
-					<?$tools?>
+					{$tools}
 				</div>
 			</div>
 			<div id='epan-frontend-editing-toolbar-breadcrumb'>
@@ -72,17 +72,17 @@
 		<i id='epan-quick-component-options-close' class='glyphicon glyphicon-remove pull-right' style='margin-right:20px'></i>
 	</div>
 	<div id='common-options-div'>
-		<?$common_css_options?>
+		{$common_css_options}
 	</div>
 </div>
 <script type="text/javascript">
 // Providing Some Values To JAVASCRIPT about current editing environment
 
-var website_requested = '<?$website_requested?>';
-var current_website_id = '<?$current_website_id?>';
-var current_page_name = '<?$current_page_name?>';
-var current_page_id = '<?$current_page_id?>';
-var current_template_id = '<?$current_template_id?>';
+var website_requested = '{$website_requested}';
+var current_website_id = '{$current_website_id}';
+var current_page_name = '{$current_page_name}';
+var current_page_id = '{$current_page_id}';
+var current_template_id = '{$current_template_id}';
 
 console.log("template id " + current_template_id);
 

@@ -20,14 +20,13 @@
 abstract class AbstractView extends AbstractObject
 {
     /**
-     * $template is an SMLite object containing indexed HTML
-     * template. 
+     * $template is an object containing indexed HTML template.
      *
      * Example:
      *
      * $view->template->set('title', $my_title);
      *
-     * Assuming you have tag <?$template?> in template file associated
+     * Assuming you have tag <?$title?> in template file associated
      * with this view - will insert text into this tag.
      *
      * @see AbstractObject::add();
@@ -130,7 +129,7 @@ abstract class AbstractView extends AbstractObject
      * Converting View into string will render recursively and produce HTML.
      * If argument is passed, JavaScript will be added into on_ready section
      * of your document like when rendered normally. Note that you might
-     * require to destroy object if you don't want it's HTML to appear normally 
+     * require to destroy object if you don't want it's HTML to appear normally
      *
      * @param boolean $destroy    Destroy object preventing it from rendering
      * @param boolean $execute_js Also capture JavaScript chains of object
@@ -144,8 +143,8 @@ abstract class AbstractView extends AbstractObject
         $this->removeHook('output', array($this, '_tsBuffer'));
         $ret=$this->_tsBuffer;
         $this->_tsBuffer='';
-        if ($execute_js && @$this->api->jquery) {
-            $this->api->jquery->getJS($this);
+        if ($execute_js && @$this->app->jquery) {
+            $this->app->jquery->getJS($this);
         }
         if ($destroy) {
             $this->destroy();
@@ -156,7 +155,7 @@ abstract class AbstractView extends AbstractObject
 
     // {{{ Template Setup
 
-    /** 
+    /**
      * Called automatically during init for template initalization
      *
      * @param string       $template_spot   Where object's output goes
@@ -174,7 +173,7 @@ abstract class AbstractView extends AbstractObject
         if (@$this->owner->template
             && !$this->owner->template->is_set($this->spot)
         ) {
-            throw $this->exception(
+            throw $this->owner->template->exception(
                 'Spot is not found in owner\'s template'
             )->addMoreInfo('spot', $this->spot);
         }
@@ -186,7 +185,7 @@ abstract class AbstractView extends AbstractObject
             // use. Let's look at several cases:
 
             if (is_object($template_branch)) {
-                // it might be already SMlite instance (object)
+                // it might be already template instance (object)
                 $this->template=$template_branch;
             } elseif (is_array($template_branch)) {
                 // it might be array with [0]=template, [1]=tag
@@ -194,7 +193,7 @@ abstract class AbstractView extends AbstractObject
                     // if [0] is object, we'll use that
                     $this->template=$template_branch[0];
                 } else {
-                    $this->template=$this->api->add('SMlite');
+                    $this->template=$this->app->add('Template');
                     $this->template->loadTemplate($template_branch[0]);
                 }
                 // Now that we loaded it, let's see which tag we need to cut out
@@ -207,7 +206,7 @@ abstract class AbstractView extends AbstractObject
                     $this->template
                         = $this->owner->template->cloneRegion($template_branch);
                 } else {
-                    $this->template=$this->add('SMlite');
+                    $this->template=$this->add('Template');
                 }
             }
             $this->template->owner=$this;
@@ -229,7 +228,7 @@ abstract class AbstractView extends AbstractObject
 
     /**
      * This method is called to automatically fill in some of the tags in this
-     * view. Normally the call is bassed to $api->setTags(), however you can
+     * view. Normally the call is bassed to $app->setTags(), however you can
      * extend and add more tags to fill
      *
      * @return void
@@ -237,17 +236,16 @@ abstract class AbstractView extends AbstractObject
     function initTemplateTags()
     {
         if ($this->template
-            && $this->api->hasMethod('setTags')
+            && $this->app->hasMethod('setTags')
         ) {
-            $this->api->setTags($this->template);
+            $this->app->setTags($this->template);
         }
     }
 
     /**
      * This method is commonly redefined to set a default template for an object.
      * If you return string, object will try to clone specified region off the
-     * parent. If you specify array, it will load and parse a separate SMlite
-     * template.
+     * parent. If you specify array, it will load and parse a separate template.
      *
      * This is overriden by 4th argument in add() method
      *
@@ -263,7 +261,7 @@ abstract class AbstractView extends AbstractObject
      * tag of its parent view. You can specify a different tag as 3rd argument
      * for the add() method. If you wish for object to use different tag by
      * default, you can override this method.
-     * 
+     *
      * @return string Tag / Spot in $this->owner->template
      */
     function defaultSpot()
@@ -287,10 +285,10 @@ abstract class AbstractView extends AbstractObject
      * When cut_object is specified in the GET arguments, then output
      * of HTML would be limited to object with matching $name or $short_name.
      *
-     * This method will be called instead of default render() and it will 
+     * This method will be called instead of default render() and it will
      * stop rendering process and output object's HTML once it finds
      * a suitable object. Exception_StopRender is used to terminate
-     * rendering process and bubble up to the API. This exception is
+     * rendering process and bubble up to the APP. This exception is
      * not an error.
      *
      * @return void
@@ -303,6 +301,9 @@ abstract class AbstractView extends AbstractObject
         }
 
         $cutting_here=false;
+        $cutting_output='';
+
+
         $this->initTemplateTags();
 
         if (isset($_GET['cut_object'])
@@ -312,6 +313,11 @@ abstract class AbstractView extends AbstractObject
             // If we are cutting here, render childs and then we are done
             unset($_GET['cut_object']);
             $cutting_here=true;
+
+            $this->addHook('output',function($self,$output)use(&$cutting_output) {
+                $cutting_output.=$output;
+            });
+
         }
 
         foreach ($this->elements as $key => $obj) {
@@ -330,18 +336,18 @@ abstract class AbstractView extends AbstractObject
         }
 
         if ($cutting_here) {
-            $result=$this->owner->template->cloneRegion($this->spot)->render();
-            if ($this->api->jquery) {
-                $this->api->jquery->getJS($this);
+            //$result=$this->owner->template->cloneRegion($this->spot)->render();
+            if ($this->app->jquery) {
+                $this->app->jquery->getJS($this);
             }
-            throw new Exception_StopRender($result);
+            throw new Exception_StopRender($cutting_output);
         }
         // if template wasn't cut, we move all JS chains to parent
 
     }
     /**
      * Append our chains to owner's chains. JS chains bubble up to
-     * API, which plugs them into template. If the object is being
+     * app, which plugs them into template. If the object is being
      * "cut" then only relevant chains will be outputed.
      *
      * @return void
@@ -352,7 +358,7 @@ abstract class AbstractView extends AbstractObject
     }
 
     /**
-     * Default rendering method. Generates HTML presentation of $this view. 
+     * Default rendering method. Generates HTML presentation of $this view.
      * For most views, rendering the $this->template would be sufficient.
      *
      * If your view requires to do some heavy-duty work, please be sure to do
@@ -393,11 +399,13 @@ abstract class AbstractView extends AbstractObject
      */
     function output($txt)
     {
-        if (!$this->hook('output', array($txt))) {
+        if (!($this->hook('output', array($txt)))) {
             if (isset($this->owner->template)
                 && !empty($this->owner->template)
             ) {
                 $this->owner->template->append($this->spot, $txt, false);
+            } elseif ($this->owner instanceof App_CLI) {
+                echo $txt;
             }
         }
     }
@@ -412,9 +420,11 @@ abstract class AbstractView extends AbstractObject
      */
     function region_render()
     {
+        throw $this->exception('cut_region is now obsolete');
+
         if ($this->template_flush) {
-            if ($this->api->jquery) {
-                $this->api->jquery->getJS($this);
+            if ($this->app->jquery) {
+                $this->app->jquery->getJS($this);
             }
             throw new Exception_StopRender(
                 $this->template->cloneRegion($this->template_flush)->render()
@@ -500,7 +510,7 @@ abstract class AbstractView extends AbstractObject
     function js($when = null, $code = null, $instance = null)
     {
         // Create new jQuery_Chain object
-        if (!isset($this->api->jquery)) {
+        if (!isset($this->app->jquery)) {
             throw new BaseException("requires jQuery or jUI support");
         }
 
@@ -516,7 +526,7 @@ abstract class AbstractView extends AbstractObject
         if ($instance && isset($this->js[$when][$instance])) {
             $js=$this->js[$when][$instance];
         } else {
-            $js=$this->api->jquery->chain($this);
+            $js=$this->app->jquery->chain($this);
         }
 
         if ($code) {
@@ -530,12 +540,54 @@ abstract class AbstractView extends AbstractObject
         }
         return $js;
     }
-    
+
     function getJSID(){
         return str_replace('/', '_', $this->name);
     }
-    /** Experimental */
+    /**
+     * Views in Agile Toolkit can assign javascript actions to themselves. This
+     * is done by calling $view->js() or $view->on().
+     *
+     * on() method implements implementation of jQuery on() method.
+     *
+     * on(event, [selector], [other_chain])
+     *
+     * Returned is a javascript chain wich is executed when event is triggered
+     * on specified selector (or all of the view if selector is ommitted).
+     * Optional other_chain argument can contain one or more chains (in array)
+     * which will also be executed.
+     *
+     * The chain returned by on() will properly select affected element. For
+     * example if the following view would contain multiple <a> elements, then
+     * only the clicked-one will be hidden.
+     *
+     * on('click','a')->hide();
+     *
+     *
+     * Other_chain can also be specified as a Callable. In this case the
+     * executable code you have specified here will be called with several
+     * arguments:
+     *
+     * function($js, $data){
+     *   $js->hide();
+     * }
+     *
+     *
+     * In this case javascript method is executed on a clicked event but
+     * in a more AJAX-way
+     *
+     * If your method returns a javascript chain, it will be executed
+     * instead. You can execute both if you embed $js inside returned
+     * chain.
+     *
+     * The third argument passed to your method contains
+     */
     function on($event, $selector=null, $js=null){
+
+        if(!is_string($selector) && is_null($js)) {
+            $js=$selector;
+            $selector=null;
+        }
 
         if(is_callable($js)){
             $p=$this->add('VirtualPage');
@@ -566,9 +618,9 @@ abstract class AbstractView extends AbstractObject
         $on_chain=$this->js(true);
         $fired=false;
 
-        $this->api->jui->addHook(
-            'pre-getJS', 
-            function($api) use($event,$selector,$ret_js,$on_chain,&$fired) {
+        $this->app->jui->addHook(
+            'pre-getJS',
+            function($app) use($event,$selector,$ret_js,$on_chain,&$fired) {
                 if($fired)return;
                 $fired=true;
 

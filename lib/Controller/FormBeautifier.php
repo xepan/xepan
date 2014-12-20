@@ -12,11 +12,12 @@ class Controller_FormBeautifier extends AbstractController{
 	function init(){
 		parent::init();
 
+		
 		if(!($this->owner instanceof CRUD) and !($this->owner instanceof Form)){
 			throw $this->exception('Must be added on CRUD or Form')->addMoreInfo('Current Owner',$this->owner);
 		}
 
-		if($this->owner instanceof CRUD and $this->owner->form){
+		if($this->owner instanceof CRUD and $this->owner->isEditing()){
 			$this->form = $this->owner->form;
 		}
 
@@ -50,8 +51,8 @@ class Controller_FormBeautifier extends AbstractController{
 				$group_details = array();
 
 			// echo $fld->short_name .' in form ?? ' . $this->form->hasField($fld->short_name). '<br/>';
-			if(count($group_details) < 2 or !($elm=$this->form->hasField($fld->short_name))){
-				if($elm=$this->form->hasField($fld->short_name)){
+			if(count($group_details) < 2 or !($elm=$this->form->hasElement($fld->short_name))){
+				if($elm=$this->form->hasElement($fld->short_name)){
 					$last_form_field=$elm;
 					$elm->addClass('form-control');
 					if(isset($fld->icon)){
@@ -60,7 +61,7 @@ class Controller_FormBeautifier extends AbstractController{
 
 						if(isset($icon[1])) $color= "style=' color:".$icon[1]."'";
 
-						$elm->setCaption("<i class='".$icon[0]."' $color ></i> ".$fld->caption());
+						$elm->setCaption(array($fld->caption(),'swatch'=>'red'));
 					}
 				}
 				continue;

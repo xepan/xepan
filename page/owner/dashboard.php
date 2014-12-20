@@ -4,9 +4,9 @@ class page_owner_dashboard extends page_base_owner {
 	function init() {
 		parent::init();
 
-		$this->add( 'H3' )->setHTML('<i class="fa fa-dashboard"></i> '. strtoupper($this->api->current_website['name']) . " Dashboard <small>One shot view for your Website/Application</small>" );
+		$this->app->layout->add( 'H3' )->setHTML('<i class="fa fa-dashboard"></i> '. strtoupper($this->api->current_website['name']) . " Dashboard <small>One shot view for your Website/Application</small>" );
 
-		$main_cols = $this->add('Columns');
+		$main_cols = $this->app->layout->add('Columns');
 		$app_dash = $main_cols->addColumn(8);
 		$manager_report_col = $main_cols->addColumn(4);
 

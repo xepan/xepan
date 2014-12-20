@@ -1,15 +1,16 @@
 <?php // vim:ts=4:sw=4:et:fdm=marker
 /**
-==ATK4===================================================
-   This file is part of Agile Toolkit 4
-    http://agiletoolkit.org/
+ * ==ATK4===================================================
+ *  This file is part of Agile Toolkit 4
+ *   http://agiletoolkit.org/
+ *
+ *  (c) 2008-2013 Agile Toolkit Limited <info@agiletoolkit.org>
+ *  Distributed under Affero General Public License v3 and
+ *  commercial license.
+ *
+ *  See LICENSE or LICENSE_COM for more information
+ * =====================================================ATK4=*/
 
-   (c) 2008-2013 Agile Toolkit Limited <info@agiletoolkit.org>
-   Distributed under Affero General Public License v3 and
-   commercial license.
-
-   See LICENSE or LICENSE_COM for more information
- =====================================================ATK4=*/
 /**
  * Class implementing field of relational database. One object is created
  * for every field in a model. Essentially this object is responsible for
@@ -58,7 +59,7 @@ class Field extends AbstractModel
     function setterGetter($type, $value = UNDEFINED)
     {
         if ($value === UNDEFINED) {
-            return $this->$type;
+            return isset($this->$type)?$this->$type:null;
         }
         $this->$type=$value;
         return $this;
@@ -401,6 +402,24 @@ class Field extends AbstractModel
      */
     function listData($t = UNDEFINED)
     {
+        if ($this->type() === 'boolean' && $t !== UNDEFINED) {
+
+            $this->owner->addHook('afterLoad,afterUpdate,afterInsert',function($m)use($t) {
+                // Normalize boolean data
+                $val=!array_search($m->data[$this->short_name], $t);
+                if($val===false)return; // do nothing
+                $m->data[$this->short_name]=(boolean)$val;
+            });
+
+            $this->owner->addHook('beforeUpdate,beforeInsert',function($m,&$data)use($t) {
+                // De-Normalize boolean data
+                $val = (int)(!$data->get($this->short_name));
+                if(!isset($t[$val]))return;  // do nothing
+                $data->set($this->short_name,$t[$val]);
+            });
+
+        }
+
         return $this->setterGetter('listData', $t);
     }
 
@@ -471,17 +490,28 @@ class Field extends AbstractModel
      *
      * @return array current value if $t=UNDEFINED
      */
-    function enum($t){ return $this->listData(array_combine($t,$t)); }
-        /** Binds the field to a relation (returned by join() function) */
-        function from($m){
-            if($m===undefined)return $this->relation;
-            if(is_object($m)){
-                $this->relation=$m;
-            }else{
-                $this->relations=$this->owner->relations[$m];
-            }
-            return $this;
+    function enum($t){
+        return $this->listData(array_combine($t,$t));
+    }
+
+    /**
+     * Binds the field to a relation (returned by join() function)
+     *
+     * @param Object $m the result of join() function
+     *
+     * @return self or the relation if $m is undefined
+     */
+    function from($m){
+        if($m===undefined){
+            return $this->relation;
+        }elseif(is_object($m)){
+            $this->relation=$m;
+        }else{
+            $this->relations=$this->owner->relations[$m];
         }
+        return $this;
+    }
+
     // what is alias?
     //function alias($t=undefined){ return $this->setterGetter('alias',$t); }
 

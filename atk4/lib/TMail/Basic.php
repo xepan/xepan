@@ -46,7 +46,7 @@ class TMail_Basic extends AbstractModel {
         return array('shared');
     }
     function addTransport($t){
-        return $this->add('TMail_Transport_'.$t);
+        return $this->add($this->api->normalizeClassName($t,'TMail_Transport'));
     }
     function addPart($p){
         return $this->add('TMail_Part_'.$p);
@@ -255,6 +255,25 @@ class TMail_Transport_DBStore extends TMail_Transport {
 
 class TMail_Template extends SMlite {
     public $template_type='mail';
+    function getDefaultSettings(){
+        /*
+         * This function specifies default settings for SMlite. Use
+         * 2nd argument for constructor to redefine those settings.
+         *
+         * A small note why I decided on .html extension. I want to
+         * point out that template files are and should be valid HTML
+         * documents. With .html extension those files will be properly
+         * rendered inside web browser, properly understood inside text
+         * editor or will be properly treated with wysiwyg html editors.
+         */
+        return array(
+                // by separating them with ':'
+                'ldelim'=>'{',                // tag delimiter
+                'rdelim'=>'}',
+                'extension'=>'.html',          // template file extension
+                );
+    }
+
     function init(){
         parent::init();
     }

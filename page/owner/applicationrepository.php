@@ -2,12 +2,16 @@
 
 class page_owner_applicationrepository extends page_base_owner {
 	public $add_component_btn;
+
 	function init(){
 		parent::init();
 
-		$this->add('H3')->setHtml('<i class="glyphicon glyphicon-list-alt"></i> xEpan Components Repository <small>Search and install from components available </small>');
+		if(!$this->api->auth->model->isApplicationManagementAllowed())
+			$this->api->redirect('owner/not-allowed');
+		
+		$this->app->layout->template->trySetHtml('page_title','<i class="glyphicon glyphicon-list-alt"></i> xEpan Components Repository <small>Search and install from components available </small>');
 
-		$this->add_component_btn = $this->add('componentList/View_AddComponentToRepository');
+		$this->add_component_btn = $this->app->layout->add('componentList/View_AddComponentToRepository');
 		//TODO keep the line below in single CMS
 		 $this->add('Controller_EpanCMSApp')->ownerComponentRepository();
 
@@ -25,7 +29,7 @@ class page_owner_applicationrepository extends page_base_owner {
 			$market_place->addCondition('name','like','%'.$_GET['search'].'%');
 		}
 
-		$mp = $this->add('componentList/View_MarketPlaceComponents');
+		$mp = $this->app->layout->add('componentList/View_MarketPlaceComponents');
 		$mp->setModel($market_place);
 		$mp->add('Paginator')->ipp(15);
 

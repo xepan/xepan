@@ -3,7 +3,7 @@
  * A basic authentication class. Include inside your API or
  * on a page. You may have multiple Auth instances. Supports
  * 3rd party plugins.
- * 
+ *
  * @link http://agiletoolkit.org/doc/auth
 *//*
 ==ATK4===================================================
@@ -56,13 +56,15 @@ class Auth_Basic extends AbstractController {
     public $hash_algo=PASSWORD_DEFAULT;
     public $hash_options=array();
 
+    public $login_layout_class='Layout_Centered';
+
     function init(){
         parent::init();
 
-        // Register as auth handler.
-        $this->api->auth=$this;
+        // Register as auth handler, if it's not set yet
+        if(@!$this->api->auth)$this->api->auth=$this;
 
-        if (!$this->api->hasMethod('initializeSession')) {
+        if (!$this->api->hasMethod('initializeSession') && !session_id()) {
             // No session support
             return;
         }
@@ -124,7 +126,7 @@ class Auth_Basic extends AbstractController {
             // after this model is saved, re-cache the info
             $tmp=$m->get();
             unset($tmp[$t->password_field]);
-            if($t->api instanceof ApiWeb)$t->memorize('info',$tmp);
+            if($t->api instanceof App_Web)$t->memorize('info',$tmp);
         });
 
         $this->addEncryptionHook($this->model);
@@ -141,6 +143,7 @@ class Auth_Basic extends AbstractController {
     function addEncryptionHook($model){
         // If model is saved, encrypt password
         $t=$this;
+        if(@$model->has_encryption_hook)return;
         $model->has_encryption_hook=true;
         $model->addHook('beforeSave',function($m)use($t){
             if($m->isDirty($t->password_field)&&$m[$t->password_field]){
@@ -227,7 +230,7 @@ class Auth_Basic extends AbstractController {
             $this->memorizeURL();
 
             // Brings up additional verification methods, such as cookie
-            // authentication, token or OpenID. In case of successful login, 
+            // authentication, token or OpenID. In case of successful login,
             // breakHook($user_id) must be used
             $user_id=$this->hook('check');
             if(!is_array($user_id) && !is_bool($user_id) && $user_id){
@@ -272,7 +275,7 @@ class Auth_Basic extends AbstractController {
     /**
      * This function verifies credibility of supplied authenication data.
      * It will search based on user and verify the password. It's also
-     * possible that the function will re-hash user password with 
+     * possible that the function will re-hash user password with
      * updated hash.
      *
      * if default authentication method is used, the function will
@@ -300,6 +303,7 @@ class Auth_Basic extends AbstractController {
 
         // Attempt to load user data by username. If not found, return
         // false
+
         $data = $this->model->tryLoadBy($this->login_field, $user);
         if (!$data->loaded()) {
             $this->debug('user with login '.$user.' could not be loaded');
@@ -367,6 +371,7 @@ class Auth_Basic extends AbstractController {
 
                 if ($rehash) {
                     $hash=$data[$this->password_field]=$password;
+                    $data->setDirty($this->password_field);
                     $data->save();
                     $this->debug('Rehashed into '.$data[$this->password_field]);
                 }
@@ -442,9 +447,11 @@ class Auth_Basic extends AbstractController {
         $this->info=$this->model->get();
         $this->info['username']=$this->info[$this->login_field];
 
-        $this->memorize('info',$this->info);
-        $this->memorize('class',get_class($this->model));
-        $this->memorize('id',$this->model->id);
+        if ($this->app->hasMethod('initializeSession') || session_id()) {
+            $this->memorize('info',$this->info);
+            $this->memorize('class',get_class($this->model));
+            $this->memorize('id',$this->model->id);
+        }
 
         $this->hook('login');
     }
@@ -495,26 +502,38 @@ class Auth_Basic extends AbstractController {
         $this->info=false;
         return $this;
     }
-    /** Creates log-in form. Override if you want to use your own form. If you need to change template used by a log-in form, 
+    /** Creates log-in form. Override if you want to use your own form. If you need to change template used by a log-in form,
      * add template/default/page/login.html */
     function createForm($page){
-        $form=$page->add('Form');
+        $form=$page->add('Form',null,null,array('form/minimal'));
 
         $email=$this->model->hasField($this->login_field);
-        $email=$email?$email->caption:'E-mail';
+        $email=$email?$email->caption():'E-mail';
 
         $password=$this->model->hasField($this->password_field);
-        $password=$password?$password->caption:'Password';
+        $password=$password?$password->caption():'Password';
 
         $form->addField('Line','username',$email);
         $form->addField('Password','password',$password);
-        $form->addSubmit('Login');
+        $form->addSubmit('Login')->addClass('atk-jackscrew')->addClass('atk-swatch-green');
+
+        //$form->add('View',null,'button_row_left')
+            //->addClass('atk-jackscrew');
 
         return $form;
     }
-    /** Do not override this function. */ 
+    /** Do not override this function. */
     function showLoginForm(){
-        $this->api->page_object=$p=$this->api->add('Page',null,null,array('page/login'));
+
+        $this->app->template->trySet('page_title','Login');
+        if($this->api->layout && $this->login_layout_class){
+            $this->api->layout->destroy();
+            $this->api->add($this->login_layout_class);
+            $this->api->page_object=$p=$this->api->layout->add('Page',null,null,array('page/login'));
+        }else{
+            $this->api->page_object=$p=$this->api->add('Page',null,null,array('page/login'));
+        }
+
 
         // hook: createForm use this to build basic login form
         $this->form=$this->hook('createForm',array($p));
@@ -523,11 +542,12 @@ class Auth_Basic extends AbstractController {
         if(!is_object($this->form))
             $this->form=$this->createForm($p);
 
+
         $this->hook('updateForm');
         $f=$this->form;
         if($f->isSubmitted()){
             $id = $this->verifyCredentials($f->get('username'), $f->get('password'));
-            if($id){             
+            if($id){
                 $this->loginByID($id);
                 $this->loggedIn($f->get('username'),$f->get('password'));
                 exit;

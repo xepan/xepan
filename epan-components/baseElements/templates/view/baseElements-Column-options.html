@@ -1,5 +1,5 @@
-<div id='<?$_name?>' class='epan-component-options' component_type="<?$component_type?>">
-	<h3><?$component_type_name?></h3>
+<div id='{$_name}' class='epan-component-options' component_type="{$component_type}">
+	<h3>{$component_type_name}</h3>
 	
 	<div class='xepan-collasp-header'>
 		<table class="table table-condensed table-hover">
@@ -35,7 +35,7 @@
 		}
 	});
 
-	var <?$component_type?>_options = {
+	var {$component_type}_options = {
 		show: function (){
 			$('#column-span-input').slider('value',$(current_selected_component).attr('span'));
 			$('.epan-component-column-size').html($(current_selected_component).attr('span'));

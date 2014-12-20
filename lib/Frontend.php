@@ -33,7 +33,10 @@ class Frontend extends ApiFrontend{
 	 */
 	public $edit_mode=false;
 
-	// TODO Comments
+	/**
+	 * Edit Template Mode
+	 * sets to true if editing Template
+	 */
 	public $edit_template = false;
 
 	/**
@@ -44,10 +47,10 @@ class Frontend extends ApiFrontend{
 	 */
 	public $website_plugins=array();
 
+
 	function init() {
 		parent::init();
-
-		// A lot of the functionality in Agile Toolkit requires jUI
+		$this->requires( 'atk', '4.2.0' );
 
 		if ( !file_exists('config-default.php') ) {
 			// Not installed and installation required
@@ -58,9 +61,8 @@ class Frontend extends ApiFrontend{
 			$this->setConfig($config);
 			$this->add( 'jUI' );
 
-			// A lot of the functionality in Agile Toolkit requires jUI
 			$this->js()
-			->_load( 'atk4_univ' )
+			// ->_load( 'atk4_univ' )
 			->_load( 'ui.atk4_notify' )
 			;
 			
@@ -69,34 +71,19 @@ class Frontend extends ApiFrontend{
 			// already installed connect to provided settings and go on
 			$this->dbConnect();
 
+			$this->addLocation(array(
+				'js'=>'atk4/public/atk4/js'
+				))->setParent( $this->pathfinder->base_location );
 
+			$this->addLocation(array(
+					'addons'=>array( 'epan-addons', 'epan-components', 'atk4-addons' ) )
+			)->setParent( $this->pathfinder->base_location );
 
-			$this->requires( 'atk', '4.2.0' );
-
-
-			$this->addLocation( 'templates', array( 'css'=>'default/css' ) );
-
-			$this->addLocation( '.', array(
-					'addons'=>array( 'epan-addons', 'epan-components', 'xavoc-addons' ) )
-			);
-
-			// This will add Epan Market Place Location
-			$this->addLocation( 'epan-addons', array(
-					'page'=>array( "." )
-				) );
-			// This will add Epan Market Place Location
-			$this->addLocation( 'epan-components', array(
-					'page'=>array( "." ),
-				) );
-			// This will add some resources from atk4-addons, which would be located
-			// in atk4-addons subdirectory.
-			$this->addLocation( 'atk4-addons', array(
-					'php'=>array(
-						'mvc',
-						'misc/lib',
-					)
-				) )
-			->setParent( $this->pathfinder->base_location );
+			$this->addLocation(array(
+	            'page'=>array('epan-components','epan-addons'),
+	            'js'=>array('templates/js'),
+	            'css'=>array('templates/js','templates/css'),
+	        ))->setParent($this->pathfinder->base_location);
 
 			$this->add( 'jUI' );
 			$this->api->template->appendHTML('js_include','<script src="templates/js/jquery-migrate-1.2.1.min.js"></script>'."\n");
@@ -109,15 +96,7 @@ class Frontend extends ApiFrontend{
 			 * Once set that can be accessed all CMS vise like
 			 * $this->api->current_website
 			 */
-
-			$auth=$this->add( 'BasicAuth' );
-			$auth->setModel( 'Users', 'username', 'password' );
-
 			if ( true /*page does not contain owner_ / branch_ or system_ */ ) {
-				// ALWAYS TRUE BECAUSE
-				// WE WANT PLUGINS TO BE AVAILABLE IN BACKEND AS WELL
-				// PLUGINS ARE BASED ON EPAN_ID so always need to run the code below
-
 				$site_parameter= $this->getConfig( 'url_site_parameter' );
 				$page_parameter= $this->getConfig( 'url_page_parameter' );
 
@@ -149,15 +128,12 @@ class Frontend extends ApiFrontend{
 					$this->current_page = $this->current_website->ref( 'EpanPage' )
 					->addCondition( 'name', $this->page_requested )
 					->tryLoadAny();
-
-					// LOAD DEFAULT PAGE IF NO SUCH PAGE FOUND OR 404 ERROR ???
-
 				}else {
 					$this->exec_plugins( 'error404', $this->website_requested );
 				}
 
 				$this->add( 'Controller_EpanCMSApp' )->frontEnd();
-
+				
 				// MULTISITE CONTROLER
 				// $this->load_plugins();
 				// $this->add( 'Controller_EpanCMSApp' )->frontEnd();
@@ -166,20 +142,14 @@ class Frontend extends ApiFrontend{
 				// if ( $this->current_page->loaded() )
 				// 	$this->exec_plugins( 'website-page-loaded', $this->api->page_requested );
 
-				// IS USER ALLOWED TO SEE THE PAGE ???
-
-				if($this->current_page['access_level'] > 0 and $this->current_page['access_level'] > ($this->api->auth->model['type']?:0)){
-					$this->api->redirect($this->api->url(null,array('login_required'=>1,$page_parameter=>$this->getConfig( 'default_page' ))));
-					exit;
-				}
-
 			}
-			
+
+			$auth=$this->add( 'BasicAuth' );
+			$auth->setModel( 'Users', 'username', 'password' );
 
 			if($this->api->auth->isLoggedIn() AND $this->api->auth->model->ref('epan_id')->get('name')==$this->api->website_requested AND $this->api->auth->model['type'] >= 80){
 				$this->edit_mode = true;
 			}
-
 
 			if($_GET['edit_template']){
 				$this->edit_template = true;
@@ -209,29 +179,29 @@ class Frontend extends ApiFrontend{
 						
 					}
 
-					$shared_template = file_get_contents('templates/default/shared.html');
+					$shared_template = file_get_contents('templates/shared.html');
 					/*$content .= '<?$Content?>';*/
 					if(!$this->edit_template){
 						include_once (getcwd().'/lib/phpQuery.php');
 						$pq = new \phpQuery();
 						$doc = $pq->newDocument($current_template['content']);
 						
-						$content_divs = $doc['div:contains("{{Content}}")'];
+						$content_divs = $doc['div:contains("~~Content~~")'];
 						$i=0;
 						foreach($content_divs as $temp){
 							$i++;
 						}
 
 						if($i==0){
-							$current_template['content'] .= "{{Content}}";
+							$current_template['content'] .= "~~Content~~";
 						}
 
 
-						$current_template['content'] = str_replace("{{Content}}", '<?$Content?>', $current_template['content']);
-						$shared_template = str_replace('<?$Content?>', $current_template['content'], $shared_template);	
+						$current_template['content'] = str_replace("~~Content~~", '{$Content}', $current_template['content']);
+						$shared_template = str_replace('{$Content}', $current_template['content'], $shared_template);	
 					}else{
-						$shared_template = str_replace('<?$Content?>', $current_template['content'], $shared_template);
-						$shared_template .= '<?$Content?>';
+						$shared_template = str_replace('{$Content}', $current_template['content'], $shared_template);
+						$shared_template .= '{$Content}';
 					}
 
 					// Saving since serverside components have been run already 
@@ -243,11 +213,10 @@ class Frontend extends ApiFrontend{
 					// throw new Exception(print_r($old_js_include,true) , 1);
 					
 					$this->template->loadTemplateFromString($shared_template);
-					$this->template->appendHTML('js_include',implode("\n", $old_js_include[0]));
+					$this->template->appendHTML('js_include',implode("\n", $old_js_include[1]));
 					$this->template->trySet('template_css',$current_template['css']);
 					$this->template->trySet('style',$current_template['body_attributes']);
 					
-					// if(isset($old_jui)) //DELETE
 					$this->api->jui  = $old_jui;
 					
 				}
@@ -264,7 +233,7 @@ class Frontend extends ApiFrontend{
 
 			// A lot of the functionality in Agile Toolkit requires jUI
 			$this->js()
-			->_load( 'atk4_univ' )
+			// ->_load( 'ui.atk4_univ' )
 			->_load( 'ui.atk4_notify' )
 			;
 
@@ -301,45 +270,30 @@ class Frontend extends ApiFrontend{
 	}
 
 	function event($event_hook, &$param){
-		$this->exec_plugins($event_hook, $param);
+		$this->exec_plugins($event_hook,$param);
 	}
-
 
 	function exec_plugins( $event_hook, &$param ) {
 		if ( !is_array( $param ) )
 			$param_array = array( &$param );
 		else
-			$param_array =& $param;
+			$param_array = $param;
 
 		// if(empty($this->website_plugins))
-		 // throw $this->exception("param" .print_r($param,true));
+		//  throw $this->exception("No Plugin loaded");
 
 		foreach ( $this->website_plugins as $p ) {
 			// echo $event_hook. " on ". $p ."<br/>";
 			$p->hook( $event_hook, $param_array );
 		}
 		return;
-
-
-		echo "Event: ". $event_hook . "<br/>";
-		foreach ( $param_array as $prm ) {
-			if ( $prm instanceof AbstractObject )
-				echo $prm['name']. "<br/>";
-			else
-				echo $prm . "<br/>";
-		}
 	}
 
 	function defaultTemplate() {
 		if ( strpos( str_replace( "/", "_", $_GET['page'] ), 'owner_' )!==false ) {
 			return array( 'owner' );
 		}
-		if ( strpos( str_replace( "/", "_", $_GET['page'] ), 'branch_' )!==false ) {
-			return array( 'branch' );
-		}
-		// if ( strpos( str_replace( "/", "_", $_GET['page'] ), 'system_' )!==false ) {
-		// 	return array( 'system' );
-		// }
+
 		return array( 'shared' );
 	}
 
@@ -373,6 +327,11 @@ class Frontend extends ApiFrontend{
 
 	function getxEpanVersion(){
 		return file_get_contents('version');
+	}
+
+
+	function addSharedLocations($path_finder, $base_directory){
+		
 	}
 
 }

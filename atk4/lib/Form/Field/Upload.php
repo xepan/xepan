@@ -132,8 +132,10 @@ class Form_Field_Upload extends Form_Field {
             if($this->model){
                 try{
 
-                    if(!file_exists($this->getFilePath()))
-                        throw $this->exception('File upload was blocked by the webserver','ForUser');
+                    if(!file_exists($this->getFilePath())){
+                        throw $this->exception('File upload was blocked by the webserver (post: '.json_encode($_POST).
+                            ', get: '.json_encode($_GET).')','ForUser');
+                    }
 
                     $model=$this->model;
                     $model->set($this->getVolumeIDFieldName(),$model->getAvailableVolumeID());
@@ -164,6 +166,7 @@ class Form_Field_Upload extends Form_Field {
                 }
 
                 $this->uploadComplete($model->get());
+            }else{
             }
         }
         if($_POST[$this->name.'_token']){
@@ -231,7 +234,7 @@ class Form_Field_Upload extends Form_Field {
     }
     function formatFiles($data){
         $this->js(true)->atk4_uploader('addFiles',$data);
-        $o = $this->add('SMLite')->loadTemplate($this->format_files_template)->render();
+        $o = $this->add('GiTemplate')->loadTemplate($this->format_files_template)->render();
         return $o;
     }
 
@@ -281,8 +284,13 @@ class Form_Field_Upload extends Form_Field {
             }
         }
         if($_GET[$this->name.'_upload_action'] && !$_POST){
+            if(!$this->model){
+                $this->uploadFailed('You are not using model with upolad field. Please use "isUploaded" and uploadComplete() methods in form submit handler');
+
+            }
             $this->uploadFailed('Webserver settings have blocked this file. Perhaps post_max_size should incleased ('.
-                $_SERVER['CONTENT_LENGTH'].' sent, '.ini_get('post_max_size').' max)');
+                $_SERVER['CONTENT_LENGTH'].' sent, '.ini_get('post_max_size').' max)(post: '.json_encode($_POST).
+                            ', get: '.json_encode($_GET).')');
         }
         $o='';
 
