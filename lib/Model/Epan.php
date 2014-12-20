@@ -156,7 +156,6 @@ class Model_Epan extends Model_Table {
 
 
 	function beforeSave(){
-
 		if(!preg_match('/^[a-z0-9\-]+$/', $this['name']))
 			throw $this->exception('URL can only contain lowercase alphabets, numbers and - ' . $this['name'],'ValidityCheck')->setField('name');
 
@@ -203,11 +202,11 @@ class Model_Epan extends Model_Table {
 
 			// Replace image urls also
 			foreach($epanpage=$this->ref('EpanPage') as $junk){
-			
+				
 				$epanpage['content']=str_replace("/epans/".$epan['name']."/", "/epans/".$this['name']."/", $epanpage['content']);
 				$epanpage['body_attributes']=str_replace("/epans/".$epan['name']."/", "/epans/".$this['name']."/", $epanpage['body_attributes']);
 				$epanpage->save();
-			
+							
 				foreach ($epansnapshots=$epanpage->ref('EpanPageSnapshots') as $junk) {
 					$epansnapshots['content']=str_replace("/epan/".$epan['name']."/", "/epan/".$this['name']."/", $epansnapshots['content']);
 					$epansnapshots['body_attributes']=str_replace("/epan/".$epan['name']."/", "/epan/".$this['name']."/", $epansnapshots['body_attributes']);
@@ -235,7 +234,7 @@ class Model_Epan extends Model_Table {
 
 		// Set all Pages keywords and description as per this one and title to this->keywords
 		if($this->loaded()){
-			foreach($ep =$this->ref('EpanPage') as $junk){
+			foreach($ep = $this->ref('EpanPage') as $junk){					
 				if($ep['title'] == $this['keywords']) $ep['title'] = $this['keywords'];
 				if($ep['description'] == $this['description']) $ep['description'] = $this['description'];
 				if($ep['keywords'] == $this['keywords']) $ep['keywords'] = $this['keywords'];

@@ -66,7 +66,7 @@ class Frontend extends ApiFrontend{
             'css'=>array('templates/js','templates/css'),
         ))->setParent($this->pathfinder->base_location);
 
-		if ( !file_exists('config-default.php') ) {
+		if ( !file_exists('config-default.php') or $this->page=='install') {
 			// Not installed and installation required
 			// TODO : check security issues
 			$config['url_postfix']='';

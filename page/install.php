@@ -4,6 +4,7 @@ class page_install extends Page {
 	function init(){
 		parent::init();
 		
+
 		$this->add('View')->setHTML('<h1>xEpan CMS :: Installer</h1>')->addClass('text-center 	xepan-installer-heading xepan-installer-step1');
 		$this->api->template->trySet('page_title','Epan :: Installer');
 		if(file_exists('config-default.php') AND $this->api->getConfig('installed')){
@@ -22,8 +23,8 @@ class page_install extends Page {
 	function step1(){
 
 		$this->add('View')->setHTML('<span class="stepred">Step 1</span> / <span class="stepgray">Step 2</span> / <span class="stepgray">Step 3</span> / <span class="stepgray">Finish</span')->addClass('text-center');
-		$form = $this->add('Form');
-		$form->setFormClass('stacked atk-row');
+		$form = $this->add('Form',null,null,['form/stacked']);
+		$form->addClass('stacked atk-row');
 		$form->addClass('xepan-installer-step-form');
 		$form->addField('line','database_host')->validateNotNull()->setAttr('placeholder','localhost');
 		$form->addField('line','database_username')->validateNotNull()->setAttr('placeholder','root');
@@ -42,7 +43,8 @@ class page_install extends Page {
                 ->move($form->add('View')->set('Admin Settings')->addClass('text-center xepan-installer-info'),'before','owner_name')
                 ->now();
 
-		if($form->isSubmitted()){
+		if($form->isSubmitted()){			
+				
 			if($form['owner_password']!=$form['re_password'])
 				$form->displayError('re_password','password must match');
 			$db_config="mysql://".$form['database_username'].":".$form['database_password']."@".$form['database_host']."/".$form['database_name'];
@@ -99,8 +101,8 @@ class page_install extends Page {
 			$user['type']='100';
 			$user['is_active']=true;
 			$user->save();
-
-			$form->js(null,$form->js()->univ()->redirect($this->api->url(null,array('step'=>2))))->univ()->successMessage("Installed Successfully")->execute();
+			
+			$form->js(null,$form->js()->univ()->successMessage("Installed Successfully"))->univ()->redirect($this->api->url(null,array('step'=>2)))->execute();
 		}
 
 	}
@@ -110,9 +112,9 @@ class page_install extends Page {
 		$this->add('View')->addClass('text-center')->setHTML('<span class="stepgreen">Step 1</span> / <span class="stepred">Step 2</span> / <span class="stepgray">Step 3</span> / <span class="stepgray">Finish</span');
 		$this->api->dbConnect();
 		$web = $this->add("Model_Epan")->tryLoadAny();
-		$email_form = $this->add('Form');
+		$email_form = $this->add('Form',null,null,['form/stacked']);
 		$email_form->addClass('xepan-installer-step-form');
-		$email_form->setFormClass('stacked atk-row');
+		$email_form->addClass('stacked atk-row');
 		$email_form->setModel($web,array('email_transport','email_port','email_username','email_reply_to','from_email','encryption','email_host','email_password','email_reply_to_name','from_name'));
 		$email_form->addSubmit('Update: Go Next');
 
@@ -152,9 +154,9 @@ class page_install extends Page {
 		$this->api->dbConnect();
 		$web=$this->add('Model_Epan')->tryLoadAny();
 		$this->add('View')->set('Company Basic Details')->addClass('text-center xepan-installer-info');
-		$epan_info_form = $this->add('Form');
+		$epan_info_form = $this->add('Form',);
 		$epan_info_form->addClass('xepan-installer-step-form');
-		$epan_info_form->setFormClass('stacked atk-row');
+		$epan_info_form->addClass('stacked atk-row');
 		$epan_info_form->setModel($web,array('category_id','company_name','contact_person_name','mobile_no','email_id','address','city','state','country','keywords','description'));
 		$epan_info_form->addSubmit('Update: Go Next ( you can edit these settings later also )');
 		$epan_info_form->add('Order')
@@ -193,7 +195,7 @@ class page_install extends Page {
 	}
 
 	function render(){
-		$this->api->template->appendHTML('js_include','<link type="text/css" href="templates/default/css/epan.css" rel="stylesheet" />'."\n");
+		$this->api->template->appendHTML('js_include','<link type="text/css" href="templates/css/epan.css" rel="stylesheet" />'."\n");
 		parent::render();
 	}
 
