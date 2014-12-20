@@ -9,7 +9,7 @@ class page_owner_dashboard extends page_base_owner {
 		$main_cols = $this->app->layout->add('Columns');
 		$app_dash = $main_cols->addColumn(8);
 		$manager_report_col = $main_cols->addColumn(4);
-
+		
 		$xAi_installed = $this->add('Model_InstalledComponents');
 		$xAi_installed->addCondition('name','xAtrificial Intelligence');
 		$xAi_installed->tryLoadAny();
