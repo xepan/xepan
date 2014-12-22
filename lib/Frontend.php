@@ -161,7 +161,7 @@ class Frontend extends ApiFrontend{
 			$this->load_plugins();
 
 			// Global Template Setting
-			if(in_array('shared', $this->defaultTemplate())){
+			if(in_array('shared', $this->defaultTemplate()) and $this->page == 'index'){
 				
 				$temp = array();
 				$this->exec_plugins('beforeTemplateInit',$temp);
