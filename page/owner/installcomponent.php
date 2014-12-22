@@ -26,7 +26,7 @@ class page_owner_installcomponent extends page_base_owner {
 		if(is_file($path = getcwd().'/epan-components/'.$component['namespace'].'/templates/view/'.$component['namespace'].'-about.html')){
 			$l=$this->api->locate('addons',$component['namespace'], 'location');
 			$this->app->pathfinder->base_location->addRelativeLocation(
-		    'epan-addons/'.$component['namespace'], array(
+		    'epan-components/'.$component['namespace'], array(
 		        'php'=>'lib',
 		        'template'=>'templates',
 		        'css'=>'css',
