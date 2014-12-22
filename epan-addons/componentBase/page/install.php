@@ -29,7 +29,7 @@ class page_componentBase_page_install extends Page {
 		$this_component->save();
 
 		// Make it accesible to superuser
-		$super_user = $this->add('Model_User')->getDefaultSuperUser();
+		$super_user = $this->add('Model_Users')->getDefaultSuperUser();
 		$super_user->allowApp($this_component->id);
 		
 		$this->js(true,$this->js()->univ()->successMessage($this_component['name'].' Application Installed'))->univ()->redirect($this->api->url('owner_installedcomponents'));
