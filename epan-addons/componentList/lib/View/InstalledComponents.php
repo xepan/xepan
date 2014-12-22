@@ -28,7 +28,7 @@ class View_InstalledComponents extends \CompleteLister {
 
 	function defaultTemplate(){
 		$this->app->pathfinder->base_location->addRelativeLocation(
-		    'epan-components/'.__NAMESPACE__, array(
+		    'epan-addons/'.__NAMESPACE__, array(
 		        'php'=>'lib',
 		        'template'=>'templates',
 		        'css'=>'css',

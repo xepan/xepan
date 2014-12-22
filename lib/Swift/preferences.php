@@ -1,35 +1,104 @@
 <?php
 
-/****************************************************************************/
-/*                                                                          */
-/* YOU MAY WISH TO MODIFY OR REMOVE THE FOLLOWING LINES WHICH SET DEFAULTS  */
-/*                                                                          */
-/****************************************************************************/
+/*
+ * This file is part of SwiftMailer.
+ * (c) 2004-2009 Chris Corbyn
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-$preferences = Swift_Preferences::getInstance();
+/**
+ * Changes some global preference settings in Swift Mailer.
+ *
+ * @package Swift
+ * @author  Chris Corbyn
+ */
+class Swift_Preferences
+{
+    /** Singleton instance */
+    private static $_instance = null;
 
-// Sets the default charset so that setCharset() is not needed elsewhere
-$preferences->setCharset('utf-8');
+    /** Constructor not to be used */
+    private function __construct()
+    {
+    }
 
-// Without these lines the default caching mechanism is "array" but this uses a lot of memory.
-// If possible, use a disk cache to enable attaching large attachments etc.
-// You can override the default temporary directory by setting the TMPDIR environment variable.
+    /**
+     * Gets the instance of Preferences.
+     *
+     * @return Swift_Preferences
+     */
+    public static function getInstance()
+    {
+        if (!isset(self::$_instance)) {
+            self::$_instance = new self();
+        }
 
-// The @ operator in front of is_writable calls is to avoid PHP warnings
-// when using open_basedir
-$tmp = getenv('TMPDIR');
-if ($tmp && @is_writable($tmp)) {
-    $preferences
-        ->setTempDir($tmp)
-        ->setCacheType('disk');
-} elseif (function_exists('sys_get_temp_dir') && @is_writable(sys_get_temp_dir())) {
-    $preferences
-        ->setTempDir(sys_get_temp_dir())
-        ->setCacheType('disk');
-}
+        return self::$_instance;
+    }
 
-// this should only be done when Swiftmailer won't use the native QP content encoder
-// see mime_deps.php
-if (version_compare(phpversion(), '5.4.7', '<')) {
-    $preferences->setQPDotEscape(false);
+    /**
+     * Set the default charset used.
+     *
+     * @param string $charset
+     *
+     * @return Swift_Preferences
+     */
+    public function setCharset($charset)
+    {
+        Swift_DependencyContainer::getInstance()
+            ->register('properties.charset')->asValue($charset);
+
+        return $this;
+    }
+
+    /**
+     * Set the directory where temporary files can be saved.
+     *
+     * @param string $dir
+     *
+     * @return Swift_Preferences
+     */
+    public function setTempDir($dir)
+    {
+        Swift_DependencyContainer::getInstance()
+            ->register('tempdir')->asValue($dir);
+
+        return $this;
+    }
+
+    /**
+     * Set the type of cache to use (i.e. "disk" or "array").
+     *
+     * @param string $type
+     *
+     * @return Swift_Preferences
+     */
+    public function setCacheType($type)
+    {
+        Swift_DependencyContainer::getInstance()
+            ->register('cache')->asAliasOf(sprintf('cache.%s', $type));
+
+        return $this;
+    }
+
+    /**
+     * Set the QuotedPrintable dot escaper preference.
+     *
+     * @param bool    $dotEscape
+     *
+     * @return Swift_Preferences
+     */
+    public function setQPDotEscape($dotEscape)
+    {
+        $dotEscape = !empty($dotEscape);
+        Swift_DependencyContainer::getInstance()
+            ->register('mime.qpcontentencoder')
+            ->asNewInstanceOf('Swift_Mime_ContentEncoder_QpContentEncoder')
+            ->withDependencies(array('mime.charstream', 'mime.bytecanonicalizer'))
+            ->addConstructorValue($dotEscape);
+
+        return $this;
+    }
 }
