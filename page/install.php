@@ -15,9 +15,14 @@ class page_install extends Page {
 		$this->api->stickyGET('step');
 		
 		$step =isset($_GET['step'])? $_GET['step']:1;
+		try{
+			call_user_method("step$step", $this);
+		}catch(Exception $e){
+			// remove all database tables if exists or connetion available
+			// remove config-default.php if exists
+			throw $e;
+		}
 
-
-		call_user_method("step$step", $this);
 	}
 
 	function step1(){
