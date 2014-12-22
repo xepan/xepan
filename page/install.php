@@ -23,7 +23,7 @@ class page_install extends Page {
 	function step1(){
 
 		$this->add('View')->setHTML('<span class="stepred">Step 1</span> / <span class="stepgray">Step 2</span> / <span class="stepgray">Step 3</span> / <span class="stepgray">Finish</span')->addClass('text-center');
-		$form = $this->add('Form',null,null,['form/stacked']);
+		$form = $this->add('Form',null,null,array('form/stacked'));
 		$form->addClass('stacked atk-row');
 		$form->addClass('xepan-installer-step-form');
 		$form->addField('line','database_host')->validateNotNull()->setAttr('placeholder','localhost');
@@ -112,7 +112,7 @@ class page_install extends Page {
 		$this->add('View')->addClass('text-center')->setHTML('<span class="stepgreen">Step 1</span> / <span class="stepred">Step 2</span> / <span class="stepgray">Step 3</span> / <span class="stepgray">Finish</span');
 		$this->api->dbConnect();
 		$web = $this->add("Model_Epan")->tryLoadAny();
-		$email_form = $this->add('Form',null,null,['form/stacked']);
+		$email_form = $this->add('Form',null,null,array('form/stacked'));
 		$email_form->addClass('xepan-installer-step-form');
 		$email_form->addClass('stacked atk-row');
 		$email_form->setModel($web,array('email_transport','email_port','email_username','email_reply_to','from_email','encryption','email_host','email_password','email_reply_to_name','from_name'));
@@ -154,7 +154,7 @@ class page_install extends Page {
 		$this->api->dbConnect();
 		$web=$this->add('Model_Epan')->tryLoadAny();
 		$this->add('View')->set('Company Basic Details')->addClass('text-center xepan-installer-info');
-		$epan_info_form = $this->add('Form',);
+		$epan_info_form = $this->add('Form',null,null,array('form/stacked'));
 		$epan_info_form->addClass('xepan-installer-step-form');
 		$epan_info_form->addClass('stacked atk-row');
 		$epan_info_form->setModel($web,array('category_id','company_name','contact_person_name','mobile_no','email_id','address','city','state','country','keywords','description'));
