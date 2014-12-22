@@ -104,6 +104,10 @@ class page_install extends Page {
 			$user['username']=$form['owner_username'];
 			$user['password']=$form['owner_password'];
 			$user['type']='100';
+			$user['user_management']=true;
+			$user['general_settings']=true;
+			$user['application_management']=true;
+			$user['website_desinging']=true;
 			$user['is_active']=true;
 			$user->save();
 			

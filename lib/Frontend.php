@@ -66,7 +66,7 @@ class Frontend extends ApiFrontend{
             'css'=>array('templates/js','templates/css'),
         ))->setParent($this->pathfinder->base_location);
 
-		if ( !file_exists('config-default.php') or $this->page=='install') {
+		if ( !file_exists('config-default.php')) {
 			// Not installed and installation required
 			// TODO : check security issues
 			$config['url_postfix']='';
@@ -161,7 +161,7 @@ class Frontend extends ApiFrontend{
 			$this->load_plugins();
 
 			// Global Template Setting
-			if(in_array('shared', $this->defaultTemplate())){
+			if(in_array('shared', $this->defaultTemplate()) and $this->page == 'index'){
 				
 				$temp = array();
 				$this->exec_plugins('beforeTemplateInit',$temp);
