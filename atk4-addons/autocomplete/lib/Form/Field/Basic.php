@@ -43,7 +43,7 @@ class Form_Field_Basic extends \Form_Field_Hidden
             'css'=>'templates/css'
             ))
             ->setBasePath($this->api->pathfinder->base_location->base_path.'/'.$addon_location)
-            ->setBaseURL($this->api->pm->base_path.'/../'.$addon_location);
+            ->setBaseURL($this->api->pm->base_path.'/'.$addon_location);
         ;
 
         // $this->api->pathfinder->addLocation($addon_location, array(
@@ -163,25 +163,6 @@ class Form_Field_Basic extends \Form_Field_Hidden
     function render()
     {
 
-        $l=$this->api->locate('addons',__NAMESPACE__, 'location');
-        $this->app->pathfinder->addLocation(
-            'atk4-addons/'.__NAMESPACE__, array(
-                'php'=>'lib',
-                'template'=>'templates',
-                'css'=>'css',
-                'js'=>'js',
-            )
-        )->setParent($l);
-
-        // $this->api->pathfinder->addLocation(
-        //     $this->api->locate('addons',__NAMESPACE__),
-        //     array(
-        //         'template'=>'templates',
-        //         'css'=>'templates/css',
-        //         'js'=>'js'
-        //         )
-        //     )->setParent($l);
-
         $url = $this->api->url(null, array($this->name => 'ajax'));
         if ($this->value) { // on add new and inserting allow empty start value
             $this->model->tryLoad($this->value);
@@ -212,5 +193,10 @@ class Form_Field_Basic extends \Form_Field_Hidden
             $wq->where($field,'like',$value);
         }   
         $this->model->addCondition($wq); 
+    }
+
+    function defaultTemplate(){
+
+        return parent::defaultTemplate();
     }
 }

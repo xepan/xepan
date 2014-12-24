@@ -1,4 +1,12 @@
 Application Todos:
  ☐ xEnquiry n subscription captcha mandatory
  ☐ cron jobs and data grabbing with social posts
- ☐ 
+ ☐ Move newsletters between applications
+ ☐ owner.php page elfinder.gull js to elfinder.min file conversion
+ ☐ smlite to gitemplate
+ ☐ filestore for images in xShop and others
+ ☐ Email settings : Form stacked
+
+
+   ATK:
+ ☐ quicksearch if paginator page is set and records are less than it.. should go to last page

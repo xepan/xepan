@@ -63,7 +63,7 @@ class page_base_owner extends Page {
 	function render(){
 		$this->api->template->appendHTML('js_include','<link type="text/css" href="elfinder/css/elfinder.min.css" rel="stylesheet" />'."\n");
 			$this->api->template->appendHTML('js_include','<link type="text/css" href="elfinder/css/theme.css" rel="stylesheet" />'."\n");
-			$this->api->template->appendHTML('js_include','<script src="elfinder/js/elfinder.min.js"></script>'."\n");
+			$this->api->template->appendHTML('js_include','<script src="elfinder/js/elfinder.full.js"></script>'."\n");
 		parent::render();
 	}
 
