@@ -4,9 +4,9 @@ class page_owner_installedcomponents extends page_base_owner {
 	function init(){
 		parent::init();
 
-		$this->add('H3')->setHTML('Installed Components <small>Your installed components</small>');
+		$this->app->layout->add('H3')->setHTML('Installed Components <small>Your installed components</small>');
 
-		$form= $this->add('Form');
+		$form= $this->app->layout->add('Form');
 		$form->addClass('stacked');
 		$search_field = $form->addField('line','search_components','')->setAttr('placeholder','Search / Filter Your Installed Component');
 		
@@ -21,7 +21,7 @@ class page_owner_installedcomponents extends page_base_owner {
 			$installed_components->addCondition('name','like','%'.$_GET['search'].'%');
 		}
 
-		$mp = $this->add('componentList/View_InstalledComponents');
+		$mp = $this->app->layout->add('componentList/View_InstalledComponents');
 		$mp->setModel($installed_components);
 
 		if($form->isSubmitted()){
