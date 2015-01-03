@@ -11,7 +11,7 @@ class Model_EpanTemplates extends Model_Table {
 		$this->addField('body_attributes')->type('text');
 		$f=$this->addField('name')->group('a~12~<i class="fa -fa-clipboard"></i> Epan Template')->mandatory(true);
 		$f->icon = 'fa fa-clipboard~red';
-		$this->addField('content')->type('text')->defaultValue('<div component_namespace="baseElements" component_type="TemplateContentRegion" class="epan-sortable-component epan-component  ui-sortable" style="" contenteditable="false">{{Content}}</div>');
+		$this->addField('content')->type('text')->defaultValue('<div component_namespace="baseElements" component_type="TemplateContentRegion" class="epan-sortable-component epan-component  ui-sortable" style="" contenteditable="false">~~Content~~</div>');
 		$f=$this->addField('css')->type('text')->group('a~12~bl');
 		$f->icon = 'fa fa-eye-slash~blue';
 		$this->addField('is_current')->type('boolean')->defaultValue(false);
