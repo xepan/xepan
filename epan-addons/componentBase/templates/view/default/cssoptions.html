@@ -636,7 +636,9 @@
 			$(current_selected_component).css({'font-size':fontSize});
 		});
 		$('#epan-component-extra-clases').change(function(event) {
-			$(current_selected_component).removeClass($(current_selected_component).attr('data-extra-classes'));
+			if($(current_selected_component).attr('data-extra-classes') != undefined){
+				$(current_selected_component).removeClass($(current_selected_component).attr('data-extra-classes'));
+			}
 			$(current_selected_component).addClass($(this).val());
 			$(current_selected_component).attr('data-extra-classes',$(this).val());
 		});

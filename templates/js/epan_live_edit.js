@@ -157,6 +157,8 @@ $(".epan-sortable-component").sortable(s = {
                 $(this).find('.remove_btn').remove();
 
             });
+    
+
             var str = $(this).attr('component_type') + '_option.object_dropped("' + $(ui.item).parent('.epan-sortable-component').attr('id') + '","' + $(new_obj).attr('id') + '")';
             try {
                 console.log(ui);
@@ -275,10 +277,6 @@ function selectComponent(obj) {
     $('.ui-selected').removeClass('ui-selected');
     $(obj).addClass('ui-selected');
     current_selected_component = obj;
-    $(current_selected_component).unbind('reload');
-    $(current_selected_component).bind('reload',function(){
-        $(this).children('div:first').trigger('reload');
-    });
 }
 
 function unSelectAllComponent() {
