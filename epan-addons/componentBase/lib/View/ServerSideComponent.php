@@ -10,16 +10,23 @@ class View_ServerSideComponent extends View_Component {
 	function init(){
 		parent::init();
 
-		if($this->responsible_namespace == null)
-			throw $this->exception('Define class variable "responsible_namespace"');
+		$this_class  = get_class($this);
 
-		if($this->responsible_view == null )
-			throw $this->exception('Define class variable "responsible_view"');
+		$namespace_view = explode("\\",$this_class);
+		$this->responsible_namespace = $namespace_view[0];
+		$this->responsible_view = $namespace_view[1];
 
 		$this->setAttr('data-responsible-namespace',$this->responsible_namespace);
 		$this->setAttr('data-responsible-view',$this->responsible_view);
 		$this->setAttr('data-is-serverside-component','true');
 
+		if($_GET['html_attributes']){
+			// reloading 
+			$this->html_attributes = json_decode($_GET['html_attributes'],true);
+			$this->data_options = $this->html_attributes['data_options'];
+		}
+
+		$this->js('reload')->reload(array('html_attributes'=>$this->js()->parent('div:first')->attrs()));
 
 	}
 

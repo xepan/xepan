@@ -9,6 +9,14 @@ class Grid extends Grid_Advanced{
 	function init(){
 		parent::init();
 		$this->order= $this->addOrder();
+        $this->addHook('formatRow',function($grid){
+            if($grid->hasColumn('delete')){
+                $grid->columns['delete']['descr']="";
+            }
+            if($grid->hasColumn('edit')){                
+                $grid->current_row_html['edit']='<button type="button" class="atk-button-small pb_edit">fddf</button>';
+            }
+        });
 	}
 
 	function add_sno(){
@@ -62,8 +70,9 @@ class Grid extends Grid_Advanced{
 		if($this->hasColumn('edit'))
 			$this->order->move('edit','last');
 
-		if($this->hasColumn('delete'))
+		if($this->hasColumn('delete')){
 			$this->order->move('delete','last');
+        }
 		
 		if($this->order) $this->order->now();
 

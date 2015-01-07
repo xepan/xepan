@@ -275,6 +275,10 @@ function selectComponent(obj) {
     $('.ui-selected').removeClass('ui-selected');
     $(obj).addClass('ui-selected');
     current_selected_component = obj;
+    $(current_selected_component).unbind('reload');
+    $(current_selected_component).bind('reload',function(){
+        $(this).children('div:first').trigger('reload');
+    });
 }
 
 function unSelectAllComponent() {
@@ -708,3 +712,34 @@ $(function() {
     setInterval(keepalive, 300000);
 
 });
+
+
+
+(function($) {
+    // Attrs
+    $.fn.attrs = function(attrs) {
+        var t = $(this);
+        if (attrs) {
+            // Set attributes
+            t.each(function(i, e) {
+                var j = $(e);
+                for (var attr in attrs) {
+                    j.attr(attr, attrs[attr]);
+                };
+            });
+            return t;
+        } else {
+            // Get attributes
+            var a = { },
+                r = t.get(0);
+            if (r) {
+                r = r.attributes;
+                for (var i in r) {
+                    var p = r[i];
+                    if (typeof p.nodeValue !== 'undefined') a[p.nodeName] = p.nodeValue;
+                }
+            }
+            return JSON.stringify(a);
+        }
+    };
+})(jQuery);
