@@ -6,7 +6,6 @@ class page_base_owner extends Page {
 	
 	function init(){
 		parent::init();
-
 		if(!$this->api->auth->isLoggedIn()){
 			$this->api->template->tryDel('admin_template');
 		}
@@ -34,6 +33,7 @@ class page_base_owner extends Page {
         // $admin_m->addSeparator();
         $admin_m->addItem(array('Logout','icon'=>'logout'),'/logout');
 
+		// Alert Notification 
 		// Pages and Templates
 		$web_designing_menu = $m->addMenu('WebSite');
 		$web_designing_menu->addItem(array('Epan Pages','icon'=>'gauge-1'),'owner/epanpages');		
@@ -47,16 +47,35 @@ class page_base_owner extends Page {
 		foreach ($installed_components as $comp) {
 			$components_m->addItem(array($comp['name'],'icon'=>'right-hand'),$comp['namespace'].'_page_owner_dashboard');
 		}
-
-
-		
-
 	}
 
 	function recursiveRender(){
 		// Add this usermanu at last to keep in last
-		if(@$this->app->layout->user_menu)
-			$this->app->layout->user_menu->addMenu(array($this->api->auth->model['name'],'icon'=>'user'))->addItem('Logout','logout');
+		if(@$this->app->layout->user_menu){
+			$menu=$this->app->layout->user_menu->addMenu(array($this->api->auth->model['name'],'icon'=>'user'));
+		
+		$alerts =$this->add('Model_Alerts');
+		$badge=array();
+		if($unread = $alerts->addCondition('is_read',false)->count()->getOne()){
+			$badge=array('badge'=>array($unread,'swatch'=>'red'));
+		}
+		$menu->addItem(array_merge(array('Alert'),$badge),'/owner/alert');
+		
+		$msg_badge=array();
+		$msg = $this->add('Model_Messages');
+		$msg_unread=$msg->addCondition(
+	        				$msg->_dsql()->orExpr()
+	            					->where('is_read',false)
+	            					->where('watch',true)
+	   		 				)->count()->getOne();
+		if($msg_unread){
+			$msg_badge=array('badge'=>array($msg_unread,'swatch'=>'red'));
+		}
+
+		$menu->addItem(array_merge(array('Message'),$msg_badge),'/owner/message');
+		$menu->addItem('Logout','logout');
+
+		}
 		parent::recursiveRender();
 	}
 
