@@ -22,6 +22,11 @@ class page_base_owner extends Page {
 		$this->api->memorize('website_requested',$this->api->current_website['name']);
 		$this->api->load_plugins();
 		
+		// if($this->app->isAjaxOutput() or $_GET['cut_page']){
+		// 	$this->app->layout = $this;
+		// 	return;
+		// }
+
 		$l=$this->app->add('Layout_Fluid');
 		$this->app->top_menu =  $m=$this->app->layout->add('Menu_Horizontal',null,'Top_Menu');
 
