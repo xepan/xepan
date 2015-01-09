@@ -26,19 +26,48 @@ class page_owner_alert extends page_base_owner{
 
 		$dv_op = $dv->addOptionButton();
 		$crud = $dv->addToColumn(0,'View');
+
+		$col=$this->app->layout->add('Columns');
+		$app_col=$col->addColumn(4);
+		$alert_col=$col->addColumn(8);
 		
-
-
 		$alrt=$this->add('Model_Alerts');
-		$alrt->addCondition('is_read',false);
+		// $alrt->addCondition('is_read',true);
 		foreach ($alrt as  $junk) {
 			// throw new \Exception("Error Processing Request", 1);
-			
 			$alrt['is_read']=true;
 			$alrt->saveAndUnload();
 		}
-		$crud=$this->add('CRUD',array('allow_add'=>false,'allow_edit'=>false));
-		$crud->setModel('Alerts',array('name','created_at','is_read','type','sender_signature'));
+
+		$installed_components = $this->add('Model_InstalledComponents');
+		$app_crud=$app_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false));
+		$app_crud->setModel($installed_components,array('namespace'));
+		if(!$app_crud->isEditing()){
+			$g=$app_crud->grid;
+			$g->addMethod('format_sendersign',function($g,$f)use($alert_col){
+				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'. $alert_col->js()->reload(array('installed_app_id'=>$g->model['namespace'])) .'">'.$g->current_row[$f].'</a>';
+			});
+			$g->addFormatter('namespace','sendersign');
+		}
+		if($_GET['installed_app_id']){
+			// throw new \Exception($_GET['installed_app_id']);
+			$this->api->stickyGET('installed_app_id');
+			$filter_box = $alert_col->add('View_Box')->setHTML(' Alerts Application for <b>'. $_GET['installed_app_id'].'</b>' );
+			
+			$filter_box->add('Icon',null,'Button')
+        	    ->addComponents(array('size'=>'mega'))
+            	->set('cancel-1')
+            	->addStyle(array('cursor'=>'pointer'))
+            	->on('click',function($js) use($filter_box,$alert_col) {
+                $filter_box->api->stickyForget('installed_app_id');
+                return $filter_box->js(null,$alert_col->js()->reload())->hide()->execute();
+            });
+			$alrt->addCondition('sender_signature',$_GET['installed_app_id']);
+		}
+
+
+		$crud=$alert_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false));
+		$crud->setModel($alrt);
 		if($crud->grid){
 			$crud->grid->addQuickSearch(array('name','created_at','type','sender_signature'));
 		}

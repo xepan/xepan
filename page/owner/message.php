@@ -8,24 +8,54 @@ class page_owner_message extends page_base_owner{
 		$op = $bv->addOptionButton();
 		$crud = $bv->addToColumn(0,'View');
 
+		$col=$this->app->layout->add('Columns');
+		$app_col=$col->addColumn(4);
+		$msg_col=$col->addColumn(8);
+
 		$msg=$this->add('Model_Messages');
-		$msg->addCondition('is_read',false);
+		// $msg->addCondition('is_read',false);
 		foreach ($msg as  $junk) {
 			// throw new \Exception("Error Processing Request", 1);
 			$msg['is_read']=true;
 			$msg->saveAndUnload();
 		}
-		$crud=$this->add('CRUD',array('allow_add'=>false,'allow_edit'=>false));
-		$crud->setModel('Messages',array('name','message','created_at',
-										'is_read','sender_signature','watch'));
+
+		$installed_components = $this->add('Model_InstalledComponents');
+		$app_crud=$app_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false));
+		$app_crud->setModel($installed_components,array('namespace'));
 		
+		if(!$app_crud->isEditing()){
+			$g=$app_crud->grid;
+			$g->addMethod('format_sendersign',function($g,$f)use($msg_col){
+				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'. $msg_col->js()->reload(array('installed_app_id'=>$g->model['namespace'])) .'">'.$g->current_row[$f].'</a>';
+			});
+			$g->addFormatter('namespace','sendersign');
+		}
+		if($_GET['installed_app_id']){
+			// throw new \Exception($_GET['installed_app_id']);
+			$this->api->stickyGET('installed_app_id');
+			$filter_box = $msg_col->add('View_Box')->setHTML(' Messages Application for  <b>'. $_GET['installed_app_id'].'</b>' );
+			
+			$filter_box->add('Icon',null,'Button')
+        	    ->addComponents(array('size'=>'mega'))
+            	->set('cancel-1')
+            	->addStyle(array('cursor'=>'pointer'))
+            	->on('click',function($js) use($filter_box,$msg_col) {
+                $filter_box->api->stickyForget('installed_app_id');
+                return $filter_box->js(null,$msg_col->js()->reload())->hide()->execute();
+            });
+			$msg->addCondition('sender_signature',$_GET['installed_app_id']);
+		}
+
+		$crud=$msg_col->add('CRUD');//,array('allow_add'=>false,'allow_edit'=>false));
+		$crud->setModel($msg);
+
 		if($crud->grid){
 			$crud->grid->addQuickSearch(array('name','message','created_at'));
 			$watch = $crud->grid->addColumn('Button','watching');
 			$message_title = $crud->grid->setFormatter('name','template')
-			->setTemplate('<a href="#" onclick="javascript:$(this).univ().frameURL(\'Message\',\'index.php?page=owner_messagedetails&message_id=<?$id?>\')"><?$name?></a>');	
+			->setTemplate('<a href="#" onclick="javascript:$(this).univ().frameURL(\'Message\',\'index.php?page=owner_messagedetails&message_id=<?$id?>\')"><?$name?></a>');
 		}
-				
 		
 		if($_GET['watching']){			
 			$msg_model=$this->add('Model_Messages')->load($_GET['watching']);
