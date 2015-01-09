@@ -42,6 +42,10 @@ class page_owner_users extends page_base_owner {
 		$usr->getElement('epan')->destroy();
 		$crud->setModel($usr);
 
+		if(!$crud->isEditing()){
+			$crud->grid->js('reload',$bg->js()->reload());
+		}
+
 	}
 
 	function page_xyz(){

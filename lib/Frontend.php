@@ -88,6 +88,7 @@ class Frontend extends ApiFrontend{
 
 			$this->add( 'jUI' );
 			$this->api->template->appendHTML('js_include','<script src="templates/js/jquery-migrate-1.2.1.min.js"></script>'."\n");
+			$this->api->template->appendHTML('js_include','<script src="templates/js/xepan-jquery.js"></script>'."\n");
 			/**
 			 * TODO: wrap in a IF(page does not contains owner_ / branch_ / system_ )
 			 * only then you need to get all this, as you are looking front of a website

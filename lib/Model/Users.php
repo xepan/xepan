@@ -10,7 +10,7 @@ class Model_Users extends Model_Table {
 		$f=$this->addField('name')->group('a~6~<i class="fa fa-user"></i> User Info')->mandatory(true)->sortable(true);
 		$f->icon='fa fa-user~red';
 
-		$f=$this->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(0)->group('a~6')->sortable(true);
+		$f=$this->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(50)->group('a~6')->sortable(true)->mandatory(false);
 		$f->icon="fa fa-question~red";
 		$f=$this->addField('username')->group('b~6~<i class="fa fa-lock"></i> Login Credentials')->mandatory(true);
 		$f->icon="fa fa-lock~red";
@@ -41,7 +41,14 @@ class Model_Users extends Model_Table {
 
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
+		$this->addHook('afterInsert',$this);
 		$this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function afterInsert($obj,$new_id){
+		$user_model=$this->add('Model_Users')->load($new_id);
+		$user_model_value = array($user_model);
+		$this->api->event('new_user_registered',$user_model_value);
 	}
 
 	function beforeSave(){

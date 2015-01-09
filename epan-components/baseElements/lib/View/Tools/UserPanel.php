@@ -180,10 +180,6 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 						$custom_field_value_model->createNew($user_model['id'],$junk['id'],$allFields[$this->api->normalizeName($junk['name'])]);
 					}
 
-					//Todo for executing plugin after user craeted in epan model
-					$user_model_value = array($user_model);
-					$this->api->exec_plugins('new_user_registered',$user_model_value);
-					// end of plugin call				
 					$this->js(null,$this->js()->univ()->successMessage('Created Successfully'))->reload()->execute();		
 				}
 
