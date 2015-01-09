@@ -157,6 +157,8 @@ $(".epan-sortable-component").sortable(s = {
                 $(this).find('.remove_btn').remove();
 
             });
+    
+
             var str = $(this).attr('component_type') + '_option.object_dropped("' + $(ui.item).parent('.epan-sortable-component').attr('id') + '","' + $(new_obj).attr('id') + '")';
             try {
                 console.log(ui);
@@ -708,3 +710,34 @@ $(function() {
     setInterval(keepalive, 300000);
 
 });
+
+
+
+(function($) {
+    // Attrs
+    $.fn.attrs = function(attrs) {
+        var t = $(this);
+        if (attrs) {
+            // Set attributes
+            t.each(function(i, e) {
+                var j = $(e);
+                for (var attr in attrs) {
+                    j.attr(attr, attrs[attr]);
+                };
+            });
+            return t;
+        } else {
+            // Get attributes
+            var a = { },
+                r = t.get(0);
+            if (r) {
+                r = r.attributes;
+                for (var i in r) {
+                    var p = r[i];
+                    if (typeof p.nodeValue !== 'undefined') a[p.nodeName] = p.nodeValue;
+                }
+            }
+            return JSON.stringify(a);
+        }
+    };
+})(jQuery);

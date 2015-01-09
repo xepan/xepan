@@ -221,7 +221,7 @@ class VirtualPage extends AbstractController
         $grid->addColumn('template', $name, $buttontext?:$title)
             ->setTemplate(
                 '<button type="button" class="atk-button-small pb_'.$name.'">'.
-                    $icon.$this->app->encodeHtmlChars($buttontext['descr']).
+                    $icon.
                 '</button>'
             );
 
