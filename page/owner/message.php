@@ -23,6 +23,7 @@ class page_owner_message extends page_base_owner{
 		$installed_components = $this->add('Model_InstalledComponents');
 		$app_crud=$app_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false));
 		$app_crud->setModel($installed_components,array('namespace'));
+		
 		if(!$app_crud->isEditing()){
 			$g=$app_crud->grid;
 			$g->addMethod('format_sendersign',function($g,$f)use($msg_col){
@@ -52,9 +53,8 @@ class page_owner_message extends page_base_owner{
 		if($crud->grid){
 			$crud->grid->addQuickSearch(array('name','message','created_at'));
 			$watch = $crud->grid->addColumn('Button','watching');
-
 			$message_title = $crud->grid->setFormatter('name','template')
-			->setTemplate('<a href="#" onclick="javascript:$(this).univ().frameURL(\'Message\',\'index.php?page=owner_messagedetails&message_id=<?$id?>\')"><?$name?></a>');	
+			->setTemplate('<a href="#" onclick="javascript:$(this).univ().frameURL(\'Message\',\'index.php?page=owner_messagedetails&message_id=<?$id?>\')"><?$name?></a>');
 		}
 		
 		if($_GET['watching']){			
