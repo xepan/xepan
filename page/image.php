@@ -24,7 +24,7 @@ class page_image extends Page{
 		if($_GET['height'])
 			$height = $_GET['height'];
 
-		$image = new Imagick($image_url);
+		$image = new Imagick(getcwd().'/'.$image_url);
 
 		if($width == $height AND $width == 0){
 			$d = $image->getImageGeometry();
