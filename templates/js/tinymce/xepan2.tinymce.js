@@ -11,7 +11,7 @@ $.each({
 
 
         tinymce.init({
-            selector: 'textarea.tinymce',
+            selector: '#'+$(obj).attr('id'),
             init_instance_callback : function(editor) {
                 console.log("Editor: " + editor.id + " is now initialized.");
             },
