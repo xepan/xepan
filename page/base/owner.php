@@ -26,7 +26,7 @@ class page_base_owner extends Page {
 		// 	return;
 		// }
 
-		$l=$this->app->add('Layout_Fluid');
+		$l=$this->app->add('Layout_Fluid'); // Usermanu is added in here
 		$this->app->top_menu =  $m=$this->app->layout->add('Menu_Horizontal',null,'Top_Menu');
 
         $admin_m = $m->addMenu('Admin');
@@ -56,29 +56,35 @@ class page_base_owner extends Page {
 
 	function recursiveRender(){
 		// Add this usermanu at last to keep in last
-		if(@$this->app->layout->user_menu){
-			$menu=$this->app->layout->user_menu->addMenu(array($this->api->auth->model['name'],'icon'=>'user'));
-		
 		$alerts =$this->add('Model_Alerts');
-		$badge=array();
-		if($unread = $alerts->addCondition('is_read',false)->count()->getOne()){
-			$badge=array('badge'=>array($unread,'swatch'=>'red'));
+		$unread_alerts = $alerts->addCondition('is_read',false)->count()->getOne();
+		$alert_badge=array();
+		if($unread_alerts){
+			$alert_badge=array('badge'=>array($unread_alerts,'swatch'=>'red'));
 		}
-		$menu->addItem(array_merge(array('Alert'),$badge),'/owner/alert');
-		
-		$msg_badge=array();
+
 		$msg = $this->add('Model_Messages');
-		$msg_unread=$msg->addCondition(
+		$unread_messages= $msg->addCondition(
 	        				$msg->_dsql()->orExpr()
 	            					->where('is_read',false)
 	            					->where('watch',true)
 	   		 				)->count()->getOne();
-		if($msg_unread){
-			$msg_badge=array('badge'=>array($msg_unread,'swatch'=>'red'));
+		$msg_badge=array();
+		if($unread_messages){
+			$msg_badge=array('badge'=>array($unread_messages,'swatch'=>'red'));
+		}
+		
+		$admin_badge=null;
+		if(($unread_alerts + $unread_messages) > 0){
+			$admin_badge=array('badge'=>array($unread_alerts + $unread_messages ,'swatch'=>'red'));
+			$admin_badge=$unread_alerts + $unread_messages;
 		}
 
-		$menu->addItem(array_merge(array('Message'),$msg_badge),'/owner/message');
-		$menu->addItem('Logout','logout');
+		if(@$this->app->layout->user_menu){
+			$menu=$this->app->layout->user_menu->addMenu(array($this->api->auth->model['name'] .  ($admin_badge?' ['.$admin_badge.'] ':''),'icon'=>'user'));
+			$menu->addItem(array_merge(array('Alert'),$alert_badge),'/owner/alert');
+			$menu->addItem(array_merge(array('Message'),$msg_badge),'/owner/message');
+			$menu->addItem('Logout','logout');
 
 		}
 		parent::recursiveRender();
