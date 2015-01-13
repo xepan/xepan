@@ -17,7 +17,7 @@ class page_image extends Page{
 
 		if(!file_exists(getcwd().'/../'.$image_url)){
 			$image_url = 'templates/images/logo.png';
-			$anotate = 'Image Not Found';
+			$anotate = 'Image Not Found '. $path;
 		}
 
 		if($_GET['width'])
