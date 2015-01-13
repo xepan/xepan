@@ -104,14 +104,16 @@ class Model_Users extends Model_Table {
 			$host     = $_SERVER['HTTP_HOST'];
 			$script   = $_SERVER['SCRIPT_NAME'];
 			$params   = $_SERVER['QUERY_STRING'];
-			$currentUrl = $protocol. '://' .$host;	 		
-
+			$currentUrl = $protocol. '://' .$host;
+			
+			
 			$email_body=str_replace("{{click_here_to_activate}}", 
 											"<a href=\"".$currentUrl.str_replace("&new_registration=1","", $this->api->url(null,array(
 													'activation_code'=>$this['activation_code'],
 													'activate_email'=>$this['email'],
 													'verify_account'=>1
 												)))."\">Click Here to Activate Your Account</a>",$email_body);				
+			
 			try{
 				$tm->send( $this['email'], $this->api->current_website['email_username'], $subject, $email_body ,false,null);
 				return true;

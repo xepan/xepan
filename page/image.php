@@ -13,9 +13,9 @@ class page_image extends Page{
 		if($_GET['image'])
 			$image_url = $_GET['image'];
 
-		if(!file_exists(getcwd().'/'.$image_url)){
+		if(!file_exists($path = getcwd().'/../'.$image_url)){
 			$image_url = 'templates/images/logo.png';
-			$anotate = 'Image Not Found';
+			$anotate = 'Image Not Found '. $path;
 		}
 
 		if($_GET['width'])
@@ -24,7 +24,7 @@ class page_image extends Page{
 		if($_GET['height'])
 			$height = $_GET['height'];
 
-		$image = new Imagick(getcwd().'/'.$image_url);
+		$image = new Imagick(getcwd().'/../'.$image_url);
 
 		if($width == $height AND $width == 0){
 			$d = $image->getImageGeometry();
