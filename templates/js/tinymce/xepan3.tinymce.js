@@ -12,6 +12,7 @@ $.each({
             if ($(event.target).closest(".mce-window").length) {
                 event.stopImmediatePropagation();
             }
+        });
 
         tinymce.init({
             selector: '#'+$(obj).attr('id'),
@@ -43,7 +44,7 @@ $.each({
             toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
             // toolbar2: "print preview media | forecolor backcolor emoticons",
             image_advtab: true,
-
+            save_enablewhendirty: false,
             content_css: 'templates/css/epan.css',
             setup: function(ed) {
                 ed.on("change", function(ed) {
