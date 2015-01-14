@@ -8,7 +8,10 @@ $.each({
         tinymce.editors=[];
         tinymce.activeEditors=[];
 
-
+        $(document).on('focusin', function(event) {
+            if ($(event.target).closest(".mce-window").length) {
+                event.stopImmediatePropagation();
+            }
 
         tinymce.init({
             selector: '#'+$(obj).attr('id'),
