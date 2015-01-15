@@ -13,7 +13,7 @@ class Form_Field_RichText extends Form_Field_Text{
 
 	function render(){
 		
-		$this->js(true)->_load('tinymce/tinymce.min')->_load('tinymce/jquery.tinymce.min')->_load('tinymce/xepan2.tinymce');
+		$this->js(true)->_load('tinymce/tinymce.min')->_load('tinymce/jquery.tinymce.min')->_load('tinymce/xepan3.tinymce');
 		// $this->js(true)->_load('tinymce/tinymce.min')->_load('tinymce/jquery.tinymce.min')->tinymce();
 		$this->js(true)->univ()->xtinymce($this);
 

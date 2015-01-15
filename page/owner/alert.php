@@ -48,6 +48,23 @@ class page_owner_alert extends page_base_owner{
 				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'. $alert_col->js()->reload(array('installed_app_id'=>$g->model['namespace'])) .'">'.$g->current_row[$f].'</a>';
 			});
 			$g->addFormatter('namespace','sendersign');
+			
+			$g->addMethod('format_total', function($g,$f){
+				$g->current_row[$f]=$g->add('Model_Alerts')->addCondition('sender_namespace',$g->model['namespace'])->count()->getOne();
+			});
+			$g->addColumn('total','Total');
+
+			$g->addMethod('format_unread', function($g,$f){
+			$alrt_model = $this->add('Model_Alerts');
+			$unread_alert= $alrt_model
+									->addCondition('is_read',0)
+	            					->addCondition('sender_namespace',$g->model['namespace'])
+	   				 				->count()->getOne();
+
+			$g->current_row[$f]=$unread_alert;
+			});
+
+			$g->addColumn('unread','unread');
 		}
 		if($_GET['installed_app_id']){
 			// throw new \Exception($_GET['installed_app_id']);
@@ -62,14 +79,14 @@ class page_owner_alert extends page_base_owner{
                 $filter_box->api->stickyForget('installed_app_id');
                 return $filter_box->js(null,$alert_col->js()->reload())->hide()->execute();
             });
-			$alrt->addCondition('sender_signature',$_GET['installed_app_id']);
+			$alrt->addCondition('sender_namespace',$_GET['installed_app_id']);
 		}
 
 
 		$crud=$alert_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false));
 		$crud->setModel($alrt);
 		if($crud->grid){
-			$crud->grid->addQuickSearch(array('name','created_at','type','sender_signature'));
+			$crud->grid->addQuickSearch(array('name','created_at','type','sender_signature','sender_namespace'));
 		}
 
 	}	

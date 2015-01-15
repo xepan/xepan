@@ -15,6 +15,7 @@ class page_owner_messagedetails extends page_base_owner{
 		$v = $this->app->layout->add('View_Info')->set('Message Detail');		
 		$this->add('View')->set('Name - '.$msg['name']);
 		$this->add('View')->set('From - '.$msg['sender_signature']);
+		$this->add('View')->set('Name Space - '.$msg['sender_namespace']);
 		$this->add('View')->set('Message - '.$msg['message']);
 
 		

@@ -8,10 +8,7 @@ $.each({
         tinymce.editors=[];
         tinymce.activeEditors=[];
 
-        $(document).on('focusin', function(event) {
-            if ($(event.target).closest(".mce-window").length) {
-                event.stopImmediatePropagation();
-            }
+
 
         tinymce.init({
             selector: '#'+$(obj).attr('id'),
@@ -40,7 +37,7 @@ $.each({
                 "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
                 "save table contextmenu directionality emoticons template paste textcolor colorpicker"
             ],
-            toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+            toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons",
             // toolbar2: "print preview media | forecolor backcolor emoticons",
             image_advtab: true,
 

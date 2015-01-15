@@ -9,16 +9,18 @@ class Model_Alerts extends Model_Table{
 		$this->addField('is_read')->type('boolean')->defaultValue(false)->sortable(true);
 		$this->addField('type')->enum(array('default','primary','success','info','warning','danger'))->sortable(true);
 		$this->addField('sender_signature');
+		$this->addField('sender_namespace');
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function createNew($epan_id,$title,$type,$sender_signature){
+	function createNew($epan_id,$title,$type,$sender_signature,$sender_namespace){
 
 		$this['epan_id']=$epan_id;
 		$this['name']=$title;
 		$this['type']=$type;
 		$this['sender_signature']=$sender_signature;
+		$this['sender_namespace']=$sender_namespace;
 		$this->save();
 	}
 
