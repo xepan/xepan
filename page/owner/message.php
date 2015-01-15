@@ -2,6 +2,7 @@
 
 class page_owner_message extends page_base_owner{
 	function page_index(){
+				$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-bullhorn"></i> Messages <small>Application Messages</small>');
 		$bv = $this->add('View_BackEndView',array('cols_widths'=>array(12)));
 		$bv->addToTopBar('H3')->set('Messages');
 		

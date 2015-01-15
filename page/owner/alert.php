@@ -2,7 +2,9 @@
 
 class page_owner_alert extends page_base_owner{
 	function page_index(){
-		
+	
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-bullhorn"></i> Alerts  <small>Application Alerts</small>');
+
 		$default_alert = $this->api->current_website->ref('Alerts')->addCondition('type','default')->count()->getOne();		
 		$dv = $this->add('View_BackEndView',array('cols_widths'=>array(12)));
 		$dv->addToTopBar('View')->setHTML('Default -'.$default_alert)->addClass('label label-default');
