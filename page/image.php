@@ -15,7 +15,11 @@ class page_image extends Page{
 			$image_url = trim($image_url,'/');
 		}
 
-		if(!file_exists(getcwd().'/../'.$image_url)){
+
+
+		if(file_exists($path=getcwd().'/../'.$image_url)){
+		}elseif(file_exists($path=getcwd().'/'.$image_url)){
+		}else{
 			$image_url = 'templates/images/logo.png';
 			$anotate = 'Image Not Found '. $path;
 		}
@@ -26,7 +30,7 @@ class page_image extends Page{
 		if($_GET['height'])
 			$height = $_GET['height'];
 		
-		$image = new Imagick(getcwd().'/../'.$image_url);
+		$image = new Imagick($path);
 
 
 		if($width == $height AND $width == 0){
