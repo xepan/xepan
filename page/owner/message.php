@@ -2,6 +2,7 @@
 
 class page_owner_message extends page_base_owner{
 	function page_index(){
+				$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-bullhorn"></i> Messages <small>Application Messages</small>');
 		$bv = $this->add('View_BackEndView',array('cols_widths'=>array(12)));
 		$bv->addToTopBar('H3')->set('Messages');
 		
@@ -30,6 +31,24 @@ class page_owner_message extends page_base_owner{
 				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'. $msg_col->js()->reload(array('installed_app_id'=>$g->model['namespace'])) .'">'.$g->current_row[$f].'</a>';
 			});
 			$g->addFormatter('namespace','sendersign');
+			$g->addMethod('format_total', function($g,$f){
+				$g->current_row[$f]=$g->add('Model_Messages')->addCondition('sender_namespace',$g->model['namespace'])->count()->getOne();
+			});
+			$g->addColumn('total','Total');
+			$g->addColumn('total','Total');
+
+			$g->addMethod('format_unread', function($g,$f){
+			$msg_model = $this->add('Model_Messages');
+			$unread_message= $msg_model
+									->addCondition('is_read',0)
+									->addCondition('watch',1)
+	            					->addCondition('sender_namespace',$g->model['namespace'])
+	   				 				->count()->getOne();
+
+			$g->current_row[$f]=$unread_message;
+			});
+
+			$g->addColumn('unread','unread');
 		}
 		if($_GET['installed_app_id']){
 			// throw new \Exception($_GET['installed_app_id']);
@@ -44,7 +63,7 @@ class page_owner_message extends page_base_owner{
                 $filter_box->api->stickyForget('installed_app_id');
                 return $filter_box->js(null,$msg_col->js()->reload())->hide()->execute();
             });
-			$msg->addCondition('sender_signature',$_GET['installed_app_id']);
+			$msg->addCondition('sender_namespace',$_GET['installed_app_id']);
 		}
 
 		$crud=$msg_col->add('CRUD');//,array('allow_add'=>false,'allow_edit'=>false));
