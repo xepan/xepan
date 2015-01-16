@@ -525,13 +525,14 @@ class PHPImage {
 	/**
 	 * Shows the resulting image
 	 */
-	public function show(){
+	public function show($as_base64_encode=true){
 		header('Expires: Wed, 1 Jan 1997 00:00:00 GMT');
 		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 		header('Cache-Control: no-store, no-cache, must-revalidate');
 		header('Cache-Control: post-check=0, pre-check=0', false);
 		header('Pragma: no-cache');
 		header('Content-type: image/png');
+		ob_start();
 		switch($this->type){
 			case IMAGETYPE_GIF:
 				imagegif($this->img, null);
@@ -544,6 +545,12 @@ class PHPImage {
 				break;
 		}
 		$this->cleanup();
+		$imageData = ob_get_contents();
+		ob_clean(); 
+		if($as_base64_encode)
+			$imageData = base64_encode($imageData);
+
+		echo $imageData;
 		die();
 	}
 
@@ -858,6 +865,7 @@ class PHPImage {
 	 * @return $this
 	 */
 	public function text($text, $options=array()){
+		$this->last_text = $text;
 		// Unset null values so they inherit defaults
 		foreach($options as $k => $v){
 			if($options[$k] === null){
@@ -1041,6 +1049,10 @@ class PHPImage {
 		return $ret;
 	}
 
+	function getTextBoxSize($fontSize, $angle, $fontFile, $text){
+		return imagettfbbox($fontSize, $angle, $fontFile, $text);
+	}
+
 	/**
 	 * Check quality is correct before save
 	 *
@@ -1201,5 +1213,22 @@ class PHPImage {
 			$this->setQuality($quality);
 		}
 		return $this;
+	}
+
+	function hex2rgb($hex) {
+	   $hex = str_replace("#", "", $hex);
+
+	   if(strlen($hex) == 3) {
+	      $r = hexdec(substr($hex,0,1).substr($hex,0,1));
+	      $g = hexdec(substr($hex,1,1).substr($hex,1,1));
+	      $b = hexdec(substr($hex,2,1).substr($hex,2,1));
+	   } else {
+	      $r = hexdec(substr($hex,0,2));
+	      $g = hexdec(substr($hex,2,2));
+	      $b = hexdec(substr($hex,4,2));
+	   }
+	   $rgb = array($r, $g, $b);
+	   //return implode(",", $rgb); // returns the rgb values separated by commas
+	   return $rgb; // returns an array with the rgb values
 	}
 }
