@@ -438,7 +438,7 @@ class PHPImage {
 	 * @param boolean $upscale
 	 * @return $this
 	 */
-	public function resize($targetWidth, $targetHeight, $crop=false, $upscale=false){
+	public function resize($targetWidth, $targetHeight, $crop=false, $upscale=false, $maintainratio=false){
 		$width = $this->width;
 		$height = $this->height;
 		$canvasWidth = $targetWidth;
@@ -496,12 +496,17 @@ class PHPImage {
 				}
 			}
 		} else {
-			if ($targetWidth/$targetHeight > $r) {
-				$newwidth = intval($targetHeight*$r);
-				$newheight = $targetHeight;
-			} else {
-				$newheight = intval($targetWidth/$r);
+			if($maintainratio){
+				if ($targetWidth/$targetHeight > $r) {
+					$newwidth = intval($targetHeight*$r);
+					$newheight = $targetHeight;
+				} else {
+					$newheight = intval($targetWidth/$r);
+					$newwidth = $targetWidth;
+				}
+			}else{
 				$newwidth = $targetWidth;
+				$newheight = $targetHeight;
 			}
 			if($upscale === false){
 				if($newwidth > $width){
@@ -1230,5 +1235,13 @@ class PHPImage {
 	   $rgb = array($r, $g, $b);
 	   //return implode(",", $rgb); // returns the rgb values separated by commas
 	   return $rgb; // returns an array with the rgb values
+	}
+
+	function getWidth(){
+		return $this->width;
+	}
+
+	function getHeight(){
+		return $this->height;
 	}
 }
