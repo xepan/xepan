@@ -530,13 +530,7 @@ class PHPImage {
 	/**
 	 * Shows the resulting image
 	 */
-	public function show($as_base64_encode=true){
-		header('Expires: Wed, 1 Jan 1997 00:00:00 GMT');
-		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-		header('Cache-Control: no-store, no-cache, must-revalidate');
-		header('Cache-Control: post-check=0, pre-check=0', false);
-		header('Pragma: no-cache');
-		header('Content-type: image/png');
+	public function show($as_base64_encode=true,$return_data=false){
 		ob_start();
 		switch($this->type){
 			case IMAGETYPE_GIF:
@@ -549,12 +543,23 @@ class PHPImage {
 				imagejpeg($this->img, null, $this->quality);
 				break;
 		}
-		$this->cleanup();
 		$imageData = ob_get_contents();
 		ob_clean(); 
-		if($as_base64_encode)
-			$imageData = base64_encode($imageData);
+		$this->cleanup();
 
+		if($as_base64_encode){
+			$imageData = base64_encode($imageData);
+		}
+
+		if($return_data){
+			return $imageData;	
+		} 
+		header('Expires: Wed, 1 Jan 1997 00:00:00 GMT');
+		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+		header('Cache-Control: no-store, no-cache, must-revalidate');
+		header('Cache-Control: post-check=0, pre-check=0', false);
+		header('Pragma: no-cache');
+		header('Content-type: image/png');
 		echo $imageData;
 		die();
 	}
