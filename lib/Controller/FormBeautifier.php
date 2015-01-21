@@ -26,6 +26,7 @@ class Controller_FormBeautifier extends AbstractController{
 		}
 
 		if(!$this->form) return;
+		$this->form->setLayout('form/minimal');
 
 		$model_fields = $this->form->getModel();
 
