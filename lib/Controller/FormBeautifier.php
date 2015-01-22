@@ -104,6 +104,10 @@ class Controller_FormBeautifier extends AbstractController{
 			$field->js(true)->parent()->parent()->appendTo($this->running_cell);
 			return;
 		}
+		if($field instanceof Form_Field_DatePicker){
+			$field->js(true)->parent()->parent()->parent()->parent()->appendTo($this->running_cell);
+			return;
+		}
 
 		$this->running_cell->add($field);
 	}
