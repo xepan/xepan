@@ -64,6 +64,17 @@ abstract class Form_Field extends AbstractView {
          */
 
     }
+
+    function setterGetter($type, $value = UNDEFINED)
+    {
+        if ($value === UNDEFINED) {
+            return isset($this->$type)?$this->$type:null;
+        }
+        $this->$type=$value;
+        return $this;
+    }
+
+    
     function setForm($form){
         $form->addHook('loadPOST',$this);
         $form->addHook('validate',$this);
