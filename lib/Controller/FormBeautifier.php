@@ -31,7 +31,7 @@ class Controller_FormBeautifier extends AbstractController{
 		}
 
 		if(!$this->form) return;
-
+		
 		$this->related_model = $this->form->getModel();
 		
 		$this->order = $this->form->add('Order');
