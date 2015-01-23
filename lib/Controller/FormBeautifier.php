@@ -110,7 +110,8 @@ class Controller_FormBeautifier extends AbstractController{
 			return;
 		}
 
-		$this->running_cell->add($field);
+		$field->js(true)->parent()->parent()->appendTo($this->running_cell);
+		// $this->running_cell->add($field);
 	}
 
 }
