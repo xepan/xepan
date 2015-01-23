@@ -31,7 +31,7 @@ class Controller_FormBeautifier extends AbstractController{
 		}
 
 		if(!$this->form) return;
-
+		
 		$this->related_model = $this->form->getModel();
 		
 		$this->order = $this->form->add('Order');
@@ -50,7 +50,8 @@ class Controller_FormBeautifier extends AbstractController{
 		// 'b~12~New Panel Start 2'
 
 		if($this->related_model){
-			$model_field = $this->related_model->getElement($field->short_name);
+			if($this->related_model->hasElement($field->short_name))
+				$model_field = $this->related_model->getElement($field->short_name);
 		}
 
 		$group = $model_field->setterGetter('group');
