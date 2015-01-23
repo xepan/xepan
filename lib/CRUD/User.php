@@ -49,7 +49,6 @@ class CRUD_User extends CRUD{
 			if($this->form->getModel()->isDefaultSuperUser()){
 				$this->form->getElement('type')->destroy();
 				$this->form->getElement('is_active')->destroy();
-				$this->form->getElement('type')->destroy();
 				$this->form->getElement('user_management')->destroy();
 				$this->form->getElement('general_settings')->destroy();
 				$this->form->getElement('application_management')->destroy();
