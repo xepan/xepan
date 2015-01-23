@@ -38,7 +38,7 @@ class page_owner_message extends page_base_owner{
 			$g->addColumn('total','Total');
 
 			$g->addMethod('format_unread', function($g,$f){
-			$msg_model = $this->add('Model_Messages');
+			$msg_model = $g->add('Model_Messages');
 			$unread_message= $msg_model
 									->addCondition('is_read',0)
 									->addCondition('watch',1)
