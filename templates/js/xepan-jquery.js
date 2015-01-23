@@ -40,5 +40,13 @@
             return (visibility == 'visible') ? 'hidden' : 'visible';
         });
     };
+
+    jQuery.fn.center = function (parent) {
+        // this.parent().css("position","absolute");
+        this.css("position","absolute");
+        this.css("top", (($(parent).height() - this.height()) / 2) );
+        this.css("left", (($(parent).width() - this.width()) / 2) );
+        return this;
+    }
     
 })(jQuery);

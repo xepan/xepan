@@ -4,7 +4,7 @@ $config['installed']=false;
 $config['atk']['base_path']='./atk4/';
 $config['dsn']='mysql://{database_username}:{database_password}@{host}/{database}';
 
-// $config['js']['versions']['jquery']='1.8.2.min';
+$config['js']['versions']['jquery']='1.8.2.min';
 $config['url_postfix']='';
 $config['url_prefix']='?page=';
 
@@ -39,3 +39,6 @@ if(!defined('DS'))
 	define('DS',DIRECTORY_SEPERATOR);
 
 $config['xepan']['events']=array('register-event','beforeTemplateInit','content-fetched','website-model-loaded','website-page-model-loaded','webpage-page-loaded','epan-page-before-save','epan-page-after-save','goal');
+
+if(!defined('FPDF_FONTPATH'))
+	define('FPDF_FONTPATH','lib/FPDF/font');
