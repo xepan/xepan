@@ -12,6 +12,12 @@ class page_owner_message extends page_base_owner{
 		$col=$this->app->layout->add('Columns');
 		$app_col=$col->addColumn(4);
 		$msg_col=$col->addColumn(8);
+		
+		$message_vp = $this->add('VirtualPage');
+		$message_vp->set(function($p){
+			$m=$p->add('xEnquiryNSubscription/Model_CustomFormEntry')->tryLoad($_GET['form_submission_id']);
+			$p->add('View')->setHTML($m['message'])->addCLass('well');
+		});
 
 		$msg=$this->add('Model_Messages');
 		// $msg->addCondition('is_read',false);
@@ -68,13 +74,18 @@ class page_owner_message extends page_base_owner{
 
 		$crud=$msg_col->add('CRUD');//,array('allow_add'=>false,'allow_edit'=>false));
 		$crud->setModel($msg);
-
 		if($crud->grid){
 			$crud->grid->addQuickSearch(array('name','message','created_at'));
 			$watch = $crud->grid->addColumn('Button','watching');
 			$message_title = $crud->grid->setFormatter('name','template')
 			->setTemplate('<a href="#" onclick="javascript:$(this).univ().frameURL(\'Message\',\'index.php?page=owner_messagedetails&message_id=<?$id?>\')"><?$name?></a>');
-		}
+		
+			$crud->grid->addMethod('format_message',function($g,$f)use($message_vp){
+				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('Message',$g->api->url($message_vp->getURL(),array('form_submission_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a>';
+			});
+
+			$crud->grid->addFormatter('message','message');
+		}	
 		
 		if($_GET['watching']){			
 			$msg_model=$this->add('Model_Messages')->load($_GET['watching']);
