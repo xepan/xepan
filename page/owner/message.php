@@ -2,7 +2,7 @@
 
 class page_owner_message extends page_base_owner{
 	function page_index(){
-				$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-bullhorn"></i> Messages <small>Application Messages</small>');
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-bullhorn"></i> Messages <small>Application Messages</small>');
 		$bv = $this->add('View_BackEndView',array('cols_widths'=>array(12)));
 		$bv->addToTopBar('H3')->set('Messages');
 		
@@ -12,6 +12,7 @@ class page_owner_message extends page_base_owner{
 		$col=$this->app->layout->add('Columns');
 		$app_col=$col->addColumn(4);
 		$msg_col=$col->addColumn(8);
+		
 
 		$msg=$this->add('Model_Messages');
 		// $msg->addCondition('is_read',false);
@@ -20,6 +21,12 @@ class page_owner_message extends page_base_owner{
 			$msg['is_read']=true;
 			$msg->saveAndUnload();
 		}
+		
+		$message_vp = $this->add('VirtualPage');
+		$message_vp->set(function($p){
+			$m=$p->add('Model_Messages')->tryLoad($_GET['message_id']);
+			$p->add('View')->setHTML($m['message'])->addCLass('well');
+		});
 
 		$installed_components = $this->add('Model_InstalledComponents');
 		$app_crud=$app_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false));
@@ -47,14 +54,13 @@ class page_owner_message extends page_base_owner{
 
 			$g->current_row[$f]=$unread_message;
 			});
-
 			$g->addColumn('unread','unread');
 		}
+
 		if($_GET['installed_app_id']){
 			// throw new \Exception($_GET['installed_app_id']);
 			$this->api->stickyGET('installed_app_id');
 			$filter_box = $msg_col->add('View_Box')->setHTML(' Messages Application for  <b>'. $_GET['installed_app_id'].'</b>' );
-			
 			$filter_box->add('Icon',null,'Button')
         	    ->addComponents(array('size'=>'mega'))
             	->set('cancel-1')
@@ -68,22 +74,28 @@ class page_owner_message extends page_base_owner{
 
 		$crud=$msg_col->add('CRUD');//,array('allow_add'=>false,'allow_edit'=>false));
 		$crud->setModel($msg);
-
 		if($crud->grid){
 			$crud->grid->addQuickSearch(array('name','message','created_at'));
 			$watch = $crud->grid->addColumn('Button','watching');
 			$message_title = $crud->grid->setFormatter('name','template')
 			->setTemplate('<a href="#" onclick="javascript:$(this).univ().frameURL(\'Message\',\'index.php?page=owner_messagedetails&message_id=<?$id?>\')"><?$name?></a>');
-		}
-		
+			
+			$crud->grid->addMethod('format_message',function($g,$f)use($message_vp){
+				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('Message',$g->api->url($message_vp->getURL(),array('message_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a>';
+			});
+			$crud->grid->addFormatter('message','message');
+		}	
+		// $form_crud=$this->app->layout->add('CRUD',array('allow_add'=>false,'allow_del'=>false,'allow_edit'=>false));
+		// $form_crud->setModel('xEnquiryNSubscription/CustomFormEntry',array('message'));
+				
 		if($_GET['watching']){			
 			$msg_model=$this->add('Model_Messages')->load($_GET['watching']);
 			if($msg_model['watch']==false)
 				$msg_model['watch']=true;
 			else
 				$msg_model['watch']=false;
-			$msg_model->save();
-			$crud->grid->js(null,$this->js()->univ()->successMessage('Watch Changes'))->reload()->execute();
+				$msg_model->save();
+				$crud->grid->js(null,$this->js()->univ()->successMessage('Watch Changes'))->reload()->execute();
 		}
 	}	
 }

@@ -22,16 +22,8 @@ class page_owner_messagedetails extends page_base_owner{
 		$msg_detail->add('View')->set('Name Space - '.$msg['sender_namespace']);
 		$msg_detail->add('View')->set('Message - '.$msg['message']);
 
-		$custome_field=$this->add('xEnquiryNSubscription/Model_CustomFields');
-		
-		$form_values="";
-		foreach ($custome_field as $junk) {
-				$form_values .= "<b>".$custome_field['name']."</b> : " . $custome_field['name'] . '<br/>';
-				if($junk['type'] == 'email'){
-						$email = $form[$this->api->normalizeName($custome_field['name'])];
-					}
-		}
-			$contributers_detail->add('View')->setHTML($form_values);
+		// $fomentry_model=$this->add('xEnquiryNSubscription/Model_CustomFormEntry')->tryLoad($_GET['form_submittion_id']);
+		// $contributers_detail->add('View')->setHTML($fomentry_model['message']);		
 		
 	}
 }		
