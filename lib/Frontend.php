@@ -212,10 +212,15 @@ class Frontend extends ApiFrontend{
 					// old includes etc will be lost so ...
 					$old_jui = $this->api->jui;
 					$old_js_include = $this->template->tags['js_include'];
-					// throw new Exception(print_r($old_js_include,true) , 1);
-					
+					$old_js_doc_ready = $this->template->tags['document_ready'];
+					// echo "<pre>";
+					// echo print_r($old_js_doc_ready,true);
+					// echo "</pre>";
+					// throw new Exception("sdf" , 1);
+
 					$this->template->loadTemplateFromString($shared_template);
 					$this->template->appendHTML('js_include',implode("\n", $old_js_include[1]));
+					$this->template->appendHTML('document_ready',implode("\n",$old_js_doc_ready[1]));
 					$this->template->trySet('template_css',$current_template['css']);
 					$this->template->trySet('style',$current_template['body_attributes']);
 					
