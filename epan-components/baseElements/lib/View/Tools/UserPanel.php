@@ -293,11 +293,16 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 						$form->displayError('username','Please Activate Your Account First');
 
 					//save into Cookies
-					//end of saving into cookies	
+					//end of saving into cookies
 
 					$this->api->auth->login($user_model);
 					// if reload page
-						$this->js()->univ()->redirect($this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_after_login_page'])))->execute();
+					$redirect_url = $this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_after_login_page']));
+					//Check for the checkout page
+					if($this->api->recall('xshop_checkout_page',$redirect_url) and $this->api->recall('xshop_checkout_page') != "")
+						$redirect_url = $this->api->recall('xshop_checkout_page');
+
+					$this->js()->univ()->redirect($redirect_url)->execute();
 					// else
 						$this->js()->reload()->execute();
 				}
