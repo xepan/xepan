@@ -6069,3 +6069,44 @@ th {
 input[readonly], div.atk-form-field-readonly{
   background: none !important;
 }
+
+
+label.css-label {
+  background-image:url('../images/csscheckbox.png') !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  -khtml-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+input[type=checkbox].css-checkbox {
+  position:absolute !important;
+  z-index:-1000 !important;
+  left:-1000px !important; 
+  overflow: hidden !important; 
+  clip: rect(0 0 0 0) !important; 
+  height:1px !important; 
+  width:1px !important; 
+  margin:-1px !important; 
+  padding:0 !important; 
+  border:0 !important;
+}
+
+input[type=checkbox].css-checkbox + label.css-label {
+  padding-left:23px !important;
+  height:14px !important; 
+  display:inline-block !important;
+  line-height:14px !important;
+  background-repeat:no-repeat !important;
+  background-position: 0 0 !important;
+  font-size:14px !important;
+  vertical-align:middle !important;
+  cursor:pointer !important;
+
+}
+
+input[type=checkbox].css-checkbox:checked + label.css-label {
+  background-position: 0 -14px !important;
+}

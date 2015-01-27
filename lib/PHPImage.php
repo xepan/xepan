@@ -1249,4 +1249,13 @@ class PHPImage {
 	function getHeight(){
 		return $this->height;
 	}
+
+	function addImage($image_data,$x,$y,$width,$height){
+		$im = imagecreatefromstring($image_data);
+		$src_w=imagesx($im);
+		$src_h=imagesy($im);
+		imagecopyresized ( $this->getResource() , $im , $x , $y , 0 , 0 , $width , $height , $src_w , $src_h );
+		// imagecopy ( $this->getResource() , $im , $x , $y , 0 , 0 , $width , $height );
+	}
+
 }

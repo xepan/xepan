@@ -157,6 +157,10 @@ class Model_Users extends Model_Table {
 		return $this['type'] == 50;
 	}
 
+	function isBackEndUser(){
+		return $this['type'] >= 80;
+	}
+
 	function isMe(){
 		return $this->id == $this->api->auth->model->id;
 	}	
