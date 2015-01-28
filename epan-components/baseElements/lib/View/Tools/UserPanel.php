@@ -299,8 +299,8 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 					// if reload page
 					$redirect_url = $this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_after_login_page']));
 					//Check for the checkout page
-					if($this->api->recall('xshop_checkout_page',$redirect_url) and $this->api->recall('xshop_checkout_page') != "")
-						$redirect_url = $this->api->recall('xshop_checkout_page');
+					if($this->api->recall('next_url',$redirect_url) and $this->api->recall('next_url') != "")
+						$redirect_url = $this->api->recall('next_url');
 
 					$this->js()->univ()->redirect($redirect_url)->execute();
 					// else

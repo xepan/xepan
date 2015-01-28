@@ -47,6 +47,7 @@ class Frontend extends ApiFrontend{
 	 */
 	public $website_plugins=array();
 
+	public $max_name_length=40;
 
 	function init() {
 		parent::init();
