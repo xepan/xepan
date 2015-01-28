@@ -280,6 +280,10 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 				// $submit_field->js(true)->appendTo($col);//->add($submit_field);
 				// $form->js(true)->find('.atk-buttons')->removeClass('atk-buttons');
 				
+				$redirect_url = array('subpage'=>$this->html_attributes['user_panel_after_login_page']);
+				//Check for the checkout page
+				$redirect_url = $this->api->recall('next_url',$redirect_url);
+					// $this->api->forget('next_url');
 				if($form->isSubmitted()){
 					$user_model = $this->add('Model_Users');
 					$user_model->addCondition('username',$form['username']);
@@ -297,12 +301,7 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 
 					$this->api->auth->login($user_model);
 					// if reload page
-					$redirect_url = $this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_after_login_page']));
-					//Check for the checkout page
-					if($this->api->recall('next_url',$redirect_url) and $this->api->recall('next_url') != "")
-						$redirect_url = $this->api->recall('next_url');
-
-					$this->js()->univ()->redirect($redirect_url)->execute();
+					$this->api->redirect($this->api->url(null,$redirect_url))->execute();
 					// else
 						$this->js()->reload()->execute();
 				}
