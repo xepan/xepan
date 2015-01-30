@@ -49,6 +49,7 @@ class Controller_FormBeautifier extends AbstractController{
 		// 'a~6~bl' in below last column 
 		// 'b~12~New Panel Start 2'
 
+		$model_field = $field;
 		if($this->related_model){
 			if($this->related_model->hasElement($field->short_name))
 				$model_field = $this->related_model->getElement($field->short_name);
@@ -91,8 +92,10 @@ class Controller_FormBeautifier extends AbstractController{
 	}
 
 	function moveField($field){
+		$model_field = $field;
 		if($this->related_model){
-			$model_field = $this->related_model->getElement($field->short_name);
+			if($this->related_model->hasElement($field->short_name))
+				$model_field = $this->related_model->getElement($field->short_name);
 		}
 		if(isset($model_field->icon)){
 			$icon = explode("~", $model_field->icon);
@@ -110,7 +113,8 @@ class Controller_FormBeautifier extends AbstractController{
 			return;
 		}
 
-		$this->running_cell->add($field);
+		$field->js(true)->parent()->parent()->appendTo($this->running_cell);
+		// $this->running_cell->add($field);
 	}
 
 }

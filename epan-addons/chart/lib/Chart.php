@@ -91,14 +91,19 @@ class Chart extends \View {
 			$x_index = array_search($xAxis, $this->xAxis);
 		}
 
+		$series_found = false;
 		foreach ($this->data as &$sr) {
 			if($sr['name'] == $series){
 				// add data here
 					$sr['data'][$x_index] = $value;
-					return;
+					$series_found = true;
+					// return;
+				}else{
+					if(!isset($sr['data'][$x_index]))
+					$sr['data'][$x_index] = 0;
 				}
 			}
-
+		if($series_found) return;
 		// series not found in $this->data add new series
 		$data =array($x_index=>$value);
 		$new_series = array('name'=>$series,'data'=>$data);

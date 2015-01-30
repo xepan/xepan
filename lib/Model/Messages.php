@@ -15,9 +15,9 @@ class Model_Messages extends Model_Table{
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function createNew($epan_id,$title,$message,$sender_signature,$sender_namespace){
+	function createNew($title,$message,$sender_signature,$sender_namespace){
 
-		$this['epan_id']=$epan_id;
+		$this['epan_id']=$this->api->current_website->id;
 		$this['name']=$title;
 		$this['message']=$message;
 		$this['sender_signature']=$sender_signature;

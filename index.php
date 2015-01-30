@@ -17,5 +17,6 @@ if(isset($_GET['page'])){
 	}
 }
 include 'atk4/loader.php';
+include 'vendor/autoload.php';
 $api=new Frontend($session_var);
 $api->main();

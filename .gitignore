@@ -9,3 +9,5 @@ nbproject
 ftpsync.settings
 ToDo
 upload/*
+composer.lock
+composer.phar

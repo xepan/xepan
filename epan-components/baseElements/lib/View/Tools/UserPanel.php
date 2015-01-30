@@ -280,6 +280,10 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 				// $submit_field->js(true)->appendTo($col);//->add($submit_field);
 				// $form->js(true)->find('.atk-buttons')->removeClass('atk-buttons');
 				
+				$redirect_url = array('subpage'=>$this->html_attributes['user_panel_after_login_page']);
+				//Check for the checkout page
+				$redirect_url = $this->api->recall('next_url',$redirect_url);
+					// $this->api->forget('next_url');
 				if($form->isSubmitted()){
 					$user_model = $this->add('Model_Users');
 					$user_model->addCondition('username',$form['username']);
@@ -293,11 +297,11 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 						$form->displayError('username','Please Activate Your Account First');
 
 					//save into Cookies
-					//end of saving into cookies	
+					//end of saving into cookies
 
 					$this->api->auth->login($user_model);
 					// if reload page
-						$this->js()->univ()->redirect($this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_after_login_page'])))->execute();
+					$this->api->redirect($this->api->url(null,$redirect_url))->execute();
 					// else
 						$this->js()->reload()->execute();
 				}

@@ -48,7 +48,7 @@ class Controller_Captcha extends \Controller {
             ));
         } else {
             $view = $this->owner->aboveField();
-            $view->setHTML('<img style="cursor:pointer" src="'.$this->api->url(null,array('captcha_view'=>'true','rand'=>md5(microtime()))).'" />');
+            $view->setHTML('<div><img style="cursor:pointer" src="'.$this->api->url(null,array('captcha_view'=>'true','rand'=>md5(microtime()))).'" /> <i class="glyphicon glyphicon-refresh"></i></div>');
             $view->js('click')->reload();
         }
     }
