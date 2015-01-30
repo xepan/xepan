@@ -58,7 +58,7 @@ class Frontend extends ApiFrontend{
 			))->setParent( $this->pathfinder->base_location );
 
 		$this->addLocation(array(
-				'addons'=>array( 'epan-addons', 'epan-components', 'atk4-addons' ) )
+				'addons'=>array( 'epan-addons', 'epan-components', 'atk4-addons' ))
 		)->setParent( $this->pathfinder->base_location );
 
 		$this->addLocation(array(
