@@ -19,8 +19,9 @@ class Form_Field_Plus extends Form_Field_Basic
             ->add('VirtualPage')
             ->bindEvent('Add New Record', 'click')
                 ->set(function($page)use($self) {
-                    $form = $page->add('Form');
+                    $form = $page->add('Form_Stacked');
                     $form->setModel($self->model);
+                    $form->add('Controller_FormBeautifier');
                     if ($form->isSubmitted()) {
                         $form->update();
                         $js = array();
