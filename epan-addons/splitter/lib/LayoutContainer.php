@@ -9,7 +9,8 @@ class LayoutContainer extends \View{
 
 	function init(){
 		parent::init();
-		$this->addStyle(array('width'=>'100%','min-height'=>'500px','height'=>'auto'));
+		$this->addStyle(array('width'=>'100%','min-height'=>'500px'));
+		$this->js(true)->css('height', $this->js()->_selectorWindow()->height());
 
 		// $this->options=array(
 		// 		'size'=> "auto"
@@ -45,9 +46,13 @@ class LayoutContainer extends \View{
 	}
 
 	function addPane($position='center',$options=array()){
-		if($this->hasPane($position)) return;
+		if($this->hasPane($position)) {
+			$p=$this->getPane($position);
+			if(count($options)) $this->setOptions($position,$options);
+			return $p;
+		}
 
-		$obj = $this->panes[$position]= $this->add('View')->addClass('ui-layout-'.$position);
+		$obj = $this->panes[$position]= $this->add('View')->addClass('ui-layout-'.$position)->add('View');
 		if(count($options)) $this->options[$position] = $options;
 		return $obj;
 	}
@@ -60,7 +65,11 @@ class LayoutContainer extends \View{
 		$this->debug=true;
 	}
 
-	function setOptions($position,$option,$value){
+	function setOptions($position,$options){
+		$this->options[$position] = $options;
+	}
+
+	function setOption($position,$option,$value){
 		$this->options[$position][$option] = $value;
 	}
 
@@ -78,7 +87,7 @@ class LayoutContainer extends \View{
             ->setBasePath($this->api->pathfinder->base_location->base_path.'/'.$addon_location)
             ->setBaseURL($this->api->pm->base_path.'/'.$addon_location);
         ;
-		// $this->api->jquery->addStaticStyleSheet('layout-default-latest');
+		$this->api->jquery->addStaticStyleSheet('layout-default-latest');
 		if($this->debug){
 			echo "<pre>";
 			print_r($this->options);

@@ -43,7 +43,11 @@ class page_base_owner extends Page {
 		// Pages and Templates		
         
 		$hr_m = $m->addMenu('HR');
-		// $hr_m->addItem(array('Employee Managment','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_dashboard');
+		$hr_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xHR_page_owner_dashboard');
+		$hr_m->addItem(array('Employees','icon'=>'gauge-1'),'xHR_page_owner_employees');
+		
+		$hr_m->addItem(array('Setup','icon'=>'cog'),'xHR_page_owner_setup');
+
 
 		$marketing_m = $m->addMenu('Marketing');
 		$marketing_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_dashboard');
@@ -76,6 +80,11 @@ class page_base_owner extends Page {
 		$sales_m->addItem(array('Payment Gateway Config','icon'=>'gauge-1'),'xShop_page_owner_paygateconfig');
 		
 		$production_m = $m->addMenu('Production');
+		$production_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xProduction_page_owner_dashboard');
+		foreach($dept=$this->add('xHR/Model_Department') as $d){
+			$production_m->addItem(array($d['name'],'icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
+		}
+
 		$crm_m = $m->addMenu('CRM');
 		$accounts_m = $m->addMenu('Accounts');
 
