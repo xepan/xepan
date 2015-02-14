@@ -80,13 +80,19 @@ class page_base_owner extends Page {
 		$sales_m->addItem(array('Payment Gateway Config','icon'=>'gauge-1'),'xShop_page_owner_paygateconfig');
 		
 		$production_m = $m->addMenu('Production');
-		$production_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xProduction_page_owner_dashboard');
+		$production_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xProduction_page_owner_user_dashboard');
 		foreach($dept=$this->add('xHR/Model_Department') as $d){
 			$production_m->addItem(array($d['name'],'icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
 		}
 
 		$crm_m = $m->addMenu('CRM');
 		$accounts_m = $m->addMenu('Accounts');
+		
+		// Add User Department secific Menus
+		// $employee = $this->add('xHR/Model_Employee')->loadFromLogin();
+		// $dept_namespace = $employee->department()->get('related_application_namespace');
+
+		$m->addMenu('My','/Menu_User');
 
         // $installed_components = $this->add('Model_InstalledComponents');
 		// $installed_components->addCondition('epan_id',$this->api->current_website->id);
