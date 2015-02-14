@@ -58,7 +58,7 @@ class View extends AbstractView
             }
             return $this;
         }
-        $this->template->appendHTML('attributes', ' '.$attribute.'="'.$value.'"');
+        $this->template->appendHTML('attributes', ' '.$attribute."='".$value."'");
         return $this;
     }
 
@@ -234,7 +234,7 @@ class View extends AbstractView
             }else{
                 $this->add('Icon')->set($text['icon']);
                 if($text[0]){
-                    $this->add('HTML')->set('&nbsp;');
+                    $this->add('Html')->set('&nbsp;');
                     $this->add('Text')->set($text[0]);
                 }
             }
@@ -249,7 +249,7 @@ class View extends AbstractView
             }else{
                 if($text[0]){
                     $this->add('Text')->set($text[0]);
-                    $this->add('HTML')->set('&nbsp;');
+                    $this->add('Html')->set('&nbsp;');
                 }
                 $this->add('Icon')->set($text['icon-r']);
             }

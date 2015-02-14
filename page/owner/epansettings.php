@@ -12,7 +12,7 @@ class page_owner_epansettings extends page_base_owner {
 	function page_index(){
 		$this->app->layout->template->trySetHTML('page_title',"<i class='fa fa-cogs' ></i> ".strtoupper($this->api->current_website["name"])." General Settings <small>Your basic company details and outgoing email settings </small>");
 		$this->tabs = $tabs = $this->app->layout->add('Tabs');
-		$epan_info = $tabs->addTab('Information');
+		$epan_info = $tabs->addTab('Company Information');
 		
 		$epan_info_form = $epan_info->add('Form_Stacked');
 		$epan_info_form->setModel($this->api->current_website,array('category_id','company_name','contact_person_name','mobile_no','email_id','address','city','state','country','keywords','description'));
@@ -24,7 +24,7 @@ class page_owner_epansettings extends page_base_owner {
 			$epan_info_form->js()->univ()->successMessage('Information Updated')->execute();
 		}
 
-		$email_tab = $tabs->addTab('Email Settings');
+		$email_tab = $tabs->addTab('Default Email Settings');
 		$email_form = $email_tab->add('Form_Stacked');
 		$email_form->setModel($this->api->current_website,array('email_transport','encryption','email_host','email_port','email_username','email_password','email_reply_to','email_reply_to_name','from_email','from_name','sender_email','sender_name','smtp_auto_reconnect','email_threshold','return_path'));
 		$email_form->addSubmit('Update');
@@ -52,6 +52,11 @@ class page_owner_epansettings extends page_base_owner {
 			$email_form->update();
 			$email_form->js()->univ()->successMessage('Information Updated')->execute();
 		}
-		
+
+		$company_settings= $tabs->addTabURL('./comp_settings','Company Settings');
+	}
+
+	function page_comp_settings(){
+		echo "df";
 	}
 }

@@ -21,6 +21,7 @@ class Model_Branch extends Model_Table {
 		$this->hasMany('Staff','branch_id');
 		$this->hasMany('Epan','branch_id');
 		$this->hasMany('EpanAdds','branch_id');
+		$this->hasMany('xHR/Deparment','branch_id');
 
 		$this->addHook('afterInsert',$this); // Create default Admin for this branch
 		$this->addHook('beforeDelete',$this); // Check For Existing Clients
