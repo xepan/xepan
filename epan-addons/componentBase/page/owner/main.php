@@ -73,5 +73,9 @@ class page_componentBase_page_owner_main extends page_base_owner {
 		$x->js('click')->univ()->frameURL( 'Uninstall This Component', $uninstall_page->getURL() );
 
 
+		// Setup current employee
+		$this->app->current_employee = $this->add('xHR/Model_Employee');
+		$this->app->current_employee->loadFromLogin();
+
 	}
 }
