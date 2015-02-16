@@ -44,6 +44,7 @@ class page_base_owner extends Page {
         
 		$hr_m = $m->addMenu('HR');
 		$hr_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xHR_page_owner_dashboard');
+		$hr_m->addItem(array('Departments','icon'=>'gauge-1'),'xHR_page_owner_department');
 		$hr_m->addItem(array('Employees','icon'=>'gauge-1'),'xHR_page_owner_employees');
 		
 		$hr_m->addItem(array('Setup','icon'=>'cog'),'xHR_page_owner_setup');
@@ -89,10 +90,12 @@ class page_base_owner extends Page {
 		$accounts_m = $m->addMenu('Accounts');
 		
 		// Add User Department secific Menus
-		// $employee = $this->add('xHR/Model_Employee')->loadFromLogin();
-		// $dept_namespace = $employee->department()->get('related_application_namespace');
-
-		$m->addMenu('My','/Menu_User');
+		$employee = $this->add('xHR/Model_Employee')->loadFromLogin();
+		
+		if($employee->loaded()){
+			$dept_namespace = $employee->department()->get('related_application_namespace');
+			$m->addMenu('My',$dept_namespace.'/Menu_User');	
+		}
 
         // $installed_components = $this->add('Model_InstalledComponents');
 		// $installed_components->addCondition('epan_id',$this->api->current_website->id);
