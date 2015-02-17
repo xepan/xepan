@@ -70,6 +70,8 @@ class page_base_owner extends Page {
 
 		$sales_m = $m->addMenu('Sales');
 		$sales_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xShop_page_owner_dashboard');
+		$sales_m->addItem(array('Oppertunity','icon'=>'gauge-1'),'xShop_page_owner_oppertunity');
+		$sales_m->addItem(array('Quotation','icon'=>'gauge-1'),'xShop_page_owner_quotation');
 		$sales_m->addItem(array('Shops & Blogs','icon'=>'gauge-1'),'xShop_page_owner_shopsnblogs');
 		$sales_m->addItem(array('Category','icon'=>'gauge-1'),'xShop_page_owner_category');
 		$sales_m->addItem(array('Item','icon'=>'gauge-1'),'xShop_page_owner_item');
@@ -96,6 +98,10 @@ class page_base_owner extends Page {
 			$dept_namespace = $employee->department()->get('related_application_namespace');
 			$m->addMenu('My',$dept_namespace.'/Menu_User');	
 		}
+
+		// Setup current employee
+		$this->app->current_employee = $this->add('xHR/Model_Employee');
+		$this->app->current_employee->loadFromLogin();
 
         // $installed_components = $this->add('Model_InstalledComponents');
 		// $installed_components->addCondition('epan_id',$this->api->current_website->id);
@@ -144,7 +150,7 @@ class page_base_owner extends Page {
 		$web_designing_menu->addItem(array('Extended Images','icon'=>'right-hand'),'extendedImages_page_owner_dashboard');
 		$web_designing_menu->addItem(array('Image Gallaries','icon'=>'right-hand'),'xImageGallary_page_owner_dashboard');
 
-			$menu=$this->app->layout->user_menu->addMenu(array($this->api->auth->model['name'] .  ($admin_badge?' ['.$admin_badge.'] ':''),'icon'=>'user'));
+			$menu=$this->app->layout->user_menu->addMenu(array($this->api->auth->model['name'] . '('.$this->api->current_employee->department()->get('name').'/'.$this->api->current_employee->post()->get('name').')','icon'=>'user'));
 			$menu->addItem(array_merge(array('Alert'),$alert_badge),'/owner/alert');
 			$menu->addItem(array_merge(array('Message'),$msg_badge),'/owner/message');
 			$menu->addItem('Logout','logout');
