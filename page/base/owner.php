@@ -35,23 +35,75 @@ class page_base_owner extends Page {
         $admin_m->addItem(array('User Management','icon'=>'users'),'/owner/users');
         $admin_m->addItem(array('General Settings','icon'=>'cog'),'/owner/epansettings');
         $admin_m->addItem(array('Application Repository','icon'=>'cog'),'/owner/applicationrepository');
+        $admin_m->addItem(array('Developer Zone','icon'=>'cog'),'developerZone_page_owner_dashboard');
         // $admin_m->addSeparator();
         $admin_m->addItem(array('Logout','icon'=>'logout'),'/logout');
 
 		// Alert Notification 
-		// Pages and Templates
-		$web_designing_menu = $m->addMenu('WebSite');
-		$web_designing_menu->addItem(array('Epan Pages','icon'=>'gauge-1'),'owner/epanpages');		
-		$web_designing_menu->addItem(array('Epan Templates','icon'=>'gauge-1'),'owner/epantemplates');		
+		// Pages and Templates		
         
+		$hr_m = $m->addMenu('HR');
+		$hr_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xHR_page_owner_dashboard');
+		$hr_m->addItem(array('Departments','icon'=>'gauge-1'),'xHR_page_owner_department');
+		$hr_m->addItem(array('Employees','icon'=>'gauge-1'),'xHR_page_owner_employees');
+		
+		$hr_m->addItem(array('Setup','icon'=>'cog'),'xHR_page_owner_setup');
 
-        $installed_components = $this->add('Model_InstalledComponents');
-		$installed_components->addCondition('epan_id',$this->api->current_website->id);
 
-		$components_m = $m->addMenu('Components');
-		foreach ($installed_components as $comp) {
-			$components_m->addItem(array($comp['name'],'icon'=>'right-hand'),$comp['namespace'].'_page_owner_dashboard');
+		$marketing_m = $m->addMenu('Marketing');
+		$marketing_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_dashboard');
+		$marketing_m->addItem(array('Manage Contacts','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_emailcontacts');
+		$marketing_m->addItem(array('Data Grabber','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb');
+		$marketing_m->addItem(array('Manage NewsLetters','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_newsletters');
+		$marketing_m->addItem(array('Add SocialContent','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_socialcontents');
+		$marketing_m->addItem(array('Campaigns','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_campaigns');
+		$marketing_m->addItem(array('Scheduled Jobs','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_scheduledjobs');
+		$marketing_m->addItem(array('Leads','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_leads');
+		$marketing_m->addItem(array('Configurations','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_config');
+
+		$exec_m = $marketing_m->addMenu('Executors');
+		$exec_m->addItem(array('Start Grabbing Data','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_mrkt_dtgrb_exec');
+		$exec_m->addItem(array('Start Sending Mass Email','icon'=>'gauge-1'),'xMarketingCampaign_page_emailexec');
+		$exec_m->addItem(array('Update Social Activities','icon'=>'gauge-1'),'xMarketingCampaign_page_updatesocialactivityexec');
+		$exec_m->addItem(array('Scheduled Emails from Campaign','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_campaignexec');
+
+
+		$sales_m = $m->addMenu('Sales');
+		$sales_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xShop_page_owner_dashboard');
+		$sales_m->addItem(array('Shops & Blogs','icon'=>'gauge-1'),'xShop_page_owner_shopsnblogs');
+		$sales_m->addItem(array('Category','icon'=>'gauge-1'),'xShop_page_owner_category');
+		$sales_m->addItem(array('Item','icon'=>'gauge-1'),'xShop_page_owner_item');
+		$sales_m->addItem(array('Affiliate','icon'=>'gauge-1'),'xShop_page_owner_afflilate');
+		$sales_m->addItem(array('E-Voucher','icon'=>'gauge-1'),'xShop_page_owner_voucher');
+		$sales_m->addItem(array('Member','icon'=>'gauge-1'),'xShop_page_owner_member');
+		$sales_m->addItem(array('Order','icon'=>'gauge-1'),'xShop_page_owner_order');
+		$sales_m->addItem(array('AddBlock','icon'=>'gauge-1'),'xShop_page_owner_addblock');
+		$sales_m->addItem(array('Payment Gateway Config','icon'=>'gauge-1'),'xShop_page_owner_paygateconfig');
+		
+		$production_m = $m->addMenu('Production');
+		$production_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xProduction_page_owner_user_dashboard');
+		foreach($dept=$this->add('xHR/Model_Department') as $d){
+			$production_m->addItem(array($d['name'],'icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
 		}
+
+		$crm_m = $m->addMenu('CRM');
+		$accounts_m = $m->addMenu('Accounts');
+		
+		// Add User Department secific Menus
+		$employee = $this->add('xHR/Model_Employee')->loadFromLogin();
+		
+		if($employee->loaded()){
+			$dept_namespace = $employee->department()->get('related_application_namespace');
+			$m->addMenu('My',$dept_namespace.'/Menu_User');	
+		}
+
+        // $installed_components = $this->add('Model_InstalledComponents');
+		// $installed_components->addCondition('epan_id',$this->api->current_website->id);
+
+		// $components_m = $m->addMenu('Components');
+		// foreach ($installed_components as $comp) {
+		// 	$components_m->addItem(array($comp['name'],'icon'=>'right-hand'),$comp['namespace'].'_page_owner_dashboard');
+		// }
 	}
 
 	function recursiveRender(){
@@ -81,6 +133,17 @@ class page_base_owner extends Page {
 		}
 
 		if(@$this->app->layout->user_menu){
+
+		$web_designing_menu = $this->app->layout->user_menu->addMenu('WebSite');
+		$web_designing_menu->addItem(array('Epan Pages','icon'=>'gauge-1'),'owner/epanpages');		
+		$web_designing_menu->addItem(array('Epan Templates','icon'=>'gauge-1'),'owner/epantemplates');		
+		$web_designing_menu->addItem(array('Menus','icon'=>'right-hand'),'xMenus_page_owner_dashboard');
+		$web_designing_menu->addItem(array('Enquiries & Subscriptions','icon'=>'right-hand'),'xEnquiryNSubscription_page_owner_dashboard');
+		$web_designing_menu->addItem(array('Extended Elements','icon'=>'right-hand'),'ExtendedElement_page_owner_dashboard');
+		$web_designing_menu->addItem(array('Slide Shows','icon'=>'right-hand'),'slideShows_page_owner_dashboard');
+		$web_designing_menu->addItem(array('Extended Images','icon'=>'right-hand'),'extendedImages_page_owner_dashboard');
+		$web_designing_menu->addItem(array('Image Gallaries','icon'=>'right-hand'),'xImageGallary_page_owner_dashboard');
+
 			$menu=$this->app->layout->user_menu->addMenu(array($this->api->auth->model['name'] .  ($admin_badge?' ['.$admin_badge.'] ':''),'icon'=>'user'));
 			$menu->addItem(array_merge(array('Alert'),$alert_badge),'/owner/alert');
 			$menu->addItem(array_merge(array('Message'),$msg_badge),'/owner/message');
