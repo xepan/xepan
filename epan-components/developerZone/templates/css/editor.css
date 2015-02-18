@@ -1,0 +1,253 @@
+.editor-page{
+	background-color:#1c2933;
+}
+
+.selected {
+	outline: 2px solid blue !important;
+}
+
+.entity-container{
+	width: 300px;
+	height:200px;
+	background-color: yellow;
+}
+
+.entity-method{
+	display: inline-block;
+	width: 100%;
+	height: 500px;
+	background-color:white;	
+    border: 2px solid #292f38;
+    border-radius: 10px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+    font-size: 14px;
+    height: 450px;
+    -o-text-overflow: clip;
+	text-overflow: clip;
+}
+
+.entity-method-cover{
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+	border: none;
+	-o-text-overflow: clip;
+	text-overflow: clip;
+	background: -webkit-linear-gradient(90deg, #FFFFFF 2px, rgba(0,0,0,0) 2px), -webkit-linear-gradient(0deg, #FFFFFF 2px, rgba(0,0,0,0) 2px), -webkit-linear-gradient(90deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px), -webkit-linear-gradient(0deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px), rgba(237,241,244,1);
+	background: -moz-linear-gradient(0deg, #FFFFFF 2px, rgba(0,0,0,0) 2px), -moz-linear-gradient(90deg, #FFFFFF 2px, rgba(0,0,0,0) 2px), -moz-linear-gradient(0deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px), -moz-linear-gradient(90deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px), rgba(237,241,244,1);
+	background: linear-gradient(0deg, #FFFFFF 2px, rgba(0,0,0,0) 2px), linear-gradient(90deg, #FFFFFF 2px, rgba(0,0,0,0) 2px), linear-gradient(0deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px), linear-gradient(90deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px), rgba(237,241,244,1);
+	background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+	-webkit-background-origin: padding-box;
+	background-origin: padding-box;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	-webkit-background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+	background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+}
+.entity-method > .name{
+	font-size: 16px;
+	background:linear-gradient(to bottom, #fefefe, #f0f2f3) repeat scroll 0 0 rgba(0, 0, 0, 0);
+	font-weight: 700;
+	font-style: italic;	
+}
+
+.entity-method > div, .entity-container > div{
+	border-radius: 15px;
+	padding-left: 10px;
+	font-size: 10px ;
+}
+
+.remove-btn,.min-max-btn{
+	font-size: 16px;
+	margin: 3px;
+}
+
+.port{
+	position: relative;
+	margin:0 0 5px 0;
+	width: 0;
+	height: 0;
+	border-/*top: 10px solid transparent;
+	border-left: 20px solid blue;
+	border-bo*/ttom: 10px solid transparent;
+}
+
+.port .name{
+	font-size: 10px;
+	margin: 0 auto 0 auto;
+}
+
+.node .name{
+	text-align: center;
+	margin-top: 20%;
+}
+
+.port .move-handler,.caption{
+	display: none;
+}
+
+.port.In, .port.DATA-IN {
+	/*border-left: 20px solid #00cc66; */
+	left:0;
+	top:0;
+	clear:all;
+	/*margin-left:-10px;*/
+}
+
+.port.Out, .port.DATA-OUT {
+	clear: right;
+	/*border-left: 20px solid #1c2933;*/
+	float: right;
+	/*margin-right: -15px;*/
+}
+
+.port.Error {
+	border-left: 20px solid #f9451f; 
+	background-color: red;
+}
+
+.node {
+	width:300px;
+	height:200px;
+	background-color:#fff8dc;
+	position: absolute !important;
+}
+
+.entity-container {
+	position: absolute !important;
+    border-radius: 5px;
+    box-shadow: 0 0 3px;
+
+}
+
+
+.port-label{
+	margin-top:10px;
+}
+
+._jsPlumb_endpoint{
+	margin-left: 2px;
+	margin-right: 2px;
+}
+
+.ui-resizable-se{
+	width: 0;
+	height: 0;
+	border-width: 0 0 10px 10px;
+	border-style: solid;
+	border-color: transparent transparent #007bff transparent;
+}
+
+.ui-resizable-se:hover{
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 0 0 20px 20px;
+	border-color: transparent transparent #007bff transparent;
+}
+
+/*.entity-container-draggable:hover .ui-resizable-se{
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-width: 0 0 20px 20px;
+	border-color: transparent transparent #007bff transparent;
+}*/
+
+.entity-container-draggable{
+	position: absolute !important; /* overiding draggable*/
+}
+
+.editortool{
+	z-index: 1000;
+}
+
+.editor_top_bar{
+	border: 1px solid #c00;
+	color: #c00;
+  	font: bold 15px arial;
+  	padding: 10px;
+  	margin: 10px;
+    width: 100%;
+}
+
+.editor_top_bar_fixed{
+	z-index: 10;
+	padding: 0 5px;
+	border: 1px solid #c00;
+	background-color:#c3c3c3; 
+	color:#222;
+	position:fixed;
+    top:10px;
+    width: 100%;
+}
+
+.editor-document{
+	display:inline-block;
+	cursor:pointer;
+	box-shadow:0 0 2px lightgray;
+	margin:0;
+	position:relative;
+	display:inline-block;
+	background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAHUlEQVQYV2NkYGAwBuKzQIwXMBJSAJMfVUidcAQAnUQBC6jEGBUAAAAASUVORK5CYII=');
+	background-color:white;
+	width:100%;
+	min-height: 1000px;
+}
+
+.editor-paper{
+	float:right !important;
+}
+
+.maketree{
+	background-color:#1c2933;
+	color: white;
+	margin: 0 0 0 -10px;
+	border-radius: 2px;
+}
+.maketree ul{
+	padding:10px;
+}
+
+.maketree ul li{
+	list-style: none;
+	margin: 5px 0 5px 0;
+}
+
+.maketree > ul >li{
+	list-style: outside;
+	border-bottom: 1px solid gray;
+}
+
+
+.maketree-innner-ul >li:hover{
+	transition:all 0.3s ease-in-out 0s;
+	border-bottom: 1px solid #D34900;
+}
+
+.maketree ul li ul{
+	background-color: #00cc66;
+	padding: 10px;
+}
+
+.maketree a{
+	color: white !important;
+}
+/*For Tools Li header*/
+.entity-header{
+	text-transform: capitalize;
+	font-size: 14px;
+	text-indent: 0;
+}
+/*For Tools Li entities as a Child*/
+.entities{
+
+}
+
+.port-label{
+
+}
+
+/*._jsPlumb_endpoint{
+	z-index: 200;
+}*/

@@ -1,6 +1,6 @@
 epans
-epan-components/*
-!epan-components/baseElements/
+epan-components/xCivil
+epan-components/xFlow
 *.zip
 config-default.php
 /nbproject/private/

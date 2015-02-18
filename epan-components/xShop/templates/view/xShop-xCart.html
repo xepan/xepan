@@ -1,0 +1,45 @@
+<div id="{$_name}" {$attributes} class=' {$class}' style=' {$style}'>
+
+	{xshop_cart_with_item_price_btn}
+		<div class="row xshop-cart-container">
+			<div class="col-md-2 col-sm-2 col-sm-lg-2 xshop-sort-cart-inner-container">
+				<a class="xshop-sort-cart-anchor" href="{xshop_cart_detail_page}{/xshop_cart_detail_page}">
+					<i class="glyphicon glyphicon-shopping-cart xshop-sort-cart-icon">
+					</i><span class="xshop-sort-cart-label">{xshop_cart_name}Cart{/xshop_cart_name}</span> 
+				</a>
+			</div>
+			<div class="col-md-4 col-sm-4 col-lg-4">
+				{xshop_cart_items}
+				{/xshop_cart_items}
+			</div>
+			<div class="col-md-6 col-sm-6 col-lg-6">
+				{xshop_cart_price}					
+				{/xshop_cart_price}
+			</div>
+		</div>
+
+		<div class="xshop-cart-button-div">
+			<!-- xShop Cart Empty Button -->
+			{xshop_cart_empty_btn}{/xshop_cart_empty_btn}
+
+			<!-- xShop Cart Checkout Button -->
+			{xshop_cart_checkout_btn}{/xshop_cart_checkout_btn}
+			
+			<!-- xShop Cart View Cart Button -->
+			{xshop_cart_viewcart_btn}{/xshop_cart_viewcart_btn}
+		</div>
+	{/xshop_cart_with_item_price_btn}
+	
+	<div class="xshop-cart-detail-container">
+	{xshop_cart_detail}{/xshop_cart_detail}
+	</div>
+	
+
+	{xshop_cart_estimate}{/xshop_cart_estimate}
+
+	<!--xShop cart Proceed Btn -->
+	<div class="xshop-cart-proceed">
+	{xshop_cart_proceed}{/xshop_cart_proceed}
+	</div>
+	{$Content}
+</div>

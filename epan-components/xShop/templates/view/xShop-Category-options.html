@@ -1,0 +1,200 @@
+<div id='{$_name}' class='epan-component-options' component_type="{$component_type}">
+	<div class="panel-group" id="accordion">
+		<div class="xepan-collasp-header component-header">
+		 	<div class="panel-heading">
+		      	<h3 class="panel-title">
+		        	<a data-toggle="collapse" data-parent="#accordion"	 href="#collapse-xshop-category">
+						{$component_type_name}
+		        	</a> 
+		      	</h3>
+		   	</div>
+		 	<div id="collapse-xshop-category" class="panel-collapse collapse">
+		      	<div class="panel-body">
+		      		<div class='xepan-collasp-header'>
+						<table class="table table-condensed table-hover">
+							
+							<tr>
+								<td>Edit CSS</td>
+								<td><div id="xshop-category-editcss" class="btn btn-default btn-xs">Edit CSS</div></td>
+							</tr>
+							<tr>
+								<td>
+									 Layout
+								</td>
+								<td>
+									<select id='xshop_category_layout'>
+										<option value='0'>Please Select</option>
+										<option value='Horizontal'>Horizontal</option>
+										<option value='Vertical'>Vertical</option>
+										<option value='MegaMenu'>MegaMenu</option>;
+										<option value='Thumbnail'>Thumbnail</option>;
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Application
+								</td>								
+								<td>
+									<select id='xshop_application_{$id}'>
+									</select>
+								</td>
+								
+							</tr>
+							<tr>
+								<td> No of  Category In Row</td>
+								<td>
+									<select id="xShop-category-grid-column" type="number" data-attr="show-category-column" class="xshop-general-bind" placeholder=" category in each Row">
+										<option value="0">Category in Each Row</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="6">6</option>
+										<option value="12">12</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Subpage Name
+								</td>
+								<td>
+									<input type='text' id='xshop_category_url_page_{$id}'/>
+								</td>
+								
+								<tr >
+									<td>
+										Show Category Price   
+									</td>
+									<td>
+									<input type='checkbox' id='xshop-category-show-price'/>	
+									</td>
+								</tr>
+
+								</tr >
+								<tr class="xshop-megamenulatout-option">
+									<td>
+										Show Category list   
+									</td>
+									<td>
+									<input type='text' id='xshopcategoryshowlist'/>	
+									</td>
+								</tr>
+
+							</tr>
+							<tr >
+								<td>
+									shoe Only Description   
+								</td>
+								<td>
+								<select id="xShop-category-description-only" data-attr="show-category-description-only" class="xshop-general-bind">
+									<option value="0">No</option>
+									<option value="1">Yes</option>
+								</select>
+								</td>
+							</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><br>
+	<div><button id='xShopCategoryServerSide'>Server Side</button></div>		
+</div>
+<script type="text/javascript">
+// ========== OPTION TO COMPONENT EFFECT ==============
+// 
+// $(your_option_html_element).click(function(event,ui){
+// 		$(current_selected_component).what to do ???
+// })
+$('#xShopCategoryServerSide').click(function(event){
+	$('#epan-quick-component-options').toggle('slideup');
+	$.univ.frameURL('xShop Category','index.php?page=xShop_page_owner_main')
+});
+
+$('#xshop-category-editcss').click(function(){
+	$(this).univ().frameURL('Edit CSS ( xShop Category Display Layout )xshop_category_url_page_{$id}','index.php?page=xShop_page_categorylayoutcss&cut_page=1');
+});
+
+$('#xshop_category_layout').change(function(event) {
+	$('.xshop-megamenulatout-option').hide();
+	$(current_selected_component).attr('xshop_category_layout',$(this).val());
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+	if($(this).val()=='MegaMenu'){
+		$('.xshop-megamenulatout-option').show();
+	}
+});
+
+$('#xshop_application_{$id}').change(function(event){
+	$(current_selected_component).attr('xshop_application_id',$(this).val());
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+});
+// $('#xshop-category-show-price').change(function(event){
+// 	$(current_selected_component).attr('xshop-category-show-price',$(this).val());
+// 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+// });
+
+$('#xshop-category-show-price').change(function(event){
+	if($('#xshop-category-show-price').is(':checked')?$(current_selected_component).attr('xshop-category-show-price','1'):$(current_selected_component).attr('xshop-category-show-price','0'));
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+});
+
+$('#xshop-category-grid-column').change(function(event){
+	$(current_selected_component).attr('xshop-category-grid-column',$(this).val());
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+});
+$('#xshopcategoryshowlist').change(function(event){
+	$(current_selected_component).attr('xshopcategoryshowlist',$(this).val());
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+});
+// on category click custom page redirect..
+$('#xshop_category_url_page_{$id}').change(function(event){
+	$(current_selected_component).attr('xshop_category_url_page',$(this).val());
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+});
+
+$('.xshop-general-bind').change(function(event){
+	$(current_selected_component).attr($(this).attr('data-attr'),$(this).val());
+	$(current_selected_component).children('div:first').trigger('reload');
+});
+
+var {$component_type}_options = {
+	show: function (){
+		// ===== THIS CODE RUNS EVERY TIME YOU DOUBLE CLICK YOUR COMPONENT
+		// TO TAKE VALUES FROM COMPONENT AND FILL OPTIONS
+		// $(your_option_html_element).text($(current_selected_component).css('border'));
+		$.ajax({
+				url: 'index.php?page=xShop_page_getcategories',
+				type: 'GET',
+				data: { },
+				success: function (data) {
+					$('#xshop_application_{$_id}').html(data);
+					$('#xshop_application_{$_id}').val($(current_selected_component).attr('xshop_application_id')?$(current_selected_component).attr('xshop_application_id'):0);
+				}
+			});
+		
+		if($(current_selected_component).attr('xshop_category_layout')=='MegaMenu'){
+			$('.xshop-megamenulatout-option').show();		
+		}else
+			$('.xshop-megamenulatout-option').hide();
+
+		$('#xshop_category_layout').val($(current_selected_component).attr('xshop_category_layout')?$(current_selected_component).attr('xshop_category_layout'):'Horizontal');
+
+		$("#xshop_application_{$id}:contains(" + $(current_selected_component).attr('xshop_application_id') + ")").attr('selected', 'selected');
+
+		$('#xshop_category_url_page_{$id}').val($(current_selected_component).attr('xshop_category_url_page'));
+
+		$('#xshop-category-grid-column').val($(current_selected_component).attr('xshop-category-grid-column')?$(current_selected_component).attr('xshop-category-grid-column'):0);
+
+		$('#xshopcategoryshowlist').val($(current_selected_component).attr('xshopcategoryshowlist')?$(current_selected_component).attr('xshopcategoryshowlist'):0);
+		
+		// $('#xshop-category-show-price').val($(current_selected_component).attr('xshop-category-show-price')?$(current_selected_component).attr('xshop-category-show-price'):0);
+		$('#xshop-category-show-price').attr('checked',$(current_selected_component).attr("xshop-category-show-price")=='1'?true:false);
+
+		$('.xshop-general-bind').each(function(index,value){
+			$(this).val($(current_selected_component).attr($(this).attr('data-attr')));
+		});
+	}
+}
+</script>
