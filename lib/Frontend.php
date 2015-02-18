@@ -107,6 +107,7 @@ class Frontend extends ApiFrontend{
 				$this->stickyGET( $page_parameter );
 
 				$this->website_requested = $this->getConfig( 'default_site' );
+				$this->current_employee = $this->add('xHR/Model_Employee');
 				/**
 				 * $this->page_requested finds and gets the requested page
 				 * Always required in both multi site mode and single site mode
