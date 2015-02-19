@@ -11,7 +11,7 @@ class Model_Post extends \Model_Table{
 		$this->addField('name')->caption('Post');
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
 		
-		$this->hasMany('xHR/Post','parent_post_id',null,'SubPosts');
+		$this->hasMany('xHR/Post','parent_post_id');
 		$this->hasMany('xHR/SalaryTemplate','post_id');
 		$this->hasMany('xHR/Employee','post_id');
 		$this->hasMany('xHR/DocumentAcl','post_id');
@@ -27,7 +27,7 @@ class Model_Post extends \Model_Table{
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function beforeSave($m){
+	function beforeSave(){
 		// todo checking SKU value must be unique
 		$post_old=$this->add('xHR/Model_Post');
 		if($this->loaded())
@@ -38,12 +38,16 @@ class Model_Post extends \Model_Table{
 			throw $this->exception('Post is Allready Exist','Growl')->setField('name');
 	}
 
-	function beforeDelete($m){
-		$emp_count = $m->ref('xHR/Employee')->count()->getOne();
+	function beforeDelete(){
+		$emp_count = $this->ref('xHR/Employee')->count()->getOne();
+		$post_count=$this->ref('xHR/Post')->count()->getOne();
 		
-		if($emp_count){
-			$this->api->js(true)->univ()->errorMessage('Cannot Delete,first delete Employees')->execute();	
+		if($emp_count or $post_count){
+			$this->api->js(true)->univ()->errorMessage('Cannot Delete,first delete Employees / Dependent Posts')->execute();	
 		}
+
+		$this->ref('xHR/DocumentAcl')->deleteAll();
+		$this->ref('xHR/SalaryTemplate')->deleteAll();
 	}
 	
 	function getSiblings(){

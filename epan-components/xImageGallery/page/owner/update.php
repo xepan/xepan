@@ -10,15 +10,7 @@ class page_xImageGallery_page_owner_update extends page_componentBase_page_updat
 		// 
 		// Code To run before update
 		
-		$this->update($dynamic_model_update=false); // All modls will be dynamic executed in here
-		$model_array=array('Model_Gallery',
-							'Model_Images',
-						);
-		foreach ($model_array as  $md) {
-			$model=$this->add('xImageGallery/'.$md);
-			$model->add('dynamic_model/Controller_AutoCreator');
-			$model->tryLoadAny();
-		}
+		$this->update($dynamic_model_update=true, $git_update=false);
 		$this->add('View_Info')->set('Component Updated Successfully');
 		// Code to run after update
 	}

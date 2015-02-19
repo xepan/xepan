@@ -39,6 +39,11 @@ class page_xHR_page_owner_department_post extends page_xHR_page_owner_main {
 			$c = $p->add('CRUD',array('allow_add'=>false,'allow_del'=>false));
 			$docs = $post->documentAcls();
 			$c->setModel($docs);
+
+			// if(!$c->isEditing()){
+			// 	$c->grid->addFormatter('allow_add','grid/inline');
+			// }
+
 			// Document acl ka crud
 
 		}
