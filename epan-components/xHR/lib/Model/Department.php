@@ -27,6 +27,7 @@ class Model_Department extends \Model_Table{
 		$this->hasMany('xHR/HolidayBlock','department_id');
 		$this->hasMany('xShop/ItemDepartmentAssociation','department_id');
 		$this->hasMany('xHR/Document','department_id');
+		$this->hasMany('xProduction/Team','department_id');
 		$this->add('Controller_Validator');
 		$this->is(array(
 							'name|to_trim|required?Must be type Department here'

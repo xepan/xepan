@@ -64,6 +64,7 @@ class Model_Employee extends \Model_Table{
 		
 		$this->hasMany('xHR/Salary','employee_id');
 		$this->hasMany('xProduction/JobCardEmployeeAssociation','employee_id');
+		$this->hasMany('xProduction/EmployeeTeamAssociation','employee_id');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
@@ -177,6 +178,21 @@ class Model_Employee extends \Model_Table{
 		$emp_ids = $this->add('xHR/Model_Employee')->addCondition('post_id',$this['post_id'])->_dsql()->del('fields')->field('id')->getAll();
 		$emp_ids = iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($emp_ids)),false);
 		return $emp_ids;
+	}
+	
+	function createAssociationWithTeam($team){
+		if(!$this->loaded() and $item > 0)
+			throw new \Exception("Employee Model Must be Loaded");
+
+		$asso_model = $this->add('xProduction/Model_EmployeeTeamAssociation');
+		$asso_model->addCondition('employee_id', $this['id']);
+		$asso_model->addCondition('team_id', $team);
+		$asso_model->tryLoadAny();
+		
+		$asso_model['is_active'] = true;
+		$asso_model->save();
+
+	
 	}
 
 }
