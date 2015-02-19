@@ -2,8 +2,8 @@
 
 namespace xProduction;
 
-class Model_JobCardEmployeeAssociation extends \SQL_Model{
-	public $table ="xproduction_jobcard_emp_asso";
+class Model_JobCardEmployeeTeamAssociation extends \SQL_Model{
+	public $table ="xproduction_jobcard_emp_team_asso";
 
 	function init(){
 		parent::init();

@@ -58,7 +58,7 @@ class Model_Post extends \Model_Table{
 		if(count($posts_ids))
 			return array_merge($posts_ids,$this->getDescendants($posts_ids));
 		else
-			return $posts_ids;
+			return count($posts_ids)?$posts_ids:array(0);
 	}
 
 	function documentAcls(){

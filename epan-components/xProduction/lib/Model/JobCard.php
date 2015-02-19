@@ -75,6 +75,8 @@ class Model_JobCard extends \SQL_Model{
 		}
 		// self status received
 		$this['status']='received';
+		$this['created_by_id']=$this->api->current_employee->id;
+		
 		$this->saveAs('xProduction/Model_JobCard');
 	}
 

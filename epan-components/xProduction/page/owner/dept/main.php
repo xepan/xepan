@@ -4,7 +4,12 @@ class page_xProduction_page_owner_dept_main extends page_xProduction_page_owner_
 	
 	function init(){
 		parent::init();
-		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> '.$this->component_name. '<small> '. $this->department['name'] .'</small>');
+
+		$this->api->stickyGET('department_id');
+
+		$dept = $this->add('xHR/Model_Department')->load($_GET['department_id']?:$this->api->current_employee->department()->get('id'));
+
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> '.$this->component_name. '<small> '. $dept['name'] .'</small>');
 
 		$tabs=$this->app->layout->add('Tabs');
 
