@@ -67,9 +67,11 @@ class page_componentBase_page_update extends page_base_owner{
 	            	$item = str_replace(".php", "", $item);
 	            	$model_array[] = $this->component_namespace .'/'.'Model_'.$item;
 	            }
-
-	            foreach ($model_array as $md) {
-	            	if(!$md instanceof SQL_Model) continue;
+	            foreach ($model_array as $md_name) {
+            		$md= $this->add($md_name);
+	            	if(!$md instanceof SQL_Model) {
+	            		continue;
+	            	}
 					$model = $this->add($md);
 					foreach ($model->elements as $elm) {
 						if(!$elm instanceof AbstractObject) continue;
