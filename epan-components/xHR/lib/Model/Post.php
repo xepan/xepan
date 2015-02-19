@@ -10,6 +10,7 @@ class Model_Post extends \Model_Table{
 
 		$this->addField('name')->caption('Post');
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
+		$this->addField('can_create_team')->type('boolean')->defaultValue(true);
 		
 		$this->hasMany('xHR/Post','parent_post_id');
 		$this->hasMany('xHR/SalaryTemplate','post_id');
