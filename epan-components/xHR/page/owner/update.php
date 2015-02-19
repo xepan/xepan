@@ -11,7 +11,7 @@ class page_xHR_page_owner_update extends page_componentBase_page_update {
 		// Code To run before update
 		
 		$this->update($dynamic_model_update=true, $git_update=false);
-		$this->add('View_Info')->set('Component Updated Successfully');
+		$this->app->layout->add('View_Info')->set('Component Updated Successfully');
 		
 		// Code to run after update
 	}

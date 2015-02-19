@@ -16,8 +16,9 @@ class Model_Department extends \Model_Table{
 		$this->addField('internal_approved')->type('boolean');
 		$this->addField('acl_approved')->type('boolean');
 		$this->addField('jobcard_assign_required')->type('boolean');
-		$this->addField('is_production_department')->type('boolean')->defaultValue(false);
+		$this->addField('is_production_department')->type('boolean')->defaultValue(true);
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
+		$this->addField('is_outsourced')->type('boolean')->defaultValue(false);
 		
 		$this->addField('related_application_namespace')->defaultValue('xProduction');
 		

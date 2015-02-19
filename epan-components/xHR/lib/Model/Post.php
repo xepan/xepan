@@ -10,7 +10,7 @@ class Model_Post extends \Model_Table{
 
 		$this->addField('name')->caption('Post');
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
-		$this->addField('can_create_team')->type('boolean')->defaultValue(true);
+		$this->addField('can_create_team')->type('boolean')->defaultValue(false);
 		
 		$this->hasMany('xHR/Post','parent_post_id');
 		$this->hasMany('xHR/SalaryTemplate','post_id');
@@ -23,6 +23,7 @@ class Model_Post extends \Model_Table{
 		$this->add('Controller_Validator');
 		$this->is(array(
 							'name|to_trim|required',
+							'parent_post_id|to_trim|required',
 							)
 					);
 		// $this->add('dynamic_model/Controller_AutoCreator');

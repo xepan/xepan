@@ -6,6 +6,7 @@ class Model_SalaryTemplate extends \Model_Table{
 	function init(){
 		parent::init();
 		$this->hasOne('xHR/Department','department_id');
+		$this->hasOne('xHR/Post','post_id');
 
 		$this->addField('name'); // Marketing Manager salary 
 		
