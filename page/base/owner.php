@@ -46,6 +46,8 @@ class page_base_owner extends Page {
 		$hr_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xHR_page_owner_dashboard');
 		$hr_m->addItem(array('Departments','icon'=>'gauge-1'),'xHR_page_owner_department');
 		$hr_m->addItem(array('Employees','icon'=>'gauge-1'),'xHR_page_owner_employees');
+		$hr_m->addItem(array('Employees Attendence','icon'=>'gauge-1'),'xHR_page_owner_employeeattendence');
+		$hr_m->addItem(array('Employees Leave','icon'=>'gauge-1'),'xHR_page_owner_employeeleave');
 		
 		$hr_m->addItem(array('Setup','icon'=>'cog'),'xHR_page_owner_setup');
 
@@ -98,7 +100,9 @@ class page_base_owner extends Page {
 		
 		if($employee->loaded()){
 			$dept_namespace = $employee->department()->get('related_application_namespace');
-			$m->addMenu('My',$dept_namespace.'/Menu_User');	
+			$my_menu = $m->addMenu('My',$dept_namespace.'/Menu_User');
+			// if user ->post->can_create_teams
+				$my_menu->addItem("Teams",'.');
 		}
 
 		// Setup current employee

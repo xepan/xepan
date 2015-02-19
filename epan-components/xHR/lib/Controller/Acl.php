@@ -18,6 +18,7 @@ class Controller_Acl extends \AbstractController {
 		'can_reject'=>'No',
 		'can_forward'=>'No',
 		'can_receive'=>'No',
+		'can_assign'=>'No',
 		
 		'can_send_via_email'=>'No',
 
@@ -134,7 +135,11 @@ class Controller_Acl extends \AbstractController {
 			$this->filterGrid('reject');
 		}
 
-		if($this->permissions['can_receive'] !='No'  AND $this->owner->model->hasMethod('receive')){
+		if($this->permissions['can_assign'] !='No'){
+			$this->addAssignPage();
+		}
+
+		if($this->permissions['can_receive'] AND $this->owner->model->hasMethod('receive')){
 			$this->owner->addAction('receive',array('toolbar'=>false));		
 			$this->filterGrid('receive');
 		}
@@ -223,6 +228,18 @@ class Controller_Acl extends \AbstractController {
 		}
 
 
+	}
+
+	function addAssignPage(){
+		$p= $this->owner->addFrame("Assign to");
+		if($p){
+			$tabs = $p->add('Tabs');
+			$teams_tab = $tabs->addTab('Teams');
+			// add teams to tab_teams
+			$tabs->addTab('Employees');
+			// 
+			$tabs->addTab('My Team Members');
+		}
 	}
 
 	function getAlc(){
