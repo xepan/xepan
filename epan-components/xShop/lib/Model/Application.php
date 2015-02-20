@@ -22,6 +22,8 @@ class Model_Application extends \Model_Table{
 		$this->hasMany('xShop/Configuration','application_id');
 		$this->hasMany('xShop/ItemOffer','application_id');
 		$this->addHook('beforeDelete',$this);
+
+		$this->hasOne('xHR/Employee','created_by_id')->defaultValue($this->api->current_employee->id)->system(true);
 		
 		// $this->add('dynamic_model/Controller_AutoCreator'); 
 	}
