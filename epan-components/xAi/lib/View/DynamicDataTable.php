@@ -75,7 +75,7 @@ class View_DynamicDataTable extends \View{
 		$grid->addColumn($this->analytic['grid_group_by_meta_information']);
 		$grid->addColumn('result');
 
-		$grid->setSource($information_model->debug()->_dsql());
+		$grid->setSource($information_model->_dsql());
 		$grid->addPaginator(10);
 
 	}
