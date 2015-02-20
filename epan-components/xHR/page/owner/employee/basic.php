@@ -16,7 +16,7 @@ class page_xHR_page_owner_employee_basic extends Page{
 		
 		$form = $this->add('Form_Stacked');
 		$form->setModel($selected_dept_model,array(
-													'name','dob','doj',
+													'name','empolyee_image_id','dob','doj',
 													'gender','status','offer_date','confirmetion_date',
 													'contract_end_date','date_of_retirement',
 													'','blood_group',

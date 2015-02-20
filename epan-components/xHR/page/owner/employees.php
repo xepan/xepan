@@ -51,6 +51,7 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 		$tab = $emp_col->add('Tabs');
 			$tab->addTabURL('xHR_page_owner_employee_basic','Basic',array('employee_id'));
 			$tab->addTabURL('xHR_page_owner_employee_qualification','Qualification',array('employee_id'));
+			$tab->addTabURL('xHR_page_owner_employee_media','Media',array('employee_id'));
 			$tab->addTabURL('xHR_page_owner_employee_workexperience','Work Experience',array('employee_id'));
 			$tab->addTabURL('xHR_page_owner_employee_department','Department',array('employee_id'));
 			// $tab->addTabURL('xHR_page_owner_employee_post','Post',array('employee_id'));
