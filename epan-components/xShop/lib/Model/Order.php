@@ -17,6 +17,8 @@ class Model_Order extends \Model_Table{
 		$f = $this->hasOne('xShop/MemberDetails','member_id')->group('a~3~<i class="fa fa-info"></i> Order Info');
 		$f->icon = "fa fa-user~red";
 		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3');
+		$f = $this->addField('email')->group('a~3');
+		$f = $this->addField('mobile')->group('a~3');
 		// Order status
 			// placed, partial-shipped, shipped, partial-dilivered, dilivered, partial-returned, returned, canceled, complete
 		// order payment status
