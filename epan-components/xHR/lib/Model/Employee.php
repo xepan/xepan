@@ -13,7 +13,7 @@ class Model_Employee extends \Model_Table{
 		$this->addField('name')->Caption('Full Name')->group('a~4');
 		$this->addField('dob')->type('date')->Caption('Date Of Birth')->group('a~2');
 		$this->addField('doj')->type('date')->Caption('Date Of Joining')->group('a~2');
-		$this->addField('filestore/Field_Image','empolyee_image_id')->group('a~3');
+		$this->addField('filestore/Field_Image','empolyee_image_id');
 		// $this->addField('image_url')->mandatory(true)->display(array('form'=>'ElImage'));
 		$this->addField('gender')->enum(array('male','female'))->group('a~2');
 
