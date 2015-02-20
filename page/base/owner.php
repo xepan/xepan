@@ -100,9 +100,11 @@ class page_base_owner extends Page {
 		
 		if($employee->loaded()){
 			$dept_namespace = $employee->department()->get('related_application_namespace');
-			$my_menu = $m->addMenu('My',$dept_namespace.'/Menu_User');
-			// if user ->post->can_create_teams
-				$my_menu->addItem("Teams",'.');
+			if($dept_namespace){
+				$my_menu = $m->addMenu('My',$dept_namespace.'/Menu_User');
+				// if user ->post->can_create_teams
+					$my_menu->addItem("Teams",'.');
+			}
 		}
 
 		// Setup current employee
