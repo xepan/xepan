@@ -23,6 +23,8 @@ class Model_MemberDetails extends \Model_Table{
 		$this->addField('pincode');
 		
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
+
+		$this->hasOne('xHR/Employee','created_by_id')->defaultValue(1)->system(true);
 						
 		$this->hasMany('xShop/Order','member_id');
 		$this->hasMany('xShop/DiscountVoucherUsed','member_id');
