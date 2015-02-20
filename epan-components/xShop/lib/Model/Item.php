@@ -41,6 +41,10 @@ class Model_Item extends \Model_Table{
 		
 		//Item Allow Optins
 		$this->addField('is_saleable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('is_purchasble')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('mantain inventory')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('is_servicable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('website display')->type('boolean')->group('f~2');
 		$this->addField('is_downloadable')->type('boolean')->group('f~2');
 		$this->addField('is_rentable')->type('boolean')->group('f~2');
 		$this->addField('is_designable')->type('boolean')->group('f~2');
