@@ -49,6 +49,8 @@ class Model_Order extends \Model_Table{
 
 		$this->hasMany('xShop/OrderDetails','order_id');
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeInsert',$this);
+
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
@@ -65,6 +67,10 @@ class Model_Order extends \Model_Table{
 			}
 		}
 		$m->ref('xShop/OrderDetails')->deleteAll();
+	}
+
+	function beforeInsert(){
+		$this['name'] = rand(1000,9999); // <== todo .. generate unique next order id
 	}
 
 	function placeOrderFromCart(){
