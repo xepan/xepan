@@ -40,7 +40,7 @@ class Model_OrderDetails extends \Model_Table{
 		}
 	}
 
-	function departmentStatus($department){
+	function associatedWithDepartment($department){
 		$relation = $this->ref('xShop/OrderItemDepartmentalStatus')->addCondition('department_id',$department->id);
 		if($relation->tryLoadAny()->loaded())
 			return $relation;

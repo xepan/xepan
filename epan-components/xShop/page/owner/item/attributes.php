@@ -31,7 +31,7 @@ class page_xShop_page_owner_item_attributes extends page_xShop_page_owner_main{
 		$custom_fields->tryLoadAny();
 
 		$crud = $this->add('CRUD');
-		$crud->setModel($custom_fields,array('customfield_id','rate_effect','is_active'),array('customfield','rate_effect','is_active'));
+		$crud->setModel($custom_fields,array('department_phase_id','customfield_id','rate_effect','is_active'),array('department_phase','customfield','rate_effect','is_active'));
 		if($crud->form){
 			$crud->form->getElement('customfield_id')->getModel()->addCondition('application_id',$application_id);
 		}

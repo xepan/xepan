@@ -14,6 +14,7 @@ class Controller_Acl extends \AbstractController {
 		'allow_del'=>'No',
 
 		'can_submit'=>'No',
+		'can_select_outsource'=>'No',
 		'can_approve'=>'No',
 		'can_reject'=>'No',
 		'can_forward'=>'No',
@@ -125,6 +126,12 @@ class Controller_Acl extends \AbstractController {
 			$this->owner->addAction('submit',array('toolbar'=>false));		
 			$this->filterGrid('submit');
 		}
+	
+		if($this->permissions['can_select_outsource'] !='No'){
+			$col_name = $this->addOutSourcePartiesPage();
+			// $this->filterGrid($col_name);
+		}		
+
 		if($this->permissions['can_approve'] !='No' AND $this->owner->model->hasMethod('approve')){
 			$this->owner->addAction('approve',array('toolbar'=>false));		
 			$this->filterGrid('approve');
@@ -240,6 +247,20 @@ class Controller_Acl extends \AbstractController {
 			// 
 			$tabs->addTab('My Team Members');
 		}
+	}
+
+	function addOutSourcePartiesPage(){
+		$p= $this->owner->addFrame("Select Outsource",array('label'=>'OutSrc Parties','icon'=>'plus'));
+		if($p){
+			$tabs = $p->add('Tabs');
+			$teams_tab = $tabs->addTab('Teams');
+			// add teams to tab_teams
+			$tabs->addTab('Employees');
+			// 
+			$tabs->addTab('My Team Members');
+		}
+
+		return 'fr_'.$this->api->normalizeName("Select Outsource");
 	}
 
 	function getAlc(){

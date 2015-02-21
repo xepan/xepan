@@ -10,10 +10,12 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 
 		$this->hasOne('xShop/OrderDetails','orderitem_id');
 		$this->hasOne('xHR/Department','department_id');
+		$this->hasOne('xProduction/OutSourceParty','outsource_party_id');
 		
 		$this->addExpression('Quantity')->set(function($m,$q){
 			return $m->refSQL('orderitem_id')->fieldQuery('qty');
 		});
+		
 		$this->addExpression('Unit')->set(function($m,$q){
 			return $m->refSQL('orderitem_id')->fieldQuery('unit');
 		});

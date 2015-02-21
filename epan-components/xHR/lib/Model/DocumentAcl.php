@@ -19,6 +19,7 @@ class Model_DocumentAcl extends \Model_Table{
 		$this->addField('allow_del')->enum($acl)->defaultValue('No');
 	
 		$this->addField('can_submit')->enum($acl)->defaultValue('No');
+		$this->addField('can_select_outsource')->enum($acl)->defaultValue('No');
 		$this->addField('can_approve')->enum($acl)->defaultValue('No');
 		$this->addField('can_reject')->enum($acl)->defaultValue('No');
 

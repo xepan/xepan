@@ -21,7 +21,7 @@ class page_xHR_page_owner_department_outsource extends Page{
 
 		if($selected_dept_model['is_outsourced']){
 			$crud=$this->add('CRUD');
-			$crud->setModel('xHR/Model_OutSourceParty');
+			$crud->setModel('xProduction/Model_OutSourceParty');
 		}
 
 		$form->add('Controller_FormBeautifier');

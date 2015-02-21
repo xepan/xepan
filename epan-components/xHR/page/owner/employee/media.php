@@ -16,9 +16,9 @@ class page_xHR_page_owner_employee_media extends Page{
 		
 		$form = $this->add('Form_Stacked');
 		$form->setModel($selected_dept_model,array('empolyee_image_id'));
-		$form->addSubmit()->set('Update');
+		$form->addSubmit('Update');
 
-		$form->add('Controller_FormBeautifier');
+		// $form->add('Controller_FormBeautifier');
 		if($form->isSubmitted()){	
 			$form->update();
 			$form->js()->univ()->successMessage(' Update Information')->execute();
