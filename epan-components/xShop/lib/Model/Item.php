@@ -19,9 +19,9 @@ class Model_Item extends \Model_Table{
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
 		// Basic Field
-		$this->addField('name')->mandatory(true)->group('b~6')->sortable(true);
+		$this->addField('name')->mandatory(true)->group('b~5')->sortable(true);
 		$this->addField('sku')->PlaceHolder('Insert Unique Referance Code')->caption('Code')->hint('Place your unique Item code ')->mandatory(true)->group('b~3')->sortable(true);
-		$this->addField('is_publish')->type('boolean')->defaultValue(true)->group('b~1')->sortable(true);
+		$this->addField('is_publish')->type('boolean')->defaultValue(true)->group('b~2')->sortable(true);
 		$this->addField('is_party_publish')->type('boolean')->defaultValue(true)->group('b~2')->sortable(true);
 
 		$this->addField('original_price')->type('money')->mandatory(true)->group('c~6~Basic Price');
@@ -40,16 +40,16 @@ class Model_Item extends \Model_Table{
 		$this->addField('qty_from_set_only')->type('boolean')->group('e~3')->defaultValue(false);
 		
 		//Item Allow Optins
-		$this->addField('is_saleable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
-		$this->addField('is_purchasble')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
-		$this->addField('mantain inventory')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
-		$this->addField('is_servicable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
-		$this->addField('website display')->type('boolean')->group('f~2');
-		$this->addField('is_downloadable')->type('boolean')->group('f~2');
+		$this->addField('is_saleable')->type('boolean')->group('f~4~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('is_purchasable')->type('boolean')->group('f~4~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('mantain_inventory')->type('boolean')->group('f~4~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('is_servicable')->type('boolean')->group('f~4~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('website_display')->type('boolean')->group('f~4');
+		$this->addField('is_downloadable')->type('boolean')->group('f~4');
 		$this->addField('is_rentable')->type('boolean')->group('f~2');
-		$this->addField('is_designable')->type('boolean')->group('f~2');
-		$this->addField('is_template')->type('boolean')->defaultValue(false)->group('f~2');
-		$this->addField('is_enquiry_allow')->type('boolean')->group('f~2');
+		$this->addField('is_designable')->type('boolean')->group('f~4');
+		$this->addField('is_template')->type('boolean')->defaultValue(false)->group('f~4');
+		$this->addField('is_enquiry_allow')->type('boolean')->group('f~4');
 		$this->addField('is_attachment_allow')->type('boolean')->group('f~2');
 		
 		//Item Display Options
@@ -76,9 +76,9 @@ class Model_Item extends \Model_Table{
 														)->group('j~4');
 
 		//Item Other Options	
-		$this->addField('add_custom_button')->type('boolean')->group('k~2~<i class=\'fa fa-cog\'> Item Other Options</i>');
+		$this->addField('add_custom_button')->type('boolean')->group('k~3~<i class=\'fa fa-cog\'> Item Other Options</i>');
 		$this->addField('custom_button_label')->group('k~4');
-		$this->addField('custom_button_url')->placeHolder('subpage name like registration etc.')->group('k~6');
+		$this->addField('custom_button_url')->placeHolder('subpage name like registration etc.')->group('k~5');
 		$this->addField('theme_code')->hint('To club same theme code items in one')->group('k~6')->sortable(true);
 		$this->addField('reference')->PlaceHolder('Any Referance')->hint('Use URL for external link')->group('k~6')->sortable(true);
 		
@@ -114,6 +114,8 @@ class Model_Item extends \Model_Table{
 		$this->hasMany('xShop/ItemReview','item_id');
 		$this->hasMany('xShop/ItemMemberDesign','item_id');
 		$this->hasMany('xShop/ItemDepartmentAssociation','item_id');
+		$this->hasMany('xShop/ItemComposition','item_id',null,'CompositionItems');
+		$this->hasMany('xShop/ItemComposition','composition_item_id',null,'UsedInComposition');
 
 		$this->hasMany('xShop/QuantitySet','item_id');
 		$this->hasMany('xShop/CustomRate','item_id');

@@ -12,15 +12,16 @@ class Model_Department extends \Model_Table{
 		
 		$this->addField('name')->Caption('Department');
 	
-		$this->addField('proceed_after_previous_department')->type('boolean');
-		$this->addField('internal_approved')->type('boolean');
-		$this->addField('acl_approved')->type('boolean');
-		$this->addField('jobcard_assign_required')->type('boolean');
-		$this->addField('is_production_department')->type('boolean')->defaultValue(true);
-		$this->addField('is_active')->type('boolean')->defaultValue(true);
-		$this->addField('is_outsourced')->type('boolean')->defaultValue(false);
+		$this->addField('proceed_after_previous_department')->type('boolean')->group('a~4~Department Attributes');
+		$this->addField('internal_approved')->type('boolean')->group('a~4');
+		$this->addField('acl_approved')->type('boolean')->group('a~4');
+		$this->addField('jobcard_assign_required')->type('boolean')->group('a~4');
+		$this->addField('is_production_department')->type('boolean')->defaultValue(true)->group('a~4');
+		$this->addField('is_active')->type('boolean')->defaultValue(true)->group('a~4');
+		$this->addField('is_outsourced')->type('boolean')->defaultValue(false)->group('a~4');
 		
-		$this->addField('related_application_namespace')->defaultValue('xProduction');
+		
+		$this->addField('related_application_namespace')->defaultValue('xProduction')->group('a~4');
 		
 		$this->hasMany('xHR/Department','previous_department_id');
 		$this->hasMany('xHR/Post','department_id');
@@ -29,6 +30,7 @@ class Model_Department extends \Model_Table{
 		$this->hasMany('xShop/ItemDepartmentAssociation','department_id');
 		$this->hasMany('xHR/Document','department_id');
 		$this->hasMany('xProduction/Team','department_id');
+		$this->hasMany('xProduction/OutSourceParty','department_id');
 		$this->add('Controller_Validator');
 		$this->is(array(
 							'name|to_trim|required?Must be type Department here'

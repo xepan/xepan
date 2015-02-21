@@ -1,5 +1,5 @@
 <?php
-class page_xHR_page_owner_department_basic extends Page{
+class page_xHR_page_owner_department_outsource extends Page{
 
 	function init(){
 		parent::init();
@@ -15,13 +15,19 @@ class page_xHR_page_owner_department_basic extends Page{
 			return;
 		
 		$form = $this->add('Form_Stacked');
-		$form->setModel($selected_dept_model,array('previous_department_id','name','is_active'));
+		$form->setModel($selected_dept_model,array('is_outsourced',
+												   'maintain_stock'));
 		$form->addSubmit()->set('Update');
+
+		if($selected_dept_model['is_outsourced']){
+			$crud=$this->add('CRUD');
+			$crud->setModel('xHR/Model_OutSourceParty');
+		}
 
 		$form->add('Controller_FormBeautifier');
 		if($form->isSubmitted()){	
 			$form->update();
-			$form->js()->univ()->successMessage('Department Updtaed')->execute();
+			$this->js()->univ()->successMessage('Department Updtaed')->reload()->execute();
 		}
 
 	}

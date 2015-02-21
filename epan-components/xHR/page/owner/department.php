@@ -68,6 +68,7 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 		}
 			$tab->addTabURL('xHR_page_owner_department_post','Posts');
 			$tab->addTabURL('xHR_page_owner_department_salarytemplate','Salary Structure');
+			$tab->addTabURL('xHR_page_owner_department_outsource','Out Source');
 		}else{
 			$dept_col->add('View_Warning')->set('Select any one Department');
 		}	
