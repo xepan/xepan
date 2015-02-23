@@ -1,7 +1,7 @@
 <?php
 namespace xProduction;
 class Model_OutSourcePartyDeptAssociation extends \Model_Table{
-	public $table="xhr_outsource_party_dept_associations";
+	public $table="xproduction_outsource_party_dept_associations";
 	function init(){
 		parent::init();
 

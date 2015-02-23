@@ -1,6 +1,6 @@
 <?php
 
-class page_xProduction_page_owner_dept_forwarded extends page_xProduction_page_owner_dept_base{
+class page_xProduction_page_owner_dept_forwardedtohere extends page_xProduction_page_owner_dept_base{
 	
 	function init(){
 		parent::init();

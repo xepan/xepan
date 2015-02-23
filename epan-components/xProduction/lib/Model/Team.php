@@ -9,8 +9,6 @@ class Model_Team extends \Model_Table{
 		$this->hasOne('xHR/Department','department_id');
 		$this->addField('name');
 
-
-
 		$this->hasMany('xProduction/EmployeeTeamAssociation','team_id');
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}

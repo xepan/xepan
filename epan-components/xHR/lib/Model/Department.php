@@ -90,12 +90,16 @@ class Model_Department extends \Model_Table{
 		return $this->ref('xHR/Document');
 	}
 
+	function teams(){
+		return $this->ref('xProduction/Team');
+	}
+
 	function isOutSourced(){
 		return $this['is_outsourced'];
 	}
 
 	function outSourceParties(){
-		return $this->ref('xProduction/OutSourceParty');
+		return $this->add('xProduction/Model_OutSourceParty')->addCondition('id',$this->getAssociatedOutsourceParty());
 	}
 
 	function previousDepartment(){
@@ -107,7 +111,11 @@ class Model_Department extends \Model_Table{
 
 	function getAssociatedOutsourceParty(){
 		$associated_categories = $this->ref('xProduction/OutSourcePartyDeptAssociation')->_dsql()->del('fields')->field('out_source_party_id')->getAll();
-		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_categories)),false);
+		$array =  iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_categories)),false);
+
+		if(!count($array)) $array = array(0);
+
+		return $array;
 	}
 
 	function addOutSourceParty($party){

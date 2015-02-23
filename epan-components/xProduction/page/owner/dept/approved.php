@@ -5,8 +5,9 @@ class page_xProduction_page_owner_dept_approved extends page_xProduction_page_ow
 	function init(){
 		parent::init();
 
-		$crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_Quotation'));
-		$crud->setModel('xShop/Quotation_Approved');
+		$crud=$this->add('CRUD',array('grid_class'=>'xProduction/Grid_JobCard'));
+		$crud->setModel('xProduction/Jobcard_Approved');
+
 		if(!$crud->isEditing()){
 			$g=$crud->grid;
 			$g->addPaginator(15);

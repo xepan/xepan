@@ -13,7 +13,7 @@ class page_xProduction_page_owner_dept_main extends page_xProduction_page_owner_
 
 		$tabs=$this->app->layout->add('Tabs');
 
-		$tabs->addTabURL('xProduction_page_owner_dept_forwarded','Forwarded tO Me');
+		$tabs->addTabURL('xProduction_page_owner_dept_forwardedtohere','Forwarded tO Me');
 		$tabs->addTabURL('xProduction_page_owner_dept_received','Received');
 		$tabs->addTabURL('xProduction_page_owner_dept_assigned','Assigned');
 		$tabs->addTabURL('xProduction_page_owner_dept_processing','Processing');

@@ -3,8 +3,10 @@ class page_xProduction_page_owner_teammanager extends page_xProduction_page_owne
 	
 	function init(){
 		parent::init();
-		$team=$this->add('xProduction/Model_Team');
 		
+		$team=$this->add('xProduction/Model_Team');
+		$team->addCondition('department_id',$this->api->current_employee->department()->get('id'));
+
 		$crud=$this->app->layout->add('CRUD');
 		$crud->setModel($team);
 		if($g=$crud->grid){

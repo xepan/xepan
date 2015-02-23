@@ -1,7 +1,7 @@
 <?php
 namespace xProduction;
 class Model_OutSourceParty extends \Model_Table{
-	public $table="xhr_out_source_partys";
+	public $table="xproduction_out_source_parties";
 	function init(){
 		parent::init();
 
