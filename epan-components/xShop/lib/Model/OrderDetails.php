@@ -75,6 +75,7 @@ class Model_OrderDetails extends \Model_Table{
 		foreach ($dept_status=$this->deptartmentalStatus() as $ds) {
 			if(!$ds['status']) return $ds;
 		}
+		return false;
 	}
 
 }

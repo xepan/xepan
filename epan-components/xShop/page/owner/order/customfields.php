@@ -61,9 +61,10 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 		$form->addSubmit('Update');
 
 		$custom_fields_values=array();
+		
 		if($form->isSubmitted()){
 			foreach ($phases as $phase) {
-				if($form['phase_'.$phase->id]){
+				if( $form['phase_'.$phase->id] ){
 					$custom_fields_values [$phase->id]=array();
 					$custom_fields = $item->ref('xShop/ItemCustomFieldAssos')->addCondition('department_phase_id',$phase->id);
 					foreach ($custom_fields as $cfassos) {

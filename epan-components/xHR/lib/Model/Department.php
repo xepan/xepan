@@ -90,6 +90,14 @@ class Model_Department extends \Model_Table{
 		return $this->ref('xHR/Document');
 	}
 
+	function isOutSourced(){
+		return $this['is_outsourced'];
+	}
+
+	function outSourceParties(){
+		return $this->ref('xProduction/OutSourceParty');
+	}
+
 	function previousDepartment(){
 		if($this['previous_department_id'])
 			return $this->ref('previous_department_id');

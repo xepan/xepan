@@ -11,6 +11,7 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
         $this->add('View')->set("Member name = ".$order['member']);
 
         $crud_actions = array('form_class'=>'xShop/Form_OrderItem');
+       
         if($order['status']!='draft'){
         	$crud_actions=array('form_class'=>'xShop/Form_OrderItem');
         }

@@ -76,4 +76,24 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 		// creatre log/communication entry
 	}
 
+	function department(){
+		return $this->ref('department_id');
+	}
+
+	function orderItem(){
+		return $this->ref('orderitem_id');
+	}
+
+	function outSourceParty($party=null){
+		if(!$party){
+			$t= $this->ref('outsource_party_id');
+			if($t->loaded()) return $t;
+			return false;
+		}else{
+			$this['outsource_party_id'] = $party->id;
+			$this->save();
+			return $party;
+		}
+	}
+
 }
