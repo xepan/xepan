@@ -252,12 +252,27 @@ class Controller_Acl extends \AbstractController {
 	function addOutSourcePartiesPage(){
 		$p= $this->owner->addFrame("Select Outsource",array('label'=>'OutSrc Parties','icon'=>'plus'));
 		if($p){
-			$tabs = $p->add('Tabs');
-			$teams_tab = $tabs->addTab('Teams');
-			// add teams to tab_teams
-			$tabs->addTab('Employees');
-			// 
-			$tabs->addTab('My Team Members');
+			$current_job_card = $p->add('xProduction/Model_JobCard');
+			$current_job_card->load($this->owner->id);
+
+			$form = $p->add('Form');
+			$osp = $form->addField('DropDown','out_source_parties');
+			$osp->setModel($current_job_card->department()->outSourceParties());
+			
+			if($selected_party = $current_job_card->outSourceParty()){
+				$osp->set($selected_party->id);
+			}
+
+			$form->addSubmit('Update');
+
+			if($form->isSubmitted()){
+				$party = $p->add('xProduction/Model_OutSourceParty');
+				$party->load($form['out_source_parties']);
+				$current_job_card->outSourceParty($party);
+				$p->js()->univ()->closeDialog()->execute();
+			}
+
+
 		}
 
 		return 'fr_'.$this->api->normalizeName("Select Outsource");

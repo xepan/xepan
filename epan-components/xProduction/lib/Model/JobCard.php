@@ -68,12 +68,34 @@ class Model_JobCard extends \SQL_Model{
 		return $this->ref('department_id');
 	}
 
+	function department(){
+		return $this->dept();
+	}
+
+	function orderItem(){
+		return $this->ref('orderitem_id');
+	}
+
+	function departmentalStatus(){
+		return $this->ref('orderitem_departmental_status_id');
+	}
+
+	function outSourceParty($party=null){
+		$t= $this->departmentalStatus();
+		return $t->outSourceParty($party);
+	}
+
 	function receive(){
 		// mark complete previous dept jobcard
 		if($pre_dept_job_card = $this->previousDeptJobCard()){
 			$pre_dept_job_card->complete();
 		}
 		// self status received
+
+		if($this->department()->isOutSourced() AND !$this->outSourceParty()){
+			throw $this->exception('Define OutSource Party First');
+		}
+
 		$this['status']='received';
 		$this['created_by_id']=$this->api->current_employee->id;
 		
