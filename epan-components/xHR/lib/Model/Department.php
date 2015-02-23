@@ -30,7 +30,8 @@ class Model_Department extends \Model_Table{
 		$this->hasMany('xShop/ItemDepartmentAssociation','department_id');
 		$this->hasMany('xHR/Document','department_id');
 		$this->hasMany('xProduction/Team','department_id');
-		$this->hasMany('xProduction/OutSourceParty','department_id');
+		// $this->hasMany('xProduction/OutSourceParty','department_id');
+		$this->hasMany('xProduction/OutSourcePartyDeptAssociation','department_id');
 		$this->add('Controller_Validator');
 		$this->is(array(
 							'name|to_trim|required?Must be type Department here'
@@ -94,6 +95,30 @@ class Model_Department extends \Model_Table{
 			return $this->ref('previous_department_id');
 		else
 			return false;
+	}
+
+	function getAssociatedOutsourceParty(){
+		$associated_categories = $this->ref('xProduction/OutSourcePartyDeptAssociation')->_dsql()->del('fields')->field('out_source_party_id')->getAll();
+		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_categories)),false);
+	}
+
+	function addOutSourceParty($party){
+		$outsource_assos_model=$this->add('xProduction/Model_OutSourcePartyDeptAssociation');
+		$outsource_assos_model->addCondition('department_id',$this->id);
+		$outsource_assos_model->addCondition('out_source_party_id',$party->id);
+		$outsource_assos_model->tryLoadAny();
+		if(!$outsource_assos_model->loaded()) $outsource_assos_model->save();
+
+		return $outsource_assos_model;
+	}
+
+	function removeOutSourceParty($party){
+		$outsource_assos_model=$this->add('xProduction/Model_OutSourcePartyDeptAssociation');
+		$outsource_assos_model->addCondition('department_id',$this->id);
+		$outsource_assos_model->addCondition('out_source_party_id',$party->id);
+		$outsource_assos_model->tryLoadAny();
+		if($outsource_assos_model->loaded()) $outsource_assos_model->delete();
+
 	}
 
 }
