@@ -1,9 +1,11 @@
 <?php
 
 namespace xShop;
-class Model_Application extends \Model_Table{
+class Model_Application extends \Model_Document{
 	var $table="xshop_application";
-
+	public $status=array();
+	public $document_name=null;
+	public $root_document_name="Application";
 	function init(){
 		parent::init();
 
@@ -23,7 +25,6 @@ class Model_Application extends \Model_Table{
 		$this->hasMany('xShop/ItemOffer','application_id');
 		$this->addHook('beforeDelete',$this);
 
-		$this->hasOne('xHR/Employee','created_by_id')->defaultValue($this->api->current_employee->id)->system(true);
 		
 		// $this->add('dynamic_model/Controller_AutoCreator'); 
 	}
