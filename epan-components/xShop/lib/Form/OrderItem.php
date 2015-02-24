@@ -4,12 +4,11 @@ namespace xShop;
 
 class Form_OrderItem extends \Form_Stacked {
 
-	function init(){
-		parent::init();
+	function setModel($model,$fields=null){
+		$m=parent::setModel($model,$fields);
 
-		$this->addHook('submit',function($form){
-			
-			$this->model->save();
+		$this->onSubmit(function($form){
+			$form->save();
 
 			$depts = $form->add('xHR/Model_Department');
 			$custome_fields_array  = json_decode($form['custom_fields'],true);
@@ -23,7 +22,12 @@ class Form_OrderItem extends \Form_Stacked {
 					$this->model->removeFromDepartment($dept);
 				}
 			}
+
+			return true;
+
 		});
+
+		return $m;
 	}
 
 	function recursiveRender(){

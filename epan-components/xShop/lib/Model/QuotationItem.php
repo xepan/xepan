@@ -1,8 +1,12 @@
 <?php
 
 namespace xShop;
-class Model_QuotationItem extends \Model_Table{
+class Model_QuotationItem extends \Model_Document{
+	
 	public $table="xshop_quotation_item";
+	public $status=array();
+	public $root_document_name="QuotationItem";
+
 	function init(){
 		parent::init();
 		$this->hasOne('xShop/Quotation','quotation_id');

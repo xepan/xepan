@@ -19,11 +19,11 @@ class Model_Document extends SQL_Model{
 
 		if($this->document_name == null){
 			$class_name = get_class($this);
-			$class_name = explode('\\', $class_name);
-			if(count($class_name)==2) 
-				$class_name=$class_name[1];
-			else
-				$class_name=$class_name[0];
+			// $class_name = explode('\\', $class_name);
+			// if(count($class_name)==2) 
+			// 	$class_name=$class_name[1];
+			// else
+			// 	$class_name=$class_name[0];
 
 			$this->document_name = str_replace("Model_", "", $class_name);
 		}

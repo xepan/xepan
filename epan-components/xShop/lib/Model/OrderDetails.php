@@ -17,7 +17,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
 
 		$this->addField('qty')->type('money')->group('b~3~Order Details');
-		$this->addField('unit')->type('money')->group('b~3');
+		$this->addField('unit')->group('b~3');
 		$this->addField('rate')->type('money')->group('b~3');
 		$this->addField('amount')->type('money')->group('b~3');
 		$this->addField('custom_fields')->type('text')->system(false)->group('c~12~ Custom Fields');

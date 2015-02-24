@@ -14,7 +14,7 @@ class Model_Oppertunity extends \Model_Document{
 		$this->hasOne('xHR/Employee','employee_id')->caption('Handeled By');
 		
 
-		$this->addField('name')->caption('Oppertunity');
+		$this->addField('name')->caption('Oppertunity')->hint('New Sales of X product');
 
 		$this->getElement('status')->enum($this->status)->defaultValue('Active');
 
