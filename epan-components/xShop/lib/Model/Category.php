@@ -1,9 +1,11 @@
 <?php
 
 namespace xShop;
-class Model_Category extends \Model_Table{
+class Model_Category extends \Model_Document{
 	var $table="xshop_categories";
 	var $table_alias = 'category';
+	public $status=array();
+	public $root_document_name="Category";
 
 	function init(){
 		parent::init();
