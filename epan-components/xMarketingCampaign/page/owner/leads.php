@@ -9,6 +9,9 @@ class page_xMarketingCampaign_page_owner_leads extends page_xMarketingCampaign_p
 		// filter line if filter is there
 
 		$leads=$this->add('xMarketingCampaign/Model_Lead');
+		$leads->addCondition('source','DataFeed');
+		$leads->addCondition('source_id','0');
+
 		$crud=$this->app->layout->add('CRUD');
 		$crud->setModel($leads);
 

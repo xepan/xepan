@@ -3,6 +3,7 @@ namespace xHR;
 
 class Model_DocumentAcl extends \Model_Table{
 	public $table="xhr_departments_acl";
+	
 	function init(){
 		parent::init();
 
