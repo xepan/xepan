@@ -43,8 +43,13 @@ class Controller_Acl extends \AbstractController {
 
 			if(! $this->owner->getModel() instanceof \Model_Document)
 				throw $this->exception("Model ". get_class($this->owner->getModel()). " Must Inherit Model_Document");
+			
+			if($this->owner->getModel() instanceof \xProduction\Model_Task){
+				$this->document = get_class($this->owner->getModel()). '\\'.$this->owner->getModel()->get('document_type');
+			}else{
+				$this->document = get_class($this->owner->getModel());
+			}
 
-			$this->document = get_class($this->owner->getModel());
 		}
 
 		$this->document = str_replace("Model_", "", $this->document);
@@ -165,11 +170,14 @@ class Controller_Acl extends \AbstractController {
 		if($this->permissions['can_manage_tasks'] !='No'){
 			if($tt=$this->permissions['task_types']){
 				switch ($tt) {
-					case 'Root Docuement':
+					case 'job_card_tasks':
 						$this->addRootDocumentTaskPage();
 						break;
-					case "Specific Document":
+					case "job_card_current_status_tasks":
 						$this->addDocumentSpecificTaskPage();
+					break;
+
+					case "job_card_all_status_tasks":
 					break;
 
 					default:
@@ -337,7 +345,12 @@ class Controller_Acl extends \AbstractController {
 	function addRootDocumentTaskPage(){
 		$p = $this->owner->addFrame("Task management");
 		if($p){
-			
+			$crud = $p->add('CRUD');
+			$task_model = $this->add('xProduction/Model_Task');
+			$task_model->addCondition('document_type',$this->owner->getModel()->root_document_name);
+			$task_model->addCondition('document_id',$this->owner->id);
+			$crud->setModel($task_model);
+			$crud->add('xHR/Controller_Acl');
 		}
 	}
 

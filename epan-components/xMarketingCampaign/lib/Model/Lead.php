@@ -1,16 +1,16 @@
 <?php
 
 namespace xMarketingCampaign;
-class Model_Lead extends \SQL_Model{
+class Model_Lead extends \Model_Document{
 	public $table="xmarketingcampaign_leads";
-	
+	public $status=array();
+	public $root_document_name="Lead";
 	function init(){
 		parent::init();
 
 
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
-		$this->hasOne('xHR/Employee','created_by_id')->defaultValue($this->api->current_employee->id)->system(true);
 
 		$this->addField('name');
 		$this->addField('organization_name');

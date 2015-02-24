@@ -23,13 +23,13 @@ class Model_DocumentAcl extends \Model_Table{
 		$this->addField('can_approve')->setValueList($acl)->defaultValue('No');
 		$this->addField('can_reject')->setValueList($acl)->defaultValue('No');
 
-		$this->addField('can_assign')->setValueList(array('No','Dept. Teams','Dept. Employee','Self Team Members'))->defaultValue('No');
+		$this->addField('can_assign')->enum(array('No','Dept. Teams','Dept. Employee','Self Team Members'))->defaultValue('No');
 
 		$this->addField('can_forward')->setValueList($acl)->defaultValue('No');
 		$this->addField('can_receive')->type('boolean')->defaultValue(false);
 		
 		$this->addField('can_manage_tasks')->setValueList($acl)->defaultValue('No');
-		$this->addField('task_types')->setValueList(array("Root Docuement"=>"Root Docuement","Specific Document"=>"Specific Document","Root Document With Status"=>'Root Document With Status'))->defaultValue('No');
+		$this->addField('task_types')->setValueList(array("job_card_tasks"=>"Root Docuement","job_card_current_status_tasks"=>"Specific Document","job_card_all_status_tasks"=>'Root Document With Status'));
 
 		$this->addField('can_send_via_email')->setValueList($acl)->defaultValue('No');
 		
