@@ -21,6 +21,8 @@ class Controller_Acl extends \AbstractController {
 		'can_receive'=>'No',
 		'can_assign'=>'No',
 		
+		'can_manage_tasks'=>'No',
+		'task_types'=>false,
 		'can_send_via_email'=>'No',
 
 		'can_see_communication'=>'No',
@@ -38,6 +40,10 @@ class Controller_Acl extends \AbstractController {
 		if(! $this->document){
 			if(!$this->owner->getModel())
 				throw $this->exception('document not setted and model not found');
+
+			if(! $this->owner->getModel() instanceof \Model_Document)
+				throw $this->exception("Model ". get_class($this->owner->getModel()). " Must Inherit Model_Document");
+
 			$this->document = get_class($this->owner->getModel());
 		}
 
@@ -154,6 +160,23 @@ class Controller_Acl extends \AbstractController {
 		if($this->permissions['can_forward'] !='No' AND $this->owner->model->hasMethod('forward')){
 			$this->owner->addAction('forward',array('toolbar'=>false));		
 			$this->filterGrid('forward');
+		}
+
+		if($this->permissions['can_manage_tasks'] !='No'){
+			if($tt=$this->permissions['task_types']){
+				switch ($tt) {
+					case 'Root Docuement':
+						$this->addRootDocumentTaskPage();
+						break;
+					case "Specific Document":
+						$this->addDocumentSpecificTaskPage();
+					break;
+
+					default:
+						# code...
+						break;
+				}
+			}
 		}
 
 		if($this->permissions['can_see_communication'] != 'No'){
@@ -309,6 +332,13 @@ class Controller_Acl extends \AbstractController {
 		}
 
 		return 'fr_'.$this->api->normalizeName("Select Outsource");
+	}
+
+	function addRootDocumentTaskPage(){
+		$p = $this->owner->addFrame("Task management");
+		if($p){
+			
+		}
 	}
 
 	function getAlc(){

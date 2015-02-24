@@ -2,8 +2,10 @@
 
 namespace xProduction;
 
-class Model_JobCard extends \SQL_Model{
+class Model_JobCard extends \Model_Document{
 	public $table ="xproduction_jobcard";
+	public $status=array('-','received','approved','assigned','processing','processed','completed','forwarded');
+	public $root_document_name = 'JobCard';
 
 	function init(){
 		parent::init();
@@ -11,11 +13,9 @@ class Model_JobCard extends \SQL_Model{
 		$this->hasOne('xShop/OrderDetails','orderitem_id');
 		$this->hasOne('xHR/Department','department_id');
 		$this->hasOne('xShop/OrderItemDepartmentalStatus','orderitem_departmental_status_id');
-
-		$this->hasOne('xHR/Employee','created_by_id')->defaultValue($this->api->current_employee->id)->system(true);
 		
 		$this->addField('name')->caption('Job Number');
-		$this->addField('status')->enum(array('-','received','approved','assigned','processing','processed','completed','forwarded'))->defaultValue('-');
+		$this->getElement('status')->defaultValue('-');
 		
 		$this->addExpression('outsource_party')->set(function($m,$q){
 			$p = $m->add('xProduction/Model_OutSourceParty');
@@ -144,14 +144,6 @@ class Model_JobCard extends \SQL_Model{
 		}
 		$this['status'] = 'forwarded';
 		$this->saveAs('xProduction/Model_JobCard');
-	}
-
-	function assignToTeam($team){
-		
-	}
-
-	function assignToEmployee($employee){
-		
 	}
 
 }	

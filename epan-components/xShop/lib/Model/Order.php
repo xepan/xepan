@@ -2,16 +2,17 @@
 
 namespace xShop;
 
-class Model_Order extends \Model_Table{
+class Model_Order extends \Model_Document{
 	public $table='xshop_orders';
+	public $status = array('draft','submitted','approved','processing','processed','shipping',
+							'complete','cancel','return');
+	public $root_document_name = 'Order';
 
 	function init(){
 		parent::init();
 		
  		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
-
-		$this->hasOne('xHR/Employee','created_by_id')->defaultValue($this->api->current_employee->id)->system(true);
 
 		$this->hasOne('xShop/PaymentGateway','paymentgateway_id');
 		$f = $this->hasOne('xShop/MemberDetails','member_id')->group('a~3~<i class="fa fa-info"></i> Order Info');
@@ -24,13 +25,8 @@ class Model_Order extends \Model_Table{
 		// order payment status
 			// unpaid, paid, refunded
 		$this->addField('order_from')->enum(array('online','offline'))->defaultValue('offline');
-		$f = $this->addField('status')
-									->enum(
-										array('draft','submitted',
-											  'approved','processing',
-											  'processed','shipping',
-											  'complete','cancel',
-											  'return'))->group('a~2');
+		$f = $this->getElement('status')->group('a~2');
+
 		$f = $this->addField('on_date')->type('date')->defaultValue(date('Y-m-d'))->group('a~2');
 		$f->icon ="fa fa-calendar~blue";
 
