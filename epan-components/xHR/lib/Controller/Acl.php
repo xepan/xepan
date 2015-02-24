@@ -21,6 +21,8 @@ class Controller_Acl extends \AbstractController {
 		'can_receive'=>'No',
 		'can_assign'=>'No',
 		
+		'can_manage_tasks'=>'No',
+		'task_types'=>false,
 		'can_send_via_email'=>'No',
 
 		'can_see_communication'=>'No',
@@ -38,7 +40,16 @@ class Controller_Acl extends \AbstractController {
 		if(! $this->document){
 			if(!$this->owner->getModel())
 				throw $this->exception('document not setted and model not found');
-			$this->document = get_class($this->owner->getModel());
+
+			if(! $this->owner->getModel() instanceof \Model_Document)
+				throw $this->exception("Model ". get_class($this->owner->getModel()). " Must Inherit Model_Document");
+			
+			if($this->owner->getModel() instanceof \xProduction\Model_Task){
+				$this->document = get_class($this->owner->getModel()). '\\'.$this->owner->getModel()->get('document_type');
+			}else{
+				$this->document = get_class($this->owner->getModel());
+			}
+
 		}
 
 		$this->document = str_replace("Model_", "", $this->document);
@@ -151,6 +162,31 @@ class Controller_Acl extends \AbstractController {
 			$this->filterGrid('receive');
 		}
 
+		if($this->permissions['can_forward'] !='No' AND $this->owner->model->hasMethod('forward')){
+			$this->owner->addAction('forward',array('toolbar'=>false));		
+			$this->filterGrid('forward');
+		}
+
+		if($this->permissions['can_manage_tasks'] !='No'){
+			if($tt=$this->permissions['task_types']){
+				switch ($tt) {
+					case 'job_card_tasks':
+						$this->addRootDocumentTaskPage();
+						break;
+					case "job_card_current_status_tasks":
+						$this->addDocumentSpecificTaskPage();
+					break;
+
+					case "job_card_all_status_tasks":
+					break;
+
+					default:
+						# code...
+						break;
+				}
+			}
+		}
+
 		if($this->permissions['can_see_communication'] != 'No'){
 			$p=$this->owner->addFrame('Comm',array('icon'=>'user'));
 			if($p){
@@ -240,27 +276,82 @@ class Controller_Acl extends \AbstractController {
 	function addAssignPage(){
 		$p= $this->owner->addFrame("Assign to");
 		if($p){
-			$tabs = $p->add('Tabs');
-			$teams_tab = $tabs->addTab('Teams');
-			// add teams to tab_teams
-			$tabs->addTab('Employees');
-			// 
-			$tabs->addTab('My Team Members');
+			switch ($this->permissions['can_assign']) {
+				case 'Dept. Teams':
+					$dept_teams = $p->api->current_employee->department()->teams();
+
+					$form = $p->add('Form');
+					
+					$team_field = $form->addField('DropDown','teams')->setEmptyText('Please Select Team')->validateNotNull(true);
+					$team_field->setModel($dept_teams);
+					
+					$form->addSubmit('Update');
+
+					if($form->isSubmitted()){
+						$dept_teams->load($form['teams']);
+						$this->owner->model->load($this->owner->id);
+						$this->owner->model->assignToTeam($dept_teams);
+
+						$form->js()->univ()->successMessage("sdfsd")->execute();
+					}
+
+				break;
+
+				case 'Dept. Employee':
+				break;
+
+				case 'Self Team Members':
+				break;
+
+			}
 		}
 	}
 
 	function addOutSourcePartiesPage(){
 		$p= $this->owner->addFrame("Select Outsource",array('label'=>'OutSrc Parties','icon'=>'plus'));
 		if($p){
-			$tabs = $p->add('Tabs');
-			$teams_tab = $tabs->addTab('Teams');
-			// add teams to tab_teams
-			$tabs->addTab('Employees');
-			// 
-			$tabs->addTab('My Team Members');
+			$current_job_card = $p->add('xProduction/Model_JobCard');
+			$current_job_card->load($this->owner->id);
+
+			$form = $p->add('Form');
+			$osp = $form->addField('DropDown','out_source_parties')->setEmptyText('Not Applicable');
+			$osp->setModel($current_job_card->department()->outSourceParties());
+			
+			if($selected_party = $current_job_card->outSourceParty()){
+				$osp->set($selected_party->id);
+			}
+
+			$form->addSubmit('Update');
+
+			if($form->isSubmitted()){
+				
+				if($form['out_source_parties']){
+					$party = $p->add('xProduction/Model_OutSourceParty');
+					$party->load($form['out_source_parties']);
+					$current_job_card->outSourceParty($party);
+				}else{
+					$current_job_card->removeOutSourceParty();
+				}
+
+				$p->js()->univ()->closeDialog()->execute();
+			}
+
+
 		}
 
 		return 'fr_'.$this->api->normalizeName("Select Outsource");
+	}
+
+	function addRootDocumentTaskPage(){
+		$p = $this->owner->addFrame("Task management");
+		if($p){
+			$crud = $p->add('CRUD');
+			$task_model = $this->add('xProduction/Model_Task');
+			$task_model->addCondition('document_type',$this->owner->getModel()->root_document_name);
+			$task_model->addCondition('document_id',$this->owner->id);
+			$crud->setModel($task_model);
+			$crud->add('xHR/Controller_Acl');
+		}
 	}
 
 	function getAlc(){

@@ -4,6 +4,28 @@ namespace xShop;
 
 class Form_OrderItem extends \Form_Stacked {
 
+	function init(){
+		parent::init();
+
+		$this->addHook('submit',function($form){
+			
+			$this->model->save();
+
+			$depts = $form->add('xHR/Model_Department');
+			$custome_fields_array  = json_decode($form['custom_fields'],true);
+
+			foreach ($depts as $dept) {
+				if(isset($custome_fields_array[$dept->id])){
+					// associate with department
+					$this->model->addToDepartment($dept);
+				}else{
+					// remove association with department
+					$this->model->removeFromDepartment($dept);
+				}
+			}
+		});
+	}
+
 	function recursiveRender(){
 		$item_field = $this->getElement('item_id');
 		$f= $item_field->other_field;

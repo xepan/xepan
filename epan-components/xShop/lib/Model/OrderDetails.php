@@ -2,8 +2,11 @@
 
 namespace xShop;
 
-class Model_OrderDetails extends \Model_Table{
+class Model_OrderDetails extends \Model_Document{
 	public $table='xshop_orderDetails';
+
+	public $status=array();
+	public $root_document_name = 'OrderDetails';
 
 	function init(){
 		parent::init();
@@ -75,6 +78,7 @@ class Model_OrderDetails extends \Model_Table{
 		foreach ($dept_status=$this->deptartmentalStatus() as $ds) {
 			if(!$ds['status']) return $ds;
 		}
+		return false;
 	}
 
 }

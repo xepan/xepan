@@ -2,7 +2,7 @@
 
 namespace xProduction;
 
-class Model_Jobcard_Assigned extends Model_JobCard_Received{
+class Model_Jobcard_Assigned extends Model_JobCard{
 	
 	function init(){
 		parent::init();

@@ -2,8 +2,10 @@
 
 namespace xProduction;
 
-class Model_JobCard extends \SQL_Model{
+class Model_JobCard extends \Model_Document{
 	public $table ="xproduction_jobcard";
+	public $status=array('-','received','approved','assigned','processing','processed','completed','forwarded');
+	public $root_document_name = 'JobCard';
 
 	function init(){
 		parent::init();
@@ -11,13 +13,19 @@ class Model_JobCard extends \SQL_Model{
 		$this->hasOne('xShop/OrderDetails','orderitem_id');
 		$this->hasOne('xHR/Department','department_id');
 		$this->hasOne('xShop/OrderItemDepartmentalStatus','orderitem_departmental_status_id');
-
-		$this->hasOne('xHR/Employee','created_by_id')->defaultValue($this->api->current_employee->id)->system(true);
 		
 		$this->addField('name')->caption('Job Number');
-		$this->addField('status')->enum(array('-','received','approved','assigned','processing','processed','completed','forwarded'))->defaultValue('-');
+		$this->getElement('status')->defaultValue('-');
+		
+		$this->addExpression('outsource_party')->set(function($m,$q){
+			$p = $m->add('xProduction/Model_OutSourceParty');
+			$j=$p->join('xshop_orderitem_departmental_status.outsource_party_id');
+			$j->addField('order_item_dept_status_id','id');
+			$p->addCondition('order_item_dept_status_id',$q->getField('orderitem_departmental_status_id'));
+			return $p->fieldQuery('name');
+		});
 
-		$this->hasMany('xProduction/JobCardEmployeeAssociation','jobcard_id');
+		$this->hasMany('xProduction/JobCardEmployeeTeamAssociation','jobcard_id');
 
 		$this->add('Controller_Validator');
 		$this->is(array(
@@ -53,14 +61,22 @@ class Model_JobCard extends \SQL_Model{
 	}
 
 	function previousDeptJobCard(){
-		if($pre_dept = $this->dept()->previousDepartment()){
-			$pre_dept_job_card = $this->newInstance();
+		
+		$custom_fields = json_decode($this->orderItem()->get('custom_fields'),true);
+		$prev_dept_id = null;
+		foreach ($custom_fields as $dept_id => $custom_field_values ) {
+			if($this->department()->get('id') == $dept_id) break;
+			$prev_dept_id = $dept_id;
+		}
+		if($prev_dept_id){
+			$pre_dept_job_card = $this->add('xProduction/Model_JobCard');
 			$pre_dept_job_card->addCondition('orderitem_id',$this['orderitem_id']);
-			$pre_dept_job_card->addCondition('department_id',$pre_dept->id);
+			$pre_dept_job_card->addCondition('department_id',$prev_dept_id);
 			$pre_dept_job_card->tryLoadAny();
 
 			if($pre_dept_job_card->loaded()) return $pre_dept_job_card;
 		}
+		
 		return false;
 	}
 
@@ -68,15 +84,47 @@ class Model_JobCard extends \SQL_Model{
 		return $this->ref('department_id');
 	}
 
+	function department(){
+		return $this->dept();
+	}
+
+	function orderItem(){
+		return $this->ref('orderitem_id');
+	}
+
+	function departmentalStatus(){
+		return $this->ref('orderitem_departmental_status_id');
+	}
+
+	function outSourceParty($party=null){
+		$t= $this->departmentalStatus();
+		return $t->outSourceParty($party);
+	}
+
+	function removeOutSourceParty(){
+		$t = $this->departmentalStatus();
+		$t['outsource_party_id'] = 0;
+		$t->save();
+	}
+
 	function receive(){
 		// mark complete previous dept jobcard
 		if($pre_dept_job_card = $this->previousDeptJobCard()){
 			$pre_dept_job_card->complete();
 		}
+
 		// self status received
-		$this['status']='received';
+		if($this->department()->isOutSourced()){
+			if(!$this->outSourceParty())
+				throw $this->exception('Define OutSource Party First');
+			else{
+				$this['status']='processed';
+			}
+		}else{
+			$this['status']='received';
+		}
+
 		$this['created_by_id']=$this->api->current_employee->id;
-		
 		$this->saveAs('xProduction/Model_JobCard');
 	}
 
@@ -84,4 +132,18 @@ class Model_JobCard extends \SQL_Model{
 		$this['status']='completed';
 		$this->saveAs('xProduction/Model_JobCard');
 	}
+
+	function approve(){
+		$this['status']='approved';
+		$this->saveAs('xProduction/Model_JobCard');	
+	}
+
+	function forward($note){
+		if($nd = $this->orderItem()->nextDept()){
+			$nd->createJobCard();
+		}
+		$this['status'] = 'forwarded';
+		$this->saveAs('xProduction/Model_JobCard');
+	}
+
 }	
