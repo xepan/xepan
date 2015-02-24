@@ -30,7 +30,8 @@ class Model_Users extends Model_Table {
 		$f = $this->addField('user_management')->type('boolean')->defaultValue(false)->group('c~6');
 		$f = $this->addField('general_settings')->type('boolean')->defaultValue(false)->group('c~6');
 		$f = $this->addField('application_management')->type('boolean')->defaultValue(false)->group('c~6');
-		$f = $this->addField('website_desinging')->type('boolean')->defaultValue(false)->group('c~6');
+		$f = $this->addField('website_desing
+			ng')->type('boolean')->defaultValue(false)->group('c~6');
 
 		$f=$this->addField('activation_code')->group('d~3')->display(array('form'=>'Readonly'));
 		$f->icon = 'fa fa-unlock-alt~blue';
