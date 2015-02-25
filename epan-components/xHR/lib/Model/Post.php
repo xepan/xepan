@@ -2,7 +2,9 @@
 namespace xHR;
 
 class Model_Post extends \Model_Table{
+	
 	public $table="xhr_posts";
+	
 	function init(){
 		parent::init();
 		$this->hasOne('xHR/Model_Department','department_id');
@@ -14,8 +16,8 @@ class Model_Post extends \Model_Table{
 		
 		$this->hasMany('xHR/Post','parent_post_id');
 		$this->hasMany('xHR/SalaryTemplate','post_id');
-		$this->hasMany('xHR/Employee','post_id');
 		$this->hasMany('xHR/DocumentAcl','post_id');
+		$this->hasMany('xHR/Employee','post_id');
 		
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);

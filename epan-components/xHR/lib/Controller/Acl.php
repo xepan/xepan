@@ -20,6 +20,7 @@ class Controller_Acl extends \AbstractController {
 		'can_forward'=>'No',
 		'can_receive'=>'No',
 		'can_assign'=>'No',
+		'can_assign_to'=>false,
 		
 		'can_manage_tasks'=>'No',
 		'task_types'=>false,
@@ -276,7 +277,7 @@ class Controller_Acl extends \AbstractController {
 	function addAssignPage(){
 		$p= $this->owner->addFrame("Assign to");
 		if($p){
-			switch ($this->permissions['can_assign']) {
+			switch ($this->permissions['can_assign_to']) {
 				case 'Dept. Teams':
 					$dept_teams = $p->api->current_employee->department()->teams();
 
@@ -309,7 +310,9 @@ class Controller_Acl extends \AbstractController {
 
 	function addOutSourcePartiesPage(){
 		$p= $this->owner->addFrame("Select Outsource",array('label'=>'OutSrc Parties','icon'=>'plus'));
+		
 		if($p){
+			
 			$current_job_card = $p->add('xProduction/Model_JobCard');
 			$current_job_card->load($this->owner->id);
 
@@ -323,8 +326,7 @@ class Controller_Acl extends \AbstractController {
 
 			$form->addSubmit('Update');
 
-			if($form->isSubmitted()){
-				
+			if($form->isSubmitted()){		
 				if($form['out_source_parties']){
 					$party = $p->add('xProduction/Model_OutSourceParty');
 					$party->load($form['out_source_parties']);
@@ -335,10 +337,7 @@ class Controller_Acl extends \AbstractController {
 
 				$p->js()->univ()->closeDialog()->execute();
 			}
-
-
 		}
-
 		return 'fr_'.$this->api->normalizeName("Select Outsource");
 	}
 

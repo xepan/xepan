@@ -23,7 +23,8 @@ class Model_DocumentAcl extends \Model_Table{
 		$this->addField('can_approve')->setValueList($acl)->defaultValue('No');
 		$this->addField('can_reject')->setValueList($acl)->defaultValue('No');
 
-		$this->addField('can_assign')->enum(array('No','Dept. Teams','Dept. Employee','Self Team Members'))->defaultValue('No');
+		$this->addField('can_assign')->setValueList($acl)->defaultValue('No');
+		$this->addField('can_assign_to')->enum(array('No','Dept. Teams','Dept. Employee','Self Team Members'))->defaultValue('No');
 
 		$this->addField('can_forward')->setValueList($acl)->defaultValue('No');
 		$this->addField('can_receive')->type('boolean')->defaultValue(false);

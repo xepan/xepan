@@ -10,7 +10,8 @@ class Model_Task extends \Model_Document{
 	function init(){
 		parent::init();
 
-		$this->addField('document_type');
+		$this->addField('root_document_name');
+		$this->addField('document_name');
 		$this->addField('document_id');
 
 		$this->addField('name')->caption('Subject');

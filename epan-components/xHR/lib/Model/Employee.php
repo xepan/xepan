@@ -3,12 +3,13 @@ namespace xHR;
 
 class Model_Employee extends \Model_Table{
 	public $table="xhr_employees";
+	
 	function init(){
 		parent::init();
 
+		$this->hasOne('xHR/Post','post_id')->group('a~3~Basic Inf0');
 		$this->hasOne('Users','user_id');
 		$this->hasOne('xHR/Department','department_id');
-		$this->hasOne('xHR/Post','post_id')->group('a~3~Basic Inf0');
 
 		$this->addField('name')->Caption('Full Name')->group('a~4');
 		$this->addField('dob')->type('date')->Caption('Date Of Birth')->group('a~2');
@@ -80,7 +81,7 @@ class Model_Employee extends \Model_Table{
 							)
 					);
 		
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave($m){
