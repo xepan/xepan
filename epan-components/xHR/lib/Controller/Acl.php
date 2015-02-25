@@ -236,6 +236,7 @@ class Controller_Acl extends \AbstractController {
 		if(!$this->owner->model->hasField($filter_column)){
 			throw $this->exception("$filter_column must be defined in model " . get_class($this->owner->model));
 		}
+		$filter_ids = false;
 
 		switch ($this->permissions['can_view']) {
 			case 'Self Only':
@@ -253,16 +254,23 @@ class Controller_Acl extends \AbstractController {
 				break;
 
 			case 'Assigned To Me':
+				$this->owner->model->addCondition('employee_id',$this->self_only_ids);
 			break;
 			
 			case 'Assigned To My Team':
+				$this->owner->model->addCondition(
+					$this->owner->model->dsql()->orExpr()
+					->where('employee_id',$this->self_only_ids)
+					->where('team_id',$this->my_teams)
+					)
+					;
 			break;
 
 			case 'If Team Leader':
 			break;
 
 			default: // No
-				$filter_ids = array(0);
+				$filter_ids = false;
 				break;
 		}
 		if($filter_ids) 

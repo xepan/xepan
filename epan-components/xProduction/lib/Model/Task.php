@@ -37,21 +37,22 @@ class Model_Task extends \Model_Document{
 	function getTeamLeaders(){
 		if(!$this['team_id']) return array(0);
 		$my_team = $this->ref('team_id');
-		print_r($my_team->getAssociatedEmployees( $team_leader = true ));
 		return $my_team->getAssociatedEmployees( $team_leader = true );
 	}
 
 	function relatedDocument(){
-		$class=$this['document_name'];
+		$class=$this['root_document_name'];
 		$class =explode("\\", $class);
-		$class[1] = "Model_".$class[1];
+		$class[1] = "\\Model_".$class[1];
 		$class = implode("", $class);
 
 		return $this->add($class)->load($this['document_id']);
 	}
 
 	function start_processing(){
-
+		$this->relatedDocument()->set('status','processing')->save();
+		$this['status']='processing';
+		$this->saveAndUnload();
 	}
 
 	function mark_processed(){

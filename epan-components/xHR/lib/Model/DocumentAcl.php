@@ -41,12 +41,16 @@ class Model_DocumentAcl extends \Model_Table{
 		$this->addField('can_see_communication')->setValueList($acl)->defaultValue('No');
 		$this->addField('can_see_deep_communication')->setValueList($acl)->defaultValue('No');
 		
+		$this->addHook('beforeSave',$this);
 
 		$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 
+	function beforeSave(){
+		// if document_id wala document ! instance of Task
+			// must not be anything in terms of "assigned" or "if team leader" kind of
+	}
+
+
 }
-
-
-

@@ -22,7 +22,7 @@ class Model_Team extends \Model_Table{
 		if($team_leader)
 			$associated_emp->addCondition('is_team_leader',true);
 			
-		$associated_emp->_dsql()->del('fields')->field('employee_id')->getAll();
+		$associated_emp = $associated_emp->_dsql()->del('fields')->field('employee_id')->getAll();
 		$emps= iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_emp)),false);
 
 		if(!count($emps)) $emps=array(0);
