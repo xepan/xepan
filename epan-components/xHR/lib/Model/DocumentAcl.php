@@ -3,10 +3,11 @@ namespace xHR;
 
 class Model_DocumentAcl extends \Model_Table{
 	public $table="xhr_departments_acl";
+	
 	function init(){
 		parent::init();
 
-		$acl =array('No'=>'No','Self Only'=>'Created By Self','Include Subordinats'=>'Created By Subordinates','Include Colleagues'=>'Created By Colleagues','Include Subordinats & Colleagues'=>'Created By Subordinats or Colleagues','Assigned To Me'=>'Assigned To Me','Assigned To My Team'=>'Assigned To My Team','If Team Leader'=>'If Team Leader','All'=>'All');
+		$acl =array('No'=>'No','Self Only'=>'Created By Employee','Include Subordinats'=>'Created By Subordinates','Include Colleagues'=>'Created By Colleagues','Include Subordinats & Colleagues'=>'Created By Subordinats or Colleagues','Assigned To Me'=>'Assigned To Me','Assigned To My Team'=>'Assigned To My Team','If Team Leader'=>'If Team Leader','All'=>'All');
 
 		$this->hasOne('xHR/Document','document_id')->display(array('form'=>'Readonly'));
 	

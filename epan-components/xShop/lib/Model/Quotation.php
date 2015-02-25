@@ -2,8 +2,10 @@
 
 namespace xShop;
 
-class Model_Quotation extends \Model_Table{
+class Model_Quotation extends \Model_Document{
 	public $table="xshop_quotation";
+	public $status=array('draft','approved','redesign','submitted');
+	public $root_document_name="Quotation";
 
 	function init(){
 		parent::init();
@@ -14,7 +16,7 @@ class Model_Quotation extends \Model_Table{
 
 		$this->addField('name');
 		$this->addField('quotation_no');
-		$this->addField('status')->enum(array('draft','approved','redesign','submitted'))->defaultValue('draft');
+		$this->getElement('status')->enum($this->status)->defaultValue('draft');
 
 
 		$this->hasMany('xShop/QuotationItem','quotation_id');

@@ -80,6 +80,8 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 	}
 
 	function addCustomField(&$cf){
+		$field=null;
+		
 		switch($cf['type']){
 			case "line":
 				$field = $this->form->addField('line','custom_field_'.$cf->id , $cf['name']);

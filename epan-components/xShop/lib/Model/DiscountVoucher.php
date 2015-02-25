@@ -2,8 +2,10 @@
 
 namespace xShop;
 
-class Model_DiscountVoucher extends \Model_Table{
+class Model_DiscountVoucher extends \Model_Document{
 	public $table='xshop_discount_vouchers';
+	public $status=array();
+	public $root_document_name="DiscountVoucher";
 
 	function init(){
 		parent::init();

@@ -1,7 +1,9 @@
 <?php
 namespace xShop;
-class Model_MemberDetails extends \Model_Table{
+class Model_MemberDetails extends \Model_Document{
 	public $table="xshop_memberdetails";
+	public $status=array();
+	public $root_document_name="Member Details";
 	function init(){
 		parent::init();
 
@@ -24,7 +26,6 @@ class Model_MemberDetails extends \Model_Table{
 		
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
 
-		$this->hasOne('xHR/Employee','created_by_id')->defaultValue(1)->system(true);
 						
 		$this->hasMany('xShop/Order','member_id');
 		$this->hasMany('xShop/DiscountVoucherUsed','member_id');

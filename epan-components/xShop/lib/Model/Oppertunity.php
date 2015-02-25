@@ -2,8 +2,10 @@
 
 namespace xShop;
 
-class Model_Oppertunity extends \Model_Table{
+class Model_Oppertunity extends \Model_Document{
 	public $table="xshop_oppertunity";
+	public $status=array('Active','Dead');
+	public $root_document_name="Oppertunity";
 	function init(){
 		parent::init();
 
@@ -12,9 +14,9 @@ class Model_Oppertunity extends \Model_Table{
 		$this->hasOne('xHR/Employee','employee_id')->caption('Handeled By');
 		
 
-		$this->addField('name')->caption('Oppertunity');
+		$this->addField('name')->caption('Oppertunity')->hint('New Sales of X product');
 
-		$this->addField('status')->enum(array('Active','Dead'))->defaultValue('Active');
+		$this->getElement('status')->enum($this->status)->defaultValue('Active');
 
 		$this->hasMany('xShop/Quotation','oppertunity_id');
 

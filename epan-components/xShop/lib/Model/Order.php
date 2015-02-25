@@ -229,11 +229,12 @@ class Model_Order extends \Model_Document{
 	function approve(){
 		// check conditions
 		foreach ($ois=$this->orderItems() as $oi) {
-			$department_association = $oi->nextDept();	
-			// if($department_association->department()->isOutSourced() AND ! $department_association->outSourceParty()){
-			// 	throw $this->exception('OrderItem '.$oi['item'].' must be defined with Outsource Party');
-			// }
-			$department_association->createJobCard();
+			if($department_association = $oi->nextDept()){
+				// if($department_association->department()->isOutSourced() AND ! $department_association->outSourceParty()){
+				// 	throw $this->exception('OrderItem '.$oi['item'].' must be defined with Outsource Party');
+				// }
+				$department_association->createJobCard();
+			}
 		}
 
 		$this['status']='approved';
