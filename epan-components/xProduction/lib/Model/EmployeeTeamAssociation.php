@@ -7,8 +7,6 @@ class Model_EmployeeTeamAssociation extends \Model_Table{
 
 		$this->hasOne('xProduction/Team','team_id');
 		$this->hasOne('xHR/Employee','employee_id');
-		$this->addField('is_active')->type('boolean')->defaultValue(true);
-
 
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}

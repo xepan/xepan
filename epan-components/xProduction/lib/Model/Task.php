@@ -14,6 +14,9 @@ class Model_Task extends \Model_Document{
 		$this->addField('document_name');
 		$this->addField('document_id');
 
+		$this->hasOne('xProduction/Team','team_id');
+		$this->hasOne('xHR/Employee','employee_id');
+
 		$this->addField('name')->caption('Subject');
 		$this->addField('content')->type('text');
 		$this->addField('Priority')->enum(array('low','Medium','High','Urgent'));

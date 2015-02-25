@@ -33,15 +33,49 @@ class Model_Document extends SQL_Model{
 
 	}
 
-	function assignTo($to){
+	function assignTo($to,$subject="",$message=""){
+			
+		if(!in_array("assigned", $this->status))
+			throw $this->exception('status must have "assigned" status in array');
 
+		$model = $this->add('xProduction/Model_Task_Assigned');
+		$model->addCondition('root_document_name',$this->root_document_name);
+		$model->addCondition('document_id', $this->id);
+		$model->addCondition('document_name', $this->document_name);
+
+		$model->tryLoadAny();
+
+		if($to instanceof \xHR\Model_Employee){
+			$model['team_id']= null;
+			$model['employee_id']= $to->id;
+		}
+		elseif ($to instanceof \xProduction\Model_Team){
+			$model['team_id']= $to->id;
+			$model['employee_id']= $to->teamLeader()->id;
+		}
+		else
+			throw $this->exception('Not known TO Whome to assign task');
+
+		$model['name'] = $subject;
+		$model['content'] = $message;
+
+		$model->save();
+
+		$this['status']='assigned';
+		$this->saveAndUnload();
 	}
 
-	function assignToTeam($team){
-		
+	
+	
+	function assignedTo(){
+		$model = $this->add('xProduction/Model_Task');
+		$model->addCondition('document_id', $this->id);
+		$model->tryLoadAny();
+
+		if($model['team_id']) return $model->ref('team_id');
+		if($model['employee_id']) return $model->ref('employee_id');
+
+		return false;
 	}
 
-	function assignToEmployee($employee){
-		
-	}
 }

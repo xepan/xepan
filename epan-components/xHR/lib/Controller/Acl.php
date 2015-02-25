@@ -19,6 +19,8 @@ class Controller_Acl extends \AbstractController {
 		'can_reject'=>'No',
 		'can_forward'=>'No',
 		'can_receive'=>'No',
+		'can_start_processing'=>'No',
+		'can_mark_processsed'=>'No',
 		'can_assign'=>'No',
 		'can_assign_to'=>false,
 		
@@ -81,6 +83,7 @@ class Controller_Acl extends \AbstractController {
 		$this->include_subordinates = $this->api->current_employee->getSubordinats();
 		$this->include_subordinates[] = $this->self_only_ids[0];
 
+		$this->my_teams = $this->api->current_employee->getTeams();
 		
 		// CRUD
 		if($this->owner instanceof \CRUD){
@@ -155,7 +158,8 @@ class Controller_Acl extends \AbstractController {
 		}
 
 		if($this->permissions['can_assign'] !='No'){
-			$this->addAssignPage();
+			$column_name = $this->addAssignPage();
+			$this->filterGrid($column_name);
 		}
 
 		if($this->permissions['can_receive'] AND $this->owner->model->hasMethod('receive')){
@@ -166,6 +170,16 @@ class Controller_Acl extends \AbstractController {
 		if($this->permissions['can_forward'] !='No' AND $this->owner->model->hasMethod('forward')){
 			$this->owner->addAction('forward',array('toolbar'=>false));		
 			$this->filterGrid('forward');
+		}
+
+		if($this->permissions['can_start_processing'] !='No' AND $this->owner->model->hasMethod('start_processing')){
+			$this->owner->addAction('start_processing',array('toolbar'=>false));		
+			$this->filterGrid('start_processing');
+		}
+
+		if($this->permissions['can_mark_processsed'] !='No' AND $this->owner->model->hasMethod('mark_processsed')){
+			$this->owner->addAction('mark_processsed',array('toolbar'=>false));
+			$this->filterGrid('mark_processsed');
 		}
 
 		if($this->permissions['can_manage_tasks'] !='No'){
@@ -213,6 +227,12 @@ class Controller_Acl extends \AbstractController {
 	}
 
 	function filterModel($filter_column='created_by_id'){
+		// $acl =array('No'=>'No','Self Only'=>'Created By Employee',
+		// 'Include Subordinats'=>'Created By Subordinates','Include Colleagues'=>'Created By Colleagues',
+		// 'Include Subordinats & Colleagues'=>'Created By Subordinats or Colleagues',
+		// 'Assigned To Me'=>'Assigned To Me','Assigned To My Team'=>'Assigned To Me & My Team',
+		// 'If Team Leader'=>'If Team Leader','All'=>'All');
+
 		if(!$this->owner->model->hasField($filter_column)){
 			throw $this->exception("$filter_column must be defined in model " . get_class($this->owner->model));
 		}
@@ -231,8 +251,17 @@ class Controller_Acl extends \AbstractController {
 				$filter_ids = $this->include_subordinates;
 				$filter_ids = array_merge($filter_ids,$this->include_colleagues);
 				break;
+
+			case 'Assigned To Me':
+			break;
 			
-			default: // No 
+			case 'Assigned To My Team':
+			break;
+
+			case 'If Team Leader':
+			break;
+
+			default: // No
 				$filter_ids = array(0);
 				break;
 		}
@@ -255,9 +284,20 @@ class Controller_Acl extends \AbstractController {
 				$filter_ids = $this->include_subordinates;
 				$filter_ids = $filter_ids + $this->include_colleagues; 
 				break;
+
+
+			case 'Assigned To Me':
+			break;
+			
+			case 'Assigned To My Team':
+			break;
+
+			case 'If Team Leader':
+			break;
 			
 			default: // All
 				$filter_ids = null;
+				$assigned_ids = null;
 				break;
 		}
 
@@ -271,41 +311,59 @@ class Controller_Acl extends \AbstractController {
 			$this->owner->grid->addFormatter($column,'flt_'.$column);
 		}
 
+		if($assigned_ids !=null){
+
+		}
+
 
 	}
 
 	function addAssignPage(){
-		$p= $this->owner->addFrame("Assign to");
+		$p= $this->owner->addFrame("Assign");
 		if($p){
+			
+			$document = $this->owner->model->load($this->owner->id);
+			$assigned_to = $document->assignedTo();
+			$set_existing_assigned_to = false;
 			switch ($this->permissions['can_assign_to']) {
 				case 'Dept. Teams':
-					$dept_teams = $p->api->current_employee->department()->teams();
-
-					$form = $p->add('Form');
-					
-					$team_field = $form->addField('DropDown','teams')->setEmptyText('Please Select Team')->validateNotNull(true);
-					$team_field->setModel($dept_teams);
-					
-					$form->addSubmit('Update');
-
-					if($form->isSubmitted()){
-						$dept_teams->load($form['teams']);
-						$this->owner->model->load($this->owner->id);
-						$this->owner->model->assignToTeam($dept_teams);
-
-						$form->js()->univ()->successMessage("sdfsd")->execute();
-					}
-
+					$model = $p->api->current_employee->department()->teams();
+					$field_caption = "Teams";
+					$set_existing_assigned_to = $assigned_to instanceof \xProduction\Model_Team ? $assigned_to->id: false;
 				break;
 
 				case 'Dept. Employee':
+					$model = $p->api->current_employee->department()->employees();
+					$field_caption = "Employees";
+					$set_existing_assigned_to = $assigned_to instanceof \xHR\Model_Employee ? $assigned_to->id: false;
 				break;
 
 				case 'Self Team Members':
+					// $model = $p->api->current_employee->department()->teams();
+					// $field_caption = "Teams";
 				break;
+			}
 
+			$form = $p->add('Form');
+			$field= $form->addField('DropDown','selected',$field_caption)->setEmptyText('Please Select Team')->validateNotNull(true);
+			$form->addField('line','subject');
+			$form->addField('text','message');
+			$field->setModel($model);
+			
+			if($set_existing_assigned_to){
+				$field->set($set_existing_assigned_to);
+			}
+
+			$form->addSubmit('Update');
+
+			if($form->isSubmitted()){
+				$model->load($form['selected']);
+				$document->assignTo($model,$form['subject'],$form['message']);
+
+				$form->js()->univ()->successMessage("sdfsd")->execute();
 			}
 		}
+		return 'fr_'.$this->api->normalizeName("assign");
 	}
 
 	function addOutSourcePartiesPage(){

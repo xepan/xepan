@@ -7,7 +7,9 @@ class page_xProduction_page_owner_dept_received extends page_xProduction_page_ow
 		
 
 		$received_jobcard_model=$this->add('xProduction/Model_Jobcard_Received');
-		$received_jobcard_model->addCondition('department_id',$_GET['department_id']?:$this->api->current_employee->department()->get('id'));
+
+		if($_GET['department_id'])
+			$received_jobcard_model->addCondition('department_id',$_GET['department_id']);
 
 		$crud=$this->add('CRUD',array('grid_class'=>'xProduction/Grid_JobCard'));
 		$crud->setModel($received_jobcard_model);

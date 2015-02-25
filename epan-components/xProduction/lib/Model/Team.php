@@ -35,4 +35,8 @@ class Model_Team extends \Model_Table{
 			$assoc->delete();
 	}
 
+	function teamLeader(){
+		return $this->ref('xProduction/EmployeeTeamAssociation')->tryLoadAny();
+	}
+
 }

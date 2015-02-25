@@ -125,12 +125,26 @@ class Model_Employee extends \Model_Table{
 		return $this->ref('user_id');
 	}
 
-	function myJobCards($status){
-		$job_cards = $this->add('xProduction/Model_JobCard');
-		$assign_j = $job_cards->join('xproduction_jobcard_emp_asso.jobcard_id');
-		$assign_j->addField('employee_id');
+	function getTeams(){
+		$teams_ids = $this->add('xProduction/Model_EmployeeTeamAssociation')->addCondition('employee_id',$this->id)->_dsql()->del('fields')->field('team_id')->getAll();
+		$teams_ids = iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($teams_ids)),false);
+		return $teams_ids;
+	}
 
-		$job_cards->addCondition('employee_id',$this->id);
+	function myJobCards($status){
+		$team_ids= $this->getTeams();
+
+		$job_cards = $this->add('xProduction/Model_Jobcard_'.ucwords($status));
+		$assign_j = $job_cards->join('xproduction_document_assignments.document_id');
+		$assign_j->addField('employee_id');
+		$assign_j->addField('team_id');
+
+		$job_cards->addCondition(
+			$this->dsql()->orExpr()
+			->where('employee_id',$this->id)
+			->where('team_id',$team_ids)
+			);
+		
 		$job_cards->addCondition('status',$status);
 
 		return $job_cards;
