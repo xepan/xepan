@@ -30,7 +30,7 @@ class Model_Document extends SQL_Model{
 		}
 
 		$this->hasOne('xHR/Employee','created_by_id')->defaultValue($this->api->current_employee->id)->system(true);
-
+		$this->hasMany('xProduction/Task','document_id');
 	}
 
 	function assignTo($to,$subject="",$message=""){
@@ -64,8 +64,6 @@ class Model_Document extends SQL_Model{
 		$this['status']='assigned';
 		$this->saveAndUnload();
 	}
-
-	
 	
 	function assignedTo(){
 		$model = $this->add('xProduction/Model_Task');
@@ -76,6 +74,15 @@ class Model_Document extends SQL_Model{
 		if($model['employee_id']) return $model->ref('employee_id');
 
 		return false;
+	}
+
+	function relatedTask(){
+		$rt = $this->ref('xProduction/Task')
+			->addCondition('root_document_name',$this->root_document_name)
+			->addCondition('document_name',$this->document_name)
+			->debug()->tryLoadAny();
+
+		return $rt;
 	}
 
 }

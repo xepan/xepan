@@ -20,7 +20,7 @@ class Controller_Acl extends \AbstractController {
 		'can_forward'=>'No',
 		'can_receive'=>'No',
 		'can_start_processing'=>'No',
-		'can_mark_processsed'=>'No',
+		'can_mark_processed'=>'No',
 		'can_assign'=>'No',
 		'can_assign_to'=>false,
 		
@@ -177,9 +177,9 @@ class Controller_Acl extends \AbstractController {
 			$this->filterGrid('start_processing');
 		}
 
-		if($this->permissions['can_mark_processsed'] !='No' AND $this->owner->model->hasMethod('mark_processsed')){
-			$this->owner->addAction('mark_processsed',array('toolbar'=>false));
-			$this->filterGrid('mark_processsed');
+		if($this->permissions['can_mark_processed'] !='No' AND $this->owner->model->hasMethod('mark_processed')){
+			$this->owner->addAction('mark_processed',array('toolbar'=>false));
+			$this->filterGrid('mark_processed');
 		}
 
 		if($this->permissions['can_manage_tasks'] !='No'){
@@ -270,6 +270,7 @@ class Controller_Acl extends \AbstractController {
 	}
 
 	function filterGrid($column){
+		$filter_ids = null;
 		switch ($this->permissions['can_'.$column]) {
 			case 'Self Only':
 				$filter_ids = $this->self_only_ids;
@@ -287,17 +288,37 @@ class Controller_Acl extends \AbstractController {
 
 
 			case 'Assigned To Me':
+				$this->owner->grid->addMethod('format_flt_'.$column,function($g,$f){
+					if($g->model->get('employee_id') != $g->api->current_employee->id){
+						$g->current_row_html[$f] = "";
+					}
+				});
+
+				$this->owner->grid->addFormatter($column,'flt_'.$column);
 			break;
 			
 			case 'Assigned To My Team':
+				$this->owner->grid->addMethod('format_flt_'.$column,function($g,$f){
+					if($g->model->get('employee_id') != $g->api->current_employee->id AND !in_array($g->api->current_employee->id, $g->model->getTeamMembers())){
+						$g->current_row_html[$f] = "";
+					}
+				});
+
+				$this->owner->grid->addFormatter($column,'flt_'.$column);
 			break;
 
 			case 'If Team Leader':
+				$this->owner->grid->addMethod('format_flt_'.$column,function($g,$f){
+					if(!in_array($g->api->current_employee->id ,$g->model->getTeamLeaders())){
+						$g->current_row_html[$f] = "";
+					}
+				});
+
+				$this->owner->grid->addFormatter($column,'flt_'.$column);
 			break;
 			
 			default: // All
 				$filter_ids = null;
-				$assigned_ids = null;
 				break;
 		}
 
@@ -310,12 +331,6 @@ class Controller_Acl extends \AbstractController {
 
 			$this->owner->grid->addFormatter($column,'flt_'.$column);
 		}
-
-		if($assigned_ids !=null){
-
-		}
-
-
 	}
 
 	function addAssignPage(){

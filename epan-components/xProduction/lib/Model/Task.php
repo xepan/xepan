@@ -27,4 +27,35 @@ class Model_Task extends \Model_Document{
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
+	function getTeamMembers(){
+		if(!$this['team_id']) return array(0);
+		$my_team = $this->ref('team_id');
+
+		return $my_team->getAssociatedEmployees();
+	}
+
+	function getTeamLeaders(){
+		if(!$this['team_id']) return array(0);
+		$my_team = $this->ref('team_id');
+		print_r($my_team->getAssociatedEmployees( $team_leader = true ));
+		return $my_team->getAssociatedEmployees( $team_leader = true );
+	}
+
+	function relatedDocument(){
+		$class=$this['document_name'];
+		$class =explode("\\", $class);
+		$class[1] = "Model_".$class[1];
+		$class = implode("", $class);
+
+		return $this->add($class)->load($this['document_id']);
+	}
+
+	function start_processing(){
+
+	}
+
+	function mark_processed(){
+
+	}
+
 }

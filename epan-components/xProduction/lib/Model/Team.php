@@ -13,12 +13,22 @@ class Model_Team extends \Model_Table{
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function getAssociatedEmployees(){
+	function getAssociatedEmployees($team_leader=false){
 		if(!$this->loaded())
 			throw new \Exception("team Model Must be Loaded",'Employee Association');
 			
-		$associated_emp = $this->ref('xProduction/EmployeeTeamAssociation')->addCondition('team_id',$this->id)->_dsql()->del('fields')->field('employee_id')->getAll();
-		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_emp)),false);
+		$associated_emp = $this->ref('xProduction/EmployeeTeamAssociation');
+		$associated_emp->addCondition('team_id',$this->id);
+		
+		if($team_leader)
+			$associated_emp->addCondition('is_team_leader',true);
+			
+		$associated_emp->_dsql()->del('fields')->field('employee_id')->getAll();
+		$emps= iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_emp)),false);
+
+		if(!count($emps)) $emps=array(0);
+
+		return $emps;
 	}
 
 	function addEmployee($employee){
