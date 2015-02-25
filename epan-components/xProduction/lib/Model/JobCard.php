@@ -5,7 +5,7 @@ namespace xProduction;
 class Model_JobCard extends \Model_Document{
 	public $table ="xproduction_jobcard";
 	public $status=array('-','received','approved','assigned','processing','processed','completed','forwarded');
-	public $root_document_name = 'JobCard';
+	public $root_document_name = 'xProducion\JobCard';
 
 	function init(){
 		parent::init();

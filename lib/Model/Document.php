@@ -58,6 +58,7 @@ class Model_Document extends SQL_Model{
 
 		$model['name'] = $subject;
 		$model['content'] = $message;
+		$model['is_default_jobcard_task'] = true;
 
 		$model->save();
 
@@ -80,6 +81,7 @@ class Model_Document extends SQL_Model{
 		$rt = $this->ref('xProduction/Task')
 			->addCondition('root_document_name',$this->root_document_name)
 			->addCondition('document_name',$this->document_name)
+			->addCondition('is_default_jobcard_task',true)
 			->debug()->tryLoadAny();
 
 		return $rt;

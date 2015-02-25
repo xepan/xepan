@@ -237,7 +237,6 @@ class Controller_Acl extends \AbstractController {
 			throw $this->exception("$filter_column must be defined in model " . get_class($this->owner->model));
 		}
 		$filter_ids = false;
-
 		switch ($this->permissions['can_view']) {
 			case 'Self Only':
 				$filter_ids = $this->self_only_ids;
@@ -270,7 +269,7 @@ class Controller_Acl extends \AbstractController {
 			break;
 
 			default: // No
-				$filter_ids = false;
+				$filter_ids = array(0);
 				break;
 		}
 		if($filter_ids) 
