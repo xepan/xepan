@@ -39,16 +39,17 @@ class Model_Item extends \Model_Table{
 		$this->addField('qty_from_set_only')->type('boolean')->group('e~3')->defaultValue(false);
 		
 		//Item Allow Optins
-		$this->addField('is_saleable')->type('boolean')->group('f~4~<i class=\'fa fa-cog\' > Item Allow Options</i>');
-		$this->addField('is_purchasable')->type('boolean')->group('f~4~<i class=\'fa fa-cog\' > Item Allow Options</i>');
-		$this->addField('mantain_inventory')->type('boolean')->group('f~4~<i class=\'fa fa-cog\' > Item Allow Options</i>');
-		$this->addField('is_servicable')->type('boolean')->group('f~4~<i class=\'fa fa-cog\' > Item Allow Options</i>');
-		$this->addField('website_display')->type('boolean')->group('f~4');
-		$this->addField('is_downloadable')->type('boolean')->group('f~4');
+		$this->addField('is_saleable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('is_purchasable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('mantain_inventory')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('allow_negative_stock')->type('boolean')->group('f~3~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('is_servicable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('website_display')->type('boolean')->group('f~2');
+		$this->addField('is_downloadable')->type('boolean')->group('f~2');
 		$this->addField('is_rentable')->type('boolean')->group('f~2');
-		$this->addField('is_designable')->type('boolean')->group('f~4');
-		$this->addField('is_template')->type('boolean')->defaultValue(false)->group('f~4');
-		$this->addField('is_enquiry_allow')->type('boolean')->group('f~4');
+		$this->addField('is_designable')->type('boolean')->group('f~2');
+		$this->addField('is_template')->type('boolean')->defaultValue(false)->group('f~2');
+		$this->addField('is_enquiry_allow')->type('boolean')->group('f~2');
 		$this->addField('is_attachment_allow')->type('boolean')->group('f~2');
 		
 		//Item Display Options
