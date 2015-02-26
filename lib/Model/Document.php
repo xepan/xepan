@@ -80,9 +80,9 @@ class Model_Document extends SQL_Model{
 	function relatedTask(){
 		$rt = $this->ref('xProduction/Task')
 			->addCondition('root_document_name',$this->root_document_name)
-			->addCondition('document_name',$this->document_name)
+			// ->addCondition('document_name',$this->document_name)
 			->addCondition('is_default_jobcard_task',true)
-			->debug()->tryLoadAny();
+			->tryLoadAny();
 
 		return $rt;
 	}
