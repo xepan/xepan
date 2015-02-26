@@ -136,6 +136,10 @@ class Model_JobCard extends \Model_Document{
 	function approve(){
 		$this['status']='approved';
 		$this->saveAs('xProduction/Model_JobCard');	
+		$rt=$this->relatedTask();
+		if($rt->loaded()){
+			return $rt->set('status','completed')->save();
+		}
 	}
 
 	function forward($note){
