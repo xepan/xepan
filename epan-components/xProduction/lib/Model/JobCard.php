@@ -5,7 +5,7 @@ namespace xProduction;
 class Model_JobCard extends \Model_Document{
 	public $table ="xproduction_jobcard";
 	public $status=array('-','received','approved','assigned','processing','processed','completed','forwarded');
-	public $root_document_name = 'xProducion\JobCard';
+	public $root_document_name = 'xProduction\JobCard';
 
 	function init(){
 		parent::init();
@@ -134,6 +134,10 @@ class Model_JobCard extends \Model_Document{
 	}
 
 	function approve(){
+		$rt = $this->relatedTask();
+		if($rt->loaded())
+			$rt->set('status','completed')->save();
+
 		$this['status']='approved';
 		$this->saveAs('xProduction/Model_JobCard');	
 	}
