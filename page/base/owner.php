@@ -63,11 +63,11 @@ class page_base_owner extends Page {
 		$marketing_m->addItem(array('Leads','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_leads');
 		$marketing_m->addItem(array('Configurations','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_config');
 
-		$exec_m = $marketing_m->addMenu('Executors');
-		$exec_m->addItem(array('Start Grabbing Data','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_mrkt_dtgrb_exec');
-		$exec_m->addItem(array('Start Sending Mass Email','icon'=>'gauge-1'),'xMarketingCampaign_page_emailexec');
-		$exec_m->addItem(array('Update Social Activities','icon'=>'gauge-1'),'xMarketingCampaign_page_updatesocialactivityexec');
-		$exec_m->addItem(array('Scheduled Emails from Campaign','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_campaignexec');
+		// $exec_m = $marketing_m->addMenu('Executors');
+		// $exec_m->addItem(array('Start Grabbing Data','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_mrkt_dtgrb_exec');
+		// $exec_m->addItem(array('Start Sending Mass Email','icon'=>'gauge-1'),'xMarketingCampaign_page_emailexec');
+		// $exec_m->addItem(array('Update Social Activities','icon'=>'gauge-1'),'xMarketingCampaign_page_updatesocialactivityexec');
+		// $exec_m->addItem(array('Scheduled Emails from Campaign','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_campaignexec');
 
 
 		$sales_m = $m->addMenu('Sales');
@@ -95,6 +95,8 @@ class page_base_owner extends Page {
 
 		$crm_m = $m->addMenu('CRM');
 		$accounts_m = $m->addMenu('Accounts');
+		$purchase_m = $m->addMenu('Purchase');
+		$store_m = $m->addMenu('Store');
 		
 		// Add User Department secific Menus
 		$employee = $this->add('xHR/Model_Employee')->loadFromLogin();
