@@ -94,10 +94,27 @@ class page_base_owner extends Page {
 		}
 
 		$crm_m = $m->addMenu('CRM');
+		
+
+
 		$accounts_m = $m->addMenu('Accounts');
+		
+
 		$purchase_m = $m->addMenu('Purchase');
+		//$purcahse_m->addItem(array('Supplier','icon'=>'gauge-1'),'xPurchase_page_owner_supplier');
+
+
+
+
+
+
 		$store_m = $m->addMenu('Store');
 		
+		
+
+
+
+
 		// Add User Department secific Menus
 		$employee = $this->add('xHR/Model_Employee')->loadFromLogin();
 		

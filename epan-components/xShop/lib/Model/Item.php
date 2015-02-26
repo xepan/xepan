@@ -118,6 +118,7 @@ class Model_Item extends \Model_Table{
 
 		$this->hasMany('xShop/QuantitySet','item_id');
 		$this->hasMany('xShop/CustomRate','item_id');
+		$this->hasMany('xPurchase/PurchaseOrderItem','item_id');
 
 		$this->addExpression('theme_code_group_expression')->set('(IF(ISNULL('.$this->table_alias.'.theme_code),'.$this->table_alias.'.id,'.$this->table_alias.'.theme_code))');
 			
