@@ -1,5 +1,5 @@
 <?php
-namespace xPurcahse;
+namespace xPurchase;
 
 class Model_PurchaseMaterialRequest extends \Model_Table{
 	public $table="xpurcahse_material_request";

@@ -1,5 +1,7 @@
 <?php
-class page_xPurchase_page_owner_purchasematerialrequest extends page_xPurchase_page_owner_main {
+
+class page_xPurchase_page_owner_materialrequest extends page_xPurchase_page_owner_main {
+	
 	function init(){
 		parent::init();
 

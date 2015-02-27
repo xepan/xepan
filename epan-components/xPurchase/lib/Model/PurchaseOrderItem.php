@@ -6,6 +6,8 @@ class Model_PurchaseOrderItem extends \Model_Table{
 	function init(){
 		parent::init();
 
+		$this->hasOne('xPurchase/PurchaseOrder','po_id');
+		
 		$this->hasOne('xShop/Item','item_id');
 		$this->addField('name');
 		$this->addField('qty');

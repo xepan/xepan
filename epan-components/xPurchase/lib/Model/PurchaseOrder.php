@@ -7,13 +7,13 @@ class Model_PurchaseOrder extends \Model_Table{
 		parent::init();
 
 
-		$this->hasOne('xPurchase/Supplier','xpurchase_supplier_id');
-		$this->addField('name')->caption('Item Name');
-		$this->addField('qty');
-		$this->addField('unit');
-		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
+		$this->hasOne('xPurchase/Supplier','supplier_id');
 
-			
-			$this->add('dynamic_model/Controller_AutoCreator');
+		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
+		
+
+		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
+
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }		
