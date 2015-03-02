@@ -9,11 +9,7 @@ class Model_PurchaseOrderItem extends \Model_Table{
 		$this->hasOne('xPurchase/PurchaseOrder','po_id');
 		
 		$this->hasOne('xShop/Item','item_id');
-		$this->addField('name');
-		$this->addField('qty');
-		$this->addField('unit');
-		$this->addField('rate')->type('money');
-		$this->addField('amount')->type('money');
+		
 		$this->addField('custom_fields')->type('text');
 
 

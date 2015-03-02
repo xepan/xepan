@@ -103,7 +103,7 @@ class page_base_owner extends Page {
 		$purchase_m = $m->addMenu('Purchase');
 		//$purchase_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xPurchase_page_owner_dashboard');
 		$purchase_m->addItem(array('Supplier','icon'=>'gauge-1'),'xPurchase_page_owner_supplier');
-		$purchase_m->addItem(array('Purchase Material Request','icon'=>'gauge-1'),'xPurchase_page_owner_purchasematerialrequest');
+		$purchase_m->addItem(array('Purchase Material Request','icon'=>'gauge-1'),'xPurchase_page_owner_materialrequest');
 		$purchase_m->addItem(array('Purchase Order','icon'=>'gauge-1'),'xPurchase_page_owner_purchaseorder');
 		// $purchase_m->addItem(array('Supplier','icon'=>'gauge-1'),'xPurchase_page_owner_supplier');
 

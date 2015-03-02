@@ -16,10 +16,10 @@ class Form_OrderItem extends \Form_Stacked {
 			foreach ($depts as $dept) {
 				if(isset($custome_fields_array[$dept->id])){
 					// associate with department
-					$this->model->addToDepartment($dept);
+					$form->model->addToDepartment($dept);
 				}else{
 					// remove association with department
-					$this->model->removeFromDepartment($dept);
+					$form->model->removeFromDepartment($dept);
 				}
 			}
 
