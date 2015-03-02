@@ -44,7 +44,7 @@ class Model_Affiliate extends \Model_Table {
 
 		$this->add('Controller_Validator');
 		$this->is(array(
-						     'email_id|as|email|unique?email must be valid',
+						     // 'email_id|as|email|required|unique?email must be valid',
     						 'phone_no|to_trim',
     						 'mobile_no|to_trim'
 

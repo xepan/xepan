@@ -44,7 +44,7 @@ class page_xShop_page_owner_afflilate extends page_xShop_page_owner_main{
 
 		$aff_crud=$aff_col->add('CRUD');
 
-		$aff_crud->setModel($afflilate_model,array('company_name','owner_name','logo_url','is_active','pnhone_no','mobile_no','email','website_url','office_address','city','state','country','zip_code','description'));//,array('name'));
+		$aff_crud->setModel($afflilate_model,array('company_name','owner_name','logo_url','is_active','pnhone_no','mobile_no','email_id','website_url','office_address','city','state','country','zip_code','description'));//,array('name'));
 
 	}
 }

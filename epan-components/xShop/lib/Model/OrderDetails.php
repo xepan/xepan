@@ -28,9 +28,32 @@ class Model_OrderDetails extends \Model_Document{
 
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');
 
+		$this->addHook('beforeSave',$this);
 		$this->addHook('afterInsert',$this);
 
 		$this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeSave(){
+		// validate custom field entries
+		if($this['custom_fields']==''){
+			$phases_ids = $this->ref('item_id')->getAssociatedDepartment();
+			$cust_field_array = array();
+		}else{
+			$cust_field_array = json_decode($this['custom_fields'],true);
+			$phases_ids = array_keys($cust_field_array);
+		}
+
+		foreach ($phases_ids as $phase_id) {
+			$custome_fields_assos_ids = $this->ref('item_id')->getAssociatedCustomFields($phase_id);
+			foreach ($custome_fields_assos_ids as $cf_id) {
+				if(!isset($cust_field_array[$phase_id][$cf_id]) or $cust_field_array[$phase_id][$cf_id] == ''){
+					throw $this->exception('Custome Field Values not proper','Growl');
+				}
+			}
+		}
+		throw new \Exception("Error Processing Request", 1);
+		
 	}
 
 	function afterInsert($obj,$new_id){

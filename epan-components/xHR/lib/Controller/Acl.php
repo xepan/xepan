@@ -58,7 +58,7 @@ class Controller_Acl extends \AbstractController {
 		$this->document = str_replace("Model_", "", $this->document);
 
 		$dept_documents = $this->add('xHR/Model_Document');
-		$dept_documents->addCondition('department_id', $this->api->current_employee->department()->get('id'));
+		$dept_documents->addCondition('department_id', $_GET['department_id']?:$this->api->current_employee->department()->get('id'));
 		$dept_documents->addCondition('name', $this->document);
 		$dept_documents->tryLoadAny();
 
