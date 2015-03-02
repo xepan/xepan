@@ -14,6 +14,8 @@ class Model_JobCard extends \Model_Document{
 		$this->hasOne('xHR/Department','department_id');
 		$this->hasOne('xShop/OrderItemDepartmentalStatus','orderitem_departmental_status_id');
 		
+		$this->addField('type')->enum(array('JobCard','MaterialRequest'));
+
 		$this->addField('name')->caption('Job Number');
 		$this->getElement('status')->defaultValue('-');
 		
@@ -62,7 +64,12 @@ class Model_JobCard extends \Model_Document{
 
 	function previousDeptJobCard(){
 		
-		$custom_fields = json_decode($this->orderItem()->get('custom_fields'),true);
+		if($cf = $this->orderItem()->get('custom_fields')){
+			$custom_fields = json_decode($cf,true);
+		}else{
+			$custom_fields = array();
+		}
+
 		$prev_dept_id = null;
 		foreach ($custom_fields as $dept_id => $custom_field_values ) {
 			if($this->department()->get('id') == $dept_id) break;
@@ -136,14 +143,11 @@ class Model_JobCard extends \Model_Document{
 	function approve(){
 		$rt = $this->relatedTask();
 		if($rt->loaded())
-			$rt->set('status','completed')->save();
+			$rt->set('status','complete')->save();
 
 		$this['status']='approved';
 		$this->saveAs('xProduction/Model_JobCard');	
-		$rt=$this->relatedTask();
-		if($rt->loaded()){
-			return $rt->set('status','completed')->save();
-		}
+		
 	}
 
 	function forward($note){

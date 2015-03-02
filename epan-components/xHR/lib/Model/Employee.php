@@ -128,6 +128,7 @@ class Model_Employee extends \Model_Table{
 	function getTeams(){
 		$teams_ids = $this->add('xProduction/Model_EmployeeTeamAssociation')->addCondition('employee_id',$this->id)->_dsql()->del('fields')->field('team_id')->getAll();
 		$teams_ids = iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($teams_ids)),false);
+		if(!count($teams_ids)) $teams_ids=array(0);
 		return $teams_ids;
 	}
 

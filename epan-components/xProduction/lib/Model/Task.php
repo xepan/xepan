@@ -57,6 +57,17 @@ class Model_Task extends \Model_Document{
 		$this->saveAndUnload();
 	}
 
+	function mark_processed_page($p){
+		$form = $p->add('Form');
+		$form->addField('line','num1');
+		$form->addField('line','num2');
+		$form->addSubmit();
+
+		if($form->isSubmitted()){
+			$form->displayError('num1','oops');
+		}
+	}
+
 	function mark_processed(){
 		$this->relatedDocument()->set('status','processed')->save();
 		$this['status']='processed';

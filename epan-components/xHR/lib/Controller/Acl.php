@@ -157,7 +157,7 @@ class Controller_Acl extends \AbstractController {
 			$this->filterGrid('reject');
 		}
 
-		if($this->permissions['can_assign'] !='No'){
+		if($this->permissions['can_assign'] !='No'){			
 			$column_name = $this->addAssignPage();
 			$this->filterGrid($column_name);
 		}
@@ -177,9 +177,16 @@ class Controller_Acl extends \AbstractController {
 			$this->filterGrid('start_processing');
 		}
 
-		if($this->permissions['can_mark_processed'] !='No' AND $this->owner->model->hasMethod('mark_processed')){
-			$this->owner->addAction('mark_processed',array('toolbar'=>false));
-			$this->filterGrid('mark_processed');
+		if($this->permissions['can_mark_processed'] !='No'){
+			if($this->owner->model->hasMethod('mark_processed_page')){
+				$p = $this->owner->addFrame('mark_processed');
+				if($p){
+					$this->owner->model->mark_processed_page($p);
+				}
+			}else{
+				$this->owner->addAction('mark_processed',array('toolbar'=>false));
+				$this->filterGrid('mark_processed');
+			}
 		}
 
 		if($this->permissions['can_manage_tasks'] !='No'){
@@ -342,8 +349,8 @@ class Controller_Acl extends \AbstractController {
 
 	function addAssignPage(){
 		$p= $this->owner->addFrame("Assign");
+		
 		if($p){
-			
 			$document = $this->owner->model->load($this->owner->id);
 			$assigned_to = $document->assignedTo();
 			$set_existing_assigned_to = false;

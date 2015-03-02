@@ -45,7 +45,7 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 	}
 
 	function createJobCard(){
-		$new_job_card = $this->add('xProduction/Model_JobCard');
+		$new_job_card = $this->add($this->department()->getNamespace().'/Model_'.  $this->department()->jobcard_document());
 		$new_job_card->addCondition('orderitem_departmental_status_id',$this->id);
 		$new_job_card->tryLoadAny();
 
@@ -61,15 +61,16 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 
 	function receive(){
 		// create job card for this department and this orderitem_id;
-		$jobcard_model=$this->add('xProduction/Model_JobCard');
+		$jobcard_model=$this->add($this->department()->getNamespace().'/Model_'.  $this->department()->jobcard_document());
 		$jobcard_model->addCondition('orderitem_departmental_status_id',$this->id);
 		$jobcard_model->addCondition('orderitem_id',$this['orderitem_id']);
 		$jobcard_model->addCondition('department_id',$this['department_id']);
 		$jobcard_model->tryLoadAny();
 		if($jobcard_model->loaded())
 			throw $this->exception('Already Recieved and Job Card Created');
-		$jobcard_model['status']='received';
-		$jobcard_model->save();
+		
+		$jobcard_model->receive();
+
 		// jiska status ... received hoga
 		// agar previous department hai to
 			// uske job card ka status complete ka do

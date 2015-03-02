@@ -21,6 +21,7 @@ class Model_Department extends \Model_Table{
 		$this->addField('is_active')->type('boolean')->defaultValue(true)->group('a~2');
 		$this->addField('is_outsourced')->type('boolean')->defaultValue(false)->group('a~4');
 		
+		$this->addField('jobcard_document')->defaultValue('JobCard')->system(true);
 		
 		$this->addField('related_application_namespace')->defaultValue('xProduction')->group('a~4');
 		
@@ -43,6 +44,14 @@ class Model_Department extends \Model_Table{
 		$this->addHook('beforeDelete',$this);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function getNamespace(){
+		return $this['related_application_namespace'];
+	}
+
+	function jobcard_document(){
+		return $this['jobcard_document'];
 	}
 
 	function beforeSave($m){

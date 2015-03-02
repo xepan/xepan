@@ -1,13 +1,16 @@
 <?php
 namespace xStore;
 
-class Model_MaterialRequest extends \Model_Table{
-	public $table="xstore_material_request";
+class Model_MaterialRequest extends \xProduction\Model_JobCard{
 	function init(){
 		parent::init();
 
-		$this->addField('name');
+		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function receive(){
+		throw new \Exception("Receiving", 1);
 		
-			$this->add('dynamic_model/Controller_AutoCreator');
+		parent::receive();
 	}
 }		

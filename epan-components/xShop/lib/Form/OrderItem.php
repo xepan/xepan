@@ -11,7 +11,15 @@ class Form_OrderItem extends \Form_Stacked {
 			$form->save();
 
 			$depts = $form->add('xHR/Model_Department');
-			$custome_fields_array  = json_decode($form['custom_fields'],true);
+			
+			if($form['custom_fields']==''){
+				$assos_depts = $form->model->ref('item_id')->getAssociatedDepartment();
+				foreach ($assos_depts as $dp) {
+					$custome_fields_array[$dp]=array();
+				}
+			}else{
+				$custome_fields_array  = json_decode($form['custom_fields'],true);
+			}
 
 			foreach ($depts as $dept) {
 				if(isset($custome_fields_array[$dept->id])){
@@ -23,7 +31,7 @@ class Form_OrderItem extends \Form_Stacked {
 				}
 			}
 
-			return true;
+			return $form->js()->univ()->closeDialog()->execute();
 
 		});
 

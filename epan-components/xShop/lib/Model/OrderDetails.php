@@ -20,6 +20,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->addField('unit')->group('b~3');
 		$this->addField('rate')->type('money')->group('b~3');
 		$this->addField('amount')->type('money')->group('b~3');
+		$this->addField('narration')->type('text')->system(false)->group('c~12~ Narration');
 		$this->addField('custom_fields')->type('text')->system(false)->group('c~12~ Custom Fields');
 
 		$this->addExpression('created_by_id')->set(function($m,$q){
@@ -45,14 +46,13 @@ class Model_OrderDetails extends \Model_Document{
 		}
 
 		foreach ($phases_ids as $phase_id) {
-			$custome_fields_assos_ids = $this->ref('item_id')->getAssociatedCustomFields($phase_id);
-			foreach ($custome_fields_assos_ids as $cf_id) {
+			$custom_fields_assos_ids = $this->ref('item_id')->getAssociatedCustomFields($phase_id);
+			foreach ($custom_fields_assos_ids as $cf_id) {
 				if(!isset($cust_field_array[$phase_id][$cf_id]) or $cust_field_array[$phase_id][$cf_id] == ''){
-					throw $this->exception('Custome Field Values not proper','Growl');
+					throw $this->exception('Custom Field Values not proper','Growl');
 				}
 			}
 		}
-		throw new \Exception("Error Processing Request", 1);
 		
 	}
 
@@ -64,6 +64,7 @@ class Model_OrderDetails extends \Model_Document{
 				$new_order_details->addToDepartment($dept);
 			}
 		}
+		// else .. form_orderItem is doing for offline orders
 	}
 
 	function associatedWithDepartment($department){
