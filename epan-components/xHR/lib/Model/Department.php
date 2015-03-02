@@ -17,7 +17,8 @@ class Model_Department extends \Model_Table{
 		$this->addField('acl_approved')->type('boolean')->group('a~4');
 		$this->addField('jobcard_assign_required')->type('boolean')->group('a~4');
 		$this->addField('is_production_department')->type('boolean')->defaultValue(true)->group('a~4');
-		$this->addField('is_active')->type('boolean')->defaultValue(true)->group('a~4');
+		$this->addField('is_system')->type('boolean')->defaultValue(false)->group('a~2');
+		$this->addField('is_active')->type('boolean')->defaultValue(true)->group('a~2');
 		$this->addField('is_outsourced')->type('boolean')->defaultValue(false)->group('a~4');
 		
 		

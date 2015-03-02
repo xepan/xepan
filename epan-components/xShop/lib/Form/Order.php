@@ -24,25 +24,25 @@ class Form_Order extends \Form_Stacked {
 
 
 
-				$users= $this->add('Model_Users');
+				$users= $form->add('Model_Users');
 				$users->addCondition('email',$form['email']);
 				$users->tryLoadAny();
 				if(!$users->loaded()){
 					// try searching member with another user by mobile number
-					$members = $this->add('xShop/Model_MemberDetails');
+					$members = $form->add('xShop/Model_MemberDetails');
 					$members->addCondition('mobile_number',$form['mobile']);
 					$members->tryLoadAny();
 					
 					if(!$members->loaded()){
 						// create new user 
 						// name and email
-						$new_user = $this->add('Model_Users');
+						$new_user = $form->add('Model_Users');
 						$new_user['name']=$form['name'];
 						$new_user['email']=$form['email'];
 						$new_user->save();
 
 						// .. member will be created by event automatically
-						$new_member= $this->add('xShop/Model_MemberDetails');
+						$new_member= $form->add('xShop/Model_MemberDetails');
 						$new_member->loadBy('users_id',$new_user->id);
 						// get member and update mobile no
 						$new_member['mobile_number'] = $form['mobile'];
@@ -52,7 +52,7 @@ class Form_Order extends \Form_Stacked {
 						$member_id = $member->id;
 					}
 				}else{
-					$existing_member = $this->add('xShop/Model_MemberDetails');
+					$existing_member = $form->add('xShop/Model_MemberDetails');
 					$existing_member->loadBy('users_id',$users->id);
 					$member_id = $existing_member->id;
 				}
