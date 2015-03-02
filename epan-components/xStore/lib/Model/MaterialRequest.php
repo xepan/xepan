@@ -2,7 +2,9 @@
 namespace xStore;
 
 class Model_MaterialRequest extends \xProduction\Model_JobCard{
+	
 	public $root_document_name='xStore\MaterialRequest';
+
 	function init(){
 		parent::init();
 
