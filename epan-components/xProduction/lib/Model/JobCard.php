@@ -14,7 +14,7 @@ class Model_JobCard extends \Model_Document{
 		$this->hasOne('xHR/Department','department_id');
 		$this->hasOne('xShop/OrderItemDepartmentalStatus','orderitem_departmental_status_id');
 		
-		$this->addField('type')->enum(array('JobCard','MaterialRequest'));
+		$this->addField('type')->enum(array('JobCard','MaterialRequest'))->defaultValue('JobCard');
 
 		$this->addField('name')->caption('Job Number');
 		$this->getElement('status')->defaultValue('-');

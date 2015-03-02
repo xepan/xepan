@@ -87,7 +87,10 @@ class page_base_owner extends Page {
 		$production_m = $m->addMenu('Production');
 		$production_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xProduction_page_owner_user_dashboard');
 		$production_m->addItem(array('OutSource Party','icon'=>'gauge-1'),'xProduction_page_owner_outsourceparties');
-		$production_depts = $this->add('xHR/Model_Department')->addCondition('is_production_department',true);
+		$production_depts = $this->add('xHR/Model_Department')
+			->addCondition('is_production_department',true)
+			->addCondition('is_system',false)
+			;
 
 		foreach($production_depts as $d){
 			$production_m->addItem(array($d['name'],'icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
