@@ -10,6 +10,7 @@ class page_xStore_page_owner_materialrequest_approved extends page_xStore_page_o
 
 		$crud=$this->add('CRUD');
 		$crud->setModel($model);
+		$crud->add('xHR/Controller_Acl');
 	}
 	
 }

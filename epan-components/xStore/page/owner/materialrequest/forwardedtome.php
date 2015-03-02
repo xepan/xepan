@@ -11,6 +11,7 @@ class page_xStore_page_owner_materialrequest_forwardedtome extends page_xStore_p
 
 		$crud=$this->add('CRUD');
 		$crud->setModel($model);
+		$crud->add('xHR/Controller_Acl');
 	}
 	
 }
