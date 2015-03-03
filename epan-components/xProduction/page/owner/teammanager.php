@@ -23,6 +23,7 @@ class page_xProduction_page_owner_teammanager extends page_xProduction_page_owne
 
 		$grid=$this->add('Grid');
 		$emp = $this->add($department_employees);
+		
 		$emp->addExpression('is_team_leader')->set(function($m,$q)use($team_id){
 			$t_emps = $m->add('xProduction/Model_EmployeeTeamAssociation',array('table_alias'=>'temp'));
 			$t_emps->addCondition('team_id',$team_id);

@@ -116,6 +116,9 @@ class Model_Item extends \Model_Table{
 		$this->hasMany('xShop/ItemDepartmentAssociation','item_id');
 		$this->hasMany('xShop/ItemComposition','item_id',null,'CompositionItems');
 		$this->hasMany('xShop/ItemComposition','composition_item_id',null,'UsedInComposition');
+		$this->hasMany('xStore/TransferNoteItem','item_id');
+		$this->hasMany('xStore/MaterialRequestItem','item_id');
+		$this->hasMany('xStore/PurchaseMaterialRequestItem','item_id');
 
 		$this->hasMany('xShop/QuantitySet','item_id');
 		$this->hasMany('xShop/CustomRate','item_id');
