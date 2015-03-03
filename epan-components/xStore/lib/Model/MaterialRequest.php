@@ -6,7 +6,7 @@ class Model_MaterialRequest extends \Model_Document {
 	public $table = 'xstore_material_request';
 
 	public $root_document_name='xStore\MaterialRequest';
-	public $status = array('draft','submitted','approved','processing','processed','shipping',
+	public $status = array('draft','submitted','assigned','processing','processed','forwarded',
 							'complete','cancel','return');
 
 	function init(){
