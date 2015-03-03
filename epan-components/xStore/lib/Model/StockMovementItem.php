@@ -1,11 +1,11 @@
 <?php
 namespace xStore;
-class Model_TransferNoteItem extends \Model_Table{
-	public $table="xstore_transfer_note_items";
+class Model_StockMovementItem extends \Model_Table{
+	public $table="xstore_stoc_movement_items";
 	function init(){
 		parent::init();
 
-		$this->hasOne('xStore/TransferNote','transfer_note_id');
+		$this->hasOne('xStore/StockMovement','stock_movement_id');
 		$this->hasOne('xShop/Item','item_id');
 		
 		$this->addField('qty');

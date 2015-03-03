@@ -11,7 +11,7 @@ class Model_MaterialRequestItem extends \Model_Table{
 		
 		$this->addField('qty');
 
-		$this->add('dynamic_model_/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 }

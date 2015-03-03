@@ -5,8 +5,8 @@ class page_xPurchase_page_owner_materialrequest extends page_xPurchase_page_owne
 	function init(){
 		parent::init();
 
-
 		$crud=$this->app->layout->add('CRUD');
-		$crud->setModel('xPurchase/Model_PurchaseMaterialRequest');
+		$crud->setModel('xPurchase/PurchaseMaterialRequest');
+
 	}
 }
