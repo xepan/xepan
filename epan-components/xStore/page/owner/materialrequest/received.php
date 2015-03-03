@@ -9,6 +9,8 @@ class page_xStore_page_owner_materialrequest_received extends page_xStore_page_o
 		$model->addCondition('department_id',$store->id);
 		$crud=$this->add('CRUD');
 		$crud->setModel($model);
+		$crud->add('xHR/Controller_Acl');
+		$crud->add('xHR/Controller_Acl');
 	}
 	
 }
