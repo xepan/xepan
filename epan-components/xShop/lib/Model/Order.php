@@ -4,7 +4,7 @@ namespace xShop;
 
 class Model_Order extends \Model_Document{
 	public $table='xshop_orders';
-	public $status = array('draft','submitted','approved','processing','processed','shipping',
+	public $status = array('draft','submitted','approved','processing','processed','dispatched',
 							'complete','cancel','return');
 	public $root_document_name = 'Order';
 

@@ -54,5 +54,7 @@ class Model_MaterialRequest extends \Model_Document {
 		$mr_item->save();
 	}
 
-	
+	function mark_processed_page($page){
+		$page->add('View')->set('do what is needed here');
+	}
 }		
