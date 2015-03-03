@@ -220,10 +220,29 @@ class Model_Order extends \Model_Document{
 		
 	}	
 
+
 	function submit(){
 		$this['status']='submitted';
 		$this->saveAs('xShop/Model_Order');
 		return $this;
+	}
+
+	function reject(){
+		$this['status']='submitted';
+		$this->saveAs('xShop/Model_Order');
+		return $this;
+	}
+
+	function approve_page($page){
+		$page->add('View_Error')->set('Are you sure?');
+		$form = $page->add('Form');
+		$form->addSubmit('Yes');
+
+		if($form->isSubmitted()){
+			$this->approve();
+			return true;
+		}
+		return false;
 	}
 
 	function approve(){

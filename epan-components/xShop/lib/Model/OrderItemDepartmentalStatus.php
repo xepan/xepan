@@ -54,6 +54,10 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 		
 		$new_job_card['orderitem_id'] = $this['orderitem_id'];
 		$new_job_card['department_id'] = $this['department_id'];
+		
+		$sales_dept = $this->add('xHR/Model_Department')->loadBy('related_application_namespace','xShop');
+		$new_job_card['from_department_id'] = $sales_dept->id;
+
 		$new_job_card['name']=rand(1000,9999);
 		$new_job_card->save();
 		return $new_job_card;

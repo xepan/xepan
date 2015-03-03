@@ -137,56 +137,40 @@ class Controller_Acl extends \AbstractController {
 			$this->filterGrid('delete');
 		}
 
-		if($this->permissions['can_submit'] != 'No' AND $this->owner->model->hasMethod('submit')){
-			$this->owner->addAction('submit',array('toolbar'=>false));		
-			$this->filterGrid('submit');
+		if($this->permissions['can_submit'] != 'No'){
+			$this->manageAction('submit');
 		}
 	
 		if($this->permissions['can_select_outsource'] !='No'){
-			$col_name = $this->addOutSourcePartiesPage();
-			// $this->filterGrid($col_name);
+			$this->manageAction('select_outsource');
 		}		
 
-		if($this->permissions['can_approve'] !='No' AND $this->owner->model->hasMethod('approve')){
-			$this->owner->addAction('approve',array('toolbar'=>false));		
-			$this->filterGrid('approve');
+		if($this->permissions['can_approve'] !='No'){
+			$this->manageAction('approve');
 		}	
 		
-		if($this->permissions['can_reject'] !='No'  AND $this->owner->model->hasMethod('reject')){
-			$this->owner->addAction('reject',array('toolbar'=>false));		
-			$this->filterGrid('reject');
+		if($this->permissions['can_reject'] !='No'){
+			$this->manageAction('reject');
 		}
 
 		if($this->permissions['can_assign'] !='No'){			
-			$column_name = $this->addAssignPage();
-			$this->filterGrid($column_name);
+			$this->manageAction('assign');
 		}
 
 		if($this->permissions['can_receive'] AND $this->owner->model->hasMethod('receive')){
-			$this->owner->addAction('receive',array('toolbar'=>false));		
-			$this->filterGrid('receive');
+			$this->manageAction('receive');
 		}
 
 		if($this->permissions['can_forward'] !='No' AND $this->owner->model->hasMethod('forward')){
-			$this->owner->addAction('forward',array('toolbar'=>false));		
-			$this->filterGrid('forward');
+			$this->manageAction('forward');
 		}
 
 		if($this->permissions['can_start_processing'] !='No' AND $this->owner->model->hasMethod('start_processing')){
-			$this->owner->addAction('start_processing',array('toolbar'=>false));		
-			$this->filterGrid('start_processing');
+			$this->manageAction('start_processing');
 		}
 
 		if($this->permissions['can_mark_processed'] !='No'){
-			if($this->owner->model->hasMethod('mark_processed_page')){
-				$p = $this->owner->addFrame('mark_processed');
-				if($p){
-					$this->owner->model->mark_processed_page($p);
-				}
-			}else{
-				$this->owner->addAction('mark_processed',array('toolbar'=>false));
-				$this->filterGrid('mark_processed');
-			}
+			$this->manageAction('mark_processed');
 		}
 
 		if($this->permissions['can_manage_tasks'] !='No'){
@@ -231,6 +215,23 @@ class Controller_Acl extends \AbstractController {
 
 	function doVIEW(){
 
+	}
+
+	function manageAction($action_name){
+		if($this->owner->model->hasMethod($action_name.'_page')){
+			$action_page_function = $action_name.'_page';
+			$p = $this->owner->addFrame(ucwords($action_name));
+			if($p){
+				$this->owner->model->load($this->owner->id);
+				if($this->owner->model->$action_page_function($p)){
+					$this->owner->js()->univ()->closeDialog()->owner->js()->reload()->execute();
+				}
+			}
+			$this->filterGrid('fr_'.$this->api->normalizeName($action_name));
+		}elseif($this->owner->model->hasMethod($action_name)){
+			$this->owner->addAction($action_name,array('toolbar'=>false));		
+			$this->filterGrid($action_name);
+		}
 	}
 
 	function filterModel($filter_column='created_by_id'){

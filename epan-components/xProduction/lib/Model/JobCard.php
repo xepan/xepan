@@ -12,6 +12,7 @@ class Model_JobCard extends \Model_Document{
 		// hasOne OrderItemDepartment Association id
 		$this->hasOne('xShop/OrderDetails','orderitem_id');
 		$this->hasOne('xHR/Department','department_id');
+		$this->hasOne('xHR/Department','from_department_id');
 		$this->hasOne('xShop/OrderItemDepartmentalStatus','orderitem_departmental_status_id');
 		
 		$this->addField('type')->enum(array('JobCard','MaterialRequest'))->defaultValue('JobCard');
