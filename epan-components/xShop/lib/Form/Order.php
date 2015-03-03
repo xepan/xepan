@@ -7,7 +7,9 @@ class Form_Order extends \Form_Stacked {
 	function init(){
 		parent::init();
 
-		$this->createForm();
+		if(in_array($this->api->stickyGET($this->owner->short_name),array('add','edit'))){
+			$this->createForm();
+		}
 
 		$this->addHook('submit',function($form){
 			// save all values to order
@@ -107,7 +109,7 @@ class Form_Order extends \Form_Stacked {
 	}
 
 	function recursiveRender(){
-		if($this->model->loaded()){
+		if($this->model AND $this->model->loaded()){
 			// fill form values from model // editing
 			$this->member_field->set($this->model['member_id']);
 			$this->name_field->set($this->model['name']);

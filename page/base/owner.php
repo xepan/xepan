@@ -63,11 +63,11 @@ class page_base_owner extends Page {
 		$marketing_m->addItem(array('Leads','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_leads');
 		$marketing_m->addItem(array('Configurations','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_config');
 
-		// $exec_m = $marketing_m->addMenu('Executors');
-		// $exec_m->addItem(array('Start Grabbing Data','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_mrkt_dtgrb_exec');
-		// $exec_m->addItem(array('Start Sending Mass Email','icon'=>'gauge-1'),'xMarketingCampaign_page_emailexec');
-		// $exec_m->addItem(array('Update Social Activities','icon'=>'gauge-1'),'xMarketingCampaign_page_updatesocialactivityexec');
-		// $exec_m->addItem(array('Scheduled Emails from Campaign','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_campaignexec');
+		$exec_m = $marketing_m->addMenu('Executors');
+		$exec_m->addItem(array('Start Grabbing Data','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_mrkt_dtgrb_exec');
+		$exec_m->addItem(array('Start Sending Mass Email','icon'=>'gauge-1'),'xMarketingCampaign_page_emailexec');
+		$exec_m->addItem(array('Update Social Activities','icon'=>'gauge-1'),'xMarketingCampaign_page_updatesocialactivityexec');
+		$exec_m->addItem(array('Scheduled Emails from Campaign','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_campaignexec');
 
 
 		$sales_m = $m->addMenu('Sales');
@@ -93,7 +93,9 @@ class page_base_owner extends Page {
 			;
 
 		foreach($production_depts as $d){
-			$production_m->addItem(array($d['name'],'icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
+			$production_m->addItem(array($d['name']. ' Job Status','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
+			$production_m->addItem(array($d['name']. ' Material Request Notes','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
+			$production_m->addItem(array($d['name']. ' Material Requests','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
 		}
 
 		$crm_m = $m->addMenu('CRM');
