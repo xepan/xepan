@@ -120,6 +120,7 @@ class page_base_owner extends Page {
 		$store_m = $m->addMenu('Store');
 		$store_m->addItem(array('Stock','icon'=>'gauge-1'),'xStore_page_owner_stock');
 		$store_m->addItem(array('Material Request','icon'=>'gauge-1'),'xStore_page_owner_materialrequest');
+		$store_m->addItem(array('Warehouse','icon'=>'gauge-1'),'xStore_page_owner_warehouse');
 		
 		
 

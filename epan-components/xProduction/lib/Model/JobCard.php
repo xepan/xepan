@@ -39,29 +39,25 @@ class Model_JobCard extends \Model_Document{
 
 	}
 
-	// function assignTo($employee){
-	// 	// create log/communication 
-	// 	$temp=$this->add('xProduction/Model_JobCardEmployeeAssociation');
-	// 	$temp->addCondition('jobcard_id',$this->id);
-	// 	$temp->addCondition('employee_id',$employee->id);
-	// 	$temp->tryLoadAny();
-	// 	$temp->save();
+	function createFromOrder($order_item, $order_dept_status ){
+		$new_job_card = $this;
 
-	// 	$this['status']='assigned';
-	// 	$this->saveAs('xProduction/Model_JobCard');
-	// 	// throw $this->exception('To Do');
-	// }
+		$new_job_card->addCondition('orderitem_departmental_status_id',$order_dept_status->id);
+		$new_job_card->tryLoadAny();
 
-	// function getAssociatedEmployees(){
-	// 	$associate_employees= $this->ref('xProduction/JobCardEmployeeAssociation')->_dsql()->del('fields')->field('employee_id')->getAll();
-	// 	return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associate_employees)),false);
-	// }
+		if($new_job_card->loaded())
+			return false;
+		
+		$new_job_card['orderitem_id'] = $order_item->id;
+		$new_job_card['department_id'] = $order_dept_status['department_id'];
+		
+		$sales_dept = $this->add('xHR/Model_Department')->loadBy('related_application_namespace','xShop');
+		$new_job_card['from_department_id'] = $sales_dept->id;
 
-	// function removeAllEmployees(){
-	// 	$this->ref('xProduction/JobCardEmployeeAssociation')->deleteAll();
-	// 	$this['status']='received'; // back to received .. not assigned
-	// 	$this->saveAs('xProduction/Model_JobCard');
-	// }
+		$new_job_card['name']=rand(1000,9999);
+		$new_job_card->save();
+
+	}
 
 	function previousDeptJobCard(){
 		
