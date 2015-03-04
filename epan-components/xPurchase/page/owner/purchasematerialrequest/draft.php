@@ -8,6 +8,10 @@ class page_xPurchase_page_owner_purchasematerialrequest_draft extends page_xPurc
 
 		$crud=$this->add('CRUD');
 		$crud->setModel($model);
+
+		$c = $crud->addRef('xPurchase/PurchaseMaterialRequestItem');
+		
+
 		$crud->add('xHR/Controller_Acl');
 	}
 	
