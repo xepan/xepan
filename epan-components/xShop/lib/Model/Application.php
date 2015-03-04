@@ -6,6 +6,7 @@ class Model_Application extends \Model_Document{
 	public $status=array();
 	public $document_name=null;
 	public $root_document_name="Application";
+	
 	function init(){
 		parent::init();
 
@@ -26,7 +27,7 @@ class Model_Application extends \Model_Document{
 		$this->addHook('beforeDelete',$this);
 
 		
-		// $this->add('dynamic_model/Controller_AutoCreator'); 
+		$this->add('dynamic_model/Controller_AutoCreator'); 
 	}
 
 	function beforeDelete($m){

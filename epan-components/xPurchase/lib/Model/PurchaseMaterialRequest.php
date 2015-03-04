@@ -1,12 +1,15 @@
 <?php
 namespace xPurchase;
 
-class Model_PurchaseMaterialRequest extends \Model_Table{
+class Model_PurchaseMaterialRequest extends \Model_Document{
 	public $table="xpurcahse_material_request";
+	public $status=array('draft','approved','rejected','submitted');
+	public $root_document_name='xStore\PurchaseMaterialRequest';
 	function init(){
 		parent::init();
+
 		$this->hasOne('xHR/Department','from_department_id');
-		$this->hasOne('Document','related_document_id');
+		$this->addField('related_document_id');
 		$this->hasOne('xShop/Order','order_id');
 		
 		$this->addField('name');

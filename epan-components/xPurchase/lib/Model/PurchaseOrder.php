@@ -1,8 +1,10 @@
 <?php
 namespace xPurchase;
 
-class Model_PurchaseOrder extends \Model_Table{
+class Model_PurchaseOrder extends \Model_Document{
 	public $table="xpurchase_purchase_order";
+	public $status=array('draft','approved','rejected','submitted');
+	public $root_document_name='xStore\PurchaseOrder';
 	function init(){
 		parent::init();
 

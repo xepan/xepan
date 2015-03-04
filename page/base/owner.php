@@ -137,7 +137,7 @@ class page_base_owner extends Page {
 				$my_menu = $m->addMenu('My',$dept_namespace.'/Menu_User');
 				// if user ->post->can_create_teams
 					$my_menu->addItem("Teams",'.');
-					$my_menu->addItem("My Material Requirments",'.');
+					$my_menu->addItem("My Material Requirments",'xProduction_page_owner_materialrequirment');
 			// }
 		}
 

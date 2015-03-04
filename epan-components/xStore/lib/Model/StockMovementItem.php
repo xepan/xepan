@@ -1,7 +1,7 @@
 <?php
 namespace xStore;
 class Model_StockMovementItem extends \Model_Table{
-	public $table="xstore_stoc_movement_items";
+	public $table="xstore_stock_movement_items";
 	function init(){
 		parent::init();
 
@@ -11,5 +11,9 @@ class Model_StockMovementItem extends \Model_Table{
 		$this->addField('qty');
 
 		$this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function item(){
+		return $this->ref('item_id');
 	}
 }

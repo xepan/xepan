@@ -580,6 +580,10 @@ class Model_Item extends \Model_Table{
 		return $this->add('xProduction/Model_Department')->addCondition('id',$this->getAssociatedDepartment());
 	}
 
+	function allowNegativeStock(){
+		return $this['allow_negative_stock'];
+	}
+
 
 }	
 

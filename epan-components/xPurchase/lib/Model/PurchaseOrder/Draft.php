@@ -1,6 +1,6 @@
 <?php
-namespace xStore;
-class Model_MaterialRequest_Draft extends Model_MaterialRequest{
+namespace xPurchase;
+class Model_PurchaseOrder_Draft extends Model_PurchaseOrder{
 	function init(){
 		parent::init();
 		$this->addCondition('status','draft');
