@@ -3,7 +3,7 @@ namespace xPurchase;
 
 class Model_PurchaseOrder extends \Model_Document{
 	public $table="xpurchase_purchase_order";
-	public $status=array('draft','approved','rejected','submitted');
+	public $status=array('draft','approved','processing','submitted','completed');
 	public $root_document_name='xStore\PurchaseOrder';
 	function init(){
 		parent::init();
@@ -18,4 +18,32 @@ class Model_PurchaseOrder extends \Model_Document{
 
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+	function submit(){
+		$this['status']='submitted';
+		$this->saveAndUnload();
+		//return $this;
+	}
+	function approve(){
+		
+		$this['status']='approved';
+		$this->saveAndUnload();
+		
+	}
+
+	function start_processing_page($page){
+		$page->add('View_Error')->set('supplier ka nam btao phle');
+		$form = $page->add('Form');
+		$form->addSubmit('Sendmail');
+
+		// if($form->isSubmitted()){
+		// 	$this->approve();
+		// 	return true;
+		// }
+		$this['status']='processing';
+		$this->saveAndUnload();
+	}
+	
+
 }		
+

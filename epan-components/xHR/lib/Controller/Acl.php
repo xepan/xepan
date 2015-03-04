@@ -157,15 +157,15 @@ class Controller_Acl extends \AbstractController {
 			$this->manageAction('assign');
 		}
 
-		if($this->permissions['can_receive'] AND $this->owner->model->hasMethod('receive')){
+		if($this->permissions['can_receive']){
 			$this->manageAction('receive');
 		}
 
-		if($this->permissions['can_forward'] !='No' AND $this->owner->model->hasMethod('forward')){
+		if($this->permissions['can_forward'] !='No'){
 			$this->manageAction('forward');
 		}
 
-		if($this->permissions['can_start_processing'] !='No' AND $this->owner->model->hasMethod('start_processing')){
+		if($this->permissions['can_start_processing'] !='No'){
 			$this->manageAction('start_processing');
 		}
 
@@ -218,6 +218,7 @@ class Controller_Acl extends \AbstractController {
 	}
 
 	function manageAction($action_name){
+
 		if($this->owner->model->hasMethod($action_name.'_page')){
 			$action_page_function = $action_name.'_page';
 			$p = $this->owner->addFrame(ucwords($action_name));
