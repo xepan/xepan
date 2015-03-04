@@ -48,6 +48,7 @@ class page_base_owner extends Page {
 		$hr_m->addItem(array('Employees','icon'=>'gauge-1'),'xHR_page_owner_employees');
 		$hr_m->addItem(array('Employees Attendence','icon'=>'gauge-1'),'xHR_page_owner_employeeattendence');
 		$hr_m->addItem(array('Employees Leave','icon'=>'gauge-1'),'xHR_page_owner_employeeleave');
+		$hr_m->addItem(array('Material Request','icon'=>'gauge-1'),'xStore_page_owner_materialrequest');
 		
 		$hr_m->addItem(array('Setup','icon'=>'cog'),'xHR_page_owner_setup');
 
@@ -62,6 +63,7 @@ class page_base_owner extends Page {
 		$marketing_m->addItem(array('Scheduled Jobs','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_scheduledjobs');
 		$marketing_m->addItem(array('Leads','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_leads');
 		$marketing_m->addItem(array('Configurations','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_config');
+		$marketing_m->addItem(array('Material Request','icon'=>'gauge-1'),'xStore_page_owner_materialrequest');
 
 		$exec_m = $marketing_m->addMenu('Executors');
 		$exec_m->addItem(array('Start Grabbing Data','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_mrkt_dtgrb_exec');
@@ -83,6 +85,7 @@ class page_base_owner extends Page {
 		$sales_m->addItem(array('Order','icon'=>'gauge-1'),'xShop_page_owner_order');
 		$sales_m->addItem(array('AddBlock','icon'=>'gauge-1'),'xShop_page_owner_addblock');
 		$sales_m->addItem(array('Payment Gateway Config','icon'=>'gauge-1'),'xShop_page_owner_paygateconfig');
+		$sales_m->addItem(array('Material Request','icon'=>'gauge-1'),'xStore_page_owner_materialrequest');
 		
 		$production_m = $m->addMenu('Production');
 		$production_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xProduction_page_owner_user_dashboard');
@@ -99,10 +102,12 @@ class page_base_owner extends Page {
 		}
 
 		$crm_m = $m->addMenu('CRM');
+		$crm_m->addItem(array('Material Request','icon'=>'gauge-1'),'xStore_page_owner_materialrequest');
 		
 
 
 		$accounts_m = $m->addMenu('Accounts');
+		$accounts_m->addItem(array('Material Request','icon'=>'gauge-1'),'xStore_page_owner_materialrequest');
 		
 
 		$purchase_m = $m->addMenu('Purchase');
