@@ -9,6 +9,11 @@ class page_xPurchase_page_owner_purchasematerialrequest_draft extends page_xPurc
 		$crud=$this->add('CRUD');
 		$crud->setModel($model);
 		$crud->add('xHR/Controller_Acl');
+
+	}
+
+	function purchaseOrderItem(){
+		return $this->ref('xPurchase/PurchaseOrderItem');
 	}
 	
 }

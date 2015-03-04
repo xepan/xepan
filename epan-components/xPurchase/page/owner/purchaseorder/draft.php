@@ -8,7 +8,10 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
 
 		$crud=$this->add('CRUD');
 		$crud->setModel($model);
+		$crud->addRef('xPurchase/PurchaseOrderItem');
 		$crud->add('xHR/Controller_Acl');
+
 	}
+
 	
 }
