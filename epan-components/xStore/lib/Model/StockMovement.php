@@ -71,6 +71,9 @@ class Model_StockMovement extends \Model_Document{
 	}
 
 	function acceptMaterial(){
-		
+		foreach ($this->itemrows() as $ir) {
+			$this->toWarehouse()->addStockItem($ir->item(),$ir['qty']);
+		}
+		return true;
 	}
 }

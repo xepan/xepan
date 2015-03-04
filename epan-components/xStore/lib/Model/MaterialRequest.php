@@ -139,6 +139,19 @@ class Model_MaterialRequest extends \Model_Document {
 		$page->add('View')->set('stock se minus kar do ... status processed kar do');
 	}
 
+	function submit_page($p){
+		$p->add('View')->set('Hello');
+		$form = $p->add('Form');
+		$form->addSubmit();
+
+		if($form->isSubmitted()){
+			return true;
+		}
+		// $this['status']='submitted';
+		// $this->saveAndUnload();
+		return false;
+	}
+
 	function approve_page($p){
 		$p->add('View_Success')->set('Show Related Challan HEre');
 		$form = $p->add('Form');
@@ -148,6 +161,8 @@ class Model_MaterialRequest extends \Model_Document {
 		if($form->isSubmitted()){
 			if($form->isClicked($accept_btn)){
 				$this->relatedChallan()->acceptMaterial();
+				$this['status']='completed';
+				$this->saveAs('xStore/Model_MaterialRequest_Completed');
 			}else{
 				throw new \Exception("Rejected", 1);
 

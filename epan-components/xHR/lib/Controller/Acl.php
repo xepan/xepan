@@ -223,8 +223,11 @@ class Controller_Acl extends \AbstractController {
 			$p = $this->owner->addFrame(ucwords($action_name));
 			if($p){
 				$this->owner->model->load($this->owner->id);
-				if($this->owner->model->$action_page_function($p)){
-					$this->owner->js()->univ()->closeDialog()->owner->js()->reload()->execute();
+				if(!$_GET['xaction_done'] AND $this->owner->model->$action_page_function($p)){
+					$js=array();
+					$js[] = $p->js()->univ()->closeDialog();
+					$js[] = $this->owner->js()->reload();
+					$this->owner->owner->js(null,$js)->execute();
 				}
 			}
 			$this->filterGrid('fr_'.$this->api->normalizeName($action_name));

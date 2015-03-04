@@ -1,8 +1,11 @@
 <?php
 
 namespace xStore;
-class Model_MaterialRequestItem extends \Model_Table{
+class Model_MaterialRequestItem extends \Model_Document{
 	public $table="xstore_material_request_items";
+	public $status=array();
+	public $root_document_name='xStore\MaterialRequestItem';
+
 	function init(){
 		parent::init();
 
