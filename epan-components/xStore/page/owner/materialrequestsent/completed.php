@@ -1,6 +1,6 @@
 <?php
 
-class page_xStore_page_owner_materialrequestsent_complete extends page_xStore_page_owner_main{
+class page_xStore_page_owner_materialrequestsent_completed extends page_xStore_page_owner_main{
 	function init(){
 		parent::init();
 

@@ -2,7 +2,7 @@
 
 namespace xStore;
 
-class Model_MaterialRequesSent_Completed extends Model_MaterialRequestSent{
+class Model_MaterialRequestSent_Completed extends Model_MaterialRequestSent{
 	
 	function init(){
 		parent::init();
