@@ -187,6 +187,14 @@ class Model_Department extends \Model_Table{
 		$temp->addCondition('name','CRM')->loadAny();
 		$this->load($temp->id);
 	}
+
+	function loadAccounts(){
+		if($this->loaded())
+			$this->unload();
+		$temp = $this->add('xHR/Model_Department');
+		$temp->addCondition('name','Accounts')->loadAny();
+		$this->load($temp->id);
+	}
 	
 	function loadPurchase(){
 		if($this->loaded())
@@ -201,6 +209,13 @@ class Model_Department extends \Model_Table{
 			$this->unload();
 		$temp = $this->add('xHR/Model_Department');
 		$temp->addCondition('name','Store')->loadAny();
+		$this->load($temp->id);
+	}
+	function loadDispatch(){
+		if($this->loaded())
+			$this->unload();
+		$temp = $this->add('xHR/Model_Department');
+		$temp->addCondition('name','Dispatch And Delivery')->loadAny();
 		$this->load($temp->id);
 	}
 
