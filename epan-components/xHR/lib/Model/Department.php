@@ -149,9 +149,16 @@ class Model_Department extends \Model_Table{
 
 	function loadPurchase(){
 		if($this->loaded())
-			throw $this->exception('Already loaded. cannot load purchase department');
+			$this->unload();
 
 		return $this->addCondition('name','Purchase')->loadAny();
+	}
+
+	function loadHR(){
+		if($this->loaded())
+			$this->unload();
+
+		return $this->addCondition('name','HR')->loadAny();
 	}
 
 	function warehouse(){
