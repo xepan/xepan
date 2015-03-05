@@ -11,7 +11,8 @@ class page_xPurchase_page_owner_materialrequest extends page_xPurchase_page_owne
 			$tabs=$this->app->layout->add('Tabs');
 			$tabs->addTabURL('xPurchase_page_owner_purchasematerialrequest_draft','Draft');
 			$tabs->addTabURL('xPurchase_page_owner_purchasematerialrequest_submitted','Submitted');
-			$tabs->addTabURL('xPurchase_page_owner_purchasematerialrequest_approved','Approved');
+			$tabs->addTabURL('xPurchase_page_owner_purchasematerialrequest_processed','Processed');
+			$tabs->addTabURL('xPurchase_page_owner_purchasematerialrequest_completed','Completed');
 			$tabs->addTabURL('xPurchase_page_owner_purchasematerialrequest_rejected','Rejected');
 	}
 

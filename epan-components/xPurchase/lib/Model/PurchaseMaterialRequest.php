@@ -3,7 +3,7 @@ namespace xPurchase;
 
 class Model_PurchaseMaterialRequest extends \Model_Document{
 	public $table="xpurcahse_material_request";
-	public $status=array('draft','approved','rejected','submitted');
+	public $status=array('draft','approved','rejected','submitted','processed','completed');
 	public $root_document_name='xStore\PurchaseMaterialRequest';
 	function init(){
 		parent::init();
