@@ -47,34 +47,34 @@ class page_base_owner extends Page {
 		$dept_model->loadHR();
 
 		$hr_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-		$hr_m->addItem(array('Departments','icon'=>'gauge-1'),'xHR_page_owner_department');
-		$hr_m->addItem(array('Employees','icon'=>'gauge-1'),'xHR_page_owner_employees');
-		$hr_m->addItem(array('Employees Attendence','icon'=>'gauge-1'),'xHR_page_owner_employeeattendence');
-		$hr_m->addItem(array('Employees Leave','icon'=>'gauge-1'),'xHR_page_owner_employeeleave');
-		$hr_m->addItem(array('Material Request','icon'=>'gauge-1'),'xStore_page_owner_materialrequest');
+		$hr_m->addItem(array('Departments','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_department',array('department_id'=>$dept_model->id)));
+		$hr_m->addItem(array('Employees','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_employees',array('department_id'=>$dept_model->id)));
+		$hr_m->addItem(array('Employees Attendence','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_employeeattendence',array('department_id'=>$dept_model->id)));
+		$hr_m->addItem(array('Employees Leave','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_employeeleave',array('department_id'=>$dept_model->id)));
+		$hr_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 		
-		$hr_m->addItem(array('Setup','icon'=>'cog'),'xHR_page_owner_setup');
+		$hr_m->addItem(array('Setup','icon'=>'cog'),$this->api->url('xHR_page_owner_setup',array('department_id'=>$dept_model->id)));
 
 
 		$marketing_m = $m->addMenu('Marketing');
 		$dept_model->loadMarketing();
 		
 		$marketing_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-		$marketing_m->addItem(array('Manage Contacts','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_emailcontacts');
-		$marketing_m->addItem(array('Data Grabber','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb');
-		$marketing_m->addItem(array('Manage NewsLetters','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_newsletters');
-		$marketing_m->addItem(array('Add SocialContent','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_socialcontents');
-		$marketing_m->addItem(array('Campaigns','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_campaigns');
-		$marketing_m->addItem(array('Scheduled Jobs','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_scheduledjobs');
-		$marketing_m->addItem(array('Leads','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_leads');
-		$marketing_m->addItem(array('Configurations','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_config');
-		$marketing_m->addItem(array('Material Request','icon'=>'gauge-1'),'xStore_page_owner_materialrequest');
+		$marketing_m->addItem(array('Manage Contacts','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_emailcontacts',array('department_id'=>$dept_model->id)));
+		$marketing_m->addItem(array('Data Grabber','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb',array('department_id'=>$dept_model->id)));
+		$marketing_m->addItem(array('Manage NewsLetters','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_newsletters',array('department_id'=>$dept_model->id)));
+		$marketing_m->addItem(array('Add SocialContent','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_socialcontents',array('department_id'=>$dept_model->id)));
+		$marketing_m->addItem(array('Campaigns','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_campaigns',array('department_id'=>$dept_model->id)));
+		$marketing_m->addItem(array('Scheduled Jobs','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_scheduledjobs',array('department_id'=>$dept_model->id)));
+		$marketing_m->addItem(array('Leads','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_leads',array('department_id'=>$dept_model->id)));
+		$marketing_m->addItem(array('Configurations','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_config',array('department_id'=>$dept_model->id)));
+		$marketing_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 
 		$exec_m = $marketing_m->addMenu('Executors');
-		$exec_m->addItem(array('Start Grabbing Data','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_mrkt_dtgrb_exec');
-		$exec_m->addItem(array('Start Sending Mass Email','icon'=>'gauge-1'),'xMarketingCampaign_page_emailexec');
-		$exec_m->addItem(array('Update Social Activities','icon'=>'gauge-1'),'xMarketingCampaign_page_updatesocialactivityexec');
-		$exec_m->addItem(array('Scheduled Emails from Campaign','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_campaignexec');
+		$exec_m->addItem(array('Start Grabbing Data','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_exec',array('department_id'=>$dept_model->id)));
+		$exec_m->addItem(array('Start Sending Mass Email','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_emailexec',array('department_id'=>$dept_model->id)));
+		$exec_m->addItem(array('Update Social Activities','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_updatesocialactivityexec',array('department_id'=>$dept_model->id)));
+		$exec_m->addItem(array('Scheduled Emails from Campaign','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_campaignexec',array('department_id'=>$dept_model->id)));
 
 
 		$sales_m = $m->addMenu('Sales');
@@ -82,18 +82,18 @@ class page_base_owner extends Page {
 
 
 		$sales_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-		$sales_m->addItem(array('Oppertunity','icon'=>'gauge-1'),'xShop_page_owner_oppertunity');
-		$sales_m->addItem(array('Quotation','icon'=>'gauge-1'),'xShop_page_owner_quotation');
-		$sales_m->addItem(array('Shops & Blogs','icon'=>'gauge-1'),'xShop_page_owner_shopsnblogs');
-		$sales_m->addItem(array('Category','icon'=>'gauge-1'),'xShop_page_owner_category');
-		$sales_m->addItem(array('Item','icon'=>'gauge-1'),'xShop_page_owner_item');
-		$sales_m->addItem(array('Affiliate','icon'=>'gauge-1'),'xShop_page_owner_afflilate');
-		$sales_m->addItem(array('E-Voucher','icon'=>'gauge-1'),'xShop_page_owner_voucher');
-		$sales_m->addItem(array('Member','icon'=>'gauge-1'),'xShop_page_owner_member');
-		$sales_m->addItem(array('Order','icon'=>'gauge-1'),'xShop_page_owner_order');
-		$sales_m->addItem(array('AddBlock','icon'=>'gauge-1'),'xShop_page_owner_addblock');
-		$sales_m->addItem(array('Payment Gateway Config','icon'=>'gauge-1'),'xShop_page_owner_paygateconfig');
-		$sales_m->addItem(array('Material Request','icon'=>'gauge-1'),'xStore_page_owner_materialrequest');
+		$sales_m->addItem(array('Oppertunity','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_oppertunity',array('department_id'=>$dept_model->id)));
+		$sales_m->addItem(array('Quotation','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_quotation',array('department_id'=>$dept_model->id)));
+		$sales_m->addItem(array('Shops & Blogs','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_shopsnblogs',array('department_id'=>$dept_model->id)));
+		$sales_m->addItem(array('Category','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_category',array('department_id'=>$dept_model->id)));
+		$sales_m->addItem(array('Item','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_item',array('department_id'=>$dept_model->id)));
+		$sales_m->addItem(array('Affiliate','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
+		$sales_m->addItem(array('E-Voucher','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_voucher',array('department_id'=>$dept_model->id)));
+		$sales_m->addItem(array('Member','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_member',array('department_id'=>$dept_model->id)));
+		$sales_m->addItem(array('Order','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_order',array('department_id'=>$dept_model->id)));
+		$sales_m->addItem(array('AddBlock','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_addblock',array('department_id'=>$dept_model->id)));
+		$sales_m->addItem(array('Payment Gateway Config','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_paygateconfig',array('department_id'=>$dept_model->id)));
+		$sales_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 		
 
 
@@ -101,8 +101,8 @@ class page_base_owner extends Page {
 
 		$production_m = $m->addMenu('Production');
 
-		$production_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dashboard'));
-		$production_m->addItem(array('OutSource Party','icon'=>'gauge-1'),'xProduction_page_owner_outsourceparties');
+		$production_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+		$production_m->addItem(array('OutSource Party','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_outsourceparties',array('department_id'=>$dept_model->id)));
 		$production_depts = $this->add('xHR/Model_Department')
 			->addCondition('is_production_department',true)
 			->addCondition('is_system',false)
@@ -117,22 +117,22 @@ class page_base_owner extends Page {
 		$crm_m = $m->addMenu('CRM');
 		$dept_model->loadCRM();
 		$crm_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-		$crm_m->addItem(array('Material Request','icon'=>'gauge-1'),'xStore_page_owner_materialrequest');
+		$crm_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 		
 
 
 		$accounts_m = $m->addMenu('Accounts');
 		$dept_model->loadAccounts();
 		$accounts_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-		$accounts_m->addItem(array('Material Request','icon'=>'gauge-1'),'xStore_page_owner_materialrequest');
+		$accounts_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 		
 
 		$purchase_m = $m->addMenu('Purchase');
 		$dept_model->loadPurchase();
 		$purchase_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xPurchase_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-		$purchase_m->addItem(array('Supplier','icon'=>'gauge-1'),'xPurchase_page_owner_supplier');
-		$purchase_m->addItem(array('Material Request','icon'=>'gauge-1'),'xStore_page_owner_materialrequest');
-		$purchase_m->addItem(array('Purchase Order','icon'=>'gauge-1'),'xPurchase_page_owner_purchaseorder');
+		$purchase_m->addItem(array('Supplier','icon'=>'gauge-1'),$this->api->url('xPurchase_page_owner_supplier',array('department_id'=>$dept_model->id)));
+		$purchase_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
+		$purchase_m->addItem(array('Purchase Order','icon'=>'gauge-1'),$this->api->url('xPurchase_page_owner_purchaseorder',array('department_id'=>$dept_model->id)));
 		// $purchase_m->addItem(array('Supplier','icon'=>'gauge-1'),'xPurchase_page_owner_supplier');
 
 
@@ -143,16 +143,16 @@ class page_base_owner extends Page {
 		$store_m = $m->addMenu('Store');
 		$dept_model->loadPurchase();
 		$store_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-		$store_m->addItem(array('Stock','icon'=>'gauge-1'),'xStore_page_owner_stock');
-		$store_m->addItem(array('Material Request','icon'=>'gauge-1'),'xStore_page_owner_materialrequest');
-		$store_m->addItem(array('Warehouse','icon'=>'gauge-1'),'xStore_page_owner_warehouse');
+		$store_m->addItem(array('Stock','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stock',array('department_id'=>$dept_model->id)));
+		$store_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
+		$store_m->addItem(array('Warehouse','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_warehouse',array('department_id'=>$dept_model->id)));
 		
 		
 
 		$dispatch_m = $m->addMenu('Dispatch');
 		$dept_model->loadDispatch();
 		$dispatch_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-		$dispatch_m->addItem(array('Material Request','icon'=>'gauge-1'),'xStore_page_owner_materialrequest');
+		$dispatch_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 
 
 
