@@ -152,6 +152,7 @@ class Model_MaterialRequest extends \Model_Document {
 		return false;
 	}
 
+	// Actually its Accepting send Goods
 	function approve_page($p){
 		$p->add('View_Success')->set('Show Related Challan HEre');
 		$form = $p->add('Form');

@@ -21,4 +21,8 @@ class Model_PurchaseOrderItem extends \Model_Table{
 		$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
+
+	function item(){
+		return $this->ref('item_id');
+	}
 }	

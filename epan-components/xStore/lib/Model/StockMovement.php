@@ -19,6 +19,7 @@ class Model_StockMovement extends \Model_Document{
 		$this->hasOne('xShop/MemberDetails','to_memberdetails_id');
 
 		$this->hasOne('xStore/MaterialRequest','material_request_id');
+		$this->hasOne('xPurchase/PurchaseOrder','po_id');
 		
 		$this->addField('type')->enum(array('StockTransfer','Sales','Purchase','SalesReturn','PurchaseReturn'));
 
@@ -62,11 +63,13 @@ class Model_StockMovement extends \Model_Document{
 		}
 	}
 
-	function executeSales(){
-
+	function executePurchase($add_to_stock=false){
+		if($add_to_stock){
+			$this->acceptMaterial();
+		}
 	}
 
-	function executePurchase(){
+	function executeSales(){
 
 	}
 
@@ -74,6 +77,9 @@ class Model_StockMovement extends \Model_Document{
 		foreach ($this->itemrows() as $ir) {
 			$this->toWarehouse()->addStockItem($ir->item(),$ir['qty']);
 		}
+		$this['status'] ='accepted';
+		// $this->saveAs('xStore/StockMovement_Accpted');
+		$this->saveAndUnload();
 		return true;
 	}
 }
