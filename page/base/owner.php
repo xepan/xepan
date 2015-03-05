@@ -57,7 +57,7 @@ class page_base_owner extends Page {
 
 
 		$marketing_m = $m->addMenu('Marketing');
-		$dept_model->loadxMarketing();
+		$dept_model->loadMarketing();
 		
 		$marketing_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$marketing_m->addItem(array('Manage Contacts','icon'=>'gauge-1'),'xMarketingCampaign_page_owner_emailcontacts');
@@ -100,9 +100,8 @@ class page_base_owner extends Page {
 
 
 		$production_m = $m->addMenu('Production');
-		$dept_model->loadProduction();
 
-		$production_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+		$production_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dashboard'));
 		$production_m->addItem(array('OutSource Party','icon'=>'gauge-1'),'xProduction_page_owner_outsourceparties');
 		$production_depts = $this->add('xHR/Model_Department')
 			->addCondition('is_production_department',true)
