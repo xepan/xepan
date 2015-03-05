@@ -5,4 +5,7 @@ class Model_PurchaseMaterialRequest_Draft extends Model_PurchaseMaterialRequest{
 		parent::init();
 		$this->addCondition('status','draft');
 	}
+
+		
 }	
+

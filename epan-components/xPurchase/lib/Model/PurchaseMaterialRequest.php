@@ -17,6 +17,11 @@ class Model_PurchaseMaterialRequest extends \Model_Document{
 		
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
+function submit(){
+		$this['status']='submitted';
+		$this->saveAndUnload();
+		return $this;
+	}
 
 	function itemrows(){
 		return $this->ref('xPurchase/PurchaseMaterialRequestItem');
