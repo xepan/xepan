@@ -147,18 +147,61 @@ class Model_Department extends \Model_Table{
 
 	}
 
-	function loadPurchase(){
-		if($this->loaded())
-			$this->unload();
-
-		return $this->addCondition('name','Purchase')->loadAny();
-	}
 
 	function loadHR(){
 		if($this->loaded())
 			$this->unload();
+		$temp = $this->add('xHR/Model_Department');
+		$temp->addCondition('name','HR')->loadAny();
+		$this->load($temp->id);
+	}
 
-		return $this->addCondition('name','HR')->loadAny();
+	function loadMarketing(){
+		if($this->loaded())
+			$this->unload();
+		$temp = $this->add('xHR/Model_Department');
+		$temp->addCondition('name','Marketing')->loadAny();
+		$this->load($temp->id);
+	}
+
+	function loadSales(){
+		if($this->loaded())
+			$this->unload();
+		$temp = $this->add('xHR/Model_Department');
+		$temp->addCondition('name','Sales')->loadAny();
+		$this->load($temp->id);
+	}
+
+	function loadProduction(){
+		if($this->loaded())
+			$this->unload();
+		$temp = $this->add('xHR/Model_Department');
+		$temp->addCondition('name','Production')->loadAny();
+		$this->load($temp->id);
+	}
+
+	function loadCRM(){
+		if($this->loaded())
+			$this->unload();
+		$temp = $this->add('xHR/Model_Department');
+		$temp->addCondition('name','CRM')->loadAny();
+		$this->load($temp->id);
+	}
+	
+	function loadPurchase(){
+		if($this->loaded())
+			$this->unload();
+		$temp = $this->add('xHR/Model_Department');
+		$temp->addCondition('name','Purchase')->loadAny();
+		$this->load($temp->id);
+	}
+
+	function loadStore(){
+		if($this->loaded())
+			$this->unload();
+		$temp = $this->add('xHR/Model_Department');
+		$temp->addCondition('name','Store')->loadAny();
+		$this->load($temp->id);
 	}
 
 	function warehouse(){
