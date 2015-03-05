@@ -13,6 +13,7 @@ class Model_MaterialRequest extends \Model_Document {
 		parent::init();
 
 		$this->hasOne('xHR/Department','from_department_id');
+		$this->hasOne('xHR/Department','to_department_id');
 		$this->hasOne('xShop/Order','order_id');
 
 		$this->getElement('status')->defaultValue('submitted');

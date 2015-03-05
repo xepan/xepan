@@ -41,9 +41,12 @@ class page_base_owner extends Page {
 
 		// Alert Notification 
 		// Pages and Templates		
+		$dept_model = $this->add('xHR/Model_Department');
         
 		$hr_m = $m->addMenu('HR');
-		$hr_m->addItem(array('Dashboard','icon'=>'gauge-1'),'xHR_page_owner_dashboard');
+		$dept_model->loadHR();
+
+		$hr_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$hr_m->addItem(array('Departments','icon'=>'gauge-1'),'xHR_page_owner_department');
 		$hr_m->addItem(array('Employees','icon'=>'gauge-1'),'xHR_page_owner_employees');
 		$hr_m->addItem(array('Employees Attendence','icon'=>'gauge-1'),'xHR_page_owner_employeeattendence');
