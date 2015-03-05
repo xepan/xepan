@@ -23,6 +23,10 @@ class Model_OrderDetails extends \Model_Document{
 		$this->addField('narration')->type('text')->system(false)->group('c~12~ Narration');
 		$this->addField('custom_fields')->type('text')->system(false)->group('c~12~ Custom Fields');
 
+		$this->addExpression('name')->set(function($m,$q){
+			return $m->refSQL('item_id')->fieldQuery('name');
+		});
+
 		$this->addExpression('created_by_id')->set(function($m,$q){
 			return $m->refSQL('order_id')->fieldQuery('created_by_id');
 		});

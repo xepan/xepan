@@ -5,12 +5,13 @@ class page_xHR_page_owner_department_outsource extends Page{
 		parent::init();
 
 		if(!$_GET['department_id'])
-			throw new \Exception($_GET['department_id']);
+			throw new \Exception('department_id must be in GET');
 			
 			// return;
 		
 		$department_id=$this->api->stickyGET('department_id');
 		$selected_dept_model = $this->add('xHR/Model_Department')->load($_GET['department_id']);		
+		
 		if(!$selected_dept_model->loaded())
 			return;
 		$grid=$this->add('Grid');
@@ -19,6 +20,7 @@ class page_xHR_page_owner_department_outsource extends Page{
 		// selector form
 		$form = $this->add('Form');
 		$outsource_party_field = $form->addField('hidden','outsource_party')->set(json_encode($selected_dept_model->getAssociatedOutsourceParty()));
+		$form->addField('Checkbox','department_completely_outsourced')->set($selected_dept_model['is_outsourced']);
 		$form->addSubmit('Update');
 	
 		$grid->setModel($outsource_model,array('name'));
@@ -36,6 +38,8 @@ class page_xHR_page_owner_department_outsource extends Page{
 					$selected_dept_model->removeOutSourceParty($party);
 			}	
 			// Update Search String
+			$selected_dept_model['is_outsourced']= $form['department_completely_outsourced'];
+			$selected_dept_model->save();
 			$form->js(null,$this->js()->univ()->successMessage('Updated'))->reload()->execute();
 		}		
 

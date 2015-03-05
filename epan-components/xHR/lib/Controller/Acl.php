@@ -19,6 +19,7 @@ class Controller_Acl extends \AbstractController {
 		'can_reject'=>'No',
 		'can_forward'=>'No',
 		'can_receive'=>'No',
+		'can_accept'=>'No',
 		'can_start_processing'=>'No',
 		'can_mark_processed'=>'No',
 		'can_assign'=>'No',
@@ -114,6 +115,42 @@ class Controller_Acl extends \AbstractController {
 
 	function doCRUD(){
 
+		if(!$this->owner->isEditing()){
+			$btn = $this->owner->grid->buttonset->addButton()->set('ACL APPLIED');
+			$self= $this;
+			$vp = $this->owner->add('VirtualPage')->set(function($p)use($self){
+				$can_view_column = 'can_view'; 
+				if(isset($self->owner->model->actions)){
+					foreach ($self->permissions as $action=>$acl) {
+						if(!in_array($action, array_keys($self->owner->model->actions)))
+							unset($self->permissions[$action]);
+						else{
+							if(is_array($self->owner->model->actions[$action]) AND isset($self->owner->model->actions[$action]['caption'])){
+								if($action==$can_view_column) $can_view_column = $self->owner->model->actions[$action]['caption'];
+								$self->permissions[$self->owner->model->actions[$action]['caption']] = $self->permissions[$action];
+								unset($self->permissions[$action]);
+							}
+						}
+					}
+				}
+
+				foreach ($self->permissions as $action => $value) {
+					$view_type='Success';
+					if($action == $can_view_column){
+						if($value=='No')
+							$view_type='Error';
+						elseif($value!='All')
+							$view_type='Warning';
+					}
+					$p->add('View_'.$view_type)->set($action." => " . $value);
+				}
+			});
+
+			if($btn->isClicked()){
+				$this->owner->js()->univ()->frameURL('Your ACL Status',$vp->getURL())->execute();
+			}
+		}
+
 		if($this->permissions['can_view'] != 'All'){
 			$this->filterModel(isset($this->owner->model->acl_field)?$this->owner->model->acl_field:'created_by_id');
 		}
@@ -141,11 +178,11 @@ class Controller_Acl extends \AbstractController {
 			$this->manageAction('submit');
 		}
 	
-		if($this->permissions['can_select_outsource'] !='No'){
+		if($this->permissions['can_select_outsource'] and $this->permissions['can_select_outsource'] !='No'){
 			$this->manageAction('select_outsource');
 		}		
 
-		if($this->permissions['can_approve'] !='No'){
+		if($this->permissions['can_approve'] and $this->permissions['can_approve'] !='No'){
 			$this->manageAction('approve');
 		}	
 		
@@ -159,6 +196,10 @@ class Controller_Acl extends \AbstractController {
 
 		if($this->permissions['can_receive']){
 			$this->manageAction('receive');
+		}
+
+		if($this->permissions['can_accept'] and $this->permissions['can_accept'] !='No'){
+			$this->manageAction('accept');
 		}
 
 		if($this->permissions['can_forward'] !='No'){

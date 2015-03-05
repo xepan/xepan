@@ -6,6 +6,9 @@ class page_base_owner extends Page {
 	
 	function init(){
 		parent::init();
+
+		if($_GET['department_id']) $this->api->stickyGET('department_id');
+
 		if(!$this->api->auth->isLoggedIn()){
 			$this->api->template->tryDel('admin_template');
 		}
@@ -25,8 +28,8 @@ class page_base_owner extends Page {
 		// 	$this->app->layout = $this;
 		// 	return;
 		// }
-
 		$l=$this->app->add('Layout_Fluid'); // Usermanu is added in here
+
 		$this->app->top_menu =  $m=$this->app->layout->add('Menu_Horizontal',null,'Top_Menu');
 
         $admin_m = $m->addMenu('Admin');
@@ -141,7 +144,7 @@ class page_base_owner extends Page {
 
 
 		$store_m = $m->addMenu('Store');
-		$dept_model->loadPurchase();
+		$dept_model->loadStore();
 		$store_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$store_m->addItem(array('Stock','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stock',array('department_id'=>$dept_model->id)));
 		$store_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
@@ -235,6 +238,14 @@ class page_base_owner extends Page {
 			$this->api->template->appendHTML('js_include','<link type="text/css" href="elfinder/css/theme.css" rel="stylesheet" />'."\n");
 			$this->api->template->appendHTML('js_include','<script src="elfinder/js/elfinder.full.js"></script>'."\n");
 		parent::render();
+	}
+
+	function add($object,$options=null,$spot=null,$template=null){
+
+		if( !$this->api->isAjaxOutput() and $this->api->layout){
+			return $this->api->layout->add($object,$options,$spot,$template);
+		}
+		return parent::add($object,$options,$spot,$template);
 	}
 
 }

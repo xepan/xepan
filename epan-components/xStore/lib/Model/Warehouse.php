@@ -93,4 +93,8 @@ class Model_Warehouse extends \Model_Table{
 
 		return $this;
 	}
+
+	function deleteIfOK(){
+		throw $this->exception('WareHouse DeleteIfOK','Growl');
+	}
 }		

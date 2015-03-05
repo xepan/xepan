@@ -1,6 +1,6 @@
 <?php
 
-class page_xShop_page_owner_item_department extends page_xShop_page_owner_main{
+class page_xShop_page_owner_item_prophases extends page_xShop_page_owner_main{
 	function init(){
 		parent::init();
 

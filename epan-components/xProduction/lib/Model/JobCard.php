@@ -111,6 +111,44 @@ class Model_JobCard extends \Model_Document{
 		$t->save();
 	}
 
+	function receive_page($page){
+
+		$form = $page->add('Form_Stacked');
+		if($this->department()->getAssociatedOutsourceParty() !== array(0)){
+			$field = $form->addField('DropDown','select_outsource_party');
+			$field->setModel($this->department()->associatedOutsourceParties());
+			
+			if($this->department()->isOutSourced()){
+				$field->setEmptyText('Please Select Out Source Party');
+				$field->validateNotNull("This is completely outsource department. Out source Party is must");
+			}else{
+				$field->setEmptyText('In House Development');
+			}
+
+			$gmr = $form->addField('Checkbox','generate_material_request');
+			$request_type = $form->addField('DropDown','request_type')->setValueList(array('purchase'=>'Purchase','transfer'=>'Transfer'));
+			$request_from = $form->addField('DropDown','transfer_from');
+			$request_from->setModel('xStore/Warehouse');
+
+			$dtpw = $form->addField('Checkbox','dispatch_to_party_wherehouse');
+
+			$gmr->js(true)->univ()->bindConditionalShow(array(
+					''=>array(),
+					'*'=>array('dispatch_to_party_wherehouse','request_type','transfer_from')
+				),'div.atk-form-row');
+
+		}
+
+		$form->addSubmit('Receive');
+		if($form->isSubmitted()){
+			if($form->hasElement('select_outsource_party') AND $form['select_outsource_party']){
+				$this->outSourceParty($this->add('xProduction/Model_OutSourceParty')->load($form['select_outsource_party']));
+				$this->receive();
+				return true;
+			}
+		}
+	}
+
 	function receive(){
 		// mark complete previous dept jobcard
 		if($pre_dept_job_card = $this->previousDeptJobCard()){

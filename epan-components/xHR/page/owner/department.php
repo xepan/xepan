@@ -3,6 +3,9 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 	function init(){
 		parent::init();
 
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Company Departments <small> Departments, Post, ACL, Salary Templates etc</small>');
+		$this->add('PageHint')->set('1. Open Left Panel 2. Create Production Phases (Departments)');
+
 		$l=$this->api->layout->add('splitter/LayoutContainer');
 		$dept_col = $l->getPane('center');
 		$cat_col = $l->addPane('west',

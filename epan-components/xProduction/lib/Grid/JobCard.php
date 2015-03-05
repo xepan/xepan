@@ -3,8 +3,8 @@ namespace xProduction;
 
 class Grid_JobCard extends \Grid{
 	
-	function init(){
-		parent::init();
+	function setModel($job_card_model){
+		parent::setModel($job_card_model,array('orderitem','from_department','name'));
 
 	}
 }

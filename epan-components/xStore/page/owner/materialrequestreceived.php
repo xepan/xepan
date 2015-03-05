@@ -2,7 +2,7 @@
 class page_xStore_page_owner_materialrequestreceived extends page_xStore_page_owner_main {
 	function init(){
 		parent::init();
-
+		$this->api->stickyGET('department_id');
 
 		$tabs=$this->add('Tabs');
 		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_draft','Draft');

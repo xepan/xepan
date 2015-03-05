@@ -63,8 +63,6 @@ class page_xEnquiryNSubscription_page_owner_dashboard extends page_xEnquiryNSubs
 			// $m->addCondition('from_app','Website');
 			$y=$chart->addLineData($junk['from_app'],$junk['dt'],(int)$junk['subs']);
 		}
-		echo $y;
-
 		// $chart->addLineData('Website','2',15);
 		$chart
 		->setXAxisTitle('Dates')

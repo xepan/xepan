@@ -16,4 +16,11 @@ class Model_Document extends \SQL_Model {
 
 	}
 
+	function modelName(){
+		$name = $this['name'];
+		$name = explode("\\", $name);
+		$name = $name[0].'\\Model_'.$name[1];
+		return $name;
+	}
+
 }

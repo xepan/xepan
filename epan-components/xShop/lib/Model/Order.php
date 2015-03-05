@@ -234,6 +234,7 @@ class Model_Order extends \Model_Document{
 	}
 
 	function approve_page($page){
+		$page->add('PageHint')->set('Approving Job Card will move this order to approved status and create JobCards to receive in respective departments for each Item');
 		$page->add('View_Error')->set('Are you sure?');
 		$form = $page->add('Form');
 		$form->addSubmit('Yes');

@@ -120,12 +120,16 @@ class Model_Department extends \Model_Table{
 	}
 
 	function getAssociatedOutsourceParty(){
-		$associated_categories = $this->ref('xProduction/OutSourcePartyDeptAssociation')->_dsql()->del('fields')->field('out_source_party_id')->getAll();
-		$array =  iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_categories)),false);
+		$associated_parties = $this->ref('xProduction/OutSourcePartyDeptAssociation')->_dsql()->del('fields')->field('out_source_party_id')->getAll();
+		
+		$array =  iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_parties)),false);
 
 		if(!count($array)) $array = array(0);
-
 		return $array;
+	}
+
+	function associatedOutsourceParties(){
+		return $this->add('xProduction/Model_OutSourceParty')->addCondition('id',$this->getAssociatedOutsourceParty());
 	}
 
 	function addOutSourceParty($party){
@@ -134,6 +138,8 @@ class Model_Department extends \Model_Table{
 		$outsource_assos_model->addCondition('out_source_party_id',$party->id);
 		$outsource_assos_model->tryLoadAny();
 		if(!$outsource_assos_model->loaded()) $outsource_assos_model->save();
+
+		$party->warehouse();
 
 		return $outsource_assos_model;
 	}
@@ -144,6 +150,8 @@ class Model_Department extends \Model_Table{
 		$outsource_assos_model->addCondition('out_source_party_id',$party->id);
 		$outsource_assos_model->tryLoadAny();
 		if($outsource_assos_model->loaded()) $outsource_assos_model->delete();
+
+		if($party->getAssociatedDepartments() === array(0)) $party->warehouse()->deleteIfOK();
 
 	}
 

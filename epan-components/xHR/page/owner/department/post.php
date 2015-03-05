@@ -38,18 +38,37 @@ class page_xHR_page_owner_department_post extends page_xHR_page_owner_main {
 			// documentAcl -> condition 'post_id'==crud->id
 			$c = $p->add('CRUD',array('allow_add'=>false,'allow_del'=>false));
 			$docs = $post->documentAcls();
-			$c->setModel($docs);
-			if($c->grid){
-				$c->grid->addQuickSearch(array('Document'));
+			$fields=null;
+			
+			if($c->isEditing()){
+				$doc_acl = $this->add('xHR/Model_DocumentAcl')->load($c->id);
+				$document_editing = $this->add('xHR/Model_Document');
+				$document_editing->load($doc_acl['document_id']);
+				$original_model = $this->add($document_editing->modelName());
+				if(isset($original_model->actions)){
+					$fields=array_keys($original_model->actions);
+				}
 			}
 
-			// if(!$c->isEditing()){
-			// 	$c->grid->addFormatter('allow_add','grid/inline');
-			// }
+			$c->setModel($docs,$fields);
+
+			if($c->isEditing()){
+				if(isset($original_model->actions)){
+					foreach ($original_model->actions as $field_name => $options) {
+						if(is_array($options)){
+							if(isset($options['caption'])) $c->form->getElement($field_name)->setCaption($options['caption']);
+						}
+					}
+				}
+			}
+
+
+			if(!$c->isEditing()){
+				$c->grid->addQuickSearch(array('Document'));
+				$c->grid->addOrder()->move('edit','first')->now();
+			}
 
 			// Document acl ka crud
-
 		}
-
 	}
 }

@@ -14,7 +14,7 @@ class Model_MaterialRequest extends \Model_Document {
 
 		$this->hasOne('xHR/Department','from_department_id');
 		$this->hasOne('xHR/Department','to_department_id');
-		$this->hasOne('xShop/Order','order_id');
+		$this->hasOne('xShop/OrderDetails','orderitem_id');
 
 		$this->getElement('status')->defaultValue('submitted');
 
@@ -32,11 +32,12 @@ class Model_MaterialRequest extends \Model_Document {
 
 	function createFromOrder($order_item, $order_dept_status ){
 		$new_request = $this->add('xStore/Model_MaterialRequest');
-		$new_request->addCondition('order_id',$order_item['order_id']);
+		$new_request->addCondition('orderitem_id',$order_item->id);
 		$new_request->tryLoadAny();
 
 		$sales_dept = $this->add('xHR/Model_Department')->loadBy('related_application_namespace','xShop');
 		$new_request['from_department_id'] = $sales_dept->id;
+		$new_request['to_department_id'] = $order_dept_status['department_id'];
 		$new_request['name']=rand(1000,9999);
 
 		$order= $order_item->ref('order_id');
@@ -62,10 +63,10 @@ class Model_MaterialRequest extends \Model_Document {
 	function mark_processed_page($page){
 
 		$form = $page->add('Form_Stacked');
-		$form->addField('DropDown','from_warehouse')->setModel('xStore/Warehouse');
-		$form->addField('DropDown','to_warehouse')
-			->setFieldHint('TODO :Check if from order only shipping here or if from any department.. that department nly here')
-			->setModel('xStore/Warehouse');
+		// $form->addField('DropDown','from_warehouse')->setModel('xStore/Warehouse');
+		// $form->addField('DropDown','to_warehouse')
+		// 	->setFieldHint('TODO :Check if from order only shipping here or if from any department.. that department nly here')
+		// 	->setModel('xStore/Warehouse');
 
 		$cols = $form->add('Columns');
 		$sno_cols= $cols->addColumn(1);
@@ -87,11 +88,9 @@ class Model_MaterialRequest extends \Model_Document {
 		if($form->isSubmitted()){
 			$i=1;
 			
-			$from_warehouse = $this->add('xStore/Model_Warehouse')->load($form['from_warehouse']);
+			$from_warehouse = $this->ref('to_department_id')->warehouse();
 			
-			// Always to any warehouse/department
-			// this is material request :: never to send directly to customer from here
-			$to_warehouse = $this->add('xStore/Model_Warehouse')->load($form['to_warehouse']);
+			$to_warehouse = $this->ref('from_department_id')->warehouse();
 
 			if($from_warehouse->id == $to_warehouse->id){
 				$form->displayError('to_warehouse','Must Be Different');
@@ -146,15 +145,14 @@ class Model_MaterialRequest extends \Model_Document {
 		$form->addSubmit();
 
 		if($form->isSubmitted()){
+			$this['status']='submitted';
+			$this->saveAndUnload();
 			return true;
 		}
-		// $this['status']='submitted';
-		// $this->saveAndUnload();
 		return false;
 	}
 
-	// Actually its Accepting send Goods
-	function approve_page($p){
+	function accept_page($p){
 		$p->add('View_Success')->set('Show Related Challan HEre');
 		$form = $p->add('Form');
 		$accept_btn = $form->addSubmit('Accept');
