@@ -14,13 +14,21 @@ class Model_MaterialRequest extends \Model_Document {
 
 		$this->hasOne('xHR/Department','from_department_id');
 		$this->hasOne('xHR/Department','to_department_id');
+		$this->hasOne('xStore/Warehouse','dispatch_to_warehouse_id');
 		$this->hasOne('xShop/OrderDetails','orderitem_id');
 
 		$this->getElement('status')->defaultValue('submitted');
 
 		$this->hasMany('xStore/MaterialRequestItem','material_request_id');
 		$this->hasMany('xStore/StockMovement','material_request_id');
+
+		$this->addHook('beforeInsert',$this);
+
 		$this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeInsert($obj){
+		$obj['name'] = rand(1000,9999);
 	}
 
 	function relatedChallan(){
@@ -30,15 +38,44 @@ class Model_MaterialRequest extends \Model_Document {
 		return false;
 	}
 
+	function create($from_department, $to_department, $items_array, $related_document=array(), $order_item=false,  $dispatch_to_warehouse=false){
+		$this['from_department_id'] = $from_department->id;
+		$this['to_department_id'] = $to_department->id;
+
+		if(count($related_document)){
+			$this['related_document_id'] = $related_document['related_document_id'];
+			$this['related_root_document_name'] = $related_document['related_root_document_name'];
+			$this['related_document_name'] = $related_document['related_document_name'];
+		}
+
+		if($order_item){
+			$this['orderitem_id'] = $order_item->id;
+		}
+
+		if($dispatch_to_warehouse){
+			$this['dispatch_to_warehouse_id'] = $dispatch_to_warehouse->id;
+		}else{
+			$this['dispatch_to_warehouse_id'] = $from_department->warehouse()->get('id');
+		}
+
+		$this->save();
+
+		foreach ($items_array as $item) {
+			$this->addItem($this->add('xShop/Model_Item')->load($item['id']),$item['qty'],$item['unit']);
+		}
+
+		return $this;
+	}
+
+	// Called if direct order to store is required
 	function createFromOrder($order_item, $order_dept_status ){
 		$new_request = $this->add('xStore/Model_MaterialRequest');
 		$new_request->addCondition('orderitem_id',$order_item->id);
 		$new_request->tryLoadAny();
 
-		$sales_dept = $this->add('xHR/Model_Department')->loadBy('related_application_namespace','xShop');
+		$sales_dept = $this->add('xHR/Model_Department')->loadSales();
 		$new_request['from_department_id'] = $sales_dept->id;
 		$new_request['to_department_id'] = $order_dept_status['department_id'];
-		$new_request['name']=rand(1000,9999);
 
 		$order= $order_item->ref('order_id');
 
@@ -53,10 +90,11 @@ class Model_MaterialRequest extends \Model_Document {
 
 	}
 
-	function addItem($item,$qty){
+	function addItem($item,$qty,$unit='Nos'){
 		$mr_item = $this->ref('xStore/MaterialRequestItem');
 		$mr_item['item_id'] = $item->id;
 		$mr_item['qty'] = $qty;
+		$mr_item['unit'] = $unit;
 		$mr_item->save();
 	}
 
@@ -90,7 +128,11 @@ class Model_MaterialRequest extends \Model_Document {
 			
 			$from_warehouse = $this->ref('to_department_id')->warehouse();
 			
-			$to_warehouse = $this->ref('from_department_id')->warehouse();
+			if($this['dispatch_to_warehouse_id']){
+				$to_warehouse = $this->add('xStore/Model_Warehouse')->load($this['displatch_to_warehouse_id']);
+			}else{
+				$to_warehouse = $this->ref('from_department_id')->warehouse();
+			}
 
 			if($from_warehouse->id == $to_warehouse->id){
 				$form->displayError('to_warehouse','Must Be Different');

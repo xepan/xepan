@@ -20,13 +20,7 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 			return $m->refSQL('orderitem_id')->fieldQuery('unit');
 		});
 
-		// $this->addExpression('Custom Fields')->set(function($m,$q){
-		// 	return $m->refSQL('orderitem_id')->fieldQuery('custom_fields');
-		// });
-
-		$this->addExpression('status')->set(function($m,$q){
-			return $m->refSQL('xProduction/JobCard')->_dsql()->limit(1)->del('fields')->field('status');
-		});
+		$this->addField('status')->defaultValue('Waiting');
 
 		// status of previous department jobcard .. if any or null
 		$this->addExpression('previous_status')->set(function($m,$q){
@@ -48,11 +42,12 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 	
 		$new_job_card = $this->add($this->department()->getNamespace().'/Model_'.  $this->department()->jobcard_document());
 		$new_job_card->createFromOrder($this->ref('orderitem_id'),$this);
-		
+		$this['status']='Sent To '. $this['department'];
+		$this->save();
 		return $new_job_card;
 	}
 
-	function receive(){
+	function receive_to_DELETE(){
 		// create job card for this department and this orderitem_id;
 		$jobcard_model=$this->add($this->department()->getNamespace().'/Model_'.  $this->department()->jobcard_document());
 		$jobcard_model->addCondition('orderitem_departmental_status_id',$this->id);
@@ -63,6 +58,9 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 			throw $this->exception('Already Recieved and Job Card Created');
 		
 		$jobcard_model->receive();
+
+		$this['status']='Received By '. $this['department'];
+		$this->save();
 
 		// jiska status ... received hoga
 		// agar previous department hai to
@@ -88,6 +86,11 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 			$this->save();
 			return $party;
 		}
+	}
+
+	function setStatus($status){
+		$this['status']=$status;
+		$this->save();
 	}
 
 }

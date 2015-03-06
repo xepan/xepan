@@ -97,4 +97,8 @@ class Model_Warehouse extends \Model_Table{
 	function deleteIfOK(){
 		throw $this->exception('WareHouse DeleteIfOK','Growl');
 	}
+
+	function department(){
+		return $this->ref('department_id');
+	}
 }		

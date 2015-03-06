@@ -93,6 +93,11 @@ class Model_JobCard extends \Model_Document{
 	}
 
 	function orderItem(){
+		if(!$this['orderitem_id']){
+			throw new \Exception("Orderite id ". $this['id'], 1);
+			
+			return false;
+		}
 		return $this->ref('orderitem_id');
 	}
 
@@ -114,7 +119,9 @@ class Model_JobCard extends \Model_Document{
 	function receive_page($page){
 
 		$form = $page->add('Form_Stacked');
+
 		if($this->department()->getAssociatedOutsourceParty() !== array(0)){
+
 			$field = $form->addField('DropDown','select_outsource_party');
 			$field->setModel($this->department()->associatedOutsourceParties());
 			
@@ -124,28 +131,73 @@ class Model_JobCard extends \Model_Document{
 			}else{
 				$field->setEmptyText('In House Development');
 			}
-
-			$gmr = $form->addField('Checkbox','generate_material_request');
-			$request_type = $form->addField('DropDown','request_type')->setValueList(array('purchase'=>'Purchase','transfer'=>'Transfer'));
-			$request_from = $form->addField('DropDown','transfer_from');
-			$request_from->setModel('xStore/Warehouse');
-
-			$dtpw = $form->addField('Checkbox','dispatch_to_party_wherehouse');
-
-			$gmr->js(true)->univ()->bindConditionalShow(array(
-					''=>array(),
-					'*'=>array('dispatch_to_party_wherehouse','request_type','transfer_from')
-				),'div.atk-form-row');
-
 		}
 
+		$gmr = $form->addField('Checkbox','generate_material_request');
+
+		$cols = $form->add('Columns');
+		$l_c= $cols->addColumn(6);
+		$r_c= $cols->addColumn(6);
+
+		$request_type = $l_c->addField('DropDown','request_type')->setValueList(array('purchase'=>'Purchase','transfer'=>'Transfer'));
+		$request_to = $r_c->addField('DropDown','request_to')->setEmptyText('Not Applicable (Only select if Request Type is Transfer)');
+		$request_to->setModel('xStore/Warehouse');
+
+
+		$ti=$form->add('CRUD'); //Temp_items
+		$tm = $form->add('xStore/Model_TempItems');
+		$ti->setModel($tm);
+
+		$dtpw = $form->addField('Checkbox','dispatch_directly','Dispatch Direclty (If Purchase Request)');
+		
+		// $gmr->js(true)->univ()->bindConditionalShow(array(
+		// 		''=>array(),
+		// 		'*'=>array('dispatch_to_party_wherehouse','request_type','transfer_from',$ti)
+		// 	),'div.atk-form-row');
+
+		$form->add('HR');
 		$form->addSubmit('Receive');
+
 		if($form->isSubmitted()){
+
+			// A bunch of validations TODO 
+
 			if($form->hasElement('select_outsource_party') AND $form['select_outsource_party']){
 				$this->outSourceParty($this->add('xProduction/Model_OutSourceParty')->load($form['select_outsource_party']));
-				$this->receive();
-				return true;
 			}
+
+			if($form['generate_material_request']){
+				$items_array=array();
+				foreach ($tm as $id => $item) {
+					$items_array[] = array('id'=>$item['item_id'],'qty'=>$item['qty'],'unit'=>$item['unit']);
+				}
+
+				$to_department = $this->add('xHR/Model_Department');
+				if($form['request_type']=='purchase')
+					$to_department->loadPurchase();
+				else{
+					$to_warehouse = $this->add('xStore/Model_Warehouse')->load($form['request_to']);
+					$to_department->load($to_warehouse['department_id']);
+				}
+
+				if($form['request_type']=='purchase'){
+					$dispatch_to = $this->department()->warehouse();
+					if($form['dispatch_directly']){
+						if($form->hasElement('select_outsource_party') AND $form['select_outsource_party']){
+							$dispatch_to = $this->add('xProduction/Model_OutSourceParty')->load($form['select_outsource_party'])->warehouse();
+						}
+					}
+				}else{
+					$dispatch_to=false;
+				}
+
+				$mr_m = $this->add('xStore/Model_MaterialRequest');
+				$mr_m->create($this->department(),$to_department,$items_array,array(),$this->orderItem(),$dispatch_to);
+
+			}
+
+			$this->receive();
+			return true;
 		}
 	}
 
@@ -155,24 +207,22 @@ class Model_JobCard extends \Model_Document{
 			$pre_dept_job_card->complete();
 		}
 
+		$this['created_by_id']=$this->api->current_employee->id;
 		// self status received
 		if($this->department()->isOutSourced()){
 			if(!$this->outSourceParty())
 				throw $this->exception('Define OutSource Party First');
 			else{
-				$this['status']='processed';
+				$this->setStatus('processed');
 			}
 		}else{
-			$this['status']='received';
+			$this->setStatus('received');
 		}
 
-		$this['created_by_id']=$this->api->current_employee->id;
-		$this->saveAs('xProduction/Model_JobCard');
 	}
 
 	function complete(){
-		$this['status']='completed';
-		$this->saveAs('xProduction/Model_JobCard');
+		$this->setStatus('completed');
 	}
 
 	function approve(){
@@ -180,8 +230,7 @@ class Model_JobCard extends \Model_Document{
 		if($rt->loaded())
 			$rt->set('status','complete')->save();
 
-		$this['status']='approved';
-		$this->saveAs('xProduction/Model_JobCard');	
+		$this->setStatus('approved');
 		
 	}
 
@@ -189,12 +238,19 @@ class Model_JobCard extends \Model_Document{
 		if($nd = $this->orderItem()->nextDept()){
 			$nd->createJobCard();
 		}
-		$this['status'] = 'forwarded';
-		$this->saveAs('xProduction/Model_JobCard');
+		$this->setStatus('forwarded');
 	}
 
 	function start_processing(){
-		$this['status']='processing';
+		$this->setStatus('processing');
+	}
+
+	function setStatus($status){
+		if($this['orderitem_id']){
+			$ds = $this->orderItem()->deptartmentalStatus($this->department());
+			$ds->setStatus(ucwords($status) .' in ' . $this['department']);
+		}
+		$this['status']=$status;
 		$this->saveAs('xProduction/Model_JobCard');
 	}
 

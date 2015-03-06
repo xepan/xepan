@@ -4,6 +4,7 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
     function init(){
 		parent::init();
 		
+        $di = $this->api->stickyGET('department_id');
         $order_id = $this->api->stickyGET('xshop_orders_id');
         
         $order = $this->add('xShop/Model_Order')->load($order_id);
@@ -21,9 +22,17 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
         $order_detail->addCondition('order_id',$order_id);
         $crud = $this->add('CRUD',$crud_actions);
 
-        $crud->setModel($order_detail);
+        $crud->setModel($order_detail,array('id','item','qty','unit','rate','amount','status'));
         $crud->add('xHR/Controller_Acl');
         
+        if(!$crud->isEditing()){
+            $grid = $crud->grid;
+            $grid->addMethod('format_status',function($g,$f){
+                $g->current_row[$f] = $g->model->getCurrentStatus();
+            });
+            $grid->addColumn('status','status');
+        }
+
         // $crud->add('Controller_FormBeautifier');
 	}
 }

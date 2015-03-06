@@ -9,7 +9,7 @@ class Model_PurchaseMaterialRequest extends \Model_Document{
 		parent::init();
 
 		$this->hasOne('xHR/Department','from_department_id');
-		$this->hasOne('xShop/Order','order_id');
+		$this->hasOne('xShop/OrderDetails','orderitem_id');
 		
 		$this->addField('name');
 		

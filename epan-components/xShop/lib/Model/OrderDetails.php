@@ -33,6 +33,7 @@ class Model_OrderDetails extends \Model_Document{
 
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');
 
+
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterInsert',$this);
 
@@ -98,8 +99,26 @@ class Model_OrderDetails extends \Model_Document{
 		return $this->ref('order_id');
 	}
 
-	function deptartmentalStatus(){
-		return $this->ref('xShop/OrderItemDepartmentalStatus');
+	function getCurrentStatus(){
+		$last_ds = $this->deptartmentalStatus()->addCondition('status','<>','Waiting');
+		$last_ds->_dsql()->order('id','desc');
+		$last_ds->tryLoadAny();
+
+		if($last_ds->loaded())
+			return $last_ds['status'];
+
+		return "Waiting";
+	}
+
+	function deptartmentalStatus($department=false){
+		$m = $this->ref('xShop/OrderItemDepartmentalStatus');
+		if($department){
+			$m->addCondition('department_id',$department->id);
+			$m->tryLoadAny();
+			if(!$m->loaded()) return false;
+		}
+
+		return $m;
 	}
 
 	function nextDept(){

@@ -13,6 +13,7 @@ class Model_MaterialRequestItem extends \Model_Document{
 		$this->hasOne('xShop/Item','item_id');
 		
 		$this->addField('qty');
+		$this->addField('unit');
 
 		$this->add('dynamic_model/Controller_AutoCreator');
 
