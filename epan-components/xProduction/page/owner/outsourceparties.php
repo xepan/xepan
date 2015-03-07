@@ -4,7 +4,7 @@ class page_xProduction_page_owner_outsourceparties extends page_xProduction_page
 	function init(){
 		parent::init();
 
-		$this->app->title=$this->api->current_department['name'] .': Out source parties';
+		$this->app->title=$this->api->current_department['name'] .': Out Source Parties';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Outsource Parties Management <small> Manage your outsource parties </small>');
 
 		$crud=$this->app->layout->add('CRUD');
