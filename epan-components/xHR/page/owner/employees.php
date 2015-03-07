@@ -3,6 +3,8 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 	function init(){
 		parent::init();
 
+		$this->app->title=$this->api->current_department['name'] .': Employees';
+
 		$l=$this->api->layout->add('splitter/LayoutContainer');
 		$emp_col = $l->getPane('center');
 		$cat_col = $l->addPane('west',

@@ -19,9 +19,10 @@ class Model_StockMovement extends \Model_Document{
 		$this->hasOne('xShop/MemberDetails','to_memberdetails_id');
 
 		$this->hasOne('xStore/MaterialRequest','material_request_id');
+		$this->hasOne('xProduction/JobCard','jobcard_id');
 		$this->hasOne('xPurchase/PurchaseOrder','po_id');
 		
-		$this->addField('type')->enum(array('StockTransfer','Sales','Purchase','SalesReturn','PurchaseReturn'));
+		$this->addField('type')->enum(array('StockTransfer','Sales','Purchase','SalesReturn','PurchaseReturn','ProductionConsume'));
 
 		$this->getElement('status')->defaultValue('submitted');
 
@@ -32,22 +33,29 @@ class Model_StockMovement extends \Model_Document{
 		$this->add('dynamic_model/Controller_AutoCreator');	
 	}
 
-	function fromWarehouse(){
-		return $this->ref('from_warehouse_id');
+	function fromWarehouse($warehouse=false){
+		if($warehouse)
+			$this['from_warehouse_id'] = $warehouse->id;
+		else
+			return $this->ref('from_warehouse_id');
 	}
 
-	function toWarehouse(){
-		return $this->ref('to_warehouse_id');
+	function toWarehouse($warehouse=false){
+		if($warehouse)
+			$this['to_warehouse_id'] = $warehouse->id;
+		else
+			return $this->ref('to_warehouse_id');
 	}
 
 	function itemrows(){
 		return $this->ref('xStore/StockMovementItem');
 	}
 
-	function addItem($item,$qty){
+	function addItem($item,$qty,$unit){
 		$new_item = $this->ref('xStore/StockMovementItem');
 		$new_item['item_id'] = $item->id;
 		$new_item['qty'] = $qty;
+		$new_item['unit'] = $unit;
 		$new_item->save();
 
 		return $this;
@@ -71,6 +79,14 @@ class Model_StockMovement extends \Model_Document{
 
 	function executeSales(){
 
+	}
+
+	function executeConsume(){
+		foreach ($this->itemrows() as $itemrow) {
+			$this->fromWarehouse()->deductItemStock($itemrow->item(),$itemrow['qty']);
+		}
+		$this['status']='accepted';
+		$this->saveAs('xStore/StockMovement_Accepted');
 	}
 
 	function acceptMaterial(){

@@ -11,10 +11,19 @@ class Model_ItemDepartmentAssociation extends \Sql_Model{
 		$this->hasOne('xShop/Item','item_id');
 		$this->hasOne('xHR/Department','department_id');
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
+		$this->addField('can_redefine_qty')->type('boolean')->defaultValue(true);
+		$this->addField('can_redefine_items')->type('boolean')->defaultValue(true);
 
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
+	function canRedefineQty(){
+		return $this['can_redefine_qty'];
+	}
+
+	function canRedefineItems(){
+		return $this['can_redefine_items'];
+	}
 
 	function duplicate($item_id){
 		if( $item_id < 0)

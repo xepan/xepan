@@ -4,6 +4,8 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 
 	function page_index(){
 		
+		$this->app->title=$this->api->current_department['name'] .': Orders';
+
 		$this->app->layout->add('xShop/View_Badges_OrderPage');
 		$tab = $this->app->layout->add('Tabs');
 			$tab->addTabURL('xShop/page/owner/order_draft','Draft');

@@ -7,7 +7,11 @@ class page_base_owner extends Page {
 	function init(){
 		parent::init();
 
-		if($_GET['department_id']) $this->api->stickyGET('department_id');
+		$this->api->current_department = new Dummy();
+		if($_GET['department_id']){
+			$id = $this->api->stickyGET('department_id');
+			$this->api->current_department = $this->add('xHR/Model_Department')->load($id);
+		}
 
 		if(!$this->api->auth->isLoggedIn()){
 			$this->api->template->tryDel('admin_template');

@@ -76,6 +76,7 @@ class Model_MaterialRequest extends \Model_Document {
 		$sales_dept = $this->add('xHR/Model_Department')->loadSales();
 		$new_request['from_department_id'] = $sales_dept->id;
 		$new_request['to_department_id'] = $order_dept_status['department_id'];
+		$new_request['dispatch_to_warehouse_id'] = $this->add('xHR/Model_Department')->loadDispatch()->get('id');
 
 		$order= $order_item->ref('order_id');
 
@@ -129,7 +130,7 @@ class Model_MaterialRequest extends \Model_Document {
 			$from_warehouse = $this->ref('to_department_id')->warehouse();
 			
 			if($this['dispatch_to_warehouse_id']){
-				$to_warehouse = $this->add('xStore/Model_Warehouse')->load($this['displatch_to_warehouse_id']);
+				$to_warehouse = $this->add('xStore/Model_Warehouse')->load($this['dispatch_to_warehouse_id']);
 			}else{
 				$to_warehouse = $this->ref('from_department_id')->warehouse();
 			}
@@ -150,7 +151,7 @@ class Model_MaterialRequest extends \Model_Document {
 							throw $this->exception('Not Sufficient Qty Available ['.$avl_qty.']','ValidityCheck')->setField('req_qty_'.$i);
 					}
 
-					$movement_challan->addItem($item,$form['alloted_qty_'.$i]);
+					$movement_challan->addItem($item,$form['alloted_qty_'.$i], $requested_item['unit']);
 					$i++;
 				}
 				// commit

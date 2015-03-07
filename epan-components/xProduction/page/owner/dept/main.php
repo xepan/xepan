@@ -4,8 +4,9 @@ class page_xProduction_page_owner_dept_main extends page_xProduction_page_owner_
 	
 	function init(){
 		parent::init();
-
 		$this->api->stickyGET('department_id');
+
+		$this->app->title=$this->api->current_department['name'] .': JobCards';
 
 		$dept = $this->add('xHR/Model_Department')->load($_GET['department_id']?:$this->api->current_employee->department()->get('id'));
 

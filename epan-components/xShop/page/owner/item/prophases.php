@@ -10,6 +10,7 @@ class page_xShop_page_owner_item_prophases extends page_xShop_page_owner_main{
 		$item = $this->add('xShop/Model_Item')->load($item_id);
 		
 		$grid=$this->add('Grid');
+
 		$department = $this->add('xHR/Model_Department',array('table_alias'=>'mc'));
 		$department->addCondition('is_active',true);
 		$department->addCondition('is_production_department',true);
@@ -34,7 +35,36 @@ class page_xShop_page_owner_item_prophases extends page_xShop_page_owner_main{
 			}
 			$form->js(null,$this->js()->univ()->successMessage('Updated'))->reload()->execute();
 		}		
+
 		$grid->addQuickSearch(array('name'));
 		$grid->addPaginator($ipp=100);
+
+		$conspution_page=$this->add('VirtualPage')->addColumn('consuption','Consuption & Compositions',array('icon'=>'plus'),$grid);
+		$conspution_page->set(function($p)use($grid, $item){
+			$p->api->stickyGET('item_id');
+
+			$itemcomposition=$p->add('xShop/Model_ItemComposition');
+			$itemcomposition->addCondition('item_id',$_GET['item_id']);
+			$itemcomposition->addCondition('department_id',$p->id);
+			
+			$form = $p->add('Form');
+			$form->addField('Checkbox','can_redefine_qty','Quantity can be redefined when marking processed ');
+			$form->addField('Checkbox','can_redefine_items','Items can be redefined when marking processed ');
+			$form->addSubmit('Update Info');
+			if($form->isSubmitted()){
+				$dept_assos = $item->ref('xShop/ItemDepartmentAssociation')->addCondition('department_id',$p->id)->loadAny();
+				$dept_assos['can_redefine_qty'] = $form['can_redefine_qty'];
+				$dept_assos['can_redefine_items'] = $form['can_redefine_items'];
+				$dept_assos->save();
+				$form->js()->univ()->successMessage('Information Saved')->execute();
+			}
+
+			$v=$p->add('View_Box')->set('Define Comsuption Items and Quantity');
+			$crud = $v->add('CRUD');
+			$crud->setModel($itemcomposition);
+
+
+		});
+
 	}
 }

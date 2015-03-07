@@ -581,8 +581,25 @@ class Model_Item extends \Model_Table{
 		return $this->add('xProduction/Model_Department')->addCondition('id',$this->getAssociatedDepartment());
 	}
 
+	function departmentalAssociations($department=false){
+		$m= $this->ref('xShop/ItemDepartmentAssociation');
+		if($department){
+			$m->addCondition('department_id',$department->id);
+			$m->tryLoadAny();
+		}
+		return $m;
+	}
+
 	function allowNegativeStock(){
 		return $this['allow_negative_stock'];
+	}
+
+	function composition($department){
+		$m = $this->add('xShop/Model_ItemComposition');
+		$m->addCondition('item_id',$this->id);
+		$m->addCondition('department_id',$department->id);
+
+		return $m;
 	}
 
 

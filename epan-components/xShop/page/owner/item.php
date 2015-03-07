@@ -5,7 +5,8 @@ class page_xShop_page_owner_item extends page_xShop_page_owner_main{
 	function init(){
 		parent::init();
 		
-		$application_id=$this->api->recall('xshop_application_id');		
+		$application_id=$this->api->recall('xshop_application_id');	
+		$this->app->title=$this->api->current_department['name'] .': Items';
 
 		// $l=$this->api->layout->add('splitter/LayoutContainer');
 		// $item_col = $l->getPane('center');
@@ -110,7 +111,7 @@ class page_xShop_page_owner_item extends page_xShop_page_owner_main{
 			$tab->addTabURL('xShop/page/owner/item_seo','SEO',array('item_id'));
 			$tab->addTabURL('xShop/page/owner/item_stock','Stock',array('item_id'));
 			$tab->addTabURL('xShop/page/owner/item_prophases','Production Phases',array('item_id'));
-			$tab->addTabURL('xShop/page/owner/item_composition','Composition',array('item_id'));
+			// $tab->addTabURL('xShop/page/owner/item_composition','Composition',array('item_id'));
 		}else{
 			$item_col->add('View_Warning')->set('Select any one Item');
 		}
