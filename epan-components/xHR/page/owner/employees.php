@@ -4,6 +4,7 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 		parent::init();
 
 		$this->app->title=$this->api->current_department['name'] .': Employees';
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Employee Management <small> Manage companies employees </small>');
 
 		$l=$this->api->layout->add('splitter/LayoutContainer');
 		$emp_col = $l->getPane('center');

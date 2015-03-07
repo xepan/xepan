@@ -4,6 +4,9 @@ class page_xShop_page_owner_addblock extends page_xShop_page_owner_main{
 
 	function page_index(){
 
+		$this->app->title=$this->api->current_department['name'] .': AddBlock';		
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Add Block<small> Manage your add block </small>');
+
 		$crud=$this->app->layout->add('CRUD');
 		$crud->setModel('xShop/Model_AddBlock');
 		// $crud->add('Controller_FormBeautifier');

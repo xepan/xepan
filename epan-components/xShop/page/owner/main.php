@@ -3,7 +3,7 @@ class page_xShop_page_owner_main extends page_componentBase_page_owner_main {
 	function init(){
 		parent::init();
 
-		$this->app->layout->add('xShop/View_ApplicationSelector',null,'page_title')->setTitle('<i class="fa fa-shopping-cart"></i> '.$this->component_name. '<small>Used as ( <i class="fa fa-list"></i> ) Product Listing , Blogs and ( <i class="fa fa-shopping-cart"></i> ) E-commerce kinds of Application</small>');
+		// $this->app->layout->add('xShop/View_ApplicationSelector',null,'page_title')->setTitle('<i class="fa fa-shopping-cart"></i> '.$this->component_name. '<small>Used as ( <i class="fa fa-list"></i> ) Product Listing , Blogs and ( <i class="fa fa-shopping-cart"></i> ) E-commerce kinds of Application</small>');
 		// $this->app->layout->template->trySetHTML('page_title');
 			
 		// $xshop_m = $this->app->top_menu->addMenu($this->component_name);

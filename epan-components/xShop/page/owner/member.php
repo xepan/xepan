@@ -4,6 +4,9 @@ class page_xShop_page_owner_member extends page_xShop_page_owner_main{
 
 	function page_index(){
 
+		$this->app->title=$this->api->current_department['name'] .': Customers';		
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Customers Management <small> Manage your customers </small>');
+
 		$crud=$this->app->layout->add('CRUD');
 		
 

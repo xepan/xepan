@@ -5,7 +5,9 @@ class page_xShop_page_owner_category extends page_xShop_page_owner_main{
 	function init(){
 		parent::init();
 		
-
+		$this->app->title=$this->api->current_department['name'] .': Item Categories';		
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Item Category Management <small> Manage Item Categories </small>');
+		
 		$application_id=$this->api->recall('xshop_application_id');
 		
 		//Badges 

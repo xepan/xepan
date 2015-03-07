@@ -7,6 +7,9 @@ class page_xShop_page_owner_paygateconfig extends page_xShop_page_owner_main {
 	function init(){
 		parent::init();
 
+		$this->app->title=$this->api->current_department['name'] .': PaymentGateway Config';		
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> PaymentGateway Management <small> Manage your PaymentGateway and configure </small>');
+
 		$btn = $this->app->layout->add('Button')->set('Update');
 
 

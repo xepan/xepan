@@ -3,6 +3,9 @@ class page_xShop_page_owner_oppertunity extends page_xShop_page_owner_main{
 	function init(){
 		parent::init();
 
+		$this->app->title=$this->api->current_department['name'] .': Oppertunities';		
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Oppertunities Management <small> Manage your sales Oppertunities </small>');
+		
 		$oppertunity_model = $this->add('xShop/Model_Oppertunity');
 
 		$crud=$this->app->layout->add('CRUD');

@@ -5,6 +5,8 @@ class page_xMarketingCampaign_page_owner_dashboard extends page_xMarketingCampai
 	function init(){
 		parent::init();	
 
+		$this->app->title=$this->api->current_department['name'] .': Dashboard';
+
 		$sub_model = $this->add('xEnquiryNSubscription/Model_Subscription');
 		$this->app->layout->add('View')->setHTML('Total Grabbed Emails = '.$sub_model->addCondition('from_app','DataGrabberPhrase')->count()->getOne());
 
