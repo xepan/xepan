@@ -11,3 +11,4 @@ ToDo
 upload/*
 composer.lock
 composer.phar
+vendor/*
