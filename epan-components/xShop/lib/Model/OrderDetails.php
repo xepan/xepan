@@ -121,10 +121,26 @@ class Model_OrderDetails extends \Model_Document{
 		return $m;
 	}
 
-	function nextDept($after_department=false){
-		
+	function nextDeptStatus($after_department=false){
 		foreach ($dept_status=$this->deptartmentalStatus() as $ds) {
-			if(!$ds['status']) return $ds;
+			if($after_department){
+				if($ds->department()->get('id') == $after_department->id) $after_department=false;
+			}else{
+				if($ds['status'] == 'Waiting') return $ds;
+			}
+		}
+		return false;
+	}
+
+	function prevDeptStatus($before_department=false){
+		$dept_status=$this->deptartmentalStatus()->setOrder('id','desc');
+		
+		foreach ($dept_status as $ds) {
+			if($before_department){
+				if($ds->department()->get('id') == $before_department->id) $before_department=false;
+			}else{
+				if($ds['status'] != 'Waiting') return $ds;
+			}
 		}
 		return false;
 	}

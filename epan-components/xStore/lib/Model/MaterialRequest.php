@@ -38,6 +38,21 @@ class Model_MaterialRequest extends \Model_Document {
 		return false;
 	}
 
+	function fromDepartment(){
+		return $this->ref('from_department_id');
+	}
+
+	function toDepartment(){
+		return $this->ref('to_department_id');
+	}
+
+	function orderItem(){
+		if(!$this['orderitem_id']){
+			return false;
+		}
+		return $this->ref('orderitem_id');
+	}
+
 	function create($from_department, $to_department, $items_array, $related_document=array(), $order_item=false,  $dispatch_to_warehouse=false){
 		$this['from_department_id'] = $from_department->id;
 		$this['to_department_id'] = $to_department->id;
@@ -72,10 +87,14 @@ class Model_MaterialRequest extends \Model_Document {
 		$new_request->addCondition('orderitem_id',$order_item->id);
 		$new_request->tryLoadAny();
 
-		$sales_dept = $this->add('xHR/Model_Department')->loadSales();
-		$new_request['from_department_id'] = $sales_dept->id;
+		// Create Request From Next Department In Phases :: IMPORTANT
+
+		$from_dept_status = $order_item->nextDeptStatus($order_dept_status->department());
+		$from_dept = $from_dept_status->department();
+
+		$new_request['from_department_id'] = $from_dept->id;
 		$new_request['to_department_id'] = $order_dept_status['department_id'];
-		$new_request['dispatch_to_warehouse_id'] = $this->add('xHR/Model_Department')->loadDispatch()->get('id');
+		$new_request['dispatch_to_warehouse_id'] = $from_dept->warehouse()->get('id');
 
 		$order= $order_item->ref('order_id');
 
@@ -99,6 +118,10 @@ class Model_MaterialRequest extends \Model_Document {
 	}
 
 	function mark_processed_page($page){
+
+		if($oi=$this->orderItem()){
+			$page->add('View_Success')->set('Created By Order, Adding JobCard to '.$oi->nextDeptStatus()->department()->get('name'));
+		}
 
 		$form = $page->add('Form_Stacked');
 
@@ -152,8 +175,12 @@ class Model_MaterialRequest extends \Model_Document {
 				// commit
 				$movement_challan->executeStockTransfer();
 
-				$this['status']='processed';
-				$this->saveAs('xStore/MaterialRequest_Processed');
+				if($department_association = $this->orderItem()->nextDeptStatus($this->toDepartment())){
+					$department_association->createJobCardFromOrder();
+				}
+
+				$this->setStatus('processed');
+
 
 				$this->api->db->commit();
 			}catch(\Exception $e){
@@ -175,8 +202,7 @@ class Model_MaterialRequest extends \Model_Document {
 		$form->addSubmit();
 
 		if($form->isSubmitted()){
-			$this['status']='submitted';
-			$this->saveAndUnload();
+			$this->setStatus('submitted');
 			return true;
 		}
 		return false;
@@ -191,11 +217,21 @@ class Model_MaterialRequest extends \Model_Document {
 		if($form->isSubmitted()){
 			if($form->isClicked($accept_btn)){
 				$this->relatedChallan()->acceptMaterial();
-				$this['status']='completed';
-				$this->saveAs('xStore/Model_MaterialRequest_Completed');
+				$this->setStatus('completed');
 			}else{
 				throw new \Exception("Rejected", 1);
 			}
 		}
-	}	
+	}
+
+	function setStatus($status){
+		if($this['orderitem_id']){
+			$ds = $this->orderItem()->deptartmentalStatus($this->toDepartment());
+			$ds->setStatus(ucwords($status) .' in ' . $this['department']);
+		}
+		$this['status']=$status;
+		$this->saveAs('xStore/Model_MaterialRequest');
+	}
+
+
 }

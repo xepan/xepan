@@ -22,7 +22,7 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
         $order_detail->addCondition('order_id',$order_id);
         $crud = $this->add('CRUD',$crud_actions);
 
-        $crud->setModel($order_detail,array('id','item','qty','unit','rate','amount','status'));
+        $crud->setModel($order_detail,array('item_id','qty','unit','rate','amount','status','custom_fields'),array('id','item','qty','unit','rate','amount','status'));
         $crud->add('xHR/Controller_Acl');
         
         if(!$crud->isEditing()){

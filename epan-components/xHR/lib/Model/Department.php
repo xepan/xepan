@@ -162,6 +162,7 @@ class Model_Department extends \Model_Table{
 		$temp = $this->add('xHR/Model_Department');
 		$temp->addCondition('name','HR')->loadAny();
 		$this->load($temp->id);
+		return $this;
 	}
 
 	function loadMarketing(){
@@ -170,6 +171,7 @@ class Model_Department extends \Model_Table{
 		$temp = $this->add('xHR/Model_Department');
 		$temp->addCondition('name','Marketing')->loadAny();
 		$this->load($temp->id);
+		return $this;
 	}
 
 	function loadSales(){
@@ -178,6 +180,7 @@ class Model_Department extends \Model_Table{
 		$temp = $this->add('xHR/Model_Department');
 		$temp->addCondition('name','Sales')->loadAny();
 		$this->load($temp->id);
+		return $this;
 	}
 
 	function loadProduction(){
@@ -186,6 +189,7 @@ class Model_Department extends \Model_Table{
 		$temp = $this->add('xHR/Model_Department');
 		$temp->addCondition('name','Production')->loadAny();
 		$this->load($temp->id);
+		return $this;
 	}
 
 	function loadCRM(){
@@ -194,6 +198,7 @@ class Model_Department extends \Model_Table{
 		$temp = $this->add('xHR/Model_Department');
 		$temp->addCondition('name','CRM')->loadAny();
 		$this->load($temp->id);
+		return $this;
 	}
 
 	function loadAccounts(){
@@ -202,6 +207,7 @@ class Model_Department extends \Model_Table{
 		$temp = $this->add('xHR/Model_Department');
 		$temp->addCondition('name','Accounts')->loadAny();
 		$this->load($temp->id);
+		return $this;
 	}
 	
 	function loadPurchase(){
@@ -210,6 +216,7 @@ class Model_Department extends \Model_Table{
 		$temp = $this->add('xHR/Model_Department');
 		$temp->addCondition('name','Purchase')->loadAny();
 		$this->load($temp->id);
+		return $this;
 	}
 
 	function loadStore(){
@@ -218,6 +225,7 @@ class Model_Department extends \Model_Table{
 		$temp = $this->add('xHR/Model_Department');
 		$temp->addCondition('name','Store')->loadAny();
 		$this->load($temp->id);
+		return $this;
 	}
 	function loadDispatch(){
 		if($this->loaded())
@@ -225,6 +233,7 @@ class Model_Department extends \Model_Table{
 		$temp = $this->add('xHR/Model_Department');
 		$temp->addCondition('name','Dispatch And Delivery')->loadAny();
 		$this->load($temp->id);
+		return $this;
 	}
 
 	function warehouse(){

@@ -236,8 +236,8 @@ class Model_JobCard extends \Model_Document{
 	}
 
 	function forward($note){
-		if($nd = $this->orderItem()->nextDept()){
-			$nd->createJobCard(); // actually departmentalStatus
+		if($nd = $this->orderItem()->nextDeptStatus()){
+			$nd->createJobCardFromOrder();
 			$this->setStatus('forwarded');
 		}else{
 			$this->setStatus('completed');
