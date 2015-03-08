@@ -263,18 +263,34 @@ class Controller_Acl extends \AbstractController {
 		if($this->owner->model->hasMethod($action_name.'_page')){
 			$action_page_function = $action_name.'_page';
 			$p = $this->owner->addFrame(ucwords($action_name));
-			if($p){
-				$this->owner->model->load($this->owner->id);
-				if(!$_GET['xaction_done'] AND $this->owner->model->$action_page_function($p)){
+			if($p and $this->owner->isEditing('fr_'.$this->api->normalizeName(ucwords($action_name)))){
+				$this->owner->model->tryLoad($this->owner->id);
+				try{
+					$this->api->db->beginTransaction();
+						$function_run = $this->owner->model->$action_page_function($p);
+					$this->api->db->commit();
+				}catch(\Exception $e){
+					$this->api->db->rollback();
+					throw $e;
+				}
+
+				if($function_run ){
 					$js=array();
 					$js[] = $p->js()->univ()->closeDialog();
-					$js[] = $this->owner->js()->reload();
-					$this->owner->owner->js(null,$js)->execute();
+					// $js[] = $this->owner->js()->reload();
+					$this->owner->js(null,$js)->execute();
 				}
 			}
-			$this->filterGrid('fr_'.$this->api->normalizeName($action_name));
+			$this->filterGrid('fr_'.$this->api->normalizeName(ucwords($action_name)));
 		}elseif($this->owner->model->hasMethod($action_name)){
-			$this->owner->addAction($action_name,array('toolbar'=>false));		
+			try{
+				$this->api->db->beginTransaction();
+					$this->owner->addAction($action_name,array('toolbar'=>false));		
+				$this->api->db->commit();
+			}catch(\Exception $e){
+				$this->api->db->rollback();
+				throw $e;
+			}
 			$this->filterGrid($action_name);
 		}
 	}

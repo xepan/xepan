@@ -165,6 +165,10 @@ class Model_Department extends \Model_Table{
 		return $this;
 	}
 
+	function isHR(){
+		return $this['name'] =='HR';
+	}
+
 	function loadMarketing(){
 		if($this->loaded())
 			$this->unload();
@@ -172,6 +176,10 @@ class Model_Department extends \Model_Table{
 		$temp->addCondition('name','Marketing')->loadAny();
 		$this->load($temp->id);
 		return $this;
+	}
+
+	function isMarketing(){
+		return $this['name'] =='Marketing';
 	}
 
 	function loadSales(){
@@ -183,6 +191,10 @@ class Model_Department extends \Model_Table{
 		return $this;
 	}
 
+	function isSales(){
+		return $this['name'] =='Sales';
+	}
+
 	function loadProduction(){
 		if($this->loaded())
 			$this->unload();
@@ -190,6 +202,10 @@ class Model_Department extends \Model_Table{
 		$temp->addCondition('name','Production')->loadAny();
 		$this->load($temp->id);
 		return $this;
+	}
+
+	function isProduction(){
+		return $this['name'] =='Production';
 	}
 
 	function loadCRM(){
@@ -201,6 +217,10 @@ class Model_Department extends \Model_Table{
 		return $this;
 	}
 
+	function isCRM(){
+		return $this['name'] =='CRM';
+	}
+
 	function loadAccounts(){
 		if($this->loaded())
 			$this->unload();
@@ -208,6 +228,10 @@ class Model_Department extends \Model_Table{
 		$temp->addCondition('name','Accounts')->loadAny();
 		$this->load($temp->id);
 		return $this;
+	}
+
+	function isAccounts(){
+		return $this['name'] =='Accounts';
 	}
 	
 	function loadPurchase(){
@@ -219,6 +243,10 @@ class Model_Department extends \Model_Table{
 		return $this;
 	}
 
+	function isPurchase(){
+		return $this['name'] =='Purchase';
+	}
+
 	function loadStore(){
 		if($this->loaded())
 			$this->unload();
@@ -227,6 +255,11 @@ class Model_Department extends \Model_Table{
 		$this->load($temp->id);
 		return $this;
 	}
+
+	function isStore(){
+		return $this['name'] =='Store';
+	}
+
 	function loadDispatch(){
 		if($this->loaded())
 			$this->unload();
@@ -234,6 +267,10 @@ class Model_Department extends \Model_Table{
 		$temp->addCondition('name','Dispatch And Delivery')->loadAny();
 		$this->load($temp->id);
 		return $this;
+	}
+
+	function isDispatch(){
+		return $this['name'] =='Dispatch And Delivery';
 	}
 
 	function warehouse(){

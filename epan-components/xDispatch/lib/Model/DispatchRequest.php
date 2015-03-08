@@ -1,11 +1,11 @@
 <?php
 namespace xStore;
 
-class Model_MaterialRequest extends \Model_Document {
+class Model_DispatchRequest extends \Model_Document {
 	
-	public $table = 'xstore_material_request';
+	public $table = 'xstore_dispatch_request';
 
-	public $root_document_name='xStore\MaterialRequest';
+	public $root_document_name='xStore\DispatchRequest';
 	public $status = array('draft','submitted','assigned','processing','processed','forwarded',
 							'complete','cancel','return');
 
@@ -13,14 +13,14 @@ class Model_MaterialRequest extends \Model_Document {
 		parent::init();
 
 		$this->hasOne('xHR/Department','from_department_id');
-		$this->hasOne('xHR/Department','to_department_id');
-		$this->hasOne('xStore/Warehouse','dispatch_to_warehouse_id');
+		// $this->hasOne('xHR/Department','to_department_id');
+		// $this->hasOne('xStore/Warehouse','dispatch_to_warehouse_id');
 		$this->hasOne('xShop/OrderDetails','orderitem_id');
 
 		$this->getElement('status')->defaultValue('submitted');
 
-		$this->hasMany('xStore/MaterialRequestItem','material_request_id');
-		$this->hasMany('xStore/StockMovement','material_request_id');
+		$this->hasMany('xStore/MaterialRequestItem','dispatch_request_id');
+		$this->hasMany('xStore/StockMovement','dispatch_request_id');
 
 		$this->addHook('beforeInsert',$this);
 
@@ -42,10 +42,6 @@ class Model_MaterialRequest extends \Model_Document {
 		return $this->ref('from_department_id');
 	}
 
-	function toDepartment(){
-		return $this->ref('to_department_id');
-	}
-
 	function orderItem(){
 		if(!$this['orderitem_id']){
 			return false;
@@ -53,7 +49,7 @@ class Model_MaterialRequest extends \Model_Document {
 		return $this->ref('orderitem_id');
 	}
 
-	function create($from_department, $to_department, $items_array, $related_document=array(), $order_item=false,  $dispatch_to_warehouse=false){
+	function create($from_department, $items_array, $related_document=array(), $order_item=false,  $dispatch_to_warehouse=false){
 		$this['from_department_id'] = $from_department->id;
 		$this['to_department_id'] = $to_department->id;
 

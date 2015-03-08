@@ -238,6 +238,14 @@ class Model_JobCard extends \Model_Document{
 	function forward($note){
 		if($nd = $this->orderItem()->nextDeptStatus()){
 			$nd->createJobCardFromOrder();
+			if($nd->department()->isDispatch()){
+				$oi=$this->orderItem();
+
+				$items_array=array(array('id'=>$oi->item()->get('id'),$oi['qty'],$oi['unit']));
+
+				$this->add('xStore/Model_MaterialRequest')
+					->create($this->add('xHR/Model_Department')->loadDispatch(), $this->departmentalStatus()->department(), $items_array, $related_document=array(), $oi,  $dispatch_to_warehouse=false);
+			}
 			$this->setStatus('forwarded');
 		}else{
 			$this->setStatus('completed');
@@ -252,6 +260,8 @@ class Model_JobCard extends \Model_Document{
 		$oi= $this->orderItem();
 		
 		if($oi){
+			$p->add('View_Info')->set('Mark Consuption If Required First');
+
 			$item = $oi->item();
 			$with_this_dept = $item->departmentalAssociations($this->department());
 
@@ -294,7 +304,7 @@ class Model_JobCard extends \Model_Document{
 			$crud = $p->add('CRUD',$crud_permissions);
 			$crud->setModel($movement_items);
 			
-			if(!$crud->isEditing())
+			if(!$crud->isEditing() and $crud->add_button)
 				$crud->add_button->set('Add Consuption Item');
 
 			$p->add('HR');

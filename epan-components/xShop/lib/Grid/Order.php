@@ -7,10 +7,8 @@ class Grid_Order extends \Grid {
 	function setModel($model,$fields=null){
 
 		parent::setModel($model,array(
-										'order_id','order_from','on_date',
-										'amount','discount_voucher',
-										'discount_voucher_amount','net_amount',
-										'billing_address','shipping_address',
+										'name','order_from','on_date','member',
+										'net_amount',
 										));
 
 		$this->addColumn('expander','details',array('page'=>'xShop_page_owner_order_detail','descr'=>'Details'));
