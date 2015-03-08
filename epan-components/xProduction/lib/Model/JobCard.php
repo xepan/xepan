@@ -250,64 +250,67 @@ class Model_JobCard extends \Model_Document{
 
 	function mark_processed_page($p){
 		$oi= $this->orderItem();
-		$item = $oi->item();
-		$with_this_dept = $item->departmentalAssociations($this->department());
+		
+		if($oi){
+			$item = $oi->item();
+			$with_this_dept = $item->departmentalAssociations($this->department());
 
-		$m = $this->add('xStore/Model_StockMovement_Draft');
-		$m->addCondition('type','ProductionConsume');
-		$m->addCondition('jobcard_id',$this->id);
+			$m = $this->add('xStore/Model_StockMovement_Draft');
+			$m->addCondition('type','ProductionConsume');
+			$m->addCondition('jobcard_id',$this->id);
 
-		if($osp=$this->outSourceParty()){
-			if($osp->warehouse())
-				$from_warehouse_id = $osp->warehouse()->get('id');
-		}
-		else{
-			$from_warehouse_id = $this->department()->warehouse()->get('id');
-		}
-
-		$m->addCondition('from_warehouse_id',$from_warehouse_id);
-		$m->tryLoadAny();
-		if(!$m->loaded()){
-			$m->save();
-			foreach ($c=$item->composition($this->department()) as $comp) {
-				$m->addItem($comp->item(),$comp['qty'],$comp['unit']);
+			if($osp=$this->outSourceParty()){
+				if($osp->warehouse())
+					$from_warehouse_id = $osp->warehouse()->get('id');
 			}
-		}
-		
-		$movement_items = $m->ref('xStore/StockMovementItem');
+			else{
+				$from_warehouse_id = $this->department()->warehouse()->get('id');
+			}
 
-		$crud_permissions=array('allow_add'=>false,'allow_edit'=>false,'allow_del'=>false);
+			$m->addCondition('from_warehouse_id',$from_warehouse_id);
+			$m->tryLoadAny();
+			if(!$m->loaded()){
+				$m->save();
+				foreach ($c=$item->composition($this->department()) as $comp) {
+					$m->addItem($comp->item(),$comp['qty'],$comp['unit']);
+				}
+			}
+			
+			$movement_items = $m->ref('xStore/StockMovementItem');
 
-		if($with_this_dept->canRedefineItems()){
-			$crud_permissions['allow_add']=true;
-			$crud_permissions['allow_del']=true;
+			$crud_permissions=array('allow_add'=>false,'allow_edit'=>false,'allow_del'=>false);
+
+			if($with_this_dept->canRedefineItems()){
+				$crud_permissions['allow_add']=true;
+				$crud_permissions['allow_del']=true;
+			}else{
+				$movement_items->getElement('item_id')->display(array('form'=>'Readonly'));
+			}
+
+			if($with_this_dept->canRedefineQty()){
+				$crud_permissions['allow_edit']=true;
+			}
+
+			$crud = $p->add('CRUD',$crud_permissions);
+			$crud->setModel($movement_items);
+			
+			if(!$crud->isEditing())
+				$crud->add_button->set('Add Consuption Item');
+
+			$p->add('HR');
+
+			$form = $p->add('Form');
+			$form->addSubmit('Consume Stock & Mark Processed');
+
+			if($form->isSubmitted()){
+				$m->executeConsume();
+				$this->setStatus('processed');
+				return true;
+			}	
 		}else{
-			$movement_items->getElement('item_id')->display(array('form'=>'Readonly'));
+				$this->setStatus('processed');
+				return true;
 		}
-
-		if($with_this_dept->canRedefineQty()){
-			$crud_permissions['allow_edit']=true;
-		}
-
-		$crud = $p->add('CRUD',$crud_permissions);
-		$crud->setModel($movement_items);
-		
-		if(!$crud->isEditing())
-			$crud->add_button->set('Add Consuption Item');
-
-		$p->add('HR');
-
-		$form = $p->add('Form');
-		$form->addSubmit('Consume Stock & Mark Processed');
-
-		if($form->isSubmitted()){
-			$m->executeConsume();
-			$this->setStatus('processed');
-			return true;
-		}
-
-		// $p->add('View')->set();
-		// $this->setStatus('processed');
 	}
 
 	function setStatus($status){

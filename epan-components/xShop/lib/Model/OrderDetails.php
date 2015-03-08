@@ -121,7 +121,8 @@ class Model_OrderDetails extends \Model_Document{
 		return $m;
 	}
 
-	function nextDept(){
+	function nextDept($after_department=false){
+		
 		foreach ($dept_status=$this->deptartmentalStatus() as $ds) {
 			if(!$ds['status']) return $ds;
 		}

@@ -63,7 +63,6 @@ class Model_MaterialRequest extends \Model_Document {
 		foreach ($items_array as $item) {
 			$this->addItem($this->add('xShop/Model_Item')->load($item['id']),$item['qty'],$item['unit']);
 		}
-
 		return $this;
 	}
 
@@ -102,10 +101,6 @@ class Model_MaterialRequest extends \Model_Document {
 	function mark_processed_page($page){
 
 		$form = $page->add('Form_Stacked');
-		// $form->addField('DropDown','from_warehouse')->setModel('xStore/Warehouse');
-		// $form->addField('DropDown','to_warehouse')
-		// 	->setFieldHint('TODO :Check if from order only shipping here or if from any department.. that department nly here')
-		// 	->setModel('xStore/Warehouse');
 
 		$cols = $form->add('Columns');
 		$sno_cols= $cols->addColumn(1);
@@ -171,14 +166,6 @@ class Model_MaterialRequest extends \Model_Document {
 			}
 		}
 
-		// echo "ask from wherehouse <br/>";
-		// echo "ask to wherehouse <br/>";
-		// echo "show all items in request with demand qty <br/>";
-		// echo "what you are fulfilling <br/>";
-		// echo "onsubmit varify stock and  execute <br/>";
-		// echo "Create StockMovement and mark this as related Document <br/>";
-
-
 		$page->add('View')->set('stock se minus kar do ... status processed kar do');
 	}
 
@@ -208,11 +195,7 @@ class Model_MaterialRequest extends \Model_Document {
 				$this->saveAs('xStore/Model_MaterialRequest_Completed');
 			}else{
 				throw new \Exception("Rejected", 1);
-
 			}
 		}
-
-	}
-
-	
-}		
+	}	
+}

@@ -117,7 +117,6 @@ class page_base_owner extends Page {
 
 		foreach($production_depts as $d){
 			$production_m->addItem(array($d['name']. ' Job Status','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
-			$production_m->addItem(array($d['name']. ' Material Request Notes','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
 			$production_m->addItem(array($d['name']. ' Material Requests','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$d->id)));
 		}
 
