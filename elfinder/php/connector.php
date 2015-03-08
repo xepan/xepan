@@ -1,10 +1,13 @@
 <?php
 
+$app = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+$app = (parse_url($app));
+$session_var = str_replace("/", "_", str_replace("elfinder/php/connector.php", "",$app['path']));
 
-session_name('web');
+session_name($session_var);
 session_start();
 
-if(!isset( $_SESSION['o']['web']['website_requested']) OR  $_SESSION['o']['web']['website_requested'] == ''){
+if(!isset( $_SESSION['o'][$session_var]['website_requested']) OR  $_SESSION['o'][$session_var]['website_requested'] == ''){
 	exit;
 }
 
@@ -61,9 +64,9 @@ $opts = array(
 		array(
 			'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
 			'path'          => '../files/',         // path to files (REQUIRED)
-			'path'       => '../../epans/'. $_SESSION['o']['web']['website_requested'],
+			'path'       => '../../epans/'. $_SESSION['o'][$session_var]['website_requested'],
 			'URL'           => dirname($_SERVER['PHP_SELF']) . '/../files/', // URL to files (REQUIRED)
-			'URL'        => 'epans/'. $_SESSION['o']['web']['website_requested'],
+			'URL'        => 'epans/'. $_SESSION['o'][$session_var]['website_requested'],
 			'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
 		)
 	)

@@ -6,7 +6,11 @@
 // some of the values here, which are going to have affect
 // on your project
 // error_reporting(E_ALL);
-$session_var='web';
+$app = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+$app = (parse_url($app));
+$app_path = str_replace("/", "_", $app['path']);
+$session_var=$app_path;
+
 if(isset($_GET['page'])){
 	$page=$_GET['page'];
 	$page=str_replace("/", "_", $page);
