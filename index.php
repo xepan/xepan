@@ -9,7 +9,7 @@
 $app = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 $app = (parse_url($app));
 $app_path = str_replace("/", "_", $app['path']);
-$session_var=$app_path;
+$session_var='web';//$app_path;
 
 if(isset($_GET['page'])){
 	$page=$_GET['page'];

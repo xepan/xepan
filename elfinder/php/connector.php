@@ -3,6 +3,7 @@
 $app = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 $app = (parse_url($app));
 $session_var = str_replace("/", "_", str_replace("elfinder/php/connector.php", "",$app['path']));
+$session_var='web';
 
 session_name($session_var);
 session_start();

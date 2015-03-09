@@ -8,9 +8,10 @@ class Model_Department extends \Model_Table{
 		
 
 		$this->hasOne('Branch','branch_id');
-		$this->hasOne('xHR/Department','previous_department_id')->defaultValue('0');
+		//$this->hasOne('xHR/Department','previous_department_id')->defaultValue('0');
 		
-		$this->addField('name')->Caption('Department');
+		$this->addField('production_level')->type('int')->mandatory(true);
+		$this->addField('name')->Caption('Department')->mandatory(true);
 	
 		$this->addField('proceed_after_previous_department')->type('boolean')->group('a~4~Department Attributes');
 		$this->addField('internal_approved')->type('boolean')->group('a~4');
@@ -25,7 +26,7 @@ class Model_Department extends \Model_Table{
 		
 		$this->addField('related_application_namespace')->defaultValue('xProduction')->group('a~4');
 		
-		$this->hasMany('xHR/Department','previous_department_id');
+		// $this->hasMany('xHR/Department','previous_department_id');
 		$this->hasMany('xHR/Post','department_id');
 		$this->hasMany('xHR/Employee','department_id');
 		$this->hasMany('xHR/HolidayBlock','department_id');
@@ -36,14 +37,15 @@ class Model_Department extends \Model_Table{
 		$this->hasMany('xProduction/OutSourcePartyDeptAssociation','department_id');
 		$this->add('Controller_Validator');
 		$this->is(array(
-							'name|to_trim|required?Must be type Department here'
+							'name|to_trim|required?Must be type Department here',
+							'production_level!|int|>=0|<999?Must be a number between 0 and 999'
 							)
 					);
 		
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function getNamespace(){
