@@ -70,9 +70,10 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 			$tab->addTabURL('xHR_page_owner_department_basic','Basic');
 			// $tab->addTabURL('xHR_page_owner_department_attributes','Attributes');
 		}
+
 			$tab->addTabURL('xHR_page_owner_department_post','Posts');
 			$tab->addTabURL('xHR_page_owner_department_salarytemplate','Salary Structure');
-			if($this->api->current_department->isProductionPhase())
+			if($selected_department->isProductionPhase())
 				$tab->addTabURL('xHR_page_owner_department_outsource','Out Source');
 		}else{
 			$dept_col->add('View_Warning')->set('Select any one Department');
