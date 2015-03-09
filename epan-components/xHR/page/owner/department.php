@@ -30,6 +30,7 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 
 		//Department
 		$dept_model=$this->add('xHR/Model_Department');
+		$dept_model->orderBy('production_level','desc');
 		$dept_crud = $cat_col->add('CRUD',array('allow_edit'=>false));
 		$dept_crud->setModel($dept_model,array('name','production_level'),array('name','is_production_department'));
 
