@@ -29,9 +29,9 @@ class Model_Document extends SQL_Model{
 			$this->document_name = str_replace("Model_", "", $class_name);
 		}
 
-		$this->addField('related_document_id');
-		$this->addField('related_root_document_name');
-		$this->addField('related_document_name');
+		$this->addField('related_document_id')->system(true);
+		$this->addField('related_root_document_name')->system(true);
+		$this->addField('related_document_name')->system(true);
 		
 		$this->hasOne('xHR/Employee','created_by_id')->defaultValue($this->api->current_employee->id)->system(true);
 		$this->hasMany('xProduction/Task','document_id');

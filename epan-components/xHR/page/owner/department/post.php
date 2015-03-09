@@ -4,14 +4,18 @@ class page_xHR_page_owner_department_post extends page_xHR_page_owner_main {
 	function init(){
 		parent::init();
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> '.$this->component_name. '<small>  Posts </small>');
-		$dept_id= $this->api->stickyGET('department_id');
+		$dept_id= $this->api->stickyGET('hr_department_id');
 		$dept=$this->add('xHR/Model_Department')->load($dept_id);
 		
 		$post=$this->add('xHR/Model_Post');
-		$post->addCondition('department_id',$_GET['department_id']);
+		$post->addCondition('department_id',$_GET['hr_department_id']);
+
+		$post->addExpression('employees')->set($post->refSQL('xHR/Employee')->count());
 
 		$crud=$this->add('CRUD');
 		$crud->setModel($post);
+
+		$emp_crud = $crud->addRef('xHR/Employee',array('view_options'=>array('allow_add'=>false,'allow_del'=>false,'allow_edit'=>false),'grid_fields'=>array('name'),'label'=>'Employees'));
 
 		if(!$crud->isEditing()){
 			$crud->grid->addFormatter('name','grid/inline');
@@ -50,7 +54,7 @@ class page_xHR_page_owner_department_post extends page_xHR_page_owner_main {
 				}
 			}
 
-			$c->setModel($docs,$fields);
+			$c->setModel($docs,$fields,array('department','document','post','can_view'));
 
 			if($c->isEditing()){
 				if(isset($original_model->actions)){

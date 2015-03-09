@@ -110,6 +110,10 @@ class Model_Department extends \Model_Table{
 		return $this['is_outsourced'];
 	}
 
+	function isProductionPhase(){
+		return $this['is_production_department'];
+	}
+
 	function outSourceParties(){
 		return $this->add('xProduction/Model_OutSourceParty')->addCondition('id',$this->getAssociatedOutsourceParty());
 	}
