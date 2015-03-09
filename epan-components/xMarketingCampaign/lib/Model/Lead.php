@@ -1,10 +1,12 @@
 <?php
 
 namespace xMarketingCampaign;
+
 class Model_Lead extends \Model_Document{
 	public $table="xmarketingcampaign_leads";
 	public $status=array();
-	public $root_document_name="Lead";
+	public $root_document_name="xMarketingCampaign\Lead";
+	
 	function init(){
 		parent::init();
 

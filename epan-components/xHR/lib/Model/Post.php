@@ -7,8 +7,10 @@ class Model_Post extends \Model_Table{
 	
 	function init(){
 		parent::init();
-		$this->hasOne('xHR/Model_Department','department_id');
-		$this->hasOne('xHR/Model_Post','parent_post_id');
+
+		$this->hasOne('xHR/Department','department_id');
+		
+		$this->hasOne('xHR/Post','parent_post_id');
 
 		$this->addField('name')->caption('Post');
 		$this->addField('is_active')->type('boolean')->defaultValue(true);

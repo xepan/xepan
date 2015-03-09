@@ -47,12 +47,12 @@ class page_xShop_page_owner_item_prophases extends page_xShop_page_owner_main{
 			$itemcomposition->addCondition('item_id',$_GET['item_id']);
 			$itemcomposition->addCondition('department_id',$p->id);
 			
+			$dept_assos = $item->ref('xShop/ItemDepartmentAssociation')->addCondition('department_id',$p->id)->loadAny();
 			$form = $p->add('Form');
-			$form->addField('Checkbox','can_redefine_qty','Quantity can be redefined when marking processed ');
-			$form->addField('Checkbox','can_redefine_items','Items can be redefined when marking processed ');
+			$form->addField('Checkbox','can_redefine_qty','Quantity can be redefined when marking processed ')->set($dept_assos['can_redefine_qty']);
+			$form->addField('Checkbox','can_redefine_items','Items can be redefined when marking processed ')->set($dept_assos['can_redefine_items']);
 			$form->addSubmit('Update Info');
 			if($form->isSubmitted()){
-				$dept_assos = $item->ref('xShop/ItemDepartmentAssociation')->addCondition('department_id',$p->id)->loadAny();
 				$dept_assos['can_redefine_qty'] = $form['can_redefine_qty'];
 				$dept_assos['can_redefine_items'] = $form['can_redefine_items'];
 				$dept_assos->save();

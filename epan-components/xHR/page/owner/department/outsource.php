@@ -4,13 +4,13 @@ class page_xHR_page_owner_department_outsource extends Page{
 	function init(){
 		parent::init();
 
-		if(!$_GET['department_id'])
+		if(!$_GET['hr_department_id'])
 			throw new \Exception('department_id must be in GET');
 			
 			// return;
 		
-		$department_id=$this->api->stickyGET('department_id');
-		$selected_dept_model = $this->add('xHR/Model_Department')->load($_GET['department_id']);		
+		$department_id=$this->api->stickyGET('hr_department_id');
+		$selected_dept_model = $this->add('xHR/Model_Department')->load($_GET['hr_department_id']);		
 		
 		if(!$selected_dept_model->loaded())
 			return;

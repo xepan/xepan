@@ -15,7 +15,7 @@ class page_xHR_page_owner_department_basic extends Page{
 			return;
 		
 		$form = $this->add('Form_Stacked');
-		$form->setModel($selected_dept_model,array('previous_department_id','name','is_active'));
+		$form->setModel($selected_dept_model,array('name','production_level','is_active'));
 		$form->addSubmit()->set('Update');
 
 		$form->add('Controller_FormBeautifier');
