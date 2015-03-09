@@ -107,7 +107,7 @@ class page_install extends Page {
 			$user['user_management']=true;
 			$user['general_settings']=true;
 			$user['application_management']=true;
-			$user['website_desinging']=true;
+			$user['website_designing']=true;
 			$user['is_active']=true;
 			$user->save();
 			
