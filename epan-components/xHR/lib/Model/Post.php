@@ -10,7 +10,7 @@ class Model_Post extends \Model_Table{
 
 		$this->hasOne('xHR/Department','department_id');
 		
-		$this->hasOne('xHR/Post','parent_post_id');
+		$this->hasOne('xHR/Post','parent_post_id')->mandatory(true);
 
 		$this->addField('name')->caption('Post');
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
