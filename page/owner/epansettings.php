@@ -57,6 +57,6 @@ class page_owner_epansettings extends page_base_owner {
 	}
 
 	function page_comp_settings(){
-		echo "df";
+		echo "TODO ";
 	}
 }
