@@ -1,35 +1,27 @@
 <?php
 namespace xStore;
 
-class Model_MaterialRequest extends \Model_Document {
+class Model_MaterialRequest extends \xProduction\Model_JobCard {
 	
 	public $table = 'xstore_material_request';
 
 	public $root_document_name='xStore\MaterialRequest';
-	public $status = array('draft','submitted','assigned','processing','processed','forwarded',
+	public $status = array('draft','submitted','approved','assigned','processing','processed','forwarded',
 							'complete','cancel','return');
 
 	function init(){
 		parent::init();
 
-		$this->hasOne('xHR/Department','from_department_id');
-		$this->hasOne('xHR/Department','to_department_id');
-		$this->hasOne('xStore/Warehouse','dispatch_to_warehouse_id');
-		$this->hasOne('xShop/OrderDetails','orderitem_id');
+		$this->addCondition('type','MaterialRequest');
 
 		$this->getElement('status')->defaultValue('submitted');
 
-		$this->hasMany('xStore/MaterialRequestItem','material_request_id');
-		$this->hasMany('xStore/StockMovement','material_request_id');
+		$this->hasMany('xStore/MaterialRequestItem','material_request_jobcard_id');
+		$this->hasMany('xStore/StockMovement','material_request_jobcard_id');
 
-		$this->addHook('beforeInsert',$this);
-
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function beforeInsert($obj){
-		$obj['name'] = rand(1000,9999);
-	}
 
 	function relatedChallan(){
 		$challan =  $this->ref('xStore/StockMovement')->tryLoadAny();
@@ -38,72 +30,20 @@ class Model_MaterialRequest extends \Model_Document {
 		return false;
 	}
 
-	function fromDepartment(){
-		return $this->ref('from_department_id');
-	}
-
-	function toDepartment(){
-		return $this->ref('to_department_id');
-	}
-
-	function orderItem(){
-		if(!$this['orderitem_id']){
-			return false;
-		}
-		return $this->ref('orderitem_id');
-	}
-
-	function create($from_department, $to_department, $items_array, $related_document=array(), $order_item=false,  $dispatch_to_warehouse=false){
-		$this['from_department_id'] = $from_department->id;
-		$this['to_department_id'] = $to_department->id;
-
-		if(count($related_document)){
-			$this['related_document_id'] = $related_document['related_document_id'];
-			$this['related_root_document_name'] = $related_document['related_root_document_name'];
-			$this['related_document_name'] = $related_document['related_document_name'];
-		}
-
-		if($order_item){
-			$this['orderitem_id'] = $order_item->id;
-		}
-
-		if($dispatch_to_warehouse){
-			$this['dispatch_to_warehouse_id'] = $dispatch_to_warehouse->id;
-		}else{
-			$this['dispatch_to_warehouse_id'] = $from_department->warehouse()->get('id');
-		}
-
-		$this->save();
-
-		foreach ($items_array as $item) {
-			$this->addItem($this->add('xShop/Model_Item')->load($item['id']),$item['qty'],$item['unit']);
-		}
-		return $this;
-	}
-
 	// Called if direct order to store is required
 	function createFromOrder($order_item, $order_dept_status ){
 		$new_request = $this->add('xStore/Model_MaterialRequest');
 		$new_request->addCondition('orderitem_id',$order_item->id);
 		$new_request->tryLoadAny();
 
-		// Create Request From Next Department In Phases :: IMPORTANT
+		if(!$new_request->loaded()){
+			// Create Request From Next Department In Phases :: IMPORTANT
 
-		$from_dept_status = $order_item->nextDeptStatus($order_dept_status->department());
-		$from_dept = $from_dept_status->department();
-
-		$new_request['from_department_id'] = $from_dept->id;
-		$new_request['to_department_id'] = $order_dept_status['department_id'];
-		$new_request['dispatch_to_warehouse_id'] = $from_dept->warehouse()->get('id');
-
-		$order= $order_item->ref('order_id');
-
-		$new_request['related_document_id'] = $order_item['order_id'];
-		$new_request['related_root_document_name'] = $order->root_document_name;
-		$new_request['related_document_name'] = $order->document_name;
-
-
-		if(!$new_request->loaded()) $new_request->save();
+			$from_dept_status = $order_item->nextDeptStatus($order_dept_status->department());
+			$from_dept = $from_dept_status->department();
+			$new_request->create($from_dept, $order_dept_status->department(), $related_document=$order_item->order(), $order_item, $items_array=array(), $from_dept->warehouse()->get('id'));
+			$new_request->save();
+		}
 
 		$new_request->addItem($order_item->ref('item_id'),$order_item['qty']);
 
@@ -178,7 +118,7 @@ class Model_MaterialRequest extends \Model_Document {
 				// commit
 				$movement_challan->executeStockTransfer();
 
-				if($this->toDepartment()->isStore() AND $department_association = $this->orderItem()->nextDeptStatus($this->toDepartment())){
+				if($this->toDepartment()->isStore() AND $this->isCreatedFromOrder() AND $department_association = $this->orderItem()->nextDeptStatus($this->toDepartment())){
 					$department_association->createJobCardFromOrder();
 				}
 
@@ -224,12 +164,16 @@ class Model_MaterialRequest extends \Model_Document {
 
 		if($form->isSubmitted()){
 			if($form->isClicked($accept_btn)){
-				$this->relatedChallan()->acceptMaterial();
-				$this->setStatus('completed');
+				$this->accept();
 			}else{
 				throw new \Exception("Rejected", 1);
 			}
 		}
+	}
+
+	function accept(){
+		$this->relatedChallan()->acceptMaterial();
+		$this->setStatus('completed');
 	}
 
 	function setStatus($status){
@@ -240,6 +184,4 @@ class Model_MaterialRequest extends \Model_Document {
 		$this['status']=$status;
 		$this->saveAs('xStore/Model_MaterialRequest');
 	}
-
-
 }
