@@ -20,6 +20,7 @@ class Controller_Acl extends \AbstractController {
 		'can_forward'=>'No',
 		'can_receive'=>'No',
 		'can_accept'=>'No',
+		'can_cancel'=>'No',
 		'can_start_processing'=>'No',
 		'can_mark_processed'=>'No',
 		'can_assign'=>'No',
@@ -200,6 +201,10 @@ class Controller_Acl extends \AbstractController {
 
 		if($this->permissions['can_accept'] and $this->permissions['can_accept'] !='No'){
 			$this->manageAction('accept');
+		}
+
+		if($this->permissions['can_cancel'] and $this->permissions['can_cancel'] !='No'){
+			$this->manageAction('cancel');
 		}
 
 		if($this->permissions['can_forward'] !='No'){

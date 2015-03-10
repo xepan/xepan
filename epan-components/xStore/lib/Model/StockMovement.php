@@ -67,7 +67,9 @@ class Model_StockMovement extends \Model_Document{
 
 	function executeStockTransfer(){
 		foreach ($this->itemrows() as $itemrow) {
-			$this->fromWarehouse()->deductItemStock($itemrow->item(),$itemrow['qty']);
+			if($itemrow->item()->mantainInventory()){
+				$this->fromWarehouse()->deductItemStock($itemrow->item(),$itemrow['qty']);
+			}
 		}
 	}
 
@@ -83,7 +85,9 @@ class Model_StockMovement extends \Model_Document{
 
 	function executeConsume(){
 		foreach ($this->itemrows() as $itemrow) {
-			$this->fromWarehouse()->deductItemStock($itemrow->item(),$itemrow['qty']);
+			if($itemrow->item()->mantainInventory()){
+				$this->fromWarehouse()->deductItemStock($itemrow->item(),$itemrow['qty']);
+			}
 		}
 		$this['status']='accepted';
 		$this->saveAs('xStore/StockMovement_Accepted');

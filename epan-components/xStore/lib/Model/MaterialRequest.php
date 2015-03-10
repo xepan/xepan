@@ -115,7 +115,7 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 				foreach($this->ref('xStore/MaterialRequestItem') as $requested_item){
 					$item = $requested_item->item();
 					
-					if(!$item->allowNegativeStock()){
+					if($item->mantainInventory() AND !$item->allowNegativeStock()){
 						if(($avl_qty=$from_warehouse->getStock($item)) < $form['alloted_qty_'.$i])
 							throw $this->exception('Not Sufficient Qty Available ['.$avl_qty.']','ValidityCheck')->setField('req_qty_'.$i);
 					}

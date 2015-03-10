@@ -590,6 +590,10 @@ class Model_Item extends \Model_Table{
 		return $m;
 	}
 
+	function mantainInventory(){
+		return $this['mantain_inventory'];
+	}
+
 	function allowNegativeStock(){
 		return $this['allow_negative_stock'];
 	}

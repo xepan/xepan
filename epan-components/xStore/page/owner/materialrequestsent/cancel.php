@@ -1,6 +1,6 @@
 <?php
 
-class page_xStore_page_owner_materialrequest_cancel extends page_xStore_page_owner_main{
+class page_xStore_page_owner_materialrequestsent_cancel extends page_xStore_page_owner_main{
 	function init(){
 		parent::init();
 		$di = $this->api->stickyGET('department_id');
