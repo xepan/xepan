@@ -126,7 +126,7 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 				// commit
 				$movement_challan->executeStockTransfer();
 
-				if($this->toDepartment()->isStore() AND $this->isCreatedFromOrder() AND $department_association = $this->orderItem()->nextDeptStatus($this->toDepartment())){
+				if(($this->toDepartment()->isPurchase() OR $this->toDepartment()->isStore()) AND $this->isCreatedFromOrder() AND $department_association = $this->orderItem()->nextDeptStatus($this->toDepartment())){
 					$department_association->createJobCardFromOrder();
 				}
 

@@ -35,12 +35,8 @@ class Model_Warehouse extends \Model_Table{
 		$m['to_warehouse_id'] = $to_warehouse->id;
 
 		if($material_request){
-			$m['material_request_id']=$material_request->id;
-
-			$m['related_root_document_name'] = $material_request['related_root_document_name']?: $material_request->root_document_name;
-			$m['related_document_name'] = $material_request['related_document_name']?: $material_request->document_name;
-			$m['related_document_id'] = $material_request['related_document_id']?: $material_request->id;
-
+			$m['material_request_jobcard_id']=$material_request->id;
+			$m->relatedDocument($material_request);
 		}
 
 		$m->save();
