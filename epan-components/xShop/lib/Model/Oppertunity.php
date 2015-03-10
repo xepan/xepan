@@ -5,7 +5,15 @@ namespace xShop;
 class Model_Oppertunity extends \Model_Document{
 	public $table="xshop_oppertunity";
 	public $status=array('Active','Dead');
-	public $root_document_name="Oppertunity";
+	public $root_document_name="xShop\Oppertunity";
+
+	public $actions=array(
+			'can_view'=>array('caption'=>'Whose created Oppertunity this post can see'),
+			'allow_edit'=>array('caption'=>'Whose created Oppertunity this post can edit'),
+			'allow_add'=>array('caption'=>'Can this post create new Oppertunity'),
+			'allow_del'=>array('caption'=>'Whose Created Oppertunity this post can delete'),
+		);
+	
 	function init(){
 		parent::init();
 
