@@ -52,7 +52,7 @@ class CRUD_User extends CRUD{
 				$this->form->getElement('user_management')->destroy();
 				$this->form->getElement('general_settings')->destroy();
 				$this->form->getElement('application_management')->destroy();
-				$this->form->getElement('website_desinging')->destroy();
+				$this->form->getElement('website_designing')->destroy();
 			}
 		}
 		parent::render();

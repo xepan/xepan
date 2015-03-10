@@ -95,4 +95,22 @@ class Model_Document extends SQL_Model{
 		return $rt;
 	}
 
+	function relatedDocument($document=false,$root=true,$load_current_status=false){
+		if($document){
+			$this['related_document_id'] = $document->id;
+			$this['related_root_document_name'] = $document->root_document_name;
+			$this['related_document_name'] = $document->document_name;
+		}else{
+			if($root){
+				$class = explode("\\", $this['related_root_document_name']);
+			}else{
+				$class = explode("\\", $this['related_document_name']);
+			}
+			$class=$class[0].'/Model_'.$class[1];
+			$m=$this->add($class);
+			$m->load($this['related_document_id']);
+			return $m;
+		}
+	}
+
 }

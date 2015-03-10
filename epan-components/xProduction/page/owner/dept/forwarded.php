@@ -1,6 +1,6 @@
 <?php
 
-class page_xProduction_page_owner_dept_forwardedtonext extends page_xProduction_page_owner_dept_base{
+class page_xProduction_page_owner_dept_forwarded extends page_xProduction_page_owner_dept_base{
 	
 	function init(){
 		parent::init();
@@ -9,7 +9,7 @@ class page_xProduction_page_owner_dept_forwardedtonext extends page_xProduction_
 		$this->api->stickyGET('department_id');
 		
 		$forwarded_to_me=$this->add('xProduction/Model_Jobcard_Forwarded');
-		$forwarded_to_me->addCondition('department_id',$_GET['department_id']?:$this->api->current_employee->department()->get('id'));
+		$forwarded_to_me->addCondition('to_department_id',$_GET['department_id']?:$this->api->current_employee->department()->get('id'));
 		
 		$crud=$this->add('CRUD');
 		$crud->setModel($forwarded_to_me);

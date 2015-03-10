@@ -21,7 +21,7 @@ class page_xHR_page_owner_setup extends page_xHR_page_owner_main {
 	// 		$tab->addTabURL('xHR/page/owner/salarytemplate','Salary Templates');
 	// 		$tab->addTabURL('xHR/page/owner/salarytype','Salary Type');
 	
-	// }
+	}
 
 	function populateSetupMenu($parent){
 		$l=$parent->add('Lister');

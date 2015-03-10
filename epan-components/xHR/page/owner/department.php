@@ -30,6 +30,7 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 
 		//Department
 		$dept_model=$this->add('xHR/Model_Department');
+		$dept_model->_dsql()->order('production_level','asc');
 		$dept_crud = $cat_col->add('CRUD',array('allow_edit'=>false));
 		$dept_crud->setModel($dept_model,array('name','production_level'),array('name','is_production_department'));
 
@@ -70,9 +71,10 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 			$tab->addTabURL('xHR_page_owner_department_basic','Basic');
 			// $tab->addTabURL('xHR_page_owner_department_attributes','Attributes');
 		}
+
 			$tab->addTabURL('xHR_page_owner_department_post','Posts');
 			$tab->addTabURL('xHR_page_owner_department_salarytemplate','Salary Structure');
-			if($this->api->current_department->isProductionPhase())
+			if($selected_department->isProductionPhase())
 				$tab->addTabURL('xHR_page_owner_department_outsource','Out Source');
 		}else{
 			$dept_col->add('View_Warning')->set('Select any one Department');

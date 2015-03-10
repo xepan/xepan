@@ -4,21 +4,22 @@ namespace xProduction;
 
 class Model_JobCard extends \Model_Document{
 	public $table ="xproduction_jobcard";
-	public $status=array('-','received','approved','assigned','processing','processed','completed','forwarded');
+	public $status=array('draft','submitted','received','approved','assigned','processing','processed','forwarded','completed','canceled');
 	public $root_document_name = 'xProduction\JobCard';
 
 	function init(){
 		parent::init();
 		// hasOne OrderItemDepartment Association id
 		$this->hasOne('xShop/OrderDetails','orderitem_id');
-		$this->hasOne('xHR/Department','department_id');
+		$this->hasOne('xHR/Department','to_department_id');
 		$this->hasOne('xHR/Department','from_department_id');
+		$this->hasOne('xStore/Warehouse','dispatch_to_warehouse_id');
 		$this->hasOne('xShop/OrderItemDepartmentalStatus','orderitem_departmental_status_id');
 		
-		$this->addField('type')->enum(array('JobCard','MaterialRequest'))->defaultValue('JobCard');
+		$this->addField('type')->enum(array('JobCard','MaterialRequest','DispatchRequest'))->defaultValue('JobCard');
 
 		$this->addField('name')->caption('Job Number');
-		$this->getElement('status')->defaultValue('-');
+		$this->getElement('status')->defaultValue('submitted');
 		
 		$this->addExpression('outsource_party')->set(function($m,$q){
 			$p = $m->add('xProduction/Model_OutSourceParty');
@@ -31,13 +32,21 @@ class Model_JobCard extends \Model_Document{
 		$this->hasMany('xProduction/JobCardEmployeeTeamAssociation','jobcard_id');
 		$this->hasMany('xStore/Model_StockMovement','jobcard_id');
 
+
 		$this->add('Controller_Validator');
 		$this->is(array(
 							'name|to_trim|required',
 							)
 					);
+
+		$this->addHook('beforeInsert',$this);
+
 		$this->add('dynamic_model/Controller_AutoCreator');
 
+	}
+
+	function beforeInsert($obj){
+		$obj['name'] = rand(1000,9999);
 	}
 
 	function createFromOrder($order_item, $order_dept_status ){
@@ -50,7 +59,7 @@ class Model_JobCard extends \Model_Document{
 			return false;
 		
 		$new_job_card['orderitem_id'] = $order_item->id;
-		$new_job_card['department_id'] = $order_dept_status['department_id'];
+		$new_job_card['to_department_id'] = $order_dept_status['department_id'];
 		
 		$sales_dept = $this->add('xHR/Model_Department')->loadBy('related_application_namespace','xShop');
 		$new_job_card['from_department_id'] = $sales_dept->id;
@@ -76,7 +85,7 @@ class Model_JobCard extends \Model_Document{
 		if($prev_dept_id){
 			$pre_dept_job_card = $this->add('xProduction/Model_JobCard');
 			$pre_dept_job_card->addCondition('orderitem_id',$this['orderitem_id']);
-			$pre_dept_job_card->addCondition('department_id',$prev_dept_id);
+			$pre_dept_job_card->addCondition('to_department_id',$prev_dept_id);
 			$pre_dept_job_card->tryLoadAny();
 
 			if($pre_dept_job_card->loaded()) return $pre_dept_job_card;
@@ -84,22 +93,28 @@ class Model_JobCard extends \Model_Document{
 		
 		return false;
 	}
-
-	function dept(){
-		return $this->ref('department_id');
+	
+	function fromDepartment(){
+		return $this->ref('from_department_id');
 	}
 
 	function department(){
-		return $this->dept();
+		return $this->toDepartment();
+	}
+
+	function toDepartment(){
+		return $this->ref('to_department_id');
 	}
 
 	function orderItem(){
 		if(!$this['orderitem_id']){
-			throw new \Exception("Orderite id ". $this['id'], 1);
-			
 			return false;
 		}
 		return $this->ref('orderitem_id');
+	}
+
+	function isCreatedFromOrder(){
+		return $this['orderitem_id'];
 	}
 
 	function departmentalStatus(){
@@ -115,6 +130,37 @@ class Model_JobCard extends \Model_Document{
 		$t = $this->departmentalStatus();
 		$t['outsource_party_id'] = 0;
 		$t->save();
+	}
+
+	function create($from_department, $to_department, $related_document=false, $order_item=false, $items_array=array(), $dispatch_to_warehouse=false){
+		$this['from_department_id'] = $from_department->id;
+		$this['to_department_id'] = $to_department->id;
+
+		if($related_document){
+			$this->relatedDocument($related_document);
+		}
+
+		if($order_item){
+			$this['orderitem_id'] = $order_item->id;
+			$this['orderitem_departmental_status_id'] = $order_item->deptartmentalStatus($to_department)->get('id');
+		}
+
+		if($dispatch_to_warehouse){
+			$this['dispatch_to_warehouse_id'] = $dispatch_to_warehouse->id;
+		}else{
+			$this['dispatch_to_warehouse_id'] = $from_department->warehouse()->get('id');
+		}
+
+		$this->save();
+
+		foreach ($items_array as $item) {
+			$this->addItem($this->add('xShop/Model_Item')->load($item['id']),$item['qty'],$item['unit']);
+		}
+		return $this;
+	}
+
+	function submit(){
+		$this->setStatus('submitted');
 	}
 
 	function receive_page($page){
@@ -236,16 +282,26 @@ class Model_JobCard extends \Model_Document{
 	}
 
 	function forward($note){
-		if($nd = $this->orderItem()->nextDeptStatus()){
-			$nd->createJobCardFromOrder();
-			if($nd->department()->isDispatch()){
+		if($next = $this->orderItem()->nextDeptStatus()){
+			if($next->department()->isDispatch()){
 				$oi=$this->orderItem();
 
 				$items_array=array(array('id'=>$oi->item()->get('id'),$oi['qty'],$oi['unit']));
 
 				$this->add('xStore/Model_MaterialRequest')
-					->create($this->add('xHR/Model_Department')->loadDispatch(), $this->departmentalStatus()->department(), $items_array, $related_document=array(), $oi,  $dispatch_to_warehouse=false);
+					->create(
+						$from_department=$this->add('xHR/Model_Department')->loadDispatch(),
+						$to_department=$this->department(), 
+						$related_document=$this, 
+						$order_item=$this->orderItem(), 
+						$items_array, 
+						$dispatch_to_warehouse=false
+						);
+
+			}else{
+				$nd->createJobCardFromOrder();
 			}
+
 			$this->setStatus('forwarded');
 		}else{
 			$this->setStatus('completed');

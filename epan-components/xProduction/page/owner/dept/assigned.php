@@ -6,15 +6,13 @@ class page_xProduction_page_owner_dept_assigned extends page_xProduction_page_ow
 		parent::init();
 		
 		
-		$crud=$this->add('CRUD',array('grid_class'=>'xProduction/Grid_JobCard'));
-		$crud->setModel('xProduction/Jobcard_Assigned');
-		
-		if(!$crud->isEditing()){
-			$g=$crud->grid;
-			$g->addPaginator(15);
-			$g->addQuickSearch(array('name'));
-		}
+		$assigned_jobcard_model=$this->add('xProduction/Model_Jobcard_Assigned');
 
+		if($this->api->stickyGET('department_id'))
+			$assigned_jobcard_model->addCondition('to_department_id',$_GET['department_id']);
+
+		$crud=$this->add('CRUD',array('grid_class'=>'xProduction/Grid_JobCard'));
+		$crud->setModel($assigned_jobcard_model);
 		$crud->add('xHR/Controller_Acl');
 	}
 }

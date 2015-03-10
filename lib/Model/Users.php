@@ -24,7 +24,7 @@ class Model_Users extends Model_Table {
 		// $this->addField('is_systemuser')->type('boolean')->defaultValue(false);
 		// $this->addField('is_frontenduser')->type('boolean')->defaultValue(false);
 		// $this->addField('is_backenduser')->type('boolean')->defaultValue(false);
-		$f = $this->addField('is_active')->type('boolean')->defaultValue(false)->group('c~6')->sortable(true);
+		$f = $this->addField('is_active')->type('boolean')->defaultValue(true)->group('c~6')->sortable(true);
 		$f->icon = "fa fa-exclamation~blue";
 
 		$f = $this->addField('user_management')->type('boolean')->defaultValue(false)->group('c~6');

@@ -18,7 +18,7 @@ class Model_StockMovement extends \Model_Document{
 		$this->hasOne('xShop/MemberDetails','from_memberdetails_id');
 		$this->hasOne('xShop/MemberDetails','to_memberdetails_id');
 
-		$this->hasOne('xStore/MaterialRequest','material_request_id');
+		$this->hasOne('xStore/MaterialRequest','material_request_jobcard_id');
 		$this->hasOne('xProduction/JobCard','jobcard_id');
 		$this->hasOne('xPurchase/PurchaseOrder','po_id');
 		

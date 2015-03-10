@@ -6,7 +6,7 @@ class Model_Order extends \Model_Document{
 	public $table='xshop_orders';
 	public $status = array('draft','submitted','approved','processing','processed','dispatched',
 							'complete','cancel','return');
-	public $root_document_name = 'Order';
+	public $root_document_name = 'xShop\Order';
 
 	function init(){
 		parent::init();
@@ -222,14 +222,12 @@ class Model_Order extends \Model_Document{
 
 
 	function submit(){
-		$this['status']='submitted';
-		$this->saveAs('xShop/Model_Order');
+		$this->setStatus('submitted');
 		return $this;
 	}
 
 	function reject(){
-		$this['status']='submitted';
-		$this->saveAs('xShop/Model_Order');
+		$this->setStatus('submitted');
 		return $this;
 	}
 
@@ -250,18 +248,16 @@ class Model_Order extends \Model_Document{
 		// check conditions
 		foreach ($ois=$this->orderItems() as $oi) {
 			if($department_association = $oi->nextDeptStatus()){
-				// if($department_association->department()->isOutSourced() AND ! $department_association->outSourceParty()){
-				// 	throw $this->exception('OrderItem '.$oi['item'].' must be defined with Outsource Party');
-				// }
 				$department_association->createJobCardFromOrder();
 			}
 		}
 
-		$this['status']='approved';
-		$this->saveAs('xShop/Model_Order');
-		// pick first '-' status department and forward the (all) orders
+		$this->setStatus('approved');
 		return $this;
 	}
 
-
+	function setStatus($status){
+		$this['status']=$status;
+		$this->saveAs('xShop/Model_Order');
+	}
 }
