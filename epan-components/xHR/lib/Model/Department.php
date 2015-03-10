@@ -45,6 +45,8 @@ class Model_Department extends \Model_Table{
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
 
+		$this->_dsql()->order('production_level','asc');
+
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 

@@ -41,7 +41,14 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 
 			$from_dept_status = $order_item->nextDeptStatus($order_dept_status->department());
 			$from_dept = $from_dept_status->department();
-			$new_request->create($from_dept, $order_dept_status->department(), $related_document=$order_item->order(), $order_item, $items_array=array(), $from_dept->warehouse()->get('id'));
+			$new_request->create(
+					$from_dept,
+					$order_dept_status->department(),
+					$related_document=$order_item->order(), 
+					$order_item, 
+					$items_array=array(), 
+					$from_dept->warehouse()
+				);
 			$new_request->save();
 		}
 

@@ -30,9 +30,8 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 
 		//Department
 		$dept_model=$this->add('xHR/Model_Department');
-		$dept_model->_dsql()->order('production_level','asc');
 		$dept_crud = $cat_col->add('CRUD',array('allow_edit'=>false));
-		$dept_crud->setModel($dept_model,array('name','production_level'),array('name','is_production_department'));
+		$dept_crud->setModel($dept_model,array('name','production_level'),array('name','is_production_department','is_system'));
 
 		if(!$dept_crud->isEditing()){
 			$dept_crud->grid->addMethod('format_name',function($g,$f)use($dept_col){
@@ -42,12 +41,13 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 			$dept_crud->grid->addFormatter('name','name');
 			
 			$dept_crud->grid->addMethod('format_mydelete',function($g,$f){
-				if(!$g->model['is_production_department'])
+				if($g->current_row['is_system']!=0)
 					$g->current_row_html[$f]='';
 			});
 
 			$dept_crud->grid->addFormatter('delete','mydelete');
 			$dept_crud->grid->removeColumn('is_production_department');
+			$dept_crud->grid->removeColumn('is_system');
 		}
 
 

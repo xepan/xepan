@@ -35,7 +35,7 @@ class Model_JobCard extends \Model_Document{
 
 		$this->add('Controller_Validator');
 		$this->is(array(
-							'name|to_trim|required',
+							// 'name|to_trim|required',
 							)
 					);
 

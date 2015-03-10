@@ -14,9 +14,9 @@ class page_xProduction_page_owner_dept_main extends page_xProduction_page_owner_
 
 		$tabs=$this->app->layout->add('Tabs');
 
-		$status = $this->add($dept->getNamespace().'/Model_'.  $dept->jobcard_document());
+		$document = $this->add($dept->getNamespace().'/Model_'.  $dept->jobcard_document());
 
-		foreach ($status->status as $st) {
+		foreach ($document->status as $st) {
 			$tabs->addTabURL('xProduction_page_owner_dept_'.$st,ucwords($st));
 		}
 		// $tabs->addTabURL('xProduction_page_owner_dept_received','Received');
