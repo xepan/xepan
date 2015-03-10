@@ -37,6 +37,12 @@ class Model_Document extends SQL_Model{
 		$this->hasMany('xProduction/Task','document_id');
 	}
 
+	function getRootClass(){
+		$class = explode("\\", $this->root_document_name);
+		$class=$class[0].'/Model_'.$class[1];
+		return $class;
+	}
+
 	function assign_page($page){
 		$page->add('View')->set('In Model Document ... complete me ');
 	}

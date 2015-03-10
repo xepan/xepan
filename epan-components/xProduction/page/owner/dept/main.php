@@ -19,12 +19,5 @@ class page_xProduction_page_owner_dept_main extends page_xProduction_page_owner_
 		foreach ($document->status as $st) {
 			$tabs->addTabURL('xProduction_page_owner_dept_'.$st,ucwords($st));
 		}
-		// $tabs->addTabURL('xProduction_page_owner_dept_received','Received');
-		// $tabs->addTabURL('xProduction_page_owner_dept_assigned','Assigned');
-		// $tabs->addTabURL('xProduction_page_owner_dept_processing','Processing');
-		// $tabs->addTabURL('xProduction_page_owner_dept_processed','Processed');
-		// $tabs->addTabURL('xProduction_page_owner_dept_approved','Approved');
-		// $tabs->addTabURL('xProduction_page_owner_dept_forwardedtonext','Forwarded to next');
-		// $tabs->addTabURL('xProduction_page_owner_dept_completed','Completed');
 	}
 }

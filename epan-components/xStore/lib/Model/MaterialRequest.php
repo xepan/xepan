@@ -49,6 +49,7 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 					$items_array=array(), 
 					$from_dept->warehouse()
 				);
+			$new_request['status']='approved'; // AUTO CREATED AND CONSIDERED APPROVED
 			$new_request->save();
 		}
 
@@ -183,12 +184,5 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 		$this->setStatus('completed');
 	}
 
-	function setStatus($status){
-		if($this['orderitem_id']){
-			$ds = $this->orderItem()->deptartmentalStatus($this->toDepartment());
-			$ds->setStatus(ucwords($status) .' in ' . $this['department']);
-		}
-		$this['status']=$status;
-		$this->saveAs('xStore/Model_MaterialRequest');
-	}
+	
 }

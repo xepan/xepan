@@ -6,6 +6,13 @@ class Model_Lead extends \Model_Document{
 	public $table="xmarketingcampaign_leads";
 	public $status=array();
 	public $root_document_name="xMarketingCampaign\Lead";
+
+	public $actions=array(
+			'can_view'=>array('caption'=>'Whose created Leads this post can see'),
+			'allow_edit'=>array('caption'=>'Whose created Leads this post can edit'),
+			'allow_add'=>array('caption'=>'Can this post create new Leads'),
+			'allow_del'=>array('caption'=>'Whose Created Leads this post can delete'),
+		);
 	
 	function init(){
 		parent::init();

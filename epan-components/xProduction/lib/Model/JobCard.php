@@ -4,7 +4,7 @@ namespace xProduction;
 
 class Model_JobCard extends \Model_Document{
 	public $table ="xproduction_jobcard";
-	public $status=array('draft','submitted','received','approved','assigned','processing','processed','forwarded','completed','canceled');
+	public $status=array('draft','submitted','approved','received','assigned','processing','processed','forwarded','completed','canceled');
 	public $root_document_name = 'xProduction\JobCard';
 
 	function init(){
@@ -46,7 +46,7 @@ class Model_JobCard extends \Model_Document{
 	}
 
 	function beforeInsert($obj){
-		$obj['name'] = rand(1000,9999);
+		$this['name'] = rand(1000,9999);
 	}
 
 	function createFromOrder($order_item, $order_dept_status ){
@@ -65,6 +65,7 @@ class Model_JobCard extends \Model_Document{
 		$new_job_card['from_department_id'] = $sales_dept->id;
 
 		$new_job_card['name']=rand(1000,9999);
+		$new_job_card['status']='approved';
 		$new_job_card->save();
 
 	}
@@ -382,10 +383,11 @@ class Model_JobCard extends \Model_Document{
 	function setStatus($status){
 		if($this['orderitem_id']){
 			$ds = $this->orderItem()->deptartmentalStatus($this->department());
-			$ds->setStatus(ucwords($status) .' in ' . $this['department']);
+			$ds->setStatus(ucwords($status) .' in ' . $this->department()->get('name'));
+			$this->orderItem()->order()->setStatus('processing');
 		}
 		$this['status']=$status;
-		$this->saveAs('xProduction/Model_JobCard');
+		$this->saveAs($this->getRootClass());
 	}
 
 }	
