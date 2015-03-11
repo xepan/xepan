@@ -152,6 +152,21 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 		$page->add('View')->set('stock se minus kar do ... status processed kar do');
 	}
 
+	function receive_page($p){
+		$p->add('View_Success')->set('What to do here');
+		$form = $p->add('Form_Stacked');
+		$form->addSubmit('Receive');
+
+		if($form->isSubmitted()){
+			$this->receive();
+			return true;
+		}
+	}
+
+	function receive(){
+		$this->setStatus('received');
+	}
+
 	function submit_page($p){
 		$p->add('View')->set('Hello');
 		$form = $p->add('Form');

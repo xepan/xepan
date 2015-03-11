@@ -21,6 +21,7 @@ class Model_StockMovement extends \Model_Document{
 		$this->hasOne('xStore/MaterialRequest','material_request_jobcard_id');
 		$this->hasOne('xProduction/JobCard','jobcard_id');
 		$this->hasOne('xPurchase/PurchaseOrder','po_id');
+		$this->hasOne('xDispatch/DispatchRequest','dispatch_request_id');
 		
 		$this->addField('type')->enum(array('StockTransfer','Sales','Purchase','SalesReturn','PurchaseReturn','ProductionConsume'));
 

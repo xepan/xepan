@@ -33,6 +33,7 @@ class Model_ItemCustomFieldAssos extends \Model_Table{
 		$old_model = $this->add('xShop/Model_ItemCustomFieldAssos');
 		
 		$old_model->addCondition('item_id',$this['item_id'])
+				->addCondition('department_phase_id',$this['department_phase_id'])
 				->addCondition('customfield_id',$this['customfield_id'])
 				->addCondition('id','<>',$this->id)
 				->tryLoadAny();

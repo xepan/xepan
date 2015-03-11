@@ -7,7 +7,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 	public $root_document_name='xStore\DispatchRequest';
 	public $status = array('draft','submitted','approved','assigned','processing','processed','forwarded',
-							'complete','cancel','return');
+							'complete','cancel','return','redesign','received');
 
 	function init(){
 		parent::init();
@@ -16,7 +16,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 		$this->getElement('status')->defaultValue('submitted');
 
-		$this->hasMany('xStore/DispatchRequestItem','dispatch_request_id');
+		$this->hasMany('xDispatch/DispatchRequestItem','dispatch_request_id');
 		$this->hasMany('xStore/StockMovement','dispatch_request_id');
 
 		$this->addHook('beforeInsert',$this);
@@ -46,16 +46,22 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 			// Create Request From Next Department In Phases :: IMPORTANT
 
 			$from_dept_status = $order_item->nextDeptStatus($order_dept_status->department());
-			$from_dept = $from_dept_status->department();
+			if($from_dept_status){
+				$from_dept = $from_dept_status->department();
+			}else{
+				$from_dept_status = $order_item->prevDeptStatus($order_dept_status->department());
+				$from_dept = $from_dept_status->department();
+			}
+
 			$new_request->create(
 					$from_dept,
 					$order_dept_status->department(),
 					$related_document=$order_item->order(), 
 					$order_item, 
-					$items_array=array()
+					$items_array=array(),
+					false,
+					'approved'
 				);
-			$new_request['status']='approved'; // AUTO CREATED AND CONSIDERED APPROVED
-			$new_request->save();
 		}
 
 		$new_request->addItem($order_item->ref('item_id'),$order_item['qty']);
@@ -63,7 +69,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 	}
 
 	function addItem($item,$qty,$unit='Nos'){
-		$mr_item = $this->ref('xStore/MaterialRequestItem');
+		$mr_item = $this->ref('xDispatch/DispatchRequestItem');
 		$mr_item['item_id'] = $item->id;
 		$mr_item['qty'] = $qty;
 		$mr_item['unit'] = $unit;
@@ -113,5 +119,10 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$this->saveAs('xStore/Model_MaterialRequest');
 	}
 
+
+
+function submit(){
+
+}
 
 }

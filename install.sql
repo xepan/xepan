@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 08, 2015 at 09:13 PM
+-- Generation Time: Mar 11, 2015 at 11:39 AM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.5
 
@@ -722,7 +722,7 @@ CREATE TABLE IF NOT EXISTS `epan_page` (
 --
 
 INSERT INTO `epan_page` (`id`, `parent_page_id`, `name`, `menu_caption`, `epan_id`, `is_template`, `title`, `description`, `keywords`, `content`, `body_attributes`, `created_on`, `updated_on`, `access_level`, `template_id`) VALUES
-(1, NULL, 'home', 'Home', 1, 0, 'xEpan CMS, an innovative approach towards Drag And Drop CMS.', 'World''s best and easiest cms :)', 'xEpan CMS, an innovative approach towards Drag And Drop CMS.', NULL, '', NULL, '2015-01-29 13:22:03', '0', 4);
+(1, NULL, 'home', 'Home', 1, 0, 'xEpan CMS, an innovative approach towards Drag And Drop CMS.', 'World''s best and easiest cms :)', 'xEpan CMS, an innovative approach towards Drag And Drop CMS.', NULL, 'cursor: default; overflow: auto; background-image: url("epans/web/untitled%20folder%201/body-bg.gif");; cursor: default; overflow: auto; background-image: url("epans/web/untitled%20folder%201/body-bg.gif");', NULL, '2015-01-29 13:22:03', '0', 4);
 
 -- --------------------------------------------------------
 
@@ -1052,7 +1052,7 @@ CREATE TABLE IF NOT EXISTS `userappaccess` (
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_user_id` (`user_id`),
   KEY `fk_installed_app_id` (`installed_app_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=37 ;
 
 --
 -- Dumping data for table `userappaccess`
@@ -1074,7 +1074,8 @@ INSERT INTO `userappaccess` (`id`, `epan_id`, `user_id`, `installed_app_id`, `cr
 (30, 1, 1, 36, '2015-02-16 09:50:18', 1),
 (31, 1, 1, 37, '2015-02-16 10:45:44', 1),
 (32, 1, 1, 38, '2015-02-16 10:46:25', 1),
-(33, 1, 1, 39, '2015-02-16 10:46:35', 1);
+(33, 1, 1, 39, '2015-02-16 10:46:35', 1),
+(36, 1, 1, 40, '2015-02-16 10:46:35', 1);
 
 -- --------------------------------------------------------
 
@@ -1447,6 +1448,57 @@ CREATE TABLE IF NOT EXISTS `xcrm_communications` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `xdispatch_dispatch_request`
+--
+
+CREATE TABLE IF NOT EXISTS `xdispatch_dispatch_request` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` varchar(255) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `orderitem_id` int(11) DEFAULT NULL,
+  `to_department_id` int(11) DEFAULT NULL,
+  `from_department_id` int(11) DEFAULT NULL,
+  `dispatch_to_warehouse_id` int(11) DEFAULT NULL,
+  `orderitem_departmental_status_id` int(11) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_orderitem_id` (`orderitem_id`) USING BTREE,
+  KEY `fk_to_department_id` (`to_department_id`) USING BTREE,
+  KEY `fk_from_department_id` (`from_department_id`) USING BTREE,
+  KEY `fk_dispatch_to_warehouse_id` (`dispatch_to_warehouse_id`) USING BTREE,
+  KEY `fk_orderitem_departmental_status_id` (`orderitem_departmental_status_id`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xdispatch_dispatch_request_items`
+--
+
+CREATE TABLE IF NOT EXISTS `xdispatch_dispatch_request_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `dispatch_request_id` int(11) DEFAULT NULL,
+  `item_id` int(11) DEFAULT NULL,
+  `qty` varchar(255) DEFAULT NULL,
+  `unit` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_dispatch_request_id` (`dispatch_request_id`) USING BTREE,
+  KEY `fk_item_id` (`item_id`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `xEnquiryNSubscription_Config`
 --
 
@@ -1714,12 +1766,12 @@ CREATE TABLE IF NOT EXISTS `xhr_departments` (
   `acl_approved` tinyint(1) DEFAULT NULL,
   `jobcard_assign_required` tinyint(1) DEFAULT NULL,
   `is_production_department` tinyint(1) DEFAULT NULL,
-  `previous_department_id` int(11) DEFAULT NULL,
   `related_application_namespace` varchar(255) DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT NULL,
   `is_outsourced` tinyint(1) DEFAULT NULL,
   `is_system` tinyint(1) DEFAULT NULL,
   `jobcard_document` varchar(255) DEFAULT NULL,
+  `production_level` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_branch_id` (`branch_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
@@ -1728,16 +1780,16 @@ CREATE TABLE IF NOT EXISTS `xhr_departments` (
 -- Dumping data for table `xhr_departments`
 --
 
-INSERT INTO `xhr_departments` (`id`, `branch_id`, `name`, `proceed_after_previous_department`, `internal_approved`, `acl_approved`, `jobcard_assign_required`, `is_production_department`, `previous_department_id`, `related_application_namespace`, `is_active`, `is_outsourced`, `is_system`, `jobcard_document`) VALUES
-(1, NULL, 'Company', NULL, NULL, NULL, NULL, 0, NULL, '', 1, NULL, 1, 'JobCard'),
-(2, NULL, 'HR', NULL, NULL, NULL, NULL, 0, NULL, 'xHR', 1, NULL, 1, 'JobCard'),
-(3, NULL, 'Marketing', NULL, NULL, NULL, NULL, 0, NULL, 'xMarketingCampaign', 1, NULL, 1, 'JobCard'),
-(4, NULL, 'Sales', NULL, NULL, NULL, NULL, 0, NULL, 'xShop', 1, NULL, 1, 'JobCard'),
-(5, NULL, 'Purchase', NULL, NULL, NULL, NULL, 0, NULL, 'xStore', 1, NULL, 1, 'MaterialRequest'),
-(7, NULL, 'Accounts', NULL, NULL, NULL, NULL, 0, NULL, 'xAccount', 1, NULL, 1, 'JobCard'),
-(8, NULL, 'CRM', NULL, NULL, NULL, NULL, 0, NULL, 'xCRM', 1, NULL, 1, 'JobCard'),
-(9, NULL, 'Store', NULL, NULL, NULL, NULL, 0, NULL, 'xStore', 1, NULL, 1, 'MaterialRequest'),
-(12, NULL, 'Dispatch And Delivery', NULL, NULL, NULL, NULL, 0, NULL, 'xDispatch', 1, NULL, 1, 'DispatchRequest');
+INSERT INTO `xhr_departments` (`id`, `branch_id`, `name`, `proceed_after_previous_department`, `internal_approved`, `acl_approved`, `jobcard_assign_required`, `is_production_department`, `related_application_namespace`, `is_active`, `is_outsourced`, `is_system`, `jobcard_document`, `production_level`) VALUES
+(1, NULL, 'Company', NULL, NULL, NULL, NULL, 0, '', 1, NULL, 1, 'JobCard', NULL),
+(2, NULL, 'HR', NULL, NULL, NULL, NULL, 0, 'xHR', 1, NULL, 1, 'JobCard', NULL),
+(3, NULL, 'Marketing', NULL, NULL, NULL, NULL, 0, 'xMarketingCampaign', 1, NULL, 1, 'JobCard', NULL),
+(4, NULL, 'Sales', NULL, NULL, NULL, NULL, 0, 'xShop', 1, NULL, 1, 'JobCard', NULL),
+(5, NULL, 'Purchase', NULL, NULL, NULL, NULL, 0, 'xStore', 1, NULL, 1, 'MaterialRequest', NULL),
+(7, NULL, 'Accounts', NULL, NULL, NULL, NULL, 0, 'xAccount', 1, NULL, 1, 'JobCard', NULL),
+(8, NULL, 'CRM', NULL, NULL, NULL, NULL, 0, 'xCRM', 1, NULL, 1, 'JobCard', NULL),
+(9, NULL, 'Store', NULL, NULL, NULL, NULL, 0, 'xStore', 1, NULL, 1, 'MaterialRequest', NULL),
+(12, NULL, 'Dispatch And Delivery', NULL, NULL, NULL, NULL, 0, 'xDispatch', 1, NULL, 1, 'DispatchRequest', NULL);
 
 -- --------------------------------------------------------
 
@@ -1769,6 +1821,7 @@ CREATE TABLE IF NOT EXISTS `xhr_departments_acl` (
   `can_start_processing` varchar(255) DEFAULT NULL,
   `can_mark_processed` varchar(255) DEFAULT NULL,
   `can_accept` varchar(255) DEFAULT NULL,
+  `can_cancel` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_document_id` (`document_id`),
   KEY `fk_post_id` (`post_id`)
@@ -2445,7 +2498,6 @@ CREATE TABLE IF NOT EXISTS `xproduction_employee_team_associations` (
 CREATE TABLE IF NOT EXISTS `xproduction_jobcard` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `orderitem_id` int(11) DEFAULT NULL,
-  `department_id` int(11) DEFAULT NULL,
   `orderitem_departmental_status_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
@@ -2455,12 +2507,15 @@ CREATE TABLE IF NOT EXISTS `xproduction_jobcard` (
   `related_document_id` varchar(255) DEFAULT NULL,
   `related_root_document_name` varchar(255) DEFAULT NULL,
   `related_document_name` varchar(255) DEFAULT NULL,
+  `to_department_id` int(11) DEFAULT NULL,
+  `dispatch_to_warehouse_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_orderitem_id` (`orderitem_id`),
-  KEY `fk_department_id` (`department_id`),
   KEY `fk_orderitem_departmental_status_id` (`orderitem_departmental_status_id`),
   KEY `fk_created_by_id` (`created_by_id`),
-  KEY `fk_from_department_id` (`from_department_id`)
+  KEY `fk_from_department_id` (`from_department_id`),
+  KEY `fk_to_department_id` (`to_department_id`) USING BTREE,
+  KEY `fk_dispatch_to_warehouse_id` (`dispatch_to_warehouse_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3753,6 +3808,9 @@ CREATE TABLE IF NOT EXISTS `xshop_quotation_item` (
   `quotation_id` int(11) DEFAULT NULL,
   `item_id` int(11) DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_quotation_id` (`quotation_id`),
   KEY `fk_item_id` (`item_id`),
@@ -3830,12 +3888,16 @@ CREATE TABLE IF NOT EXISTS `xstore_material_request` (
   `to_department_id` int(11) DEFAULT NULL,
   `orderitem_id` int(11) DEFAULT NULL,
   `dispatch_to_warehouse_id` int(11) DEFAULT NULL,
+  `orderitem_departmental_status_id` int(11) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`),
   KEY `fk_from_department_id` (`from_department_id`),
   KEY `fk_to_department_id` (`to_department_id`),
   KEY `fk_orderitem_id` (`orderitem_id`),
-  KEY `fk_dispatch_to_warehouse_id` (`dispatch_to_warehouse_id`)
+  KEY `fk_dispatch_to_warehouse_id` (`dispatch_to_warehouse_id`),
+  KEY `fk_orderitem_departmental_status_id` (`orderitem_departmental_status_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3846,7 +3908,6 @@ CREATE TABLE IF NOT EXISTS `xstore_material_request` (
 
 CREATE TABLE IF NOT EXISTS `xstore_material_request_items` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `material_request_id` int(11) DEFAULT NULL,
   `item_id` int(11) DEFAULT NULL,
   `qty` varchar(255) DEFAULT NULL,
   `related_document_id` varchar(255) DEFAULT NULL,
@@ -3854,10 +3915,11 @@ CREATE TABLE IF NOT EXISTS `xstore_material_request_items` (
   `related_document_name` varchar(255) DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
   `unit` varchar(255) DEFAULT NULL,
+  `material_request_jobcard_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_material_request_id` (`material_request_id`),
   KEY `fk_item_id` (`item_id`),
-  KEY `fk_created_by_id` (`created_by_id`)
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_material_request_jobcard_id` (`material_request_jobcard_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3910,24 +3972,24 @@ CREATE TABLE IF NOT EXISTS `xstore_stock_movement_master` (
   `to_supplier_id` int(11) DEFAULT NULL,
   `from_memberdetails_id` int(11) DEFAULT NULL,
   `to_memberdetails_id` int(11) DEFAULT NULL,
-  `material_request_id` int(11) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
   `created_at` date DEFAULT NULL,
   `from_warehouse_id` int(11) DEFAULT NULL,
   `to_warehouse_id` int(11) DEFAULT NULL,
   `po_id` int(11) DEFAULT NULL,
   `jobcard_id` int(11) DEFAULT NULL,
+  `material_request_jobcard_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`),
   KEY `fk_from_supplier_id` (`from_supplier_id`),
   KEY `fk_to_supplier_id` (`to_supplier_id`),
   KEY `fk_from_memberdetails_id` (`from_memberdetails_id`),
   KEY `fk_to_memberdetails_id` (`to_memberdetails_id`),
-  KEY `fk_material_request_id` (`material_request_id`),
   KEY `fk_from_warehouse_id` (`from_warehouse_id`),
   KEY `fk_to_warehouse_id` (`to_warehouse_id`),
   KEY `fk_po_id` (`po_id`),
-  KEY `fk_jobcard_id` (`jobcard_id`)
+  KEY `fk_jobcard_id` (`jobcard_id`),
+  KEY `fk_material_request_jobcard_id` (`material_request_jobcard_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3945,6 +4007,35 @@ CREATE TABLE IF NOT EXISTS `xstore_warehouse` (
   KEY `fk_department_id` (`department_id`),
   KEY `fk_out_source_party_id` (`out_source_party_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `xproduction_jobcard`
+--
+ALTER TABLE `xproduction_jobcard`
+  ADD CONSTRAINT `xproduction_jobcard_ibfk_2` FOREIGN KEY (`dispatch_to_warehouse_id`) REFERENCES `xstore_warehouse` (`id`),
+  ADD CONSTRAINT `xproduction_jobcard_ibfk_1` FOREIGN KEY (`to_department_id`) REFERENCES `xhr_departments` (`id`);
+
+--
+-- Constraints for table `xstore_material_request`
+--
+ALTER TABLE `xstore_material_request`
+  ADD CONSTRAINT `xstore_material_request_ibfk_1` FOREIGN KEY (`orderitem_departmental_status_id`) REFERENCES `xshop_orderitem_departmental_status` (`id`);
+
+--
+-- Constraints for table `xstore_material_request_items`
+--
+ALTER TABLE `xstore_material_request_items`
+  ADD CONSTRAINT `xstore_material_request_items_ibfk_1` FOREIGN KEY (`material_request_jobcard_id`) REFERENCES `xstore_material_request` (`id`);
+
+--
+-- Constraints for table `xstore_stock_movement_master`
+--
+ALTER TABLE `xstore_stock_movement_master`
+  ADD CONSTRAINT `xstore_stock_movement_master_ibfk_1` FOREIGN KEY (`material_request_jobcard_id`) REFERENCES `xstore_material_request` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
