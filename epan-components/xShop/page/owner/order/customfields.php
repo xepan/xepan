@@ -40,7 +40,7 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 			$custom_fields = $item->ref('xShop/ItemCustomFieldAssos')->addCondition('department_phase_id',$phase->id);
 			$custome_fields_array=array();
 			foreach ($custom_fields as $cfassos) {
-				$field = $this->addCustomField($cf = $cfassos->ref('customfield_id'));
+				$field = $this->addCustomField($cf = $cfassos->ref('customfield_id'),$custom_fields);
 				if(isset($this->existing_values[$phase->id][$cf->id])){
 					$field->set($this->existing_values[$phase->id][$cf->id]);
 				}
@@ -69,7 +69,7 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 					$custom_fields = $item->ref('xShop/ItemCustomFieldAssos')->addCondition('department_phase_id',$phase->id);
 					foreach ($custom_fields as $cfassos) {
 						$cf = $cfassos->ref('customfield_id');
-						$custom_fields_values [$phase->id][$cf->id] =  $form['custom_field_'.$cf->id];
+						$custom_fields_values [$phase->id][$cf->id] =  $form['custom_field_'.$custom_fields->id];
 					}
 				}
 			}
@@ -79,7 +79,7 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 
 	}
 
-	function addCustomField(&$cf){
+	function addCustomField(&$cf, $custom_fields_assos){
 		$field=null;
 		
 		switch($cf['type']){
@@ -87,10 +87,11 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 				$field = $this->form->addField('line','custom_field_'.$cf->id , $cf['name']);
 			break;
 			case "DropDown":
-				$field = $drp = $this->form->addField('DropDown','custom_field_'.$cf->id , $cf['name']);
+				$field = $drp = $this->form->addField('DropDown','custom_field_'.$custom_fields_assos->id , $cf['name']);
 				$values = $this->add('xShop/Model_CustomFieldValue');
 				$values->addCondition('item_id',$this->item->id);
 				$values->addCondition('customfield_id',$cf->id);
+				$values->addCondition('itemcustomfiledasso_id',$custom_fields_assos->id);
 				$values_array=array();
 				foreach ($values as $value) {
 					$values_array[$value['name']]=$value['name'];
