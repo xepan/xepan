@@ -2,6 +2,11 @@
 namespace xShop;
 
 class Model_Order_Processed extends Model_Order{
+	public $actions=array(
+			'can_view'=>array('caption'=>'Whose created Order(processed) this post can see'),
+			
+		);
+	
 	function init(){
 		parent::init();
 
