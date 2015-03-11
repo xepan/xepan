@@ -282,11 +282,10 @@ class Model_JobCard extends \Model_Document{
 		
 	}
 
-	function forward($note){
-		if($next = $this->orderItem()->nextDeptStatus()){
+	function forward(){
+		if($next = $this->orderItem()->nextDeptStatus()){			
 			if($next->department()->isDispatch()){
 				$oi=$this->orderItem();
-
 				$items_array=array(array('id'=>$oi->item()->get('id'),$oi['qty'],$oi['unit']));
 
 				$this->add('xStore/Model_MaterialRequest')
@@ -302,7 +301,6 @@ class Model_JobCard extends \Model_Document{
 			}else{
 				$next->createJobCardFromOrder();
 			}
-
 			$this->setStatus('forwarded');
 		}else{
 			$this->setStatus('completed');

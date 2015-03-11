@@ -1,9 +1,9 @@
 <?php
-namespace xStore;
+namespace xDispatch;
 
 class Model_DispatchRequest extends \xProduction\Model_JobCard {
 	
-	public $table = 'xstore_dispatch_request';
+	public $table = 'xdispatch_dispatch_request';
 
 	public $root_document_name='xStore\DispatchRequest';
 	public $status = array('draft','submitted','approved','assigned','processing','processed','forwarded',
@@ -52,8 +52,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 					$order_dept_status->department(),
 					$related_document=$order_item->order(), 
 					$order_item, 
-					$items_array=array(), 
-					
+					$items_array=array()
 				);
 			$new_request['status']='approved'; // AUTO CREATED AND CONSIDERED APPROVED
 			$new_request->save();

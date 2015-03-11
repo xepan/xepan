@@ -4,7 +4,7 @@ namespace xShop;
 
 class Model_Quotation extends \Model_Document{
 	public $table="xshop_quotation";
-	public $status=array('draft','approved','redesign','submitted','cancel');
+	public $status=array('draft','approved','redesign','submitted','cancelled');
 	public $root_document_name="xShop\Quotation";
 
 	function init(){
