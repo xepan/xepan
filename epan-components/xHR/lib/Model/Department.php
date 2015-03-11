@@ -159,7 +159,7 @@ class Model_Department extends \Model_Table{
 		$outsource_assos_model->tryLoadAny();
 		if($outsource_assos_model->loaded()) $outsource_assos_model->delete();
 
-		if($party->getAssociatedDepartments() === array(0)) $party->warehouse()->deleteIfOK();
+		// if($party->getAssociatedDepartments() === array(0)) $party->warehouse()->deleteIfOK();
 
 	}
 
