@@ -120,35 +120,28 @@ class Controller_Acl extends \AbstractController {
 			$btn = $this->owner->grid->buttonset->addButton()->set('ACL APPLIED');
 			$self= $this;
 			$vp = $this->owner->add('VirtualPage')->set(function($p)use($self){
-				$can_view_column = 'can_view'; 
-				if(isset($self->owner->model->actions)){
-					foreach ($self->permissions as $action=>$acl) {
-						if(!in_array($action, array_keys($self->owner->model->actions)))
-							unset($self->permissions[$action]);
-						else{
-							if(is_array($self->owner->model->actions[$action]) AND isset($self->owner->model->actions[$action]['caption'])){
-								if($action==$can_view_column) $can_view_column = $self->owner->model->actions[$action]['caption'];
-								$self->permissions[$self->owner->model->actions[$action]['caption']] = $self->permissions[$action];
-								unset($self->permissions[$action]);
-							}
-						}
-					}
-				}
+				// $p->add('View')->set($self->owner->model->document_name);
+				$m = $p->add('xHR/Model_DocumentAcl');
+				$m->leftJoin('xhr_documents','document_id')->addField('d_name','name');
+				$m->addCondition('d_name',$self->owner->model->document_name);
+				$m->addCondition('post_id','<>',null);
+				$m->getElement('post_id')->display(array('form'=>'Readonly'));
 
-				foreach ($self->permissions as $action => $value) {
-					$view_type='Success';
-					if($action == $can_view_column){
-						if($value=='No')
-							$view_type='Error';
-						elseif($value!='All')
-							$view_type='Warning';
-					}
-					$p->add('View_'.$view_type)->set($action." => " . $value);
+				$c = $p->add('CRUD',array('allow_add'=>false));
+
+				$fields=null;
+				if(isset($self->owner->model->actions)){
+					$fields = array_merge(array('post','post_id'),array_keys($self->owner->model->actions));
+				}
+				$c->setModel($m,$fields);
+
+				if(!$c->isEditing()){
+					$c->grid->removeColumn('post_id');
 				}
 			});
 
 			if($btn->isClicked()){
-				$this->owner->js()->univ()->frameURL('Your ACL Status',$vp->getURL())->execute();
+				$this->owner->js()->univ()->frameURL('ACL Status for '.$self->owner->model->document_name , $vp->getURL())->execute();
 			}
 		}
 
