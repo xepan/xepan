@@ -270,20 +270,22 @@ class Controller_Acl extends \AbstractController {
 			$p = $this->owner->addFrame(ucwords($action_name));
 			if($p and $this->owner->isEditing('fr_'.$this->api->normalizeName(ucwords($action_name)))){
 				$this->owner->model->tryLoad($this->owner->id);
-				try{
-					$this->api->db->beginTransaction();
-						$function_run = $this->owner->model->$action_page_function($p);
-					$this->api->db->commit();
-				}catch(\Exception $e){
-					$this->api->db->rollback();
-					throw $e;
-				}
+				if($this->owner->model->loaded()){
+					try{
+						$this->api->db->beginTransaction();
+							$function_run = $this->owner->model->$action_page_function($p);
+						$this->api->db->commit();
+					}catch(\Exception $e){
+						$this->api->db->rollback();
+						throw $e;
+					}
 
-				if($function_run ){
-					$js=array();
-					$js[] = $p->js()->univ()->closeDialog();
-					// $js[] = $this->owner->js()->reload();
-					$this->owner->js(null,$js)->execute();
+					if($function_run ){
+						$js=array();
+						$js[] = $p->js()->univ()->closeDialog();
+						$js[] = $this->owner->js()->reload(array('cut_object'=>'',$p->short_name=>'',$p->short_name.'_id'=>''));
+						$this->owner->js(null,$js)->execute();
+					}
 				}
 			}
 			$this->filterGrid('fr_'.$this->api->normalizeName(ucwords($action_name)));
