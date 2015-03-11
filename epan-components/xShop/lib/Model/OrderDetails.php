@@ -58,6 +58,30 @@ class Model_OrderDetails extends \Model_Document{
 				}
 			}
 		}
+
+		$depts = $form->add('xHR/Model_Department');
+			
+		if($this['custom_fields']==''){
+			$assos_depts = $this->item()->getAssociatedDepartment();
+			foreach ($assos_depts as $dp) {
+				$custome_fields_array[$dp]=array();
+			}
+		}else{
+			$custome_fields_array  = json_decode($this['custom_fields'],true);
+		}
+
+		foreach ($depts as $dept) {
+			if(isset($custome_fields_array[$dept->id])){
+				// associate with department
+				$this->addToDepartment($dept);
+			}else{
+				// remove association with department
+				if($this->getCurrentStatus($dept) != 'Waiting')
+					$this->removeFromDepartment($dept);
+				else
+					throw $this->exception('Job Has Been forwarded to department '. $dept['name'].' and cannot be removed');
+			}
+		}
 		
 	}
 
@@ -99,9 +123,12 @@ class Model_OrderDetails extends \Model_Document{
 		return $this->ref('order_id');
 	}
 
-	function getCurrentStatus(){
+	function getCurrentStatus($department=false){
 		$last_ds = $this->deptartmentalStatus()->addCondition('status','<>','Waiting');
 		$last_ds->_dsql()->order('id','desc');
+		if($department){
+			$last_ds->addCondition('department_id',$department->id);
+		}
 		$last_ds->tryLoadAny();
 
 		if($last_ds->loaded())
