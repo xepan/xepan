@@ -38,8 +38,7 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function createJobCardFromOrder(){
-	
+	function createJobCardFromOrder(){		
 		$new_job_card = $this->add($this->department()->getNamespace().'/Model_'.  $this->department()->jobcard_document());
 		$new_job_card->createFromOrder($this->ref('orderitem_id'),$this);
 		$this['status']='Sent To '. $this['department'];

@@ -111,7 +111,9 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function deptartmentalStatus($department=false){
-		$m = $this->ref('xShop/OrderItemDepartmentalStatus');
+		$m = $this->add('xShop/Model_OrderItemDepartmentalStatus');
+		$m->addCondition('orderitem_id',$this->id);
+		
 		if($department){
 			$m->addCondition('department_id',$department->id);
 			$m->tryLoadAny();
@@ -126,7 +128,9 @@ class Model_OrderDetails extends \Model_Document{
 			if($after_department){
 				if($ds->department()->get('id') == $after_department->id) $after_department=false;
 			}else{
-				if($ds['status'] == 'Waiting') return $ds;
+				if($ds['status'] == 'Waiting'){
+					return $ds;
+				}
 			}
 		}
 		return false;

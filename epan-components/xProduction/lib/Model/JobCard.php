@@ -133,7 +133,7 @@ class Model_JobCard extends \Model_Document{
 		$t->save();
 	}
 
-	function create($from_department, $to_department, $related_document=false, $order_item=false, $items_array=array(), $dispatch_to_warehouse=false){
+	function create($from_department, $to_department, $related_document=false, $order_item=false, $items_array=array(), $dispatch_to_warehouse=false, $status=false){
 		$this['from_department_id'] = $from_department->id;
 		$this['to_department_id'] = $to_department->id;
 
@@ -151,6 +151,9 @@ class Model_JobCard extends \Model_Document{
 		}else{
 			$this['dispatch_to_warehouse_id'] = $from_department->warehouse()->get('id');
 		}
+
+		if($status)
+			$this['status'] = $status;
 
 		$this->save();
 
@@ -283,7 +286,7 @@ class Model_JobCard extends \Model_Document{
 	}
 
 	function forward(){
-		if($next = $this->orderItem()->nextDeptStatus()){			
+		if($next = $this->orderItem()->nextDeptStatus()){
 			if($next->department()->isDispatch()){
 				$oi=$this->orderItem();
 				$items_array=array(array('id'=>$oi->item()->get('id'),$oi['qty'],$oi['unit']));
@@ -295,12 +298,12 @@ class Model_JobCard extends \Model_Document{
 						$related_document=$this, 
 						$order_item=$this->orderItem(), 
 						$items_array, 
-						$dispatch_to_warehouse=false
+						$dispatch_to_warehouse=false,
+						'approved'
 						);
 
-			}else{
-				$next->createJobCardFromOrder();
 			}
+			$next->createJobCardFromOrder();
 			$this->setStatus('forwarded');
 		}else{
 			$this->setStatus('completed');

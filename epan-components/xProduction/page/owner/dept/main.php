@@ -17,7 +17,11 @@ class page_xProduction_page_owner_dept_main extends page_xProduction_page_owner_
 		$document = $this->add($dept->getNamespace().'/Model_'.  $dept->jobcard_document());
 
 		foreach ($document->status as $st) {
-			$tabs->addTabURL('xProduction_page_owner_dept_'.$st,ucwords($st));
+			if($st=='approved'){
+				$tabs->addTabURL('xProduction_page_owner_dept_'.$st,'Approved / To Receive');
+			}else{
+				$tabs->addTabURL('xProduction_page_owner_dept_'.$st,ucwords($st));
+			}
 		}
 	}
 }
