@@ -58,11 +58,22 @@ class Model_OrderDetails extends \Model_Document{
 				}
 			}
 		}
+		
+	}
 
-		$depts = $form->add('xHR/Model_Department');
+	function afterInsert($obj,$new_id){
+		$new_order_details = $this->add('xShop/Model_OrderDetails')->load($new_id);
+		if($new_order_details->order()->isFromOnline()){
+			$item_departments = $new_order_details->item()->associatedDepartments();
+			foreach($item_departments as $dept){
+				$new_order_details->addToDepartment($dept);
+			}
+		}
+
+		$depts = $this->add('xHR/Model_Department');
 			
 		if($this['custom_fields']==''){
-			$assos_depts = $this->item()->getAssociatedDepartment();
+			$assos_depts = $new_order_details->item()->getAssociatedDepartment();
 			foreach ($assos_depts as $dp) {
 				$custome_fields_array[$dp]=array();
 			}
@@ -73,24 +84,13 @@ class Model_OrderDetails extends \Model_Document{
 		foreach ($depts as $dept) {
 			if(isset($custome_fields_array[$dept->id])){
 				// associate with department
-				$this->addToDepartment($dept);
+				$new_order_details->addToDepartment($dept);
 			}else{
 				// remove association with department
-				if($this->getCurrentStatus($dept) != 'Waiting')
-					$this->removeFromDepartment($dept);
-				else
-					throw $this->exception('Job Has Been forwarded to department '. $dept['name'].' and cannot be removed');
-			}
-		}
-		
-	}
-
-	function afterInsert($obj,$new_id){
-		$new_order_details = $this->add('xShop/Model_OrderDetails')->load($new_id);
-		if($new_order_details->order()->isFromOnline()){
-			$item_departments = $new_order_details->item()->associatedDepartments();
-			foreach($item_departments as $dept){
-				$new_order_details->addToDepartment($dept);
+				if($new_order_details->getCurrentStatus($dept) != 'Waiting')
+					$new_order_details->removeFromDepartment($dept);
+				// else
+				// 	throw $new_order_details->exception('Job Has Been forwarded to department '. $dept['name'].' and cannot be removed');
 			}
 		}
 		// else .. form_orderItem is doing for offline orders
