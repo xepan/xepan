@@ -14,7 +14,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		$this->hasOne('xShop/Order','order_id');
-		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
+		$this->hasOne('xShop/Item_Saleable','item_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
 
 		$this->addField('qty')->type('money')->group('b~3~Order Details');
 		$this->addField('unit')->group('b~3');
@@ -35,6 +35,7 @@ class Model_OrderDetails extends \Model_Document{
 
 
 		$this->addHook('beforeSave',$this);
+		$this->addHook('afterSave',$this);
 		$this->addHook('afterInsert',$this);
 
 		$this->add('dynamic_model/Controller_AutoCreator');
@@ -61,19 +62,11 @@ class Model_OrderDetails extends \Model_Document{
 		
 	}
 
-	function afterInsert($obj,$new_id){
-		$new_order_details = $this->add('xShop/Model_OrderDetails')->load($new_id);
-		if($new_order_details->order()->isFromOnline()){
-			$item_departments = $new_order_details->item()->associatedDepartments();
-			foreach($item_departments as $dept){
-				$new_order_details->addToDepartment($dept);
-			}
-		}
-
+	function afterSave(){
 		$depts = $this->add('xHR/Model_Department');
 			
 		if($this['custom_fields']==''){
-			$assos_depts = $new_order_details->item()->getAssociatedDepartment();
+			$assos_depts = $this->item()->getAssociatedDepartment();
 			foreach ($assos_depts as $dp) {
 				$custome_fields_array[$dp]=array();
 			}
@@ -84,13 +77,23 @@ class Model_OrderDetails extends \Model_Document{
 		foreach ($depts as $dept) {
 			if(isset($custome_fields_array[$dept->id])){
 				// associate with department
-				$new_order_details->addToDepartment($dept);
+				$this->addToDepartment($dept);
 			}else{
 				// remove association with department
-				if($new_order_details->getCurrentStatus($dept) != 'Waiting')
-					$new_order_details->removeFromDepartment($dept);
+				if($this->getCurrentStatus($dept) != 'Waiting')
+					$this->removeFromDepartment($dept);
 				// else
-				// 	throw $new_order_details->exception('Job Has Been forwarded to department '. $dept['name'].' and cannot be removed');
+					// throw $this->exception('Job Has Been forwarded to department '. $dept['name'].' and cannot be removed');
+			}
+		}
+	}
+
+	function afterInsert($obj,$new_id){
+		$new_order_details = $this->add('xShop/Model_OrderDetails')->load($new_id);
+		if($new_order_details->order()->isFromOnline()){
+			$item_departments = $new_order_details->item()->associatedDepartments();
+			foreach($item_departments as $dept){
+				$new_order_details->addToDepartment($dept);
 			}
 		}
 		// else .. form_orderItem is doing for offline orders
