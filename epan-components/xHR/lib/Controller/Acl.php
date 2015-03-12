@@ -126,12 +126,13 @@ class Controller_Acl extends \AbstractController {
 				$m->addCondition('d_name',$self->owner->model->document_name);
 				$m->addCondition('post_id','<>',null);
 				$m->getElement('post_id')->display(array('form'=>'Readonly'));
+				$m->addExpression('post_department')->set($m->refSQL('post_id')->fieldQuery('department'))->caption('Department');
 
 				$c = $p->add('CRUD',array('allow_add'=>false));
 
 				$fields=null;
 				if(isset($self->owner->model->actions)){
-					$fields = array_merge(array('post','post_id'),array_keys($self->owner->model->actions));
+					$fields = array_merge(array('post_department','post','post_id'),array_keys($self->owner->model->actions));
 				}
 				$c->setModel($m,$fields);
 
