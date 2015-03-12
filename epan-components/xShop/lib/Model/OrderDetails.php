@@ -35,6 +35,7 @@ class Model_OrderDetails extends \Model_Document{
 
 
 		$this->addHook('beforeSave',$this);
+		$this->addHook('afterSave',$this);
 		$this->addHook('afterInsert',$this);
 
 		$this->add('dynamic_model/Controller_AutoCreator');
@@ -58,8 +59,11 @@ class Model_OrderDetails extends \Model_Document{
 				}
 			}
 		}
+		
+	}
 
-		$depts = $form->add('xHR/Model_Department');
+	function afterSave(){
+		$depts = $this->add('xHR/Model_Department');
 			
 		if($this['custom_fields']==''){
 			$assos_depts = $this->item()->getAssociatedDepartment();
@@ -78,11 +82,10 @@ class Model_OrderDetails extends \Model_Document{
 				// remove association with department
 				if($this->getCurrentStatus($dept) != 'Waiting')
 					$this->removeFromDepartment($dept);
-				else
-					throw $this->exception('Job Has Been forwarded to department '. $dept['name'].' and cannot be removed');
+				// else
+					// throw $this->exception('Job Has Been forwarded to department '. $dept['name'].' and cannot be removed');
 			}
 		}
-		
 	}
 
 	function afterInsert($obj,$new_id){

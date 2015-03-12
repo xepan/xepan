@@ -161,9 +161,9 @@ class page_base_owner extends Page {
 
 		$dispatch_m = $m->addMenu('Dispatch');
 		$dept_model->loadDispatch();
-		$dispatch_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+		$dispatch_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xDispatch_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$dispatch_m->addItem(array('Dispatch Requests','icon'=>'gauge-1'),$this->api->url('xDispatch_page_owner_dispatchrequest',array('department_id'=>$dept_model->id)));
-		$dispatch_m->addItem(array('Delivery Note','icon'=>'gauge-1'),$this->api->url('xDispatch_page_owner_deliverynotes',array('department_id'=>$dept_model->id)));
+		$dispatch_m->addItem(array('Delivery Note','icon'=>'gauge-1'),$this->api->url('xDispatch_page_owner_deliverynote',array('department_id'=>$dept_model->id)));
 		$dispatch_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 
 
