@@ -13,6 +13,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		parent::init();
 
 		$this->addCondition('type','DispatchRequest');
+		$this->hasOne('xShop/Order','order_id');
 
 		$this->getElement('status')->defaultValue('submitted');
 
@@ -39,11 +40,10 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 	// Called if direct order to store is required
 	function createFromOrder($order_item, $order_dept_status ){
 		$new_request = $this->add('xDispatch/Model_DispatchRequest');
-		$new_request->addCondition('orderitem_id',$order_item->id);
+		$new_request->addCondition('order_id',$order_item->order()->get('id'));
 		$new_request->tryLoadAny();
 
 		if(!$new_request->loaded()){
-			// Create Request From Next Department In Phases :: IMPORTANT
 
 			$from_dept_status = $order_item->nextDeptStatus($order_dept_status->department());
 			if($from_dept_status){
