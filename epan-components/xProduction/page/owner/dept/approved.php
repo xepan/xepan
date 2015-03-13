@@ -14,6 +14,9 @@ class page_xProduction_page_owner_dept_approved extends page_xProduction_page_ow
 		$crud->setModel($approved_jobcard_model);
 		$crud->add('xHR/Controller_Acl');
 
+		$jobcard=$this->add('xProductionprodution/View_Jobcard');
+		$jobcard->setModel($jobcard);
+
 
 	}
 }

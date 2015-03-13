@@ -18,7 +18,7 @@ class View_OrderDetail extends \CompleteLister{
 		parent::setModel($model);
 		$order= $model->ref('order_id');
 		$this->template->set('gross_amount',$order['amount']);
-		// $this->template->set('discount_voucher',$order['discount_voucher']);
+		//$this->template->set('discount_voucher',$order['discount_voucher']);
 		$this->template->set('discount_voucher_amount',$order['discount_voucher_amount']);
 		$this->template->set('net_amount',$order['net_amount']);
 	}

@@ -124,7 +124,7 @@ class Controller_Acl extends \AbstractController {
 				$m->addCondition('doc_name',$self->owner->model->document_name);
 				$m->addCondition('post_id','<>',null);
 				
-				$m->addCondition('department_id',$this->api->current_department->id);
+				$m->addCondition('department_id',$p->api->current_department->id);
 				
 				$m->getElement('post_id')->display(array('form'=>'Readonly'));
 				$m->addExpression('post_department')->set($m->refSQL('post_id')->fieldQuery('department'))->caption('Department');
