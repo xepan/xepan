@@ -143,7 +143,10 @@ class Controller_Acl extends \AbstractController {
 			});
 
 			if($btn->isClicked()){
-				$this->owner->js()->univ()->frameURL('ACL Status for '.$self->owner->model->document_name.' In ' . $this->api->current_department['name'] , $vp->getURL())->execute();
+				$dept = '';
+				if(!$this->api->current_department instanceof \Dummy)
+					$dept = ' In ' . $this->api->current_department['name'];
+				$this->owner->js()->univ()->frameURL('ACL Status for '.$self->owner->model->document_name . $dept , $vp->getURL())->execute();
 			}
 		}
 
