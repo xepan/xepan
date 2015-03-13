@@ -17,6 +17,7 @@ class Controller_Acl extends \AbstractController {
 		'can_select_outsource'=>'No',
 		'can_approve'=>'No',
 		'can_reject'=>'No',
+		'can_redesign'=>'No',
 		'can_forward'=>'No',
 		'can_receive'=>'No',
 		'can_accept'=>'No',
@@ -184,6 +185,10 @@ class Controller_Acl extends \AbstractController {
 		
 		if($this->permissions['can_reject'] !='No'){
 			$this->manageAction('reject');
+		}
+		
+		if($this->permissions['can_redesign'] !='No'){
+			$this->manageAction('redesign');
 		}
 
 		if($this->permissions['can_assign'] !='No'){			
