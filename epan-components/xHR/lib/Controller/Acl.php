@@ -273,13 +273,13 @@ class Controller_Acl extends \AbstractController {
 					try{
 						$this->api->db->beginTransaction();
 							$function_run = $this->owner->model->$action_page_function($p);
-							if($function_run ){
-								$js=array();
-								$js[] = $p->js()->univ()->closeDialog();
-								$js[] = $this->owner->js()->reload(array('cut_object'=>'',$p->short_name=>'',$p->short_name.'_id'=>''));
-								$this->owner->js(null,$js)->execute();
-							}
 						$this->api->db->commit();
+						if($function_run ){
+							$js=array();
+							$js[] = $p->js()->univ()->closeDialog();
+							$js[] = $this->owner->js()->reload(array('cut_object'=>'',$p->short_name=>'',$p->short_name.'_id'=>''));
+							$this->owner->js(null,$js)->execute();
+						}
 					}catch(\Exception $e){
 						$this->api->db->rollback();
 						// throw $e;
