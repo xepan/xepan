@@ -3,7 +3,7 @@ class page_owner_users extends page_base_owner {
 
 	function init(){
 		parent::init();
-
+		$this->app->title="xEpan CMS" .': User Management';
 		if(!$this->api->auth->model->isUserManagementAllowed())
 			$this->api->redirect('owner/not-allowed');
 	}

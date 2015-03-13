@@ -177,7 +177,7 @@ class page_base_owner extends Page {
 			// if($dept_namespace){
 				$my_menu = $m->addMenu('My',$dept_namespace.'/Menu_User');
 				// if user ->post->can_create_teams
-					$my_menu->addItem("Teams",$this->api->url('.',array('department_id'=>$this->api->current_employee['department_id'])));
+					$my_menu->addItem("Teams",$this->api->url('xProduction_page_owner_teammanager',array('department_id'=>$this->api->current_employee['department_id'])));
 					$my_menu->addItem("My Material Requirments",$this->api->url('xProduction_page_owner_materialrequirment',array('department_id'=>$this->api->current_employee['department_id'])));
 			// }
 		}
