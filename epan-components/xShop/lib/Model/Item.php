@@ -606,6 +606,19 @@ class Model_Item extends \Model_Table{
 		return $m;
 	}
 
+	function getStockEffectAssociatedCustomFields($department_ids=null){
+		$associate_customfields= $this->ref('xShop/ItemCustomFieldAssos');
+		$associate_customfields->addCondition('is_active',true);
+		$associate_customfields->addCondition('can_effect_stock',true);
+
+		if($department_ids)
+			$associate_customfields->addCondition('department_phase_id',$department_ids);
+
+		$associate_customfields = $associate_customfields->_dsql()->del('fields')->field('customfield_id')->getAll();
+		
+		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associate_customfields)),false);
+		// return $associate_customfields;
+	}
 
 }	
 
