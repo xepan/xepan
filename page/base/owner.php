@@ -242,14 +242,15 @@ class page_base_owner extends Page {
 
 	function render(){
 		$this->api->template->appendHTML('js_include','<link type="text/css" href="elfinder/css/elfinder.min.css" rel="stylesheet" />'."\n");
-			$this->api->template->appendHTML('js_include','<link type="text/css" href="elfinder/css/theme.css" rel="stylesheet" />'."\n");
-			$this->api->template->appendHTML('js_include','<script src="elfinder/js/elfinder.full.js"></script>'."\n");
+		$this->api->template->appendHTML('js_include','<link type="text/css" href="elfinder/css/theme.css" rel="stylesheet" />'."\n");
+		$this->api->template->appendHTML('js_include','<script src="elfinder/js/elfinder.full.js"></script>'."\n");
+
 		parent::render();
 	}
 
 	function add($object,$options=null,$spot=null,$template=null){
 
-		if( !$this->api->isAjaxOutput() and $this->api->layout){
+		if( !$this->api->isAjaxOutput() and $this->api->layout and strpos($object,"Controller_") === false){
 			return $this->api->layout->add($object,$options,$spot,$template);
 		}
 		return parent::add($object,$options,$spot,$template);
