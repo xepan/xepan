@@ -31,7 +31,7 @@ class Model_NewsLetter extends \Model_Table {
 
 		$this->setOrder('created_at','desc');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){

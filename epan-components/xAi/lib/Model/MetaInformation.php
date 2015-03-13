@@ -12,6 +12,6 @@ class Model_MetaInformation extends \Model_Table{
 
 		$this->addField('is_triggering')->type('boolean')->defaultValue(false);
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

@@ -47,7 +47,7 @@ class Model_Department extends \Model_Table{
 
 		$this->_dsql()->order('production_level','asc');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function getNamespace(){

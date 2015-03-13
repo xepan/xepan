@@ -15,7 +15,7 @@ class Model_CustomFormEntry extends \Model_Table {
 		$this->addField('is_read')->type('boolean')->defaultValue(false)->sortable(true);
 		$this->addField('watch')->type('boolean')->defaultValue(false)->sortable(true);
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function createNew($epan_id,$forms_id,$create_at,$message,$ip){

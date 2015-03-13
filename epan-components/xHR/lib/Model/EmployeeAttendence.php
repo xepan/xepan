@@ -8,7 +8,7 @@ class Model_EmployeeAttendence extends \Model_Table{
 
 		//$this->hasOne('xHR/Employee',)
 		$this->addField('name');
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 }

@@ -17,7 +17,7 @@ class Model_AwesomeImages extends \Model_Table {
 		$f = $this->addField('is_publish')->type('boolean')->defaultValue(true)->group('a~2~dl');
 		$f->icon = "fa fa-exclamation~blue";
 		$this->addHook('beforeSave',$this);
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave($m){

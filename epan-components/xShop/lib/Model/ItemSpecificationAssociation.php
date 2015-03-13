@@ -14,7 +14,7 @@ class Model_ItemSpecificationAssociation extends \SQL_Model{
 		$this->addField('value');
 		$this->addField('highlight_it')->type('boolean');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function duplicate($item_id){

@@ -12,7 +12,7 @@ class Model_VisualAnalyticSeries extends \Model_Table {
 		$this->hasOne('xAi/VisualAnalytic','visual_analytic_id');
 		$this->addField('name')->caption('Data Type')->setValueList(array('VALUE'=>'VALUE','COUNT'=>"COUNT",'SUM'=>'SUM','WEIGHTSUM'=>'WEIGHT SUM'));
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 }

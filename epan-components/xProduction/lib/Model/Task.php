@@ -26,7 +26,7 @@ class Model_Task extends \Model_Document{
 		$this->addField('expected_start_date')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		$this->addField('expected_end_date')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function getTeamMembers(){

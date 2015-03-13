@@ -9,6 +9,6 @@ class Model_Guide extends SQL_Model {
 		$this->addField('name');
 		$this->hasMany('GuideStep','guide_id');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

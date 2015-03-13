@@ -7,7 +7,7 @@ class Model_EmployeeLeave extends \Model_Table{
 		parent::init();
 
 		$this->addField('name');
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 }

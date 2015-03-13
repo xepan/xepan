@@ -15,7 +15,7 @@ class Model_Dimension extends \Model_Table{
 
 		$this->hasMany('xAi/Model_IBlockContent','dimension_id');
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 }

@@ -50,7 +50,7 @@ class Model_Affiliate extends \Model_Table {
 
 		));
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 }

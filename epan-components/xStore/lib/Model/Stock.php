@@ -10,6 +10,6 @@ class Model_Stock extends \Model_Table{
 			$this->hasOne('xShop/Item_Stockable','item_id');	
 			$this->addField('qty');
 			
-			$this->add('dynamic_model/Controller_AutoCreator');
+			//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }		

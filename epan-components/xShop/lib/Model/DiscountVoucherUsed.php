@@ -13,7 +13,7 @@ class Model_DiscountVoucherUsed extends \Model_Table{
 		$this->hasOne('xShop/DiscountVoucher','discountvoucher_id');
 		$this->hasOne('xShop/MemberDetails','member_id');	
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	// function createNew($discountvoucher_id){

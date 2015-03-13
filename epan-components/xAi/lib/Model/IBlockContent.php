@@ -31,7 +31,7 @@ class Model_IBlockContent extends \Model_Table{
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterLoad',$this);
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 

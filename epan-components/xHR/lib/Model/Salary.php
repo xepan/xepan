@@ -18,7 +18,7 @@ class Model_Salary extends \Model_Table{
 							'amount|to_trim|required',
 							)
 					);
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){}

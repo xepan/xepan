@@ -24,7 +24,7 @@ class Model_QuantitySet extends \Model_Table{
 		$this->addHook('afterInsert',$this);
 
 		$this->hasMany('xShop/QuantitySetCondition','quantityset_id');
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){

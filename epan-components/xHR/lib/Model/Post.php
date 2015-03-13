@@ -30,7 +30,7 @@ class Model_Post extends \Model_Table{
 							'parent_post_id|to_trim|required',
 							)
 					);
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){
