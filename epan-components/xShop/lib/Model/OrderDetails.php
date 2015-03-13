@@ -185,6 +185,7 @@ class Model_OrderDetails extends \Model_Document{
 
 		$cf = print_r($cf,true);
 		 return $cf;
+		
 	}
-}
 
+}
