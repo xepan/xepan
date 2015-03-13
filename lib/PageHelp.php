@@ -8,9 +8,9 @@ class PageHelp extends View{
 		
 		$bs = $this->add('ButtonSet');
 		
-		$help=$bs->addButton('Help');
-		$guide=$bs->addButton('Guide');
-		$faq=$bs->addButton('FAQ');
+		$help=$bs->addButton('')->addClass('icon-help');
+		$guide=$bs->addButton('')->addClass('icon-eye');
+		$faq=$bs->addButton('')->addClass('icon-book');
 
 		if($help->isClicked()){
 			$help->js()->univ()->successMessage('Hello')->execute();
