@@ -1,0 +1,16 @@
+{
+	"steps":[
+		{ 					
+	        "element" : ".ui-tabs-panel .atk-button:contains(Add OrderDetails)",
+	        "title": "Draft Order",
+	        "content" : "Create a Default Draft Order Here",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : ".atk-button:contains(ACL)",
+	        "title": "Draft Order Details",
+	        "content" : "Order Details Perticular Order Draft ",
+	        "placement":"top"
+	    }
+	]
+}
