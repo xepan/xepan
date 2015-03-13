@@ -122,9 +122,14 @@ class Controller_Acl extends \AbstractController {
 			$vp = $this->owner->add('VirtualPage')->set(function($p)use($self){
 				// $p->add('View')->set($self->owner->model->document_name);
 				$m = $p->add('xHR/Model_DocumentAcl');
-				$m->leftJoin('xhr_documents','document_id')->addField('d_name','name');
-				$m->addCondition('d_name',$self->owner->model->document_name);
+				$j=$m->leftJoin('xhr_documents','document_id');
+				$j->addField('doc_name','name');
+				$j->addField('department_id');
+				$m->addCondition('doc_name',$self->owner->model->document_name);
 				$m->addCondition('post_id','<>',null);
+				
+				$m->addCondition('department_id',$this->api->current_department->id);
+				
 				$m->getElement('post_id')->display(array('form'=>'Readonly'));
 				$m->addExpression('post_department')->set($m->refSQL('post_id')->fieldQuery('department'))->caption('Department');
 
@@ -142,7 +147,7 @@ class Controller_Acl extends \AbstractController {
 			});
 
 			if($btn->isClicked()){
-				$this->owner->js()->univ()->frameURL('ACL Status for '.$self->owner->model->document_name , $vp->getURL())->execute();
+				$this->owner->js()->univ()->frameURL('ACL Status for '.$self->owner->model->document_name.' In ' . $this->api->current_department['name'] , $vp->getURL())->execute();
 			}
 		}
 

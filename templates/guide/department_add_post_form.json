@@ -1,0 +1,10 @@
+[
+	{
+		"selector": "#c50d2c99__arent_post_id-button",
+		"intro":"Parent Post is the post .. bla bla bla"
+	},
+	{
+		"selector": ".atk-form-row-line:nth-child(2) ",
+		"intro":"Parent Post is the post .. bla bla bla"
+	}
+]
