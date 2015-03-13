@@ -5,23 +5,25 @@ namespace xProduction;
 class View_Jobcard extends \CompleteLister{
 	public $jobcard;
 	public $sno=1;
+
 	function init(){
 		parent::init();
 
-		
-		
-	}
+		$oi = $this->jobcard->orderItem();
+		$order = $oi->order();
 
-	function setModel($model){
-		$m=parent::setModel($model);
-		$order= $m->ref('orderitem_id');
-		$this->template->set('gross_amount',$order['amount']);
-		$this->template->set('net_amount',$order['net_amount']);
-	echo "hgjh";
+		$this->setModel($order->OrderItems());
+		
+
+		$this->template->set('qty',$order['qty']);
+		$this->template->set('order_from',$order['order_from']);
+		$this->template->set('on_date',$order['on_date']);
 	}
 
 	function formatRow(){
 		$this->current_row['sno']=$this->sno;
+		$this->current_row['current_status'] = $this->model->getCurrentStatus();
+		$this->current_row['custom_fields'] = $this->model->getCurrentStatus();
 		$this->sno++;
 	}
 	
