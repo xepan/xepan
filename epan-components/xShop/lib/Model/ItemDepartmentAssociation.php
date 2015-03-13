@@ -14,7 +14,7 @@ class Model_ItemDepartmentAssociation extends \Sql_Model{
 		$this->addField('can_redefine_qty')->type('boolean')->defaultValue(true);
 		$this->addField('can_redefine_items')->type('boolean')->defaultValue(true);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function canRedefineQty(){

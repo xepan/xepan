@@ -19,6 +19,6 @@ class Model_Information extends \Model_Table {
 		$this->addField('value');
 		$this->addField('weight')->defaultValue(1);
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

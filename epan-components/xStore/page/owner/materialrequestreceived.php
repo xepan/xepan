@@ -10,6 +10,7 @@ class page_xStore_page_owner_materialrequestreceived extends page_xStore_page_ow
 		//$tabs->addTabURL('xStore_page_owner_materialrequestreceived_assigned','Assigned');
 		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_toreceive','To Receive');
 		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_received','Received');
+		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_assigned','Assigned');
 		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_processing','Processing');
 		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_processed','Processed');
 		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_complete','Completed');

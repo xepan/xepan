@@ -13,7 +13,7 @@ class Model_GuideStep extends SQL_Model {
 
 		$this->_dsql()->order('order','asc');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 }

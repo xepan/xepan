@@ -89,7 +89,7 @@ class Model_SocialPost extends \Model_Table {
     	$this->hasMany('xMarketingCampaign/SocialPosting','post_id');
     	$this->hasMany('xMarketingCampaign/CampaignSocialPost','socialpost_id');
     	$this->addHook('beforeDelete',$this);
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

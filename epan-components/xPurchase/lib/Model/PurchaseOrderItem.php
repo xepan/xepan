@@ -8,7 +8,7 @@ class Model_PurchaseOrderItem extends \Model_Table{
 
 		$this->hasOne('xPurchase/PurchaseOrder','po_id');
 		
-		$this->hasOne('xShop/Item','item_id');
+		$this->hasOne('xShop/Item_Purchasable','item_id')->display(array('form'=>'autocomplete/Basic'));;
 		
 		$this->addField('qty');
 		$this->addField('unit');
@@ -18,7 +18,7 @@ class Model_PurchaseOrderItem extends \Model_Table{
 
 
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

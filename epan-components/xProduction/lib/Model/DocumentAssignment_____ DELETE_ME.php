@@ -15,7 +15,7 @@ class Model_DocumentAssignment extends \SQL_Model{
 		$this->addField('root_document_name');
 		$this->addField('document_name');
 		
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 }	

@@ -35,7 +35,7 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 		// hasMany JobCards
 		$this->hasMany('xProduction/JobCard','orderitem_departmental_status_id');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function createJobCardFromOrder(){

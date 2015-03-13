@@ -37,7 +37,7 @@ class Model_Entity extends \SQL_Model{
 		$this->hasMany('developerZone/Event');
 		$this->hasMany('developerZone/Method');
 		
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function compile(){

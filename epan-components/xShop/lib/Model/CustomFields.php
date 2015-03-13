@@ -21,7 +21,7 @@ class Model_CustomFields extends \Model_Table{
 		$this->hasMany('xShop/CustomFieldValueFilterAssociation','customefield_id');
 		$this->hasMany('xShop/ItemCustomFieldAssos','customfield_id');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function getCustomValue($for_item_id){

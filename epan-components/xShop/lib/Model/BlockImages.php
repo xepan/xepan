@@ -19,7 +19,7 @@ class Model_BlockImages extends \Model_Table {
 		// 	return $m->refSQL('block_id')->fieldQuery('name');
 		// });
 		
-		// $this->add('dynamic_model/Controller_AutoCreator');		
+		// //$this->add('dynamic_model/Controller_AutoCreator');		
 	}
 }
 

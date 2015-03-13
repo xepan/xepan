@@ -9,6 +9,6 @@ class Model_OutSourcePartyDeptAssociation extends \Model_Table{
 		$this->hasOne('xProduction/OutSourceParty','out_source_party_id');
 
 			
-		$this->add('dynamic_model/Controller_AutoCreator'); 
+		//$this->add('dynamic_model/Controller_AutoCreator'); 
 	}
 }

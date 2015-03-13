@@ -26,7 +26,7 @@ class Model_Branch extends Model_Table {
 		$this->addHook('afterInsert',$this); // Create default Admin for this branch
 		$this->addHook('beforeDelete',$this); // Check For Existing Clients
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){

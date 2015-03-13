@@ -13,7 +13,7 @@ class Model_UserCustomFieldValue extends \Model_Table{
 
 		$this->addField('name');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function createNew($users_id,$usercustomfield_id,$value,$othre_info=null){

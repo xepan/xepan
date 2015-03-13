@@ -14,7 +14,7 @@ class Model_DeliveryNoteItem extends \Model_Document{
 		$this->addField('qty');
 		$this->addField('unit');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

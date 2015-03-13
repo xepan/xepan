@@ -19,7 +19,7 @@ class Model_Images extends \Model_Table {
 		$f = $this->addField('is_publish')->type('boolean')->defaultValue(true)->group('a~2');
 		$f->icon = "fa fa-exclamation~blue";
 						
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 }	

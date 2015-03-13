@@ -16,7 +16,7 @@ class Model_WaterWheelImages extends \Model_Table {
 		$f = $this->addField('description')->type('text')->group('a~11~dl');
 		$f->icon = "fa fa-pencil~blue"; 
 		// $this->addField('order_no')->type('int');
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	// function beforeSave($m){

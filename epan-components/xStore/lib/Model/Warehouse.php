@@ -13,7 +13,7 @@ class Model_Warehouse extends \Model_Table{
 
 			$this->hasMany('xStore/Stock','warehouse_id');
 			
-			$this->add('dynamic_model/Controller_AutoCreator');
+			//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function getStock($item){
@@ -71,6 +71,9 @@ class Model_Warehouse extends \Model_Table{
 	function deductStockItem($item,$qty){$this->deductItemStock($item,$qty);}
 	function deductItemStock($item,$qty){
 		$stock = $this->ref('xStore/Stock')->addCondition('item_id',$item->id)->tryLoadAny();
+		if($stock['qty'] - $qty < 0 AND ! $item->allowNegativeStock()){
+			throw $this->exception('Stock Insufficient '. $stock['qty']);
+		}
 		$stock['qty'] = $stock['qty'] - $qty;
 		$stock->save();
 		return $this;

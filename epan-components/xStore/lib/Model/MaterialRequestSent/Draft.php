@@ -1,12 +1,13 @@
 <?php
 namespace xStore;
 class Model_MaterialRequestSent_Draft extends Model_MaterialRequestSent{
-	// public $actions=array(
-	// 	'document_id'=>'',
-	// 	'allow_add'=>'allow_add',
-	// 	'allow_edit'=>'allow_edit',
-	// 	'can_submit'=>array('caption'=>'Can Submit and Approve')
-	// 	);
+	public $actions=array(
+			'can_view'=>array('caption'=>'Whose created Jobcard this post can see'),
+			'allow_edit'=>array('caption'=>'Whose created Jobcard this post can edit'),
+			'allow_add'=>array('caption'=>'Can this post create new Jobcard'),
+			'allow_del'=>array('caption'=>'Whose Created Jobcard this post can delete'),
+			'can_submit'=>array('caption'=>'Whose Created Jobcard this post can submit'),
+		);
 
 	function init(){
 		parent::init();

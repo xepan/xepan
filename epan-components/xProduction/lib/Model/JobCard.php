@@ -41,7 +41,7 @@ class Model_JobCard extends \Model_Document{
 
 		$this->addHook('beforeInsert',$this);
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 
@@ -371,8 +371,8 @@ class Model_JobCard extends \Model_Document{
 			$form->addSubmit('Consume Stock & Mark Processed');
 
 			if($form->isSubmitted()){
-				$m->executeConsume();
 				$this->setStatus('processed');
+				$m->executeConsume();
 				return true;
 			}	
 		}else{

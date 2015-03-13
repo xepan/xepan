@@ -10,7 +10,7 @@ class Model_HostsTouched extends \Model_Table{
 
 		$this->hasOne('xEnquiryNSubscription/SubscriptionCategories','category_id');
 		$this->addField('name');
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 }

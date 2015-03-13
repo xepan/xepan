@@ -14,7 +14,7 @@ class Model_Attribute extends \SQL_Model{
 		$this->addField('name');
 		$this->addField('value');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

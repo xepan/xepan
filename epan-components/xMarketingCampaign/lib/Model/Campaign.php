@@ -32,6 +32,6 @@ class Model_Campaign extends \Model_Table {
 		$this->hasMany('xMarketingCampaign/CampaignSocialUser','campaign_id');
 		$this->hasMany('xMarketingCampaign/CampaignSocialPost','campaign_id');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

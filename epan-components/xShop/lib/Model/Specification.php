@@ -17,7 +17,7 @@ class Model_Specification extends \Model_Table{
 			
 		$this->hasMany('xShop/ItemSpecificationAssociation','specification_id');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }
 

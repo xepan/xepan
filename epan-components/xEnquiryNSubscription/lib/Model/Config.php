@@ -14,7 +14,7 @@ class Model_Config extends \Model_Table{
 		$this->addField('show_all_newsletters')->type('boolean')->defaultValue(false)->caption('Show News Letters Created By All Applications');
 		
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 }

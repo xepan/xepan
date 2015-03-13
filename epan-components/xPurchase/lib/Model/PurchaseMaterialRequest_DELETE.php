@@ -15,7 +15,7 @@ class Model_PurchaseMaterialRequest extends \Model_Document{
 		
 		$this->hasMany('xPurchase/PurchaseMaterialRequestItem','purchase_material_request_id');
 		
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
 	function submit(){
