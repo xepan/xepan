@@ -12,7 +12,7 @@ class Model_EpanCategory extends Model_Table {
 		$this->hasMany('EpanAdds','category_id');
 		$this->hasMany('EpanCategory','parent_category_id');
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 }

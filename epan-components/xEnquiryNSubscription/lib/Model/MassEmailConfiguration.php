@@ -10,6 +10,6 @@ class Model_MassEmailConfiguration extends \Model_Table{
 		$this->addField('use_mandril')->type('boolean')->defaultValue(false)->hint('Enabling This Setting Will Override Your Epan Ganrel Email Setting');
 		$this->addField('mandril_api_key');
 		$this->addField('send_via_bcc')->type('boolean')->defaultValue(true);
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

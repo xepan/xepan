@@ -32,7 +32,7 @@ class Model_InformationExtractor extends \Model_Table {
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('afterInsert',$this);
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){

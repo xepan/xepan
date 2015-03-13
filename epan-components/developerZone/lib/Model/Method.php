@@ -18,7 +18,7 @@ class Model_Method extends \SQL_Model{
 
 		$this->hasMany('developerZone/Node');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

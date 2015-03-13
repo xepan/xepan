@@ -19,7 +19,7 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 		$this->hasMany('xStore/MaterialRequestItem','material_request_jobcard_id');
 		$this->hasMany('xStore/StockMovement','material_request_jobcard_id');
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 

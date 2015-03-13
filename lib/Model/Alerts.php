@@ -11,7 +11,7 @@ class Model_Alerts extends Model_Table{
 		$this->addField('sender_signature');
 		$this->addField('sender_namespace');
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function createNew($epan_id,$title,$type,$sender_signature,$sender_namespace){

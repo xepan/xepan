@@ -32,6 +32,6 @@ class Model_InstalledComponents extends Model_Table {
 
 		$this->hasMany('UserAppAccess','installed_app_id');
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

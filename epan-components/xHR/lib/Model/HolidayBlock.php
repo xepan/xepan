@@ -16,7 +16,7 @@ class Model_HolidayBlock extends \Model_Table{
 							'name|to_trim|required',
 							)
 					);
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){}

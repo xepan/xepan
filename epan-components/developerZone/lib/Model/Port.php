@@ -14,7 +14,7 @@ class Model_Port extends \SQL_Model{
 
 		$this->addField('type')->enum(array('DATA-IN','DATA-OUT','FLOW-IN','FLOW-OUT','internal'));
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function getVariableName($for_node){

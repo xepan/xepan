@@ -11,6 +11,6 @@ class Model_ItemReview extends \SQL_Model{
 		$this->addField('rating')->type('number');
 		$this->addField('review')->type('text');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

@@ -24,7 +24,7 @@ class Model_Communication extends \Model_Table{
 
 		$this->addField('Deleted');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function create($params=array(),$action){

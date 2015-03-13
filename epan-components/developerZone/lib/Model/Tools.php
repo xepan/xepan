@@ -21,7 +21,7 @@ class Model_Tools extends \SQL_Model{
 		$this->addField('icon');
 		$this->addField('order');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 }

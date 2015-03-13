@@ -17,6 +17,6 @@ class Model_ThumbnailSliderImages extends \Model_Table {
 		$f = $this->addField('tooltip')->type('text')->group('a~5~bl');
 		$f->icon = "fa fa-pencil~blue";
 		
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

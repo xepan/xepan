@@ -13,6 +13,6 @@ class Model_TransformGalleryImages extends \Model_Table{
 		$f->icon = "fa fa-picture-o~red";
 		$f = $this->addField('name')->caption('Display Tittle')->group('a~12~bl');
 		$f->icon = "fa fa-info~blue";
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

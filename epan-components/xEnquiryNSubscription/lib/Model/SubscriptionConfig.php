@@ -37,6 +37,6 @@ class Model_SubscriptionConfig extends \Model_Table {
 		$f=$this->addField('email_body')->type('text')->display(array('form'=>'RichText'))->group('d~10~bl');
 		$f->icon='fa fa-quote-left~blue';
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

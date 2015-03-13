@@ -47,7 +47,7 @@ class Model_Order extends \Model_Document{
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeInsert',$this);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete($m){

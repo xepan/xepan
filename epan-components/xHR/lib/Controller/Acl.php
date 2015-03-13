@@ -268,9 +268,7 @@ class Controller_Acl extends \AbstractController {
 				if($this->owner->model->loaded()){
 					try{
 						$x=$this->owner->model->_dsql()->owner->beginTransaction();
-						echo "transaction run ".$x . "</br/>";
 							$function_run = $this->owner->model->$action_page_function($p);
-							echo "function run </br/>";
 							if($function_run ){
 								$js=array();
 								$js[] = $p->js()->univ()->closeDialog();
@@ -278,15 +276,8 @@ class Controller_Acl extends \AbstractController {
 								$this->owner->js(null,$js)->execute();
 							}
 						$this->owner->model->_dsql()->owner->commit();
-						echo "function commited</br/>";
 					}catch(\Exception $e){
-						echo "function exception</br/>";
-						try{
-							$x = $this->owner->model->_dsql()->owner->rollback();
-						}catch(\PDOException $ee){
-							echo $ee->getMessage();
-						}
-						echo "rolled $x </br/>";
+						$this->owner->model->_dsql()->owner->rollback();
 						// throw $e;
 						$this->owner->js()->univ()->errorMessage($e->getMessage())->execute();
 					}

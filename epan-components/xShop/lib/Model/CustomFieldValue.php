@@ -32,7 +32,7 @@ class Model_CustomFieldValue extends \Model_Table{
 		$this->hasMany('xShop/CustomFieldValueFilterAssociation','customefieldvalue_id');
 
 		$this->addHook('beforeSave',$this);
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){
