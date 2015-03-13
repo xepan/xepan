@@ -249,6 +249,7 @@ class Model_Department extends \Model_Table{
 		$temp->addCondition('name','Purchase')->loadAny();
 		$this->load($temp->id);
 		return $this;
+		
 	}
 
 	function isPurchase(){
