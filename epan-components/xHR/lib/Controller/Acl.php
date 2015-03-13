@@ -125,7 +125,8 @@ class Controller_Acl extends \AbstractController {
 				$m->addCondition('doc_name',$self->owner->model->document_name);
 				$m->addCondition('post_id','<>',null);
 				
-				$m->addCondition('department_id',$p->api->current_department->id);
+				if(! $p->api->current_department instanceof \Dummy)
+					$m->addCondition('department_id',$p->api->current_department->id);
 				
 				$m->getElement('post_id')->display(array('form'=>'Readonly'));
 				$m->addExpression('post_department')->set($m->refSQL('post_id')->fieldQuery('department'))->caption('Department');
@@ -144,7 +145,10 @@ class Controller_Acl extends \AbstractController {
 			});
 
 			if($btn->isClicked()){
-				$this->owner->js()->univ()->frameURL('ACL Status for '.$self->owner->model->document_name.' In ' . $this->api->current_department['name'] , $vp->getURL())->execute();
+				$dept = '';
+				if(!$this->api->current_department instanceof \Dummy)
+					$dept = ' In ' . $this->api->current_department['name'];
+				$this->owner->js()->univ()->frameURL('ACL Status for '.$self->owner->model->document_name . $dept , $vp->getURL())->execute();
 			}
 		}
 
@@ -272,17 +276,17 @@ class Controller_Acl extends \AbstractController {
 				$this->owner->model->tryLoad($this->owner->id);
 				if($this->owner->model->loaded()){
 					try{
-						$x=$this->owner->model->_dsql()->owner->beginTransaction();
+						$this->api->db->beginTransaction();
 							$function_run = $this->owner->model->$action_page_function($p);
-							if($function_run ){
-								$js=array();
-								$js[] = $p->js()->univ()->closeDialog();
-								$js[] = $this->owner->js()->reload(array('cut_object'=>'',$p->short_name=>'',$p->short_name.'_id'=>''));
-								$this->owner->js(null,$js)->execute();
-							}
-						$this->owner->model->_dsql()->owner->commit();
+						$this->api->db->commit();
+						if($function_run ){
+							$js=array();
+							$js[] = $p->js()->univ()->closeDialog();
+							$js[] = $this->owner->js()->reload(array('cut_object'=>'',$p->short_name=>'',$p->short_name.'_id'=>''));
+							$this->owner->js(null,$js)->execute();
+						}
 					}catch(\Exception $e){
-						$this->owner->model->_dsql()->owner->rollback();
+						$this->api->db->rollback();
 						// throw $e;
 						$this->owner->js()->univ()->errorMessage($e->getMessage())->execute();
 					}

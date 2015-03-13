@@ -5,6 +5,7 @@ class page_owner_epansettings extends page_base_owner {
 
 	function init(){
 		parent::init();
+		$this->app->title="xEpan CMS" .': xEpan Settings';
 		if(!$this->api->auth->model->isGeneralSettingsAllowed())
 			$this->api->redirect('owner/not-allowed');
 	}
