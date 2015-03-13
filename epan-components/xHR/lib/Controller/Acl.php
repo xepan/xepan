@@ -267,7 +267,7 @@ class Controller_Acl extends \AbstractController {
 				$this->owner->model->tryLoad($this->owner->id);
 				if($this->owner->model->loaded()){
 					try{
-						$x=$this->owner->model->_dsql()->owner->beginTransaction();
+						$this->api->db->beginTransaction();
 							$function_run = $this->owner->model->$action_page_function($p);
 							if($function_run ){
 								$js=array();
@@ -275,9 +275,9 @@ class Controller_Acl extends \AbstractController {
 								$js[] = $this->owner->js()->reload(array('cut_object'=>'',$p->short_name=>'',$p->short_name.'_id'=>''));
 								$this->owner->js(null,$js)->execute();
 							}
-						$this->owner->model->_dsql()->owner->commit();
+						$this->api->db->commit();
 					}catch(\Exception $e){
-						$this->owner->model->_dsql()->owner->rollback();
+						$this->api->db->rollback();
 						// throw $e;
 						$this->owner->js()->univ()->errorMessage($e->getMessage())->execute();
 					}
