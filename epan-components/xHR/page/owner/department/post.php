@@ -13,7 +13,7 @@ class page_xHR_page_owner_department_post extends page_xHR_page_owner_main {
 		$post->addExpression('employees')->set($post->refSQL('xHR/Employee')->count());
 
 		$crud=$this->add('CRUD');
-		$crud->setModel($post);
+		$crud->setModel($post,array('parent_post_id','name','is_active','can_create_team','test'),array('name','parent_post','is_active','can_create_team','employees'));
 
 		$emp_crud = $crud->addRef('xHR/Employee',array('view_options'=>array('allow_add'=>false,'allow_del'=>false,'allow_edit'=>false),'grid_fields'=>array('name'),'label'=>'Employees'));
 

@@ -10,9 +10,9 @@ class Model_Post extends \Model_Table{
 
 		$this->hasOne('xHR/Department','department_id');
 		
-		$this->hasOne('xHR/Post','parent_post_id')->mandatory(true);
+		$this->hasOne('xHR/ParentPost','parent_post_id');
 
-		$this->addField('name')->caption('Post');
+		$this->addField('name')->caption('Post')->sortable(true);
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
 		$this->addField('can_create_team')->type('boolean')->defaultValue(false);
 		

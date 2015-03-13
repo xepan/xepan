@@ -3,7 +3,7 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 	function init(){
 		parent::init();
 
-		$this->app->title=$this->api->current_department['name'] .': Employees';
+		$this->app->title=$this->api->current_department['name'] .': Employee';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Employee Management <small> Manage companies employees </small>');
 
 		$l=$this->api->layout->add('splitter/LayoutContainer');
@@ -42,7 +42,7 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 		// $emp_col->add('xShop/View_Badges_ItemPage');
 		if($_GET['employee_id']){
 			$this->api->stickyGET('employee_id');
-			$filter_box = $emp_col->add('View_Box')->setHTML('Employees :: '.$this->add('xHR/Model_Employee')->load($_GET['employee_id'])->get('name'));
+			$filter_box = $emp_col->add('View_Box')->setHTML('Employee :: '.$this->add('xHR/Model_Employee')->load($_GET['employee_id'])->get('name'));
 			$filter_box->add('Icon',null,'Button')
             ->addComponents(array('size'=>'mega'))
             ->set('cancel-1')
