@@ -20,7 +20,7 @@ class Model_SocialConfig extends \Model_Table{
 
 		$this->addHook('beforeDelete',$this);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
@@ -45,7 +45,7 @@ class Model_SocialUsers extends \Model_Table{
 		$this->addField('is_access_token_valid')->type('boolean')->defaultValue(false)->system(true);
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }
 
@@ -96,7 +96,7 @@ class Model_SocialPosting extends \Model_Table{
 
 		$this->hasMany('xMarketingCampaign/Activity','posting_id');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function keep_monitoring(){
@@ -157,7 +157,7 @@ class Model_Activity extends \SQL_Model{
 		$this->addField('name')->caption('Activity')->allowHTML(true);
 		$this->addField('action_allowed')->defaultValue(''); // Can remove/ can edit etc if done by user itself
 
-		$this->add('dynamic_model/Controller_AutoCreator');		
+		//$this->add('dynamic_model/Controller_AutoCreator');		
 	}
 
 }

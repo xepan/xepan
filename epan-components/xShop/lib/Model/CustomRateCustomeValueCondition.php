@@ -11,6 +11,6 @@ class Model_CustomRateCustomeValueCondition extends \Model_Table {
 		$this->hasOne('xShop/CustomRate','custom_rate_id');
 		$this->hasOne('xShop/CustomFieldValue','custom_field_value_id');
 		
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

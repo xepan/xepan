@@ -17,7 +17,7 @@ class Model_MaterialRequirment extends \Model_Document{
 		$this->addField('qty');
 		$this->addField('narration');
 		
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 }	

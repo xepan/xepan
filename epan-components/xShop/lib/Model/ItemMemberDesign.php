@@ -17,7 +17,7 @@ class Model_ItemMemberDesign extends \Model_Table {
 
 		$this->addField('is_dummy')->type('boolean')->defaultValue(false)->system(true);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 		}
 

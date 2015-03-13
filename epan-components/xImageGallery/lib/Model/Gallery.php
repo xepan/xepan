@@ -16,6 +16,6 @@ class Model_Gallery extends \Model_Table {
 		// $this->addField('matter')->type('text')->display(array('form'=>'RichText'))->defaultValue('<p></p>');
 		$this->hasMany('xImageGallery/Images','gallery_id');
 			
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

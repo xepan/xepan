@@ -32,7 +32,7 @@ class Model_Configuration extends \Model_Table {
 		$f = $this->addField('order_detail_email_body')->type('text')->caption('Order Detail Email Body')->hint('Order Bill Email Body : this Bill send to member who placed order, {{user_name}},{{mobile_number}},{{billing_address}},{{shipping_address}},{{order_destination}}')->group('c~11')->display(array('form'=>'RichText'));
 		$f->icon = "glyphicon glyphicon-send~blue";
 		// TODO GROUP ACCESS of Category and other feature
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
 }

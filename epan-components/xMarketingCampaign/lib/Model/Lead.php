@@ -43,6 +43,6 @@ class Model_Lead extends \Model_Document{
 			)
 		);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

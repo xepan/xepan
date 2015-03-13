@@ -22,7 +22,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 		$this->addHook('beforeInsert',$this);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeInsert($obj){

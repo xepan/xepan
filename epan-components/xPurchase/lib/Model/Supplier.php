@@ -20,6 +20,6 @@ class Model_Supplier extends \Model_Table{
 		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 
 		$this->hasMany('xPurchase/PurchaseOrder','xpurchase_supplier_id');
-			$this->add('dynamic_model/Controller_AutoCreator');
+			//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }		

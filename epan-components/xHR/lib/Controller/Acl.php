@@ -49,11 +49,7 @@ class Controller_Acl extends \AbstractController {
 			if(! $this->owner->getModel() instanceof \Model_Document)
 				throw $this->exception("Model ". get_class($this->owner->getModel()). " Must Inherit Model_Document");
 			
-			if($this->owner->getModel() instanceof \xProduction\Model_Task){
-				$this->document = get_class($this->owner->getModel()). '\\'.$this->owner->getModel()->get('document_type');
-			}else{
-				$this->document = get_class($this->owner->getModel());
-			}
+			$this->document = get_class($this->owner->getModel());
 
 		}
 
@@ -271,20 +267,21 @@ class Controller_Acl extends \AbstractController {
 				$this->owner->model->tryLoad($this->owner->id);
 				if($this->owner->model->loaded()){
 					try{
-						$this->api->db->beginTransaction();
+						$x=$this->owner->model->_dsql()->owner->beginTransaction();
 							$function_run = $this->owner->model->$action_page_function($p);
-						$this->api->db->commit();
+							if($function_run ){
+								$js=array();
+								$js[] = $p->js()->univ()->closeDialog();
+								$js[] = $this->owner->js()->reload(array('cut_object'=>'',$p->short_name=>'',$p->short_name.'_id'=>''));
+								$this->owner->js(null,$js)->execute();
+							}
+						$this->owner->model->_dsql()->owner->commit();
 					}catch(\Exception $e){
-						$this->api->db->rollback();
-						throw $e;
+						$this->owner->model->_dsql()->owner->rollback();
+						// throw $e;
+						$this->owner->js()->univ()->errorMessage($e->getMessage())->execute();
 					}
 
-					if($function_run ){
-						$js=array();
-						$js[] = $p->js()->univ()->closeDialog();
-						$js[] = $this->owner->js()->reload(array('cut_object'=>'',$p->short_name=>'',$p->short_name.'_id'=>''));
-						$this->owner->js(null,$js)->execute();
-					}
 				}
 			}
 			$this->filterGrid('fr_'.$this->api->normalizeName(ucwords($action_name)));

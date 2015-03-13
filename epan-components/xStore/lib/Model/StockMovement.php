@@ -31,7 +31,7 @@ class Model_StockMovement extends \Model_Document{
 
 		$this->hasMany('xStore/StockMovementItem','stock_movement_id');
 
-		$this->add('dynamic_model/Controller_AutoCreator');	
+		//$this->add('dynamic_model/Controller_AutoCreator');	
 	}
 
 	function fromWarehouse($warehouse=false){

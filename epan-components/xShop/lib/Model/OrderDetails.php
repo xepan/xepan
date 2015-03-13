@@ -38,7 +38,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->addHook('afterSave',$this);
 		$this->addHook('afterInsert',$this);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){

@@ -20,7 +20,7 @@ class Model_GoogleBloggerConfig extends \Model_Table{
 		$this->addField('is_access_token_valid')->type('boolean')->defaultValue(false)->system(true);
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }
 

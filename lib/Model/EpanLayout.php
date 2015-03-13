@@ -10,6 +10,6 @@ class Model_EpanLayout extends Model_Table {
 		$this->addField('name')->mandatory();
 		$this->addField('content')->type('text');
 		$this->addField('is_user_created')->type('boolean')->defaultValue(true);
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		////$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

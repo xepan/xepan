@@ -32,7 +32,7 @@ class Model_Node extends \SQL_Model{
 		$this->hasMany('developerZone/NodeConnections');
 		$this->hasMany('developerZone/Port');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 
