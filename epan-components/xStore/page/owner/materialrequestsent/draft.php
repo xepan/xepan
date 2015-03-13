@@ -12,6 +12,11 @@ class page_xStore_page_owner_materialrequestsent_Draft extends page_xStore_page_
 		$crud->setModel($model);
 
 		$crud->addRef('xStore/MaterialRequestItem');
+
+		// $p=$crud->addFrame('Details', array('icon'=>'plus'));
+		// if($p){
+		// 	$p->add('xProduction/View_Jobcard',array('jobcard'=>$this->add('xProduction/Model_JobCard')->load($crud->id)));
+		// }
 		
 		$crud->add('xHR/Controller_Acl');
 	}

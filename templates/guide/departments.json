@@ -1,14 +1,22 @@
 {
 	"steps":[
 		{ 
-	        "element" : "#f119fd1c__al_2_menu_advanced_item",
-	        "title": "Title 1",
-	        "content" : "This is element 1"
+	        "element" : ".ui-layout-west",
+	        "title": "Your Departments",
+	        "content" : "This section shows your departments",
+	        "placement": "top"
 	    },
 	    {
-	        "element" : "#f119fd1c__al_2_menu_advanced_item_2",
-	        "title": "Title 2",
-	        "content" : "This is element 2"
+	        "element" : ".ui-layout-center ",
+	        "title": "Editing Area For Selected Department",
+	        "content" : "This section allows you to edit your department, for that you must first click any of the department from previous section",
+	        "placement": "top"
+	    },
+	    {
+	        "element" : ".ui-layout-west button:first",
+	        "title": "Create Production Phases",
+	        "content" : "All basic departments are already provided like company, Hr, accounts etc.. You just need to create your production phases. Production phases will also be considered as department. But its ok if you do not treat them as departments. just create them here.",
+	        "placement": "bottom"
 	    }
 	]
 }
