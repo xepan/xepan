@@ -615,8 +615,7 @@ class Model_Item extends \Model_Table{
 			$associate_customfields->addCondition('department_phase_id',$department_ids);
 
 		$associate_customfields = $associate_customfields->_dsql()->del('fields')->field('customfield_id')->getAll();
-		
-		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associate_customfields)),false);
+		return $associate_customfields = iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associate_customfields)),false);
 		// return $associate_customfields;
 	}
 

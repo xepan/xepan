@@ -87,32 +87,22 @@ class Model_PurchaseOrder extends \Model_Document{
 				
 				$to_warehouse = $this->add('xStore/Model_Warehouse')->loadPurchase();
 				
-				try{
-					$this->api->db->beginTransaction();
 					$movement_challan = $to_warehouse->newPurchaseReceive($this);
 					$i=1;
 					foreach ($this->itemrows() as $ir) {
-						$movement_challan->addItem($ir->item(),$form['received_qty_'.$i]);
+						$movement_challan->addItem($ir->item(),$form['received_qty_'.$i],$ir->item()->getStockEffectAssociatedCustomFields());
 						$i++;
 					}
 
 					$movement_challan->executePurchase($add_to_stock=true);
-
-					$this->api->db->commit();
-				}catch(\Exception $e){
-					$this->api->db->rollback();
-					// rollback
-					if($e instanceof \Exception_ValidityCheck)
-						$form->displayError($e->getField(), $e->getMessage());
-
-					throw $e;
-				}
+					$this->setStatus('completed');
+				return true;
 			}
 		}
 
 
 	}
 	
-
-}		
+	
+}
 

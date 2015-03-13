@@ -97,7 +97,7 @@ class Model_StockMovement extends \Model_Document{
 	function acceptMaterial(){
 		foreach ($this->itemrows() as $ir) {
 			if($ir->item()->mantainInventory()){
-				$this->toWarehouse()->addStockItem($ir->item(),$ir['qty']);
+				$this->toWarehouse()->addStockItem($ir->item(),$ir['qty'],$ir->item()->getStockEffectAssociatedCustomFields());
 			}
 		}
 		$this['status'] ='accepted';

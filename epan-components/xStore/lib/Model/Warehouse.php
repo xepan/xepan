@@ -60,20 +60,19 @@ class Model_Warehouse extends \Model_Table{
 		return $m;
 	}
 
-	function addItemStock($item,$qty){$this->addStockItem($item,$qty);}
+	function addItemStock($item,$qty,$custom_fields){$this->addStockItem($item,$qty,$custom_fields);}
 	function addStockItem($item,$qty,$custom_fields){
 		if(!is_array($custom_fields))
 			throw $this->exception('Custom Fields Not Defined','Growl');
-		
+
 		$stock = $this->ref('xStore/Stock');
 		$stock->addCondition('item_id',$item->id);
 		$cf_string = "";
-		foreach($custom_fields as $cf_id => $cf_value_id) {	
+		foreach($custom_fields as $cf_id => $cf_value_id) {
 			//check for custom filed value
-			$cf_string .= "$cf_id:$cf_value_id ";
+			$cf_string .= "".$cf_id.":".$cf_value_id;
 			$stock->addCondition('custom_fields','like',"$cf_id:$cf_value_id");
 		}
-		
 		$stock->tryLoadAny();
 		$stock['custom_fields'] = $cf_string;
 		$stock['qty'] = $stock['qty'] + $qty;
