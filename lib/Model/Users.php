@@ -39,6 +39,13 @@ class Model_Users extends Model_Table {
 
 		$this->hasMany('UserAppAccess','user_id');
 
+		$this->add('Controller_Validator');
+		$this->is(array(
+							'name|to_trim|required?type User name here',
+							'email|email|unique','if','*','[email]'
+						)
+				);
+
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterInsert',$this);
