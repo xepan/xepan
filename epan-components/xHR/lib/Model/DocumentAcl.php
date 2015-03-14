@@ -28,6 +28,7 @@ class Model_DocumentAcl extends \Model_Table{
 		$this->addField('can_select_outsource')->setValueList($acl)->defaultValue('No');
 		$this->addField('can_approve')->setValueList($acl)->defaultValue('No');
 		$this->addField('can_reject')->setValueList($acl)->defaultValue('No');
+		$this->addField('can_redesign')->setValueList($acl)->defaultValue('No');
 		$this->addField('can_accept')->setValueList($acl)->defaultValue('No');
 		$this->addField('can_cancel')->setValueList($acl)->defaultValue('No');
 
@@ -50,7 +51,7 @@ class Model_DocumentAcl extends \Model_Table{
 		
 		$this->addHook('beforeSave',$this);
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

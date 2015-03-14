@@ -3,8 +3,8 @@ namespace xPurchase;
 
 class Model_PurchaseOrder extends \Model_Document{
 	public $table="xpurchase_purchase_order";
-	public $status=array('draft','approved','processing','submitted','completed');
-	public $root_document_name='xStore\PurchaseOrder';
+	public $status=array('draft','approved','processing','submitted','completed','reject','redesign','accepted');
+	public $root_document_name='xPurchase\PurchaseOrder';
 	function init(){
 		parent::init();
 
@@ -23,27 +23,36 @@ class Model_PurchaseOrder extends \Model_Document{
 	}
 
 	function submit(){
-		$this['status']='submitted';
-		$this->saveAndUnload();
-		//return $this;
+		$this->setStatus('submitted');
 	}
+
 	function approve(){
+		//TODO SEND MAIL
+			//COMMUNICATION LOG ENTRY 
 		
-		$this['status']='approved';
-		$this->saveAndUnload();
-		
+		$this->setStatus('approved');
 	}
 
-	function start_processing_page($page){
-		$page->add('View_Error')->set('supplier ka nam btao phle');
-		$form = $page->add('Form');
-		$form->addSubmit('Sendmail');
+	function reject(){
+		$this->setStatus('rejected');
+	}
 
-		if($form->isSubmitted()){
-			$this['status']='processing';
-			$this->saveAndUnload();			
-			return true;
-		}
+	function redesign(){
+		$this->setStatus('redesign');
+	}
+
+	function accept(){
+		$this->setStatus('accepted');
+	}
+
+	function start_processing(){
+		$this->setStatus('processing');
+		//TODO
+	}
+
+	function setStatus($status){
+		$this['status']=$status;
+		$this->saveAs($this->getRootClass());
 	}
 
 	function mark_processed_page($page){
