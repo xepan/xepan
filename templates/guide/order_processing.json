@@ -1,0 +1,28 @@
+{
+	"steps":[
+		{ 					
+	        "element" : ".ui-tabs-panel .atk-button:contains(Add Order Processing)",
+	        "title": "<b>Processing Order<b>",
+	        "content" : "Create Processing Order Here"
+	    },
+	    {
+	        "element" : ".ui-tabs-panel .atk-button:contains(Add Order Processing) ~ button:contains('ACL')",
+	        "title": "Access Controll Level",
+	        "content" : "Customize Aceess Controll on Submitted Orders",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : "th:contains('Details')",
+	        "title": "Processing Order Details",
+	        "content" : "Order Details Perticular Order to click here to see Details ",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : "th:contains('Print')",
+	        "title": "Print Processing Order ",
+	        "content" : "Print Your Processing Order Click Here to Print page ",
+	        "placement":"bottom"
+	    }
+	    
+	]
+}

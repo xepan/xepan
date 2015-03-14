@@ -1,0 +1,28 @@
+{
+	"steps":[
+		{ 					
+	        "element" : ".ui-tabs-panel .atk-button:contains(Add Order Complete)",
+	        "title": "<b>Complete Order<b>",
+	        "content" : "Create Complete Order Here"
+	    },
+	    {
+	        "element" : ".ui-tabs-panel .atk-button:contains(Add Order Complete) ~ button:contains('ACL')",
+	        "title": "Access Controll Level",
+	        "content" : "Customize Aceess Controll on Submitted Orders",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : "th:contains('Details')",
+	        "title": "Complete Order Details",
+	        "content" : "Order Details Perticular Order to click here to see Details ",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : "th:contains('Print')",
+	        "title": "Print Complete Order ",
+	        "content" : "Print Your Complete Order Click Here to Print page ",
+	        "placement":"bottom"
+	    }
+	    
+	]
+}
