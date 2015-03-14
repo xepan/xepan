@@ -3,13 +3,13 @@
 		{ 
 	        "element" : ".ui-layout-container button:first",
 	        "title": "Title 1",
-	        "content" : "This is element 1",
-	        "backdrop" : true
+	        "content" : "This is element <b>1</b>"
 	    },
 	    {
 	        "element" : "th:contains(DocumentAcl)",
 	        "title": "Title 2",
-	        "content" : "This is element 2"
+	        "content" : "This is element 2",
+	        "placement":"top"
 	    }
 	]
 }

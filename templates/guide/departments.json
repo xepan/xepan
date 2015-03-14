@@ -17,6 +17,12 @@
 	        "title": "Create Production Phases",
 	        "content" : "All basic departments are already provided like company, Hr, accounts etc.. You just need to create your production phases. Production phases will also be considered as department. But its ok if you do not treat them as departments. just create them here.",
 	        "placement": "bottom"
+	    },
+	    {
+	        "element" : "th:contains(Department)",
+	        "title": "Your Departments",
+	        "content" : "Click on any department, and run guide again on next page to continue guide.",
+	        "placement": "top"
 	    }
 	]
 }
