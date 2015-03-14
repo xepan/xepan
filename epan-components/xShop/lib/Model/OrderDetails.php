@@ -179,5 +179,13 @@ class Model_OrderDetails extends \Model_Document{
 		return false;
 	}
 
-}
+	function getCustomFieldSrting(){
+		$cf=$this['custom_fields'];
+		$cf =json_decode($cf,true);
 
+		$cf = print_r($cf,true);
+		 return $cf;
+		
+	}
+
+}

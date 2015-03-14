@@ -23,7 +23,7 @@ class View_Jobcard extends \CompleteLister{
 	function formatRow(){
 		$this->current_row['sno']=$this->sno;
 		$this->current_row['current_status'] = $this->model->getCurrentStatus();
-		$this->current_row['custom_fields'] = $this->model->getCurrentStatus();
+		$this->current_row['custom_fields'] = $this->model->getCustomFieldSrting();
 		$this->sno++;
 	}
 	

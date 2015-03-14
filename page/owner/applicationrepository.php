@@ -5,7 +5,7 @@ class page_owner_applicationrepository extends page_base_owner {
 
 	function init(){
 		parent::init();
-
+		$this->app->title="xEpan CMS" .': Application Repository';
 		if(!$this->api->auth->model->isApplicationManagementAllowed())
 			$this->api->redirect('owner/not-allowed');
 		

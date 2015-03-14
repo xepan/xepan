@@ -2,8 +2,8 @@
 
 class page_developerZone_page_owner_dashboard extends page_developerZone_page_owner_main {
 
-
 	function page_index(){
+			$this->app->title="Developer Zone" .': Dashboard';
 			$this->app->layout->add('H4')->set('Available Components in Local MarketPlace');
 			$grid = $this->app->layout->add('Grid');
 			$grid->setModel('MarketPlace',array('namespace','type','name','is_system','has_toolbar_tools','has_owner_modules','has_plugins','has_live_edit_app_page'));
