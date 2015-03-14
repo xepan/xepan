@@ -1,0 +1,28 @@
+{
+	"steps":[
+		{ 					
+	        "element" : ".ui-tabs-panel .atk-button:contains(Add Order Cancel)",
+	        "title": "<b>Cancel Order<b>",
+	        "content" : "Create Cancel Order Here"
+	    },
+	    {
+	        "element" : ".ui-tabs-panel .atk-button:contains(Add Order Cancel) ~ button:contains('ACL')",
+	        "title": "Access Controll Level",
+	        "content" : "Customize Aceess Controll on Submitted Orders",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : "th:contains('Details')",
+	        "title": "Cancel Order Details",
+	        "content" : "Order Details Perticular Order to click here to see Details ",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : "th:contains('Print')",
+	        "title": "Print Cancel Order ",
+	        "content" : "Print Your Cancel Order Click Here to Print page ",
+	        "placement":"bottom"
+	    }
+	    
+	]
+}

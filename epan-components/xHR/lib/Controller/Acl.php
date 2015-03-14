@@ -158,7 +158,8 @@ class Controller_Acl extends \AbstractController {
 
 		if(!$this->permissions['allow_add']){
 			$this->owner->allow_add=false;
-			// $this->owner->add_button->destroy();
+			if($this->owner->add_button instanceof \View)
+				$this->owner->add_button->destroy();
 		}
 
 		if($this->permissions['allow_edit']=='No'){
@@ -288,9 +289,9 @@ class Controller_Acl extends \AbstractController {
 					}catch(\Exception $e){
 						$this->api->db->rollback();
 						if($this->api->getConfig('developer_mode',false)){
-							$this->owner->js()->univ()->errorMessage($e->getMessage())->execute();
-						}else{
 							throw $e;
+						}else{
+							$this->owner->js()->univ()->errorMessage($e->getMessage())->execute();
 						}
 					}
 				}
