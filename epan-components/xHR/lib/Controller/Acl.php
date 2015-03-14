@@ -287,10 +287,12 @@ class Controller_Acl extends \AbstractController {
 						}
 					}catch(\Exception $e){
 						$this->api->db->rollback();
-						// throw $e;
-						$this->owner->js()->univ()->errorMessage($e->getMessage())->execute();
+						if($this->api->getConfig('developer_mode',false)){
+							$this->owner->js()->univ()->errorMessage($e->getMessage())->execute();
+						}else{
+							throw $e;
+						}
 					}
-
 				}
 			}
 			$this->filterGrid('fr_'.$this->api->normalizeName(ucwords($action_name)));
@@ -301,6 +303,11 @@ class Controller_Acl extends \AbstractController {
 				$this->api->db->commit();
 			}catch(\Exception $e){
 				$this->api->db->rollback();
+				if($this->api->getConfig('developer_mode',false)){
+					$this->owner->js()->univ()->errorMessage($e->getMessage())->execute();
+				}else{
+					throw $e;
+				}
 				throw $e;
 			}
 			$this->filterGrid($action_name);

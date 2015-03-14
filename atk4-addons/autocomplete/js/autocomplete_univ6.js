@@ -9,9 +9,9 @@ $.each({
         var q = this.jquery;
 
 
-        console.log('hi');
-        console.log(send_other_fields);
-        console.log(data);
+        // console.log('hi');
+        // console.log(send_other_fields);
+        // console.log(data);
 
         this.jquery.autocomplete($.extend({
             source: function(request, response) {

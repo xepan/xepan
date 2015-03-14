@@ -45,7 +45,5 @@ class page_owner_dashboard extends page_base_owner {
 			}
 
 		}
-
-
 	}
 }

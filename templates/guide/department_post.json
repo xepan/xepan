@@ -1,12 +1,12 @@
 {
 	"steps":[
 		{ 
-	        "element" : ".dialog span:first:contains(Parent)",
+	        "element" : ".ui-layout-container button:first",
 	        "title": "Title 1",
 	        "content" : "This is element 1"
 	    },
 	    {
-	        "element" : ".dialog input[type=text]",
+	        "element" : "th:contains(DocumentAcl)",
 	        "title": "Title 2",
 	        "content" : "This is element 2"
 	    }

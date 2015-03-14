@@ -5,26 +5,23 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 
 		$this->app->title=$this->api->current_department['name'] .': Departments/Posts/ACL';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Company Departments <small> Departments, Post, ACL, Salary Templates etc</small>');
-		$this->add('PageHint')->set('1. Open Left Panel 2. Create Production Phases (Departments)');
 
 		$l=$this->api->layout->add('splitter/LayoutContainer');
 		$dept_col = $l->getPane('center');
 		$cat_col = $l->addPane('west',
 			array(
 				'size'=>					250
-		,	'spacing_closed'=>			21			// wider space when closed
-		,	'togglerLength_closed'=>	21			// make toggler 'square' - 21x21
-		,	'togglerAlign_closed'=>	"top"		// align to top of resizer
-		,	'togglerLength_open'=>		10			// NONE - using custom togglers INSIDE west-pane
-		,	'togglerTip_open'=>		"Close West Pane"
-		,	'togglerTip_closed'=>		"Open West Pane"
-		,	'resizerTip_open'=>		"Resize West Pane"
-		,	'slideTrigger_open'=>		"click" 	// default
-		,	'initClosed'=>				true
-		//	add 'bounce' option to default 'slide' effect
-		,	'fxSettings_open'=>		array('easing'=> "easeOutBounce" )
-
-
+			,	'spacing_closed'=>			21			// wider space when closed
+			,	'togglerLength_closed'=>	21			// make toggler 'square' - 21x21
+			,	'togglerAlign_closed'=>	"top"		// align to top of resizer
+			,	'togglerLength_open'=>		10			// NONE - using custom togglers INSIDE west-pane
+			,	'togglerTip_open'=>		"Close West Pane"
+			,	'togglerTip_closed'=>		"Open West Pane"
+			,	'resizerTip_open'=>		"Resize West Pane"
+			,	'slideTrigger_open'=>		"click" 	// default
+			,	'initClosed'=>				false
+			//	add 'bounce' option to default 'slide' effect
+			,	'fxSettings_open'=>		array('easing'=> "easeOutBounce" )
 			)
 			);
 
@@ -86,6 +83,7 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 				$tab->addTabURL('xHR_page_owner_department_outsource','Out Source');
 		}else{
 			$dept_col->add('View_Warning')->set('Select any one Department');
-		}	
+		}
+
 	}
 }
