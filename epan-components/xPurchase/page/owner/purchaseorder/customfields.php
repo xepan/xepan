@@ -34,10 +34,10 @@ class page_xPurchase_page_owner_purchaseorder_customfields extends page_xPurchas
 		$department->addCondition('name','Purchase');
 		$phase = $department->tryLoadAny();
 
-		$custom_fields = $item->ref('xShop/ItemCustomFieldAssos')->addCondition('department_phase_id',$phase->id);
+		$custom_fields_asso = $item->ref('xShop/ItemCustomFieldAssos')->addCondition('department_phase_id',$phase->id);
 		$custome_fields_array = array();
-		foreach ($custom_fields as $cfassos) {
-			$field = $this->addCustomField($cf = $cfassos->ref('customfield_id'),$custom_fields);
+		foreach ($custom_fields_asso as $cfassos) {
+			$field = $this->addCustomField($cf = $cfassos->ref('customfield_id'),$custom_fields_asso);
 			if(isset($this->existing_values[$phase->id][$cf->id])){
 				$field->set($this->existing_values[$phase->id][$cf->id]);
 			}
@@ -47,23 +47,23 @@ class page_xPurchase_page_owner_purchaseorder_customfields extends page_xPurchas
 
 		$form->addSubmit('Update');
 
-		$custom_fields_values=array();
+		$custom_fields_asso_values=array();
 		
 		if($form->isSubmitted()){
-			$custom_fields_values[$phase->id]=array();
-			$custom_fields = $item->ref('xShop/ItemCustomFieldAssos')->addCondition('department_phase_id',$phase->id);
-			foreach ($custom_fields as $cfassos) {
+			$custom_fields_asso_values[$phase->id]=array();
+			$custom_fields_asso = $item->ref('xShop/ItemCustomFieldAssos')->addCondition('department_phase_id',$phase->id);
+			foreach ($custom_fields_asso as $cfassos) {
 				$cf = $cfassos->ref('customfield_id');
-				$custom_fields_values [$phase->id][$cf->id] =  $form['custom_field_'.$custom_fields->id];
+				$custom_fields_asso_values [$phase->id][$cf->id] =  $form['custom_field_'.$custom_fields_asso->id];
 			}
 				
-			$json = json_encode($custom_fields_values);
+			$json = json_encode($custom_fields_asso_values);
 			$form->js(null,$form->js()->univ()->closeDialog())->_selector('#'.$_GET['custom_field_name'])->val($json)->execute();
 		}
 
 	}
 
-	function addCustomField(&$cf, $custom_fields_assos){
+	function addCustomField(&$cf, $custom_fields_asso_assos){
 		$field=null;
 		
 		switch($cf['type']){
@@ -71,14 +71,14 @@ class page_xPurchase_page_owner_purchaseorder_customfields extends page_xPurchas
 				$field = $this->form->addField('line','custom_field_'.$cf->id , $cf['name']);
 			break;
 			case "DropDown":
-				$field = $drp = $this->form->addField('DropDown','custom_field_'.$custom_fields_assos->id , $cf['name']);
+				$field = $drp = $this->form->addField('DropDown','custom_field_'.$custom_fields_asso_assos->id , $cf['name']);
 				$values = $this->add('xShop/Model_CustomFieldValue');
 				$values->addCondition('item_id',$this->item->id);
 				$values->addCondition('customfield_id',$cf->id);
-				$values->addCondition('itemcustomfiledasso_id',$custom_fields_assos->id);
+				$values->addCondition('itemcustomfiledasso_id',$custom_fields_asso_assos->id);
 				$values_array=array();
 				foreach ($values as $value) {
-					$values_array[$value['name']]=$value['name'];
+					$values_array[$value['id']]=$value['name'];
 				}
 				$drp->setValueList($values_array);
 				$drp->setEmptyText('Please Select Value');

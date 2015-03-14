@@ -590,7 +590,7 @@ class Model_Item extends \Model_Table{
 		return $m;
 	}
 
-	function mantainInventory(){
+	function isMantainInventory(){
 		return $this['mantain_inventory'];
 	}
 
@@ -617,6 +617,23 @@ class Model_Item extends \Model_Table{
 		$associate_customfields = $associate_customfields->_dsql()->del('fields')->field('customfield_id')->getAll();
 		return $associate_customfields = iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associate_customfields)),false);
 		// return $associate_customfields;
+	}
+
+	function genericRedableCustomFieldAndValue($cf_value_json){
+		// $cf_value_json = '{"5":{"2":"10","3":"12"}}';
+							//{"Department_id":{"custom Field id":"Custom Field Value id"}}
+		if(! (is_string($cf_value_json) && is_object(json_decode($cf_value_json)) && (json_last_error() == JSON_ERROR_NONE)) )
+			throw $this->exception('Json Not Given','Growl');
+		$array = json_decode($cf_value_json,true);
+		$str = "";
+		foreach ($array as $department) {
+			foreach ($department as $cf_id => $cf_value_id) {
+				$cf_model = $this->add('xShop/Model_CustomFields')->load($cf_id);
+				$cf_value_model = $this->add('xShop/Model_CustomFieldValue')->load($cf_value_id);
+				$str .= $cf_model['name']." :: ".$cf_value_model['name']." </br>";
+			}
+		}
+		return $str;
 	}
 
 }	
