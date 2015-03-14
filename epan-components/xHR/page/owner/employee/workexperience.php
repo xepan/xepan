@@ -15,7 +15,7 @@ class page_xHR_page_owner_employee_workexperience extends Page{
 			return;
 		
 		$form = $this->add('Form_Stacked');
-		$form->setModel($selected_dept_model,array('previous_work_company','previous_work_designation','previous_company_branch','previous_work_salary','previous_company_department','from_date','to_date','previous_company_address','resignation_letter_date','resion_of_resignation','relieving_date','leave_encashed','encashment_date','feedback'));
+		$form->setModel($selected_dept_model,array('previous_work_company','previous_company_address','previous_work_designation','previous_company_branch','previous_work_salary','previous_company_department','from_date','to_date','pre_resignation_letter_date','pre_relieving_date','pre_reason_of_resignation'));
 		$form->addSubmit()->set('Update');
 
 		$form->add('Controller_FormBeautifier');

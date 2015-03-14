@@ -7,6 +7,8 @@ class Model_JobCard extends \Model_Document{
 	public $status=array('draft','submitted','approved','received','assigned','processing','processed','forwarded','completed','canceled');
 	public $root_document_name = 'xProduction\JobCard';
 
+	public $show_details = true;
+
 	function init(){
 		parent::init();
 		// hasOne OrderItemDepartment Association id
