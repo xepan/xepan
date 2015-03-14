@@ -7,7 +7,6 @@ class page_xHR_page_owner_department_post extends page_xHR_page_owner_main {
 
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> '.$this->component_name. '<small>  Posts </small>');
 		$dept_id= $this->api->stickyGET('hr_department_id');
-		$this->add('PageHelp',array('page'=>'department_post'));
 
 		$dept=$this->add('xHR/Model_Department')->load($dept_id);
 		

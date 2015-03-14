@@ -3,7 +3,7 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 	function init(){
 		parent::init();
 		
-		$this->api->layout->add('PageHelp',array('page'=>'departments'));
+		$this->api->layout->add('PageHelp',array('page'=>array('departments','department_editing_page','department_post')));
 
 		$this->app->title=$this->api->current_department['name'] .': Departments/Posts/ACL';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Company Departments <small> Departments, Post, ACL, Salary Templates etc</small>');
@@ -63,8 +63,6 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 		if($_GET['hr_department_id']){
 			$this->api->stickyGET('hr_department_id');
 			
-			$dept_col->add('PageHelp',array('page'=>'department_editing_page'));
-
 			$selected_department = $this->add('xHR/Model_Department')->load($_GET['hr_department_id']);
 
 			$filter_box = $dept_col->add('View_Box')->setHTML('Department :: '.$this->add('xHR/Model_Department')->load($_GET['hr_department_id'])->get('name'));

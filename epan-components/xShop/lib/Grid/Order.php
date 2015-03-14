@@ -6,10 +6,14 @@ class Grid_Order extends \Grid {
 
 	function setModel($model,$fields=null){
 
-		$m = parent::setModel($model,array(
-										'name','order_from','on_date','member',
-										'net_amount','last_action'
-										));
+		if($fields==null){
+			$fields = array(
+						'name','order_from','on_date','member',
+						'net_amount','last_action'
+						);
+		}
+
+		$m = parent::setModel($model,$fields);
 
 		$this->addColumn('expander','details',array('page'=>'xShop_page_owner_order_detail','descr'=>'Details'));
 		$this->addColumn('Button','print');

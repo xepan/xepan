@@ -20,10 +20,8 @@ class Model_Order extends \Model_Document{
 		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3');
 		$f = $this->addField('email')->group('a~3');
 		$f = $this->addField('mobile')->group('a~3');
-		// Order status
-			// placed, partial-shipped, shipped, partial-dilivered, dilivered, partial-returned, returned, canceled, complete
-		// order payment status
-			// unpaid, paid, refunded
+		
+
 		$this->addField('order_from')->enum(array('online','offline'))->defaultValue('offline');
 		$f = $this->getElement('status')->group('a~2');
 
@@ -42,6 +40,26 @@ class Model_Order extends \Model_Document{
 		// Payment GateWay related Info
 		$this->addField('transaction_reference');
 		$this->addField('transaction_response_data')->type('text');
+
+		// Last OrderItem Status
+		$dept_status = $this->add('xShop/Model_OrderItemDepartmentalStatus',array('table_alias'=>'ds'));
+		$oi_j = $dept_status->join('xshop_orderDetails','orderitem_id');
+		$oi_j->addField('order_id');
+		$dept_status->addCondition($dept_status->getELement('order_id'),$this->getElement('id'));
+		$dept_status->_dsql()->limit(1)->order($dept_status->getElement('id'),'desc')->where('status','<>','Waiting');
+		
+		
+		$this->addExpression('last_action')->set(function ($m, $q) use($dept_status){
+			return $dept_status->_dsql()->del('fields')
+				->field(
+					$dept_status->dsql()->concat(
+						$dept_status->getELement('orderitem'),
+						' ',
+						$dept_status->getElement('status')
+						)
+					);
+		})->caption('Last OrderItem Action');
+
 
 		$this->hasMany('xShop/OrderDetails','order_id');
 		$this->addHook('beforeDelete',$this);
@@ -232,7 +250,7 @@ class Model_Order extends \Model_Document{
 	}
 
 	function approve_page($page){
-		$page->add('PageHint')->set('Approving Job Card will move this order to approved status and create JobCards to receive in respective FIRST Departments for each Item');
+		$page->add('View_Info')->set('Approving Job Card will move this order to approved status and create JobCards to receive in respective FIRST Departments for each Item');
 		$page->add('View_Error')->set('Are you sure?');
 		$form = $page->add('Form');
 		$form->addSubmit('Yes');
