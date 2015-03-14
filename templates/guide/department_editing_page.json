@@ -1,0 +1,28 @@
+{
+	"steps":[
+		{ 
+	        "element" : ".atk-box-small",
+	        "title": "Selected Department",
+	        "content" : "This section shows your departments",
+	        "placement": "top"
+	    },
+	    {
+	        "element" : ".atk-box-small .atk-size-mega icon-cancel-1",
+	        "title": "Close Editing",
+	        "content" : "This section allows you to edit your department, for that you must first click any of the department from previous section",
+	        "placement": "left"
+	    },
+	    {
+	        "element" : ".ui-tabs-nav a:contains(Posts)",
+	        "title": "Posts Management",
+	        "content" : "All basic departments are already provided like company, Hr, accounts etc.. You just need to create your production phases. Production phases will also be considered as department. But its ok if you do not treat them as departments. just create them here.",
+	        "placement": "top"
+	    },
+	    {
+	        "element" : ".ui-tabs-nav a:contains(Salary)",
+	        "title": "Salary Management",
+	        "content" : "All basic departments are already provided like company, Hr, accounts etc.. You just need to create your production phases. Production phases will also be considered as department. But its ok if you do not treat them as departments. just create them here.",
+	        "placement": "top"
+	    }
+	]
+}

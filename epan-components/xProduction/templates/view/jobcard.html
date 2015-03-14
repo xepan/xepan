@@ -5,16 +5,28 @@
 		{$order_detail}
 		</div>
 </div> -->
-<div id="{$_name}">
-
-{$order_from}
-Date :- {$on_date}
+<style >
+/*.tr-border{
+	border-right: 1px solid black;	
+}*/
+</style>
+	
+<div id="{$_name}" class="well">
+	<div class="row panel panel-primary">
+		<div class="col-md-6">
+			<b>Order Type : -{$order_from}</b>
+		</div>
+		<div class="col-md-6 text-right">
+			<b>Date :- {$on_date}</b>
+			
+		</div>
+	</div>
 
 <table width='100%' class='table' style="font-size:11px;vertical-align:top;" >
 	<tbody class='table-striped'>
-		<tr>
+		<tr class="well " >
 			<th align="left">Sno</th>
-			<th align="left">Product</th>
+			<th align="center">Product</th>
 			<th align="right" class="text-right">Qty</th>
 			<th align="right" class="text-right">Current Status</th>
 			<th align="right" class="text-right">Custom Fields</th>
