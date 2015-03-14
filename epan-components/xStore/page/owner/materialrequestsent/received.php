@@ -4,6 +4,8 @@ class page_xStore_page_owner_materialrequestsent_received extends page_xStore_pa
 	function init(){
 		parent::init();
 		$di = $this->api->stickyGET('department_id');
+		$this->add('PageHelp',array('page'=>'materialrequestsent_recieve'));
+
 		$model = $this->add('xStore/Model_MaterialRequestSent_Received');
 		$model->addCondition('from_department_id',$di);
 
