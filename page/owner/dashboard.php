@@ -46,6 +46,6 @@ class page_owner_dashboard extends page_base_owner {
 
 		}
 
-
+		$this->add('Controller_Guide',array('guide'=>'main_dashboard'));
 	}
 }
