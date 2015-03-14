@@ -1,0 +1,38 @@
+{
+	"steps":[
+		{ 					
+	        "element" : ".ui-tabs-panel .atk-button:contains(Add Order Draft)",
+	        "title": "Draft Order",
+	        "content" : "Create a Default Draft Order Here"
+	    },
+	    {
+	        "element" : ".atk-button:contains(APPLIED)",
+	        "title": "Title 2",
+	        "content" : "Order Draft Specify ACl (Access Control Level )"
+	    },
+	    {
+	        "element" : "th:contains('Details')",
+	        "title": "Draft Order Details",
+	        "content" : "Order Details Perticular Order Draft ",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : "th:contains('Print')",
+	        "title": "Print Draft Order ",
+	        "content" : "Print Your Draft Order Click Here to Print page ",
+	        "placement":"bottom"
+	    },
+	    {
+	        "element" : "th:contains('Submit')",
+	        "title": "Print Draft Order ",
+	        "content" : "Print Your Draft Order Click Here to Print page ",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : "th:contains('Edit')",
+	        "title": "Print Draft Order ",
+	        "content" : "Print Your Draft Order Click Here to Print page ",
+	        "placement":"left"
+	    }
+	]
+}

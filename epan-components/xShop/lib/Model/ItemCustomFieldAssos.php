@@ -17,6 +17,7 @@ class Model_ItemCustomFieldAssos extends \Model_Table{
 
 		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true);
+		$this->addField('can_effect_stock')->type('boolean')->defaultValue(true);
 
 		$this->hasMany('xShop/CustomFieldValue','itemcustomfiledasso_id');
 
@@ -26,7 +27,7 @@ class Model_ItemCustomFieldAssos extends \Model_Table{
 
 		$this->addHook('beforeSave',$this);
 		
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){
