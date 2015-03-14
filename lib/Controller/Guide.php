@@ -4,6 +4,7 @@
 class Controller_Guide extends AbstractController {
 	public $guide_steps = array();
 	public $guide = null;
+	public $return = false;
 
 	function init(){
 		parent::init();
@@ -36,7 +37,11 @@ class Controller_Guide extends AbstractController {
 				// $this->api->template->appendHTML('js_include','<script src="templates/js/guide/bootstrap-tour.min.js"></script>'."\n");
 				// $this->api->template->appendHTML('js_include','<link type="text/css" href="templates/js/guide/bootstrap-tour.min.css" rel="stylesheet" />'."\n");
 				// get its guide and start tour on load
-				$this->owner->js()->_load('guide/guide.xepan')->univ()->runIntro($this->guide_steps)->execute();
+				if($this->return){
+					$this->owner->js(true)->_load('guide/guide.xepan')->univ()->runIntro($this->guide_steps);
+				}else{
+					$this->owner->js()->_load('guide/guide.xepan')->univ()->runIntro($this->guide_steps)->execute();
+				}
 			}else{
 				$this->owner->js()->univ()->errorMessage('No Guide Found')->execute();
 			}
