@@ -16,15 +16,14 @@ class page_xHR_page_owner_employee_basic extends Page{
 		
 		$form = $this->add('Form_Stacked');
 		$form->setModel($selected_dept_model,array(
-													'name','empolyee_image_id','dob','doj',
-													'gender','status','offer_date','confirmetion_date',
-													'contract_end_date','date_of_retirement',
-													'','blood_group',
-													'marital_status','current_address','salary_mode','company_email_id',
-													'permanent_addesss','mobile_no','personal_email',
-													'family_background','health_details',
-													'passport_no','passport_issue_date','passport_expiry_date',
-													'passport_place_of_issue','emergency_contact_no','relation','emergency_contact_person'));
+													'name','dob','gender', 
+													'status','doj','offer_date','company_email_id','confirmation_date','contract_end_date','date_of_retirement','resignation_letter_date'
+													,'relieving_date','reason_of_resignation','salary_mode','feedback','mobile_no',													// 'marital_status','salary_mode','company_email_id',
+													'emergency_contact_person','relation','emergency_contact_no','current_address','permanent_addesss',
+													 'personal_email','passport_no','passport_issue_date','passport_expiry_date','passport_place_of_issue','blood_group','marital_status'
+    												,'family_background','health_details'													
+
+													));
 		$form->addSubmit()->set('Update');
 
 		$form->add('Controller_FormBeautifier');
