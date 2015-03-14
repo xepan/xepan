@@ -5,7 +5,13 @@ class PageHelp extends View{
 
 	function init(){
 		parent::init();
+		$this->rename('ph');
 		
+		if($this->page == null) {
+			$this->set('Page Not Defined');
+			return;
+		}
+
 		$bs = $this->add('ButtonSet');
 		
 		$help=$bs->addButton('Help');
