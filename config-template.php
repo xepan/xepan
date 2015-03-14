@@ -27,6 +27,7 @@ $config['url_page_parameter']='subpage';
 
 $config['default_site']='web';
 $config['default_page']='home';
+$config['developer_mode']=false;
 // Define yout working host path
 // ie http://localhost/epan_cms_runnign_folder
 // or http://www.yourdomain.com
