@@ -1,10 +1,14 @@
 <?php
 
 class page_xHR_page_owner_department_post extends page_xHR_page_owner_main {
+	
 	function init(){
 		parent::init();
+
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> '.$this->component_name. '<small>  Posts </small>');
 		$dept_id= $this->api->stickyGET('hr_department_id');
+		$this->add('PageHelp',array('page'=>'department_post'));
+
 		$dept=$this->add('xHR/Model_Department')->load($dept_id);
 		
 		$post=$this->add('xHR/Model_Post');
@@ -22,8 +26,12 @@ class page_xHR_page_owner_department_post extends page_xHR_page_owner_main {
 			$g=$crud->grid;
 			$g->addPaginator(15);
 			$g->addQuickSearch(array('name'));
-		
 		}
+
+		if($crud->isEditing()){
+			$crud->virtual_page->getPage()->add('PageHelp',array('page'=>'department_add_post_form'));
+		}
+
 
 		$p=$crud->addFrame('DocumentAcl',array('icon'=>'plus'));
 		if($p){
