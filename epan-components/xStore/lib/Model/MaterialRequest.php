@@ -38,7 +38,6 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 
 		if(!$new_request->loaded()){
 			// Create Request From Next Department In Phases :: IMPORTANT
-
 			$from_dept_status = $order_item->nextDeptStatus($order_dept_status->department());
 			$from_dept = $from_dept_status->department();
 			$new_request->create(

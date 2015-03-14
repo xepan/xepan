@@ -12,7 +12,6 @@ class page_xProduction_page_owner_dept_approved extends page_xProduction_page_ow
 
 		$crud=$this->add('CRUD',array('grid_class'=>'xProduction/Grid_JobCard'));
 		$crud->setModel($approved_jobcard_model);
-		$crud->add('xHR/Controller_Acl');
 
 		$p=$crud->addFrame('Details', array('icon'=>'plus'));
 		if($p){
