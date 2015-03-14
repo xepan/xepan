@@ -1,0 +1,22 @@
+{
+	"steps":[
+		{ 					
+	        "element" : ".ui-tabs-panel .atk-button:contains(Add OrderDetails)",
+	        "title": "Draft Order Details ",
+	        "content" : "Create a Default Draft Order Details  Here",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : ".atk-actions .atk-button:contains(APPLIED):last",
+	        "title": "Access Controll Level",
+	        "content" : "Customize Aceess Controll on Order Details Draft  ",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : "th:contains('Edit'):last",
+	        "title": "Edit Draft Order ",
+	        "content" : "Edit  Draft Order Details Click Here ",
+	        "placement":"left"
+	    }
+	]
+}

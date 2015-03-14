@@ -1,0 +1,28 @@
+{
+	"steps":[
+		{ 					
+	        "element" : ".ui-tabs-panel .atk-button:contains(Add Order Shipping)",
+	        "title": "<b>Shipping Order<b>",
+	        "content" : "Create Shipping Order Here"
+	    },
+	    {
+	        "element" : ".ui-tabs-panel .atk-button:contains(Add Order Shipping) ~ button:contains('ACL')",
+	        "title": "Access Controll Level",
+	        "content" : "Customize Aceess Controll on Submitted Orders",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : "th:contains('Details')",
+	        "title": "Shipping Order Details",
+	        "content" : "Order Details Perticular Order to click here to see Details ",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : "th:contains('Print')",
+	        "title": "Print Shipping Order ",
+	        "content" : "Print Your Shipping Order Click Here to Print page ",
+	        "placement":"bottom"
+	    }
+	    
+	]
+}
