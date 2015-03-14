@@ -11,6 +11,9 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 	function init(){
 		parent::init();
 
+		$this->add('View_Error')->set('if You are Select only Store OR Purchase Department So Please Specify Any Other Next Department To Proceed');
+
+
 		$this->api->stickyGET('custom_field_name');
 		$this->api->stickyGET('current_json');
 
@@ -34,6 +37,7 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 		// add all phases
 			$phase_field = $form->addField('Checkbox','phase_'.$phase->id,$phase['name']);
 			// if item has custome fields for phase & set if editing
+			
 			if(isset($this->existing_values[$phase->id])) 
 				$phase_field->set(true);
 
