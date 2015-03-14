@@ -1,0 +1,16 @@
+{
+	"steps":[
+		{ 
+	        "element" : ".atk-tabs > ul:first a:contains('Sent')",
+	        "title": "Sent Material Request",
+	        "content" : "This section shows your Material Request status which are sent ...",
+	        "placement": "right"
+	    },
+	    { 
+	        "element" : ".atk-tabs > ul:first a:contains('Received')",
+	        "title": "Sent Material Request",
+	        "content" : "This section shows your Material Request status which are Received ...",
+	        "placement": "right"
+	    }
+	]
+}	    

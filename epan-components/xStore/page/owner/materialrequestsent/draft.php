@@ -1,9 +1,11 @@
 <?php
 
-class page_xStore_page_owner_materialrequestsent_Draft extends page_xStore_page_owner_main{
+class page_xStore_page_owner_materialrequestsent_draft extends page_xStore_page_owner_main{
 	function init(){
 		parent::init();
 		$di = $this->api->stickyGET('department_id');
+		$this->add('PageHelp',array('page'=>'materialrequestsent_draft'));
+
 		
 		$model = $this->add('xStore/Model_MaterialRequestSent_Draft');
 		$model->addCondition('from_department_id',$di);
@@ -11,7 +13,7 @@ class page_xStore_page_owner_materialrequestsent_Draft extends page_xStore_page_
 		$crud=$this->add('CRUD');
 		$crud->setModel($model);
 
-		$crud->addRef('xStore/MaterialRequestItem');
+		$crud->addRef('xStore/MaterialRequestItem',array('label'=>'Items'));
 
 		// $p=$crud->addFrame('Details', array('icon'=>'plus'));
 		// if($p){
