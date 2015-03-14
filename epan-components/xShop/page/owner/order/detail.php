@@ -6,7 +6,7 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
         
         $di = $this->api->stickyGET('department_id');
         $order_id = $this->api->stickyGET('xshop_orders_id');
-        $this->add('PageHelp',array('page'=>'order_draft_details'));
+        $this->add('PageHelp',array('page'=>'order_details'));
         
         $order = $this->add('xShop/Model_Order')->load($order_id);
 

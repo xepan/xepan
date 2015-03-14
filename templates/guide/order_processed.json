@@ -1,0 +1,28 @@
+{
+	"steps":[
+		{ 					
+	        "element" : ".ui-tabs-panel .atk-button:contains(Add Order Processed)",
+	        "title": "<b>Processed Order<b>",
+	        "content" : "Create Processed Order Here"
+	    },
+	    {
+	        "element" : ".ui-tabs-panel .atk-button:contains(Add Order Processed) ~ button:contains('ACL')",
+	        "title": "Access Controll Level",
+	        "content" : "Customize Aceess Controll on Submitted Orders",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : "th:contains('Details')",
+	        "title": "Processed Order Details",
+	        "content" : "Order Details Perticular Order to click here to see Details ",
+	        "placement":"top"
+	    },
+	    {
+	        "element" : "th:contains('Print')",
+	        "title": "Print Processed Order ",
+	        "content" : "Print Your Processed Order Click Here to Print page ",
+	        "placement":"bottom"
+	    }
+	    
+	]
+}

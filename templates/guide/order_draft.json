@@ -6,14 +6,15 @@
 	        "content" : "Create a Default Draft Order Here"
 	    },
 	    {
-	        "element" : ".atk-button:contains(APPLIED)",
-	        "title": "Title 2",
-	        "content" : "Order Draft Specify ACl (Access Control Level )"
+	        "element" : ".atk-actions .atk-button:contains(APPLIED):first",
+	        "title": "Access Controll Level",
+	        "content" : "Customize Aceess Controll on Draft",
+	        "placement":"top"
 	    },
 	    {
 	        "element" : "th:contains('Details')",
 	        "title": "Draft Order Details",
-	        "content" : "Order Details Perticular Order Draft ",
+	        "content" : "Order Details Perticular Order to click here to see Details ",
 	        "placement":"top"
 	    },
 	    {
@@ -24,14 +25,14 @@
 	    },
 	    {
 	        "element" : "th:contains('Submit')",
-	        "title": "Print Draft Order ",
-	        "content" : "Print Your Draft Order Click Here to Print page ",
+	        "title": "Submit  Draft Order ",
+	        "content" : "Submit  Draft Order to next Submitted Order Status Click Here  ",
 	        "placement":"top"
 	    },
 	    {
-	        "element" : "th:contains('Edit')",
-	        "title": "Print Draft Order ",
-	        "content" : "Print Your Draft Order Click Here to Print page ",
+	        "element" : "th:contains('Edit'):first",
+	        "title": "Edit Draft Order ",
+	        "content" : "Edit  Draft Order Click Here ",
 	        "placement":"left"
 	    }
 	]
