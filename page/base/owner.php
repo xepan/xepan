@@ -53,6 +53,7 @@ class page_base_owner extends Page {
 		
 		$this->shorcut_menus[]=array("page"=>"Dashboard","url"=>$this->api->url("owner_dashboard"));
 		$this->shorcut_menus[]=array("page"=>"Users","url"=>$this->api->url("owner_users"));
+		$this->shorcut_menus[]=array("page"=>"General Settings","url"=>$this->api->url("owner_epansettings"));
 
 		// Alert Notification 
 		// Pages and Templates		
@@ -73,6 +74,7 @@ class page_base_owner extends Page {
 		$this->shorcut_menus[]=array("page"=>"HR Dashboard","url"=>$this->api->url('xHR_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Departments","url"=>$this->api->url('xHR_page_owner_department',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Employees","url"=>$this->api->url('xHR_page_owner_employees',array('department_id'=>$dept_model->id)));
+		$this->shorcut_menus[]=array("page"=>"HR Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 
 		$marketing_m = $m->addMenu('Marketing');
 		$dept_model->loadMarketing();
@@ -87,6 +89,8 @@ class page_base_owner extends Page {
 		$marketing_m->addItem(array('Leads','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_leads',array('department_id'=>$dept_model->id)));
 		$marketing_m->addItem(array('Configurations','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_config',array('department_id'=>$dept_model->id)));
 		$marketing_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
+		
+		$this->shorcut_menus[]=array("page"=>"Marketing Dashboard","url"=>$this->api->url('xMarketingCampaign_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 
 		$exec_m = $marketing_m->addMenu('Executors');
 		$exec_m->addItem(array('Start Grabbing Data','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_exec',array('department_id'=>$dept_model->id)));
@@ -113,6 +117,8 @@ class page_base_owner extends Page {
 		$sales_m->addItem(array('Payment Gateway Config','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_paygateconfig',array('department_id'=>$dept_model->id)));
 		$sales_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 		
+		$this->shorcut_menus[]=array("page"=>"Sales Dashboard","url"=>$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+		$this->shorcut_menus[]=array("page"=>"Opportunity","url"=>$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 
 
 
@@ -227,7 +233,7 @@ class page_base_owner extends Page {
 		}
 
 		if(@$this->app->layout->user_menu){
-
+			
 			$web_designing_menu = $this->app->layout->user_menu->addMenu('WebSite');
 			$web_designing_menu->addItem(array('Epan Pages','icon'=>'gauge-1'),'owner/epanpages');		
 			$web_designing_menu->addItem(array('Epan Templates','icon'=>'gauge-1'),'owner/epantemplates');		
