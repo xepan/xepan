@@ -65,5 +65,12 @@ class Model_CustomFields extends \Model_Table{
 		return $cf_value_array;
 	}
 
+	function getId($name){
+		if(!$this->loaded() and $name != "")
+			throw new \Exception('Model Must be Loaded and Value not given','custom Field');
+
+			$this->addCondition('name',$name);
+			return $this['id'];		
+	}
 }
 

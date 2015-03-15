@@ -261,6 +261,8 @@ jQuery.widget("ui.xepan_xshop_addtocart",{
 			.done(function(ret) {
 				$.univ().successMessage('Item Added To Cart');
 				$('.xshop-cart').trigger('reload');
+				// console.log('CartPage');
+				// console.log(JSON.stringify(self.options.selected_custom_field_values));
 			})
 			.fail(function() {
 				console.log("error");

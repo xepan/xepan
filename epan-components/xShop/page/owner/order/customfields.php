@@ -42,20 +42,20 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 				$phase_field->set(true);
 
 			$custom_fields_asso = $item->ref('xShop/ItemCustomFieldAssos')->addCondition('department_phase_id',$phase->id);
-			$custome_fields_array=array();
+			$custom_fields_array=array();
 			foreach ($custom_fields_asso as $cfassos) {
 				$field = $this->addCustomField($cf = $cfassos->ref('customfield_id'),$custom_fields_asso);
 				if(isset($this->existing_values[$phase->id][$cf->id])){
 					$field->set($this->existing_values[$phase->id][$cf->id]);
 				}
 
-				$custome_fields_array[] = 'custom_field_'.$cf->id;
+				$custom_fields_array[] = 'custom_field_'.$cf->id;
 			}
 
-			if(count($custome_fields_array)){
+			if(count($custom_fields_array)){
 				$phase_field->js(true)->univ()->bindConditionalShow(array(
 					''=>array(),
-					'*'=>$custome_fields_array
+					'*'=>$custom_fields_array
 				),'div.atk-form-row');	
 			}
 				// add custome fields here
