@@ -8,7 +8,7 @@ class Model_PurchaseOrderItem extends \Model_Table{
 
 		$this->hasOne('xPurchase/PurchaseOrder','po_id');
 		
-		$this->hasOne('xShop/Item_Purchasable','item_id')->display(array('form'=>'autocomplete/Basic'));;
+		$this->hasOne('xShop/Item_Purchasable','item_id')->display(array('form'=>'autocomplete/Basic'));
 		
 		$this->addField('qty');
 		$this->addField('unit');
@@ -30,9 +30,7 @@ class Model_PurchaseOrderItem extends \Model_Table{
 	function beforeSave(){
 
 		// validate custom field entries
-		$department = $this->add('xHR/Model_Department');
-		$department->addCondition('name','Purchase');
-		$phase = $department->tryLoadAny();
+		$phase = $this->add('xHR/Model_Department')->loadStore();
 
 		if($this['custom_fields']==''){
 			// $phases_ids = $this->ref('item_id')->getAssociatedDepartment();

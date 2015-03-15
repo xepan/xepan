@@ -88,7 +88,6 @@ class Model_Order extends \Model_Document{
 	}
 
 	function placeOrderFromCart(){
-		
 		// $billing_address=$order_info['address'].", ".$order_info['landmark'].", ".$order_info['city'].", ".$order_info['state'].", ".$order_info['country'].", ".$order_info['pincode'];
 		// $shipping_address=$order_info['shipping_address'].", ".$order_info['s_landmark'].", ".$order_info['s_city'].", ".$order_info['s_state'].", ".$order_info['s_country'].", ".$order_info['s_pincode'];
 		$member = $this->add('xShop/Model_MemberDetails');
@@ -101,19 +100,19 @@ class Model_Order extends \Model_Document{
 		// $this['billing_address'] = $billing_address;
 		// $this['shipping_address'] = $shipping_address;		
 		$this->save();
-
-		$order_details=$this->add('xShop/Model_OrderDetails');
 			$total_amount=0;
 			foreach ($cart_items as $junk) {
+				$order_details=$this->add('xShop/Model_OrderDetails');
+				$item_model = $this->add('xShop/Model_Item')->load($cart_items['item_id']);
 
 				$order_details['order_id']=$this->id;
 				$order_details['item_id']=$cart_items['item_id'];
 				$order_details['qty']=$cart_items['qty'];
 				$order_details['rate']=$cart_items['sales_amount'];//get Item Rate????????????????
 				$order_details['amount']=$cart_items['total_amount'];
-				$order_details['custom_fields']=json_encode($cart_items['custom_fields']);
+				$order_details['custom_fields']= $item_model->customFieldsRedableToId(json_encode($cart_items['custom_fields']));//json_encode($cart_items['custom_fields']);
 				$total_amount+=$order_details['amount'];
-				$order_details->saveAndUnload();
+				$order_details->save();
 			}
 
 			$this['amount']=$total_amount;
@@ -128,7 +127,8 @@ class Model_Order extends \Model_Document{
 			// $this['discount_voucher_amount']=$discount_voucher_amount;
 			$this['net_amount'] = $total_amount;
 			$this->save();
-
+			echo "placeOrderFromCart";
+			
 			// $discountvoucher->processDiscountVoucherUsed($this['discount_voucher']);
 			return $this;
 	}
