@@ -104,7 +104,7 @@ class page_base_owner extends Page {
 
 
 		$sales_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-		$sales_m->addItem(array('Oppertunity','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_oppertunity',array('department_id'=>$dept_model->id)));
+		$sales_m->addItem(array('Opportunity','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_opportunity',array('department_id'=>$dept_model->id)));
 		$sales_m->addItem(array('Quotation','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_quotation',array('department_id'=>$dept_model->id)));
 		$sales_m->addItem(array('Shops & Blogs','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_shopsnblogs',array('department_id'=>$dept_model->id)));
 		$sales_m->addItem(array('Category','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_category',array('department_id'=>$dept_model->id)));
@@ -232,7 +232,7 @@ class page_base_owner extends Page {
 			$admin_badge=$unread_alerts + $unread_messages;
 		}
 
-		if(@$this->app->layout->user_menu){
+		if($this->app->layout->user_menu){
 			
 			$web_designing_menu = $this->app->layout->user_menu->addMenu('WebSite');
 			$web_designing_menu->addItem(array('Epan Pages','icon'=>'gauge-1'),'owner/epanpages');		

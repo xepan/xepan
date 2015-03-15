@@ -1,12 +1,12 @@
 <?php
-class page_xShop_page_owner_oppertunity extends page_xShop_page_owner_main{
+class page_xShop_page_owner_opportunity extends page_xShop_page_owner_main{
 	function init(){
 		parent::init();
 
 		$this->app->title=$this->api->current_department['name'] .': Oppertunities';		
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Oppertunities Management <small> Manage your sales Oppertunities </small>');
 		
-		$oppertunity_model = $this->add('xShop/Model_Oppertunity');
+		$oppertunity_model = $this->add('xShop/Model_Opportunity');
 
 		$crud=$this->app->layout->add('CRUD');
 		$crud->setModel($oppertunity_model);
@@ -32,7 +32,7 @@ class page_xShop_page_owner_oppertunity extends page_xShop_page_owner_main{
 		if($p){
 			
 			$model_quotation=$p->add('xShop/Model_Quotation');
-			$model_quotation->addCondition('oppertunity_id',$crud->id);
+			$model_quotation->addCondition('opportunity_id',$crud->id);
 
 			$c = $p->add('CRUD',array('grid_class'=>'xShop/Grid_Quotation'));
 
