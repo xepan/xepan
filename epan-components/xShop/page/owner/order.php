@@ -7,8 +7,8 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 		$this->app->title=$this->api->current_department['name'] .': Orders';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Sale Orders Management <small> Manage your sale Orders </small>');
 
-		$this->app->layout->add('xShop/View_Badges_OrderPage');
-		$tab = $this->app->layout->add('Tabs');
+		$this->add('xShop/View_Badges_OrderPage');
+		$tab = $this->add('Tabs');
 			$tab->addTabURL('xShop/page/owner/order_draft','Draft');
 			$tab->addTabURL('xShop/page/owner/order_submitted','Submitted');
 			$tab->addTabURL('xShop/page/owner/order_approved','Approved');

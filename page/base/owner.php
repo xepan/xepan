@@ -36,9 +36,10 @@ class page_base_owner extends Page {
 		// 	$this->app->layout = $this;
 		// 	return;
 		// }
-		$l=$this->app->add('Layout_Fluid'); // Usermanu is added in here
+		// $l=$this->app->add('Layout_Fluid'); // Usermanu is added in here
 
 		$this->app->top_menu =  $m=$this->app->layout->add('Menu_Horizontal',null,'Top_Menu');
+		$this->shorcut_menus = array();
 
         $admin_m = $m->addMenu('Admin');
         
@@ -49,6 +50,10 @@ class page_base_owner extends Page {
         $admin_m->addItem(array('Developer Zone','icon'=>'cog'),'developerZone_page_owner_dashboard');
         // $admin_m->addSeparator();
         $admin_m->addItem(array('Logout','icon'=>'logout'),'/logout');
+		
+		$this->shorcut_menus[]=array("page"=>"Dashboard","url"=>$this->api->url("owner_dashboard"));
+		$this->shorcut_menus[]=array("page"=>"Users","url"=>$this->api->url("owner_users"));
+		$this->shorcut_menus[]=array("page"=>"General Settings","url"=>$this->api->url("owner_epansettings"));
 
 		// Alert Notification 
 		// Pages and Templates		
@@ -66,6 +71,10 @@ class page_base_owner extends Page {
 		
 		$hr_m->addItem(array('Setup','icon'=>'cog'),$this->api->url('xHR_page_owner_setup',array('department_id'=>$dept_model->id)));
 
+		$this->shorcut_menus[]=array("page"=>"HR Dashboard","url"=>$this->api->url('xHR_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+		$this->shorcut_menus[]=array("page"=>"Departments","url"=>$this->api->url('xHR_page_owner_department',array('department_id'=>$dept_model->id)));
+		$this->shorcut_menus[]=array("page"=>"Employees","url"=>$this->api->url('xHR_page_owner_employees',array('department_id'=>$dept_model->id)));
+		$this->shorcut_menus[]=array("page"=>"HR Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 
 		$marketing_m = $m->addMenu('Marketing');
 		$dept_model->loadMarketing();
@@ -80,6 +89,8 @@ class page_base_owner extends Page {
 		$marketing_m->addItem(array('Leads','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_leads',array('department_id'=>$dept_model->id)));
 		$marketing_m->addItem(array('Configurations','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_config',array('department_id'=>$dept_model->id)));
 		$marketing_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
+		
+		$this->shorcut_menus[]=array("page"=>"Marketing Dashboard","url"=>$this->api->url('xMarketingCampaign_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 
 		$exec_m = $marketing_m->addMenu('Executors');
 		$exec_m->addItem(array('Start Grabbing Data','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_exec',array('department_id'=>$dept_model->id)));
@@ -106,6 +117,8 @@ class page_base_owner extends Page {
 		$sales_m->addItem(array('Payment Gateway Config','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_paygateconfig',array('department_id'=>$dept_model->id)));
 		$sales_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 		
+		$this->shorcut_menus[]=array("page"=>"Sales Dashboard","url"=>$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+		$this->shorcut_menus[]=array("page"=>"Opportunity","url"=>$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 
 
 
@@ -220,16 +233,16 @@ class page_base_owner extends Page {
 		}
 
 		if(@$this->app->layout->user_menu){
-
-		$web_designing_menu = $this->app->layout->user_menu->addMenu('WebSite');
-		$web_designing_menu->addItem(array('Epan Pages','icon'=>'gauge-1'),'owner/epanpages');		
-		$web_designing_menu->addItem(array('Epan Templates','icon'=>'gauge-1'),'owner/epantemplates');		
-		$web_designing_menu->addItem(array('Menus','icon'=>'right-hand'),'xMenus_page_owner_dashboard');
-		$web_designing_menu->addItem(array('Enquiries & Subscriptions','icon'=>'right-hand'),'xEnquiryNSubscription_page_owner_dashboard');
-		$web_designing_menu->addItem(array('Extended Elements','icon'=>'right-hand'),'ExtendedElement_page_owner_dashboard');
-		$web_designing_menu->addItem(array('Slide Shows','icon'=>'right-hand'),'slideShows_page_owner_dashboard');
-		$web_designing_menu->addItem(array('Extended Images','icon'=>'right-hand'),'extendedImages_page_owner_dashboard');
-		$web_designing_menu->addItem(array('Image Gallaries','icon'=>'right-hand'),'xImageGallary_page_owner_dashboard');
+			
+			$web_designing_menu = $this->app->layout->user_menu->addMenu('WebSite');
+			$web_designing_menu->addItem(array('Epan Pages','icon'=>'gauge-1'),'owner/epanpages');		
+			$web_designing_menu->addItem(array('Epan Templates','icon'=>'gauge-1'),'owner/epantemplates');		
+			$web_designing_menu->addItem(array('Menus','icon'=>'right-hand'),'xMenus_page_owner_dashboard');
+			$web_designing_menu->addItem(array('Enquiries & Subscriptions','icon'=>'right-hand'),'xEnquiryNSubscription_page_owner_dashboard');
+			$web_designing_menu->addItem(array('Extended Elements','icon'=>'right-hand'),'ExtendedElement_page_owner_dashboard');
+			$web_designing_menu->addItem(array('Slide Shows','icon'=>'right-hand'),'slideShows_page_owner_dashboard');
+			$web_designing_menu->addItem(array('Extended Images','icon'=>'right-hand'),'extendedImages_page_owner_dashboard');
+			$web_designing_menu->addItem(array('Image Gallaries','icon'=>'right-hand'),'xImageGallary_page_owner_dashboard');
 
 			$menu=$this->app->layout->user_menu->addMenu(array($this->api->auth->model['name'] . '('.$this->api->current_employee->department()->get('name').'/'.$this->api->current_employee->post()->get('name').')','icon'=>'user'));
 			$menu->addItem(array_merge(array('Alert'),$alert_badge),'/owner/alert');
@@ -244,16 +257,18 @@ class page_base_owner extends Page {
 		$this->api->template->appendHTML('js_include','<link type="text/css" href="elfinder/css/elfinder.min.css" rel="stylesheet" />'."\n");
 		$this->api->template->appendHTML('js_include','<link type="text/css" href="elfinder/css/theme.css" rel="stylesheet" />'."\n");
 		$this->api->template->appendHTML('js_include','<script src="elfinder/js/elfinder.full.js"></script>'."\n");
-
+		$this->api->template->appendHTML('js_include','<script src="templates/js/shortcut.js"></script>'."\n");
+		
+		$this->api->js(true)->_load('utilities/fuse.min')->_load('utilities/shortmenus')->univ()->setUpShortMenus($this->shorcut_menus);
 		parent::render();
 	}
 
-	function add($object,$options=null,$spot=null,$template=null){
+	// function add($object,$options=null,$spot=null,$template=null){
 
-		if( !$this->api->isAjaxOutput() and $this->api->layout and strpos($object,"Controller_") === false){
-			return $this->api->layout->add($object,$options,$spot,$template);
-		}
-		return parent::add($object,$options,$spot,$template);
-	}
+	// 	if( !$this->api->isAjaxOutput() and $this->api->layout and strpos($object,"Controller_") === false){
+	// 		return $this->api->layout->add($object,$options,$spot,$template);
+	// 	}
+	// 	return parent::add($object,$options,$spot,$template);
+	// }
 
 }
