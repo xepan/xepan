@@ -6,7 +6,7 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 		$this->app->title=$this->api->current_department['name'] .': Employee';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Employee Management <small> Manage companies employees </small>');
 
-		$l=$this->api->layout->add('splitter/LayoutContainer');
+		$l=$this->add('splitter/LayoutContainer');
 		$emp_col = $l->getPane('center');
 		$cat_col = $l->addPane('west',
 			array(
@@ -19,7 +19,7 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 		,	'togglerTip_closed'=>		"Open West Pane"
 		,	'resizerTip_open'=>		"Resize West Pane"
 		,	'slideTrigger_open'=>		"click" 	// default
-		,	'initClosed'=>				true
+		,	'initClosed'=>				false
 		//	add 'bounce' option to default 'slide' effect
 		,	'fxSettings_open'=>		array('easing'=> "easeOutBounce" )
 

@@ -3,13 +3,13 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 	function init(){
 		parent::init();
 		
-		$this->api->layout->add('PageHelp',array('page'=>array('departments','department_editing_page','department_post')));
+		$this->add('PageHelp',array('page'=>array('departments','department_editing_page','department_post')));
 
 		$this->app->title=$this->api->current_department['name'] .': Departments/Posts/ACL';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Company Departments <small> Departments, Post, ACL, Salary Templates etc</small>');
 		
 
-		$l=$this->api->layout->add('splitter/LayoutContainer');
+		$l=$this->add('splitter/LayoutContainer');
 		$dept_col = $l->getPane('center');
 		$cat_col = $l->addPane('west',
 			array(
