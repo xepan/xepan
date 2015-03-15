@@ -3,9 +3,8 @@
 		{ 
 	        "element" : ".ui-layout-west",
 	        "title": "Your Departments",
-	        "content" : "This section shows your departments",
-	        "placement": "top",
-	        "backdrop": true
+	        "content" : "This section shows your <span class='label label-info'>departments</span>",
+	        "placement": "top"
 	    },
 	    {
 	        "element" : ".ui-layout-center ",
