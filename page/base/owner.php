@@ -260,19 +260,8 @@ class page_base_owner extends Page {
 		
 		}
 
+		// ============ USER MENUS =================
 		
-
-        // $installed_components = $this->add('Model_InstalledComponents');
-		// $installed_components->addCondition('epan_id',$this->api->current_website->id);
-
-		// $components_m = $m->addMenu('Components');
-		// foreach ($installed_components as $comp) {
-		// 	$components_m->addItem(array($comp['name'],'icon'=>'right-hand'),$comp['namespace'].'_page_owner_dashboard');
-		// }
-	}
-
-	function recursiveRender(){
-		// Add this usermanu at last to keep in last
 		$alerts =$this->add('Model_Alerts');
 		$unread_alerts = $alerts->addCondition('is_read',false)->count()->getOne();
 		$alert_badge=array();
@@ -315,7 +304,7 @@ class page_base_owner extends Page {
 			$menu->addItem('Logout','logout');
 
 		}
-		parent::recursiveRender();
+
 	}
 
 	function render(){
@@ -327,13 +316,5 @@ class page_base_owner extends Page {
 		$this->api->js(true)->_load('utilities/fuse.min')->_load('utilities/shortmenus')->univ()->setUpShortMenus($this->shorcut_menus, $this->api->url());
 		parent::render();
 	}
-
-	// function add($object,$options=null,$spot=null,$template=null){
-
-	// 	if( !$this->api->isAjaxOutput() and $this->api->layout and strpos($object,"Controller_") === false){
-	// 		return $this->api->layout->add($object,$options,$spot,$template);
-	// 	}
-	// 	return parent::add($object,$options,$spot,$template);
-	// }
 
 }

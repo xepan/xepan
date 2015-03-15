@@ -63,14 +63,14 @@ class page_componentBase_page_owner_main extends page_base_owner {
 		);
 
 		// User Menu Setup 
-		$um=$this->app->layout->user_menu;
-		$this->api->component_common_menu = $component_common = $um->addMenu('Component');
-		// $x=$component_common->addItem('About','#');
-		// $x->js('click')->univ()->frameURL( 'About This Component', $about_page->getURL() );
-		$x=$component_common->addItem('Update','#');
-		$x->js('click')->univ()->frameURL( 'Update This Component', $update_page->getURL() );
-		$x=$component_common->addItem('Uninstall','#');
-		$x->js('click')->univ()->frameURL( 'Uninstall This Component', $uninstall_page->getURL() );
+		// $um=$this->app->layout->user_menu;
+		// $this->api->component_common_menu = $component_common = $um->addMenu('Component');
+		// // $x=$component_common->addItem('About','#');
+		// // $x->js('click')->univ()->frameURL( 'About This Component', $about_page->getURL() );
+		// $x=$component_common->addItem('Update','#');
+		// $x->js('click')->univ()->frameURL( 'Update This Component', $update_page->getURL() );
+		// $x=$component_common->addItem('Uninstall','#');
+		// $x->js('click')->univ()->frameURL( 'Uninstall This Component', $uninstall_page->getURL() );
 
 	}
 }
