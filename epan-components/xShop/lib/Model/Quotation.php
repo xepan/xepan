@@ -10,7 +10,7 @@ class Model_Quotation extends \Model_Document{
 	function init(){
 		parent::init();
 		$this->hasOne('xMarketingCampaign/Lead','lead_id');
-		$this->hasOne('xShop/Oppertunity','oppertunity_id');
+		$this->hasOne('xShop/Opportunity','opportunity_id');
 		$this->hasOne('xShop/Customer','customer_id');
 		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id');
 
