@@ -19,7 +19,7 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 		$this->hasMany('xStore/MaterialRequestItem','material_request_jobcard_id');
 		$this->hasMany('xStore/StockMovement','material_request_jobcard_id');
 
-		// //$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 
@@ -108,18 +108,16 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 			}
 
 			try{
-				// start transection
-				$this->api->db->beginTransaction();
 				$movement_challan = $from_warehouse->newStockTransfer($to_warehouse,$this);
 				foreach($this->ref('xStore/MaterialRequestItem') as $requested_item){
 					$item = $requested_item->item();
 					
-					if($item->mantainInventory() AND !$item->allowNegativeStock()){
+					if($item->isMantainInventory() AND !$item->allowNegativeStock()){
 						if(($avl_qty=$from_warehouse->getStock($item)) < $form['alloted_qty_'.$i])
 							throw $this->exception('Not Sufficient Qty Available ['.$avl_qty.']','ValidityCheck')->setField('req_qty_'.$i);
 					}
 
-					$movement_challan->addItem($item,$form['alloted_qty_'.$i], $requested_item['unit']);
+					$movement_challan->addItem($item,$form['alloted_qty_'.$i], $requested_item['unit'],$requested_item['custom_fields']);
 					$i++;
 				}
 				// commit
@@ -135,17 +133,16 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 				// }
 
 				$this->setStatus('processed');
+				
+				return true;
 
-
-				$this->api->db->commit();
 			}catch(\Exception $e){
-				$this->api->db->rollback();
-					// rollback
 				if($e instanceof \Exception_ValidityCheck)
 					$form->displayError($e->getField(), $e->getMessage());
 
 				throw $e;
 			}
+
 		}
 
 		$page->add('View')->set('stock se minus kar do ... status processed kar do');
@@ -187,6 +184,7 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 		if($form->isSubmitted()){
 			if($form->isClicked($accept_btn)){
 				$this->accept();
+				return true;
 			}else{
 				throw new \Exception("Rejected", 1);
 			}

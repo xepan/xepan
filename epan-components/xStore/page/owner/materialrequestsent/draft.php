@@ -13,8 +13,8 @@ class page_xStore_page_owner_materialrequestsent_draft extends page_xStore_page_
 		$crud->setModel($model,array('to_department_id'),array('to_department'));
 		
 		// $ic = $crud->addRef('xStore/MaterialRequestItem',array('label'=>'Items'));
-		
-		if($crud->isEditing()){
+		$editing_mode = $crud->isEditing();
+		if($editing_mode === 'add' OR $editing_mode ==='edit'){
 			$crud->form->getElement('to_department_id')->getModel()->addCondition('id','<>',$this->api->current_department->id);
 		}else{
 			$crud->grid->addColumn('expander','items');

@@ -17,6 +17,7 @@ class page_xProduction_page_owner_dept_received extends page_xProduction_page_ow
 		if($p){
 			$p->add('xProduction/View_Jobcard',array('jobcard'=>$this->add('xProduction/Model_JobCard')->load($crud->id)));
 		}
+		$crud->add('xHR/Controller_Acl');
 
 	
 
