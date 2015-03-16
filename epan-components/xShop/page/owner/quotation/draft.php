@@ -6,7 +6,7 @@ class page_xShop_page_owner_quotation_draft extends page_xShop_page_owner_main{
 
 		$draft_quotation_model = $this->add('xShop/Model_Quotation_Draft');
 
-		$draft_quotation_model->getElement('oppertunity_id')->system(true);
+		$draft_quotation_model->getElement('opportunity_id')->system(true);
 
 		$crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_Quotation'));
 		$crud->setModel($draft_quotation_model);
