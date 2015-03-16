@@ -69,7 +69,7 @@ class Model_StockMovement extends \Model_Document{
 
 	function executeStockTransfer(){
 		foreach ($this->itemrows() as $itemrow) {
-			if($itemrow->item()->mantainInventory()){
+			if($itemrow->item()->isMantainInventory()){
 				$this->fromWarehouse()->deductItemStock($itemrow->item(),$itemrow['qty']);
 			}
 		}
