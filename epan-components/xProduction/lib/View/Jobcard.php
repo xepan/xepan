@@ -16,8 +16,10 @@ class View_Jobcard extends \CompleteLister{
 		
 
 		$this->template->set('qty',$order['qty']);
+		$this->template->set('name',$order['name']);
 		$this->template->set('order_from',$order['order_from']);
 		$this->template->set('on_date',$order['on_date']);
+		$this->template->set('status',$order['status']);
 	}
 
 	function formatRow(){

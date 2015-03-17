@@ -1,23 +1,25 @@
-<!-- <div id="{$_name}" class="{$class}">
-		{$Content}
-	{qty}{/qty}
-		<div class="xshop-order-detail">
-		{$order_detail}
-		</div>
-</div> -->
+
 <style >
-/*.tr-border{
-	border-right: 1px solid black;	
-}*/
 </style>
 	
 <div id="{$_name}" class="well">
-	<div class="row panel panel-primary">
-		<div class="col-md-6">
-			<b>Order Type : -{$order_from}</b>
+<div  class="row panel panel-info">
+	<div class="col-md-12">
+			<b>Customer name : {$name}</b>
 		</div>
+</div>
+	<div class="row panel panel-info">
+		<div class="col-md-6">
+			<b>Order Type : {$order_from}</b>
+		</div>
+		
 		<div class="col-md-6 text-right">
-			<b>Date :- {$on_date}</b>
+			<b> Order Status:- {$status}</b>
+		
+		<div class="col-md-3 text-center">
+			<b>Date  {$on_date}</b>
+			
+		</div>
 			
 		</div>
 	</div>
@@ -42,21 +44,6 @@
 		</tr>
 		{/row}
 	{/rows}
-		<!-- <tr align="right">
-			<td>&nbsp;</td>
-			<th>Total</th>
-			<td class='' colspan="4"><b>&#8377;</b> {$gross_amount}</td>
-		</tr>
-		<tr align="right">
-			<td>&nbsp;</td>
-			<th>Discount Voucher Amount</th>
-			<td class='' colspan="4"><b>&#8377;</b> {$discount_voucher_amount}</td>
-		</tr>		
-		<tr align="right">
-			<td>&nbsp;</td>
-			<th>Net Amount</th>
-			<td colspan="4" class=''><b>&#8377; {$net_amount} </b> </td>
-		</tr> -->
 	</tbody>
 </table>
 </div>
