@@ -21,6 +21,7 @@ class page_xProduction_page_owner_dept_draft extends page_xProduction_page_owner
 
 		$crud->add('xHR/Controller_Acl');
 
+		//$this->add('xProduction/View_Jobcard',array('jobcard'=>$this->add('xProduction/Model_JobCard')->load(3)));
 	}
 
 }
