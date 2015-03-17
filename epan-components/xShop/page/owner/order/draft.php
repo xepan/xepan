@@ -11,6 +11,10 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 			$crud->grid->removeColumn('order_from');
 		}else{
 			$crud->form->add('View_Error')->set('Payment Advanced');
-		}	
+		}
+
+		$o = $this->add('xShop/Model_Order_Draft')->load(9);
+		$this->add('xShop/View_Order')->setModel($o);
+
 	}
 }		

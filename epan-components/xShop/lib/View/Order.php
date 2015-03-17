@@ -2,10 +2,11 @@
 
 namespace xShop;
 
-class View_PrintOrder extends \View{
+class View_Order extends \View{
 	function init(){
 		parent::init();
-
+		
+		$this->add('View_Info')->set('Order');
 	}  
 
 	function setModel($model){
@@ -49,7 +50,8 @@ class View_PrintOrder extends \View{
 		        'js'=>'templates/js',
 		    )
 		);
-		return array('view/xShop-PrintOrder');
+		
+		return array('view/xShop-Order');
 	}
 	
 }
