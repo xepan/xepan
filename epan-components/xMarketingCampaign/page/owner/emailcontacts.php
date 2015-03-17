@@ -19,7 +19,7 @@ class page_xMarketingCampaign_page_owner_emailcontacts extends page_xMarketingCa
 
 
 
-		$bg=$this->app->layout->add('View_BadgeGroup');
+		$bg=$this->add('View_BadgeGroup');
 		$data =$this->add('xMarketingCampaign/Model_DataSearchPhrase')->count()->getOne();
 		$v=$bg->add('View_Badge')->set('Total Phrases')->setCount($data)->setCountSwatch('ink');
 		

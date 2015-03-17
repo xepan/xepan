@@ -33,7 +33,7 @@ class Model_Cart extends \Model{
 		$prices = $item->getPrice($custom_fields,$qty,'retailer');
 		
 		$amount = $item->getAmount($custom_fields,$qty,'retailer');
-
+		
 		$this['item_id'] = $item->id;
 		$this['item_code'] = $item['sku'];
 		$this['item_name'] = $item['name'];

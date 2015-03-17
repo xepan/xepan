@@ -1,0 +1,10 @@
+{
+	"steps":[
+		{ 
+	        "element" : "Sa:contains('Draft')",
+	        "title": "Sent Material Request",
+	        "content" : "This section shows your Material Request status which are sent ...",
+	        "placement": "right"
+	    }
+	]
+}	    

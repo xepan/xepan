@@ -1,9 +1,10 @@
 {
 	"steps":[
 		{ 
-	        "element" : "#f119fd1c__al_2_menu_advanced_item",
-	        "title": "Title 1",
-	        "content" : "This is element 1"
+	        "title": "xEpan CMS Guide",
+	        "content" : "Hi, and welcome to this new system.",
+	        "orphan": true,
+	        "backdrop": true
 	    },
 	    {
 	        "element" : "#f119fd1c__al_2_menu_advanced_item_2",

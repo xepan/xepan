@@ -571,14 +571,17 @@ class Model_Item extends \Model_Table{
 
 	function getAssociatedDepartment(){
 		if(!$this->loaded())
-			throw new \Exception("Item Model Must be Loaded",'Department Association');
+			throw $this->exception('Item Model Must be Loaded');
 			
 		$associated_department = $this->ref('xShop/ItemDepartmentAssociation')->addCondition('is_active',true)->_dsql()->del('fields')->field('department_id')->getAll();
 		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_department)),false);
 	}
 
 	function associatedDepartments(){
-		return $this->add('xProduction/Model_Department')->addCondition('id',$this->getAssociatedDepartment());
+		if(!$this->loaded())
+			throw $this->exception('Item Model Must be Loaded');
+
+		return $this->add('xHR/Model_Department')->addCondition('id',$this->getAssociatedDepartment());
 	}
 
 	function departmentalAssociations($department=false){
@@ -590,7 +593,7 @@ class Model_Item extends \Model_Table{
 		return $m;
 	}
 
-	function mantainInventory(){
+	function isMantainInventory(){
 		return $this['mantain_inventory'];
 	}
 
@@ -618,6 +621,60 @@ class Model_Item extends \Model_Table{
 		return $associate_customfields = iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associate_customfields)),false);
 		// return $associate_customfields;
 	}
+
+	function genericRedableCustomFieldAndValue($cf_value_json){
+		// $cf_value_json = '{"5":{"2":"10","3":"12"}}';
+							//{"Department_id":{"custom Field id":"Custom Field Value id"}}
+		if(! (is_string($cf_value_json) && is_object(json_decode($cf_value_json)) && (json_last_error() == JSON_ERROR_NONE)) )
+			throw $this->exception('Json Not Given','Growl');
+		$array = json_decode($cf_value_json,true);
+		$str = "";
+		foreach ($array as $department) {
+			foreach ($department as $cf_id => $cf_value_id) {
+				$cf_model = $this->add('xShop/Model_CustomFields')->load($cf_id);
+				$cf_value_model = $this->add('xShop/Model_CustomFieldValue')->load($cf_value_id);
+				$str .= $cf_model['name']." :: ".$cf_value_model['name']." </br>";
+			}
+		}
+		return $str;
+	}
+
+	function customFieldsRedableToId($cf_value_json){
+		// $cf_value_json = {"Sides":"Single Side"}
+						//{"Custom_field_name":"Selected custom Field Value"}
+		if(!$this->loaded())
+			throw new \Exception("Item Model Must be Loaded");
+			
+		if(! (is_string($cf_value_json) && is_object(json_decode($cf_value_json)) && (json_last_error() == JSON_ERROR_NONE)) )
+			throw $this->exception('Json Not Given','Growl');
+
+		//Load Sales Department
+		$sales_department = $this->add('xHR/Model_Department')->loadSales();
+		$cart_cf_array = json_decode($cf_value_json,true);
+		//Load Item Associated Custom Fields
+
+		$array = array();
+		foreach ($cart_cf_array as $cf_name => $cf_value_name) {
+			$cf = $this->add('xShop/Model_CustomFields')->addCondition('name',$cf_name)->tryLoadAny();
+			$cf_asso = $this->add('xShop/Model_ItemCustomFieldAssos')
+									->addCondition('item_id',$this['id'])
+									->addCondition('department_phase_id',$sales_department['id'])
+									->addCondition('customfield_id',$cf->id)
+									->tryLoadAny();
+
+			$cf_value = $cf->ref('xShop/CustomFieldValue')->addCondition('name',$cf_value_name)->tryLoadAny();
+			$array[] = array($cf->id => $cf_value->id);
+		}
+
+		$json_array[$sales_department->id] = $array;
+		
+		//Get Custom Field Id
+		//Get Custom Field Value Id
+		//{"5":{"2":"10","3":"12"}}
+		//and Make json
+		return json_encode($json_array);
+	}
+
 
 }	
 

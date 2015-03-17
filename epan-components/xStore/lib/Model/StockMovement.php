@@ -52,11 +52,12 @@ class Model_StockMovement extends \Model_Document{
 		return $this->ref('xStore/StockMovementItem');
 	}
 
-	function addItem($item,$qty,$unit){
+	function addItem($item,$qty,$unit,$custom_fields){
 		$new_item = $this->ref('xStore/StockMovementItem');
 		$new_item['item_id'] = $item->id;
 		$new_item['qty'] = $qty;
 		$new_item['unit'] = $unit;
+		$new_item['custom_fields'] = $custom_fields;
 		$new_item->save();
 
 		return $this;
@@ -68,7 +69,7 @@ class Model_StockMovement extends \Model_Document{
 
 	function executeStockTransfer(){
 		foreach ($this->itemrows() as $itemrow) {
-			if($itemrow->item()->mantainInventory()){
+			if($itemrow->item()->isMantainInventory()){
 				$this->fromWarehouse()->deductItemStock($itemrow->item(),$itemrow['qty']);
 			}
 		}
@@ -86,7 +87,7 @@ class Model_StockMovement extends \Model_Document{
 
 	function executeConsume(){
 		foreach ($this->itemrows() as $itemrow) {
-			if($itemrow->item()->mantainInventory()){
+			if($itemrow->item()->isMantainInventory()){
 				$this->fromWarehouse()->deductItemStock($itemrow->item(),$itemrow['qty']);
 			}
 		}
@@ -96,8 +97,10 @@ class Model_StockMovement extends \Model_Document{
 
 	function acceptMaterial(){
 		foreach ($this->itemrows() as $ir) {
-			if($ir->item()->mantainInventory()){
-				$this->toWarehouse()->addStockItem($ir->item(),$ir['qty'],$ir->item()->getStockEffectAssociatedCustomFields());
+			
+			if($ir->item()->isMantainInventory()){
+				$this->toWarehouse()->addStockItem($ir->item(),$ir['qty'],$ir['custom_fields']);
+				// throw new \Exception("Error Processing Request", 1);
 			}
 		}
 		$this['status'] ='accepted';

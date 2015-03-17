@@ -1,5 +1,18 @@
 <div id="{$_name}" class="{$class}">
-		{$Content}
+	{$Content}
+	<div class="row">
+		<div class="col-md-4">
+			Order No :: {$id}
+		</div>
+		<div class="col-md-4">
+			Status :: {$status}
+		</div>
+		<div class="col-md-4">
+			Order from :: {$member}
+		</div>
+	</div>
+
+
 	{order_address}{/order_address}
 		<div class="xshop-order-detail">
 		{$order_detail}

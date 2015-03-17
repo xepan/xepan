@@ -5,7 +5,7 @@ class PageHelp extends View{
 
 	function init(){
 		parent::init();
-		$this->rename('ph');
+		// $this->addStyle('float','right');
 		
 		if($this->page == null) {
 			$this->set('Page Not Defined');
@@ -16,15 +16,29 @@ class PageHelp extends View{
 		
 		$help=$bs->addButton('')->addClass('icon-help');
 		$guide=$bs->addButton('')->addClass('icon-eye');
+		if(is_array($this->page)){
+			$pov = $this->add('View_Popover');
+			$view= $pov->add('View');
+			foreach ($this->page as $pg) {
+				$m = $view->add('Button')->set(ucwords(str_replace("_", " ", $pg)));
+				$m->js('click')->reload(array($this->api->normalizeName($m->name) => 'true'));
+				if($m->isClicked()){
+					$guide->js(true)->click();
+					$this->add('Controller_Guide',array('guide'=>$pg));
+				}
+			}
+			$guide->js('click',$pov->showJS());
+		}else{
+			if($guide->isClicked()){
+				$this->add('Controller_Guide',array('guide'=>$this->page));
+			}
+		}
 		$faq=$bs->addButton('')->addClass('icon-book');
 
 		if($help->isClicked()){
 			$help->js()->univ()->successMessage('Hello')->execute();
 		}
 
-		if($guide->isClicked()){
-			$this->add('Controller_Guide',array('guide'=>$this->page));
-		}
 	}
 
 	function render(){

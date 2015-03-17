@@ -73,7 +73,10 @@ class Model_PurchaseOrder extends \Model_Document{
 		$i=1;
 		foreach($this->itemrows() as $ir){
 			$sno_cols->add('View')->set($i);
-			$item_cols->addField('Readonly','item_'.$i,'Item')->set($ir['item']);
+			$item_model = $this->add('xShop/Model_Item')->load($ir['item_id']);
+			$item_name_with_customField = $ir['item']." </br>".$item_model->genericRedableCustomFieldAndValue($ir['custom_fields']);
+			$item_cols->addField('Readonly','item_'.$i,'Item')->set($item_name_with_customField);
+			
 			$req_qty_cols->addField('Readonly','req_qty_'.$i,'Qty')->set($ir['qty']);
 			$unit_cols->addField('Readonly','req_uit_'.$i,'Unit')->set($ir['unit']);
 			$received_qty->addField('Number','received_qty_'.$i,'Received Qty')->set($ir['qty']);
@@ -87,15 +90,15 @@ class Model_PurchaseOrder extends \Model_Document{
 				
 				$to_warehouse = $this->add('xStore/Model_Warehouse')->loadPurchase();
 				
-					$movement_challan = $to_warehouse->newPurchaseReceive($this);
-					$i=1;
-					foreach ($this->itemrows() as $ir) {
-						$movement_challan->addItem($ir->item(),$form['received_qty_'.$i],$ir->item()->getStockEffectAssociatedCustomFields());
-						$i++;
-					}
+				$movement_challan = $to_warehouse->newPurchaseReceive($this);
+				$i=1;
+				foreach ($this->itemrows() as $ir) {		
+					$movement_challan->addItem($ir->item(),$form['received_qty_'.$i],$form['req_uit_'.$i],$ir['custom_fields']);
+					$i++;
+				}
 
-					$movement_challan->executePurchase($add_to_stock=true);
-					$this->setStatus('completed');
+				$movement_challan->executePurchase($add_to_stock=true);
+				$this->setStatus('completed');
 				return true;
 			}
 		}
@@ -103,6 +106,7 @@ class Model_PurchaseOrder extends \Model_Document{
 
 	}
 	
+
 	
 }
 

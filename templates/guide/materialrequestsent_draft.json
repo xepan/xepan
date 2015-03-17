@@ -1,0 +1,29 @@
+{
+	"steps":[
+		{ 
+	        "element" : "button:contains('MaterialRequestSent Draft')",
+	        "title": "Sent Material Request Draft",
+	        "content" : "This section shows your Material Request which are made for rough work...",
+	        "placement": "right"
+	    },
+	    { 
+	        "element" : ".atk-actions .atk-button:contains('APPLIED'):first",
+	        "title": "Acl Applied",
+	        "content" : "This section shows your Access Level of Material Request ...",
+	        "placement": "right"
+	    },
+	    { 
+	        "element" : "th:contains('Items')",
+	        "title": "Sent Material Request Submit",
+	        "content" : "This Button for add your Items which are added in material request",
+	        "placement": "left"
+	    },
+	    { 
+	        "element" : "th:contains('Submit')",
+	        "title": "Sent Material Request Submit",
+	        "content" : "This Button use for submit/send your material request for approval  ",
+	        "placement": "left"
+	    }	    
+	    
+	]
+}	    

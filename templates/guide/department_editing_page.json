@@ -1,7 +1,7 @@
 {
 	"steps":[
 		{ 
-	        "element" : ".atk-box-small",
+	        "element" : ".ui-layout-center .atk-box-small *:contains(Department)",
 	        "title": "Selected Department",
 	        "content" : "This section shows your departments",
 	        "placement": "top"
@@ -13,16 +13,29 @@
 	        "placement": "left"
 	    },
 	    {
-	        "element" : ".ui-tabs-nav a:contains(Posts)",
-	        "title": "Posts Management",
-	        "content" : "All basic departments are already provided like company, Hr, accounts etc.. You just need to create your production phases. Production phases will also be considered as department. But its ok if you do not treat them as departments. just create them here.",
-	        "placement": "top"
+	        "element" : ".ui-tabs-nav a.ui-tabs-anchor:contains(Basic)",
+	        "title": "Basic Info",
+	        "content" : "This Tab allows you to edit your <b>Department name(Production Phase name)</b>, can provide a <b>phase number</b> and shows an <b>active</b> or <b>passive</b> Phase.<p><div class='panel panel-danger panel-heading text-center'>This <b>Basic Option</b> is only available in user defined Departments (Production Phases)</div></p>",
+	        "placement": "bottom",
+	        "orphan":true
 	    },
 	    {
-	        "element" : ".ui-tabs-nav a:contains(Salary)",
+	        "element" : ".ui-tabs-nav a.ui-tabs-anchor:contains(Posts)",
+	        "title": "Posts Management",
+	        "content" : "In this section you can <b>Assign</b> a particular Post in a Department, Parent Post(to whom Employee is being Reported). <p> Manage the <b>Activation</b> of a Post and <b>Creation</b> a Team by that Post.</p>",
+	        "placement": "bottom"
+	    },
+	    {
+	        "element" : ".ui-tabs-nav a.ui-tabs-anchor:contains(Salary)",
 	        "title": "Salary Management",
-	        "content" : "All basic departments are already provided like company, Hr, accounts etc.. You just need to create your production phases. Production phases will also be considered as department. But its ok if you do not treat them as departments. just create them here.",
-	        "placement": "top"
+	        "content" : "In this Tab you can make <b>Salary Templates</b> for a Specific Post so that it can helpful to speed up your process at the time of Defining Salary of Employees in Employee Menu.<br>Its useful to make your task easier.",
+	        "placement": "bottom"
+	    },
+	    {
+	        "element" : ".ui-tabs-nav a.ui-tabs-anchor:contains(Out Source)",
+	        "title": "Outsourcing",
+	        "content" : "This tab allows you to Associate your Out Source Party Name of your Department   <b>(if any)</b>. <br><ul><li><b>Department Completely Outsourced</b></li></ul><p>If your Department is completely outsourced then you will be forced to select an Out Source Party at the time of Job Creation.</p>",
+	        "placement": "bottom"
 	    }
 	]
 }

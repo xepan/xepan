@@ -41,6 +41,24 @@ class Model_ItemCustomFieldAssos extends \Model_Table{
 		if($old_model->loaded()){
 			throw $this->Exception('Custom Filed Exist','ValidityCheck')->setField('customfield_id');
 		}
+
+		//check for the Can Effect Stock 
+		//Check selected Department Phase is Store
+		//if check_effect_stock is true
+			if($this['can_effect_stock']){
+				//load Store Department
+				$store = $this->add('xHR/Model_Department')->loadStore();
+				//if department phase is not store
+				if($store['id'] != $this['department_phase_id']){
+					// display error
+					throw $this->Exception('Only Apply With Store Department Phase','ValidityCheck')->setField('can_effect_stock');
+				}			
+			}
+
+		//Check customField is empty
+		if(!$this['customfield_id'])
+			throw $this->Exception('Select Any CustomField','ValidityCheck')->setField('customfield_id');
+		
 	}
 
 	function duplicate($new_item_id){

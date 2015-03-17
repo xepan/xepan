@@ -7,16 +7,25 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 		$this->app->title=$this->api->current_department['name'] .': Orders';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Sale Orders Management <small> Manage your sale Orders </small>');
 
-		$this->app->layout->add('xShop/View_Badges_OrderPage');
-		$tab = $this->app->layout->add('Tabs');
-			$tab->addTabURL('xShop/page/owner/order_draft','Draft');
-			$tab->addTabURL('xShop/page/owner/order_submitted','Submitted');
-			$tab->addTabURL('xShop/page/owner/order_approved','Approved');
-			$tab->addTabURL('xShop/page/owner/order_processing','Processing');
-			$tab->addTabURL('xShop/page/owner/order_processed','Processed');
-			$tab->addTabURL('xShop/page/owner/order_shipping','Shipping');
-			$tab->addTabURL('xShop/page/owner/order_complete','Complete');
-			$tab->addTabURL('xShop/page/owner/order_cancel','Cancel / Return');
+		$counts = $this->add('xShop/Model_Order');
+		$counts->_dsql()->del('fields')->field('count(*) cnt')->field('status')->group('status');
+
+		$counts = $counts->_dsql()->get();
+		$counts_array=array();
+		foreach ($counts as $cnt) {
+			$counts_array[$cnt['status']] = $cnt['cnt'];
+		}
+
+		$this->add('xShop/View_Badges_OrderPage');
+		$tab = $this->add('Tabs');
+			$tab->addTabURL('xShop/page/owner/order_draft','Draft '. ($counts_array['draft']? '('.$counts_array['draft'].')':''));
+			$tab->addTabURL('xShop/page/owner/order_submitted','Submitted '.($counts_array['submitted']? '('.$counts_array['submitted'].')':''));
+			$tab->addTabURL('xShop/page/owner/order_approved','Approved '.($counts_array['approved']? '('.$counts_array['approved'].')':''));
+			$tab->addTabURL('xShop/page/owner/order_processing','Processing '.($counts_array['processing']? '('.$counts_array['processing'].')':''));
+			$tab->addTabURL('xShop/page/owner/order_processed','Processed '.($counts_array['processed']? '('.$counts_array['processed'].')':''));
+			$tab->addTabURL('xShop/page/owner/order_shipping','Shipping '.($counts_array['shipping']? '('.$counts_array['shipping'].')':''));
+			$tab->addTabURL('xShop/page/owner/order_complete','Complete '.($counts_array['complete']? '('.$counts_array['complete'].')':''));
+			$tab->addTabURL('xShop/page/owner/order_cancel','Cancel / Return '.($counts_array['cancel']? '('.$counts_array['cancel'].')':''));
 
 		// $application_id=$this->api->recall('xshop_application_id');
 		// //$order_model->addCondition('application_id',$application_id);	

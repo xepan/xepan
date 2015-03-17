@@ -60,23 +60,28 @@ class Model_Warehouse extends \Model_Table{
 		return $m;
 	}
 
-	function addItemStock($item,$qty,$custom_fields){$this->addStockItem($item,$qty,$custom_fields);}
-	function addStockItem($item,$qty,$custom_fields){
-		if(!is_array($custom_fields))
+	function addItemStock($item,$qty,$custom_fields_json){$this->addStockItem($item,$qty,$custom_fields_json);}
+	function addStockItem($item,$qty,$custom_fields_json){
+		if(!(is_string($custom_fields_json) && is_object(json_decode($custom_fields_json)) && (json_last_error() == JSON_ERROR_NONE)))
 			throw $this->exception('Custom Fields Not Defined','Growl');
-
+			
 		$stock = $this->ref('xStore/Stock');
 		$stock->addCondition('item_id',$item->id);
 		$cf_string = "";
-		foreach($custom_fields as $cf_id => $cf_value_id) {
-			//check for custom filed value
-			$cf_string .= "".$cf_id.":".$cf_value_id;
-			$stock->addCondition('custom_fields','like',"$cf_id:$cf_value_id");
+
+		foreach (json_decode($custom_fields_json) as $department) {
+			foreach($department as $cf_id => $cf_value_id) {
+				//check for custom filed value
+				$cf_string .= "".$cf_id.":".$cf_value_id." ";
+				$stock->addCondition('custom_fields','like',"%$cf_id:$cf_value_id%");
+			}
 		}
+
+
 		$stock->tryLoadAny();
 		$stock['custom_fields'] = $cf_string;
 		$stock['qty'] = $stock['qty'] + $qty;
-		$stock->save();
+		$stock->saveAs('xStore/Model_Stock');
 		return $this;
 	}
 
@@ -95,7 +100,7 @@ class Model_Warehouse extends \Model_Table{
 		if($this->loaded())
 			throw $this->exception('Already loaded. cannot load purchase warehouse');
 
-		$this->addCondition('department_id',$this->add('xHR/Model_Department')->loadPUrchase()->get('id'));
+		$this->addCondition('department_id',$this->add('xHR/Model_Department')->loadPurchase()->get('id'));
 		$this->tryLoadAny();
 		if(!$this->loaded()) {
 			$this['name']='Purchase';

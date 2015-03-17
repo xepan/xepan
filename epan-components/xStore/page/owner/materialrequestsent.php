@@ -4,6 +4,7 @@ class page_xStore_page_owner_materialrequestsent extends page_xStore_page_owner_
 		parent::init();
 
 		$this->api->stickyGET('department_id');
+		$this->add('PageHelp',array('page'=>'materialrequestsent'));
 		
 		$tabs=$this->add('Tabs');
 		$tabs->addTabURL('xStore_page_owner_materialrequestsent_draft','Draft');

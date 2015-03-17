@@ -20,10 +20,8 @@ class Model_Order extends \Model_Document{
 		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3');
 		$f = $this->addField('email')->group('a~3');
 		$f = $this->addField('mobile')->group('a~3');
-		// Order status
-			// placed, partial-shipped, shipped, partial-dilivered, dilivered, partial-returned, returned, canceled, complete
-		// order payment status
-			// unpaid, paid, refunded
+		
+
 		$this->addField('order_from')->enum(array('online','offline'))->defaultValue('offline');
 		$f = $this->getElement('status')->group('a~2');
 
@@ -42,6 +40,26 @@ class Model_Order extends \Model_Document{
 		// Payment GateWay related Info
 		$this->addField('transaction_reference');
 		$this->addField('transaction_response_data')->type('text');
+
+		// Last OrderItem Status
+		$dept_status = $this->add('xShop/Model_OrderItemDepartmentalStatus',array('table_alias'=>'ds'));
+		$oi_j = $dept_status->join('xshop_orderDetails','orderitem_id');
+		$oi_j->addField('order_id');
+		$dept_status->addCondition($dept_status->getELement('order_id'),$this->getElement('id'));
+		$dept_status->_dsql()->limit(1)->order($dept_status->getElement('id'),'desc')->where('status','<>','Waiting');
+		
+		
+		$this->addExpression('last_action')->set(function ($m, $q) use($dept_status){
+			return $dept_status->_dsql()->del('fields')
+				->field(
+					$dept_status->dsql()->concat(
+						$dept_status->getELement('orderitem'),
+						' ',
+						$dept_status->getElement('status')
+						)
+					);
+		})->caption('Last OrderItem Action');
+
 
 		$this->hasMany('xShop/OrderDetails','order_id');
 		$this->addHook('beforeDelete',$this);
@@ -70,7 +88,6 @@ class Model_Order extends \Model_Document{
 	}
 
 	function placeOrderFromCart(){
-		
 		// $billing_address=$order_info['address'].", ".$order_info['landmark'].", ".$order_info['city'].", ".$order_info['state'].", ".$order_info['country'].", ".$order_info['pincode'];
 		// $shipping_address=$order_info['shipping_address'].", ".$order_info['s_landmark'].", ".$order_info['s_city'].", ".$order_info['s_state'].", ".$order_info['s_country'].", ".$order_info['s_pincode'];
 		$member = $this->add('xShop/Model_MemberDetails');
@@ -83,19 +100,19 @@ class Model_Order extends \Model_Document{
 		// $this['billing_address'] = $billing_address;
 		// $this['shipping_address'] = $shipping_address;		
 		$this->save();
-
-		$order_details=$this->add('xShop/Model_OrderDetails');
 			$total_amount=0;
 			foreach ($cart_items as $junk) {
+				$order_details=$this->add('xShop/Model_OrderDetails');
+				$item_model = $this->add('xShop/Model_Item')->load($cart_items['item_id']);
 
 				$order_details['order_id']=$this->id;
 				$order_details['item_id']=$cart_items['item_id'];
 				$order_details['qty']=$cart_items['qty'];
 				$order_details['rate']=$cart_items['sales_amount'];//get Item Rate????????????????
 				$order_details['amount']=$cart_items['total_amount'];
-				$order_details['custom_fields']=json_encode($cart_items['custom_fields']);
+				$order_details['custom_fields']= $item_model->customFieldsRedableToId(json_encode($cart_items['custom_fields']));//json_encode($cart_items['custom_fields']);
 				$total_amount+=$order_details['amount'];
-				$order_details->saveAndUnload();
+				$order_details->save();
 			}
 
 			$this['amount']=$total_amount;
@@ -110,7 +127,8 @@ class Model_Order extends \Model_Document{
 			// $this['discount_voucher_amount']=$discount_voucher_amount;
 			$this['net_amount'] = $total_amount;
 			$this->save();
-
+			echo "placeOrderFromCart";
+			
 			// $discountvoucher->processDiscountVoucherUsed($this['discount_voucher']);
 			return $this;
 	}

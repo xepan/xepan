@@ -1,6 +1,6 @@
 <?php
 
-class page_xPurchase_page_owner_purchaseorder_customfields extends page_xPurchase_page_owner_main {
+class page_xStore_page_owner_materialrequestsent_customfields extends page_xStore_page_owner_main {
 
 	public $orderitem;
 	public $existing_values;
@@ -15,7 +15,7 @@ class page_xPurchase_page_owner_purchaseorder_customfields extends page_xPurchas
 		$this->api->stickyGET('current_json');
 
 		$orderitem_id = $this->api->stickyGET('orderitem_id');
-		$this->orderitem = $orderitem = $this->add('xPurchase/Model_PurchaseOrderItem')->addCondition('id',$orderitem_id)->tryLoadAny();
+		$this->orderitem = $orderitem = $this->add('xStore/Model_MaterialRequestItem')->addCondition('id',$orderitem_id)->tryLoadAny();
 
 		$this->existing_values = json_decode($_GET['current_json'],true);
 

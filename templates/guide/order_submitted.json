@@ -1,6 +1,11 @@
 {
 	"steps":[
 		{ 					
+	        "title": "<b>Submitted Order<b>",
+	        "content" : "Submitted Order are submitted by staff by creating Draft and click submit",
+	        "orphan": true
+	    },
+	    { 					
 	        "element" : ".ui-tabs-panel .atk-button:contains(Add Order Submitted)",
 	        "title": "<b>Submitted Order<b>",
 	        "content" : "Create Submitted Order Here"
@@ -28,6 +33,11 @@
 	        "title": "Approved  Submit Order ",
 	        "content" : "Approved Submit  Order to next Approved  Order Status Click Here  ",
 	        "placement":"top"
+	    },
+	    {
+	        "title": "What Next",
+	        "content" : "Submitted Orders can be <ul><li><b>Approved</b> : Goes in next tab </li><li><b>Rejected</b> : Goes in Cancel/Returned </li></ul>",
+	        "orphan":true
 	    }
 	]
 }
