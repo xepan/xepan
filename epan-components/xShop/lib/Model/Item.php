@@ -630,11 +630,15 @@ class Model_Item extends \Model_Table{
 		$array = json_decode($cf_value_json,true);
 		$str = "";
 		foreach ($array as $department) {
+			$i = 1;
 			foreach ($department as $cf_id => $cf_value_id) {
 				$cf_model = $this->add('xShop/Model_CustomFields')->load($cf_id);
 				$cf_value_model = $this->add('xShop/Model_CustomFieldValue')->load($cf_value_id);
-				$str .= $cf_model['name']." :: ".$cf_value_model['name']." </br>";
-			}
+				$str .= " ".$cf_model['name']." :: ".$cf_value_model['name'];
+				if($i != count($department))
+					$str.=",";
+				$i++;
+			}	
 		}
 		return $str;
 	}
