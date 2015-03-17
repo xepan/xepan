@@ -2,16 +2,16 @@
 <div id="{$_name}" class="well">
 
 {$Content}
-	<div class="row">
-		<div class="col-md-3">
-			Order-On :- {$order_on}
+	<div class="row well">
+		<div class="col-md-4 panel panel-info">
+			Request On :-<b> {$request_on}</b>
 		</div>
-		<div class="col-md-6">
-			Status :- {$status}
+		<div class="col-md-4 text-center panel panel-danger ">
+			 <h3><b>{$status}</b></h3>
 		</div>
-		<div class="col-md-3">
-			Form Date :-
-			To Date :-
+		<div class="col-md-4 text-center panel panel-success">
+			To Department :-<b>{$to_dept}</b> <br>
+			Form Department :-<b>{$form_dept} 
 		</div>
 	</div>	
 		
@@ -20,17 +20,17 @@
 			<tr class="well" >
 				<th align="left">Sno</th>
 				<th align="center">Item</th>
-				<th align="right" class="text-right">Custom Fields</th>
 				<th align="right" class="text-right">Qty</th>
+				<th align="right" class="text-right">Custom Fields</th>
 			</tr>
 		{rows}
-		{row}
-			<tr>
-				<td align="left">{$sno}</td>
-				<td align="left">{$item}</td>
-				<td align="left">{$custom_field}</td>
-				<td align="right">{$qty}</td>
-			</tr>
+			{row}
+				<tr>
+					<td align="left">{$sno}</td>
+					<td align="left">{$item}</td>
+					<td align="right">{$qty}</td>
+					<td align="right">{$custom_field}</td>
+				</tr>
 			{/row}
 		{/rows}
 		</tbody>
