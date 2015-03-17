@@ -17,6 +17,7 @@ class View_Jobcard extends \View{
 		$this->template->set('receive_date',"TODOOOOO");
 		$this->template->set('from_dept',$this->jobcard['from_department']);
 		$this->template->set('to_dept',$this->jobcard['to_department']);
+		$this->template->set('next_dept','Todo');
 		$this->template->set('status',$this->jobcard['status']);
 		$this->template->set('sales_order_no',$order['name']);
 		$this->template->set('order_created_at',$order['created_at']);
