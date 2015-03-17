@@ -1,24 +1,34 @@
 <div id="{$_name}">
+{$Content}
 <table width='100%' class='table' style="font-size:11px;vertical-align:top;" >
 	<tbody class='table-striped'>
 		<tr>
 			<th align="left">Sno</th>
-			<th align="left">Product</th>
+			<th align="left">Item</th>
+			{item_amount_th}
 			<th align="right" class="text-right">Qty</th>
 			<th align="right" class="text-right">Rate</th>
 			<th colspan="2" align="right" class="text-right">Amount</th>
+			{/item_amount_th}
 		</tr>
 	{rows}
 	{row}
 		<tr>
 			<td align="left">{$sno}</td>
-			<td align="left">{$product}</td>
-			<td align="right">{$qty}</td>
-			<td align="right">{$rate}</td>
-			<td colspan="2" align="right">{$amount}</td>
+			<td align="left">
+				{$item}<br>{$departments}
+			</td>
+			
+			{item_amount_td}
+				<td align="right">{$qty}</td>
+				<td align="right">{$rate}</td>
+				<td colspan="2" align="right">{$amount}</td>
+			{/item_amount_td}
 		</tr>
 		{/row}
 	{/rows}
+
+		{order_amount_section}
 		<tr align="right">
 			<td>&nbsp;</td>
 			<th>Total</th>
@@ -34,6 +44,8 @@
 			<th>Net Amount</th>
 			<td colspan="4" class=''><b>&#8377; {$net_amount} </b> </td>
 		</tr>
+		{/order_amount_section}
+
 	</tbody>
 </table>
 </div>

@@ -4,6 +4,18 @@ namespace xShop;
 
 class Grid_Order extends \Grid {
 
+	function init(){
+		parent::init();
+		$self = $this;
+
+		$this->add('VirtualPage')->addColumn('col_name','title','btn_text',$this)->set(function($p)use($self){
+			$o = $p->add('xShop/Model_Order')->load($p->id);
+			$order = $p->add('xShop/View_Order');
+			$order->setModel($o);
+		});
+	}
+
+
 	function setModel($model,$fields=null){
 
 		if($fields==null){

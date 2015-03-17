@@ -49,16 +49,7 @@ class View_PrintOrder extends \View{
 		        'js'=>'templates/js',
 		    )
 		);
-		
-		// $l=$this->api->locate('addons',__NAMESPACE__, 'location');
-		// $this->api->pathfinder->addLocation(
-		// 	$this->api->locate('addons',__NAMESPACE__),
-		// 	array(
-		//   		'template'=>'templates',
-		//   		'css'=>'templates/css'
-		// 		)
-		// 	)->setParent($l);
-		return array('view/xShop-Order');
+		return array('view/xShop-PrintOrder');
 	}
 	
 }
