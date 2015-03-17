@@ -10,6 +10,7 @@ class View_OrderDetail extends \CompleteLister{
 	}
 
 	function formatRow(){
+		$this->current_row['custom_fields'] = $this->model->getCustomFieldSrting();
 		$this->current_row['sno']=$this->sno;
 		$this->sno++;
 	}
@@ -22,6 +23,7 @@ class View_OrderDetail extends \CompleteLister{
 		$this->template->set('discount_voucher_amount',$order['discount_voucher_amount']);
 		$this->template->set('net_amount',$order['net_amount']);
 	}
+	
 
 	function defaultTemplate(){
 
