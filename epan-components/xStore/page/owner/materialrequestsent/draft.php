@@ -9,7 +9,7 @@ class page_xStore_page_owner_materialrequestsent_draft extends page_xStore_page_
 		$model = $this->add('xStore/Model_MaterialRequestSent_Draft');
 		$model->addCondition('from_department_id',$di);
 
-		$crud=$this->add('CRUD');
+		$crud=$this->add('CRUD',array('grid_class'=>'xStore/Grid_MaterialRequest'));
 		$crud->setModel($model,array('to_department_id'),array('to_department'));
 		
 		// $ic = $crud->addRef('xStore/MaterialRequestItem',array('label'=>'Items'));
@@ -20,17 +20,14 @@ class page_xStore_page_owner_materialrequestsent_draft extends page_xStore_page_
 			$crud->grid->addColumn('expander','items');
 		}
 
-		$p=$crud->addFrame('Details', array('icon'=>'plus'));
-		if($p){
-			$p->add('xStore/View_MaterialRequest',array('materialrequest'=>$this->add('xStore/Model_MaterialRequest')->load($crud->id)));
-		}
 		$crud->add('xHR/Controller_Acl');
 	}
 	
 
 	function page_items(){
         $mr_id = $this->api->stickyGET('xstore_material_request_id');
-		
+		$dummy_item = $this->add('xShop/Model_Item');
+
 		$crud = $this->add('CRUD');
         $mr_item=$this->add('xStore/Model_MaterialRequestItem');
         $mr_item->addCondition('material_request_jobcard_id',$mr_id);
@@ -48,6 +45,14 @@ class page_xStore_page_owner_materialrequestsent_draft extends page_xStore_page_
             $btn->js('click',$this->js()->univ()->frameURL('Custome Field Values',array($this->api->url('xStore_page_owner_materialrequestsent_customfields',array('orderitem_id'=>$crud->id,'custom_field_name'=>$crud->form->getElement('custom_fields')->name)),"selected_item_id"=>$item_field->js()->val(),'current_json'=>$custom_fields_field->js()->val())));
         }
 
+        if(!$crud->isEditing()){
+        	$crud->grid->addMethod('format_readable',function($g,$f)use($dummy_item){
+        		$g->current_row_html[$f]  = $dummy_item->genericRedableCustomFieldAndValue($g->model['custom_fields']);
+        	});
+        	$crud->grid->addFormatter('custom_fields','readable');
+        }
+        $crud->grid->removeColumn('created_by');
+        $crud->grid->removeColumn('material_request_jobcard');
 	}
 
 

@@ -7,7 +7,7 @@ class page_xStore_page_owner_materialrequestreceived_return extends page_xStore_
 		$model = $this->add('xStore/Model_MaterialRequestReceived_Return');
 		$model->addCondition('to_department_id',$di);
 
-		$crud=$this->add('CRUD');
+		$crud=$this->add('CRUD',array('grid_class'=>'xStore/Grid_MaterialRequest'));
 		$crud->setModel($model);
 		$crud->add('xHR/Controller_Acl');
 	}
