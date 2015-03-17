@@ -51,7 +51,7 @@ class Form_Order extends \Form_Stacked {
 						$new_member->save();
 						$member_id = $new_member->id;
 					}else{
-						$member_id = $member->id;
+						$member_id = $members->id;
 					}
 				}else{
 					$existing_member = $form->add('xShop/Model_MemberDetails');

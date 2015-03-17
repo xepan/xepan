@@ -1,50 +1,82 @@
-
-<style >
-</style>
-	
 <div id="{$_name}" class="well">
-<div  class="row panel panel-info">
-	<div class="col-md-12">
-			<b>Customer name : {$name}</b>
-		</div>
-</div>
-	<div class="row panel panel-info">
-		<div class="col-md-6">
-			<b>Order Type : {$order_from}</b>
-		</div>
 		
-		<div class="col-md-6 text-right">
+		<!--job card detail  -->
+	<div  class="row">
+		<div class="col-md-4 panel panel-info">
+			<div>
+				<b>JobCard NO : {$name}</b>
+			</div>
+
+			<div>
+			<b> Job Created On : {$on_date}</b>
+			</div>
+		
+			<div>
+			<b>Recieved On : {$on_date}</b>
+			</div>
+			
+			<div>
+			<b> From Dept: {$from_dept}</b>
+			</div>
+
+			<div>
+			<b> Next Dept: {$to_dept}</b>
+			</div>
+		 </div>
+
+		<div class="col-md-4 text-center">
 			<b> Order Status:- {$status}</b>
-		
-		<div class="col-md-3 text-center">
-			<b>Date  {$on_date}</b>
-			
 		</div>
-			
+
+			<!--order detail  -->
+		<div class = "col-md-4 panel panel-info">
+				<div>
+				<b>  SalesOrder No : {$name}</b>
+				</div>
+
+				<div>
+				<b> Order Created Date  {$on_date}</b>
+				</div>
+
+				<div>
+				<b>Member : {$member}</b>
+				</div>
+				
+				<div>
+				<b>Order Type : {$order_from}</b>
+				</div>
 		</div>
 	</div>
+	<div class ="panel panel-info">
+			<div>
+				<th align="center"><b> Item Detail :</b></th>
+			</div>
 
-<table width='100%' class='table' style="font-size:11px;vertical-align:top;" >
-	<tbody class='table-striped'>
-		<tr class="well " >
-			<th align="left">Sno</th>
-			<th align="center">Product</th>
-			<th align="right" class="text-right">Qty</th>
-			<th align="right" class="text-right">Current Status</th>
-			<th align="right" class="text-right">Custom Fields</th>
-		</tr>
-	{rows}
-	{row}
-		<tr>
-			<td align="left">{$sno}</td>
-			<td align="left">{$name}</td>
-			<td align="right">{$qty}</td>
-			<td align="right">{$current_status}</td>
-			<td align="right">{$custom_fields}</td>
-		</tr>
-		{/row}
-	{/rows}
-	</tbody>
-</table>
+		<table width='100%' class='table' style="font-size:11px;vertical-align:top;" >
+			<tbody class='table-striped'>
+				<tr class="well " >
+					<th align="left">Sno</th>
+					<th align="center">Item Name</th>
+					<th align="right" class="text-right">Qty</th>
+					<th align="right" class="text-right">Current Status</th>
+					<th align="right" class="text-right">Custom Fields</th>
+				</tr>
+				
+				<tr>
+					<td align="left">{$sno}</td>
+					<td align="left">{$name}</td>
+					<td align="right">{$qty}</td>
+					<td align="right">{$current_status}</td>
+					<td align="right">{$custom_fields}</td>
+				</tr>
+			
+			</tbody>
+		</table>
+	</div>
+</div>		
+
+
+
+
 </div>
 

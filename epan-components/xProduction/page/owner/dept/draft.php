@@ -18,12 +18,6 @@ class page_xProduction_page_owner_dept_draft extends page_xProduction_page_owner
 			$g->addPaginator(15);
 			$g->addQuickSearch(array('name'));
 		}
-		
-
-		$p=$crud->addFrame('Details', array('icon'=>'plus'));
-		if($p){
-			$p->add('xProduction/View_Jobcard',array('jobcard'=>$this->add('xProduction/Model_JobCard')->load($crud->id)));
-		}
 
 		$crud->add('xHR/Controller_Acl');
 
