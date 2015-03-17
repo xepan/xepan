@@ -202,9 +202,15 @@ class Model_OrderDetails extends \Model_Document{
 			if($with_custom_fields){
 				$array = json_decode($this['custom_fields'],true);
 				foreach ($array as $id => $cf ) {
+					// $str.=$this['custom_fields'];
 					if($department['department_id'] == $id){
-						$array[$id] = $cf;
-						$str .="<br>[".$this->ref('item_id')->genericRedableCustomFieldAndValue(json_encode($array))." ]<br>";
+						if(!empty($cf)){
+							$ar[$id] = $cf;
+							$str .= "<br>[".$this->ref('item_id')->genericRedableCustomFieldAndValue(json_encode($ar))." ]<br>";
+							unset($ar[$id]);							
+						}else{
+							$str.="<br>";
+						}
 					}
 				}
 			}
