@@ -18,11 +18,7 @@ class Model_MaterialRequestItem extends \Model_Document{
 		
 		$this->addField('custom_fields')->type('text');
 		$this->addHook('beforeSave',$this);
-<<<<<<< HEAD
 		// $this->add('dynamic_model/Controller_AutoCreator');
-=======
-		//$this->add('dynamic_model/Controller_AutoCreator');
->>>>>>> 817a9ed5c727ec49b6c240e2d7e16bd2b74a4c1e
 	}
 
 	function item(){

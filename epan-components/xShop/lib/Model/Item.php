@@ -626,7 +626,7 @@ class Model_Item extends \Model_Table{
 		// $cf_value_json = '{"5":{"2":"10","3":"12"}}';
 							//{"Department_id":{"custom Field id":"Custom Field Value id"}}
 		if(! (is_string($cf_value_json) && is_object(json_decode($cf_value_json)) && (json_last_error() == JSON_ERROR_NONE)) )
-			throw $this->exception('Json Not Given','Growl');
+			return "";
 		$array = json_decode($cf_value_json,true);
 		$str = "";
 		foreach ($array as $department) {
@@ -650,8 +650,7 @@ class Model_Item extends \Model_Table{
 			throw new \Exception("Item Model Must be Loaded");
 			
 		if(! (is_string($cf_value_json) && is_object(json_decode($cf_value_json)) && (json_last_error() == JSON_ERROR_NONE)) )
-			throw $this->exception('Json Not Given','Growl');
-
+			return "";
 		//Load Sales Department
 		$sales_department = $this->add('xHR/Model_Department')->loadSales();
 		$cart_cf_array = json_decode($cf_value_json,true);

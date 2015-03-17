@@ -8,7 +8,7 @@ class page_xStore_page_owner_materialrequestreceived_processed extends page_xSto
 		$model = $this->add('xStore/Model_MaterialRequestReceived_Processed');
 		$model->addCondition('to_department_id',$di);
 		
-		$crud=$this->add('CRUD');
+		$crud=$this->add('CRUD',array('grid_class'=>'xStore/Grid_MaterialRequest'));
 		$crud->setModel($model);
 		$crud->add('xHR/Controller_Acl');
 	}
