@@ -13,6 +13,8 @@ class Grid_JobCard extends \Grid{
 	}
 
 	function setModel($job_card_model){
-		parent::setModel($job_card_model,array('orderitem','from_department','name','forwarded_to'));
+		$m=parent::setModel($job_card_model,array('orderitem','from_department','name','forwarded_to'));
+		$this->addOrder()->move('col_name','last')->now();
+		return $m;
 	}
 }
