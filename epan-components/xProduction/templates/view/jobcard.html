@@ -1,18 +1,17 @@
-<div id="{$_name}" class="well">
-		
+<div id="{$_name}" class="well {$Class}">
 		<!--job card detail  -->
 	<div  class="row">
 		<div class="col-md-4 panel panel-info">
 			<div>
-				<b>JobCard NO : {$name}</b>
+				<b>JobCard NO : {$jobcard_no}</b>
 			</div>
 
 			<div>
-			<b> Job Created On : {$on_date}</b>
+			<b> Job Created On : {$job_created_at}</b>
 			</div>
 		
 			<div>
-			<b>Recieved On : {$on_date}</b>
+			<b>Recieved On : {$receive_date}</b>
 			</div>
 			
 			<div>
@@ -25,21 +24,21 @@
 		 </div>
 
 		<div class="col-md-4 text-center">
-			<b> Order Status:- {$status}</b>
+			{$status}
 		</div>
 
 			<!--order detail  -->
 		<div class = "col-md-4 panel panel-info">
 				<div>
-				<b>  SalesOrder No : {$name}</b>
+				<b>  SalesOrder No : {$sales_order_no}</b>
 				</div>
 
 				<div>
-				<b> Order Created Date  {$on_date}</b>
+				<b> Order Created Date  {$order_created_at}</b>
 				</div>
 
 				<div>
-				<b>Member : {$member}</b>
+				<b>Customer : {$customer}</b>
 				</div>
 				
 				<div>
@@ -47,36 +46,18 @@
 				</div>
 		</div>
 	</div>
-	<div class ="panel panel-info">
-			<div>
-				<th align="center"><b> Item Detail :</b></th>
-			</div>
+	<div class ="panel panel-info">name:- {$item}</div>
+	<div class="row">
+		<div class="col-md-6">
+			<b>Custom Fields</b><br>
+			{custom_fields} Custom Fields Here{/custom_fields}
+		</div>
 
-		<table width='100%' class='table' style="font-size:11px;vertical-align:top;" >
-			<tbody class='table-striped'>
-				<tr class="well " >
-					<th align="left">Sno</th>
-					<th align="center">Item Name</th>
-					<th align="right" class="text-right">Qty</th>
-					<th align="right" class="text-right">Current Status</th>
-					<th align="right" class="text-right">Custom Fields</th>
-				</tr>
-				
-				<tr>
-					<td align="left">{$sno}</td>
-					<td align="left">{$name}</td>
-					<td align="right">{$qty}</td>
-					<td align="right">{$current_status}</td>
-					<td align="right">{$custom_fields}</td>
-				</tr>
-			
-			</tbody>
-		</table>
+		<div class="col-md-6">
+			<b>Specification</b><br>
+			{specification} Specification Here{/specification}
+		</div>
 	</div>
-</div>		
-
-
-
-
+</div>
 </div>
 
