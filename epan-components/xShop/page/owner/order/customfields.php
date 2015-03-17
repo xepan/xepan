@@ -52,12 +52,12 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 				$custom_fields_array[] = 'custom_field_'.$cf->id;
 			}
 
-			if(count($custom_fields_array)){
-				$phase_field->js(true)->univ()->bindConditionalShow(array(
-					''=>array(),
-					'*'=>$custom_fields_array
-				),'div.atk-form-row');	
-			}
+			// if(count($custom_fields_array)){
+			// 	$phase_field->js(true)->univ()->bindConditionalShow(array(
+			// 		''=>array(),
+			// 		'*'=>$custom_fields_array
+			// 	),'div.atk-form-row');	
+			// }
 				// add custome fields here
 					// if orderitem is loaded fill exising values
 		}

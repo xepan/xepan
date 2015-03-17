@@ -19,7 +19,7 @@ class Model_JobCard extends \Model_Document{
 		$this->hasOne('xShop/OrderItemDepartmentalStatus','orderitem_departmental_status_id');
 		
 		$this->addField('type')->enum(array('JobCard','MaterialRequest','DispatchRequest'))->defaultValue('JobCard');
-
+		$this->addField('created_at')->type('date')->defaultValue(date('Y-m-d'));
 		$this->addField('name')->caption('Job Number');
 		$this->getElement('status')->defaultValue('submitted');
 		
@@ -43,7 +43,7 @@ class Model_JobCard extends \Model_Document{
 
 		$this->addHook('beforeInsert',$this);
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

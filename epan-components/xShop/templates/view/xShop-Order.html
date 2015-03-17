@@ -1,7 +1,19 @@
 <div id="{$_name}" class="{$class}">
-		{$Content}
-	{order_address}{/order_address}
-		<div class="xshop-order-detail">
-		{$order_detail}
+	{$Content}
+	<div class="row">
+		<div class="col-md-4">
+			Order No :: {$id}
 		</div>
+		<div class="col-md-4">
+			Status :: {$status}
+		</div>
+		<div class="col-md-4">
+			Date of Approved :: TODOOO
+		</div>
+	</div>
+	<div class="text-center">
+		from Customer :: {$member}	
+	</div>
+	{order_address}{/order_address}
+	{$order_detail}
 </div>
