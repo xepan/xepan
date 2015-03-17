@@ -13,11 +13,10 @@ class page_xStore_page_owner_materialrequestsent_Draft extends page_xStore_page_
 
 		$crud->addRef('xStore/MaterialRequestItem');
 
-		// $p=$crud->addFrame('Details', array('icon'=>'plus'));
-		// if($p){
-		// 	$p->add('xProduction/View_Jobcard',array('jobcard'=>$this->add('xProduction/Model_JobCard')->load($crud->id)));
-		// }
-		
+		$p=$crud->addFrame('Details', array('icon'=>'plus'));
+		if($p){
+			$p->add('xStore/View_MaterialRequest',array('materialrequest'=>$this->add('xStore/Model_MaterialRequest')->load($crud->id)));
+		}
 		$crud->add('xHR/Controller_Acl');
 	}
 	

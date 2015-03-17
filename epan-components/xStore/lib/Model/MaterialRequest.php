@@ -22,6 +22,9 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
+	function itemrows(){
+		return $this->add('xStore/Model_MaterialRequestItem')->addCondition('material_request_jobcard_id',$this->id);
+	}
 
 	function relatedChallan(){
 		$challan =  $this->ref('xStore/StockMovement')->tryLoadAny();
