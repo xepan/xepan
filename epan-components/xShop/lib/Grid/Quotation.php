@@ -6,6 +6,13 @@ class Grid_Quotation extends \Grid{
 
 	function setModel($m){
 		parent::setModel($m);
+
+		$self= $this;
+
+		$this->add('VirtualPage')->addColumn('col_name','title',"btn_text",$this)->set(function($p)use($self){
+			$p->add('xShop/View_Quotation',array('quotation'=>$p->add('xShop/Model_Quotation')->load($p->id)));
+		});
+
 		
 		$this->addColumn('expander','items',array('page'=>'xShop_page_owner_quotation_items','descr'=>'Items'));
 		// $this->addFormatter('edit','myedit');
