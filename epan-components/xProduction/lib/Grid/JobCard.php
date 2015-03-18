@@ -7,7 +7,7 @@ class Grid_JobCard extends \Grid{
 		parent::init();
 		$self= $this;
 
-		$this->add('VirtualPage')->addColumn('col_name','title','btn_text',$this)->set(function($p)use($self){
+		$this->add('VirtualPage')->addColumn('col_name','job Detail',array('icon'=>''),$this)->set(function($p)use($self){
 			$p->add('xProduction/View_Jobcard',array('jobcard'=>$p->add('xProduction/Model_JobCard')->load($p->id)));
 		});
 	}
