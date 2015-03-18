@@ -10,12 +10,40 @@ class Model_QuotationItem extends \Model_Document{
 	function init(){
 		parent::init();
 		$this->hasOne('xShop/Quotation','quotation_id');
-		$this->hasOne('xShop/Item','item_id');
+		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'autocomplete/Basic'));
 		
 		$this->addField('qty');
 		$this->addField('rate');
 		$this->addField('amount');
-
-		$this->add('dynamic_model/Controller_AutoCreator');
+		$this->addField('narration');
+		$this->addField('custom_fields')->type('text');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+	//Return OrderItem DepartmentalStatus
+	//$with_custom_Fields = true; means also return departmnet associated CustomFields of OrderItem in Human Redable
+	function redableDeptartmentalStatus($with_custom_fields=false){
+		if(!$this->loaded())
+			return false;
+
+		$str = "";
+		$array = json_decode($this['custom_fields'],true);
+		foreach ($array as $department_id => $cf) {
+			$d = $this->add('xHR/Model_Department')->load($department_id);
+			$str .= $d['name'];
+			if($with_custom_fields){
+				if(!empty($cf)){
+					$ar[$department_id] = $cf;
+					$str .= "<br>[".$this->ref('item_id')->genericRedableCustomFieldAndValue(json_encode($ar))." ]<br>";
+					unset($ar[$department_id]);							
+				}else{
+					$str.="<br>";
+				}
+			}
+		}
+			
+		return $str;
+	}
+
+
 }

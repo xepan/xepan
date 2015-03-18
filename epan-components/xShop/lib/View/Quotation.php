@@ -19,6 +19,7 @@ class View_Quotation extends \CompleteLister{
 
 	function formatRow(){
 		$this->current_row['sno']=$this->sno;
+		$this->current_row_html['departments']=$this->model->redableDeptartmentalStatus(true);
 		$this->sno++;
 	}
 
