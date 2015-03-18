@@ -1,0 +1,51 @@
+	
+<div id="{$_name}" class="well">
+
+
+	<div class="row">
+		<div class="col-md-4 panel panel-info">
+		<b>Quotation No:</b> {$name}
+		<div>
+		<b>Created At:</b> {$created_at}
+		</div>
+		</div>
+		
+		
+
+		<div class="col-md-4 panel panel-info">
+			<b>Status :-</b> {$status}
+		</div>
+
+		<div class="col-md-4 panel panel-info">
+			<b>For Customer :-</b> {$customer}
+			
+			<div><b>For lead :-</b> {$lead}</div>
+		</div>
+	</div>
+
+		
+	<table width='100%' class='table' style="font-size:11px;vertical-align:top;" >
+		<tbody class='table-striped'>
+			<tr class="well" >
+				<th align="left">Sno</th>
+				<th align="left">  Item Name </th> 
+				<th align="left">  Qty </th> 
+				<th align="left">  Rate </th> 
+				<th align="left">  Amount </th> 
+			</tr>
+		{rows}
+			{row}
+				<tr>
+					<td align="left">{$sno}</td>
+					 <td align="left">{item}{/item}</td> 
+					 <td align="left">{qty}{/qty}</td> 
+					 <td align="left">{rate}{/rate}</td> 
+					 <td align="left">{amount}{/amount}</td> 
+				</tr>
+			{/row}
+		{/rows}
+		</tbody>
+	</table>
+</div>
+</div>	
+

@@ -8,15 +8,17 @@ class View_Quotation extends \CompleteLister{
 	function init(){
 		parent::init();
 
+		$this->template->set('name',$this->quotation['name']);
 		$this->template->set('created_at',$this->quotation['created_at']);
 		$this->template->set('status',ucwords($this->quotation['status']));
-	
+		$this->template->set('customer',ucwords($this->quotation['customer']));
+		$this->template->set('lead',ucwords($this->quotation['lead']));
+		
 		$this->setModel($this->quotation->itemrows());
 	}
 
 	function formatRow(){
 		$this->current_row['sno']=$this->sno;
-		
 		$this->sno++;
 	}
 
@@ -29,6 +31,6 @@ class View_Quotation extends \CompleteLister{
 		        'js'=>'templates/js',
 		    )
 		);
-		return array('view/xShop-quotaion');
+		return array('view/quotation');
 	}
 }

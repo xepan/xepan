@@ -1,0 +1,45 @@
+<div id="{$_name}" class="well">
+{$Content}
+<div  style=color:red;> <b> Stock Movement Challlan </b></div>
+	<div class="row well">
+		<div class="col-md-4 panel panel-info">
+			<div><b>Created at:</b> {$created_at}</div>
+			<div><b>From WareHouse:</b> {$from_warehouse}</div> 
+			<div><b>From Suppiler:</b> {$from_supplier}</div>
+			<div><b>From Customer:</b> {$from_memberdetails}</div>
+		</div>
+		
+		<div class="col-md-4 text-center panel panel-danger">
+			 <div><b>Status:</b> {$status}</div>
+			 <div><b> Challan Type : </b> {$type}</div>
+		</div>
+		<div class="col-md-4 text-center panel panel-success">
+			<!-- To Department <b>{$to_dept}</b> <br> -->
+			<div><b>To WareHouse:</b> {$to_warehouse}</div>
+			<div><b>To Supplier:</b> {$to_supplier}</div> 
+			<div><b>To Customer:</b> {$to_memberdetails}</div> 
+		</div>
+	</div>	
+		
+	<table width='100%' class='table' style="font-size:11px;vertical-align:top;" >
+		<tbody class='table-striped'>
+			<tr class="well" >
+				<th align="left">Sno</th>
+				<th align="center">Item</th>
+				<th align="right" class="text-right">Qty</th>
+				<th align="right" class="text-right">Custom Fields</th>
+			</tr>
+		{rows}
+			{row}
+				<tr>
+					<td align="left">{$sno}</td>
+					<td align="left">{$item}</td>
+					<td align="right">{$qty}</td>
+					<td align="right">{$custom_field}</td>
+				</tr>
+			{/row}
+		{/rows}
+		</tbody>
+	</table>
+</div>
+

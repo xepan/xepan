@@ -12,7 +12,7 @@ class Grid_MaterialRequest extends \Grid{
 		$m=parent::setModel($material_request_model,$fields);
 
 		$this->add('VirtualPage')->addColumn('Details','Details','Details',$this)->set(function($p){
-			$p->add('xStore/View_MaterialRequest',array('materialrequest'=>$this->add('xStore/Model_MaterialRequest')->load($p->id)));
+			$p->add('xStore/View_MaterialRequest',array('materialrequest'=>$p->add('xStore/Model_MaterialRequest')->load($p->id)));
 		});
 
 		$this->addOrder()->move('Details','last')->now();

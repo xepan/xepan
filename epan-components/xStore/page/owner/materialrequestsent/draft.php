@@ -21,6 +21,7 @@ class page_xStore_page_owner_materialrequestsent_draft extends page_xStore_page_
 		}
 
 		$crud->add('xHR/Controller_Acl');
+		$this->add('xStore/View_StockMovement',array('stockmovement'=>$this->add('xStore/Model_StockMovement')->load(1)));
 	}
 	
 
@@ -45,6 +46,7 @@ class page_xStore_page_owner_materialrequestsent_draft extends page_xStore_page_
             $btn->js('click',$this->js()->univ()->frameURL('Custome Field Values',array($this->api->url('xStore_page_owner_materialrequestsent_customfields',array('orderitem_id'=>$crud->id,'custom_field_name'=>$crud->form->getElement('custom_fields')->name)),"selected_item_id"=>$item_field->js()->val(),'current_json'=>$custom_fields_field->js()->val())));
         }
 
+        
         if(!$crud->isEditing()){
         	$crud->grid->addMethod('format_readable',function($g,$f)use($dummy_item){
         		$g->current_row_html[$f]  = $dummy_item->genericRedableCustomFieldAndValue($g->model['custom_fields']);

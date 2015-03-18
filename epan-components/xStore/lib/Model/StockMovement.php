@@ -49,7 +49,7 @@ class Model_StockMovement extends \Model_Document{
 	}
 
 	function itemrows(){
-		return $this->ref('xStore/StockMovementItem');
+		return $this->ref('xStore/StockMovementItem')->addCondition('stock_movement_id',$this->id);
 	}
 
 	function addItem($item,$qty,$unit,$custom_fields){

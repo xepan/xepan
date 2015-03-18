@@ -16,7 +16,6 @@ class Model_Quotation extends \Model_Document{
 
 		$this->addField('name')->Caption('Quotation Number');
 		// $this->addField('quotation_no');
-		// $this->addField('status');
 		$this->addField('created_at')->type('date');
 		$this->getElement('status')->enum($this->status)->defaultValue('draft');
 
@@ -44,7 +43,7 @@ class Model_Quotation extends \Model_Document{
 	}
 
 	function itemrows(){
-		return $this->add('xShop/Model_Quotation')->addCondition('quotation_id',$this->id);
+		return $this->add('xShop/Model_QuotationItem')->addCondition('quotation_id',$this->id);
 	}
 
 }
