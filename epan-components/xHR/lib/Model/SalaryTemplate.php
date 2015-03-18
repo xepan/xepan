@@ -5,10 +5,10 @@ class Model_SalaryTemplate extends \Model_Table{
 	public $table="xhr_salary_templates";
 	function init(){
 		parent::init();
-		$this->hasOne('xHR/Department','department_id');
-		$this->hasOne('xHR/Post','post_id');
+		$this->hasOne('xHR/Department','department_id')->mandatory(true);
+		$this->hasOne('xHR/Post','post_id')->mandatory(true);
 
-		$this->addField('name'); // Marketing Manager salary 
+		$this->addField('name')->mandatory(true); // Marketing Manager salary 
 		
 		$this->hasMany('xHR/TemplateSalary','salary_template_id');
 		

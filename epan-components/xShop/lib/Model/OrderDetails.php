@@ -6,7 +6,7 @@ class Model_OrderDetails extends \Model_Document{
 	public $table='xshop_orderDetails';
 
 	public $status=array();
-	public $root_document_name = 'OrderDetails';
+	public $root_document_name = 'xShop\OrderDetails';
 
 	function init(){
 		parent::init();
@@ -32,13 +32,13 @@ class Model_OrderDetails extends \Model_Document{
 		});
 
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');
-
+		$this->hasMany('xShop/SalesOrderDetailAttachment','related_document_id',null,'Attachements');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
 		$this->addHook('afterInsert',$this);
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){
@@ -202,9 +202,15 @@ class Model_OrderDetails extends \Model_Document{
 			if($with_custom_fields){
 				$array = json_decode($this['custom_fields'],true);
 				foreach ($array as $id => $cf ) {
+					// $str.=$this['custom_fields'];
 					if($department['department_id'] == $id){
-						$array[$id] = $cf;
-						$str .="<br>[".$this->ref('item_id')->genericRedableCustomFieldAndValue(json_encode($array))." ]<br>";
+						if(!empty($cf)){
+							$ar[$id] = $cf;
+							$str .= "<br>[".$this->ref('item_id')->genericRedableCustomFieldAndValue(json_encode($ar))." ]<br>";
+							unset($ar[$id]);							
+						}else{
+							$str.="<br>";
+						}
 					}
 				}
 			}
