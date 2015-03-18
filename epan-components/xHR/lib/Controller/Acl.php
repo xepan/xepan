@@ -27,6 +27,7 @@ class Controller_Acl extends \AbstractController {
 		'can_assign'=>'No',
 		'can_assign_to'=>false,
 		
+		'can_manage_attachements'=>'No',
 		'can_manage_tasks'=>'No',
 		'task_types'=>false,
 		'can_send_via_email'=>'No',
@@ -222,6 +223,10 @@ class Controller_Acl extends \AbstractController {
 
 		if($this->permissions['can_mark_processed'] !='No'){
 			$this->manageAction('mark_processed');
+		}
+
+		if($this->permissions['can_manage_attachements'] !='No'){
+			$this->manageAction('manage_attachements');
 		}
 
 		if($this->permissions['can_manage_tasks'] !='No'){

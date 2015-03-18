@@ -1,7 +1,7 @@
 <?php
 
 class Model_Document extends SQL_Model{
-	
+
 	public $status = null;
 	public $document_name=null;
 	public $root_document_name=null;
@@ -28,6 +28,12 @@ class Model_Document extends SQL_Model{
 
 			$this->document_name = str_replace("Model_", "", $class_name);
 		}
+
+		$default_acl_options =array(
+				'can_view'=>array('caption'=>'Whose created Order(draft) you can see'),
+				'can_manage_attachments' =>array('caption'=>'Whose created Documents Attachemnt you can manage')
+			);
+
 
 		$this->addField('related_document_id')->system(true);
 		$this->addField('related_root_document_name')->system(true);
@@ -118,6 +124,13 @@ class Model_Document extends SQL_Model{
 			$m->load($this['related_document_id']);
 			return $m;
 		}
+	}
+
+	function manage_attachements_page($page){
+
+		$crud = $page->add('CRUD');
+		$crud->setModel($this->ref('Attachements'));
+		$crud->add('xHR/Controller_Acl');
 	}
 
 }

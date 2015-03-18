@@ -33,7 +33,9 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
             });
             $grid->addColumn('status','status');
             $grid->addColumn('expander','attachment',array('page'=>'xShop_page_owner_attachment','descr'=>'Attachments'));
-        }else{
+        }
+
+        if($crud->isEditing()==='add' OR $crud->isEditing()==='edit'){
             $item_field = $crud->form->getElement('item_id');
             $f= $item_field->other_field;
             $custom_fields_field = $crud->form->getElement('custom_fields');

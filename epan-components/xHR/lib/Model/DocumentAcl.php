@@ -41,6 +41,7 @@ class Model_DocumentAcl extends \Model_Table{
 		$this->addField('can_start_processing')->setValueList($acl)->defaultValue('No');
 		$this->addField('can_mark_processed')->setValueList($acl)->defaultValue('No');
 
+		$this->addField('can_manage_attachements')->setValueList($acl)->defaultValue('No');
 		$this->addField('can_manage_tasks')->setValueList($acl)->defaultValue('No');
 		$this->addField('task_types')->setValueList(array("job_card_tasks"=>"Root Docuement","job_card_current_status_tasks"=>"Specific Document","job_card_all_status_tasks"=>'Root Document With Status'));
 
@@ -51,7 +52,7 @@ class Model_DocumentAcl extends \Model_Table{
 		
 		$this->addHook('beforeSave',$this);
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 
