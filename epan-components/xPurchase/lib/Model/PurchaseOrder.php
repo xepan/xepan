@@ -15,7 +15,12 @@ class Model_PurchaseOrder extends \Model_Document{
 
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
 
+		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeDelete(){
+		$this->ref('xPurchase/PurchaseOrderItem')->deleteAll();
 	}
 
 	function itemrows(){
