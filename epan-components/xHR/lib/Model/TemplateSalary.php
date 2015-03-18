@@ -21,5 +21,8 @@ class Model_TemplateSalary extends \Model_Table{
 	}
 
 	function beforeSave(){}
-	function beforeDelete(){}
+	function beforeDelete(){
+		if($this->ref('salary_type_id')->count()->getOne() > 0)
+			throw $this->exception('Salary  contains of salary Type Please Delete Salary Type First ','Growl');
+	}
 }
