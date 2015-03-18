@@ -19,6 +19,10 @@ class View_StockMovement extends \CompleteLister{
 		$this->template->set('to_supplier',$this->stockmovement['to_supplier']);
 		$this->template->set('from_memberdetails',$this->stockmovement['from_memberdetails']);
 		$this->template->set('to_memberdetails',$this->stockmovement['to_memberdetails']);
+		$this->template->set('material_request_jobcard',$this->stockmovement['material_request_jobcard']);
+		$this->template->set('jobcard',$this->stockmovement['jobcard']);
+		$this->template->set('po',$this->stockmovement['po']);
+		$this->template->set('dispatch_request',$this->stockmovement['dispatch_request']);
 	
 		$this->setModel($this->stockmovement->itemrows());
 	}
@@ -27,7 +31,7 @@ class View_StockMovement extends \CompleteLister{
 		$this->current_row['sno']=$this->sno;
 		$this->current_row_html['custom_field'] =  $this->add('xShop/Model_Item')->genericRedableCustomFieldAndValue($this->model['custom_fields']);
 		$this->sno++;
-	}.
+	}
 
 	function defaultTemplate(){
 		$this->app->pathfinder->base_location->addRelativeLocation(

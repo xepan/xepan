@@ -1,12 +1,16 @@
 <div id="{$_name}" class="well">
 {$Content}
-<div  style=color:red;> <b> Stock Movement Challlan </b></div>
+<div class='text-center text-danger'> Stock Movement Challlan</div>
 	<div class="row well">
 		<div class="col-md-4 panel panel-info">
 			<div><b>Created at:</b> {$created_at}</div>
 			<div><b>From WareHouse:</b> {$from_warehouse}</div> 
 			<div><b>From Suppiler:</b> {$from_supplier}</div>
 			<div><b>From Customer:</b> {$from_memberdetails}</div>
+			<div><b>Material Request Jobcard:</b> {$material_request_jobcard}</div>
+			<div><b>Jobcard:</b> {$jobcard}</div>
+			<div><b>Purchase Order No:</b> {$po}</div>
+			<div><b>Dispatch No:</b> {$dispatch_request}</div>
 		</div>
 		
 		<div class="col-md-4 text-center panel panel-danger">

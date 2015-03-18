@@ -5,11 +5,12 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
 	function page_index(){
 		// parent::init();
 
-		$model = $this->add('xPurchase/Model_PurchaseOrder_Draft');
+		$draft_purchase_order_model = $this->add('xPurchase/Model_PurchaseOrder_Draft');
 
-		$crud=$this->add('CRUD');
-		$crud->setModel($model);
-		// $crud->addRef('xPurchase/PurchaseOrderItem');
+
+		$crud=$this->add('CRUD',array('grid_class'=>'xPurchase/Grid_PurchaseOrder'));
+		$crud->setModel($draft_purchase_order_model);
+		
 		$crud->add('xHR/Controller_Acl');
 		if(!$crud->isEditing()){
 			$crud->grid->addColumn('expander','purchase_order_item');
