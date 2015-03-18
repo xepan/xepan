@@ -42,6 +42,8 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 			$g->addFormatter('name','filternewsletter');
 			$g->add_sno();
 		}
+		$cat_crud->grid->addQuickSearch(array('name'));
+		$cat_crud->grid->addPaginator($ipp=50);
 
 		$newsletter_model = $this->add('xEnquiryNSubscription/Model_NewsLetter');
 		$newsletter_model->addExpression('unsend_emails')->set(function($m,$q){
@@ -113,6 +115,9 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 			$job_j->addField('process_via');
 			$email_to_process->addCondition('process_via','xMarketingCampaign');
 		}
+
+		$newsletter_crud->grid->addQuickSearch(array('name','category'));
+		$newsletter_crud->grid->addPaginator($ipp=50);
 	}
 
 	function page_send(){

@@ -3,6 +3,12 @@
 namespace xShop;
 
 class Grid_Quotation extends \Grid{
+	function init(){
+		parent::init();
+
+		$this->addQuickSearch(array('name','status','quotation_no'));
+		$this->addPaginator($ipp=50);
+	}
 
 	function setModel($m){
 		parent::setModel($m);

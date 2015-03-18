@@ -42,7 +42,9 @@ class page_xMarketingCampaign_page_owner_campaigns extends page_xMarketingCampai
 		}
 
 		$campaign_model = $this->add('xMarketingCampaign/Model_Campaign');
-
+		
+		$cat_crud->grid->addQuickSearch(array('name'));
+		$cat_crud->grid->addPaginator($ipp=50);
 
 		//filter Campaigns as per selected category
 		if($_GET['category_id']){
@@ -85,7 +87,8 @@ class page_xMarketingCampaign_page_owner_campaigns extends page_xMarketingCampai
 			$campaign_crud->add_button->setIcon('ui-icon-plusthick');
 			// $Campaign_crud->grid->addColumn('expander','BlogSubCampaign');
 		}
-
+		$campaign_crud->grid->addQuickSearch(array('name','category','starting_date','ending_date'));
+		$campaign_crud->grid->addPaginator($ipp=50);
 		// $Campaign_crud->add('Controller_FormBeautifier');
 
 	}

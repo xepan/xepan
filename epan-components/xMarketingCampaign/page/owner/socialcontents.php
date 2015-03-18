@@ -107,7 +107,8 @@ class page_xMarketingCampaign_page_owner_socialcontents extends page_xMarketingC
 			$g->addFormatter('name','filtersocial');
 			$g->add_sno();
 		}
-
+		$cat_crud->grid->addQuickSearch(array('name'));
+		$cat_crud->grid->addPaginator($ipp=50);
 		$social_model = $this->add('xMarketingCampaign/Model_SocialPost');
 
 		// filter social letter as per selected category
@@ -187,7 +188,7 @@ class page_xMarketingCampaign_page_owner_socialcontents extends page_xMarketingC
 			$btn->js('click',$g->js()->reload(array('sort_by'=>$sort_form_field->js()->val(),'order'=>'desc')));
 
 
-			$g->addQuickSearch(array('name'));
+			$g->addQuickSearch(array('name','category'));
 			$g->addClass('social_grid');
 			$g->js('reload')->reload();
 

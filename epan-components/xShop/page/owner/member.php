@@ -10,15 +10,15 @@ class page_xShop_page_owner_member extends page_xShop_page_owner_main{
 		$crud=$this->app->layout->add('CRUD');
 		
 
-		$members=$this->add('xShop/Model_MemberDetails');
+		$members=$this->add('xShop/Model_Customer');
 		
 
 		if(!$crud->isEditing()){
-		$users_join = $members->leftJoin('users','users_id');
-		$users_join->addField('username','username');
-		$users_join->addField('email','email');
-		$users_join->addField('is_user_active','is_active')->type('boolean');
-		$users_join->addField('joining_date','created_at')->type('date');
+		// $users_join = $members->leftJoin('users','users_id');
+		// $users_join->addField('username','username');
+		// $users_join->addField('email','email');
+		// $users_join->addField('is_user_active','is_active')->type('boolean');
+		// $users_join->addField('joining_date','created_at')->type('date');
 
 			$btn = $crud->grid->addButton('System User to Member Create');
 			if($btn->isClicked()){
@@ -37,7 +37,20 @@ class page_xShop_page_owner_member extends page_xShop_page_owner_main{
 		}
 		
 		$members->setOrder('id');
-		$crud->setModel($members);
+		$crud->setModel($members,array(
+										'username','password',
+										'type','email','mobile_number',
+										'landmark','city','state',
+										'country','address',
+										'pincode','billing_address',
+										'shipping_address',
+										)
+								,array('users','username','password',
+										'type','email','mobile_number',
+										'landmark','city','state',
+										'country','address',
+										'pincode','billing_address',
+										'shipping_address',));
         $crud->add('xHR/Controller_Acl');
 		
 	}

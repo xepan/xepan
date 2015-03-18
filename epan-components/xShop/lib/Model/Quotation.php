@@ -17,14 +17,17 @@ class Model_Quotation extends \Model_Document{
 		$this->addField('name');
 		$this->addField('quotation_no');
 		$this->getElement('status')->enum($this->status)->defaultValue('draft');
-
+		$this->addHook('beforeDelete',$this);
 
 		$this->hasMany('xShop/QuotationItem','quotation_id');
 
 		//$this->add('dynamic_model/Controller_AutoCreator');
-		
-		
 	}
+
+	function beforeDelete(){
+		$this->ref('xShop/QuotationItem')->deleteAll();
+	}
+
 
 	function reject($message){
 		$this['status']='redesign';

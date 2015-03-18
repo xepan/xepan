@@ -29,6 +29,7 @@ class Model_Opportunity extends \Model_Document{
 		$this->hasMany('xShop/Quotation','opportunity_id');
 
 		$this->addHook('afterInsert',$this);
+		$this->addHook('beforeDelete',$this);
 
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
@@ -49,6 +50,7 @@ class Model_Opportunity extends \Model_Document{
 		$log->create($log_array,'Created');
 		
 	}
+	function beforeDelete(){}
 
 	function mark_dead($reason){
 		return "Quotation";
