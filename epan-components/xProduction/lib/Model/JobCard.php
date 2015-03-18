@@ -308,7 +308,7 @@ class Model_JobCard extends \Model_Document{
 			$next->createJobCardFromOrder();
 			$this->setStatus('forwarded');
 		}else{
-			$this->setStatus('completed');
+			$this->complete();
 		}
 	}
 
