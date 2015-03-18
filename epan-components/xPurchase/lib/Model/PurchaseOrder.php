@@ -11,11 +11,17 @@ class Model_PurchaseOrder extends \Model_Document{
 
 		$this->hasOne('xPurchase/Supplier','xpurchase_supplier_id');
 
+
 		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));		
 
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
 
+		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeDelete(){
+		$this->ref('xPurchase/PurchaseOrderItem')->deleteAll();
 	}
 
 	function itemrows(){
@@ -65,10 +71,11 @@ class Model_PurchaseOrder extends \Model_Document{
 
 		$cols = $form->add('Columns');
 		$sno_cols= $cols->addColumn(1);
-		$item_cols= $cols->addColumn(6);
+		$item_cols= $cols->addColumn(5);
 		$req_qty_cols= $cols->addColumn(2);
 		$unit_cols= $cols->addColumn(1);
 		$received_qty= $cols->addColumn(2);
+		$keep_open= $cols->addColumn(1);
 
 		$i=1;
 		foreach($this->itemrows() as $ir){
@@ -80,6 +87,7 @@ class Model_PurchaseOrder extends \Model_Document{
 			$req_qty_cols->addField('Readonly','req_qty_'.$i,'Qty')->set($ir['qty']);
 			$unit_cols->addField('Readonly','req_uit_'.$i,'Unit')->set($ir['unit']);
 			$received_qty->addField('Number','received_qty_'.$i,'Received Qty')->set($ir['qty']);
+			$keep_open->addField('boolean','keep_open_'.$i,'Keep open')->set(false);
 			$i++;
 		}
 

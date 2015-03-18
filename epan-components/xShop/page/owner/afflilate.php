@@ -30,6 +30,9 @@ class page_xShop_page_owner_afflilate extends page_xShop_page_owner_main{
 			$g->add_sno();
 		}
 
+		$type_crud->grid->addQuickSearch(array('name'));
+		$type_crud->grid->addPaginator($ipp=50);
+
 		if($_GET['afflilatetype_id']){
 			$this->api->stickyGET('afflilatetype_id');
 			$filter_box = $aff_col->add('View_Box')->setHTML(' Affiliate for <b>'. $afflilate_type_model->load($_GET['afflilatetype_id'])->get('name').'</b>' );
@@ -49,7 +52,9 @@ class page_xShop_page_owner_afflilate extends page_xShop_page_owner_main{
 		$aff_crud=$aff_col->add('CRUD');
 
 		$aff_crud->setModel($afflilate_model,array('company_name','owner_name','logo_url','is_active','pnhone_no','mobile_no','email_id','website_url','office_address','city','state','country','zip_code','description'));//,array('name'));
-
+		
+		$aff_crud->grid->addQuickSearch(array('name','company_name','phone_no','mobile_no','email_id','website_url','state','zip_code'));
+		$aff_crud->grid->addPaginator($ipp=50);
 	}
 }
 

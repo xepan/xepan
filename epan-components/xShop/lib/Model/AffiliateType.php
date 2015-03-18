@@ -15,8 +15,17 @@ class Model_AffiliateType extends \Model_Table {
 		$this->addField('name');
 		$this->hasMany('xShop/Affiliate','affiliatetype_id');
 		$this->hasMany('xShop/ItemAffiliateAssociation','affiliatetype_id');
-
+		$this->addHook('beforeDelete',$this);	
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	
+	}
+
+	function beforeDelete(){
+		if($this->ref('xShop/Affiliate')->count()->getOne() > 0){
+			throw $this->exception("Affiliate Contains of Affiliate Type Please Delete First",'Growl');
+		}
+
+		$this->ref('xShop/ItemAffiliateAssociation')->deleteAll();
+			
 	}
 }

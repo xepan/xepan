@@ -12,7 +12,7 @@ class Model_StockMovementItem extends \Model_Table{
 		$this->addField('unit');
 		$this->addField('custom_fields')->type('text');
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function item(){

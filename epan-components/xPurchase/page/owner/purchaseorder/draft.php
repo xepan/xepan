@@ -5,16 +5,18 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
 	function page_index(){
 		// parent::init();
 
-		$model = $this->add('xPurchase/Model_PurchaseOrder_Draft');
+		$draft_purchase_order_model = $this->add('xPurchase/Model_PurchaseOrder_Draft');
 
-		$crud=$this->add('CRUD');
-		$crud->setModel($model);
-		// $crud->addRef('xPurchase/PurchaseOrderItem');
+
+		$crud=$this->add('CRUD',array('grid_class'=>'xPurchase/Grid_PurchaseOrder'));
+		$crud->setModel($draft_purchase_order_model);
+		
 		$crud->add('xHR/Controller_Acl');
 		if(!$crud->isEditing()){
 			$crud->grid->addColumn('expander','purchase_order_item');
 		}
 
+		//$this->add('xPurchase/View_PurchaseOrder',array('purchaseorder'=>$this->add('xPurchase/Model_PurchaseOrder')->load(1)));
 	}
 
 	function page_purchase_order_item(){
@@ -35,6 +37,7 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
             $btn = $item_field->other_field->belowField()->add('Button')->set('CustomFields');
             $btn->js('click',$this->js()->univ()->frameURL('Custome Field Values',array($this->api->url('xPurchase_page_owner_purchaseorder_customfields',array('orderitem_id'=>$crud->id,'custom_field_name'=>$crud->form->getElement('custom_fields')->name)),"selected_item_id"=>$item_field->js()->val(),'current_json'=>$custom_fields_field->js()->val())));
         }
+
 
 	}
 	

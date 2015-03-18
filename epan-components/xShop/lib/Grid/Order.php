@@ -38,7 +38,7 @@ class Grid_Order extends \Grid {
 
 
 		$this->addPaginator(100);
-		$this->addQuickSearch(array('order_id'));
+		$this->addQuickSearch(array('order_id','order_from','on_date','discount_voucher'));
 		return $m;
 	}	
 

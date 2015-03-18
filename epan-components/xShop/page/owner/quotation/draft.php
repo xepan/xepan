@@ -24,6 +24,7 @@ class page_xShop_page_owner_quotation_draft extends page_xShop_page_owner_main{
 		}
 			
 
+		//$this->add('xShop/View_Quotation',array('quotation'=>$this->add('xShop/Model_Quotation')->load(3)));
 		}
 
 	}

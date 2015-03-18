@@ -58,6 +58,8 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 			$dept_crud->grid->removeColumn('is_system');
 		}
 
+		$dept_crud->grid->addQuickSearch(array('name','production_level'));
+		$dept_crud->grid->addPaginator($ipp=50);
 
 		// $dept_col->add('xShop/View_Badges_ItemPage');
 		if($_GET['hr_department_id']){

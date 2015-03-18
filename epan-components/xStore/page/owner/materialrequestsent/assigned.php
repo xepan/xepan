@@ -9,6 +9,7 @@ class page_xStore_page_owner_materialrequestsent_assigned extends page_xStore_pa
 		
 		$crud=$this->add('CRUD',array('grid_class'=>'xStore/Grid_MaterialRequest'));
 		$crud->setModel($model);
+		
 		$crud->add('xHR/Controller_Acl');
 	}
 }

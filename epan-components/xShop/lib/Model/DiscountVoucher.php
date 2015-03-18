@@ -26,7 +26,7 @@ class Model_DiscountVoucher extends \Model_Document{
 			
 		$this->hasMany('xShop/DiscountVoucherUsed','discountvoucher_id');
 		$this->addHook('beforeDelete',$this);
-		// //$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
   	
   	function beforeDelete($m){	

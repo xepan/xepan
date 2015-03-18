@@ -2,7 +2,12 @@
 namespace xStore;
 
 class Grid_MaterialRequest extends \Grid{
-
+	function init(){
+		parent::init();
+		$this->addQuickSearch(array('to_department','status'));
+		$this->addPaginator($ipp=50);
+		
+	}
 	function setModel($material_request_model,$fields=null){
 
 		// if(!$fields){
@@ -12,10 +17,11 @@ class Grid_MaterialRequest extends \Grid{
 		$m=parent::setModel($material_request_model,$fields);
 
 		$this->add('VirtualPage')->addColumn('Details','Details','Details',$this)->set(function($p){
-			$p->add('xStore/View_MaterialRequest',array('materialrequest'=>$this->add('xStore/Model_MaterialRequest')->load($p->id)));
+			$p->add('xStore/View_MaterialRequest',array('materialrequest'=>$p->add('xStore/Model_MaterialRequest')->load($p->id)));
 		});
 
 		$this->addOrder()->move('Details','last')->now();
 		return $m;
+
 	}
 }

@@ -14,17 +14,21 @@ class Model_Quotation extends \Model_Document{
 		$this->hasOne('xShop/Customer','customer_id');
 		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id');
 
-		$this->addField('name');
-		$this->addField('quotation_no');
+		$this->addField('name')->Caption('Quotation Number');
+		// $this->addField('quotation_no');
+		$this->addField('created_at')->type('date');
 		$this->getElement('status')->enum($this->status)->defaultValue('draft');
-
+		$this->addHook('beforeDelete',$this);
 
 		$this->hasMany('xShop/QuotationItem','quotation_id');
 
 		//$this->add('dynamic_model/Controller_AutoCreator');
-		
-		
 	}
+
+	function beforeDelete(){
+		$this->ref('xShop/QuotationItem')->deleteAll();
+	}
+
 
 	function reject($message){
 		$this['status']='redesign';
@@ -41,4 +45,9 @@ class Model_Quotation extends \Model_Document{
 		return $this['status'];
 	}
 
+	function itemrows(){
+		return $this->add('xShop/Model_QuotationItem')->addCondition('quotation_id',$this->id);
+	}
+
 }
+

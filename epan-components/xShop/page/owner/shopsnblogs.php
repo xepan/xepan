@@ -23,6 +23,9 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 		if(!$crud->isEditing()){
 			$crud->grid->addColumn('expander','configuration',array("descr"=>"Configuration",'icon'=>'cog'));
 		}
+
+		$crud->grid->addQuickSearch(array('name'));
+		$crud->grid->addPaginator($ipp=50);
         $crud->add('xHR/Controller_Acl');
 		
 	}
@@ -34,6 +37,9 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 		if(!$crud->isEditing()){
 			$crud->grid->addColumn('expander','configuration',array("descr"=>"Configuration",'icon'=>'cog'));
 		}
+
+		$crud->grid->addQuickSearch(array('name'));
+		$crud->grid->addPaginator($ipp=50);
 	}
 
 	function page_shops_configuration(){

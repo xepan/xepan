@@ -44,6 +44,7 @@ class Model_DataGrabber extends \Model_Table{
 		
 
 		$this->addHook('beforeSave',$this);
+		$this->addHook('beforeDelete',$this);
 
 
 		// //$this->add('dynamic_model/Controller_AutoCreator');
@@ -54,5 +55,13 @@ class Model_DataGrabber extends \Model_Table{
 	function beforeSave(){
 		$this['last_run_at'] = date('Y-m-d H:i:s');
 		// if(!$this['required_pause_between_hits'] or $this['required_pause_between_hits'] < 10) $this['required_pause_between_hits'] = 10;
+	}
+
+	function beforeDelete($m){
+		$phase_count = $m->ref('xMarketingCampaign/DataSearchPhrase')->count()->getOne();
+		
+		if($phase_count ){
+			$this->api->js(true)->univ()->errorMessage('Cannot Delete,first delete Phrases')->execute();	
+		}
 	}
 }

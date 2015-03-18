@@ -47,9 +47,10 @@ class Model_Post extends \Model_Table{
 	function beforeDelete(){
 		$emp_count = $this->ref('xHR/Employee')->count()->getOne();
 		$post_count=$this->ref('xHR/Post')->count()->getOne();
+		$salary_count=$this->ref('xHR/SalaryTemplate')->count()->getOne();
 		
-		if($emp_count or $post_count){
-			$this->api->js(true)->univ()->errorMessage('Cannot Delete,first delete Employees / Dependent Posts')->execute();	
+		if($emp_count or $post_count or $salary_count){
+			$this->api->js(true)->univ()->errorMessage('Cannot Delete,first delete Employees  & Salary Templates / Dependent Posts')->execute();	
 		}
 
 		$this->ref('xHR/DocumentAcl')->deleteAll();

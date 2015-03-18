@@ -28,16 +28,20 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 			);
 
 		//Department
-		$dept_model=$this->add('xHR/Model_Employee');
-		$dept_crud = $cat_col->add('CRUD');
-		$dept_crud->setModel($dept_model,array('name'));
+		$emp_model=$this->add('xHR/Model_Employee');
+		$emp_crud = $cat_col->add('CRUD');
+		$emp_crud->setModel($emp_model,array('name'));
 
-		if(!$dept_crud->isEditing()){
-			$dept_crud->grid->addMethod('format_name',function($g,$f)use($emp_col){
+		if(!$emp_crud->isEditing()){
+			$emp_crud->grid->addMethod('format_name',function($g,$f)use($emp_col){
 				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$emp_col->js()->reload(array('employee_id'=>$g->model->id)).'">'.$g->current_row[$f].'</a>';
 			});
-			$dept_crud->grid->addFormatter('name','name');
+			$emp_crud->grid->addFormatter('name','name');
 		}
+
+		$emp_crud->grid->addQuickSearch(array('name'));
+		$emp_crud->grid->addPaginator($ipp=50);
+
 
 		// $emp_col->add('xShop/View_Badges_ItemPage');
 		if($_GET['employee_id']){

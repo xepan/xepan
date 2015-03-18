@@ -1,0 +1,40 @@
+	
+<div id="{$_name}" class="well">
+<div class='text-center text-info'> Purchase Order</div>
+{$Content}
+	<div class="row well">
+		<div class="col-md-4 panel panel-info">
+			<b>Request On</b> :-{$request_on}
+		</div>
+		<div class="col-md-4 text-center panel panel-danger">
+			 <b>Status:</b>{$status}
+		</div>
+		<div class="col-md-4 text-center panel panel-success">
+			<!-- <div><b>To Department:</b> {$to_dept}</div> -->
+			<div><b>Form Department:</b> {$form_dept}</div>
+			<div><b>To Suppiler:</b> {$supplier}</div>
+		</div>
+	</div>	
+		
+	<table width='100%' class='table' style="font-size:11px;vertical-align:top;" >
+		<tbody class='table-striped'>
+			<tr class="well" >
+				<th align="left">Sno</th>
+				<th align="center">Item</th>
+				<th align="right" class="text-right">Qty</th>
+				<th align="right" class="text-right">Custom Fields</th>
+			</tr>
+		{rows}
+			{row}
+				<tr>
+					<td align="left">{$sno}</td>
+					<td align="left">{$item}</td>
+					<td align="right">{$qty}</td>
+					<td align="right">{$custom_field}</td>
+				</tr>
+			{/row}
+		{/rows}
+		</tbody>
+	</table>
+</div>
+

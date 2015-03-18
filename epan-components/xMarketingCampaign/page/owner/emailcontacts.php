@@ -122,7 +122,8 @@ class page_xMarketingCampaign_page_owner_emailcontacts extends page_xMarketingCa
 
 
 		}
-
+		$crud->grid->addQuickSearch(array('name','is_active'));
+		$crud->grid->addPaginator($ipp=50);
 		// $crud->add('Controller_FormBeautifier');
 		
 	}
