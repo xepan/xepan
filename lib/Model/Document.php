@@ -127,7 +127,6 @@ class Model_Document extends SQL_Model{
 	}
 
 	function manage_attachements_page($page){
-
 		$crud = $page->add('CRUD');
 		$crud->setModel($this->ref('Attachements'));
 		$crud->add('xHR/Controller_Acl');
