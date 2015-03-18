@@ -28,6 +28,7 @@ class Grid_Order extends \Grid {
 		$m = parent::setModel($model,$fields);
 
 		$this->addColumn('expander','details',array('page'=>'xShop_page_owner_order_detail','descr'=>'Details'));
+		$this->addColumn('expander','attachment',array('page'=>'xShop_page_owner_attachment','descr'=>'Attachments'));
 		$this->addColumn('Button','print');
 
 		if($_GET['print']){			
@@ -37,7 +38,7 @@ class Grid_Order extends \Grid {
 
 
 		$this->addPaginator(100);
-		$this->addQuickSearch(array('order_id'));
+		$this->addQuickSearch(array('order_id','order_from','on_date','discount_voucher'));
 		return $m;
 	}	
 

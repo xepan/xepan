@@ -10,6 +10,8 @@ class page_xProduction_page_owner_outsourceparties extends page_xProduction_page
 		$crud=$this->app->layout->add('CRUD');
 		$outsource_model=$this->add('xProduction/Model_OutSourceParty');
 		$crud->setModel($outsource_model);
+		$crud->grid->addQuickSearch(array('name','code'));
+		$crud->grid->addPaginator($ipp=50);
 		// $jobcard_model=$this->add('xProduction/Model_JobCard');
 		// $jobcard=$this->add('xProduction/View_Jobcard');
 		// $jobcard->setModel($jobcard_model);

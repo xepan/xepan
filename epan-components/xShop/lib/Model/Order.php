@@ -62,6 +62,8 @@ class Model_Order extends \Model_Document{
 
 
 		$this->hasMany('xShop/OrderDetails','order_id');
+		$this->hasMany('xShop/SalesOrderAttachment','related_document_id',null,'Attachements');
+		
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeInsert',$this);
 

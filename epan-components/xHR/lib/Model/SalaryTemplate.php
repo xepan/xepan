@@ -25,5 +25,8 @@ class Model_SalaryTemplate extends \Model_Table{
 	}
 
 	function beforeSave(){}
-	function beforeDelete(){}
+	function beforeDelete(){
+		if($this->ref('xHR/TemplateSalary')->count()->getOne() > 0)
+			throw $this->exception('Templates contains salary','Growl');
+	}
 }

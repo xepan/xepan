@@ -30,7 +30,8 @@ class page_xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb extends page_xMarketin
 			$crud->add_button->setIcon('ui-icon-plusthick');
 			$g->addColumn('expander','phrases');
 		}
-
+		$crud->grid->addQuickSearch(array('name','is_active','site_url','created_at','last_run_at'));
+		$crud->grid->addPaginator($ipp=50);
 		// $crud->add('Controller_FormBeautifier');
 
 	}

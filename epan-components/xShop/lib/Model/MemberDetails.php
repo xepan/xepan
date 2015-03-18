@@ -43,9 +43,13 @@ class Model_MemberDetails extends \Model_Document{
 	}
 
 	function beforeDelete(){
-		throw $this->exception('TODOOOOOOOOOOO');
+		$order_count=$this->ref('xShop/Order')->count()->getOne();
+		$member_count=$this->ref('xShop/MemberImages')->count()->getOne();
+		$item_member_count=$this->ref('xShop/ItemMemberDesign')->count()->getOne();
+			$str = 'Order Count'.$order_count . ' ' .'Member Images Count'.$member_count .' ' .'Item Design'.$item_member_count;
+			if($order_count or $member_count or $item_member_count)
+			throw $this->exception($str,'Growl');
 	}
-
 
 	function beforeSave(){
 		$existing_check = $this->add('xShop/Model_MemberDetails');

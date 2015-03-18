@@ -304,8 +304,6 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 	}
                                                          
 	function page_newsletter(){
-		$this->api->jui->addStaticInclude('splitter/splitter');
-		$this->api->jui->addStylesheet('splitter/splitter');
 		$preview_vp = $this->add('VirtualPage');
 		$preview_vp->set(function($p){
 			$m=$p->add('xEnquiryNSubscription/Model_NewsLetter')->load($_GET['newsletter_id']);

@@ -23,5 +23,10 @@ class Model_SalaryType extends \Model_Table{
 	}
 
 	function beforeSave(){}
-	function beforeDelete(){}
+	function beforeDelete(){
+		$tem_salary=$this->ref('salary_template_id')->count()->getOne() > 0;
+		$salary=$this->ref('xHR/Salary')->count()->getOne() > 0;
+		if($tem_salary OR $salary)
+			throw $this->exception('Salary Type contains O  Templates. Please Delete Templates First','Growl');
+	}
 }

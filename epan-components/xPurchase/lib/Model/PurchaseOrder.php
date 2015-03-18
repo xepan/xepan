@@ -13,10 +13,15 @@ class Model_PurchaseOrder extends \Model_Document{
 
 
 		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));		
-		$this->addField('name');
+
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		$this->addHook('beforeDelete',$this);
+		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeDelete(){
+		$this->ref('xPurchase/PurchaseOrderItem')->deleteAll();
 	}
 
 	function itemrows(){
@@ -109,4 +114,7 @@ class Model_PurchaseOrder extends \Model_Document{
 
 	}
 	
+
+	
 }
+

@@ -26,7 +26,7 @@ class Model_SocialPostCategory extends \Model_Table {
 	}
 
 	function beforeDelete(){
-		if($this->ref('xEnquiryNSubscription/SocialPost')->count()->getOne() > 0)
+		if($this->ref('xMarketingCampaign/SocialPost')->count()->getOne() > 0)
 			throw $this->exception('Category contains SocialPosts','Growl');
 	}
 
