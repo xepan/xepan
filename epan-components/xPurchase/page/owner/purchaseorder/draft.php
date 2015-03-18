@@ -16,6 +16,7 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
 			$crud->grid->addColumn('expander','purchase_order_item');
 		}
 
+		//$this->add('xPurchase/View_PurchaseOrder',array('purchaseorder'=>$this->add('xPurchase/Model_PurchaseOrder')->load(1)));
 	}
 
 	function page_purchase_order_item(){
@@ -36,6 +37,7 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
             $btn = $item_field->other_field->belowField()->add('Button')->set('CustomFields');
             $btn->js('click',$this->js()->univ()->frameURL('Custome Field Values',array($this->api->url('xPurchase_page_owner_purchaseorder_customfields',array('orderitem_id'=>$crud->id,'custom_field_name'=>$crud->form->getElement('custom_fields')->name)),"selected_item_id"=>$item_field->js()->val(),'current_json'=>$custom_fields_field->js()->val())));
         }
+
 
 	}
 	
