@@ -35,6 +35,7 @@ class Model_Document extends SQL_Model{
 		
 		$this->hasOne('xHR/Employee','created_by_id')->defaultValue($this->api->current_employee->id)->system(true);
 		$this->hasMany('xProduction/Task','document_id');
+		$this->hasMany('Attachment','document_id');
 	}
 
 	function getRootClass(){

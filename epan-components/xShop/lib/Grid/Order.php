@@ -28,6 +28,7 @@ class Grid_Order extends \Grid {
 		$m = parent::setModel($model,$fields);
 
 		$this->addColumn('expander','details',array('page'=>'xShop_page_owner_order_detail','descr'=>'Details'));
+		$this->addColumn('expander','attachment',array('page'=>'xShop_page_owner_attachment','descr'=>'Attachments'));
 		$this->addColumn('Button','print');
 
 		if($_GET['print']){			

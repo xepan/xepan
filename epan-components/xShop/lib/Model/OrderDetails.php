@@ -6,7 +6,7 @@ class Model_OrderDetails extends \Model_Document{
 	public $table='xshop_orderDetails';
 
 	public $status=array();
-	public $root_document_name = 'OrderDetails';
+	public $root_document_name = 'xShop\OrderDetails';
 
 	function init(){
 		parent::init();
@@ -32,13 +32,13 @@ class Model_OrderDetails extends \Model_Document{
 		});
 
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');
-
+		$this->hasMany('xShop/SalesOrderDetailAttachment','related_document_id',null,'Attachements');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
 		$this->addHook('afterInsert',$this);
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){
