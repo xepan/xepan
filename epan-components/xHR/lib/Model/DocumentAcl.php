@@ -18,10 +18,10 @@ class Model_DocumentAcl extends \Model_Table{
 	
 		$this->hasOne('xHR/Post','post_id');
 		
-		$this->addField('can_view')->setValueList($acl)->defaultValue('No');
+		$this->addField('can_view')->setValueList($acl)->defaultValue('Self Only');
 	
 		$this->addField('allow_add')->type('boolean')->defaultValue(false);
-		$this->addField('allow_edit')->setValueList($acl)->defaultValue('No');
+		$this->addField('allow_edit')->setValueList($acl)->defaultValue('Self Only');
 		$this->addField('allow_del')->setValueList($acl)->defaultValue('No');
 	
 		$this->addField('can_submit')->setValueList($acl)->defaultValue('No');
