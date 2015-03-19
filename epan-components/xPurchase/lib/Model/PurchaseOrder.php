@@ -83,7 +83,7 @@ class Model_PurchaseOrder extends \Model_Document{
 			$req_qty_cols->addField('Readonly','req_qty_'.$i,'Qty')->set($ir['qty']);
 			$unit_cols->addField('Readonly','req_uit_'.$i,'Unit')->set($ir['unit']);
 			$received_qty->addField('Number','received_qty_'.$i,'Received Qty')->set($ir['qty']);
-			$keep_open->addField('boolean','keep_open_'.$i,'Keep open')->set(false);
+			// $keep_open->addField('boolean','keep_open_'.$i,'Keep open')->set(false);
 			$i++;
 		}
 
