@@ -2,7 +2,7 @@
 
 namespace xShop;
 
-class Model_Quotation_Submit extends Model_Quotation{
+class Model_Quotation_Submitted extends Model_Quotation{
 	public $actions=array(
 			'can_view'=>array('caption'=>'Whose created Quotation(submitted) this post can see'),
 			'allow_edit'=>array('caption'=>'Whose created Quotation(submitted) this post can edit'),

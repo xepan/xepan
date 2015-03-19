@@ -86,6 +86,7 @@ class Model_Employee extends \Model_Table{
 		$this->hasMany('xHR/Salary','employee_id');
 		// $this->hasMany('xProduction/JobCardEmployeeAssociation','employee_id');
 		$this->hasMany('xProduction/EmployeeTeamAssociation','employee_id');
+		$this->hasMany('LastSeen','employee_id');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
@@ -230,5 +231,4 @@ class Model_Employee extends \Model_Table{
 
 	
 	}
-
 }

@@ -1,6 +1,6 @@
 <?php
 
-class page_xDispatch_page_owner_deliverynote_submit extends page_xDispatch_page_owner_main{
+class page_xDispatch_page_owner_deliverynote_submitted extends page_xDispatch_page_owner_main{
 
 	function page_index(){
 

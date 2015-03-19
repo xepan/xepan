@@ -5,6 +5,7 @@ namespace xHR;
 class Controller_Acl extends \AbstractController {
 
 	public $document=null;
+	public $my_model = null;
 	public $permissions=array(
 		
 		'can_view'=>'No',
@@ -44,13 +45,25 @@ class Controller_Acl extends \AbstractController {
 		parent::init();
 
 		if(! $this->document){
-			if(!$this->owner->getModel())
+			if(!$this->owner instanceof \SQL_Model AND !$this->owner->getModel())
 				throw $this->exception('document not setted and model not found');
 
-			if(! $this->owner->getModel() instanceof \Model_Document)
+			if(!$this->owner instanceof \SQL_Model AND !$this->owner->getModel() instanceof \Model_Document)
 				throw $this->exception("Model ". get_class($this->owner->getModel()). " Must Inherit Model_Document");
 			
-			$this->document = get_class($this->owner->getModel());
+			if($this->owner instanceof \SQL_Model AND !$this->owner instanceof \Model_Document)
+				throw $this->exception("Model ". get_class($this->owner). " Must Inherit Model_Document");
+
+			if($this->owner instanceof \SQL_Model){
+				$this->document = get_class($this->owner);
+				$this->owner->acl_added=$this;
+				$this->my_model = $this->owner;
+			}
+			else{
+				$this->document = get_class($this->owner->getModel());
+				$this->owner->model->acl_added=$this;
+				$this->my_model = $this->owner->model;
+			}
 
 		}
 
@@ -94,15 +107,23 @@ class Controller_Acl extends \AbstractController {
 			}else{
 				$this->doGRID();
 			}
+
+			$this->owner->model->setOrder('updated_at','desc');
+
 		}elseif($this->owner instanceof \Grid){
 			$this->doGRID();
 		}elseif ($this->owner instanceof \Form){
 			$this->doFORM();
+		}elseif ($this->owner instanceof \SQL_Model){
+			$this->doModel();
 		}else{
 			// its just view
 			$this->doVIEW();
 		}
 
+		if(!$this->owner instanceof \SQL_Model){
+			$this->my_model->myUnRead(true);
+		}
 		// Grid
 		// Form
 			// Fields ??? readonly 
@@ -153,7 +174,7 @@ class Controller_Acl extends \AbstractController {
 		}
 
 		if($this->permissions['can_view'] != 'All'){
-			$this->filterModel(isset($this->owner->model->acl_field)?$this->owner->model->acl_field:'created_by_id');
+			$this->filterModel($this->owner->model, isset($this->owner->model->acl_field)?$this->owner->model->acl_field:'created_by_id');
 		}
 
 		if(!$this->permissions['allow_add']){
@@ -265,6 +286,12 @@ class Controller_Acl extends \AbstractController {
 
 	}
 
+	function doModel(){
+		if($this->permissions['can_view'] != 'All'){
+			$this->filterModel($this->owner, isset($this->owner->acl_field)?$this->owner->acl_field:'created_by_id');
+		}
+	}
+
 	function doVIEW(){
 
 	}
@@ -315,15 +342,15 @@ class Controller_Acl extends \AbstractController {
 		}
 	}
 
-	function filterModel($filter_column='created_by_id'){
+	function filterModel($model, $filter_column='created_by_id'){
 		// $acl =array('No'=>'No','Self Only'=>'Created By Employee',
 		// 'Include Subordinats'=>'Created By Subordinates','Include Colleagues'=>'Created By Colleagues',
 		// 'Include Subordinats & Colleagues'=>'Created By Subordinats or Colleagues',
 		// 'Assigned To Me'=>'Assigned To Me','Assigned To My Team'=>'Assigned To Me & My Team',
 		// 'If Team Leader'=>'If Team Leader','All'=>'All');
 
-		if(!$this->owner->model->hasField($filter_column)){
-			throw $this->exception("$filter_column must be defined in model " . get_class($this->owner->model));
+		if(!$model->hasField($filter_column)){
+			throw $this->exception("$filter_column must be defined in model " . get_class($model));
 		}
 		$filter_ids = false;
 		switch ($this->permissions['can_view']) {
@@ -346,8 +373,8 @@ class Controller_Acl extends \AbstractController {
 			break;
 			
 			case 'Assigned To My Team':
-				$this->owner->model->addCondition(
-					$this->owner->model->dsql()->orExpr()
+				$model->addCondition(
+					$model->dsql()->orExpr()
 					->where('employee_id',$this->self_only_ids)
 					->where('team_id',$this->my_teams)
 					)
@@ -362,7 +389,7 @@ class Controller_Acl extends \AbstractController {
 				break;
 		}
 		if($filter_ids) 
-			$this->owner->model->addCondition($filter_column,$filter_ids);
+			$model->addCondition($filter_column,$filter_ids);
 	}
 
 	function filterGrid($column){
@@ -524,6 +551,45 @@ class Controller_Acl extends \AbstractController {
 
 	function getAlc(){
 		return $this->permissions;
+	}
+
+
+	function getCounts($string=false, $new_only = true){
+		if($this->owner instanceof \SQL_Model)
+			$doc = $this->owner;
+		else
+			$doc = $this->owner->model;
+
+		$current_lastseen = $this->add('Model_MyLastSeen');
+		$current_lastseen->addCondition('related_root_document_name',$doc->root_document_name);
+		$current_lastseen->addCondition('related_document_name',$doc->document_name);
+		$current_lastseen->tryLoadAny();
+
+		$new_docs_q = clone $doc->_dsql();
+		
+		$new_docs_q->where('updated_at','>',$current_lastseen['seen_till']?:'1970-01-01');
+		$new_doc_count = $new_docs_q->del('fields')->field('count(*)')->getOne();
+		
+		$total_doc_count = $new_docs_q->del('fields')->field('count(*)')->getOne();
+
+		if($string and !$new_only){
+			return "<span class='label label-danger'>$new_doc_count</span>/<span class='label label-default'>$total_doc_count</span>";
+		}
+
+		if($string and $new_only){
+			if($new_doc_count)
+				return "<span class='label label-danger'>$new_doc_count</span>";
+			else
+				return "";
+		}
+
+
+		return array('new'=>$new_doc_count,'total'=>$total_doc_count);
+
+	}
+
+	function myUnRead($set=null){
+		return $this->my_model->myUnRead($set);
 	}
 
 }

@@ -3,7 +3,7 @@ namespace xPurchase;
 
 class Model_PurchaseOrder extends \Model_Document{
 	public $table="xpurchase_purchase_order";
-	public $status=array('draft','approved','processing','submitted','completed','reject','redesign','accepted');
+	public $status=array('draft','approved','processing','submitted','completed','rejected','redesign','accepted');
 	public $root_document_name='xPurchase\PurchaseOrder';
 	function init(){
 		parent::init();
@@ -87,7 +87,7 @@ class Model_PurchaseOrder extends \Model_Document{
 			$req_qty_cols->addField('Readonly','req_qty_'.$i,'Qty')->set($ir['qty']);
 			$unit_cols->addField('Readonly','req_uit_'.$i,'Unit')->set($ir['unit']);
 			$received_qty->addField('Number','received_qty_'.$i,'Received Qty')->set($ir['qty']);
-			$keep_open->addField('boolean','keep_open_'.$i,'Keep open')->set(false);
+			// $keep_open->addField('boolean','keep_open_'.$i,'Keep open')->set(false);
 			$i++;
 		}
 

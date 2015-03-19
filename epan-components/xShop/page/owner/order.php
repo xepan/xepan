@@ -7,25 +7,17 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 		$this->app->title=$this->api->current_department['name'] .': Orders';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Sale Orders Management <small> Manage your sale Orders </small>');
 
-		$counts = $this->add('xShop/Model_Order');
-		$counts->_dsql()->del('fields')->field('count(*) cnt')->field('status')->group('status');
-
-		$counts = $counts->_dsql()->get();
-		$counts_array=array();
-		foreach ($counts as $cnt) {
-			$counts_array[$cnt['status']] = $cnt['cnt'];
-		}
-
 		$this->add('xShop/View_Badges_OrderPage');
+
 		$tab = $this->add('Tabs');
-			$tab->addTabURL('xShop/page/owner/order_draft','Draft '. ($counts_array['draft']? '('.$counts_array['draft'].')':''));
-			$tab->addTabURL('xShop/page/owner/order_submitted','Submitted '.($counts_array['submitted']? '('.$counts_array['submitted'].')':''));
-			$tab->addTabURL('xShop/page/owner/order_approved','Approved '.($counts_array['approved']? '('.$counts_array['approved'].')':''));
-			$tab->addTabURL('xShop/page/owner/order_processing','Processing '.($counts_array['processing']? '('.$counts_array['processing'].')':''));
-			$tab->addTabURL('xShop/page/owner/order_processed','Processed '.($counts_array['processed']? '('.$counts_array['processed'].')':''));
-			$tab->addTabURL('xShop/page/owner/order_shipping','Shipping '.($counts_array['shipping']? '('.$counts_array['shipping'].')':''));
-			$tab->addTabURL('xShop/page/owner/order_complete','Complete '.($counts_array['complete']? '('.$counts_array['complete'].')':''));
-			$tab->addTabURL('xShop/page/owner/order_cancel','Cancel / Return '.($counts_array['cancel']? '('.$counts_array['cancel'].')':''));
+			$tab->addTabURL('xShop/page/owner/order_draft','Draft '.$this->add('xShop/Model_Order_Draft')->myUnRead());
+			$tab->addTabURL('xShop/page/owner/order_submitted','Submitted '.$this->add('xShop/Model_Order_Submitted')->myUnRead());
+			$tab->addTabURL('xShop/page/owner/order_approved','Approved '.$this->add('xShop/Model_Order_Approved')->myUnRead());
+			$tab->addTabURL('xShop/page/owner/order_processing','Processing '.$this->add('xShop/Model_Order_Processing')->myUnRead());
+			$tab->addTabURL('xShop/page/owner/order_processed','Processed '.$this->add('xShop/Model_Order_Processed')->myUnRead());
+			$tab->addTabURL('xShop/page/owner/order_shipping','Shipping '.$this->add('xShop/Model_Order_Shipping')->myUnRead());
+			$tab->addTabURL('xShop/page/owner/order_completed','Complete '.$this->add('xShop/Model_Order_Completed')->myUnRead());
+			$tab->addTabURL('xShop/page/owner/order_cancelled','Cancel / Return '.$this->add('xShop/Model_Order_Cancelled')->myUnRead());
 
 		// $application_id=$this->api->recall('xshop_application_id');
 		// //$order_model->addCondition('application_id',$application_id);	

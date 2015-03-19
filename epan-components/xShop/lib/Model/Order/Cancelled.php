@@ -1,7 +1,7 @@
 <?php
 namespace xShop;
 
-class Model_Order_Cancel extends Model_Order{
+class Model_Order_Cancelled extends Model_Order{
 	public $actions=array(
 			'can_view'=>array('caption'=>'Whose created Order(cancel) this post can see'),
 			
@@ -10,6 +10,6 @@ class Model_Order_Cancel extends Model_Order{
 	function init(){
 		parent::init();
 
-		$this->addCondition('status','cancel');
+		$this->addCondition('status','cancelled');
 	}
 }

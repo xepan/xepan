@@ -13,4 +13,25 @@ class Model_Stock extends \Model_Table{
 			
 			// $this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+	function genericRedableCustomFiledAndValue(){
+		if(!$this->loaded() and $this['custom_fields'] == "")
+			return false;
+
+		$str = ""; 
+		$array = explode(" ", $this['custom_fields']);
+		foreach ($array as $id => $cf_value) {
+			if($cf_value !== ""){
+				$cf = explode(":",$cf_value);
+				$cfm = $this->add('xShop/Model_CustomFields')->load($cf[0]);
+				$str.= $cfm['name'];
+				$str.=": ";
+				$cfvm = $this->add('xShop/Model_CustomFieldValue')->load($cf[1]);
+				$str.= $cfvm['name'];
+				$str.= "<br>";
+			}
+		}
+		return $str;
+	}
+
 }		

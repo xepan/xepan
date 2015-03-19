@@ -3,7 +3,7 @@
 class Model_Document extends SQL_Model{
 	
 	public $actions=array();
-
+	public $acl_added = false;
 	public $status = null;
 	public $document_name=null;
 	public $root_document_name=null;
@@ -31,7 +31,8 @@ class Model_Document extends SQL_Model{
 			'can_see_activities' => array('caption'=>'Whose created Documents Communications you can see'),
 		);
 
-		$this->actions = array_merge($default_acl_options,$this->actions);
+		if(!$this instanceof \xCRM\Model_Activity)
+			$this->actions = array_merge($default_acl_options,$this->actions);
 
 		$this->addField('related_document_id')->system(true);
 		$this->addField('related_root_document_name')->system(true);
@@ -52,8 +53,12 @@ class Model_Document extends SQL_Model{
 		$this['updated_at']= date('Y-m-d H:i:s');
 	}
 
-	function getRootClass(){
-		$class = explode("\\", $this->root_document_name);
+	function getRootClass($specific_calss=false){
+		if($specific_calss)
+			$class = explode("\\", $this->document_name);
+		else
+			$class = explode("\\", $this->root_document_name);
+
 		$class=$class[0].'/Model_'.$class[1];
 		return $class;
 	}
@@ -178,5 +183,25 @@ class Model_Document extends SQL_Model{
 		$new_activity['message']= $message;
 
 		$new_activity->save();
+	}
+
+	function myCounts($string=false, $new_only = true){
+		if(!$this->acl_added){
+			$this->add('xHR/Controller_Acl');
+		}
+		return $this->acl_added->getCounts($string, $new_only);
+	}
+
+	function myUnRead($set=null){
+		if(!$set)
+			return $this->myCounts(true,true);
+
+		$current_lastseen = $this->add('Model_MyLastSeen');
+		$current_lastseen->addCondition('related_root_document_name',$this->root_document_name);
+		$current_lastseen->addCondition('related_document_name',$this->document_name);
+		$current_lastseen->tryLoadAny();
+
+		$current_lastseen['seen_till'] = date('Y-m-d H:i:s');
+		$current_lastseen->save();
 	}
 }

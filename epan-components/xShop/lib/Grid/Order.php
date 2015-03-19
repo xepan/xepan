@@ -8,11 +8,14 @@ class Grid_Order extends \Grid {
 		parent::init();
 		$self = $this;
 
-		$this->add('VirtualPage')->addColumn('col_name','Sales Order',"Order",$this)->set(function($p)use($self){
-			$o = $p->add('xShop/Model_Order')->load($p->id);
+		$vp = $this->add('VirtualPage')->set(function($p)use($self){
+			$o = $p->add('xShop/Model_Order')->load($_GET['sales_order_clicked']);
 			$order = $p->add('xShop/View_Order');
 			$order->setModel($o);
 		});
+		
+		$this->js(true)->find('tr')->css('cursor','pointer');
+		$this->on('click','tbody td:not(:has(button))',$this->js()->univ()->frameURL('Sales Order',array($this->api->url($vp->getURL()),'sales_order_clicked'=>$this->js()->_selectorThis()->closest('tr')->data('id'))));
 	}
 
 

@@ -6,7 +6,7 @@ class Model_DeliveryNote extends \xProduction\Model_JobCard {
 	public $table = 'xdispatch_delivery_note';
 
 	public $root_document_name='xDispatch\DeliveyNote';
-	public $status = array('draft','submitted','approved','assigned','processing','processed','forwarded','complete','cancel','return','redesign','received');
+	public $status = array('draft','submitted','approved','assigned','processing','processed','forwarded','completed','cancelled','return','redesign','received');
 
 	function init(){
 		parent::init();

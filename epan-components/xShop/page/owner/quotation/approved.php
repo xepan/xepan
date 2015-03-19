@@ -1,6 +1,6 @@
 <?php
 
-class page_xShop_page_owner_quotation_approve extends page_xShop_page_owner_main{
+class page_xShop_page_owner_quotation_approved extends page_xShop_page_owner_main{
 
 	function page_index(){
 

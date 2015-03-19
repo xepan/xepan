@@ -1,7 +1,7 @@
 <?php
 namespace xShop;
 
-class Model_Order_Complete extends Model_Order{
+class Model_Order_Completed extends Model_Order{
 	public $actions=array(
 			'can_view'=>array('caption'=>'Whose created Order(complete) this post can see'),
 			
@@ -10,6 +10,6 @@ class Model_Order_Complete extends Model_Order{
 	function init(){
 		parent::init();
 
-		$this->addCondition('status','complete');
+		$this->addCondition('status','completed');
 	}
 }

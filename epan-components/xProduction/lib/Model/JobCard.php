@@ -4,7 +4,7 @@ namespace xProduction;
 
 class Model_JobCard extends \Model_Document{
 	public $table ="xproduction_jobcard";
-	public $status=array('draft','submitted','approved','received','assigned','processing','processed','forwarded','completed','canceled');
+	public $status=array('draft','submitted','approved','received','assigned','processing','processed','forwarded','completed','cancelled');
 	public $root_document_name = 'xProduction\JobCard';
 
 	public $show_details = true;
@@ -42,7 +42,7 @@ class Model_JobCard extends \Model_Document{
 
 		$this->addHook('beforeInsert',$this);
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

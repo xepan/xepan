@@ -1,11 +1,11 @@
 <?php
 
-class page_xDispatch_page_owner_dispatchrequest_submit extends page_xDispatch_page_owner_main{
+class page_xDispatch_page_owner_dispatchrequest_approved extends page_xDispatch_page_owner_main{
 
 	function page_index(){
 
 		$crud=$this->add('CRUD',array('grid_class'=>'xDispatch/Grid_DispatchRequest'));
-		$crud->setModel('xDispatch/DispatchRequest_Submit');
+		$crud->setModel('xDispatch/DispatchRequest_Approved');
 		$crud->add('xHR/Controller_Acl');
 	}
 }

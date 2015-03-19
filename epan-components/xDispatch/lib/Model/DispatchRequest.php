@@ -7,7 +7,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 	public $root_document_name='xStore\DispatchRequest';
 	public $status = array('draft','submitted','approved','assigned','processing','processed','forwarded',
-							'complete','cancel','return','redesign','received');
+							'completed','cancelled','return','redesign','received');
 
 	function init(){
 		parent::init();

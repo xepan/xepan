@@ -1,11 +1,11 @@
 <?php
 
-class page_xProduction_page_owner_dept_canceled extends page_xProduction_page_owner_dept_base{
+class page_xProduction_page_owner_dept_cancelled extends page_xProduction_page_owner_dept_base{
 	
 	function init(){
 		parent::init();
 		
-		$canceled_jobcard_model=$this->add('xProduction/Model_Jobcard_Canceled');
+		$canceled_jobcard_model=$this->add('xProduction/Model_Jobcard_Cancelled');
 
 		if($this->api->stickyGET('department_id'))
 			$canceled_jobcard_model->addCondition('to_department_id',$_GET['department_id']);

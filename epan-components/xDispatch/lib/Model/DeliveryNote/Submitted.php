@@ -1,6 +1,6 @@
 <?php
-namespace xStore;
-class Model_MaterialRequestSent_Submit extends Model_MaterialRequestSent{
+namespace xDispatch;
+class Model_DeliveryNote_Submitted extends Model_DeliveryNote{
 	public $actions=array(
 			'can_view'=>array('caption'=>'Whose created Jobcard(submit) this post can see'),
 			'allow_edit'=>array('caption'=>'Whose created Jobcard(submit) this post can edit'),
