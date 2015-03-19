@@ -16,11 +16,13 @@ class Grid_MaterialRequest extends \Grid{
 
 		$m=parent::setModel($material_request_model,$fields);
 
-		$this->add('VirtualPage')->addColumn('Details','Material Request','Details',$this)->set(function($p){
-			$p->add('xStore/View_MaterialRequest',array('materialrequest'=>$p->add('xStore/Model_MaterialRequest')->load($p->id)));
+		$vp = $this->add('VirtualPage')->set(function($p){
+			$p->add('xStore/View_MaterialRequest',array('materialrequest'=>$p->add('xStore/Model_MaterialRequest')->load($_GET['material_request_clicked'])));
 		});
+		$this->js(true)->find('tr')->css('cursor','pointer');
+		$this->on('click','tbody td:not(:has(button))',$this->js()->univ()->frameURL('Material Request',array($this->api->url($vp->getURL()),'material_request_clicked'=>$this->js()->_selectorThis()->closest('tr')->data('id'))));
 
-		$this->addOrder()->move('Details','last')->now();
+		// $this->addOrder()->move('Details','last')->now();
 		return $m;
 
 	}

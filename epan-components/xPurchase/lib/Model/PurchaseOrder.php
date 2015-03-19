@@ -18,11 +18,11 @@ class Model_PurchaseOrder extends \Model_Document{
 	}
 
 	function beforeDelete(){
-		if($this['status']=='draft'){
+		if($this['status']=='draft')
 			$this->ref('xPurchase/PurchaseOrderItem')->deleteAll();
-		}
-			throw new \Exception("Error Processing Request", 1);
-
+		else
+			throw $this->exception("can not be delete",'Growl');
+		
 	}
 
 	function itemrows(){
