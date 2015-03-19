@@ -11,9 +11,13 @@ class Model_Warehouse extends \Model_Table{
 			
 			$this->addField('name');
 
+			$this->addHook('beforeDelete',$this);
 			$this->hasMany('xStore/Stock','warehouse_id');
 			
 			//$this->add('dynamic_model/Controller_AutoCreator');
+	}
+	function beforeDelete(){
+		
 	}
 
 	function getStock($item){

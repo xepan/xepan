@@ -11,5 +11,8 @@ class page_xStore_page_owner_warehouse extends page_xStore_page_owner_main {
 		$crud=$this->app->layout->add('CRUD');
 		$crud->setModel('xStore/Model_Warehouse');
 		$crud->addRef('xStore/Stock');
+		
+		$crud->grid->addQuickSearch(array('name'));
+		$crud->grid->addPaginator($ipp=50);
 	}
 }
