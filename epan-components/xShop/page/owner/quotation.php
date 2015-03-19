@@ -8,9 +8,9 @@ class page_xShop_page_owner_quotation extends page_xShop_page_owner_main{
 
 		$tab = $this->add('Tabs');
 		$draft_tab = $tab->addTabURL('xShop_page_owner_quotation_draft','Draft');
-		$submit_tab = $tab->addTabURL('xShop_page_owner_quotation_submit','Submitted');
+		$submit_tab = $tab->addTabURL('xShop_page_owner_quotation_submitted','Submitted');
 		$redesign_tab = $tab->addTabURL('xShop_page_owner_quotation_redesign','Redesign');
-		$approve_tab = $tab->addTabURL('xShop_page_owner_quotation_approve','Approved');
+		$approve_tab = $tab->addTabURL('xShop_page_owner_quotation_approved','Approved');
 		$approve_tab = $tab->addTabURL('xShop_page_owner_quotation_cancelled','Cancelled');
 		
 		// $p=$crud->addFrame('communication_frame');

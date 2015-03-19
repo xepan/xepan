@@ -8,6 +8,6 @@ class Model_Task_Cancelled extends Model_Task{
 	function init(){
 		parent::init();
 
-		$this->addCondition('status','cancel');
+		$this->addCondition('status','cancelled');
 	}
 }

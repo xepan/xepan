@@ -5,6 +5,7 @@ namespace xHR;
 class Controller_Acl extends \AbstractController {
 
 	public $document=null;
+	public $my_model = null;
 	public $permissions=array(
 		
 		'can_view'=>'No',
@@ -56,10 +57,12 @@ class Controller_Acl extends \AbstractController {
 			if($this->owner instanceof \SQL_Model){
 				$this->document = get_class($this->owner);
 				$this->owner->acl_added=$this;
+				$this->my_model = $this->owner;
 			}
 			else{
 				$this->document = get_class($this->owner->getModel());
 				$this->owner->model->acl_added=$this;
+				$this->my_model = $this->owner->model;
 			}
 
 		}
@@ -104,6 +107,9 @@ class Controller_Acl extends \AbstractController {
 			}else{
 				$this->doGRID();
 			}
+
+			$this->owner->model->setOrder('updated_at','desc');
+
 		}elseif($this->owner instanceof \Grid){
 			$this->doGRID();
 		}elseif ($this->owner instanceof \Form){
@@ -115,6 +121,9 @@ class Controller_Acl extends \AbstractController {
 			$this->doVIEW();
 		}
 
+		if(!$this->owner instanceof \SQL_Model){
+			$this->my_model->myUnRead(true);
+		}
 		// Grid
 		// Form
 			// Fields ??? readonly 
@@ -577,6 +586,10 @@ class Controller_Acl extends \AbstractController {
 
 		return array('new'=>$new_doc_count,'total'=>$total_doc_count);
 
+	}
+
+	function myUnRead($set=null){
+		return $this->my_model->myUnRead($set);
 	}
 
 }

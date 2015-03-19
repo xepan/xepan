@@ -7,7 +7,7 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 
 	public $root_document_name='xStore\MaterialRequest';
 	public $status = array('draft','submitted','approved','assigned','processing','processed','forwarded',
-							'complete','cancel','return');
+							'completed','cancelled','return');
  
 	function init(){
 		parent::init();
