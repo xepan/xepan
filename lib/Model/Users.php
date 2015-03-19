@@ -42,8 +42,8 @@ class Model_Users extends Model_Table {
 		$this->add('Controller_Validator');
 		$this->is(array(
 							'name|to_trim|required?type User name here',
-							'email|email?Not a valid Email Id',
-							'email|unique? Email Id Already Used',
+							'email|email',
+							'email|unique',
 							'username|to_trim|unique'
 						)
 				);
@@ -61,6 +61,11 @@ class Model_Users extends Model_Table {
 	}
 
 	function beforeSave(){
+		//Check User Name is Empty
+		if($this['type'] == ""){
+			throw $this->exception('User Type Must be Defined','ValidityCheck')->setField('type');
+		}
+
 		// Check username for THIS EPAN
 		$old_user = $this->add('Model_Users');
 		$old_user->addCondition('username',$this['username']);
