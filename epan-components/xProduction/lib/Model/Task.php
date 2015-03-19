@@ -4,7 +4,7 @@ namespace xProduction;
 
 class Model_Task extends \Model_Document{
 	public $table = "xproduction_tasks";
-	public $status=array('assigned','processing','processed','complete','cancel');
+	public $status=array('assigned','processing','processed','completed','cancelled');
 	public $root_document_name = "xProduction\Task";
 
 	function init(){

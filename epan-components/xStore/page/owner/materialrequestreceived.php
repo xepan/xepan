@@ -13,8 +13,8 @@ class page_xStore_page_owner_materialrequestreceived extends page_xStore_page_ow
 		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_assigned','Assigned');
 		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_processing','Processing');
 		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_processed','Processed');
-		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_complete','Completed');
-		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_cancel','Cancel');
+		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_completed','Completed');
+		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_cancelled','Cancelled');
 		$tabs->addTabURL('xStore_page_owner_materialrequestreceived_return','Return');
 
 

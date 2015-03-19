@@ -3,7 +3,7 @@ namespace xPurchase;
 
 class Model_PurchaseOrder extends \Model_Document{
 	public $table="xpurchase_purchase_order";
-	public $status=array('draft','approved','processing','submitted','completed','reject','redesign','accepted');
+	public $status=array('draft','approved','processing','submitted','completed','rejected','redesign','accepted');
 	public $root_document_name='xPurchase\PurchaseOrder';
 	function init(){
 		parent::init();

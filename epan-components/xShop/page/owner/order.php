@@ -24,8 +24,8 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 			$tab->addTabURL('xShop/page/owner/order_processing','Processing '.($counts_array['processing']? '('.$counts_array['processing'].')':''));
 			$tab->addTabURL('xShop/page/owner/order_processed','Processed '.($counts_array['processed']? '('.$counts_array['processed'].')':''));
 			$tab->addTabURL('xShop/page/owner/order_shipping','Shipping '.($counts_array['shipping']? '('.$counts_array['shipping'].')':''));
-			$tab->addTabURL('xShop/page/owner/order_complete','Complete '.($counts_array['complete']? '('.$counts_array['complete'].')':''));
-			$tab->addTabURL('xShop/page/owner/order_cancel','Cancel / Return '.($counts_array['cancel']? '('.$counts_array['cancel'].')':''));
+			$tab->addTabURL('xShop/page/owner/order_completed','Completed '.($counts_array['completed']? '('.$counts_array['completed'].')':''));
+			$tab->addTabURL('xShop/page/owner/order_cancelled','Cancel / Return '.($counts_array['cancelled']? '('.$counts_array['cancelled'].')':''));
 
 		// $application_id=$this->api->recall('xshop_application_id');
 		// //$order_model->addCondition('application_id',$application_id);	
