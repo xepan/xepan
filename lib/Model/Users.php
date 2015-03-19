@@ -12,7 +12,7 @@ class Model_Users extends Model_Table {
 
 		$f=$this->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(50)->group('a~6')->sortable(true)->mandatory(false);
 		$f->icon="fa fa-question~red";
-		$f=$this->addField('username')->group('b~6~<i class="fa fa-lock"></i> Login Credentials')->mandatory(true);
+		$f=$this->addField('username')->group('b~6~<i class="fa fa-lock"></i> Login Credentials')->mandatory(true)->sortable(true);
 		$f->icon="fa fa-lock~red";
 
 		$f=$this->addField('password')->type('password')->group('b~6')->mandatory(true);
@@ -32,7 +32,7 @@ class Model_Users extends Model_Table {
 		$f = $this->addField('application_management')->type('boolean')->defaultValue(false)->group('c~6');
 		$f = $this->addField('website_designing')->type('boolean')->defaultValue(false)->group('c~6');
 
-		$f=$this->addField('activation_code')->group('d~3')->display(array('form'=>'Readonly'));
+		$f=$this->addField('activation_code')->group('d~3')->display(array('form'=>'Readonly'))->sortable(true);
 		$f->icon = 'fa fa-unlock-alt~blue';
 		$f=$this->addField('last_login_date')->type('date')->group('d~9')->display(array('form'=>'Readonly'))->sortable(true);
 		$f->icon='fa fa-calendar~blue';
