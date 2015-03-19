@@ -15,11 +15,11 @@ class Model_SalaryTemplate extends \Model_Table{
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
 
-		$this->add('Controller_Validator');
-		$this->is(array(
-							'name|to_trim|required',
-							)
-					);
+		// $this->add('Controller_Validator');
+		// $this->is(array(
+							// 'name|to_trim|required',
+							// )
+					// );
 
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}

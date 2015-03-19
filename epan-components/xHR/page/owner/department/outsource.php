@@ -14,10 +14,11 @@ class page_xHR_page_owner_department_outsource extends Page{
 		
 		if(!$selected_dept_model->loaded())
 			return;
-		$grid=$this->add('Grid');
+		$grid=$this->add('Grid')->addSno();
 		$outsource_model=$this->add('xProduction/Model_OutSourceParty',array('table_alias'=>'mc'));
 
 		// selector form
+		$this->add('HR');
 		$form = $this->add('Form');
 		$outsource_party_field = $form->addField('hidden','outsource_party')->set(json_encode($selected_dept_model->getAssociatedOutsourceParty()));
 		$form->addField('Checkbox','department_completely_outsourced')->set($selected_dept_model['is_outsourced']);
