@@ -28,9 +28,9 @@ class page_xProduction_page_owner_dept_main extends page_xProduction_page_owner_
 
 		foreach ($document->status as $st) {
 			if($st=='approved'){
-				$tabs->addTabURL('xProduction_page_owner_dept_'.$st,'Approved / To Receive '.' '. ($counts_array[$st]? '('.$counts_array[$st].')':''));
+				$tabs->addTabURL('xProduction_page_owner_dept_'.$st,'Approved / To Receive '. $this->add('xProduction/Model_Jobcard_'.ucwords($st))->myUnRead() );
 			}else{
-				$tabs->addTabURL('xProduction_page_owner_dept_'.$st,ucwords($st).' '. ($counts_array[$st]? '('.$counts_array[$st].')':''));
+				$tabs->addTabURL('xProduction_page_owner_dept_'.$st,ucwords($st).$this->add('xProduction/Model_Jobcard_'.ucwords($st))->myUnRead());
 			}
 		}
 	}
