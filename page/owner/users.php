@@ -27,11 +27,11 @@ class page_owner_users extends page_base_owner {
 		
 		$data=$this->add('Model_Users')->addCondition('type',100)->count()->getOne();
 		if($data!= 0)
-			$v=$bg->add('View_Badge')->set('Total Super End Users')->setCount($data)->setCountSwatch('ink');
+			$v=$bg->add('View_Badge')->set('Total Super Users')->setCount($data)->setCountSwatch('ink');
 		
 		$data=$this->add('Model_Users')->addCondition('is_active',false)->count()->getOne();
 		if($data!= 0)
-			$v=$bg->add('View_Badge')->set('Total Un-active Users')->setCount($data)->setCountSwatch('red');
+			$v=$bg->add('View_Badge')->set('Total In-active Users')->setCount($data)->setCountSwatch('red');
 
 		//end of Badges
 
@@ -77,7 +77,7 @@ class page_owner_users extends page_base_owner {
 	function page_options(){
 		$form = $this->add('Form');
 		$form->addClass('stacked');
-		$form->setModel($this->api->current_website,array('is_frontent_regiatrstion_allowed','user_activation','user_registration_email_subject','user_registration_email_message_body'));
+		$form->setModel($this->api->current_website,array('is_frontend_registration_allowed','user_activation','user_registration_email_subject','user_registration_email_message_body'));
 		$form->addSubmit('Update');
 		$form->add('Controller_FormBeautifier');
 		if($form->isSubmitted()){
