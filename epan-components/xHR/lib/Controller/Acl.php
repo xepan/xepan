@@ -300,8 +300,18 @@ class Controller_Acl extends \AbstractController {
 
 		if($this->owner->model->hasMethod($action_name.'_page')){
 			$action_page_function = $action_name.'_page';
-			$p = $this->owner->addFrame(ucwords($action_name));
-			if($p and $this->owner->isEditing('fr_'.$this->api->normalizeName(ucwords($action_name)))){
+			
+			$title = explode("_", $action_name);
+			for($i=0;$i<count($title);$i++){
+				if(in_array($title[$i],array('manage','see'))){
+					unset($title[$i]);
+				}
+			}
+
+			$title = implode(" ", $title);
+
+			$p = $this->owner->addFrame(ucwords($title),array('icon'=>'edit'));
+			if($p and $this->owner->isEditing('fr_'.$this->api->normalizeName(ucwords($title)))){
 				$this->owner->model->tryLoad($this->owner->id);
 				if($this->owner->model->loaded()){
 					try{
@@ -324,7 +334,7 @@ class Controller_Acl extends \AbstractController {
 					}
 				}
 			}
-			$this->filterGrid('fr_'.$this->api->normalizeName(ucwords($action_name)));
+			$this->filterGrid('fr_'.$this->api->normalizeName(ucwords($title)));
 		}elseif($this->owner->model->hasMethod($action_name)){
 			try{
 				$this->api->db->beginTransaction();
@@ -555,10 +565,7 @@ class Controller_Acl extends \AbstractController {
 
 
 	function getCounts($string=false, $new_only = true){
-		if($this->owner instanceof \SQL_Model)
-			$doc = $this->owner;
-		else
-			$doc = $this->owner->model;
+		$doc= $this->my_model;
 
 		$current_lastseen = $this->add('Model_MyLastSeen');
 		$current_lastseen->addCondition('related_root_document_name',$doc->root_document_name);
@@ -568,7 +575,7 @@ class Controller_Acl extends \AbstractController {
 		$new_docs_q = clone $doc->_dsql();
 		
 		$new_docs_q->where('updated_at','>',$current_lastseen['seen_till']?:'1970-01-01');
-		$new_doc_count = $new_docs_q->del('fields')->field('count(*)')->getOne();
+		$new_doc_count = $new_docs_q->del('fields')->field('count(*)')->debug()->getOne();
 		
 		$total_doc_count = $new_docs_q->del('fields')->field('count(*)')->getOne();
 
