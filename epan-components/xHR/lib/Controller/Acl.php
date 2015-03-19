@@ -115,13 +115,6 @@ class Controller_Acl extends \AbstractController {
 			$this->doVIEW();
 		}
 
-		if($this->owner instanceof \SQL_Model){
-			$this->owner->myUnRead(true);
-		}
-		else{
-			$this->owner->model->myUnRead(true);
-		}
-
 		// Grid
 		// Form
 			// Fields ??? readonly 
@@ -564,8 +557,11 @@ class Controller_Acl extends \AbstractController {
 		$current_lastseen->tryLoadAny();
 
 		$new_docs_q = clone $doc->_dsql();
-		$new_doc_count = $new_docs_q->where('updated_at','>',$current_lastseen['seen_till'])->debug()->del('fields')->field('count(*)')->getOne();
-		$total_doc_count = $new_docs_q->debug()->del('fields')->field('count(*)')->getOne();
+		
+		$new_docs_q->where('updated_at','>',$current_lastseen['seen_till']?:'1970-01-01');
+		$new_doc_count = $new_docs_q->del('fields')->field('count(*)')->getOne();
+		
+		$total_doc_count = $new_docs_q->del('fields')->field('count(*)')->getOne();
 
 		if($string and !$new_only){
 			return "<span class='label label-danger'>$new_doc_count</span>/<span class='label label-default'>$total_doc_count</span>";

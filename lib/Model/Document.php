@@ -201,7 +201,7 @@ class Model_Document extends SQL_Model{
 		$current_lastseen->addCondition('related_document_name',$this->document_name);
 		$current_lastseen->tryLoadAny();
 
-		$current_lastseen['seen_till'] = $this->add($this->getRootClass())->setLimit(1)->setOrder('id','desc')->get('id');
+		$current_lastseen['seen_till'] = date('Y-m-d H:i:s');
 		$current_lastseen->save();
 	}
 }
