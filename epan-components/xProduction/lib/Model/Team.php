@@ -6,10 +6,15 @@ class Model_Team extends \Model_Table{
 
 	function init(){
 		parent::init();
-		$this->hasOne('xHR/Department','department_id');
-		$this->addField('name');
+		$this->hasOne('xHR/Department','department_id')->sortable(true);
+		$this->addField('name')->sortable(true);
 		$this->hasMany('xProduction/EmployeeTeamAssociation','team_id');
+		$this->addHook('beforeDelete',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeDelete(){
+		$this->ref('xProduction/EmployeeTeamAssociation')->deleteAll();
 	}
 
 	function getAssociatedEmployees($team_leader=false){

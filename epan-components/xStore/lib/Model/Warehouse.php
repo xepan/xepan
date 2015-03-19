@@ -6,10 +6,10 @@ class Model_Warehouse extends \Model_Table{
 	function init(){
 		parent::init();
 
-			$this->hasOne('xHR/Department','department_id');
-			$this->hasOne('xProduction/OutSourceParty','out_source_party_id');
+			$this->hasOne('xHR/Department','department_id')->sortable(true);
+			$this->hasOne('xProduction/OutSourceParty','out_source_party_id')->sortable(true);
 			
-			$this->addField('name');
+			$this->addField('name')->sortable(true);
 
 			$this->addHook('beforeDelete',$this);
 			$this->hasMany('xStore/Stock','warehouse_id');
@@ -17,7 +17,9 @@ class Model_Warehouse extends \Model_Table{
 			//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 	function beforeDelete(){
-		
+		if($this->ref('xStore/Stock')->count()->getOne() > 0)
+			throw $this->exception('Stock Contains of WareHouse.. Please Delete First Warehouse','Growl');
+			
 	}
 
 	function getStock($item){

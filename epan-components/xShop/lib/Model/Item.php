@@ -10,8 +10,8 @@ class Model_Item extends \Model_Table{
 		parent::init();
 		
 		$this->hasOne('xShop/Application','application_id');
-		$this->hasOne('xShop/MemberDetails','designer_id');
-		$this->hasOne('xShop/Quotation','quotation_id');
+		$this->hasOne('xShop/MemberDetails','designer_id')->sortable(true);
+		$this->hasOne('xShop/Quotation','quotation_id')->sortable(true);
 
 		//for Mutiple Epan website
 		$this->hasOne('Epan','epan_id');

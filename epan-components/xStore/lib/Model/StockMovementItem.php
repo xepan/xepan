@@ -5,8 +5,8 @@ class Model_StockMovementItem extends \Model_Table{
 	function init(){
 		parent::init();
 
-		$this->hasOne('xStore/StockMovement','stock_movement_id');
-		$this->hasOne('xShop/Item','item_id');
+		$this->hasOne('xStore/StockMovement','stock_movement_id')->sortable(true);
+		$this->hasOne('xShop/Item','item_id')->sortable(true);
 		
 		$this->addField('qty');
 		$this->addField('unit');

@@ -5,9 +5,9 @@ class Model_SalaryType extends \Model_Table{
 	public $table="xhr_salary_types";
 	function init(){
 		parent::init();
-		$this->hasOne('xHR/SalaryTemplate','salary_template_id');
+		$this->hasOne('xHR/SalaryTemplate','salary_template_id')->sortable(true);
 
-		$this->addField('name');
+		$this->addField('name')->sortable(true);
 		
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);

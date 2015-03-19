@@ -12,7 +12,7 @@ class Model_AffiliateType extends \Model_Table {
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		$this->hasOne('xShop/Application','application_id');
 
-		$this->addField('name');
+		$this->addField('name')->sortable(true);
 		$this->hasMany('xShop/Affiliate','affiliatetype_id');
 		$this->hasMany('xShop/ItemAffiliateAssociation','affiliatetype_id');
 		$this->addHook('beforeDelete',$this);	

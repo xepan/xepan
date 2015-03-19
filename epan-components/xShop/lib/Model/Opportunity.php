@@ -17,12 +17,12 @@ class Model_Opportunity extends \Model_Document{
 	function init(){
 		parent::init();
 
-		$this->hasOne('xMarketingCampaign/Lead','lead_id');
-		$this->hasOne('xShop/Customer','customer_id');
-		$this->hasOne('xHR/Employee','employee_id')->caption('Handeled By');
+		$this->hasOne('xMarketingCampaign/Lead','lead_id')->sortable(true);
+		$this->hasOne('xShop/Customer','customer_id')->sortable(true);
+		$this->hasOne('xHR/Employee','employee_id')->caption('Handeled By')->sortable(true);
 		
 
-		$this->addField('name')->caption('Opportunity')->hint('New Sales of X product');
+		$this->addField('name')->caption('Opportunity')->hint('New Sales of X product')->sortable(true);
 
 		$this->getElement('status')->enum($this->status)->defaultValue('Active');
 

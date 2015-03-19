@@ -8,12 +8,12 @@ class Model_Post extends \Model_Table{
 	function init(){
 		parent::init();
 
-		$this->hasOne('xHR/Department','department_id');
+		$this->hasOne('xHR/Department','department_id')->sortable(true);
 		
-		$this->hasOne('xHR/ParentPost','parent_post_id');
+		$this->hasOne('xHR/ParentPost','parent_post_id')->sortable(true);
 
-		$this->addField('name')->caption('Post')->sortable(true);
-		$this->addField('is_active')->type('boolean')->defaultValue(true);
+		$this->addField('name')->caption('Post')->sortable(true)->sortable(true);
+		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true);
 		$this->addField('can_create_team')->type('boolean')->defaultValue(false);
 		
 		$this->hasMany('xHR/Post','parent_post_id');

@@ -21,16 +21,16 @@ class Model_Lead extends \Model_Document{
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
-		$this->addField('name');
-		$this->addField('organization_name');
-		$this->addField('email_id');
+		$this->addField('name')->sortable(true);
+		$this->addField('organization_name')->sortable(true);
+		$this->addField('email_id')->sortable(true);
 		// $this->addField('status');
-		$this->addField('source');
-		$this->addField('source_id');
-		$this->addField('phone');
-		$this->addField('mobile_no');
+		$this->addField('source')->sortable(true);
+		$this->addField('source_id')->sortable(true);
+		$this->addField('phone')->sortable(true);
+		$this->addField('mobile_no')->sortable(true);
 		$this->addField('fax');
-		$this->addField('website');
+		$this->addField('website')->sortable(true);
 		$this->addField('lead_type')->enum(array('Sales'));
 
 		$this->hasMany('xShop/Model_Oppertunity','lead_id');

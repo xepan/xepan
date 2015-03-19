@@ -12,7 +12,7 @@ class Model_Employee extends \Model_Table{
 		$this->hasOne('xHR/Department','department_id');
 		
 		//basic Details
-		$this->addField('name')->Caption('Full Name')->group('a~5');
+		$this->addField('name')->Caption('Full Name')->group('a~5')->sortable(true);
 		$this->addField('dob')->type('date')->Caption('Date Of Birth')->group('a~4');
 		$this->addField('gender')->enum(array('male','female'))->group('a~3');
 		$this->add('filestore/Field_Image','empolyee_image_id');

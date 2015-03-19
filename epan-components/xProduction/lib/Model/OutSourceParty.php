@@ -5,11 +5,11 @@ class Model_OutSourceParty extends \Model_Table{
 	function init(){
 		parent::init();
 
-		$this->addField('name')->Caption('Party');
-		$this->addField('code')->Caption('Party Code');
-		$this->addField('contact_no')->Caption('number');
-		$this->addField('address')->type('text');
-		$this->addField('maintain_stock')->type('boolean')->defaultValue(false)->group('a~4');
+		$this->addField('name')->Caption('Party')->sortable(true);
+		$this->addField('code')->Caption('Party Code')->sortable(true);
+		$this->addField('contact_no')->Caption('number')->sortable(true);
+		$this->addField('address')->type('text')->sortable(true);
+		$this->addField('maintain_stock')->type('boolean')->defaultValue(false)->group('a~4')->sortable(true);
 
 		$this->hasMany('xProduction/OutSourcePartyDeptAssociation','out_source_party_id');
 		$this->hasMany('xStore/Warehouse','out_source_party_id');

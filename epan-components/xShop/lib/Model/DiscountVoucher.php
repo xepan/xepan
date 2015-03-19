@@ -13,15 +13,15 @@ class Model_DiscountVoucher extends \Model_Document{
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
-		$f = $this->addField('name')->caption('Voucher Number')->mandatory(true)->group('a~6');
+		$f = $this->addField('name')->caption('Voucher Number')->mandatory(true)->group('a~6')->sortable(true);
 		$f->icon = "fa fa-circle~red";
-		$f = $this->addField('no_person')->caption('No of Person')->defaultValue(1)->mandatory(true)->hint('Only Numeric Number')->group('a~3');
+		$f = $this->addField('no_person')->caption('No of Person')->defaultValue(1)->mandatory(true)->hint('Only Numeric Number')->group('a~3')->sortable(true);
 		$f->icon = "fa fa-user~red";	
-		$f = $this->addField('discount_amount')->caption('Discount Amount %')->type('int')->mandatory(true)->hint('discount Amount in %')->group('a~3');
+		$f = $this->addField('discount_amount')->caption('Discount Amount %')->type('int')->mandatory(true)->hint('discount Amount in %')->group('a~3')->sortable(true);
 		$f->icon = "fa fa-money~red";	
-		$f = $this->addField('from')->caption('Strating Date')->type('date')->defaultValue(date('Y-m-d'))->mandatory(true)->group('b~6');
+		$f = $this->addField('from')->caption('Strating Date')->type('date')->defaultValue(date('Y-m-d'))->mandatory(true)->group('b~6')->sortable(true);
 		$f->icon = "fa fa-calendar~red";	
-		$f = $this->addField('to')->caption('Expire Date')->type('date')->group('b~6');
+		$f = $this->addField('to')->caption('Expire Date')->type('date')->group('b~6')->sortable(true);
 		$f->icon = "fa fa-calendar~blue";
 			
 		$this->hasMany('xShop/DiscountVoucherUsed','discountvoucher_id');

@@ -14,7 +14,6 @@ class Model_DeliveryNote extends \xProduction\Model_JobCard {
 		$this->hasOne('xShop/Order','order_id');
 		$this->hasOne('xShop/MemberDetails','to_memberdetails_id');
 		$this->hasOne('xStore/Warehouse','warehouse_id');
-		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:I:S'));
 		$this->addField('shipping_address')->type('text');
 		$this->addField('billing_address')->type('text');
 		$this->addField('shipping_through')->type('text');

@@ -4,7 +4,7 @@ class page_xDispatch_page_owner_deliverynote_processing extends page_xDispatch_p
 
 	function page_index(){
 
-		$crud=$this->add('CRUD');
+		$crud=$this->add('CRUD',array('grid_class'=>'xDispatch/Grid_DeliveryNote'));
 		$crud->setModel('xDispatch/DeliveryNote_Processing');
 		$crud->add('xHR/Controller_Acl');
 	}

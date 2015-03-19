@@ -9,10 +9,10 @@ class Model_Customer extends Model_MemberDetails{
 
 		$user_j = $this->join('users','users_id');
 		$user_j->addField('user_name','name');
-		$user_j->addField('username');
+		$user_j->addField('username')->sortable(true);
 		$user_j->addField('password');
 		$user_j->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(50)->group('a~6')->sortable(true)->mandatory(false);
-		$user_j->addField('email');
+		$user_j->addField('email')->sortable(true);
 
 		$this->add('Controller_Validator');
 		$this->is(array(

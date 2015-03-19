@@ -7,7 +7,7 @@ class Model_MemberDetails extends \Model_Document{
 	function init(){
 		parent::init();
 
-		$this->hasOne('xShop/Users','users_id')->mandatory(true);
+		$this->hasOne('xShop/Users','users_id')->mandatory(true)->sortable(true);
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		
@@ -17,14 +17,14 @@ class Model_MemberDetails extends \Model_Document{
 		// $this->addField('is_verify')->type('boolean')->defaultValue(false);
 		// $this->addField('join_on')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		// $this->addField('verified_on')->type('datetime')->defaultValue(null);
-		$this->addField('landmark');
-		$this->addField('city');
-		$this->addField('state');
-		$this->addField('country');
-		$this->addField('mobile_number');
-		$this->addField('pincode');
+		$this->addField('landmark')->sortable(true);
+		$this->addField('city')->sortable(true);
+		$this->addField('state')->sortable(true);
+		$this->addField('country')->sortable(true);
+		$this->addField('mobile_number')->sortable(true);
+		$this->addField('pincode')->sortable(true);
 		
-		$this->addField('is_active')->type('boolean')->defaultValue(true);
+		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true);
 
 						
 		$this->hasMany('xShop/Order','member_id');

@@ -5,10 +5,10 @@ class Model_Salary extends \Model_Table{
 	public $table="xhr_salary";
 	function init(){
 		parent::init();
-		$this->hasOne('xHR/Employee','employee_id'); //kiski
+		$this->hasOne('xHR/Employee','employee_id')->sortable(true); //kiski
 		
-		$this->hasOne('xHR/SalaryType','salary_type_id'); // basic, DA, HRA etc
-		$this->addField('amount'); // 2000 basic, 1500HR ... like this
+		$this->hasOne('xHR/SalaryType','salary_type_id')->sortable(true); // basic, DA, HRA etc
+		$this->addField('amount')->sortable(true); // 2000 basic, 1500HR ... like this
 		
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
