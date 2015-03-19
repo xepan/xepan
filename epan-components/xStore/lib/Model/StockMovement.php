@@ -91,8 +91,7 @@ class Model_StockMovement extends \Model_Document{
 				$this->fromWarehouse()->deductItemStock($itemrow->item(),$itemrow['qty']);
 			}
 		}
-		$this['status']='accepted';
-		$this->saveAs('xStore/StockMovement_Accepted');
+		$this->setStatus('accepted');
 	}
 
 	function acceptMaterial(){
@@ -103,9 +102,7 @@ class Model_StockMovement extends \Model_Document{
 				// throw new \Exception("Error Processing Request", 1);
 			}
 		}
-		$this['status'] ='accepted';
-		// $this->saveAs('xStore/StockMovement_Accpted');
-		$this->saveAndUnload();
+		$this->setStatus('accepted');
 		return true;
 	}
 }

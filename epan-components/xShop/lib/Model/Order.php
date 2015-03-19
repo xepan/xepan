@@ -277,7 +277,6 @@ class Model_Order extends \Model_Document{
 	}
 
 	function setStatus($status){
-		$this['status']=$status;
-		$this->saveAs('xShop/Model_Order');
+		parent::setStatus($status);
 	}
 }

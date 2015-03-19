@@ -57,8 +57,7 @@ class Model_PurchaseOrder extends \Model_Document{
 	}
 
 	function setStatus($status){
-		$this['status']=$status;
-		$this->saveAs($this->getRootClass());
+		parent::setStatus($status);
 	}
 
 	function mark_processed_page($page){

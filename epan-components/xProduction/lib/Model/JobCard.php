@@ -389,8 +389,7 @@ class Model_JobCard extends \Model_Document{
 			$ds->setStatus(ucwords($status) .' in ' . $this->department()->get('name'));
 			$this->orderItem()->order()->setStatus('processing');
 		}
-		$this['status']=$status;
-		$this->saveAs($this->getRootClass());
+		parent::setStatus($status);
 	}
 
 }	

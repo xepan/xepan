@@ -1,6 +1,8 @@
 <?php
 
 class Model_Document extends SQL_Model{
+	
+	public $actions=array();
 
 	public $status = null;
 	public $document_name=null;
@@ -26,8 +28,7 @@ class Model_Document extends SQL_Model{
 		$default_acl_options = array(
 			'can_view'=>array('caption'=>'Whose created Document you can see'),
 			'can_manage_attachments' => array('caption'=>'Whose created Documents Attachemnt you can manage'),
-			'can_see_communication' => array('caption'=>'Whose created Documents Communications you can see'),
-			'can_see_deep_communication' => array('caption'=>'Whose created Documents Communications Deep you can see')
+			'can_see_activities' => array('caption'=>'Whose created Documents Communications you can see'),
 		);
 
 		$this->actions = array_merge($default_acl_options,$this->actions);
@@ -36,9 +37,19 @@ class Model_Document extends SQL_Model{
 		$this->addField('related_root_document_name')->system(true);
 		$this->addField('related_document_name')->system(true);
 		
+		$this->addField('created_at')->type('datetime')->system(true)->defaultValue(date('Y-m-d H:i:s'));
+		$this->addField('updated_at')->type('datetime')->system(true)->defaultValue(date('Y-m-d H:i:s'));
+		
 		$this->hasOne('xHR/Employee','created_by_id')->defaultValue($this->api->current_employee->id)->system(true);
 		$this->hasMany('xProduction/Task','document_id');
 		$this->hasMany('Attachment','document_id');
+
+		$this->addHook('beforeSave',array($this,'defaultBeforeSave'));
+
+	}
+
+	function defaultBeforeSave(){
+		$this['updated_at']= date('Y-m-d H:i:s');
 	}
 
 	function getRootClass(){
@@ -129,7 +140,41 @@ class Model_Document extends SQL_Model{
 		$crud->add('xHR/Controller_Acl');
 	}
 
-	function see_communication_page($page){
-		$grid = $page->add('Grid');
+	function see_activities_page($page){
+
+		$activities = $page->add('xCRM/Model_Activity');
+		$activities->addCondition('related_root_document_name',$this->root_document_name);
+		$activities->addCondition('related_document_id',$this->id);
+		$activities->setORder('created_at','desc');
+
+
+		$crud = $page->add('CRUD');
+		$crud->setModel($activities);
+	}
+
+	function setStatus($status){
+		$this['status']=$status;
+		$this->createActivity($status,ucwords($status),'Document Status Changed');
+		$this->saveAs($this->getRootClass());
+	}
+
+	function createActivity($action,$subject,$message,$from=null,$from_id=null){
+		if(!$from){
+			$from = 'Employee';
+			$from_id = $this->api->current_employee->id;
+		}
+
+		$new_activity = $this->add('xCRM/Model_Activity');
+		$new_activity['related_root_document_name'] = $this->root_document_name;
+		$new_activity['related_document_name'] = $this->document_name;
+		$new_activity['related_document_id'] = $this->id;
+
+		$new_activity['action'] = $action;
+		$new_activity['from']= $from;
+		$new_activity['from_id']= $from_id;
+		$new_activity['subject']= $subject;
+		$new_activity['message']= $message;
+
+		$new_activity->save();
 	}
 }

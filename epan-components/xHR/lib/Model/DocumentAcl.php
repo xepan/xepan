@@ -47,8 +47,7 @@ class Model_DocumentAcl extends \Model_Table{
 
 		$this->addField('can_send_via_email')->setValueList($acl)->defaultValue('No');
 		
-		$this->addField('can_see_communication')->setValueList($acl)->defaultValue('No');
-		$this->addField('can_see_deep_communication')->setValueList($acl)->defaultValue('No');
+		$this->addField('can_see_activities')->setValueList(array('No'=>'No','All'=>'All','Deep'=>'Deep'))->defaultValue('No');
 		
 		$this->addHook('beforeSave',$this);
 

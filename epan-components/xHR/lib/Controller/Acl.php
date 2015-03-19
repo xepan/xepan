@@ -32,8 +32,7 @@ class Controller_Acl extends \AbstractController {
 		'task_types'=>false,
 		'can_send_via_email'=>'No',
 
-		'can_see_communication'=>'No',
-		'can_see_deep_communicatoin'=>'No',
+		'can_see_activities'=>'No',
 
 		);
 
@@ -249,8 +248,8 @@ class Controller_Acl extends \AbstractController {
 			}
 		}
 
-		if($this->permissions['can_see_communication'] AND $this->permissions['can_see_communication'] != 'No'){
-			$this->manageAction('see_communication');
+		if($this->permissions['can_see_activities'] AND $this->permissions['can_see_activities'] != 'No'){
+			$this->manageAction('see_activities');
 		}
 
 		if($this->permissions['can_send_via_email'] !='No' AND $this->owner->model->hasMethod('send_via_email')){
@@ -311,7 +310,6 @@ class Controller_Acl extends \AbstractController {
 				}else{
 					throw $e;
 				}
-				throw $e;
 			}
 			$this->filterGrid($action_name);
 		}

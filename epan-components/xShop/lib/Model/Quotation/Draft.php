@@ -16,9 +16,5 @@ class Model_Quotation_Draft extends Model_Quotation{
 		$this->addCondition('status','draft');
 	}
 
-	function submit(){
-		$this['status'] = 'submitted';
-		$this->saveAndUnload();
-		return "Sended For Approval";
-	}
+	
 }
