@@ -68,7 +68,7 @@ class page_base_owner extends Page {
 		$hr_m->addItem(array('Employees Attendence','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_employeeattendence',array('department_id'=>$dept_model->id)));
 		$hr_m->addItem(array('Employees Leave','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_employeeleave',array('department_id'=>$dept_model->id)));
 		$hr_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
-		
+		$hr_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 		$hr_m->addItem(array('Setup','icon'=>'cog'),$this->api->url('xHR_page_owner_setup',array('department_id'=>$dept_model->id)));
 
 		$this->shorcut_menus[]=array("page"=>"HR Dashboard","url"=>$this->api->url('xHR_page_owner_dashboard',array('department_id'=>$dept_model->id)));
@@ -79,7 +79,7 @@ class page_base_owner extends Page {
 		$this->shorcut_menus[]=array("page"=>"HR Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"HR Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"HR Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
-
+		$this->shorcut_menus[]=array("page"=>"HR Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
 		$marketing_m = $m->addMenu('Marketing');
 		$dept_model->loadMarketing();
@@ -94,7 +94,8 @@ class page_base_owner extends Page {
 		$marketing_m->addItem(array('Leads','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_leads',array('department_id'=>$dept_model->id)));
 		$marketing_m->addItem(array('Configurations','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_config',array('department_id'=>$dept_model->id)));
 		$marketing_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
-		
+		$marketing_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
+
 		$this->shorcut_menus[]=array("page"=>"Marketing Dashboard","url"=>$this->api->url('xMarketingCampaign_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Manage Contacts","url"=>$this->api->url('xMarketingCampaign_page_owner_emailcontacts',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Data Grabber","url"=>$this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb',array('department_id'=>$dept_model->id)));
@@ -107,6 +108,7 @@ class page_base_owner extends Page {
 		$this->shorcut_menus[]=array("page"=>"Marketing Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Marketing Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Marketing Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
+		$this->shorcut_menus[]=array("page"=>"Marketing Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
 
 		$exec_m = $marketing_m->addMenu('Executors');
@@ -133,7 +135,8 @@ class page_base_owner extends Page {
 		$sales_m->addItem(array('AddBlock','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_addblock',array('department_id'=>$dept_model->id)));
 		$sales_m->addItem(array('Payment Gateway Config','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_paygateconfig',array('department_id'=>$dept_model->id)));
 		$sales_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
-		
+		$sales_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
+
 		$this->shorcut_menus[]=array("page"=>"Sales Dashboard","url"=>$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Opportunity","url"=>$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Quotation","url"=>$this->api->url('xShop_page_owner_quotation',array('department_id'=>$dept_model->id)));
@@ -149,6 +152,7 @@ class page_base_owner extends Page {
 		$this->shorcut_menus[]=array("page"=>"Sales Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Sales Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Sales Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
+		$this->shorcut_menus[]=array("page"=>"Sales Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
 
 
@@ -166,33 +170,37 @@ class page_base_owner extends Page {
 		foreach($production_depts as $d){
 			$production_m->addItem(array($d['name']. ' Job Status','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
 			$production_m->addItem(array($d['name']. ' Material Requests','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$d->id)));
+			$production_m->addItem(array($d['name']. ' Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$d->id)));
 			$this->shorcut_menus[]=array("page"=>$d['name']. ' Job Status',"url"=>$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
 			$this->shorcut_menus[]=array("page"=>$d['name']. ' Material Requests',"url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$d->id)));
 			$this->shorcut_menus[]=array("page"=>$d['name']. " Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$d->id)));
 			$this->shorcut_menus[]=array("page"=>$d['name']. " Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$d->id)));
-
+			$this->shorcut_menus[]=array("page"=>$d['name']. " Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$d->id)));
 		}
 
 		$crm_m = $m->addMenu('CRM');
 		$dept_model->loadCRM();
 		$crm_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$crm_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
-		
+		$crm_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
+
 		$this->shorcut_menus[]=array("page"=>"CRM Dashboard","url"=>$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"CRM Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"CRM Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"CRM Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
-
+		$this->shorcut_menus[]=array("page"=>"CRM Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
 		$accounts_m = $m->addMenu('Accounts');
 		$dept_model->loadAccounts();
 		$accounts_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$accounts_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-		
+		$accounts_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
+
 		$this->shorcut_menus[]=array("page"=>"Accounts Dashboard","url"=>$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Accounts Material Request","url"=>$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Accounts Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Accounts Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
+		$this->shorcut_menus[]=array("page"=>"Accounts Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
 		$purchase_m = $m->addMenu('Purchase');
 		$dept_model->loadPurchase();
@@ -200,6 +208,7 @@ class page_base_owner extends Page {
 		$purchase_m->addItem(array('Supplier','icon'=>'gauge-1'),$this->api->url('xPurchase_page_owner_supplier',array('department_id'=>$dept_model->id)));
 		$purchase_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 		$purchase_m->addItem(array('Purchase Order','icon'=>'gauge-1'),$this->api->url('xPurchase_page_owner_purchaseorder',array('department_id'=>$dept_model->id)));
+		$purchase_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 		// $purchase_m->addItem(array('Supplier','icon'=>'gauge-1'),'xPurchase_page_owner_supplier');
 
 		$this->shorcut_menus[]=array("page"=>"Purchase Dashboard","url"=>$this->api->url('xPurchase_page_owner_dashboard',array('department_id'=>$dept_model->id)));
@@ -208,6 +217,7 @@ class page_base_owner extends Page {
 		$this->shorcut_menus[]=array("page"=>"Purchase Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Purchase Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Purchase Order","url"=>$this->api->url('xPurchase_page_owner_purchaseorder',array('department_id'=>$dept_model->id)));
+		$this->shorcut_menus[]=array("page"=>"Purchase Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
 
 		$store_m = $m->addMenu('Store');
@@ -216,12 +226,14 @@ class page_base_owner extends Page {
 		$store_m->addItem(array('Stock','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stock',array('department_id'=>$dept_model->id)));
 		$store_m->addItem(array('Warehouse','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_warehouse',array('department_id'=>$dept_model->id)));
 		$store_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
+		$store_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 		
 		$this->shorcut_menus[]=array("page"=>"Store Dashboard","url"=>$this->api->url('xStore_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Stock","url"=>$this->api->url('xStore_page_owner_stock',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Store Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Store Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Store Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
+		$this->shorcut_menus[]=array("page"=>"Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
 		$this->shorcut_menus[]=array("page"=>"Warehouse","url"=>$this->api->url('xStore_page_owner_warehouse',array('department_id'=>$dept_model->id)));
 		
@@ -232,6 +244,7 @@ class page_base_owner extends Page {
 		$dispatch_m->addItem(array('Dispatch Requests','icon'=>'gauge-1'),$this->api->url('xDispatch_page_owner_dispatchrequest',array('department_id'=>$dept_model->id)));
 		$dispatch_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 		$dispatch_m->addItem(array('Delivery Note','icon'=>'gauge-1'),$this->api->url('xDispatch_page_owner_deliverynote',array('department_id'=>$dept_model->id)));
+		$dispatch_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
 		$this->shorcut_menus[]=array("page"=>"Dispatch Dashboard","url"=>$this->api->url('xDispatch_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Dispatch Requests","url"=>$this->api->url('xDispatch_page_owner_dispatchrequest',array('department_id'=>$dept_model->id)));
@@ -239,6 +252,7 @@ class page_base_owner extends Page {
 		$this->shorcut_menus[]=array("page"=>"Dispatch Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Dispatch Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"Dispatch Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
+		$this->shorcut_menus[]=array("page"=>"Dispatch Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
 
 		// Add User Department secific Menus
