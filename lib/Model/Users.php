@@ -62,7 +62,7 @@ class Model_Users extends Model_Table {
 
 	function beforeSave(){
 		//Check User Name is Empty
-		if($this['type'] == ""){
+		if($this->dirty['type'] and $this['type'] == ""){
 			throw $this->exception('User Type Must be Defined','ValidityCheck')->setField('type');
 		}
 
