@@ -11,9 +11,6 @@ class Model_PurchaseOrder extends \Model_Document{
 
 		$this->hasOne('xPurchase/Supplier','xpurchase_supplier_id');
 
-
-		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));		
-
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
 
 		$this->addHook('beforeDelete',$this);
