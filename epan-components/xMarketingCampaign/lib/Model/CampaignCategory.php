@@ -11,11 +11,11 @@ class Model_CampaignCategory extends \Model_Table {
 
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
-		$this->addField('name');
+		$this->addField('name')->sortable(true);
 
 		$this->addExpression('campaigns')->set(function($m,$q){
 			return $m->refSQL('xMarketingCampaign/Campaign')->count();
-		});
+		})->sortable(true);
 
 		$this->hasMany('xMarketingCampaign/Campaign','category_id');
 		$this->addHook('beforeDelete',$this);

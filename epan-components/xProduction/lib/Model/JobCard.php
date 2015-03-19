@@ -12,14 +12,14 @@ class Model_JobCard extends \Model_Document{
 	function init(){
 		parent::init();
 		// hasOne OrderItemDepartment Association id
-		$this->hasOne('xShop/OrderDetails','orderitem_id');
-		$this->hasOne('xHR/Department','to_department_id');
-		$this->hasOne('xHR/Department','from_department_id');
-		$this->hasOne('xStore/Warehouse','dispatch_to_warehouse_id');
-		$this->hasOne('xShop/OrderItemDepartmentalStatus','orderitem_departmental_status_id');
+		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
+		$this->hasOne('xHR/Department','to_department_id')->sortable(true);
+		$this->hasOne('xHR/Department','from_department_id')->sortable(true);
+		$this->hasOne('xStore/Warehouse','dispatch_to_warehouse_id')->sortable(true);
+		$this->hasOne('xShop/OrderItemDepartmentalStatus','orderitem_departmental_status_id')->sortable(true);
 		
 		$this->addField('type')->enum(array('JobCard','MaterialRequest','DispatchRequest'))->defaultValue('JobCard');
-		$this->addField('name')->caption('Job Number');
+		$this->addField('name')->caption('Job Number')->sortable(true);
 		$this->getElement('status')->defaultValue('submitted');
 		
 		$this->addExpression('outsource_party')->set(function($m,$q){
@@ -28,7 +28,7 @@ class Model_JobCard extends \Model_Document{
 			$j->addField('order_item_dept_status_id','id');
 			$p->addCondition('order_item_dept_status_id',$q->getField('orderitem_departmental_status_id'));
 			return $p->fieldQuery('name');
-		});
+		})->sortable(true);
 
 		$this->hasMany('xProduction/JobCardEmployeeTeamAssociation','jobcard_id');
 		$this->hasMany('xStore/Model_StockMovement','jobcard_id');

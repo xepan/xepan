@@ -9,14 +9,14 @@ class Model_QuotationItem extends \Model_Document{
 
 	function init(){
 		parent::init();
-		$this->hasOne('xShop/Quotation','quotation_id');
-		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'autocomplete/Basic'));
+		$this->hasOne('xShop/Quotation','quotation_id')->sortable(true);
+		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'autocomplete/Basic'))->sortable(true);
 		
-		$this->addField('qty');
-		$this->addField('rate');
-		$this->addField('amount');
+		$this->addField('qty')->sortable(true);
+		$this->addField('rate')->sortable(true);
+		$this->addField('amount')->sortable(true);
 		$this->addField('narration');
-		$this->addField('custom_fields')->type('text');
+		$this->addField('custom_fields')->type('text')->sortable(true);
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 

@@ -9,7 +9,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		parent::init();
 
 
-		$this->hasOne('xPurchase/Supplier','xpurchase_supplier_id');
+		$this->hasOne('xPurchase/Supplier','xpurchase_supplier_id')->sortable(true);
 
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
 
@@ -18,7 +18,11 @@ class Model_PurchaseOrder extends \Model_Document{
 	}
 
 	function beforeDelete(){
-		$this->ref('xPurchase/PurchaseOrderItem')->deleteAll();
+		if($this['status']=='draft')
+			$this->ref('xPurchase/PurchaseOrderItem')->deleteAll();
+		else
+			throw $this->exception("can not be delete",'Growl');
+		
 	}
 
 	function itemrows(){

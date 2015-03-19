@@ -12,6 +12,8 @@ class page_xProduction_page_owner_teammanager extends page_xProduction_page_owne
 		if($g=$crud->grid){
 			$g->addColumn('Expander','team_members');
 		}
+		$crud->grid->addQuickSearch(array('name'));
+		$crud->grid->addPaginator($ipp=50);
 	}
 
 	function page_team_members(){
@@ -31,7 +33,7 @@ class page_xProduction_page_owner_teammanager extends page_xProduction_page_owne
 			$t_emps->addCondition('employee_id',$q->getField('id'));
 
 			return $t_emps->count();
-		})->type('boolean');
+		})->type('boolean')->sortable(true);
 		// selector form
 		$form = $this->add('Form');
 		$item_emp_field = $form->addField('hidden','team_employee')->set(json_encode($team->getAssociatedEmployees()));

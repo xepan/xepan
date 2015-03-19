@@ -13,7 +13,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		parent::init();
 
 		$this->addCondition('type','DispatchRequest');
-		$this->hasOne('xShop/Order','order_id');
+		$this->hasOne('xShop/Order','order_id')->sortable(true);
 
 		$this->getElement('status')->defaultValue('submitted');
 

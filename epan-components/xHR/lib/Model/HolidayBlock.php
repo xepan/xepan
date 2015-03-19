@@ -5,9 +5,9 @@ class Model_HolidayBlock extends \Model_Table{
 	public $table="xhr_holiday_blocks";
 	function init(){
 		parent::init();
-		$this->hasOne('xHR/Model_Department','department_id');
+		$this->hasOne('xHR/Model_Department','department_id')->sortable(true);
 
-		$this->addField('name');
+		$this->addField('name')->sortable(true);
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
 

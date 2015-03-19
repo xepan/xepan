@@ -9,12 +9,12 @@ class Model_Quotation extends \Model_Document{
 
 	function init(){
 		parent::init();
-		$this->hasOne('xMarketingCampaign/Lead','lead_id');
-		$this->hasOne('xShop/Opportunity','opportunity_id');
-		$this->hasOne('xShop/Customer','customer_id');
-		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id');
+		$this->hasOne('xMarketingCampaign/Lead','lead_id')->sortable(true);
+		$this->hasOne('xShop/Opportunity','opportunity_id')->sortable(true);
+		$this->hasOne('xShop/Customer','customer_id')->sortable(true);
+		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->sortable(true);
 
-		$this->addField('name')->Caption('Quotation Number');
+		$this->addField('name')->Caption('Quotation Number')->sortable(true);
 		// $this->addField('quotation_no');
 		$this->getElement('status')->enum($this->status)->defaultValue('draft');
 		$this->addHook('beforeDelete',$this);

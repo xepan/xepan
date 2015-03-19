@@ -4,7 +4,7 @@ class page_xDispatch_page_owner_deliverynote_draft extends page_xDispatch_page_o
 
 	function page_index(){
 
-		$crud=$this->add('CRUD');
+		$crud=$this->add('CRUD',array('grid_class'=>'xDispatch/Grid_DeliveryNote'));
 		$crud->setModel('xDispatch/DeliveryNote_Draft');
 		// $crud->setModel('xDispatch/DeliveryNote');
 		$crud->add('xHR/Controller_Acl');

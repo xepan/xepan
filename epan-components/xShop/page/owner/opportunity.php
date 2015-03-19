@@ -25,8 +25,8 @@ class page_xShop_page_owner_opportunity extends page_xShop_page_owner_main{
 			$grid->removeColumn('lead');
 			$grid->removeColumn('customer');
 		}
-		$crud->grid->addQuickSearch(array('name','created_by','status'));
-			$crud->grid->addPaginator($ipp=50);
+		// $crud->grid->addQuickSearch(array('name','created_by','status'));
+		// $crud->grid->addPaginator($ipp=50);
 
 		$crud->add('xHR/Controller_Acl');
 		$p=$crud->addFrame('quotation',array('icon'=>'plus'));

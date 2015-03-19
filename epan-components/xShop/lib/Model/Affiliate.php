@@ -9,7 +9,7 @@ class Model_Affiliate extends \Model_Table {
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		$this->hasOne('xShop/Application','application_id');
-		$f = $this->hasOne('xShop/AffiliateType','affiliatetype_id')->mandatory(true);
+		$f = $this->hasOne('xShop/AffiliateType','affiliatetype_id')->mandatory(true)->sortable(true);
 		
 		$f->icon = "fa fa-user~blue";
 		$f = $this->addField('company_name')->caption('Company Name')->mandatory(true)->group('a~5~<i class="fa fa-info"></i> Basic Info')->sortable(true);
@@ -22,18 +22,18 @@ class Model_Affiliate extends \Model_Table {
 		$f->icon = "glyphicon glyphicon-picture~blue";
 		$f = $this->addField('is_active')->type('boolean')->defaultValue('true')->group('a~2')->sortable(true);
 		$f->icon ="fa fa-exclamation~blue";
-		$f = $this->addField('phone_no')->type('number')->group('c~3~<i class="fa fa-link"></i> Digital Contact');
+		$f = $this->addField('phone_no')->type('number')->group('c~3~<i class="fa fa-link"></i> Digital Contact')->sortable(true);
 		$f->icon="fa fa-phone~blue";
-		$f = $this->addField('mobile_no')->type('number')->group('c~3');
+		$f = $this->addField('mobile_no')->type('number')->group('c~3')->sortable(true);
 		$f->icon="fa fa-mobile~blue";
-		$f = $this->addField('email_id')->group('c~3');
+		$f = $this->addField('email_id')->group('c~3')->sortable(true);
 		$f->icon="fa fa-envelope~blue";
-		$f = $this->addField('website_url')->group('c~3');
+		$f = $this->addField('website_url')->group('c~3')->sortable(true);
 		$f->icon="fa fa-globe~blue";
 		$this->addField('office_address')->type('text')->mandatory(true)->group('b~12~<i class="fa fa-credit-card"></i> Address');
-		$f = $this->addField('city')->group('b~3~Address')->sortable(true);
-		$this->addField('state')->group('b~3~Address')->sortable(true);
-		$this->addField('country')->group('b~3~Address')->sortable(true);
+		$f = $this->addField('city')->group('b~3~Address')->sortable(true)->sortable(true);
+		$this->addField('state')->group('b~3~Address')->sortable(true)->sortable(true);
+		$this->addField('country')->group('b~3~Address')->sortable(true)->sortable(true);
 		$this->addField('zip_code')->caption('Zip/postal code')->group('b~2')->sortable(true);
 		
 		$f = $this->addField('description')->type('text')->display(array('form'=>'RichText'));

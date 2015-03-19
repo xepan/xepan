@@ -10,13 +10,13 @@ class Model_MaterialRequestItem extends \Model_Document{
 		parent::init();
 
 		$this->hasOne('xStore/MaterialRequest','material_request_jobcard_id');
-		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'autocomplete/Basic'));
+		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'autocomplete/Basic'))->sortable(true);
 		
-		$this->addField('qty');
-		$this->addField('unit');
+		$this->addField('qty')->sortable(true);
+		$this->addField('unit')->sortable(true);
 		$this->addField('narration');
 		
-		$this->addField('custom_fields')->type('text');
+		$this->addField('custom_fields')->type('text')->sortable(true);
 		$this->addHook('beforeSave',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}

@@ -9,7 +9,7 @@ class Model_DataSearchPhrase extends \Model_Table{
 		parent::init();
 
 		$this->hasOne('xMarketingCampaign/DataGrabber','data_grabber_id');
-		$f=$this->hasOne('xEnquiryNSubscription/Model_SubscriptionCategories','subscription_category_id')->caption('Category To Save Data');
+		$f=$this->hasOne('xEnquiryNSubscription/Model_SubscriptionCategories','subscription_category_id')->caption('Category To Save Data')->sortable(true);
 		$f->group="a~10~Store Grabbed Emails";
 		$f=$this->addField('is_grabbed')->type('boolean')->defaultValue(false)->group('a~2')->sortable(true);
 
