@@ -9,10 +9,10 @@ class View_MaterialRequest extends \CompleteLister{
 		parent::init();
 		// $this->add('View_Info')->set('Material Request Details Here');
 
-		$this->template->set('request_on',$this->materialrequest['created_at']);
-		$this->template->set('status',ucwords($this->materialrequest['status']));
-		$this->template->set('form_dept',$this->materialrequest['from_department']);
-		$this->template->set('to_dept',$this->materialrequest['to_department']);
+		$this->template->setHtml('request_on',"Request On: <b>".$this->materialrequest['created_at']."</b>");
+		$this->template->setHtml('status',"Status: <b>".ucwords($this->materialrequest['status'])."</b>");
+		$this->template->setHtml('form_dept',"From Department: <b>".$this->materialrequest['from_department']."</b>");
+		$this->template->setHtml('to_dept',"To Department: <b>".$this->materialrequest['to_department']."</b>");
 	
 		$this->setModel($this->materialrequest->itemrows());
 	}

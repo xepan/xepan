@@ -8,7 +8,7 @@ class Grid_Order extends \Grid {
 		parent::init();
 		$self = $this;
 
-		$this->add('VirtualPage')->addColumn('col_name','title','btn_text',$this)->set(function($p)use($self){
+		$this->add('VirtualPage')->addColumn('col_name','Sales Order',"Order",$this)->set(function($p)use($self){
 			$o = $p->add('xShop/Model_Order')->load($p->id);
 			$order = $p->add('xShop/View_Order');
 			$order->setModel($o);

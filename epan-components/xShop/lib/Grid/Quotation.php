@@ -15,7 +15,7 @@ class Grid_Quotation extends \Grid{
 
 		$self= $this;
 
-		$this->add('VirtualPage')->addColumn('col_name','title',"btn_text",$this)->set(function($p)use($self){
+		$this->add('VirtualPage')->addColumn('col_name','Quotation',"btn_text",$this)->set(function($p)use($self){
 			$p->add('xShop/View_Quotation',array('quotation'=>$self->add('xShop/Model_Quotation')->load($p->id)));
 		});
 

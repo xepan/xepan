@@ -6,7 +6,7 @@ class View_Order extends \View{
 	function init(){
 		parent::init();
 
-		$this->add('View_Info')->set('Order');
+		// $this->add('View_Info')->set('Order');
 	}  
 
 	function setModel($model){
