@@ -11,12 +11,12 @@ class page_xPurchase_page_owner_purchaseorder extends page_xPurchase_page_owner_
 		// $crud=$this->app->layout->add('CRUD');
 		// $crud->setModel('xPurchase/Model_PurchaseOrder');
 		$tabs=$this->app->layout->add('Tabs');
-		$tabs->addTabURL('xPurchase_page_owner_purchaseorder_draft','Draft');
-		$tabs->addTabURL('xPurchase_page_owner_purchaseorder_redesign','Redesign');
-		$tabs->addTabURL('xPurchase_page_owner_purchaseorder_submitted','Submitted');
-		$tabs->addTabURL('xPurchase_page_owner_purchaseorder_approved','Approved');
-		$tabs->addTabURL('xPurchase_page_owner_purchaseorder_processing','Processing');
-		$tabs->addTabURL('xPurchase_page_owner_purchaseorder_completed','Completed');
-		$tabs->addTabURL('xPurchase_page_owner_purchaseorder_rejected','Rejected');
+		$tabs->addTabURL('xPurchase/page/owner/purchaseorder/draft','Draft'.$this->add('xPurchase/Model_PurchaseOrder_Draft')->myUnRead());
+		$tabs->addTabURL('xPurchase/page/owner/purchaseorder/redesign','Redesign'.$this->add('xPurchase/Model_PurchaseOrder_Redesign')->myUnRead());
+		$tabs->addTabURL('xPurchase/page/owner/purchaseorder/submitted','Submitted'.$this->add('xPurchase/Model_PurchaseOrder_Submitted')->myUnRead());
+		$tabs->addTabURL('xPurchase/page/owner/purchaseorder/approved','Approved'.$this->add('xPurchase/Model_PurchaseOrder_Approved')->myUnRead());
+		$tabs->addTabURL('xPurchase/page/owner/purchaseorder/processing','Processing'.$this->add('xPurchase/Model_PurchaseOrder_Processing')->myUnRead());
+		$tabs->addTabURL('xPurchase/page/owner/purchaseorder/completed','Completed'.$this->add('xPurchase/Model_PurchaseOrder_Completed')->myUnRead());
+		$tabs->addTabURL('xPurchase/page/owner/purchaseorder/rejected','Rejected'.$this->add('xPurchase/Model_PurchaseOrder_Rejected')->myUnRead());
 	}
 }
