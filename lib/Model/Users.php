@@ -42,8 +42,8 @@ class Model_Users extends Model_Table {
 		$this->add('Controller_Validator');
 		$this->is(array(
 							'name|to_trim|required?type User name here',
-							'email|email'
-							'email|unique'
+							'email|email',
+							'email|unique',
 							'username|to_trim|unique'
 						)
 				);
