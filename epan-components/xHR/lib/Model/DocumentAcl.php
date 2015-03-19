@@ -51,7 +51,7 @@ class Model_DocumentAcl extends \Model_Table{
 		
 		$this->addHook('beforeSave',$this);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

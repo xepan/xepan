@@ -12,7 +12,7 @@ class Model_Messages extends Model_Table{
 		$this->addField('sender_namespace');
 		$this->addField('watch')->type('boolean')->defaultValue(false);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function createNew($title,$message,$sender_signature,$sender_namespace){

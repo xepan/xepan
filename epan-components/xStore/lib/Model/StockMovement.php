@@ -27,11 +27,9 @@ class Model_StockMovement extends \Model_Document{
 
 		$this->getElement('status')->defaultValue('submitted');
 
-		$this->addField('created_at')->type('date')->defaultValue(date('Y-m-d'));
-
 		$this->hasMany('xStore/StockMovementItem','stock_movement_id');
 
-		//$this->add('dynamic_model/Controller_AutoCreator');	
+		// $this->add('dynamic_model/Controller_AutoCreator');	
 	}
 
 	function fromWarehouse($warehouse=false){
