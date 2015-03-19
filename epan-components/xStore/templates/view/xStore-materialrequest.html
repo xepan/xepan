@@ -1,23 +1,21 @@
-	
-<div id="{$_name}" class="well">
-
+<div id="{$_name}" class="{$Class}">
 {$Content}
-	<div class="row well">
-		<div class="col-md-4 panel panel-info">
-			Request On :-<b> {$request_on}</b>
+	<div class="row">
+		<div class="col-md-4">
+			{$request_on}
 		</div>
-		<div class="col-md-4 text-center panel panel-danger ">
-			 <h3><b>{$status}</b></h3>
+		<div class="col-md-4 text-center">
+			{$status}
 		</div>
-		<div class="col-md-4 text-center panel panel-success">
-			To Department :-<b>{$to_dept}</b> <br>
-			Form Department :-<b>{$form_dept} 
+		<div class="col-md-4 text-right">
+			{$to_dept}<br>
+			{$form_dept} 
 		</div>
 	</div>	
 		
-	<table width='100%' class='table' style="font-size:11px;vertical-align:top;" >
+	<table width='100%' class='table'>
 		<tbody class='table-striped'>
-			<tr class="well" >
+			<tr>
 				<th align="left">Sno</th>
 				<th align="center">Item</th>
 				<th align="right" class="text-right">Qty</th>

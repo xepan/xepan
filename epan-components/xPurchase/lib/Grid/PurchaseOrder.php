@@ -12,7 +12,7 @@ class Grid_PurchaseOrder extends \Grid {
 
 		$self= $this;
 
-		$this->add('VirtualPage')->addColumn('col_name','title',"btn_text",$this)->set(function($p)use($self){
+		$this->add('VirtualPage')->addColumn('col_name','Purchase Order',"btn_text",$this)->set(function($p)use($self){
 			$p->add('xPurchase/View_PurchaseOrder',array('purchaseorder'=>$self->add('xPurchase/Model_PurchaseOrder')->load($p->id)));
 		});
 

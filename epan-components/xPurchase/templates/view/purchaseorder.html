@@ -1,24 +1,22 @@
-	
-<div id="{$_name}" class="well">
-<div class='text-center text-info'> Purchase Order</div>
-{$Content}
-	<div class="row well">
-		<div class="col-md-4 panel panel-info">
-			<b>Request On</b> :-{$request_on}
+<div id="{$_name}">
+	{$Content}
+	<div class="row">
+		<div class="col-md-4">
+			Request On: <b>{$request_on}</b>
 		</div>
-		<div class="col-md-4 text-center panel panel-danger">
-			 <b>Status:</b>{$status}
+		<div class="col-md-4 text-center">
+			 Status: <b>{$status}</b>
 		</div>
-		<div class="col-md-4 text-center panel panel-success">
+		<div class="col-md-4 text-right">
 			<!-- <div><b>To Department:</b> {$to_dept}</div> -->
-			<div><b>Form Department:</b> {$form_dept}</div>
-			<div><b>To Suppiler:</b> {$supplier}</div>
+			<div>Form Department: <b>{$form_dept}</b></div>
+			<div>To Suppiler: <b>{$supplier}</b></div>
 		</div>
 	</div>	
 		
-	<table width='100%' class='table' style="font-size:11px;vertical-align:top;" >
-		<tbody class='table-striped'>
-			<tr class="well" >
+	<table width='100%' class="table">
+		<tbody class="table-striped">
+			<tr>
 				<th align="left">Sno</th>
 				<th align="center">Item</th>
 				<th align="right" class="text-right">Qty</th>
@@ -36,5 +34,6 @@
 		{/rows}
 		</tbody>
 	</table>
+
 </div>
 

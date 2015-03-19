@@ -1,33 +1,34 @@
-<div id="{$_name}" class="well">
+<div id="{$_name}">
 {$Content}
-<div class='text-center text-danger'> Stock Movement Challlan</div>
-	<div class="row well">
-		<div class="col-md-4 panel panel-info">
-			<div><b>Created at:</b> {$created_at}</div>
-			<div><b>From WareHouse:</b> {$from_warehouse}</div> 
-			<div><b>From Suppiler:</b> {$from_supplier}</div>
-			<div><b>From Customer:</b> {$from_memberdetails}</div>
-			<div><b>Material Request Jobcard:</b> {$material_request_jobcard}</div>
-			<div><b>Jobcard:</b> {$jobcard}</div>
-			<div><b>Purchase Order No:</b> {$po}</div>
-			<div><b>Dispatch No:</b> {$dispatch_request}</div>
+
+<div class='text-center'> <h3>Stock Movement Challlan</h3></div>
+	<div class="row">
+		<div class="col-md-4">
+			<div>{$created_at}</div>
+			<div>{$from_warehouse}</div>
+			<div>{$from_supplier}</div>
+			<div>{$from_memberdetails}</div>
+			<div>{$material_request_jobcard}</div>
+			<div>{$jobcard}</div>
+			<div>{$po}</div>
+			<div>{$dispatch_request}</div>
 		</div>
 		
-		<div class="col-md-4 text-center panel panel-danger">
-			 <div><b>Status:</b> {$status}</div>
-			 <div><b> Challan Type : </b> {$type}</div>
+		<div class="col-md-4 text-center">
+			<div>{$status}</div>
 		</div>
-		<div class="col-md-4 text-center panel panel-success">
+		<div class="col-md-4 text-right">
 			<!-- To Department <b>{$to_dept}</b> <br> -->
-			<div><b>To WareHouse:</b> {$to_warehouse}</div>
-			<div><b>To Supplier:</b> {$to_supplier}</div> 
-			<div><b>To Customer:</b> {$to_memberdetails}</div> 
+			<div>{$to_warehouse}</div>
+			<div>{$to_supplier}</div>
+			<div>{$to_memberdetails}</div>
+			<div>{$type}</div>
 		</div>
 	</div>	
 		
-	<table width='100%' class='table' style="font-size:11px;vertical-align:top;" >
+	<table width='100%' class='table'>
 		<tbody class='table-striped'>
-			<tr class="well" >
+			<tr>
 				<th align="left">Sno</th>
 				<th align="center">Item</th>
 				<th align="right" class="text-right">Qty</th>

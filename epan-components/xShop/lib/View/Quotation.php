@@ -8,17 +8,18 @@ class View_Quotation extends \CompleteLister{
 	function init(){
 		parent::init();
 
-		$this->template->set('name',$this->quotation['name']);
-		$this->template->set('created_at',$this->quotation['created_at']);
-		$this->template->set('status',ucwords($this->quotation['status']));
-		$this->template->set('customer',ucwords($this->quotation['customer']));
-		$this->template->set('lead',ucwords($this->quotation['lead']));
+		$this->template->setHtml('name',"Quotation No: <b>".$this->quotation['name']."</b>");
+		$this->template->setHtml('created_at',"Created At: <b>".$this->quotation['created_at']."</b>");
+		$this->template->setHtml('status',"Status: <b>".ucwords($this->quotation['status'])."</b>");
+		$this->template->setHtml('customer',"Customer: <b>".ucwords($this->quotation['customer'])."</b>");
+		$this->template->setHtml('lead',"Lead: <b>".ucwords($this->quotation['lead'])."<b>");
 		
 		$this->setModel($this->quotation->itemrows());
 	}
 
 	function formatRow(){
 		$this->current_row['sno']=$this->sno;
+		$this->current_row_html['departments']=$this->model->redableDeptartmentalStatus(true);
 		$this->sno++;
 	}
 
