@@ -60,6 +60,11 @@ class Model_Users extends Model_Table {
 	}
 
 	function beforeSave(){
+		//Check User Name is Empty
+		if($this['type'] == ""){
+			throw $this->exception('User Type Must be Defined','ValidityCheck')->setField('type');
+		}
+
 		// Check username for THIS EPAN
 		$old_user = $this->add('Model_Users');
 		$old_user->addCondition('username',$this['username']);

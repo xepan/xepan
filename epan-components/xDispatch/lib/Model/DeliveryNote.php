@@ -20,7 +20,7 @@ class Model_DeliveryNote extends \xProduction\Model_JobCard {
 		$this->addField('narration')->type('text');
 		$this->hasMany('xDispatch/DeliveryNoteItems','delivery_note_id');
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+	//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function submit(){
