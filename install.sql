@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 19, 2015 at 04:38 PM
+-- Generation Time: Mar 19, 2015 at 06:56 PM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.6
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `prime_test`
+-- Database: `xavoc_demo`
 --
 
 -- --------------------------------------------------------
@@ -464,7 +464,6 @@ CREATE TABLE IF NOT EXISTS `epan` (
   `email_password` varchar(255) DEFAULT NULL,
   `email_reply_to` varchar(255) DEFAULT NULL,
   `email_reply_to_name` varchar(255) DEFAULT NULL,
-  `is_frontent_regiatrstion_allowed` tinyint(1) DEFAULT NULL,
   `user_activation` varchar(255) DEFAULT NULL,
   `email_threshold` int(11) DEFAULT NULL,
   `user_registration_email_subject` varchar(255) DEFAULT NULL,
@@ -480,6 +479,7 @@ CREATE TABLE IF NOT EXISTS `epan` (
   `emails_in_BCC` int(11) DEFAULT NULL,
   `last_emailed_at` datetime DEFAULT NULL,
   `email_sent_in_this_minute` int(11) DEFAULT NULL,
+  `is_frontend_registration_allowed` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_staff1` (`staff_id`),
   KEY `fk_epan_epan_categories1` (`category_id`),
@@ -490,8 +490,8 @@ CREATE TABLE IF NOT EXISTS `epan` (
 -- Dumping data for table `epan`
 --
 
-INSERT INTO `epan` (`id`, `name`, `staff_id`, `branch_id`, `password`, `fund_alloted`, `created_at`, `category_id`, `company_name`, `contact_person_name`, `mobile_no`, `address`, `city`, `state`, `country`, `email_id`, `keywords`, `description`, `website`, `is_active`, `is_approved`, `last_email_sent`, `allowed_aliases`, `parked_domain`, `email_host`, `email_port`, `email_username`, `email_password`, `email_reply_to`, `email_reply_to_name`, `is_frontent_regiatrstion_allowed`, `user_activation`, `email_threshold`, `user_registration_email_subject`, `user_registration_email_message_body`, `email_transport`, `encryption`, `from_email`, `from_name`, `sender_email`, `sender_name`, `return_path`, `smtp_auto_reconnect`, `emails_in_BCC`, `last_emailed_at`, `email_sent_in_this_minute`) VALUES
-(1, 'web', 1, 1, NULL, '5000000', '2014-01-26', 1, 'Xavoc Technocrats Pvt. Ltd.', 'Xavoc Admin', '+91 8875191258', '18/436, Gayatri marg, Kanji Ka hata, Udaipur, Rajasthan , India', 'Udaipur', 'Rajasthan', 'India', '', 'xEpan CMS, an innovative approach towards Drag And Drop CMS.', 'World''s best and easiest cms :)', 'http://www.xavoc.com', 1, 1, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'self_activated', 200, '', '', 'SmtpTransport', 'ssl', NULL, NULL, NULL, NULL, NULL, 100, NULL, NULL, 1);
+INSERT INTO `epan` (`id`, `name`, `staff_id`, `branch_id`, `password`, `fund_alloted`, `created_at`, `category_id`, `company_name`, `contact_person_name`, `mobile_no`, `address`, `city`, `state`, `country`, `email_id`, `keywords`, `description`, `website`, `is_active`, `is_approved`, `last_email_sent`, `allowed_aliases`, `parked_domain`, `email_host`, `email_port`, `email_username`, `email_password`, `email_reply_to`, `email_reply_to_name`, `user_activation`, `email_threshold`, `user_registration_email_subject`, `user_registration_email_message_body`, `email_transport`, `encryption`, `from_email`, `from_name`, `sender_email`, `sender_name`, `return_path`, `smtp_auto_reconnect`, `emails_in_BCC`, `last_emailed_at`, `email_sent_in_this_minute`, `is_frontend_registration_allowed`) VALUES
+(1, 'web', 1, 1, NULL, '5000000', '2014-01-26', 1, 'Xavoc Technocrats Pvt. Ltd.', 'Xavoc Admin', '+91 8875191258', '18/436, Gayatri marg, Kanji Ka hata, Udaipur, Rajasthan , India', 'Udaipur', 'Rajasthan', 'India', '', 'xEpan CMS, an innovative approach towards Drag And Drop CMS.', 'World''s best and easiest cms :)', 'http://www.xavoc.com', 1, 1, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'self_activated', 200, '', '', 'SmtpTransport', 'ssl', NULL, NULL, NULL, NULL, NULL, 100, NULL, NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -1207,7 +1207,7 @@ CREATE TABLE IF NOT EXISTS `xai_data` (
   `name` text,
   PRIMARY KEY (`id`),
   KEY `fk_session_id` (`session_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
 
 --
 -- Dumping data for table `xai_data`
@@ -1230,10 +1230,7 @@ INSERT INTO `xai_data` (`id`, `session_id`, `name`) VALUES
 (14, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
 (15, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
 (16, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(17, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(18, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(19, 2, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(20, 2, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}');
+(17, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}');
 
 -- --------------------------------------------------------
 
@@ -1396,15 +1393,7 @@ CREATE TABLE IF NOT EXISTS `xai_session` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
-
---
--- Dumping data for table `xai_session`
---
-
-INSERT INTO `xai_session` (`id`, `name`, `type`, `is_goal_achieved`, `created_at`, `updated_at`) VALUES
-(1, '', 'website', 0, '2015-03-19 11:01:30', '2015-03-19 11:01:30'),
-(2, 'p094ta0b04s2l8le3uaaoqe9o6', 'website', 0, '2015-03-19 11:01:37', '2015-03-19 11:02:11');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
