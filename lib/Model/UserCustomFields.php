@@ -21,9 +21,9 @@ class Model_UserCustomFields extends \Model_Table{
 													'dropdown'=>'DROPDOWN',
 													'DatePicker'=>'DATE',
 													'Upload'=>'UPLOAD',
-													'captcha'=>'Captcha'))->group('cf~4');
+													'captcha'=>'Captcha'))->group('cf~4')->defaultValue('line')->mandatory(true);
 		$f->icon= 'fa fa-question~red';
-		$f=$this->addField('mandatory')->type('boolean')->Caption('Requird Field')->group('cf~2');
+		$f=$this->addField('mandatory')->type('boolean')->Caption('Required Field')->group('cf~2');
 		$f->icon = 'fa fa-exclamation~red';
 		$f=$this->addField('is_editable')->type('boolean')->group('cf~2');
 		$f->icon = 'fa fa-exclamation~red';
