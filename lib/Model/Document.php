@@ -1,7 +1,7 @@
 <?php
 
 class Model_Document extends SQL_Model{
-	
+
 	public $status = null;
 	public $document_name=null;
 	public $root_document_name=null;
@@ -20,14 +20,17 @@ class Model_Document extends SQL_Model{
 
 		if($this->document_name == null){
 			$class_name = get_class($this);
-			// $class_name = explode('\\', $class_name);
-			// if(count($class_name)==2) 
-			// 	$class_name=$class_name[1];
-			// else
-			// 	$class_name=$class_name[0];
-
 			$this->document_name = str_replace("Model_", "", $class_name);
 		}
+
+		$default_acl_options = array(
+			'can_view'=>array('caption'=>'Whose created Document you can see'),
+			'can_manage_attachments' => array('caption'=>'Whose created Documents Attachemnt you can manage'),
+			'can_see_communication' => array('caption'=>'Whose created Documents Communications you can see'),
+			'can_see_deep_communication' => array('caption'=>'Whose created Documents Communications Deep you can see')
+		);
+
+		$this->actions = array_merge($default_acl_options,$this->actions);
 
 		$this->addField('related_document_id')->system(true);
 		$this->addField('related_root_document_name')->system(true);
@@ -120,4 +123,13 @@ class Model_Document extends SQL_Model{
 		}
 	}
 
+	function manage_attachments_page($page){
+		$crud = $page->add('CRUD');
+		$crud->setModel($this->ref('Attachements'));
+		$crud->add('xHR/Controller_Acl');
+	}
+
+	function see_communication_page($page){
+		$grid = $page->add('Grid');
+	}
 }

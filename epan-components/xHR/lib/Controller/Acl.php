@@ -27,6 +27,7 @@ class Controller_Acl extends \AbstractController {
 		'can_assign'=>'No',
 		'can_assign_to'=>false,
 		
+		'can_manage_attachments'=>'No',
 		'can_manage_tasks'=>'No',
 		'task_types'=>false,
 		'can_send_via_email'=>'No',
@@ -224,6 +225,10 @@ class Controller_Acl extends \AbstractController {
 			$this->manageAction('mark_processed');
 		}
 
+		if($this->permissions['can_manage_attachments'] !='No'){
+			$this->manageAction('manage_attachments');
+		}
+
 		if($this->permissions['can_manage_tasks'] !='No'){
 			if($tt=$this->permissions['task_types']){
 				switch ($tt) {
@@ -244,11 +249,8 @@ class Controller_Acl extends \AbstractController {
 			}
 		}
 
-		if($this->permissions['can_see_communication'] != 'No'){
-			$p=$this->owner->addFrame('Comm',array('icon'=>'user'));
-			if($p){
-				$p->add('xCRM/View_Communication',array('include_deep_communication'=>$this->permissions['can_see_deep_communication'],'document'=>$this->owner->getModel()->load($this->owner->id)));
-			}
+		if($this->permissions['can_see_communication'] AND $this->permissions['can_see_communication'] != 'No'){
+			$this->manageAction('see_communication');
 		}
 
 		if($this->permissions['can_send_via_email'] !='No' AND $this->owner->model->hasMethod('send_via_email')){
