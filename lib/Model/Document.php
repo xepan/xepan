@@ -147,9 +147,11 @@ class Model_Document extends SQL_Model{
 		$activities->addCondition('related_document_id',$this->id);
 		$activities->setORder('created_at','desc');
 
-
 		$crud = $page->add('CRUD');
 		$crud->setModel($activities);
+
+		$crud->add('xHR/Controller_Acl');
+
 	}
 
 	function setStatus($status){

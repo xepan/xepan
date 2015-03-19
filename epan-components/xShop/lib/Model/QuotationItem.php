@@ -28,6 +28,8 @@ class Model_QuotationItem extends \Model_Document{
 
 		$str = "";
 		$array = json_decode($this['custom_fields'],true);
+		if(!$array) return false;
+		
 		foreach ($array as $department_id => $cf) {
 			$d = $this->add('xHR/Model_Department')->load($department_id);
 			$str .= $d['name'];
