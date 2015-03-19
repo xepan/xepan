@@ -4,7 +4,7 @@ class page_xStore_page_owner_materialrequestsent_draft extends page_xStore_page_
 	function page_index(){
 		// parent::init();
 		$di = $this->api->stickyGET('department_id');
-		$this->add('PageHelp',array('page'=>'materialrequestsent_draft'));
+		// $this->add('PageHelp',array('page'=>'materialrequestsent_draft'));
 
 		$model = $this->add('xStore/Model_MaterialRequestSent_Draft');
 		$model->addCondition('from_department_id',$di);
@@ -21,7 +21,7 @@ class page_xStore_page_owner_materialrequestsent_draft extends page_xStore_page_
 		}
 
 		$crud->add('xHR/Controller_Acl');
-		$this->add('xStore/View_StockMovement',array('stockmovement'=>$this->add('xStore/Model_StockMovement')->load(1)));
+		// $this->add('xStore/View_StockMovement',array('stockmovement'=>$this->add('xStore/Model_StockMovement')->load(1)));
 	}
 	
 

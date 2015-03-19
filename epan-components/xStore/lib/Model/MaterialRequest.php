@@ -179,7 +179,9 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 	}
 
 	function accept_page($p){
-		$p->add('View_Success')->set('Show Related Challan HEre');
+		
+		$p->add('xStore/View_StockMovement',array('stockmovement'=>$this->relatedChallan()));
+		
 		$form = $p->add('Form');
 		$accept_btn = $form->addSubmit('Accept');
 		$reject_btn = $form->addSubmit('Reject');
