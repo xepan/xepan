@@ -15,9 +15,10 @@ class View_Order extends \View{
 		$order_detail = $this->add('xShop/Model_OrderDetails')->addCondition('order_id',$model->id);
 		$view=$this->add('xShop/View_OrderDetail',null,'order_detail');
 		$view->setModel($order_detail);
-			
-		parent::setModel($model);
+		
 
+		parent::setModel($model);
+		$this->template->trySet('approved_date',$this->model->searchActivity('approved')->get('created_at'));
 	}
 
 	function defaultTemplate(){
