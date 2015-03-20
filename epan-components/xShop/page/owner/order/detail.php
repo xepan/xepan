@@ -26,7 +26,6 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
         $crud = $container->add('CRUD');
 
         $crud->setModel($order_detail,array('item_id','qty','unit','rate','amount','status','custom_fields'),array('id','item','qty','unit','rate','amount','status'));
-        $crud->add('xHR/Controller_Acl',array('document'=>'xShop\Order_'. ucwords($order['status']),'show_acl_btn'=>false,'override'=>array('can_view'=>'All','can_see_activities'=>'No','can_manage_attachments'=>'No')));
         
         if(!$crud->isEditing()){
             $grid = $crud->grid;
@@ -37,7 +36,7 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
             // $grid->addColumn('expander','attachment',array('page'=>'xShop_page_owner_attachment','descr'=>'Attachments'));
         }
 
-        if($crud->isEditing()){
+        if($crud->isEditing()=='add' or $crud->isEditing()=='edit'){
             $item_field = $crud->form->getElement('item_id');
             $f= $item_field->other_field;
             $custom_fields_field = $crud->form->getElement('custom_fields');
@@ -47,6 +46,7 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
             $btn->js('click',$this->js()->univ()->frameURL('Custome Field Values',array($this->api->url('xShop_page_owner_order_customfields',array('orderitem_id'=>$crud->id,'custom_field_name'=>$crud->form->getElement('custom_fields')->name)),"selected_item_id"=>$item_field->js()->val(),'current_json'=>$custom_fields_field->js()->val())));
         }
 
+        // $crud->add('xHR/Controller_Acl',array('document'=>'xShop\Order_'. ucwords($order['status']),'show_acl_btn'=>false,'override'=>array('can_view'=>'All','can_see_activities'=>'No')));
         // $crud->add('Controller_FormBeautifier');
 	}
 }

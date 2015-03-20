@@ -23,7 +23,7 @@ class page_xPurchase_page_owner_purchaseorder_customfields extends page_xPurchas
 		$this->item = $item = $this->add('xShop/Model_Item')->tryLoad($item_id);
 
 		if(!$item->loaded()) {
-			$this->add('View_Error')->set('item not selcetd');
+			$this->add('View_Error')->set('Item not selceted');
 			return;
 		}
 

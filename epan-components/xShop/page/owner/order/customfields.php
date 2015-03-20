@@ -11,9 +11,6 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 	function init(){
 		parent::init();
 
-		$this->add('View_Error')->set('if You are Select only Store OR Purchase Department So Please Specify Any Other Next Department To Proceed');
-
-
 		$this->api->stickyGET('custom_field_name');
 		$this->api->stickyGET('current_json');
 
@@ -22,6 +19,11 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 
 		$item_id = $this->api->stickyGET('selected_item_id');
 		$this->item = $item = $this->add('xShop/Model_Item')->tryLoad($item_id);
+		
+		if(!$item->loaded()) {
+			$this->add('View_Error')->set('Item not selceted');
+			return;
+		}
 		
 		//Make PredefinedPhase Array
 		$this->preDefinedPhase = array();
@@ -75,14 +77,9 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 		
 		if($form->isSubmitted()){
 			//TODOOOOOO
-			//Display Department in Level Format
-			//If Department Is Store then next One Department is Select Compulsary
-			//If Department Is Purchase then next One Department is Select Compulsary 
-			//If Department Is Dispatch or Dilivey then Previous One Department is Select Compulsary 
-					// validate custom field entries
-			//Check For the Custom Field Value Not Proper
-			//Check For the One Department at One Leve
+
 			
+			//Check For the Custom Field Value Not Proper
 			foreach ($phases as $phase) {
 				if( $form['phase_'.$phase->id] ){
 					$custom_fields_asso_values [$phase->id]=array();
@@ -90,9 +87,45 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 					foreach ($custom_fields_asso as $cfassos) {
 						$cf = $cfassos->ref('customfield_id');
 						$custom_fields_asso_values [$phase->id][$cf->id] =  $form['custom_field_'.$custom_fields_asso->id];
+						if(!$form['custom_field_'.$custom_fields_asso->id])
+							$form->displayError('custom_field_'.$custom_fields_asso->id,'Phase selceted but custom field not field');
 					}
 				}
 			}
+
+			$selected_phases = array_keys($custom_fields_asso_values);
+			
+			$purchase_level = $this->add('xHR/Model_Department')->loadPurchase();
+			$purchase_level_id = $purchase_level->id;
+			$store_level = $this->add('xHR/Model_Department')->loadStore();
+			$store_level_id = $store_level->id;
+			$dispatch_level = $this->add('xHR/Model_Department')->loadDispatch();
+			$dispatch_level_id = $dispatch_level->id;
+
+			//If Department Is Purchase then next One Department is Select Compulsary 
+			if(in_array($purchase_level_id,$selected_phases) and count($selected_phases)===1){
+				$form->displayError('phase_'.$purchase_level_id, ' Purchase cannot be alone seleccted, select any other phase/department');
+			}
+
+			//If Department Is Store then next One Department is Select Compulsary
+			if(in_array($store_level_id,$selected_phases) and !$this->arrayHasBiggerDepartment($selected_phases,$store_level_id)){
+				$form->displayError('phase_'.$store_level_id,' Store cannot be alone seleccted, select any other phase/department');
+			}
+
+			//If Department Is Dispatch or Dilivey then Previous One Department is Select Compulsary 
+			if(in_array($dispatch_level_id,$selected_phases) and !$this->arrayHasSmallerDepartment($selected_phases,$dispatch_level_id)){
+				$form->displayError('phase_'.$dispatch_level_id,' Dispatch cannot be alone seleccted, select any other phase/department');
+			}
+
+			//Check For the One Department at One Leve
+			$level_touched=array();
+			foreach ($selected_phases as $ph) {
+				if(in_array(($prd_level=$this->add('xHR/Model_Department')->load($ph)->get('production_level')),$level_touched)){
+					$form->displayError('phase_'.$ph,' Cannot Select More phases/Departments at a level');
+				}
+				$level_touched[] = $prd_level;
+			}
+
 			$json = json_encode($custom_fields_asso_values);
 			$form->js(null,$form->js()->univ()->closeDialog())->_selector('#'.$_GET['custom_field_name'])->val($json)->execute();
 		}
@@ -125,5 +158,25 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 		}
 
 		return $field;
+	}
+
+	function arrayHasBiggerDepartment($selected_departments_id_array,$department_id){
+		$depts = $this->add('xHR/Model_Department')->load($department_id);
+		$big_depts = $this->add('xHR/Model_Department')->addCondition('production_level','>',$depts['production_level']);
+		foreach ($big_depts as $d) {
+			if(in_array($d->id, $selected_departments_id_array)) return true;
+		}
+
+		return false;
+	}
+
+	function arrayHasSmallerDepartment($selected_departments_id_array,$department_id){
+		$depts = $this->add('xHR/Model_Department')->load($department_id);
+		$big_depts = $this->add('xHR/Model_Department')->addCondition('production_level','<',$depts['production_level']);
+		foreach ($big_depts as $d) {
+			if(in_array($d->id, $selected_departments_id_array)) return true;
+		}
+
+		return false;
 	}
 }
