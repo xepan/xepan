@@ -2,13 +2,31 @@
 	"steps":[
 		{ 
 	        "element" : ".dialog span:first:contains(Parent)",
-	        "title": "Title 1",
-	        "content" : "This is element 1"
-	    },
+	        "title": "Parent Post",
+	        "content" : "Here you can define a <b>Reporting</b> designation<p><div class='panel panel-info panel-heading text-center'>Example:<b> Manager</b> reports to <b>Director</b> </div></p>"
+
+	        },
 	    {
 	        "element" : ".dialog input[type=text]",
-	        "title": "Title 2",
-	        "content" : "This is element 2"
+	        "title": "Post",
+
+	       "content" :"Define a <b>Designation</b> here"
+	        
+	    },
+	    {
+	        "element" : ".dialog input[data-shortname=is_active]",
+	        "title": "Active",
+
+	       "content" :"Check if post is presently active",
+	       "placement": "bottom"     
+	    },
+	    {
+	        "element" : ".dialog input[data-shortname=can_create_team]",
+	        "title": "Create Team",
+
+	       "content" :"Check if employee at this post can create team",
+	       "placement": "bottom"     
 	    }
+	    
 	]
 }

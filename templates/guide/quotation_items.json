@@ -1,0 +1,44 @@
+{
+	"steps":[	
+	    {
+	        "element" : "div.page_xShop_page_owner_quotation_items div.atk-box-small button:contains(Add QuotationItem)",
+	        "title": "Add Items to Quotation",
+	        "content" : "This button, when clicked, <i>allows you to add item(s) in the Quotation so selected</i>.",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop":true
+	    },
+	    {
+	        "element" : "tr.odd td:nth-of-type(4) button.atk-button-small",
+	        "title": "Assigning Item to an Employee/Department",
+	        "content" : "This button, when clicked, <i>allows you assign an item to a specific Employee/Department,</i> in the Quotation so selected.",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop":true
+	    },
+		{
+	        "element" : "tr.odd td:nth-of-type(5) button.atk-button-small",
+	        "title": "Incomplete 1",
+	        "content" : "This button, when clicked, <i>do a MAGIC</i>.",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop":true
+	    },
+		{
+	        "element" : "tr.odd td:nth-of-type(6) button.atk-button-small",
+	        "title": "Edit Button",
+	        "content" : "This button, when clicked, allows us to <i>edit the corresponding Item</i> in 'Item' feild.",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop":true
+	    },
+		{
+	        "element" : "td.lister_expander tr.odd td:nth-of-type(7) button.atk-button-small",
+	        "title": "Delete Button",
+	        "content" : "This button, when clicked, <i>deletes</i> the <i>corresponding Item</i> from Quotation.",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop":true
+	    }
+	 ]
+}

@@ -1,0 +1,22 @@
+{
+	"steps":[
+		
+	    { 
+	        "element" : " ",
+	        "title": "add_Opportunity_Quotation",
+	        "content" : "This Page allows you to <b>Add</b> a New Quotation regarding the <b>Same Opportunity</b>.",
+	        "placement": "top",
+	        "orphan" : true,
+	        "backdrop" : true
+	    },
+	    { 
+	        "element" : " ",
+	        "title": "Quotation_status",
+	        "content" : "It shows you  <b>Quotation States.</b>(Draft,Submitted,Redesign,Approved,Cancel)",
+	        "placement": "top",
+	        "orphan" : true
+	        
+	    },
+
+    ]
+}

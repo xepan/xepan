@@ -1,0 +1,58 @@
+{
+	"steps":[
+		{ 					
+        	"element" : "",
+       		"title": "Purchase Order",
+        	"content" : "Here you can <b>generate the order</b> for the things which you want to purchase",
+        	"orphan" : true
+    	},
+    	{ 					
+        	"element" : "",
+       		"title": "Purchase Order",
+        	"content" : "<b>Here you can</b><ul><li>Create a Draft</li><li>Redesign Order</li><li>Submit the Draft</li><li>Approve the Order</li><li>Process the Order</li><li>Shows Completed Orders</li><li>Shows Canceled Orders</li></ui>",
+        	"orphan" : true
+    	},
+        {                   
+            "element" : ".ui-tabs-anchor:contains(Draft)",
+            "title": "Draft",
+            "content" : "This Tab provides facility for creating a <b>Draft</b> for purchase order",
+            "orphan" : true
+        },
+        {                   
+            "element" : ".ui-tabs-anchor:contains(Redesign)",
+            "title": "Redesign",
+            "content" : "This Tab provides facility for <b>modify the order</b> which is not approved",
+            "orphan" : true
+        },
+        {                   
+            "element" : ".ui-tabs-anchor:contains(Submitted)",
+            "title": "Submit",
+            "content" : "In this Tab Order can be <ui><li>Approve</li><li>Cancel</li><li>Redirect to Redesign</li></ui>",
+            "orphan" : true
+        },
+        {                   
+            "element" : ".ui-tabs-anchor:contains(Approved)",
+            "title": "Approved Order",
+            "content" : "In this Tab process will start on the order by sending the order to <b>the supplier</b>",
+            "orphan" : true
+        },
+        {                   
+            "element" : ".ui-tabs-anchor:contains(Processing)",
+            "title": "Processed Order",
+            "content" : "In this Tab we recieve the item and mark as processed if it is complete",
+            "orphan" : true
+        },
+        {                   
+            "element" : ".ui-tabs-anchor:contains(Completed)",
+            "title": "Completed Order",
+            "content" : "This Tab shows the <b>completed order</b>",
+            "orphan" : true
+        },
+        {                   
+            "element" : ".ui-tabs-anchor:contains(Canceled)",
+            "title": "Canceled Order",
+            "content" : "This Tab shows the<b> rejected order</b>",
+            "orphan" : true
+        }
+            ]
+}

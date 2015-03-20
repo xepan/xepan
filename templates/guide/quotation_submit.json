@@ -1,0 +1,52 @@
+{
+	"steps":[
+	    {
+	        "element" : "div.atk-box-small button:contains(Add Quotation Submit)",
+	        "title": "Add Life To Your Quotation",
+	        "content" : "This Button allows you to <b>create a new Quotation, status as submitted,</b> generated as per <i>requirement/need of Lead/Customer</i> of Company.",
+	        "placement": "top",
+	        "orphan":true,
+	        "backdrop":true
+	    },
+	    {
+	        "element" :"th:contains(Items):visible()",
+	        "title": "Items Button",
+	        "content" : "This button, when clicked, shows below the <i>list </i>and <i>information</i> about Items required by Customer.",
+	        "placement": "bottom",
+	        "orphan":true,
+	        "backdrop":true
+	    },
+	    {
+	        "element" :"th:contains(Approve):visible()",
+	        "title": "Approve Button",
+	        "content" : "This button, when clicked, <i>approves the Corresponding Quotation</i> and <i>places it in Approved Tab</i>.",
+	        "placement": "bottom",
+	        "orphan":true,
+	        "backdrop":true
+	    },
+	    	    {
+	        "element" :"th:contains(Reject):visible()",
+	        "title": "Reject Button",
+	        "content" : "This button, when clicked, <i>rejects the Corresponding Quotation with asking for feedback for cause of rejection</i> and <i>places it in Redesign Tab</i>.",
+	        "placement": "bottom",
+	        "orphan":true,
+	        "backdrop":true
+	    },
+	    {
+	        "element" :"th:contains(Edit):visible()",
+	        "title": "Edit Button",
+	        "content" : "This button, when clicked, <i>allows you to edit the current information about the corresponding Quotation</i>.",
+	        "placement": "bottom",
+	        "orphan":true,
+	        "backdrop":true
+	    },
+	    {
+	        "element" :"th:contains(Delete):visible()",
+	        "title": "Delete Button",
+	        "content" : "This button, when clicked, <i>deletes the corresponding Quotation</i> from the records.",
+	        "placement": "bottom",
+	        "orphan":true,
+	        "backdrop":true
+	    }
+	 ]
+}

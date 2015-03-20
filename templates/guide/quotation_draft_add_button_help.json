@@ -1,0 +1,60 @@
+{
+	"steps":[	
+	 	{
+	        "element" : "dialog",
+	        "title": "Basic Info",
+	        "content" : "This dialog allows you to <b>add a New Quotation Draft</b>, by facilitating you to <i>select Lead/Customer, Term and Conditions, Name, Quotation No</i> for Quotations.<p><div class='panel panel-danger panel-heading text-center'>While drafting Quotation, You can only select Lead or Customer, i.e. only one at a time, not both.</div></p>",
+	        "placement": "bottom",
+	        "orphan":true,
+	        "backdrop":true
+	    },
+	    {
+	        "element" : "div.atk-form-row div.atk-push-xsmall label:contains(Lead:)",
+	        "title": "Lead",
+	        "content" : "This dropdown list, when clicked, <i>allows you to select the name from list of currently available leads.</i>.<p><div class='panel panel-danger panel-heading text-center'>Leads are the prospective consumer of a product/service that is created when an indiviual/organization expresses interest in our goods/services.</br>Leads are typically obtained through the referral of an existing customer, advertisments, publicity, direct mailing, etc.</div></p>",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop":true
+	    },
+	    {
+	        "element" : "div.atk-form-row div.atk-push-xsmall label:contains(Customer:)",
+	        "title": "Select from Available Customers",
+	        "content" : "This dropdown list, when clicked, <i>allows you to select the name from list of Customers.</i>.",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop":true
+	    },
+	    {
+	        "element" : "div.atk-form-row div.atk-push-xsmall label:contains(Termandcondition:)",
+	        "title": "Select from Available Terms and Conditions",
+	        "content" : "This dropdown list, when clicked, <i>allows you to select all applicable Terms and Conditions from available ones.</i>.",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop":true
+	    },
+	    {
+	        "element" : "div.atk-form-row div.atk-push-xsmall label:contains(Name:)",
+	        "title": "Type a Name For the Quotation",
+	        "content" : "This dropdown list, when clicked, <i>???????????????????????????????</i>.",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop":true
+	    },
+	    {
+	        "element" : "div.atk-form-row div.atk-push-xsmall label:contains(Quotation No:)",
+	        "title": "Give a Quotation No For the Quotation",
+	        "content" : "This TextBox, when clicked, <i>???????????????????????????????</i>.",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop":true
+	    },
+	    {
+	        "element" : "div.atk-actions button:contains(Add)",
+	        "title": "When You Have Done, Click Me to Add Quotation",
+	        "content" : "When you have done with the Required Infomation, <i>Click Me to add Infomation to Your Drafts</i>.",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop":true
+	    }
+	 ]
+}
