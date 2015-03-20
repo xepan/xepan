@@ -67,6 +67,13 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 		$custom_fields_asso_values=array();
 		
 		if($form->isSubmitted()){
+			//TODOOOOOO
+			//Display Department in Level Format
+			//Check For the One Department at One Level
+			//If Department Is Store then next One Department is Select Compulsary
+			//If Department Is Purchase then next One Department is Select Compulsary 
+			//If Department Is Dispatch or Dilivey then Previous One Department is Select Compulsary 
+
 			foreach ($phases as $phase) {
 				if( $form['phase_'.$phase->id] ){
 					$custom_fields_asso_values [$phase->id]=array();

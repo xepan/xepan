@@ -45,8 +45,8 @@ class CRUD_User extends CRUD{
 	}
 
 	function setModel($model,$field_form=null,$field_grid=null){
-		if($this->isEditing()){
-			if($model->load($this->id)->isDefaultSuperUser()){
+		if($this->isEditing('edit')){
+			if($model->load($this->id)->isDefaultSuperUser()){				
 				$model->getElement('type')->display(array('form'=>'Readonly'));
 				$model->getElement('is_active')->system(true);
 				$model->getElement('user_management')->system(true);
@@ -86,7 +86,7 @@ class CRUD_User extends CRUD{
 
 			$this->grid->addColumn('Expander,app_permission','application_permissions',array('page'=>$this->app_page,'descr'=>'App'));
 		}else{
-			if($this->model->isFrontEndUser()){
+			if($this->isEditing('edit') AND $this->model->isFrontEndUser()){
 				$this->form->getElement('user_management')->destroy();
 				$this->form->getElement('general_settings')->destroy();
 				$this->form->getElement('application_management')->destroy();
