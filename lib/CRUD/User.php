@@ -45,7 +45,7 @@ class CRUD_User extends CRUD{
 	}
 
 	function setModel($model,$field_form=null,$field_grid=null){
-		if($this->isEditing()){
+		if($this->isEditing('edit')){
 			if($model->load($this->id)->isDefaultSuperUser()){
 				$model->getElement('type')->display(array('form'=>'Readonly'));
 				$model->getElement('is_active')->system(true);
