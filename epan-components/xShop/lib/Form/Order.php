@@ -39,7 +39,9 @@ class Form_Order extends \Form_Stacked {
 						$new_user['name']=$form['name'];
 						$new_user['email']=$form['email'];
 						$new_user->save();
-
+						$new_user['username']=$new_user->id;
+						$new_user->save();
+							
 						// .. member will be created by event automatically
 						$new_member= $form->add('xShop/Model_MemberDetails');
 						$new_member->loadBy('users_id',$new_user->id);
