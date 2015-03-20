@@ -20,31 +20,38 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 		$orderitem_id = $this->api->stickyGET('orderitem_id');
 		$this->orderitem = $orderitem = $this->add('xShop/Model_OrderDetails')->addCondition('id',$orderitem_id)->tryLoadAny();
 
-		$this->existing_values = json_decode($_GET['current_json'],true);
-
 		$item_id = $this->api->stickyGET('selected_item_id');
 		$this->item = $item = $this->add('xShop/Model_Item')->tryLoad($item_id);
+		
+		//Make PredefinedPhase Array
+		$this->preDefinedPhase = array();
+		foreach ($item->getAssociatedDepartment() as $key => $value) {
+			$this->preDefinedPhase[$value] = $value;
+		}
 
+		$this->existing_values = $_GET['current_json']?json_decode($_GET['current_json'],true):$this->preDefinedPhase;
+		// $this->existing_values = $item->getAssociatedDepartment();
+		// print_r($this->existing_values);
 		if(!$item->loaded()) {
 			$this->add('View_Error')->set('item not selcetd');
 			return;
 		}
 
 		$this->form = $form = $this->add('Form_Stacked');
-
 		$phases = $this->add('xProduction/Model_Phase');
 		foreach ($phases as $phase) {
 		// add all phases
-			$phase_field = $form->addField('Checkbox','phase_'.$phase->id,$phase['name']);
+			$group = $phase['production_level']."~12~Level".$phase['production_level'];
+			$phase_field = $form->addField('Checkbox','phase_'.$phase->id,$phase['name'])->setterGetter('group',$group);
 			// if item has custome fields for phase & set if editing
-			
-			if(isset($this->existing_values[$phase->id])) 
+			if(isset($this->existing_values[$phase->id])) {
 				$phase_field->set(true);
-
+			}
+			
 			$custom_fields_asso = $item->ref('xShop/ItemCustomFieldAssos')->addCondition('department_phase_id',$phase->id);
 			$custom_fields_array=array();
 			foreach ($custom_fields_asso as $cfassos) {
-				$field = $this->addCustomField($cf = $cfassos->ref('customfield_id'),$custom_fields_asso);
+				$field = $this->addCustomField($cf = $cfassos->ref('customfield_id'),$custom_fields_asso,$group);
 				if(isset($this->existing_values[$phase->id][$cf->id])){
 					$field->set($this->existing_values[$phase->id][$cf->id]);
 				}
@@ -69,11 +76,13 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 		if($form->isSubmitted()){
 			//TODOOOOOO
 			//Display Department in Level Format
-			//Check For the One Department at One Level
 			//If Department Is Store then next One Department is Select Compulsary
 			//If Department Is Purchase then next One Department is Select Compulsary 
 			//If Department Is Dispatch or Dilivey then Previous One Department is Select Compulsary 
-
+					// validate custom field entries
+			//Check For the Custom Field Value Not Proper
+			//Check For the One Department at One Leve
+			
 			foreach ($phases as $phase) {
 				if( $form['phase_'.$phase->id] ){
 					$custom_fields_asso_values [$phase->id]=array();
@@ -87,18 +96,19 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 			$json = json_encode($custom_fields_asso_values);
 			$form->js(null,$form->js()->univ()->closeDialog())->_selector('#'.$_GET['custom_field_name'])->val($json)->execute();
 		}
+		$this->form->add('Controller_FormBeautifier');
 
 	}
 
-	function addCustomField(&$cf, $custom_fields_asso_assos){
+	function addCustomField(&$cf, $custom_fields_asso_assos,$group){
 		$field=null;
 		
 		switch($cf['type']){
 			case "line":
-				$field = $this->form->addField('line','custom_field_'.$cf->id , $cf['name']);
+				$field = $this->form->addField('line','custom_field_'.$cf->id , $cf['name'])->setterGetter('group',$group);
 			break;
 			case "DropDown":
-				$field = $drp = $this->form->addField('DropDown','custom_field_'.$custom_fields_asso_assos->id , $cf['name']);
+				$field = $drp = $this->form->addField('DropDown','custom_field_'.$custom_fields_asso_assos->id , $cf['name'])->setterGetter('group',$group);
 				$values = $this->add('xShop/Model_CustomFieldValue');
 				$values->addCondition('item_id',$this->item->id);
 				$values->addCondition('customfield_id',$cf->id);
