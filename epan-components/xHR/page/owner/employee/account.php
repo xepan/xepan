@@ -14,9 +14,9 @@ class page_xHR_page_owner_employee_account extends Page{
 		$form = $this->add('Form_Stacked');
 		$active_user = $this->add('Model_USers')->addCondition('is_active', true);
 		
-		$form_field=$form->addField('dropdown','user');
+		$form_field=$form->addField('autocomplete/Basic','user');
 		$form_field->setModel($active_user);
-		$form_field->setEmptyText('Please Select User');
+		// $form_field->setEmptyText('Please Select User');
 		$form_field->set($emp->user()->get('id'));
 		$bs=$form_field->beforeField()->add('Button');
 
