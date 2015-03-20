@@ -17,7 +17,7 @@ class Model_Order extends \Model_Document{
 		$this->hasOne('xShop/PaymentGateway','paymentgateway_id');
 		$f = $this->hasOne('xShop/MemberDetails','member_id')->group('a~3~<i class="fa fa-info"></i> Order Info')->sortable(true);
 		$f->icon = "fa fa-user~red";
-		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3')->sortable(true);
+		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3')->sortable(true)->defaultValue(rand(1000,9999));
 		$f = $this->addField('email')->group('a~3')->sortable(true);
 		$f = $this->addField('mobile')->group('a~3')->sortable(true);
 		
@@ -65,7 +65,6 @@ class Model_Order extends \Model_Document{
 		$this->hasMany('xShop/SalesOrderAttachment','related_document_id',null,'Attachements');
 		
 		$this->addHook('beforeDelete',$this);
-		$this->addHook('beforeInsert',$this);
 
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
@@ -83,10 +82,6 @@ class Model_Order extends \Model_Document{
 			}
 		}
 		$m->ref('xShop/OrderDetails')->deleteAll();
-	}
-
-	function beforeInsert(){
-		$this['name'] = rand(1000,9999); // <== todo .. generate unique next order id
 	}
 
 	function placeOrderFromCart(){

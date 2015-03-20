@@ -46,11 +46,23 @@ class Model_Document extends SQL_Model{
 		$this->hasMany('Attachment','document_id');
 
 		$this->addHook('beforeSave',array($this,'defaultBeforeSave'));
+		$this->addHook('afterInsert',array($this,'defaultAfterInsert'));
 
 	}
 
 	function defaultBeforeSave(){
 		$this['updated_at']= date('Y-m-d H:i:s');
+	}
+
+	function getSeries(){
+		return $this->document_name;
+	}
+
+	function defaultAfterInsert($newobj,$id){
+		$x=$this->newInstance();
+		$x->load($id);
+		$x['name'] = $this->getSeries() .' ' . sprintf("%05d", $x->id);
+		$x->save();
 	}
 
 	function getRootClass($specific_calss=false){

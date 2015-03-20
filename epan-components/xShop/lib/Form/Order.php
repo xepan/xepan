@@ -23,9 +23,6 @@ class Form_Order extends \Form_Stacked {
 				if(!$form['name'])
 					$form->displayError('name','name is must');
 
-
-
-
 				$users= $form->add('Model_Users');
 				$users->addCondition('email',$form['email']);
 				$users->tryLoadAny();
@@ -112,9 +109,9 @@ class Form_Order extends \Form_Stacked {
 		if($this->model AND $this->model->loaded()){
 			// fill form values from model // editing
 			$this->member_field->set($this->model['member_id']);
-			$this->name_field->set($this->model['name']);
-			$this->email_field->set($this->model['email']);
-			$this->mobile_field->set($this->model['mobile']);
+			$this->name_field->set($this->model['member']);
+			$this->email_field->set($this->model->ref('member_id')->get('email'));
+			$this->mobile_field->set($this->model->ref('member_id')->get('mobile_number'));
 			$this->billing_address_field->set($this->model['billing_address']);
 			$this->shipping_address_field->set($this->model['shipping_address']);
 			$this->order_summary_field->set($this->model['order_summary']);
