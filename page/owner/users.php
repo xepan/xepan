@@ -40,7 +40,7 @@ class page_owner_users extends page_base_owner {
 		$usr=$this->add('Model_Users');
 		$usr->addCondition('epan_id',$this->api->current_website->id);
 		$usr->getElement('epan')->destroy();
-		$crud->setModel($usr);//,array('name','type','username','password','email','created_at','is_active','activation_code','application_management'));
+		$crud->setModel($usr,array('name','type','username','password','email','is_active','user_management','general_settings','application_management','website_designing','last_login_date'),array('name','username','is_active','user_management','general_settings','application_management','website_designing','last_login_date'));
 
 		if(!$crud->isEditing()){
 			$crud->grid->js('reload',$bg->js()->reload());

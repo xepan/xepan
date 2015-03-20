@@ -86,7 +86,7 @@ class CRUD_User extends CRUD{
 
 			$this->grid->addColumn('Expander,app_permission','application_permissions',array('page'=>$this->app_page,'descr'=>'App'));
 		}else{
-			if($this->model->isFrontEndUser()){
+			if($this->isEditing('edit') AND $this->model->isFrontEndUser()){
 				$this->form->getElement('user_management')->destroy();
 				$this->form->getElement('general_settings')->destroy();
 				$this->form->getElement('application_management')->destroy();

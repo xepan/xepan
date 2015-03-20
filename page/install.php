@@ -110,6 +110,7 @@ class page_install extends Page {
 			$user['application_management']=true;
 			$user['website_designing']=true;
 			$user['is_active']=true;
+			$user['email']="support@xepan.org";
 			$user->save();
 			
 			$form->js(null,$form->js()->univ()->successMessage("Installed Successfully"))->univ()->redirect($this->api->url(null,array('step'=>2)))->execute();
