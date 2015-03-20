@@ -162,7 +162,6 @@ class Controller_Acl extends \AbstractController {
 					$fields = array_merge(array('post_department','post','post_id'),array_keys($self->owner->model->actions));
 				}
 				$c->setModel($m,$fields);
-
 				if(!$c->isEditing()){
 					$c->grid->removeColumn('post_id');
 				}
@@ -329,6 +328,7 @@ class Controller_Acl extends \AbstractController {
 						}
 					}
 					catch(\Exception_StopInit $e){
+						$this->api->db->commit();
 						throw $e;
 					}catch(\Exception $e){
 						$this->api->db->rollback();
@@ -348,8 +348,8 @@ class Controller_Acl extends \AbstractController {
 				$this->api->db->commit();
 			}
 			catch(\Exception_StopInit $e){
-						echo "not rolling" . $e->getMessage();
-						throw $e;
+					$this->api->db->commit();
+					throw $e;
 			}catch(\Exception $e){
 				$this->api->db->rollback();
 					throw $e;
