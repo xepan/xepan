@@ -5,7 +5,7 @@ namespace xShop;
 class Model_Order extends \Model_Document{
 	public $table='xshop_orders';
 	public $status = array('draft','submitted','approved','processing','processed','dispatched',
-							'complete','cancel','return');
+							'complete','cancel','return','redesign');
 	public $root_document_name = 'xShop\Order';
 
 	function init(){
@@ -242,9 +242,10 @@ class Model_Order extends \Model_Document{
 	}
 
 	function reject(){
-		$this->setStatus('submitted');
-		return $this;
+		$this->setStatus('redesign');
 	}
+
+
 
 	function approve_page($page){
 		$page->add('View_Info')->set('Approving Job Card will move this order to approved status and create JobCards to receive in respective FIRST Departments for each Item');

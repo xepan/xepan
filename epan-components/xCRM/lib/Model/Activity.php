@@ -2,6 +2,7 @@
 namespace xCRM;
 
 class Model_Activity extends \Model_Document{
+	
 	public $status=array();
 	public $table="xcrm_document_activities";
 	public $root_document_name= 'xCRM\Activity';
@@ -25,13 +26,13 @@ class Model_Activity extends \Model_Document{
 
 		$this->addExpression('action_from')->set(function($m,$q){
 
-			$nq=$this->api->db->dsql();
+			$nq=$m->api->db->dsql();
 
 			$emp_q = $nq->table('xhr_employees');
 			$emp_q->where('id',$q->getField('from_id'));
 			$emp_q->del('fields');
 
-			$nq1=$this->api->db->dsql();
+			$nq1=$m->api->db->dsql();
 			$users = $nq1->table('users');
 			$cust_j = $users->join('xshop_memberdetails.users_id');
 			$users->where('users_id',$q->getField('from_id'));

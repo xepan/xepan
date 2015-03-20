@@ -8,16 +8,16 @@ class page_xShop_page_owner_attachment extends page_xShop_page_owner_main{
         $order_id = $this->api->stickyGET('id');
         $order_item_id = $this->api->stickyGET('xshop_orderDetails_id');
         
-        $order = $this->add('xShop/Model_Order')->load($order_id);
-
-        $this->add('View')->set("Member name = ".$order['member']);
-        $crud = $this->add('CRUD');
         if($order_id){
-           $attachment = $this->add('xShop/Model_SalesOrderAttachment');
+            $order = $this->add('xShop/Model_Order')->load($order_id);
+            $this->add('View')->set("Member name = ".$order['member']);
+            $attachment = $this->add('xShop/Model_SalesOrderAttachment');
         }
         if($order_item_id){
            $attachment = $this->add('xShop/Model_SalesOrderDetailAttachment');    
         }
+
+        $crud = $this->add('CRUD');
 
 
         $crud->setModel($attachment);

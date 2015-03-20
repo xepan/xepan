@@ -1,0 +1,22 @@
+{
+	"steps":[
+		{ 					
+        	"element" : "",
+       		"title": "Processing",
+        	"content" : "In this section you recieve the item from supplier,which are ordered",
+        	"orphan" : true
+    	},
+    	{ 					
+        	"element" : ".atk-button:contains('ACL APPLIED')",
+       		"title": "Access Controll Level",
+            "content" : "Customize Aceess Controll on Submitted Orders.Here you can <b>edit</b> the access control permission",
+        	"orphan" : true
+    	},
+        {	
+            "element" : "th:contains('Mark_processed')",
+       		"title": "Mark_processed",
+        	"content" : "If you recieve the items than click on Mark_processed.If you did not recieve the items in exact quantity that you have ordered then you have to change in <b>Recieved Quantity</b>",
+        	"orphan" : true
+    	}
+		    ]
+}

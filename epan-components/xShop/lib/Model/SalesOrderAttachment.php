@@ -4,6 +4,7 @@ namespace xShop;
 
 class Model_SalesOrderAttachment extends \Model_Attachment{
 	public $root_document_name = "xShop\SalesOrderAttachment";
+
 	function init(){
 		parent::init();
 

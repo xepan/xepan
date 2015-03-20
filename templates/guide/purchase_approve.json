@@ -1,0 +1,22 @@
+{
+	"steps":[
+		{ 					
+        	"element" : "",
+       		"title": "Approved",
+        	"content" : "This section shows the order which are Apporoved",
+        	"orphan" : true
+    	},
+    	{ 					
+        	"element" : ".atk-button:contains('ACL APPLIED')",
+       		"title": "Access Controll Level",
+            "content" : "Customize Aceess Controll on Submitted Orders.Here you can <b>edit</b> the access control permission",
+        	"orphan" : true
+    	},
+        {	
+            "element" : "th:contains('Start Processing')",
+       		"title": "Start Processing",
+        	"content" : "In this Tab process will start on the order by sending the order to <b>the supplier</b>",
+        	"orphan" : true
+    	}
+		    ]
+}

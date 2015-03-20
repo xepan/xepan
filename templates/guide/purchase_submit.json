@@ -1,0 +1,31 @@
+{
+	"steps":[
+		{ 					
+        	"element" : "",
+       		"title": "Submitted",
+        	"content" : "This section shows the order which are submitted",
+        	"orphan" : true
+    	},
+    	{ 					
+        	"element" : ".atk-button:contains('ACL APPLIED')",
+       		"title": "Access Controll Level",
+            "content" : "Customize Aceess Controll on Submitted Orders.Here you can <b>edit</b> the access control permission",
+        	"orphan" : true
+    	},
+        {	
+            "element" : "th:contains('Approve')",
+       		"title": "Approve ",
+        	"content" : "If order is according to requirement than it will appove",
+        	"orphan" : true
+    	},
+		{ 					
+        	"element" : "th:contains('Redesign')",
+       		"title": "Redesign",
+        	"content" : "If order is not appropriate than it goes to redesign",
+        	"orphan" : true,
+        	"Placement":"bottom"
+    	}
+		
+
+            ]
+}
