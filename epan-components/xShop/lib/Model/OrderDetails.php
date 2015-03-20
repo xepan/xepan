@@ -198,7 +198,7 @@ class Model_OrderDetails extends \Model_Document{
 		$d = $this->deptartmentalStatus();
 		$str = "";
 		foreach ($d as $department) {
-			$str .= $department['department']." ( ".$department['status']." )";
+			$str .= '<b>' . $department['department']."</b> ( ".$department['status']." )";
 			if($with_custom_fields){
 				$array = json_decode($this['custom_fields'],true);
 				foreach ($array as $id => $cf ) {

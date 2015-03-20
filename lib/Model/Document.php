@@ -46,11 +46,23 @@ class Model_Document extends SQL_Model{
 		$this->hasMany('Attachment','document_id');
 
 		$this->addHook('beforeSave',array($this,'defaultBeforeSave'));
+		$this->addHook('afterInsert',array($this,'defaultAfterInsert'));
 
 	}
 
 	function defaultBeforeSave(){
 		$this['updated_at']= date('Y-m-d H:i:s');
+	}
+
+	function getSeries(){
+		return $this->document_name;
+	}
+
+	function defaultAfterInsert($newobj,$id){
+		$x=$this->newInstance();
+		$x->load($id);
+		$x['name'] = $this->getSeries() .' ' . sprintf("%05d", $x->id);
+		$x->save();
 	}
 
 	function getRootClass($specific_calss=false){
@@ -153,15 +165,24 @@ class Model_Document extends SQL_Model{
 		$activities->setORder('created_at','desc');
 
 		$crud = $page->add('CRUD');
-		$crud->setModel($activities);
+
+		if($crud->isEditing('add')){
+			$activities->addCondition('action','comment');
+		}
+
+		$crud->setModel($activities,array('created_at','action_from','action','subject','message'));
+
+		if(!$crud->isEditing()){
+			$crud->grid->controller->importField('created_at');
+		}
 
 		$crud->add('xHR/Controller_Acl');
 
 	}
 
-	function setStatus($status){
+	function setStatus($status,$message=null){
 		$this['status']=$status;
-		$this->createActivity($status,ucwords($status),'Document Status Changed');
+		$this->createActivity($status,ucwords($status),$message?:'Document Status Changed');
 		$this->saveAs($this->getRootClass());
 	}
 
