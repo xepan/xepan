@@ -25,9 +25,6 @@ class Model_Order extends \Model_Document{
 		$this->addField('order_from')->enum(array('online','offline'))->defaultValue('offline');
 		$f = $this->getElement('status')->group('a~2');
 
-		$f = $this->addField('on_date')->type('date')->defaultValue(date('Y-m-d'))->group('a~2')->sortable(true);
-		$f->icon ="fa fa-calendar~blue";
-
 		$f = $this->addField('amount')->mandatory(true)->group('b~3~<i class="fa fa-money"></i> Order Amount')->sortable(true);
 		$f = $this->addField('discount_voucher')->group('b~3');
 		$f = $this->addField('discount_voucher_amount')->group('b~3');
@@ -66,7 +63,7 @@ class Model_Order extends \Model_Document{
 		
 		$this->addHook('beforeDelete',$this);
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete($m){

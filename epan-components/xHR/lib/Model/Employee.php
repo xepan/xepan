@@ -18,6 +18,17 @@ class Model_Employee extends \Model_Table{
 		$this->add('filestore/Field_Image','empolyee_image_id');
 		$this->addField('is_active')->type('boolean')->defaultValue(true)->group('a~2');
 		
+
+		$this->addExpression('name_with_designation')->set(
+			$this->dsql()->concat(
+				$this->getElement('name'),
+				' / ',
+				$this->refSQL('department_id')->fieldQuery('name'),
+				' / ',
+				$this->refSQL('post_id')->fieldQuery('name')
+			)
+		);
+
 		//Employmet Detail
 		
 		$this->addField('status')->enum(array('active','left'))->group('b~3~Employment Details');
