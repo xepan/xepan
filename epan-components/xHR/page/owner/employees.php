@@ -42,11 +42,11 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 		$emp_crud->grid->addQuickSearch(array('name'));
 		$emp_crud->grid->addPaginator($ipp=50);
 
-
 		// $emp_col->add('xShop/View_Badges_ItemPage');
 		if($_GET['employee_id']){
 			$this->api->stickyGET('employee_id');
-			$filter_box = $emp_col->add('View_Box')->setHTML('Employee :: '.$this->add('xHR/Model_Employee')->load($_GET['employee_id'])->get('name'));
+			$selected_emp = $this->add('xHR/Model_Employee')->load($_GET['employee_id']);
+			$filter_box = $emp_col->add('View_Box')->setHTML('Employee :: '.$selected_emp['name'] . ' / '. $selected_emp->department()->get('name').' / '.$selected_emp->post()->get('name'). ' / '. ($selected_emp['is_active']?'Active':'InActive'));
 			$filter_box->add('Icon',null,'Button')
             ->addComponents(array('size'=>'mega'))
             ->set('cancel-1')

@@ -16,7 +16,7 @@ class page_xHR_page_owner_employee_basic extends Page{
 		
 		$form = $this->add('Form_Stacked');
 		$form->setModel($selected_dept_model,array(
-													'name','dob','gender', 
+													'name','dob','gender','is_active', 
 													'status','doj','offer_date','company_email_id','confirmation_date','contract_end_date','date_of_retirement','resignation_letter_date'
 													,'relieving_date','reason_of_resignation','salary_mode','feedback','mobile_no',													// 'marital_status','salary_mode','company_email_id',
 													'emergency_contact_person','relation','emergency_contact_no','current_address','permanent_addesss',
@@ -29,7 +29,7 @@ class page_xHR_page_owner_employee_basic extends Page{
 		$form->add('Controller_FormBeautifier');
 		if($form->isSubmitted()){	
 			$form->update();
-			$form->js()->univ()->successMessage(' Update Information')->execute();
+			$form->js(null,$form->js()->reload())->univ()->successMessage(' Update Information')->execute();
 		}
 
 	}

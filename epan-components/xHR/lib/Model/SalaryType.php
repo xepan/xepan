@@ -5,7 +5,6 @@ class Model_SalaryType extends \Model_Table{
 	public $table="xhr_salary_types";
 	function init(){
 		parent::init();
-		$this->hasOne('xHR/SalaryTemplate','salary_template_id')->sortable(true);
 
 		$this->addField('name')->sortable(true);
 		
@@ -18,15 +17,17 @@ class Model_SalaryType extends \Model_Table{
 							'name|to_trim|required',
 							)
 					);
+		$this->hasMany('xHR/TemplateSalary','salary_type_id');
 
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){}
 	function beforeDelete(){
-		$tem_salary=$this->ref('salary_template_id')->count()->getOne() > 0;
-		$salary=$this->ref('xHR/Salary')->count()->getOne() > 0;
+		$tem_salary = $this->ref('xHR/TemplateSalary')->count()->getOne();
+		$salary=$this->ref('xHR/Salary')->count()->getOne();
+
 		if($tem_salary OR $salary)
-			throw $this->exception('Salary Type contains O  Templates. Please Delete Templates First','Growl');
+			throw $this->exception("Salary Type is Used in Salary Templates($tem_salary) or Salaries($salary). Please Remove its use first",'Growl');
 	}
 }

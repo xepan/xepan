@@ -4,6 +4,7 @@ class page_install extends Page {
 	function init(){
 		parent::init();
 		
+		set_time_limit(0);
 
 		$this->add('View')->setHTML('<h1>xEpan CMS :: Installer</h1>')->addClass('text-center 	xepan-installer-heading xepan-installer-step1');
 		$this->api->template->trySet('page_title','Epan :: Installer');

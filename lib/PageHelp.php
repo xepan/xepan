@@ -5,8 +5,10 @@ class PageHelp extends View{
 
 	function init(){
 		parent::init();
-		// $this->addStyle('float','right');
-		
+		$this->addStyle('float','right');
+			
+		$this->owner->add('Order')->move($this,'first')->now();
+
 		if($this->page == null) {
 			$this->set('Page Not Defined');
 			return;

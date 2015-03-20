@@ -21,7 +21,6 @@ class Form_Field_Plus extends Form_Field_Basic
                 ->set(function($page)use($self) {
                     $form = $page->add('Form_Stacked');
                     $form->setModel($self->model);
-                    $form->add('Controller_FormBeautifier');
                     if ($form->isSubmitted()) {
                         $form->update();
                         $js = array();
@@ -29,6 +28,7 @@ class Form_Field_Plus extends Form_Field_Basic
                         $js[] = $self->other_field->js()->val($form->model[$self->title_field]);
                         $form->js(null, $js)->univ()->closeDialog()->execute();
                     }
+                    $form->add('Controller_FormBeautifier');
                 });
     }
 }
