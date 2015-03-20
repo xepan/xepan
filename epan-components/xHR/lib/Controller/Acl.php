@@ -6,6 +6,9 @@ class Controller_Acl extends \AbstractController {
 
 	public $document=null;
 	public $my_model = null;
+	public $show_acl_btn = true;
+	public $override=array();
+
 	public $permissions=array(
 		
 		'can_view'=>'No',
@@ -56,15 +59,18 @@ class Controller_Acl extends \AbstractController {
 
 			if($this->owner instanceof \SQL_Model){
 				$this->document = get_class($this->owner);
-				$this->owner->acl_added=$this;
-				$this->my_model = $this->owner;
 			}
 			else{
 				$this->document = get_class($this->owner->getModel());
-				$this->owner->model->acl_added=$this;
-				$this->my_model = $this->owner->model;
 			}
+		}
 
+		if($this->owner instanceof \SQL_Model){
+			$this->owner->acl_added=$this;
+			$this->my_model = $this->owner;
+		}else{
+			$this->owner->model->acl_added=$this;
+			$this->my_model = $this->owner->model;
 		}
 
 		$this->document = str_replace("Model_", "", $this->document);
@@ -73,7 +79,6 @@ class Controller_Acl extends \AbstractController {
 		$dept_documents->addCondition('department_id', $_GET['department_id']?:$this->api->current_employee->department()->get('id'));
 		$dept_documents->addCondition('name', $this->document);
 		$dept_documents->tryLoadAny();
-
 		if(!$dept_documents->loaded()) $dept_documents->save();
 
 		$acl_model = $this->add('xHR/Model_DocumentAcl');
@@ -88,6 +93,11 @@ class Controller_Acl extends \AbstractController {
 		foreach ($this->permissions as $key => $value) {
 			$this->permissions[$key] = $acl_model[$key];
 		}
+
+		foreach ($this->override as $key => $value) {
+			$this->permissions[$key] = $value;
+		}
+
 
 		$this->self_only_ids = array($this->api->current_employee->id);
 		
@@ -136,7 +146,7 @@ class Controller_Acl extends \AbstractController {
 
 	function doCRUD(){
 		// echo "i m here 2 <br>";
-		if(!$this->owner->isEditing()){
+		if($this->show_acl_btn AND !$this->owner->isEditing()){
 			$btn = $this->owner->grid->buttonset->addButton()->set('ACL APPLIED');
 			$self= $this;
 			$vp = $this->owner->add('VirtualPage')->set(function($p)use($self){
@@ -200,55 +210,55 @@ class Controller_Acl extends \AbstractController {
 		}
 
 		if($this->permissions['can_submit'] != 'No'){
-			$this->manageAction('submit');
+			$this->manageAction('submit','can_submit');
 		}
 	
 		if($this->permissions['can_select_outsource'] and $this->permissions['can_select_outsource'] !='No'){
-			$this->manageAction('select_outsource');
+			$this->manageAction('select_outsource','can_select_outsource');
 		}		
 
 		if($this->permissions['can_approve'] and $this->permissions['can_approve'] !='No'){
-			$this->manageAction('approve');
+			$this->manageAction('approve','can_approve');
 		}	
 		
 		if($this->permissions['can_reject'] !='No'){
-			$this->manageAction('reject');
+			$this->manageAction('reject','can_reject');
 		}
 		
 		if($this->permissions['can_redesign'] !='No'){
-			$this->manageAction('redesign');
+			$this->manageAction('redesign','can_redesign');
 		}
 
 		if($this->permissions['can_assign'] !='No'){			
-			$this->manageAction('assign');
+			$this->manageAction('assign','can_assign');
 		}
 
 		if($this->permissions['can_receive']){
-			$this->manageAction('receive');
+			$this->manageAction('receive','can_receive');
 		}
 
 		if($this->permissions['can_accept'] and $this->permissions['can_accept'] !='No'){
-			$this->manageAction('accept');
+			$this->manageAction('accept','can_accept');
 		}
 
 		if($this->permissions['can_cancel'] and $this->permissions['can_cancel'] !='No'){
-			$this->manageAction('cancel');
+			$this->manageAction('cancel','can_cancel');
 		}
 
 		if($this->permissions['can_forward'] !='No'){
-			$this->manageAction('forward');
+			$this->manageAction('forward','can_forward');
 		}
 
 		if($this->permissions['can_start_processing'] !='No'){
-			$this->manageAction('start_processing');
+			$this->manageAction('start_processing','can_start_processing');
 		}
 
 		if($this->permissions['can_mark_processed'] !='No'){
-			$this->manageAction('mark_processed');
+			$this->manageAction('mark_processed','can_mark_processed');
 		}
 
 		if($this->permissions['can_manage_attachments'] !='No'){
-			$this->manageAction('manage_attachments');
+			$this->manageAction('manage_attachments','can_manage_attachments');
 		}
 
 		if($this->permissions['can_manage_tasks'] !='No'){
@@ -272,7 +282,7 @@ class Controller_Acl extends \AbstractController {
 		}
 
 		if($this->permissions['can_see_activities'] AND $this->permissions['can_see_activities'] != 'No'){
-			$this->manageAction('see_activities');
+			$this->manageAction('see_activities','can_see_activities');
 		}
 
 		if($this->permissions['can_send_via_email'] !='No' AND $this->owner->model->hasMethod('send_via_email')){
@@ -298,7 +308,13 @@ class Controller_Acl extends \AbstractController {
 
 	}
 
-	function manageAction($action_name){
+	function manageAction($action_name, $full_acl_key=null , $icon = null){
+
+		if(!$icon and isset($this->my_model->actions)){
+			$icon = $this->my_model->actions[$full_acl_key]['icon']?:'edit';
+		}
+		else
+			$icon = 'target';
 
 		if($this->owner->model->hasMethod($action_name.'_page')){
 			$action_page_function = $action_name.'_page';
@@ -312,7 +328,7 @@ class Controller_Acl extends \AbstractController {
 
 			$title = implode(" ", $title);
 
-			$p = $this->owner->addFrame(ucwords($title),array('icon'=>'edit'));
+			$p = $this->owner->addFrame(ucwords($title),array('icon'=>$icon));
 			if($p and $this->owner->isEditing('fr_'.$this->api->normalizeName(ucwords($title)))){
 				$this->owner->model->tryLoad($this->owner->id);
 				if($this->owner->model->loaded()){
@@ -344,7 +360,7 @@ class Controller_Acl extends \AbstractController {
 		}elseif($this->owner->model->hasMethod($action_name)){
 			try{
 				$this->api->db->beginTransaction();
-					$this->owner->addAction($action_name,array('toolbar'=>false));		
+					$this->owner->addAction($action_name,array('toolbar'=>false,'icon'=>$icon));		
 				$this->api->db->commit();
 			}
 			catch(\Exception_StopInit $e){
