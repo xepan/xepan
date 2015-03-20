@@ -1,0 +1,12 @@
+{
+	"steps":[	
+	    {
+	        "element" : "div.page_xShop_page_owner_quotation_items div.atk-box-small button:contains(Add QuotationItem)",
+	        "title": "Edit Button",
+	        "content" : "This button, when clicked, <i>allows you to edit the current information about the Quotation so selected</i>.",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop":true
+	    }
+	 ]
+}

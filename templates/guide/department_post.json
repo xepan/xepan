@@ -2,14 +2,77 @@
 	"steps":[
 		{ 
 	        "element" : ".ui-layout-container button:first",
-	        "title": "Title 1",
-	        "content" : "This is element <b>1</b>"
+	        "title": "Add Post",
+	        "content" : "<b>Here you can:</b><ul><li>Add new post</li><li>Assign a parent post (Reporting post)</li><li>Can <b>Activate/Deactivate</b> post</li><li>Define if employee/employees under this particular post can <b> Create Team</b></li></ul>"
 	    },
+
+	    {
+	        "element" : "th:contains(Post)",
+	        "title": "Post",
+	        "content" : "This shows all the <b>Posts</b> in your selected department",
+	        "placement":"top",
+	        "orphan":true
+	    } ,
+
+	    {
+	        "element" : "th:contains(Parent Post)",
+	        "title": "Parent post",
+	        "content" : "This shows the <b>Parent post </b>(reporting post) of the corresponding post",
+	        "placement":"top"
+	    } ,
+
+	    {
+	        "element" : "th:contains(Is Active)",
+	        "title": "Is Active",
+	        "content" : "<b>Here:</b> <ul><span style='color:green'><li type='disc'>Shows an active post</li></span><span style='color:red'> <li type='disc'>Shows an inactive post</li></span></ul>",
+	        "placement":"top"
+	    },
+	    
+	    {
+	        "element" : "th:contains(Can Create Team)",
+	        "title": "Can Create Team",
+	        "content" : "<b>Here:</b> <ul><span style='color:green'><li type='disc'>Shows post can create Team</li></span><span style='color:red'> <li type='disc'>Shows post can't create team</li></span></ul>",
+	        "placement":"top"
+	    },
+
+	    {
+	        "element" : "th:contains('Employees'):first",
+	        "title": "Employee count",
+	        "content" : "Shows total number of Employees in particular post of the selected department",
+	        "placement":"top"
+	    },
+
+	    {
+	        "element" : "th:contains('Employee')",
+	        "title": "Employees",
+	        "content" : "Here you can see <b>Name</b> of all the employee associated with corresponding post of the selected department <p><div class='panel panel-danger panel-heading text-center'><b>Note:</b> To get full information or to edit information about any employee go to [<b>Menu</b> Hr >> employee]</div></p>",
+	        "placement":"top",
+	        "orphan":true
+	    },
+	    
+
 	    {
 	        "element" : "th:contains(DocumentAcl)",
-	        "title": "Title 2",
-	        "content" : "This is element 2",
-	        "placement":"top"
+	        "title": "DocumentAcl",
+	        "content" : "Here you can See/Add/Remove the <b>Document Access Rights</b> given to corresponding post of the selected department <p><div class='panel panel-info panel-heading text-center'><b>Example:</b> <b>Sales Manager</b> can see every Employee's submitted quotations and can approve them whereas <b> Sales Executive</b> can only see it's own submitted documents and cannot perform any action on them.</div></p>",
+	        "placement":"left"
+	    },
+
+	    {
+	        "element" : "th:contains(Edit)",
+	        "title": "Edit",
+	        "content" : "This action allows you to Edit:<ul><li>post</li><li>parent post (Reporting post)</li><li>Can <b>Activate/Deactivate</b> post</li><li>Can <b>Activate/Deactivate</b> Create Team</li></ul>",
+	        "placement":"top",
+	        "orphan":true
+
+	    },
+	    
+	    {
+	        "element" : "th:contains(Delete)",
+	        "title": "Delete",
+	        "content" : "This action allows you to <b>Delete</b> a particular post<p><div class='panel panel-info panel-heading text-center'><b>NOTE:</b> You cannot delete posts which are <b>reporting posts</b> or have employees in them. To delete you have to remove that particular post from the <b>reporting post</b> if it is.",
+	        "placement":"top",
+	       	"orphan" :true
 	    }
 	]
 }

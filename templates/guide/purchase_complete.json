@@ -1,0 +1,11 @@
+{
+	"steps":[
+		{ 					
+        	"element" : "",
+       		"title": "Completed Order",
+        	"content" : "This Tab shows the list <b>completed order</b>",
+        	"orphan" : true
+    	}
+    	
+            ]
+}

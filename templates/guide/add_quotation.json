@@ -1,0 +1,19 @@
+{
+	"steps":[
+		{ 
+	        "element" : " ",
+	        "title": "Opportunity_Quotation",
+	        "content" : "This Page provides you a view of Quotation regarding this Opportunity.",
+	        "placement": "top",
+	        "orphan" : true,
+	        "backdrop" : true
+	    },
+	    { 
+	        "element" : " ",
+	        "title": "add_Opportunity_Quotation",
+	        "content" : "This Button allows you to <b>Add</b> a New Quotation regarding the <b>Same Opportunity</b>.",
+	        "placement": "top",
+	        "orphan" : true
+	    }
+    ]
+}
