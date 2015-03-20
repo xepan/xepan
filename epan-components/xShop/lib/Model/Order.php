@@ -61,6 +61,8 @@ class Model_Order extends \Model_Document{
 		$this->hasMany('xShop/OrderDetails','order_id');
 		$this->hasMany('xShop/SalesOrderAttachment','related_document_id',null,'Attachements');
 		
+		$this->addExpression('orderitem_count')->set($this->refSQL('xShop/OrderDetails')->count());
+		
 		$this->addHook('beforeDelete',$this);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
