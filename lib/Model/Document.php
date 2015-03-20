@@ -153,15 +153,24 @@ class Model_Document extends SQL_Model{
 		$activities->setORder('created_at','desc');
 
 		$crud = $page->add('CRUD');
-		$crud->setModel($activities);
+
+		if($crud->isEditing('add')){
+			$activities->addCondition('action','comment');
+		}
+
+		$crud->setModel($activities,array('created_at','action_from','action','subject','message'));
+
+		if(!$crud->isEditing()){
+			$crud->grid->controller->importField('created_at');
+		}
 
 		$crud->add('xHR/Controller_Acl');
 
 	}
 
-	function setStatus($status){
+	function setStatus($status,$message=null){
 		$this['status']=$status;
-		$this->createActivity($status,ucwords($status),'Document Status Changed');
+		$this->createActivity($status,ucwords($status),$message?:'Document Status Changed');
 		$this->saveAs($this->getRootClass());
 	}
 
