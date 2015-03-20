@@ -172,13 +172,17 @@ class Model_Document extends SQL_Model{
 			$activities->addCondition('action','comment');
 		}
 
+		if($crud->isEditing('edit')){
+			$activities->getElement('action')->display(array('form'=>'Readonly'));
+		}
+
 		$crud->setModel($activities,array('created_at','action_from','action','subject','message'));
 
 		if(!$crud->isEditing()){
 			$crud->grid->controller->importField('created_at');
 		}
 
-		$crud->add('xHR/Controller_Acl');
+		// $crud->add('xHR/Controller_Acl',array('name'=>'xx'));
 
 	}
 

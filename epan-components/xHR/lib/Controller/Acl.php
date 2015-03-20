@@ -43,7 +43,7 @@ class Controller_Acl extends \AbstractController {
 
 	function init(){
 		parent::init();
-
+		// echo "i m here 1";
 		if(! $this->document){
 			if(!$this->owner instanceof \SQL_Model AND !$this->owner->getModel())
 				throw $this->exception('document not setted and model not found');
@@ -81,7 +81,9 @@ class Controller_Acl extends \AbstractController {
 		$acl_model->addCondition('document_id',$dept_documents->id);
 
 		$acl_model->tryLoadAny();
-		if(!$acl_model->loaded()) $acl_model->save();
+		if(!$acl_model->loaded()){
+			$acl_model->save();	
+		} 
 
 		foreach ($this->permissions as $key => $value) {
 			$this->permissions[$key] = $acl_model[$key];
@@ -133,18 +135,20 @@ class Controller_Acl extends \AbstractController {
 	}
 
 	function doCRUD(){
-
+		// echo "i m here 2 <br>";
 		if(!$this->owner->isEditing()){
 			$btn = $this->owner->grid->buttonset->addButton()->set('ACL APPLIED');
 			$self= $this;
 			$vp = $this->owner->add('VirtualPage')->set(function($p)use($self){
 				// $p->add('View')->set($self->owner->model->document_name);
+				$p->api->stickyGET('department_id');
+
 				$m = $p->add('xHR/Model_DocumentAcl');
 				$j=$m->leftJoin('xhr_documents','document_id');
 				$j->addField('doc_name','name');
 				$j->addField('department_id');
 				$m->addCondition('doc_name',$self->owner->model->document_name);
-				$m->addCondition('post_id','<>',null);
+				$m->addCondition('post_id','<>',null); // is admin is not associated with any post athen post=null wali entries bhi dikhayega
 				
 				if(! $p->api->current_department instanceof \Dummy)
 					$m->addCondition('department_id',$p->api->current_department->id);
@@ -153,7 +157,6 @@ class Controller_Acl extends \AbstractController {
 				$m->addExpression('post_department')->set($m->refSQL('post_id')->fieldQuery('department'))->caption('Department');
 
 				$c = $p->add('CRUD',array('allow_add'=>false));
-
 				$fields=null;
 				if(isset($self->owner->model->actions)){
 					$fields = array_merge(array('post_department','post','post_id'),array_keys($self->owner->model->actions));
@@ -324,6 +327,9 @@ class Controller_Acl extends \AbstractController {
 							$js[] = $this->owner->js()->reload(array('cut_object'=>'',$p->short_name=>'',$p->short_name.'_id'=>''));
 							$this->owner->js(null,$js)->execute();
 						}
+					}
+					catch(\Exception_StopInit $e){
+						throw $e;
 					}catch(\Exception $e){
 						$this->api->db->rollback();
 						if($this->api->getConfig('developer_mode',false)){
@@ -340,6 +346,10 @@ class Controller_Acl extends \AbstractController {
 				$this->api->db->beginTransaction();
 					$this->owner->addAction($action_name,array('toolbar'=>false));		
 				$this->api->db->commit();
+			}
+			catch(\Exception_StopInit $e){
+						echo "not rolling" . $e->getMessage();
+						throw $e;
 			}catch(\Exception $e){
 				$this->api->db->rollback();
 					throw $e;

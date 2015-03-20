@@ -57,6 +57,11 @@ class Model_Activity extends \Model_Document{
 
 		$this->setOrder('created_at','desc');
 
+		$this->addHook('beforeSave,beforeDelete',function($obj){
+			if($obj['created_by_id'] != $obj->api->current_employee->id)
+				throw $this->exception('You are not authorised for action','Growl');
+		});
+
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
