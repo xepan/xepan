@@ -55,14 +55,16 @@ class Model_Document extends SQL_Model{
 	}
 
 	function getSeries(){
-		return $this->document_name;
+		return $this->root_document_name;
 	}
 
 	function defaultAfterInsert($newobj,$id){
 		$x=$this->newInstance();
 		$x->load($id);
-		$x['name'] = $this->getSeries() .' ' . sprintf("%05d", $x->id);
-		$x->save();
+		if($x['name']==''){
+			$x['name'] = $this->getSeries() .' ' . sprintf("%05d", $x->id);
+			$x->save();
+		}
 	}
 
 	function getRootClass($specific_calss=false){
@@ -187,6 +189,7 @@ class Model_Document extends SQL_Model{
 	}
 
 	function createActivity($action,$subject,$message,$from=null,$from_id=null){
+		
 		if(!$from){
 			$from = 'Employee';
 			$from_id = $this->api->current_employee->id;
@@ -204,6 +207,21 @@ class Model_Document extends SQL_Model{
 		$new_activity['message']= $message;
 
 		$new_activity->save();
+	}
+
+	function searchActivity($action,$from_on_date=null, $to_date=null, $from=null,$from_id=null,$to=null,$to_id=null){
+		$m = $this->add('xCRM/Model_Activity');
+		$m->addCondition('action',$action);
+
+		$m->addCondition('related_root_document_name',$this->root_document_name);
+		$m->addCondition('related_document_name',$this->document_name);
+		$m->addCondition('related_document_id',$this->id);
+		$m->tryLoadAny();
+		
+		if($m->loaded())
+			return $m;
+
+		return new Dummy();
 	}
 
 	function myCounts($string=false, $new_only = true){

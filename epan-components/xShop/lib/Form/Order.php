@@ -60,7 +60,7 @@ class Form_Order extends \Form_Stacked {
 			$m = $form->model;
 
 			$m['member_id'] = $member_id;
-			$m['name'] = $form['name'];
+			// $m['name'] = $form['name'];
 			$m['email'] = $form['email'];
 			$m['mobile'] = $form['mobile'];
 			$m['billing_address'] = $form['billing_address'];
