@@ -7,6 +7,8 @@ class Grid_Order extends \Grid {
 	function init(){
 		parent::init();
 		$self = $this;
+		
+		$this->addSno();
 
 		$vp = $this->add('VirtualPage')->set(function($p)use($self){
 			$o = $p->add('xShop/Model_Order')->load($_GET['sales_order_clicked']);
@@ -14,8 +16,8 @@ class Grid_Order extends \Grid {
 			$order->setModel($o);
 		});
 		
-		$this->js(true)->find('tr')->css('cursor','pointer');
-		$this->on('click','tbody td:not(:has(button))',$this->js()->univ()->frameURL('Sales Order',array($this->api->url($vp->getURL()),'sales_order_clicked'=>$this->js()->_selectorThis()->closest('tr')->data('id'))));
+		$this->js(true)->find('tr td:nth-child(1)')->css(array('cursor'=>'pointer'));
+		$this->on('click','tbody td:nth-child(1)',$this->js()->univ()->frameURL('Sales Order',array($this->api->url($vp->getURL()),'sales_order_clicked'=>$this->js()->_selectorThis()->closest('tr')->data('id'))));
 	}
 
 
