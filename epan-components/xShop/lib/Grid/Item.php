@@ -9,7 +9,7 @@ class Grid_Item extends \Grid{
 		$this->add_sno();
 		$this->addQuickSearch(array('sku','name','sale_price'));
 		$this->addPaginator($ipp=100);
-
+		$self = $this;
 	}
 
 
@@ -21,12 +21,13 @@ class Grid_Item extends \Grid{
 		// $this->addColumn('expander','specifications',array("descr"=>"Specfications",'icon'=>'cog','icon_only'=>true));
 		// $this->addColumn('expander','images',array("descr"=>"Images",'icon'=>'picture','icon_only'=>true));
 		// $this->addColumn('expander','attachments',array("descr"=>"Docs",'icon'=>'folder','icon_only'=>true));
-		// $this->addColumn('Button','duplicate',array("descr"=>"Duplicate",'icon'=>'folder','icon_only'=>true));
 		// $this->addColumn('expander','rate_effect',array("descr"=>"Rate Effect",'icon'=>'cog','icon_only'=>true));
 		// $this->addColumn('pics_docs','pics_docs','Pics / Docs');
+		
+		$this->addColumn('Button','duplicate',array("descr"=>"Duplicate",'icon'=>'cog','icon_only'=>true));
 
 		if($_GET['duplicate']){
-			$this->add('xShop/Model_ItemTemplate')->load($_GET['duplicate'])->duplicate();
+			$this->add('xShop/Model_Item')->load($_GET['duplicate'])->duplicate(false);
 			$this->js()->reload()->execute();
 		}
 
