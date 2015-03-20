@@ -182,7 +182,7 @@ class Model_Document extends SQL_Model{
 			$crud->grid->controller->importField('created_at');
 		}
 
-		// $crud->add('xHR/Controller_Acl',array('name'=>'xx'));
+		$crud->add('xHR/Controller_Acl');
 
 	}
 
