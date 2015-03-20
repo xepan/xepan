@@ -61,8 +61,10 @@ class Model_Document extends SQL_Model{
 	function defaultAfterInsert($newobj,$id){
 		$x=$this->newInstance();
 		$x->load($id);
-		$x['name'] = $this->getSeries() .' ' . sprintf("%05d", $x->id);
-		$x->save();
+		if($x['name']==''){
+			$x['name'] = $this->getSeries() .' ' . sprintf("%05d", $x->id);
+			$x->save();
+		}
 	}
 
 	function getRootClass($specific_calss=false){
@@ -204,6 +206,17 @@ class Model_Document extends SQL_Model{
 		$new_activity['message']= $message;
 
 		$new_activity->save();
+	}
+
+	function activity($action,$from_on_date=null, $to_date=null, $from=null,$from_id=null,$to=null,$to_id=null){
+		$m = $this->add('xCRM/Model_Activity');
+		$m->addCondition('action',$action);
+
+		$m->addCondition('related_root_document_name',$this->root_document_name);
+		$m->addCondition('related_document_name',$this->document_name);
+		$m->addCondition('related_document_id',$this->id);
+		$m->debug()->tryLoadAny();
+		return $m;
 	}
 
 	function myCounts($string=false, $new_only = true){
