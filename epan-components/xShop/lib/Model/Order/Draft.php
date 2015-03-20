@@ -7,9 +7,9 @@ class Model_Order_Draft extends Model_Order{
 			'can_view'=>array('caption'=>'Whose created Order(draft) you can see'),
 			'allow_add'=>array('caption'=>'Whose created Order(draft) you can add'),
 			'allow_edit'=>array('caption'=>'Whose created Order(draft) you can edit'),
-			'can_submit'=>array('caption'=>'Whose Created Order(draft) you can submit '),
+			'can_submit'=>array('caption'=>'Whose Created Order(draft) you can submit ','icon'=>'upload'),
 			'allow_del'=>array('caption'=>'Whose created Order(draft) you can delete'),
-			'can_manage_attachements'=>array('caption'=>'Whose created Order(draft)\'s attachement you can manage'),
+			'can_manage_attachements'=>array('caption'=>'Whose created Order(draft)\'s attachement you can manage','icon'=>'note'),
 		);
 
 	function init(){
