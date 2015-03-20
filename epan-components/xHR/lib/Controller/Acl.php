@@ -342,6 +342,7 @@ class Controller_Acl extends \AbstractController {
 				$this->api->db->commit();
 			}catch(\Exception $e){
 				$this->api->db->rollback();
+					throw $e;
 				if($this->api->getConfig('developer_mode',false)){
 					$this->owner->js()->univ()->errorMessage($e->getMessage())->execute();
 				}else{

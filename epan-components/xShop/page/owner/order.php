@@ -18,6 +18,7 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 			$tab->addTabURL('xShop/page/owner/order_shipping','Shipping '.$this->add('xShop/Model_Order_Shipping')->myUnRead());
 			$tab->addTabURL('xShop/page/owner/order_completed','Complete '.$this->add('xShop/Model_Order_Completed')->myUnRead());
 			$tab->addTabURL('xShop/page/owner/order_cancelled','Cancel / Return '.$this->add('xShop/Model_Order_Cancelled')->myUnRead());
+			$tab->addTabURL('xShop/page/owner/order_redesign','Redesign '.$this->add('xShop/Model_Order_Redesign')->myUnRead());
 
 		// $application_id=$this->api->recall('xshop_application_id');
 		// //$order_model->addCondition('application_id',$application_id);	

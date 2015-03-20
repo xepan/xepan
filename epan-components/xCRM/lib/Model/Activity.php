@@ -2,6 +2,7 @@
 namespace xCRM;
 
 class Model_Activity extends \Model_Document{
+	
 	public $status=array();
 	public $table="xcrm_document_activities";
 	public $root_document_name= 'xCRM\Activity';
