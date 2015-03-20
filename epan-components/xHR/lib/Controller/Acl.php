@@ -569,7 +569,10 @@ class Controller_Acl extends \AbstractController {
 
 		$current_lastseen = $this->add('Model_MyLastSeen');
 		$current_lastseen->addCondition('related_root_document_name',$doc->root_document_name);
-		$current_lastseen->addCondition('related_document_name',$doc->document_name);
+		
+		if($doc->document_name != $doc->root_document_name)
+			$current_lastseen->addCondition('related_document_name',$doc->document_name);
+		
 		$current_lastseen->tryLoadAny();
 
 		$new_docs_q = clone $doc->_dsql();
@@ -590,6 +593,9 @@ class Controller_Acl extends \AbstractController {
 				return "";
 		}
 
+		if(!$string and $new_only){
+			return $new_doc_count;
+		}
 
 		return array('new'=>$new_doc_count,'total'=>$total_doc_count);
 
