@@ -183,18 +183,18 @@ class Controller_Acl extends \AbstractController {
 				$this->owner->add_button->destroy();
 		}
 
-		if($this->permissions['allow_edit']=='No'){
+		if($this->permissions['allow_edit'] =='No'){
 			$this->owner->allow_edit=false;
 			$this->owner->grid->removeColumn('edit');
 		}else{
-			$this->filterGrid('edit');
+			$this->filterGrid('edit','allow_');
 		}
 
 		if($this->permissions['allow_del'] == 'No'){
 			$this->owner->allow_del=false;
 			$this->owner->grid->removeColumn('delete');
 		}else{
-			$this->filterGrid('delete');
+			$this->filterGrid('delete','allow_','del');
 		}
 
 		if($this->permissions['can_submit'] != 'No'){
@@ -402,9 +402,10 @@ class Controller_Acl extends \AbstractController {
 			$model->addCondition($filter_column,$filter_ids);
 	}
 
-	function filterGrid($column){
+	function filterGrid($column, $prefix = 'can_', $col_name=false){
+		// echo $prefix.($col_name?:$column) . ' = ' . $this->permissions[$prefix.($col_name?:$column)] . ' <br/>';
 		$filter_ids = null;
-		switch ($this->permissions['can_'.$column]) {
+		switch ($this->permissions[$prefix.($col_name?:$column)]) {
 			case 'Self Only':
 				$filter_ids = $this->self_only_ids;
 				break;
