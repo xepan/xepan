@@ -576,7 +576,7 @@ class Controller_Acl extends \AbstractController {
 		$new_docs_q = clone $doc->_dsql();
 		
 		$new_docs_q->where('updated_at','>',$current_lastseen['seen_till']?:'1970-01-01');
-		$new_doc_count = $new_docs_q->del('fields')->field('count(*)')->debug()->getOne();
+		$new_doc_count = $new_docs_q->del('fields')->field('count(*)')->getOne();
 		
 		$total_doc_count = $new_docs_q->del('fields')->field('count(*)')->getOne();
 
