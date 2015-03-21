@@ -59,7 +59,11 @@ class page_base_owner extends Page {
 		// Pages and Templates		
 		$dept_model = $this->add('xHR/Model_Department');
         
-		$hr_m = $m->addMenu('HR');
+		$hr_m = $m->addMenu('HR',null,array('swatch'=>'red'));
+		$hr_m->add('View')
+                    ->setElement('span')
+                    ->addClass('atk-label')
+                    ->set('badge');
 		$dept_model->loadHR();
 
 		$hr_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_dashboard',array('department_id'=>$dept_model->id)));

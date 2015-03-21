@@ -27,7 +27,7 @@ class Model_Users extends Model_Table {
 		$f = $this->addField('is_active')->type('boolean')->defaultValue(true)->group('c~6')->sortable(true);
 		$f->icon = "fa fa-exclamation~blue";
 
-		$f = $this->addField('user_management')->type('boolean')->defaultValue(false)->group('c~6');
+		$f = $this->addField('user_management')->type('boolean')->defaultValue(false)->group('c~6')->display(array('grid'=>'wrap'));
 		$f = $this->addField('general_settings')->type('boolean')->defaultValue(false)->group('c~6');
 		$f = $this->addField('application_management')->type('boolean')->defaultValue(false)->group('c~6');
 		$f = $this->addField('website_designing')->type('boolean')->defaultValue(false)->group('c~6');
@@ -42,7 +42,8 @@ class Model_Users extends Model_Table {
 		$this->add('Controller_Validator');
 		$this->is(array(
 							'name|to_trim|required?type User name here',
-							'email|email|unique','if','*','[email]',
+							'email|email',
+							'email|unique',
 							'username|to_trim|unique'
 						)
 				);
@@ -50,7 +51,7 @@ class Model_Users extends Model_Table {
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterInsert',$this);
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function afterInsert($obj,$new_id){
@@ -60,6 +61,11 @@ class Model_Users extends Model_Table {
 	}
 
 	function beforeSave(){
+		//Check User Name is Empty
+		if($this->dirty['type'] and $this['type'] == ""){
+			throw $this->exception('User Type Must be Defined','ValidityCheck')->setField('type');
+		}
+
 		// Check username for THIS EPAN
 		$old_user = $this->add('Model_Users');
 		$old_user->addCondition('username',$this['username']);

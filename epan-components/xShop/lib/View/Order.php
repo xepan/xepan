@@ -15,31 +15,13 @@ class View_Order extends \View{
 		$order_detail = $this->add('xShop/Model_OrderDetails')->addCondition('order_id',$model->id);
 		$view=$this->add('xShop/View_OrderDetail',null,'order_detail');
 		$view->setModel($order_detail);
-			
-		// $user_model = $this->add('xShop/Model_MemberDetails');
-		// $user_model->getAllDetail($model['member_id']);
 		
-		// $config_model = $this->add('xShop/Model_Configuration')->addCondition('application_id',$application_id);
-		// $config_model->tryLoadAny();
-		// $order_template = $config_model['order_detail_email_body'];
-		
-		// // REPLACING VALUE INTO ORDER DETAIL TEMPLATES
-		// $order_template = str_replace("{{user_name}}", $this->api->auth->model['name'], $order_template);
-		// $order_template = str_replace("{{mobile_number}}", $user_model['mobile_number'], $order_template);
-		// $order_template = str_replace("{{billing_address}}",$model['billing_address'], $order_template);
-		// $order_template = str_replace("{{shipping_address}}", $model['shipping_address'], $order_template);
-		// $order_template = str_replace("{{email}}", $this->api->auth->model['email'], $order_template);
 
-
-		// $order_template = str_replace("{{order_number}}", $model->id, $order_template);
-		// $order_template = str_replace("{{order_date}}", $model['order_date'], $order_template);
-		// $order_template = str_replace("{{order_mode}}", $model['payment_status'], $order_template);
-		// $order_template = str_replace("{{order_destination}}", $model['shipping_address'], $order_template);
-		// $order_template = str_replace("{{order_detail}}", $view->getHtml(true), $order_template);
-		
-		// $this->template->SetHtml('order_address',$order_template);
 		parent::setModel($model);
-
+		$approved_activity = $this->model->searchActivity('approved');
+		if(!$approved_activity instanceof \Dummy)
+			$this->template->trySet('approved_date', $approved_activity['created_at'] . ' by '. $approved_activity['action_from']);
+		$this->template->trySet('created_by_x',$this->model->ref('created_by_id')->get('name_with_designation') . ' on ' .$this->model['created_at']);
 	}
 
 	function defaultTemplate(){

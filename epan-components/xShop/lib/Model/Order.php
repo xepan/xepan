@@ -5,7 +5,7 @@ namespace xShop;
 class Model_Order extends \Model_Document{
 	public $table='xshop_orders';
 	public $status = array('draft','submitted','approved','processing','processed','dispatched',
-							'complete','cancel','return');
+							'complete','cancel','return','redesign');
 	public $root_document_name = 'xShop\Order';
 
 	function init(){
@@ -17,16 +17,13 @@ class Model_Order extends \Model_Document{
 		$this->hasOne('xShop/PaymentGateway','paymentgateway_id');
 		$f = $this->hasOne('xShop/MemberDetails','member_id')->group('a~3~<i class="fa fa-info"></i> Order Info')->sortable(true);
 		$f->icon = "fa fa-user~red";
-		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3')->sortable(true);
+		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3')->sortable(true)->defaultValue(rand(1000,9999));
 		$f = $this->addField('email')->group('a~3')->sortable(true);
 		$f = $this->addField('mobile')->group('a~3')->sortable(true);
 		
 
 		$this->addField('order_from')->enum(array('online','offline'))->defaultValue('offline');
 		$f = $this->getElement('status')->group('a~2');
-
-		$f = $this->addField('on_date')->type('date')->defaultValue(date('Y-m-d'))->group('a~2')->sortable(true);
-		$f->icon ="fa fa-calendar~blue";
 
 		$f = $this->addField('amount')->mandatory(true)->group('b~3~<i class="fa fa-money"></i> Order Amount')->sortable(true);
 		$f = $this->addField('discount_voucher')->group('b~3');
@@ -64,10 +61,11 @@ class Model_Order extends \Model_Document{
 		$this->hasMany('xShop/OrderDetails','order_id');
 		$this->hasMany('xShop/SalesOrderAttachment','related_document_id',null,'Attachements');
 		
+		$this->addExpression('orderitem_count')->set($this->refSQL('xShop/OrderDetails')->count());
+		
 		$this->addHook('beforeDelete',$this);
-		$this->addHook('beforeInsert',$this);
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete($m){
@@ -83,10 +81,6 @@ class Model_Order extends \Model_Document{
 			}
 		}
 		$m->ref('xShop/OrderDetails')->deleteAll();
-	}
-
-	function beforeInsert(){
-		$this['name'] = rand(1000,9999); // <== todo .. generate unique next order id
 	}
 
 	function placeOrderFromCart(){
@@ -140,9 +134,7 @@ class Model_Order extends \Model_Document{
 	    $this['transaction_response_data'] = json_encode($transaction_reference_data);
 	    $this->save();
 	}
-	function checkStatus(){
-		
-	}
+	
 
 	function getAllOrder($member_id){
 		if($this->loaded())
@@ -246,10 +238,17 @@ class Model_Order extends \Model_Document{
 		return $this;
 	}
 
-	function reject(){
-		$this->setStatus('submitted');
-		return $this;
+	function reject_page($page){
+		$form= $page->add('Form_Stacked');
+		$form->addField('text','reason');
+		$form->addSubmit('reject');
+		if($form->isSubmitted()){
+			$this->setStatus('redesign',$form['reason']);
+			return true;
+		}
 	}
+
+
 
 	function approve_page($page){
 		$page->add('View_Info')->set('Approving Job Card will move this order to approved status and create JobCards to receive in respective FIRST Departments for each Item');
@@ -274,9 +273,5 @@ class Model_Order extends \Model_Document{
 
 		$this->setStatus('approved');
 		return $this;
-	}
-
-	function setStatus($status){
-		parent::setStatus($status);
 	}
 }

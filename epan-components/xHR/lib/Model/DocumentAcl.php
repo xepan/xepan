@@ -14,9 +14,9 @@ class Model_DocumentAcl extends \Model_Table{
 		});
 
 
-		$this->hasOne('xHR/Document','document_id')->display(array('form'=>'Readonly'));
+		$this->hasOne('xHR/Document','document_id')->display(array('form'=>'Readonly'))->mandatory(true);
 	
-		$this->hasOne('xHR/Post','post_id');
+		$this->hasOne('xHR/Post','post_id')->mandatory(true);
 		
 		$this->addField('can_view')->setValueList($acl)->defaultValue('Self Only');
 	

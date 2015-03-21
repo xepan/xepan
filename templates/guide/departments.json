@@ -4,6 +4,7 @@
 	        "title": "Departments",
 	        "content" : "This section shows your <b>Departments</b>, <b>Production Phases</b>, <b>Posts</b>, <b>Salary Structure</b> and <b>Acls</b>(permissions on various posts)",
 	        "placement": "top",
+	        "backdrop":true,
 	        "orphan": true
 	    },
 		{ 

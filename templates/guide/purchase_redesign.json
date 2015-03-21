@@ -1,0 +1,37 @@
+{
+	"steps":[
+		{ 					
+        	"element" : "",
+       		"title": "Redesign",
+        	"content" : "When the order is not approved than it comes to <b>Redesign</b>",
+        	"orphan" : true
+    	},
+    	{ 					
+        	"element" : ".atk-button:contains('ACL APPLIED')",
+       		"title": "Access Controll Level",
+            "content" : "Customize Aceess Controll on Submitted Orders.Here you can <b>edit</b> the access control permission",
+        	"orphan" : true
+    	},
+        {	
+            "element" : "th:contains('Submit')",
+       		"title": "Submit ",
+        	"content" : "This Tab allows you to <b>submit the Order</b>,which is completly design.",
+        	"orphan" : true
+    	},
+		{ 					
+        	"element" : "th:contains('Edit')",
+       		"title": "Edit",
+        	"content" : "In this section we can <b>Edit</b> supplier name  and date of created draft",
+        	"orphan" : true,
+        	"Placement":"bottom"
+    	},
+		{ 					
+        	"element" : "th:contains('Delete')",
+       		"title": "Delete ",
+        	"content" : "This section allows you to <b>Delete the Order.</b>",
+        	"orphan" : true,
+        	"Placement":"bottom"
+    	}
+
+            ]
+}

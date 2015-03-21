@@ -14,6 +14,6 @@ class Model_LastSeen extends SQL_Model {
 
 		$this->addField('seen_till')->type('datetime')->defaultValue('1970-01-01');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

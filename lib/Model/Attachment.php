@@ -11,7 +11,7 @@ class Model_Attachment extends Model_Document{
 		parent::init();
 
 		$this->addField('name');
-		$this->add('filestore/Field_Image','attachment_url_id')->mandatory(true);
+		$this->add('filestore/Field_File','attachment_url_id')->mandatory(true);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 

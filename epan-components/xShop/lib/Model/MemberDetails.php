@@ -36,6 +36,10 @@ class Model_MemberDetails extends \Model_Document{
 			return $m->refSQL('users_id')->fieldQuery('name');
 		});
 
+		$this->addExpression('email')->set(function($m,$q){
+			return $m->refSQL('users_id')->fieldQuery('email');
+		});
+
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
 

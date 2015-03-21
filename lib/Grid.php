@@ -22,7 +22,12 @@ class Grid extends Grid_Advanced{
 	function add_sno(){
 		$this->addColumn('sno','s_no');
 		$this->order->move('s_no','first');
+        return $this;
 	}
+
+    function addSno(){
+        return $this->add_sno();
+    }
 
 	function format_sno($field){
 		$this->current_row[$field] = (($this->sno++) + ($_GET[$this->name.'_paginator_skip']?:0));

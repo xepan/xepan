@@ -1,0 +1,51 @@
+{
+	"steps":[
+		{ 					
+        	"element" : "",
+       		"title": "Draft",
+        	"content" : "<i>Drafts are the documents, created at initial states of generating order that have not been submitted, yet, in the company for processing.</i>",
+        	"orphan" : true
+    	},
+    	{ 					
+        	"element" : ".atk-button:contains('Add PurchaseOrder Draft')",
+       		"title": "Add New Purchase Order as Draft ",
+        	"content" : "This Button is used to create a Draft for Purchase Order,in which we Provide<ui><li>Supplier Name</li><li>Date of creating draft</li></ui>",
+        	"orphan" : true
+    	},
+        { 					
+        	"element" : ".atk-button:contains('ACL APPLIED')",
+       		"title": "Access Controll Level",
+            "content" : "Customize Aceess Controll on Submitted Orders.Here you can <b>edit</b> the access control permission",
+        	"orphan" : true
+    	},
+        {	
+            "element" : "th:contains('Submit')",
+       		"title": "Submit ",
+        	"content" : "This action allows you to <b>submit the Draft to senior authority </b> for the approval.After the submission, draft goes to <b>Submitted section</b>.",
+        	"orphan" : true
+    	},
+    	{ 					
+        	"element" : "th:contains('Purchase Order Item')",
+       		"title": "Purchase Order Draft ",
+        	"content" : "This section allows you add the item which you want to purchase in which you have to provide<ui><li>Item Name</li><li>Qntitiy of Item</li><li>Unit <b>Example: </b>5 kg Here 5 is a quantity and kg is a unit</li><li>Narration</li><li>Custom Field</li></ui> ",
+        	"orphan" : true,
+            "Placement":"right"
+        	
+    	},
+		{ 					
+        	"element" : "th:contains('Edit')",
+       		"title": "Edit",
+        	"content" : "In this section you can <b>Edit</b> supplier name  and date of created draft",
+        	"orphan" : true,
+        	"Placement":"bottom"
+    	},
+		{ 					
+        	"element" : "th:contains('Delete')",
+       		"title": "Delete ",
+        	"content" : "This section allows you to <b>Delete the Draft.</b>",
+        	"orphan" : true,
+        	"Placement":"bottom"
+    	}
+
+    ]
+}

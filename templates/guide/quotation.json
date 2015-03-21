@@ -1,0 +1,52 @@
+{
+	"steps":[
+ 		{
+	        "element" : "ul.ui-tabs-nav a.ui-tabs-anchor:contains(Basic)",
+	        "title": "Basic Info",
+	        "content" : "This Page allows you to manage <b>Department Quotations</b>, by providing <i>classified view</i> for Quotations as: <b><ul><li>Drafts</li> <li>Submitted</li>  <li>Redesign</li> <li>Approved</li> <li>Cancelled</li></b></ul> and provides an <i>easy and managable interface</i> to <b>handle Quotations</b> from <b>its origin till its Completely Processed.</b>",
+	        "placement": "bottom",
+	        "orphan":true,
+	        "backdrop":true
+	    },
+	    {
+	        "element" : "ul.ui-tabs-nav li.ui-state-default a.ui-tabs-anchor:contains(Draft)",
+	        "title": "Draft Tab",
+	        "content" : "This Tab provides facility for creating Drafts in favour of Quotations. <i>Drafts are the documents, created at initial states of Framing Quotations that have not been submitted, yet, in the company for processing.</i><p><div class='panel panel-danger panel-heading text-center'>The Drafts, made by a Person  are visible to the Person Itself only.</div></p>",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop": true
+	    },
+	    {
+	        "element" : "ul.ui-tabs-nav li.ui-state-default a.ui-tabs-anchor:contains(Submitted)",
+	        "title": "Submitted Tab",
+	        "content" : "Once the draft for the Quotation has been <b>submitted by the you</b> for approval, it <b>appears in the Submitted Tab</b>.<p><div class='panel panel-danger panel-heading text-center'>Submitted Quotations, are visible to the person, who submitted the Quotation, and to its Senior authority as well.</div></p>",
+	        "placement": "bottom",
+	        "orphan":false,
+			"backdrop": true
+	    },
+	    {
+	        "element" : "ul.ui-tabs-nav li.ui-state-default a.ui-tabs-anchor:contains(Approved)",
+	        "title": "Approved Tab",
+	        "content" : "Once the Quotation has been <b>approved</b> by the <i>Senior authorit(y/ies)</i>, it appears in the Approved Tab. It also provides the <b>facility</b> for directly <b>sending the Quotation to the Client via Mail</b>, etc.",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop": true
+	    },
+	    {
+	        "element" : "ul.ui-tabs-nav li.ui-state-default a.ui-tabs-anchor:contains(Redesign)",
+	        "title": "Redesign Tab",
+	        "content" : "This tab contains the Quotations that have been <i>temporarily postponed for approval<i> by the <b>authority</b> for <i>some corrections</i> or <i>further alterations</i> and needs to be <i>revisited</i>.",
+	        "placement": "bottom",
+	        "orphan":false,
+			"backdrop": true
+	    },
+	    {
+	        "element" : "ul.ui-tabs-nav li.ui-state-default a.ui-tabs-anchor:contains(Cancelled)",
+	        "title": "Cancelled Tab",
+	        "content" : "This tab keeps track of Quotations that were either <b> cancelled by the Lead/Customer </b> or <b>pemanently rejected by the Authority</b>.",
+	        "placement": "bottom",
+	        "orphan":false,
+	        "backdrop": true
+	    }
+	 ]
+}

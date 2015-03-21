@@ -1,0 +1,44 @@
+{
+	"steps":[
+		{
+			"element" :" ",
+			"title" : "Create Opportunity",
+			"content" : "<b>This Page Creates a New Opportunity.</b><br>After Creating Opportunity you <b>Add</b> this and then it will include in view of all Opportunities on previous page.<br> It takes that <b>by whom(Lead/Customer)</b> your Department receive this Opportunity and <b>who(Employee Name)</b> will go to Handle it. <br>",			
+			"orphan" : true,
+	        "backdrop" : true
+		},		
+		{
+			"element" :" ",
+			"title" : "Opportunity Status",
+			"content" : "It shows that this Opportunity is still <b>Alive(Active)</b> or <b>Dead</b>.<br><b>Active :</b> <i>Customer/Lead may be generate an Opportunity</i>.<br><b>Dead :</b><i>Now its no more an Opportunity.</i>",			
+			"orphan" : true
+		},
+		{
+			"element" :" ",
+			"title" : "Lead as Opportunity",
+			"content" : "<b>Lead :</b><i>Lead may be any Company/Person, by whom your Company can create an Opportunity.When you are not sure that this Company/Person can definitely create an Opportunity for your Company then it will include as <b>Lead</b> </i><p><div class='panel panel-info panel-heading text-center'>When you are confirm about Company/Person that it will create an Opportunity then it converts into <b>Customer</b>.</div></p>",			
+			"orphan" : true
+	        
+		},	
+		{
+			"element" :" ",
+			"title" : "Customer as Opportunity",
+			"content" : "<b>Customer :</b><i>When a Company/Person create an Opportunity that time it known as <b>Customer</b> for your Company.",			
+			"orphan" : true
+	       
+		},
+		{
+			"element" :" ",
+			"title" : "Handle Opportunity",
+			"content" : "<b>Who(Employee)</b> is going to operate on this Opportunity?<br>Who will Manage it?<br>This Person may be <b>You</b> or any </b>Other Employee</b><p><div class='panel panel-info panel-heading text-center'><b> For Example :</b>Mukesh Sharma will handle This Opportunity.</div></p>",			
+			"orphan" : true
+		},
+		{
+			"element" :" ",
+			"title" : "Opportunity Name",
+			"content" : "It simply a name for your Opportunity as your convenience.<p><div class='panel panel-info panel-heading text-center'><b> For Example :</b>If My Opportunity is related to <b>Marketing</b> then my Opportunity name may be <b>Marketing Opportunity.</b></div></p>",			
+			"orphan" : true
+	        
+		}		
+    ]
+}

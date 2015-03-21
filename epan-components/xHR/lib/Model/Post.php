@@ -8,9 +8,9 @@ class Model_Post extends \Model_Table{
 	function init(){
 		parent::init();
 
-		$this->hasOne('xHR/Department','department_id')->sortable(true);
+		$this->hasOne('xHR/Department','department_id')->sortable(true)->display(array('form'=>'autocomplete/Basic'));
 		
-		$this->hasOne('xHR/ParentPost','parent_post_id')->sortable(true);
+		$this->hasOne('xHR/ParentPost','parent_post_id')->sortable(true)->display(array('form'=>'autocomplete/Basic'));
 
 		$this->addField('name')->caption('Post')->sortable(true)->sortable(true);
 		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true);

@@ -25,14 +25,12 @@ class Model_Document extends SQL_Model{
 			$this->document_name = str_replace("Model_", "", $class_name);
 		}
 
-		$default_acl_options = array(
-			'can_view'=>array('caption'=>'Whose created Document you can see'),
-			'can_manage_attachments' => array('caption'=>'Whose created Documents Attachemnt you can manage'),
-			'can_see_activities' => array('caption'=>'Whose created Documents Communications you can see'),
-		);
 
-		if(!$this instanceof \xCRM\Model_Activity)
-			$this->actions = array_merge($default_acl_options,$this->actions);
+		if(!$this instanceof \xCRM\Model_Activity){
+			$this->actions = array_merge(array('can_view'=>array('caption'=>'Whose created Document you can see')),$this->actions);
+			$this->actions = array_merge(array('can_manage_attachments' => array('caption'=>'Whose created Documents Attachemnt you can manage')),$this->actions);
+			$this->actions = array_merge(array('can_see_activities' => array('caption'=>'Whose created Documents Communications you can see','icon'=>'comment')),$this->actions);
+		}
 
 		$this->addField('related_document_id')->system(true);
 		$this->addField('related_root_document_name')->system(true);
@@ -46,11 +44,25 @@ class Model_Document extends SQL_Model{
 		$this->hasMany('Attachment','document_id');
 
 		$this->addHook('beforeSave',array($this,'defaultBeforeSave'));
+		$this->addHook('afterInsert',array($this,'defaultAfterInsert'));
 
 	}
 
 	function defaultBeforeSave(){
 		$this['updated_at']= date('Y-m-d H:i:s');
+	}
+
+	function getSeries(){
+		return $this->root_document_name;
+	}
+
+	function defaultAfterInsert($newobj,$id){
+		$x=$this->newInstance();
+		$x->load($id);
+		if($x['name']==''){
+			$x['name'] = $this->getSeries() .' ' . sprintf("%05d", $x->id);
+			$x->save();
+		}
 	}
 
 	function getRootClass($specific_calss=false){
@@ -153,19 +165,33 @@ class Model_Document extends SQL_Model{
 		$activities->setORder('created_at','desc');
 
 		$crud = $page->add('CRUD');
-		$crud->setModel($activities);
+
+		if($crud->isEditing('add')){
+			$activities->addCondition('action','comment');
+		}
+
+		if($crud->isEditing('edit')){
+			$activities->getElement('action')->display(array('form'=>'Readonly'));
+		}
+
+		$crud->setModel($activities,array('created_at','action_from','action','subject','message'));
+
+		if(!$crud->isEditing()){
+			$crud->grid->controller->importField('created_at');
+		}
 
 		$crud->add('xHR/Controller_Acl');
 
 	}
 
-	function setStatus($status){
+	function setStatus($status,$message=null,$subject=null){
 		$this['status']=$status;
-		$this->createActivity($status,ucwords($status),'Document Status Changed');
+		$this->createActivity($status, $subject?:ucwords($status) ,$message?:'Document Status Changed');
 		$this->saveAs($this->getRootClass());
 	}
 
 	function createActivity($action,$subject,$message,$from=null,$from_id=null){
+		
 		if(!$from){
 			$from = 'Employee';
 			$from_id = $this->api->current_employee->id;
@@ -183,6 +209,22 @@ class Model_Document extends SQL_Model{
 		$new_activity['message']= $message;
 
 		$new_activity->save();
+	}
+
+	function searchActivity($action,$from_on_date=null, $to_date=null, $from=null,$from_id=null,$to=null,$to_id=null){
+		$m = $this->add('xCRM/Model_Activity');
+		$m->addCondition('action',$action);
+
+		$m->addCondition('related_root_document_name',$this->root_document_name);
+		if($this->root_document_name != $this->document_name)
+			$m->addCondition('related_document_name',$this->document_name);
+		$m->addCondition('related_document_id',$this->id);
+		$m->tryLoadAny();
+		
+		if($m->loaded())
+			return $m;
+
+		return new Dummy();
 	}
 
 	function myCounts($string=false, $new_only = true){

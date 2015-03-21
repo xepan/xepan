@@ -23,7 +23,7 @@ class page_xPurchase_page_owner_purchaseorder_customfields extends page_xPurchas
 		$this->item = $item = $this->add('xShop/Model_Item')->tryLoad($item_id);
 
 		if(!$item->loaded()) {
-			$this->add('View_Error')->set('item not selcetd');
+			$this->add('View_Error')->set('Item not selceted');
 			return;
 		}
 
@@ -48,6 +48,13 @@ class page_xPurchase_page_owner_purchaseorder_customfields extends page_xPurchas
 		$custom_fields_asso_values=array();
 		
 		if($form->isSubmitted()){
+			//Display Department in Level Format
+			//Check For the One Department at One Level
+			//If Department Is Store then next One Department is Select Compulsary
+			//If Department Is Purchase then next One Department is Select Compulsary 
+			//If Department Is Dispatch or Dilivey then Previous One Department is Select Compulsary 
+			
+
 			$custom_fields_asso_values[$phase->id]=array();
 			$custom_fields_asso = $item->ref('xShop/ItemCustomFieldAssos')->addCondition('department_phase_id',$phase->id)->addCondition('can_effect_stock',true);
 			foreach ($custom_fields_asso as $cfassos) {

@@ -13,10 +13,22 @@ class Model_Employee extends \Model_Table{
 		
 		//basic Details
 		$this->addField('name')->Caption('Full Name')->group('a~5')->sortable(true);
-		$this->addField('dob')->type('date')->Caption('Date Of Birth')->group('a~4');
-		$this->addField('gender')->enum(array('male','female'))->group('a~3');
+		$this->addField('dob')->type('date')->Caption('Date Of Birth')->group('a~3');
+		$this->addField('gender')->enum(array('male','female'))->group('a~2');
 		$this->add('filestore/Field_Image','empolyee_image_id');
+		$this->addField('is_active')->type('boolean')->defaultValue(true)->group('a~2');
 		
+
+		$this->addExpression('name_with_designation')->set(
+			$this->dsql()->concat(
+				$this->getElement('name'),
+				' / ',
+				$this->refSQL('department_id')->fieldQuery('name'),
+				' / ',
+				$this->refSQL('post_id')->fieldQuery('name')
+			)
+		);
+
 		//Employmet Detail
 		
 		$this->addField('status')->enum(array('active','left'))->group('b~3~Employment Details');
@@ -59,7 +71,7 @@ class Model_Employee extends \Model_Table{
 
 
 		//qualification Detail
-		$this->addField('qualifiction')->group('e~4~Educational Qualification'); 
+		$this->addField('qualifiction')->group('e~4~Recent Educational Qualification'); 
 		$this->addField('qualifiction_level')->enum(array('Graduate','Post Graduate','Under Graduate'))->group('e~4');//->display(array('form'=>'Radio'));
 		$this->addField('pass')->Caption('Percent / Division')->group('e~4');
 		$this->addField('major_optional_subject')->type('text')->group('e~6');

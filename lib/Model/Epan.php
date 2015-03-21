@@ -74,7 +74,7 @@ class Model_Epan extends Model_Table {
 		$this->hasMany('Users','epan_id');
 		
 		// User options
-		$f=$this->addField('is_frontent_regiatrstion_allowed')->type('boolean')->defaultValue(true)->group('u~6~<i class="fa fa-cog"></i> User Registration Options');
+		$f=$this->addField('is_frontend_registration_allowed')->type('boolean')->defaultValue(true)->group('u~6~<i class="fa fa-cog"></i> User Registration Options');
 		$f->icon = "fa fa-exclamation~red";
 		$f=$this->addField('user_activation')->setValueList(array('self_activated'=>'Self Activation Via Email','admin_activated'=>'Admin Activated',"default_activated"=>'Default Activated'))->defaultValue('self_activated')->mandatory(true)->group('u~6');
 		$f->icon = "fa fa-question~red";
@@ -102,7 +102,7 @@ class Model_Epan extends Model_Table {
 		$this->setOrder('created_at','desc');
 		$this->add('Controller_EpanCMSApp')->epanModel();
 		
-		// //$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){

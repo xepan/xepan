@@ -44,18 +44,20 @@ class CRUD_User extends CRUD{
 		parent::recursiveRender();
 	}
 
-	function render(){
-		if($this->isEditing()){
-			if($this->form->getModel()->isDefaultSuperUser()){
-				$this->form->getElement('type')->destroy();
-				$this->form->getElement('is_active')->destroy();
-				$this->form->getElement('user_management')->destroy();
-				$this->form->getElement('general_settings')->destroy();
-				$this->form->getElement('application_management')->destroy();
-				$this->form->getElement('website_designing')->destroy();
+	function setModel($model,$field_form=null,$field_grid=null){
+		if($this->isEditing('edit')){
+			if($model->load($this->id)->isDefaultSuperUser()){
+				$model->getElement('type')->display(array('form'=>'Readonly'));
+				$model->getElement('is_active')->system(true);
+				$model->getElement('user_management')->system(true);
+				$model->getElement('general_settings')->system(true);
+				$model->getElement('application_management')->system(true);
+				$model->getElement('website_designing')->system(true);
 			}
 		}
-		parent::render();
+		$m = parent::setModel($model,$field_form,$field_grid);
+
+		return $this->model;
 	}
 
 	function addOptions(){
@@ -84,7 +86,7 @@ class CRUD_User extends CRUD{
 
 			$this->grid->addColumn('Expander,app_permission','application_permissions',array('page'=>$this->app_page,'descr'=>'App'));
 		}else{
-			if($this->model->isFrontEndUser()){
+			if($this->isEditing('edit') AND $this->model->isFrontEndUser()){
 				$this->form->getElement('user_management')->destroy();
 				$this->form->getElement('general_settings')->destroy();
 				$this->form->getElement('application_management')->destroy();

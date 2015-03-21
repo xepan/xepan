@@ -6,6 +6,12 @@ class Model_Category extends \Model_Document{
 	var $table_alias = 'category';
 	public $status=array();
 	public $root_document_name="Category";
+	public $actions=array(
+			//'can_view'=>array('caption'=>'Whose created Quotation(draft) this post can see'),
+			'allow_edit'=>array('caption'=>'Whose created Quotation this post can edit'),
+			'allow_add'=>array('caption'=>'Can this post create new Quotation'),
+			'allow_del'=>array('caption'=>'Whose Created Quotation this post can delete'),
+		);
 
 	function init(){
 		parent::init();

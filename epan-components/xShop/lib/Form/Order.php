@@ -23,9 +23,6 @@ class Form_Order extends \Form_Stacked {
 				if(!$form['name'])
 					$form->displayError('name','name is must');
 
-
-
-
 				$users= $form->add('Model_Users');
 				$users->addCondition('email',$form['email']);
 				$users->tryLoadAny();
@@ -42,7 +39,9 @@ class Form_Order extends \Form_Stacked {
 						$new_user['name']=$form['name'];
 						$new_user['email']=$form['email'];
 						$new_user->save();
-
+						$new_user['username']=$new_user->id;
+						$new_user->save();
+							
 						// .. member will be created by event automatically
 						$new_member= $form->add('xShop/Model_MemberDetails');
 						$new_member->loadBy('users_id',$new_user->id);
@@ -63,7 +62,7 @@ class Form_Order extends \Form_Stacked {
 			$m = $form->model;
 
 			$m['member_id'] = $member_id;
-			$m['name'] = $form['name'];
+			// $m['name'] = $form['name'];
 			$m['email'] = $form['email'];
 			$m['mobile'] = $form['mobile'];
 			$m['billing_address'] = $form['billing_address'];
@@ -112,9 +111,9 @@ class Form_Order extends \Form_Stacked {
 		if($this->model AND $this->model->loaded()){
 			// fill form values from model // editing
 			$this->member_field->set($this->model['member_id']);
-			$this->name_field->set($this->model['name']);
-			$this->email_field->set($this->model['email']);
-			$this->mobile_field->set($this->model['mobile']);
+			$this->name_field->set($this->model['member']);
+			$this->email_field->set($this->model->ref('member_id')->get('email'));
+			$this->mobile_field->set($this->model->ref('member_id')->get('mobile_number'));
 			$this->billing_address_field->set($this->model['billing_address']);
 			$this->shipping_address_field->set($this->model['shipping_address']);
 			$this->order_summary_field->set($this->model['order_summary']);

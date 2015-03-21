@@ -4,7 +4,7 @@ class page_xStore_page_owner_materialrequestreceived_toreceive extends page_xSto
 	function init(){
 		parent::init();
 		$di = $this->api->stickyGET('department_id');
-		$model = $this->add('xStore/Model_MaterialRequestReceived_ToReceive');
+		$model = $this->add('xStore/Model_MaterialRequestReceived_Approved');
 		$model->addCondition('to_department_id',$di);
 
 		$crud=$this->add('CRUD',array('grid_class'=>'xStore/Grid_MaterialRequest'));
