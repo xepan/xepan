@@ -24,6 +24,7 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
         $order_detail=$this->add('xShop/Model_OrderDetails');
         $order_detail->addCondition('order_id',$order_id);
         $crud = $container->add('CRUD');
+        $order_detail->getElement('item_id')->display(array('form'=>'xShop/Item'));
 
         $crud->setModel($order_detail,array('item_id','qty','unit','rate','amount','status','custom_fields'),array('id','item','qty','unit','rate','amount','status'));
         
@@ -38,12 +39,9 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
 
         if($crud->isEditing('add') or $crud->isEditing('edit')){
             $item_field = $crud->form->getElement('item_id');
-            $f= $item_field->other_field;
-            $custom_fields_field = $crud->form->getElement('custom_fields');
-            // $custom_fields_field->js(true)->hide();
-            
-            $btn = $item_field->other_field->belowField()->add('Button')->set('CustomFields');
-            $btn->js('click',$this->js()->univ()->frameURL('Custom Field Values',array($this->api->url('xShop_page_owner_order_customfields',array('orderitem_id'=>$crud->id,'custom_field_name'=>$crud->form->getElement('custom_fields')->name)),"selected_item_id"=>$item_field->js()->val(),'current_json'=>$custom_fields_field->js()->val())));
+            $item_field->custom_field_element = 'custom_fields';
+            $item_field->qty_effected_custom_fields_only = true;
+
         }
 
         $crud->add('xHR/Controller_Acl',array('document'=>'xShop\Order_'. ucwords($order['status']),'show_acl_btn'=>false,'override'=>array('can_view'=>'All','can_see_activities'=>'No')));
