@@ -22,6 +22,8 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 
 		$this->addField('status')->defaultValue('Waiting');
 
+		$this->addField('is_open')->type('boolean')->defaultValue(true)->system(true);
+
 		// status of previous department jobcard .. if any or null
 		$this->addExpression('previous_status')->set(function($m,$q){
 			// my departments
@@ -35,7 +37,12 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 		// hasMany JobCards
 		$this->hasMany('xProduction/JobCard','orderitem_departmental_status_id');
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function close(){
+		$this['is_open']= false;
+		$this->save();
 	}
 
 	function createJobCardFromOrder(){

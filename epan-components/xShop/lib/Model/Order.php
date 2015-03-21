@@ -197,6 +197,14 @@ class Model_Order extends \Model_Document{
 		return $this->ref('xShop/OrderDetails');
 	}
 
+	function unCompletedOrderItems(){
+		$oi=$this->orderItems();
+		$oi->addExpression('open_departments')->set($oi->refSQL('xShop/OrderItemDepartmentalStatus')->addCondition('is_open',true)->count());
+		$oi->addCondition('open_departments',true);
+
+		return $oi;
+	}
+
 	function placeOrderFromQuotation($quotation_approved_id){
 		if($quotation_approved_id < 0 or $quotation_approved_id == null)
 			return false;
