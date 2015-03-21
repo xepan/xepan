@@ -248,7 +248,15 @@ class Model_Order extends \Model_Document{
 		}
 	}
 
-
+	function cancel_page($page){
+		$form= $page->add('Form_Stacked');
+		$form->addField('text','reason');
+		$form->addSubmit('reject');
+		if($form->isSubmitted()){
+			$this->setStatus('cancelled',$form['reason']);
+			return true;
+		}
+	}
 
 	function approve_page($page){
 		$page->add('View_Info')->set('Approving Job Card will move this order to approved status and create JobCards to receive in respective FIRST Departments for each Item');

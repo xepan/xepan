@@ -11,6 +11,7 @@ class Model_Jobcard_Received extends Model_JobCard{
 			'can_assign_to'=>array('caption'=>' Whose created Jobcard(received) this post can assign to'),
 			'can_start_processing'=>array('caption'=>' Whose created Jobcard(received) this post can start processing'),
 			'can_mark_processed'=>array('caption'=>' Whose created Jobcard(received) this post can mark processed'),
+			'can_cancel'=>array('caption'=>'Whose created Jobcard(submit) this post can reject'),
 		);
 	
 	function init(){

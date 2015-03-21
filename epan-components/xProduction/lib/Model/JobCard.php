@@ -274,6 +274,16 @@ class Model_JobCard extends \Model_Document{
 
 	}
 
+	function cancel_page($page){
+		$form= $page->add('Form_Stacked');
+		$form->addField('text','reason');
+		$form->addSubmit('reject');
+		if($form->isSubmitted()){
+			$this->setStatus('cancelled',$form['reason']);
+			return true;
+		}
+	}
+
 	function complete(){
 		$this->setStatus('completed');
 	}
@@ -383,7 +393,7 @@ class Model_JobCard extends \Model_Document{
 		}
 	}
 
-	function setStatus($status){
+	function setStatus($status,$message=null,$subject=null){
 		if($this['orderitem_id']){
 			$ds = $this->orderItem()->deptartmentalStatus($this->department());
 			if($ds) {
@@ -391,7 +401,7 @@ class Model_JobCard extends \Model_Document{
 			}
 			$this->orderItem()->order()->setStatus('processing');
 		}
-		parent::setStatus($status);
+		parent::setStatus($status,$message,$subject);
 	}
 
 }	
