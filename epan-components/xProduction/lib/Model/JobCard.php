@@ -272,6 +272,10 @@ class Model_JobCard extends \Model_Document{
 			$this->setStatus('received');
 		}
 
+		if($this['orderitem_id']){
+			$this->orderItem()->order()->setStatus('processing');
+		}
+
 	}
 
 	function cancel_page($page){
@@ -280,12 +284,24 @@ class Model_JobCard extends \Model_Document{
 		$form->addSubmit('reject');
 		if($form->isSubmitted()){
 			$this->setStatus('cancelled',$form['reason']);
+			$this->isOrderClose(true);
 			return true;
 		}
 	}
 
 	function complete(){
 		$this->setStatus('completed');
+		$this->isOrderClose(true);
+	}
+
+	function isOrderClose($close_as_well=true){
+		$order = $this->orderItem()->order();
+		if($order->unCompletedOrderItems()->count()->getOne() == 0){
+			if($close_as_well)
+				$order->setStatus('processed');
+			return true;
+		}
+		return false;
 	}
 
 	function approve(){
@@ -399,7 +415,6 @@ class Model_JobCard extends \Model_Document{
 			if($ds) {
 				$ds->setStatus(ucwords($status) .' in ' . $this->department()->get('name'));
 			}
-			$this->orderItem()->order()->setStatus('processing');
 		}
 		parent::setStatus($status,$message,$subject);
 	}
