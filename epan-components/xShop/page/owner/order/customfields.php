@@ -88,7 +88,7 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 						$cf = $cfassos->ref('customfield_id');
 						$custom_fields_asso_values [$phase->id][$cf->id] =  $form['custom_field_'.$custom_fields_asso->id];
 						if(!$form['custom_field_'.$custom_fields_asso->id])
-							$form->displayError('custom_field_'.$custom_fields_asso->id,'Phase selceted but custom field not field');
+							$form->displayError('custom_field_'.$custom_fields_asso->id,'Please define custom fields for selected phase');
 					}
 				}
 			}

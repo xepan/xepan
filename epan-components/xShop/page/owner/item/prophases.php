@@ -20,7 +20,7 @@ class page_xShop_page_owner_item_prophases extends page_xShop_page_owner_main{
 		$item_department_field = $form->addField('hidden','item_department')->set(json_encode($item->getAssociatedDepartment()));
 		$form->addSubmit('Update');
 	
-		$grid->setModel($department,array('name'));
+		$grid->setModel($department,array('name','production_level'));
 		$grid->addSelectable($item_department_field);
 
 		if($form->isSubmitted()){
