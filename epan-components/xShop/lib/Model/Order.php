@@ -25,9 +25,6 @@ class Model_Order extends \Model_Document{
 		$this->addField('order_from')->enum(array('online','offline'))->defaultValue('offline');
 		$f = $this->getElement('status')->group('a~2');
 
-		$f = $this->addField('on_date')->type('date')->defaultValue(date('Y-m-d'))->group('a~2')->sortable(true);
-		$f->icon ="fa fa-calendar~blue";
-
 		$f = $this->addField('amount')->mandatory(true)->group('b~3~<i class="fa fa-money"></i> Order Amount')->sortable(true);
 		$f = $this->addField('discount_voucher')->group('b~3');
 		$f = $this->addField('discount_voucher_amount')->group('b~3');
@@ -64,9 +61,11 @@ class Model_Order extends \Model_Document{
 		$this->hasMany('xShop/OrderDetails','order_id');
 		$this->hasMany('xShop/SalesOrderAttachment','related_document_id',null,'Attachements');
 		
+		$this->addExpression('orderitem_count')->set($this->refSQL('xShop/OrderDetails')->count());
+		
 		$this->addHook('beforeDelete',$this);
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete($m){
@@ -135,9 +134,7 @@ class Model_Order extends \Model_Document{
 	    $this['transaction_response_data'] = json_encode($transaction_reference_data);
 	    $this->save();
 	}
-	function checkStatus(){
-		
-	}
+	
 
 	function getAllOrder($member_id){
 		if($this->loaded())
@@ -241,8 +238,14 @@ class Model_Order extends \Model_Document{
 		return $this;
 	}
 
-	function reject(){
-		$this->setStatus('redesign');
+	function reject_page($page){
+		$form= $page->add('Form_Stacked');
+		$form->addField('text','reason');
+		$form->addSubmit('reject');
+		if($form->isSubmitted()){
+			$this->setStatus('redesign',$form['reason']);
+			return true;
+		}
 	}
 
 
@@ -270,9 +273,5 @@ class Model_Order extends \Model_Document{
 
 		$this->setStatus('approved');
 		return $this;
-	}
-
-	function setStatus($status){
-		parent::setStatus($status);
 	}
 }

@@ -18,7 +18,10 @@ class View_Order extends \View{
 		
 
 		parent::setModel($model);
-		$this->template->trySet('approved_date',$this->model->searchActivity('approved')->get('created_at'));
+		$approved_activity = $this->model->searchActivity('approved');
+		if(!$approved_activity instanceof \Dummy)
+			$this->template->trySet('approved_date', $approved_activity['created_at'] . ' by '. $approved_activity['action_from']);
+		$this->template->trySet('created_by_x',$this->model->ref('created_by_id')->get('name_with_designation') . ' on ' .$this->model['created_at']);
 	}
 
 	function defaultTemplate(){

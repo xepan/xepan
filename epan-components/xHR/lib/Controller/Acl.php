@@ -6,6 +6,9 @@ class Controller_Acl extends \AbstractController {
 
 	public $document=null;
 	public $my_model = null;
+	public $show_acl_btn = true;
+	public $override=array();
+
 	public $permissions=array(
 		
 		'can_view'=>'No',
@@ -43,7 +46,7 @@ class Controller_Acl extends \AbstractController {
 
 	function init(){
 		parent::init();
-
+		// echo "i m here 1";
 		if(! $this->document){
 			if(!$this->owner instanceof \SQL_Model AND !$this->owner->getModel())
 				throw $this->exception('document not setted and model not found');
@@ -56,15 +59,18 @@ class Controller_Acl extends \AbstractController {
 
 			if($this->owner instanceof \SQL_Model){
 				$this->document = get_class($this->owner);
-				$this->owner->acl_added=$this;
-				$this->my_model = $this->owner;
 			}
 			else{
 				$this->document = get_class($this->owner->getModel());
-				$this->owner->model->acl_added=$this;
-				$this->my_model = $this->owner->model;
 			}
+		}
 
+		if($this->owner instanceof \SQL_Model){
+			$this->owner->acl_added=$this;
+			$this->my_model = $this->owner;
+		}else{
+			$this->owner->model->acl_added=$this;
+			$this->my_model = $this->owner->model;
 		}
 
 		$this->document = str_replace("Model_", "", $this->document);
@@ -73,7 +79,6 @@ class Controller_Acl extends \AbstractController {
 		$dept_documents->addCondition('department_id', $_GET['department_id']?:$this->api->current_employee->department()->get('id'));
 		$dept_documents->addCondition('name', $this->document);
 		$dept_documents->tryLoadAny();
-
 		if(!$dept_documents->loaded()) $dept_documents->save();
 
 		$acl_model = $this->add('xHR/Model_DocumentAcl');
@@ -81,11 +86,18 @@ class Controller_Acl extends \AbstractController {
 		$acl_model->addCondition('document_id',$dept_documents->id);
 
 		$acl_model->tryLoadAny();
-		if(!$acl_model->loaded()) $acl_model->save();
+		if(!$acl_model->loaded()){
+			$acl_model->save();	
+		} 
 
 		foreach ($this->permissions as $key => $value) {
 			$this->permissions[$key] = $acl_model[$key];
 		}
+
+		foreach ($this->override as $key => $value) {
+			$this->permissions[$key] = $value;
+		}
+
 
 		$this->self_only_ids = array($this->api->current_employee->id);
 		
@@ -133,18 +145,20 @@ class Controller_Acl extends \AbstractController {
 	}
 
 	function doCRUD(){
-
-		if(!$this->owner->isEditing()){
+		// echo "i m here 2 <br>";
+		if($this->show_acl_btn AND !$this->owner->isEditing()){
 			$btn = $this->owner->grid->buttonset->addButton()->set('ACL APPLIED');
 			$self= $this;
 			$vp = $this->owner->add('VirtualPage')->set(function($p)use($self){
 				// $p->add('View')->set($self->owner->model->document_name);
+				$p->api->stickyGET('department_id');
+
 				$m = $p->add('xHR/Model_DocumentAcl');
 				$j=$m->leftJoin('xhr_documents','document_id');
 				$j->addField('doc_name','name');
 				$j->addField('department_id');
 				$m->addCondition('doc_name',$self->owner->model->document_name);
-				$m->addCondition('post_id','<>',null);
+				$m->addCondition('post_id','<>',null); // is admin is not associated with any post athen post=null wali entries bhi dikhayega
 				
 				if(! $p->api->current_department instanceof \Dummy)
 					$m->addCondition('department_id',$p->api->current_department->id);
@@ -153,13 +167,11 @@ class Controller_Acl extends \AbstractController {
 				$m->addExpression('post_department')->set($m->refSQL('post_id')->fieldQuery('department'))->caption('Department');
 
 				$c = $p->add('CRUD',array('allow_add'=>false));
-
 				$fields=null;
 				if(isset($self->owner->model->actions)){
 					$fields = array_merge(array('post_department','post','post_id'),array_keys($self->owner->model->actions));
 				}
 				$c->setModel($m,$fields);
-
 				if(!$c->isEditing()){
 					$c->grid->removeColumn('post_id');
 				}
@@ -198,55 +210,55 @@ class Controller_Acl extends \AbstractController {
 		}
 
 		if($this->permissions['can_submit'] != 'No'){
-			$this->manageAction('submit');
+			$this->manageAction('submit','can_submit');
 		}
 	
 		if($this->permissions['can_select_outsource'] and $this->permissions['can_select_outsource'] !='No'){
-			$this->manageAction('select_outsource');
+			$this->manageAction('select_outsource','can_select_outsource');
 		}		
 
 		if($this->permissions['can_approve'] and $this->permissions['can_approve'] !='No'){
-			$this->manageAction('approve');
+			$this->manageAction('approve','can_approve');
 		}	
 		
 		if($this->permissions['can_reject'] !='No'){
-			$this->manageAction('reject');
+			$this->manageAction('reject','can_reject');
 		}
 		
 		if($this->permissions['can_redesign'] !='No'){
-			$this->manageAction('redesign');
+			$this->manageAction('redesign','can_redesign');
 		}
 
 		if($this->permissions['can_assign'] !='No'){			
-			$this->manageAction('assign');
+			$this->manageAction('assign','can_assign');
 		}
 
 		if($this->permissions['can_receive']){
-			$this->manageAction('receive');
+			$this->manageAction('receive','can_receive');
 		}
 
 		if($this->permissions['can_accept'] and $this->permissions['can_accept'] !='No'){
-			$this->manageAction('accept');
+			$this->manageAction('accept','can_accept');
 		}
 
 		if($this->permissions['can_cancel'] and $this->permissions['can_cancel'] !='No'){
-			$this->manageAction('cancel');
+			$this->manageAction('cancel','can_cancel');
 		}
 
 		if($this->permissions['can_forward'] !='No'){
-			$this->manageAction('forward');
+			$this->manageAction('forward','can_forward');
 		}
 
 		if($this->permissions['can_start_processing'] !='No'){
-			$this->manageAction('start_processing');
+			$this->manageAction('start_processing','can_start_processing');
 		}
 
 		if($this->permissions['can_mark_processed'] !='No'){
-			$this->manageAction('mark_processed');
+			$this->manageAction('mark_processed','can_mark_processed');
 		}
 
 		if($this->permissions['can_manage_attachments'] !='No'){
-			$this->manageAction('manage_attachments');
+			$this->manageAction('manage_attachments','can_manage_attachments');
 		}
 
 		if($this->permissions['can_manage_tasks'] !='No'){
@@ -270,7 +282,7 @@ class Controller_Acl extends \AbstractController {
 		}
 
 		if($this->permissions['can_see_activities'] AND $this->permissions['can_see_activities'] != 'No'){
-			$this->manageAction('see_activities');
+			$this->manageAction('see_activities','can_see_activities');
 		}
 
 		if($this->permissions['can_send_via_email'] !='No' AND $this->owner->model->hasMethod('send_via_email')){
@@ -296,7 +308,13 @@ class Controller_Acl extends \AbstractController {
 
 	}
 
-	function manageAction($action_name){
+	function manageAction($action_name, $full_acl_key=null , $icon = null){
+
+		if(!$icon and isset($this->my_model->actions)){
+			$icon = $this->my_model->actions[$full_acl_key]['icon']?:'edit';
+		}
+		else
+			$icon = 'target';
 
 		if($this->owner->model->hasMethod($action_name.'_page')){
 			$action_page_function = $action_name.'_page';
@@ -310,7 +328,7 @@ class Controller_Acl extends \AbstractController {
 
 			$title = implode(" ", $title);
 
-			$p = $this->owner->addFrame(ucwords($title),array('icon'=>'edit'));
+			$p = $this->owner->addFrame(ucwords($title),array('icon'=>$icon));
 			if($p and $this->owner->isEditing('fr_'.$this->api->normalizeName(ucwords($title)))){
 				$this->owner->model->tryLoad($this->owner->id);
 				if($this->owner->model->loaded()){
@@ -324,6 +342,10 @@ class Controller_Acl extends \AbstractController {
 							$js[] = $this->owner->js()->reload(array('cut_object'=>'',$p->short_name=>'',$p->short_name.'_id'=>''));
 							$this->owner->js(null,$js)->execute();
 						}
+					}
+					catch(\Exception_StopInit $e){
+						$this->api->db->commit();
+						throw $e;
 					}catch(\Exception $e){
 						$this->api->db->rollback();
 						if($this->api->getConfig('developer_mode',false)){
@@ -338,8 +360,12 @@ class Controller_Acl extends \AbstractController {
 		}elseif($this->owner->model->hasMethod($action_name)){
 			try{
 				$this->api->db->beginTransaction();
-					$this->owner->addAction($action_name,array('toolbar'=>false));		
+					$this->owner->addAction($action_name,array('toolbar'=>false,'icon'=>$icon));		
 				$this->api->db->commit();
+			}
+			catch(\Exception_StopInit $e){
+					$this->api->db->commit();
+					throw $e;
 			}catch(\Exception $e){
 				$this->api->db->rollback();
 					throw $e;
@@ -571,7 +597,10 @@ class Controller_Acl extends \AbstractController {
 
 		$current_lastseen = $this->add('Model_MyLastSeen');
 		$current_lastseen->addCondition('related_root_document_name',$doc->root_document_name);
-		$current_lastseen->addCondition('related_document_name',$doc->document_name);
+		
+		if($doc->document_name != $doc->root_document_name)
+			$current_lastseen->addCondition('related_document_name',$doc->document_name);
+		
 		$current_lastseen->tryLoadAny();
 
 		$new_docs_q = clone $doc->_dsql();
@@ -592,6 +621,9 @@ class Controller_Acl extends \AbstractController {
 				return "";
 		}
 
+		if(!$string and $new_only){
+			return $new_doc_count;
+		}
 
 		return array('new'=>$new_doc_count,'total'=>$total_doc_count);
 

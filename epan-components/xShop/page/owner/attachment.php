@@ -15,6 +15,7 @@ class page_xShop_page_owner_attachment extends page_xShop_page_owner_main{
         }
         if($order_item_id){
            $attachment = $this->add('xShop/Model_SalesOrderDetailAttachment');    
+           $attachment->addCondition('related_document_id',$order_item_id);
         }
 
         $crud = $this->add('CRUD');

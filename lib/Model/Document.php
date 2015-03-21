@@ -25,14 +25,12 @@ class Model_Document extends SQL_Model{
 			$this->document_name = str_replace("Model_", "", $class_name);
 		}
 
-		$default_acl_options = array(
-			'can_view'=>array('caption'=>'Whose created Document you can see'),
-			'can_manage_attachments' => array('caption'=>'Whose created Documents Attachemnt you can manage'),
-			'can_see_activities' => array('caption'=>'Whose created Documents Communications you can see'),
-		);
 
-		if(!$this instanceof \xCRM\Model_Activity)
-			$this->actions = array_merge($default_acl_options,$this->actions);
+		if(!$this instanceof \xCRM\Model_Activity){
+			$this->actions = array_merge(array('can_view'=>array('caption'=>'Whose created Document you can see')),$this->actions);
+			$this->actions = array_merge(array('can_manage_attachments' => array('caption'=>'Whose created Documents Attachemnt you can manage')),$this->actions);
+			$this->actions = array_merge(array('can_see_activities' => array('caption'=>'Whose created Documents Communications you can see','icon'=>'comment')),$this->actions);
+		}
 
 		$this->addField('related_document_id')->system(true);
 		$this->addField('related_root_document_name')->system(true);
@@ -172,6 +170,10 @@ class Model_Document extends SQL_Model{
 			$activities->addCondition('action','comment');
 		}
 
+		if($crud->isEditing('edit')){
+			$activities->getElement('action')->display(array('form'=>'Readonly'));
+		}
+
 		$crud->setModel($activities,array('created_at','action_from','action','subject','message'));
 
 		if(!$crud->isEditing()){
@@ -182,9 +184,9 @@ class Model_Document extends SQL_Model{
 
 	}
 
-	function setStatus($status,$message=null){
+	function setStatus($status,$message=null,$subject=null){
 		$this['status']=$status;
-		$this->createActivity($status,ucwords($status),$message?:'Document Status Changed');
+		$this->createActivity($status, $subject?:ucwords($status) ,$message?:'Document Status Changed');
 		$this->saveAs($this->getRootClass());
 	}
 
@@ -214,7 +216,8 @@ class Model_Document extends SQL_Model{
 		$m->addCondition('action',$action);
 
 		$m->addCondition('related_root_document_name',$this->root_document_name);
-		$m->addCondition('related_document_name',$this->document_name);
+		if($this->root_document_name != $this->document_name)
+			$m->addCondition('related_document_name',$this->document_name);
 		$m->addCondition('related_document_id',$this->id);
 		$m->tryLoadAny();
 		
