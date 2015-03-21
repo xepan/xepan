@@ -26,6 +26,8 @@ class page_xProduction_page_owner_dept_main extends page_xProduction_page_owner_
 			$counts_array[$cnt['status']] = $cnt['cnt'];
 		}
 
+		$tabs->addTabURL('xProduction_page_owner_dept_upcoming','UpComings');
+
 		foreach ($document->status as $st) {
 			if($st=='approved'){
 				$tabs->addTabURL('xProduction_page_owner_dept_'.$st,'Approved / To Receive '. $this->add('xProduction/Model_Jobcard_'.ucwords($st))->myUnRead() );
