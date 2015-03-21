@@ -48,23 +48,24 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function beforeSave(){
+		// DONE IN FORM_FIELD_ITEM
 		// validate custom field entries
-		if($this['custom_fields']==''){
-			$phases_ids = $this->ref('item_id')->getAssociatedDepartment();
-			$cust_field_array = array();
-		}else{
-			$cust_field_array = json_decode($this['custom_fields'],true);
-			$phases_ids = array_keys($cust_field_array);
-		}
+		// if($this['custom_fields']==''){
+		// 	$phases_ids = $this->ref('item_id')->getAssociatedDepartment();
+		// 	$cust_field_array = array();
+		// }else{
+		// 	$cust_field_array = json_decode($this['custom_fields'],true);
+		// 	$phases_ids = array_keys($cust_field_array);
+		// }
 
-		foreach ($phases_ids as $phase_id) {
-			$custom_fields_assos_ids = $this->ref('item_id')->getAssociatedCustomFields($phase_id);
-			foreach ($custom_fields_assos_ids as $cf_id) {
-				if(!isset($cust_field_array[$phase_id][$cf_id]) or $cust_field_array[$phase_id][$cf_id] == ''){
-					throw $this->exception('Custom Field Values not proper','Growl');
-				}
-			}
-		}
+		// foreach ($phases_ids as $phase_id) {
+		// 	$custom_fields_assos_ids = $this->ref('item_id')->getAssociatedCustomFields($phase_id);
+		// 	foreach ($custom_fields_assos_ids as $cf_id) {
+		// 		if(!isset($cust_field_array[$phase_id][$cf_id]) or $cust_field_array[$phase_id][$cf_id] == ''){
+		// 			throw $this->exception('Custom Field Values not proper','Growl');
+		// 		}
+		// 	}
+		// }
 		
 	}
 
