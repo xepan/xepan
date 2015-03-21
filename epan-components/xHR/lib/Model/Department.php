@@ -44,6 +44,7 @@ class Model_Department extends \Model_Table{
 		
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('afterInsert',$this);
 
 		$this->_dsql()->order('production_level','asc');
 
@@ -67,6 +68,10 @@ class Model_Department extends \Model_Table{
 
 		if($dept_old['name'] == $this['name'])
 			throw $this->exception('Department is Allready Exist','Growl')->setField('name');
+	}
+
+	function afterInsert($obj,$new_id){
+		$this->newInsatce()->load($new_id)->warehouse();
 	}
 
 	function beforeDelete($m){

@@ -1,66 +1,40 @@
-<div id="{$_name}" class="well {$Class}">
+<div id="{$_name}" class="{$Class}">
 		<!--job card detail  -->
 	<div  class="row">
-		<div class="col-md-4 panel panel-info">
-			<div>
-				<b>JobCard NO : {$jobcard_no}</b>
-			</div>
-
-			<div>
-			<b> Job Created On : {$job_created_at}</b>
-			</div>
-		
-			<div>
-			<b>Recieved On : {$receive_date}</b>
-			</div>
-			
-			<div>
-			<b> From Dept: {$from_dept}</b>
-			</div>
-
-			<div>
-			<b> Current Dept: {$to_dept}</b>
-			</div>
-			<div>
-			<b> Next Dept: {next_dept}TODO{/next_dept}</b>
-			</div>
+		<div class="col-md-4">
+			<div>Job Card No: <b>{$jobcard_no}</b></div>
+			<!-- <div>Job Created On: <b>{$job_created_at}</b></div> -->
+			<div>Recieved On: <b>{$receive_date}</b></div>
+			<div>From Department: <b>{$from_dept}</b></div>
+			<div>Current Department: <b>{$to_dept}</b></div>
+			<div>Next Department: <b>{next_dept}TODO{/next_dept}</b></div>
 		 </div>
 
-		<div class="col-md-4 text-center">
-			{$status}
-		</div>
+		<div class="col-md-4 text-center atk-swatch-ink"style='text-transform:capitalize'>{$status}</div>
 
 			<!--order detail  -->
-		<div class = "col-md-4 panel panel-info">
-				<div>
-				<b>  SalesOrder No : {$sales_order_no}</b>
-				</div>
-
-				<div>
-				<b> Order Created Date  {$order_created_at}</b>
-				</div>
-
-				<div>
-				<b>Customer : {$customer}</b>
-				</div>
-				
-				<div>
-				<b>Order Type : {$order_from}</b>
-				</div>
+		<div class = "col-md-4 text-right">
+			<div>Sale Order No: <b>{$sales_order_no}</b></div>
+			<div>Order Created Date: <b>{$order_created_at}</b></div>
+			<div>Customer: <b>{$customer}</b></div>
+			<div>Order Type: <b>{$order_from}</b></div>
 		</div>
 	</div>
-	<div class ="panel panel-info">name:- {$item}</div>
+	<div class="text-center"><h3 class="page-header">{$item}</h3></div>
 	<div class="row">
 		<div class="col-md-6">
 			<b>Custom Fields</b><br>
-			{custom_fields} Custom Fields Here{/custom_fields}
+				{custom_fields} Custom Fields Here{/custom_fields}
 		</div>
-
 		<div class="col-md-6">
-			<b>Specification</b><br>
-			{specification} Specification Here{/specification}
+			<b>Specifications</b><br>
+				{specification} Specification Here{/specification}
 		</div>
 	</div>
+
+	<div>
+		<br><b>Received by :</b> {$received_by_x}
+	</div>
 </div>
-</div>
+
 

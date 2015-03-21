@@ -5,11 +5,11 @@
 		<tr>
 			<th align="left">Sno</th>
 			<th align="left">Item</th>
-			{item_amount_th}
 			<th align="right" class="text-right">Qty</th>
+			{order_amount_section}
 			<th align="right" class="text-right">Rate</th>
 			<th colspan="2" align="right" class="text-right">Amount</th>
-			{/item_amount_th}
+			{/order_amount_section}
 		</tr>
 	{rows}
 	{row}
@@ -19,11 +19,11 @@
 				<h4>{$item}<br><small>{$departments}</small></h4>
 			</td>
 			
-			{item_amount_td}
 				<td align="right">{$qty}</td>
+			{order_amount_section}
 				<td align="right">{$rate}</td>
 				<td colspan="2" align="right">{$amount}</td>
-			{/item_amount_td}
+			{/order_amount_section}
 		</tr>
 		{/row}
 	{/rows}

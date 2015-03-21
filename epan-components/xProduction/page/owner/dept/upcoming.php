@@ -12,7 +12,7 @@ class page_xProduction_page_owner_dept_upcoming extends page_xProduction_page_ow
 		
 		// $departmental_status->addCondition('status',"Waiting");
 
-		$crud=$this->add('CRUD',array('grid_class'=>'xProduction/Grid_JobCard','allow_add'=>false,'allow_del'=>false,'allow_edit'=>false));
+		$crud=$this->add('CRUD',array('allow_add'=>false,'allow_del'=>false,'allow_edit'=>false));
 		$crud->setModel($departmental_status,array('orderitem','status'));
 		
 		if(!$crud->isEditing()){

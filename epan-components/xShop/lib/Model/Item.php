@@ -750,5 +750,18 @@ class Model_Item extends \Model_Table{
 	}
 
 
+	function redableSpecification(){
+		if(!$this->loaded())
+			return false;
+		$str = "";
+		$specifications = $this->specification();
+		foreach ($specifications as $specification) {
+			$str .= $specification['name']." :: ".$specification['value']."<br>";
+		}
+		return $str;
+
+	}
+
+
 }	
 
