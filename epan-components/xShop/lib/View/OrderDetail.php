@@ -15,8 +15,7 @@ class View_OrderDetail extends \CompleteLister{
 		$this->current_row_html['sno']=$this->sno;
 		$this->current_row_html['departments']=$this->model->redableDeptartmentalStatus(true);
 		if(!$this->show_price){
-			$this->current_row_html['amount']= " ";
-			$this->current_row_html['rate']= " ";
+			$this->current_row_html['order_amount_section']= " ";
 		}
 		$this->sno++;
 	}
