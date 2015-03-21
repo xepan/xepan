@@ -10,7 +10,7 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
         $container = $this->add('View');
         $container->addClass('atk-section atk-box atk-effect-info atk-padding-large atk-shapre-rounded');
 
-        $this->add('PageHelp',array('page'=>'order_details'));
+        // $this->add('PageHelp',array('page'=>'order_details'));
         
         $order = $this->add('xShop/Model_Order')->load($order_id);
 
@@ -46,7 +46,7 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
             $btn->js('click',$this->js()->univ()->frameURL('Custome Field Values',array($this->api->url('xShop_page_owner_order_customfields',array('orderitem_id'=>$crud->id,'custom_field_name'=>$crud->form->getElement('custom_fields')->name)),"selected_item_id"=>$item_field->js()->val(),'current_json'=>$custom_fields_field->js()->val())));
         }
 
-        // $crud->add('xHR/Controller_Acl',array('document'=>'xShop\Order_'. ucwords($order['status']),'show_acl_btn'=>false,'override'=>array('can_view'=>'All','can_see_activities'=>'No')));
+        $crud->add('xHR/Controller_Acl',array('document'=>'xShop\Order_'. ucwords($order['status']),'show_acl_btn'=>false,'override'=>array('can_view'=>'All','can_see_activities'=>'No')));
         // $crud->add('Controller_FormBeautifier');
 	}
 }

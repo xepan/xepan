@@ -30,8 +30,8 @@ class Grid_Order extends \Grid {
 
 		if($fields==null){
 			$fields = array(
-						'name','order_from','on_date','member',
-						'net_amount','last_action','orderitem_count'
+						'name','order_from','created_at','member',
+						'net_amount','last_action','created_by','orderitem_count'
 						);
 		}
 

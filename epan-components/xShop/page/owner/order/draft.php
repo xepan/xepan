@@ -11,8 +11,8 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 			$crud->grid->removeColumn('order_from');
 		}
 
-		if(in_array($crud->isEditing(),array('add','edit'))){
-			$crud->form->add('View_Error')->set('Payment Advanced');
+		if($crud->isEditing('add') OR $crud->isEditing('edit')){
+			$crud->form->add('View_Error')->set('Payment Advanced ' . $crud->isEditing());
 		}
 
 	}

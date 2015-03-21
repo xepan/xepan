@@ -184,9 +184,9 @@ class Model_Document extends SQL_Model{
 
 	}
 
-	function setStatus($status,$message=null){
+	function setStatus($status,$message=null,$subject=null){
 		$this['status']=$status;
-		$this->createActivity($status,ucwords($status),$message?:'Document Status Changed');
+		$this->createActivity($status, $subject?:ucwords($status) ,$message?:'Document Status Changed');
 		$this->saveAs($this->getRootClass());
 	}
 

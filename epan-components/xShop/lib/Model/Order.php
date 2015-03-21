@@ -134,9 +134,7 @@ class Model_Order extends \Model_Document{
 	    $this['transaction_response_data'] = json_encode($transaction_reference_data);
 	    $this->save();
 	}
-	function checkStatus(){
-		
-	}
+	
 
 	function getAllOrder($member_id){
 		if($this->loaded())
@@ -240,8 +238,14 @@ class Model_Order extends \Model_Document{
 		return $this;
 	}
 
-	function reject(){
-		$this->setStatus('redesign');
+	function reject_page($page){
+		$form= $page->add('Form_Stacked');
+		$form->addField('text','reason');
+		$form->addSubmit('reject');
+		if($form->isSubmitted()){
+			$this->setStatus('redesign',$form['reason']);
+			return true;
+		}
 	}
 
 
@@ -269,9 +273,5 @@ class Model_Order extends \Model_Document{
 
 		$this->setStatus('approved');
 		return $this;
-	}
-
-	function setStatus($status){
-		parent::setStatus($status);
 	}
 }
