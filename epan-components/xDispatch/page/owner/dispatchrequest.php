@@ -2,7 +2,7 @@
 class page_xDispatch_page_owner_dispatchrequest extends page_xDispatch_page_owner_main {
 	function init(){
 		parent::init();
-		$tabs=$this->app->layout->add('Tabs');
+		$tabs=$this->add('Tabs');
 		$tabs->addTabURL('xDispatch_page_owner_dispatchrequest_draft','Draft');
 		$tabs->addTabURL('xDispatch_page_owner_dispatchrequest_submitted','Submitted');
 		$tabs->addTabURL('xDispatch_page_owner_dispatchrequest_approved','Approved/To Receive');
