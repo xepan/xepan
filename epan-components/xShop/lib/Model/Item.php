@@ -633,8 +633,14 @@ class Model_Item extends \Model_Table{
 			$i = 1;
 			foreach ($department as $cf_id => $cf_value_id) {
 				$cf_model = $this->add('xShop/Model_CustomFields')->load($cf_id);
-				$cf_value_model = $this->add('xShop/Model_CustomFieldValue')->tryLoad($cf_value_id);
-				$str .= " ".$cf_model['name']." :: ". ($cf_value_model['name']!=''?$cf_value_model['name']:'not-found-or-deleted');
+				if($cf_model['type']!='line'){
+					$cf_value_model = $this->add('xShop/Model_CustomFieldValue')->tryLoad($cf_value_id);
+					$str .= " ".$cf_model['name']." :: ". ($cf_value_model['name']!=''?$cf_value_model['name']:'not-found-or-deleted');
+				}
+				else{
+					$cf_value_model = $cf_value_id;
+					$str .= " ".$cf_model['name']." :: ". $cf_value_model;
+				}
 				if($i != count($department))
 					$str.=",";
 				$i++;
