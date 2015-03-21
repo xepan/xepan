@@ -39,15 +39,7 @@ class Model_JobCard extends \Model_Document{
 							// 'name|to_trim|required',
 							)
 					);
-
-		$this->addHook('beforeInsert',$this);
-
 		//$this->add('dynamic_model/Controller_AutoCreator');
-
-	}
-
-	function beforeInsert($obj){
-		$this['name'] = rand(1000,9999);
 	}
 
 	function createFromOrder($order_item, $order_dept_status ){
@@ -144,7 +136,8 @@ class Model_JobCard extends \Model_Document{
 
 		if($order_item){
 			$this['orderitem_id'] = $order_item->id;
-			$this['orderitem_departmental_status_id'] = $order_item->deptartmentalStatus($to_department)->get('id');
+			if($osid = $order_item->deptartmentalStatus($to_department))
+				$this['orderitem_departmental_status_id'] = $osid->id;
 		}
 
 		if($dispatch_to_warehouse){
@@ -232,6 +225,7 @@ class Model_JobCard extends \Model_Document{
 					$to_department->load($to_warehouse['department_id']);
 				}
 
+				$dispatch_to=false;
 				if($form['request_type']=='purchase'){
 					$dispatch_to = $this->department()->warehouse();
 					if($form['dispatch_directly']){
@@ -239,12 +233,19 @@ class Model_JobCard extends \Model_Document{
 							$dispatch_to = $this->add('xProduction/Model_OutSourceParty')->load($form['select_outsource_party'])->warehouse();
 						}
 					}
-				}else{
-					$dispatch_to=false;
 				}
 
 				$mr_m = $this->add('xStore/Model_MaterialRequest');
-				$mr_m->create($this->department(),$to_department,$items_array,array(),$this->orderItem(),$dispatch_to);
+				$this->add('xStore/Model_MaterialRequest')
+					->create(
+						$from_department=$this->department(),
+						$to_department=$to_department, 
+						$related_document=$this, 
+						$order_item=$this->orderItem(), 
+						$items_array, 
+						$dispatch_to_warehouse=$dispatch_to,
+						'approved'
+						);
 
 			}
 
@@ -385,7 +386,9 @@ class Model_JobCard extends \Model_Document{
 	function setStatus($status){
 		if($this['orderitem_id']){
 			$ds = $this->orderItem()->deptartmentalStatus($this->department());
-			$ds->setStatus(ucwords($status) .' in ' . $this->department()->get('name'));
+			if($ds) {
+				$ds->setStatus(ucwords($status) .' in ' . $this->department()->get('name'));
+			}
 			$this->orderItem()->order()->setStatus('processing');
 		}
 		parent::setStatus($status);

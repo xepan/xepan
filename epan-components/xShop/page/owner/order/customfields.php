@@ -102,6 +102,11 @@ class page_xShop_page_owner_order_customfields extends page_xShop_page_owner_mai
 			$dispatch_level = $this->add('xHR/Model_Department')->loadDispatch();
 			$dispatch_level_id = $dispatch_level->id;
 
+			// only either purchase or store should be selecetd
+			if(in_array($purchase_level_id,$selected_phases) and in_array($store_level_id, $selected_phases)){
+				$form->displayError('phase_'.$store_level_id,' Please select either Purchase or Store');
+			}
+
 			//If Department Is Purchase then next One Department is Select Compulsary 
 			if(in_array($purchase_level_id,$selected_phases) and count($selected_phases)===1){
 				$form->displayError('phase_'.$purchase_level_id, ' Purchase cannot be alone seleccted, select any other phase/department');
