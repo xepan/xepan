@@ -11,22 +11,31 @@ class View_Jobcard extends \View{
 		$oi = $this->jobcard->orderItem();
 		$order = $oi->order();
 
+		$self = $this;
+		$this->vp = $this->add('VirtualPage')->set(function($p)use($self){
+			$o = $p->add('xShop/Model_Order')->load($_GET['sales_order_clicked']);
+			$order = $p->add('xShop/View_Order');
+			$order->setModel($o);
+		});
 
-		$this->template->set('jobcard_no',$this->jobcard['name']);
-		$this->template->set('job_created_at',$this->jobcard['created_at']);
-		$this->template->set('receive_date',"TODOOOOO");
-		$this->template->set('from_dept',$this->jobcard['from_department']);
-		$this->template->set('to_dept',$this->jobcard['to_department']);
-		$this->template->set('next_dept','Todo');
-		$this->template->set('status',$this->jobcard['status']);
-		$this->template->set('sales_order_no',$order['name']);
-		$this->template->set('order_created_at',$order['created_at']);
-		$this->template->set('customer',$order['member']);
-		$this->template->set('order_from',$order['order_from']);
-		$this->template->set('item',$oi['item']);
+		$this->template->setHtml('jobcard_no',$this->jobcard['name']);
+		$this->template->setHtml('from_dept',$this->jobcard['from_department']);
+		$this->template->setHtml('to_dept',$this->jobcard['to_department']);
+		$this->template->setHtml('next_dept','Todo');
+		$this->template->setHtml('status',$this->jobcard['status']);
+		$this->template->setHtml('sales_order_no','<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Sale Order', $this->api->url($this->vp->getURL(),array('sales_order_clicked'=>$order->id))).'">'. $order['name'] ."</a>");
+		$this->template->setHtml('order_created_at',$order['created_at']);
+		$this->template->setHtml('customer',$order['member']);
+		$this->template->setHtml('order_from',$order['order_from']);
+		$this->template->setHtml('item',$oi['item']);
 		$this->template->setHtml('custom_fields',$oi->item()->genericRedableCustomFieldAndValue($oi['custom_fields']));
-		$this->template->setHtml('specification',$oi->item()->genericRedableCustomFieldAndValue($oi['custom_fields']));
+		$this->template->setHtml('specification',$oi->item()->redableSpecification());
 
+		$received_activity = $this->jobcard->searchActivity('received');
+		if(!$received_activity instanceof \Dummy)
+			$this->template->setHtml('receive_date', $received_activity['created_at']);
+
+		$this->template->setHtml('received_by_x',$this->jobcard->ref('created_by_id')->get('name_with_designation') . ' on ' .$this->jobcard['created_at']);
 		// $this->current_row['sno']=$this->sno;
 		// $this->current_row['current_status'] = $this->model->getCurrentStatus();
 	}
