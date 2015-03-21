@@ -13,6 +13,7 @@ class View_MaterialRequest extends \CompleteLister{
 		$this->template->setHtml('status',"Status: <b>".ucwords($this->materialrequest['status'])."</b>");
 		$this->template->setHtml('form_dept',"From Department: <b>".$this->materialrequest['from_department']."</b>");
 		$this->template->setHtml('to_dept',"To Department: <b>".$this->materialrequest['to_department']."</b>");
+		$this->template->setHtml('name',"Job Number: <b>".$this->materialrequest['name']."</b>");
 	
 		$this->setModel($this->materialrequest->itemrows());
 	}
