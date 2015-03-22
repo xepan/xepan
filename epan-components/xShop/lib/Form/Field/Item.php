@@ -9,7 +9,7 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 	public $show_custom_fields=true;
 	public $qty_effected_custom_fields_only=false;
 	
-	public $custom_field_element='custom_fields';
+	public $custom_field_element = 'custom_fields';
 	public $selected_item_id;
 	public $existing_json;
 
@@ -18,12 +18,52 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 		if($this->show_custom_fields){
 			$this->custom_field_page();
 		}
+
+		$self = $this;
+
+		$this->validateField(function($field)use($self){
+
+			if(!$field->get()) $field->displayFieldError('Please specify Item');
+			$item = $field->add('xShop/Model_Item')->load($field->get());
+			$cf_filled = $field->owner->get('custom_fields');
+
+			if($cf_filled == ''){
+				if($self->recall('qty_cf_only')){
+					$phases_ids = array($field->add('xHR/Model_Department')->loadStore()->get('id'));
+				}else{
+					$phases_ids = $item->getAssociatedDepartment();
+				}
+
+				$cust_field_array = array();
+			}else{
+				$cust_field_array = json_decode($cf_filled,true);
+				$phases_ids = array_keys($cust_field_array);
+			}
+
+			foreach ($phases_ids as $phase_id) {
+				$custom_fields_assos_ids = $item->getAssociatedCustomFields($phase_id);
+				foreach ($custom_fields_assos_ids as $cf_id) {
+					if(!isset($cust_field_array[$phase_id][$cf_id]) or $cust_field_array[$phase_id][$cf_id] == ''){
+						$field->displayFieldError('This Item requires custom fields to be filled');
+					}
+				}
+			}
+
+		});
 	}
 
 	function recursiveRender(){
 		if($this->show_custom_fields){
+			$this->owner->getElement($this->custom_field_element)->js(true)->closest('.atk-form-row')->hide();
 			$this->manageCustomFields();
 		}
+
+		if($this->qty_effected_custom_fields_only){
+			$this->memorize('qty_cf_only',true);
+		}else{
+			$this->forget('qty_cf_only');
+		}
+
 		parent::recursiveRender();
 	}
 
@@ -229,4 +269,5 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 
 		return false;
 	}
+
 }
