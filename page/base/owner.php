@@ -51,15 +51,15 @@ class page_base_owner extends Page {
         // $admin_m->addSeparator();
         $admin_m->addItem(array('Logout','icon'=>'logout'),'/logout');
 		
-		$this->shorcut_menus[]=array("page"=>"Dashboard","url"=>$this->api->url("owner_dashboard"));
-		$this->shorcut_menus[]=array("page"=>"Users","url"=>$this->api->url("owner_users"));
-		$this->shorcut_menus[]=array("page"=>"General Settings","url"=>$this->api->url("owner_epansettings"));
+		$this->shorcut_menus[]=array("page"=>"Dashboard","url"=>$this->api->url("owner_dashboard"),"keys"=>'dashboard');
+		$this->shorcut_menus[]=array("page"=>"Users","url"=>$this->api->url("owner_users"),'keys'=>'users logins');
+		$this->shorcut_menus[]=array("page"=>"General Settings","url"=>$this->api->url("owner_epansettings"),'keys'=>'company settings general configurations');
 
 		// Alert Notification 
 		// Pages and Templates
 		$dept_model = $this->add('xHR/Model_Department');
 
-		if($this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xHR')->tryLoadAny()->get('id'))){
+		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xHR')->tryLoadAny()->get('id'))){
 	        
 			$hr_m = $m->addMenu(array('HR','bagde'=>12));
 			$dept_model->loadHR();
@@ -73,8 +73,8 @@ class page_base_owner extends Page {
 			$hr_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 			$hr_m->addItem(array('Setup','icon'=>'cog'),$this->api->url('xHR_page_owner_setup',array('department_id'=>$dept_model->id)));
 
-			$this->shorcut_menus[]=array("page"=>"HR Dashboard","url"=>$this->api->url('xHR_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Departments","url"=>$this->api->url('xHR_page_owner_department',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array('keys'=>'hr dashboard mainpage summery',"page"=>"HR Dashboard","url"=>$this->api->url('xHR_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array('keys'=>'departments production phase posts salatery templates',"page"=>"Departments","url"=>$this->api->url('xHR_page_owner_department',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Employees","url"=>$this->api->url('xHR_page_owner_employees',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Employees Attendence","url"=>$this->api->url('xHR_page_owner_employeeattendence',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Employees Leave","url"=>$this->api->url('xHR_page_owner_employeeleave',array('department_id'=>$dept_model->id)));
@@ -85,7 +85,7 @@ class page_base_owner extends Page {
 		}
 
 
-		if($this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xMarketingCampaign')->tryLoadAny()->get('id'))){
+		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xMarketingCampaign')->tryLoadAny()->get('id'))){
 			$marketing_m = $m->addMenu('Marketing');
 			$dept_model->loadMarketing();
 			
@@ -123,7 +123,7 @@ class page_base_owner extends Page {
 			$exec_m->addItem(array('Scheduled Emails from Campaign','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_campaignexec',array('department_id'=>$dept_model->id)));
 	}
 
-		if($this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xShop')->tryLoadAny()->get('id'))){
+		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xShop')->tryLoadAny()->get('id'))){
 			$sales_m = $m->addMenu('Sales');
 			$dept_model->loadSales();
 
@@ -143,8 +143,8 @@ class page_base_owner extends Page {
 			$sales_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
-			$this->shorcut_menus[]=array("page"=>"Sales Dashboard","url"=>$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Opportunity","url"=>$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array('keys'=>'sales dashboard, mainpage department summery',"page"=>"Sales Dashboard","url"=>$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array('keys'=>'opportunity hot leads',"page"=>"Opportunity","url"=>$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Quotation","url"=>$this->api->url('xShop_page_owner_quotation',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Shops & Blogs","url"=>$this->api->url('xShop_page_owner_shopsnblogs',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Category","url"=>$this->api->url('xShop_page_owner_category',array('department_id'=>$dept_model->id)));
@@ -163,7 +163,7 @@ class page_base_owner extends Page {
 		}
 
 
-		if($this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xProduction')->tryLoadAny()->get('id'))){
+		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xProduction')->tryLoadAny()->get('id'))){
 			$production_m = $m->addMenu('Production');
 
 			$production_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dashboard',array('department_id'=>$dept_model->id)));
@@ -186,7 +186,7 @@ class page_base_owner extends Page {
 			}
 		}
 			
-		if($this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xCRM')->tryLoadAny()->get('id'))){
+		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xCRM')->tryLoadAny()->get('id'))){
 			
 			$crm_m = $m->addMenu('CRM');
 			$dept_model->loadCRM();
@@ -202,7 +202,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"CRM Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 		}
 			
-		if($this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xAccounts')->tryLoadAny()->get('id'))){
+		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xAccounts')->tryLoadAny()->get('id'))){
 			$accounts_m = $m->addMenu('Accounts');
 			$dept_model->loadAccounts();
 			$accounts_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
@@ -216,7 +216,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Accounts Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 		}
 			
-		if($this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xPurchase')->tryLoadAny()->get('id'))){
+		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xPurchase')->tryLoadAny()->get('id'))){
 			$purchase_m = $m->addMenu('Purchase');
 			$dept_model->loadPurchase();
 			$purchase_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xPurchase_page_owner_dashboard',array('department_id'=>$dept_model->id)));
@@ -235,7 +235,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Purchase Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 		}	
 
-		if($this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xStore')->tryLoadAny()->get('id'))){
+		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xStore')->tryLoadAny()->get('id'))){
 			$store_m = $m->addMenu('Store');
 
 			$dept_model->loadStore();
@@ -255,7 +255,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Warehouse","url"=>$this->api->url('xStore_page_owner_warehouse',array('department_id'=>$dept_model->id)));
 		}	
 
-		if($this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xDispatch')->tryLoadAny()->get('id'))){
+		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xDispatch')->tryLoadAny()->get('id'))){
 			$dispatch_m = $m->addMenu('Dispatch');
 			$dept_model->loadDispatch();
 			$dispatch_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xDispatch_page_owner_dashboard',array('department_id'=>$dept_model->id)));
