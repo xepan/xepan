@@ -59,11 +59,12 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 
 	}
 
-	function addItem($item,$qty,$unit='Nos'){
+	function addItem($item,$qty,$unit,$custom_fields){
 		$mr_item = $this->ref('xStore/MaterialRequestItem');
 		$mr_item['item_id'] = $item->id;
 		$mr_item['qty'] = $qty;
 		$mr_item['unit'] = $unit;
+		$mr_item['custom_fields'] = $custom_fields;
 		$mr_item->save();
 	}
 

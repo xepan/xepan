@@ -48,7 +48,7 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function beforeSave(){
-		// DONE IN FORM_FIELD_ITEM
+
 		// validate custom field entries
 		// if($this['custom_fields']==''){
 		// 	$phases_ids = $this->ref('item_id')->getAssociatedDepartment();

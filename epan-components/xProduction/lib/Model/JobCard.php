@@ -152,7 +152,7 @@ class Model_JobCard extends \Model_Document{
 		$this->save();
 
 		foreach ($items_array as $item) {
-			$this->addItem($this->add('xShop/Model_Item')->load($item['id']),$item['qty'],$item['unit']);
+			$this->addItem($this->add('xShop/Model_Item')->load($item['id']),$item['qty'],$item['unit'],$item['custom_fields']);
 		}
 		return $this;
 	}
@@ -190,8 +190,8 @@ class Model_JobCard extends \Model_Document{
 
 
 		$ti=$form->add('CRUD'); //Temp_items
-		$tm = $this->add('xStore/Model_TempItems');
-		$ti->setModel($tm);
+		$tm = $ti->add('xStore/Model_TempItems');
+		$ti->setModel($tm,array('item_id','qty','unit','custom_fields'),array('item_id','qty','unit'));
 		if($ti->isEditing('add') or $ti->isEditing('edit')){
 			$f = $ti->form->getElement('item_id');
 			$f->qty_effected_custom_fields_only = true;
@@ -218,7 +218,7 @@ class Model_JobCard extends \Model_Document{
 			if($form['generate_material_request']){
 				$items_array=array();
 				foreach ($tm as $id => $item) {
-					$items_array[] = array('id'=>$item['item_id'],'qty'=>$item['qty'],'unit'=>$item['unit']);
+					$items_array[] = array('id'=>$item['item_id'],'qty'=>$item['qty'],'unit'=>$item['unit'],'custom_fields'=>$item['custom_fields']);
 				}
 
 				$to_department = $this->add('xHR/Model_Department');
