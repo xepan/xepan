@@ -82,8 +82,8 @@ class Form_Order extends \Form_Stacked {
 
 		$this->create_new_field = $this->addField('Checkbox','create_new_member');
 
-		$this->member_field = $this->addField('autocomplete/Basic','member');
-		$member_model = $this->add('xShop/Model_MemberDetails');
+		$this->member_field = $this->addField('autocomplete/Plus','member');
+		$member_model = $this->add('xShop/Model_Customer');
 		// $member_model->addExpression('search_field')->set(function($m,$q){
 		// 	return "(concat(".$q->getField('name').",' ','mobile_number'))";
 		// });

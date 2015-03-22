@@ -3,28 +3,50 @@
 namespace xShop;
 
 class Model_Customer extends Model_MemberDetails{
+	public $title_field ='customer_search_phrase';
+
 	function init(){
 		parent::init();
 
+		$this->getElement('users_id')->destroy();
 		$this->getElement('name')->destroy();
 		$this->getElement('email')->destroy();
 
 		$user_j = $this->join('users','users_id');
-		$user_j->addField('customer_name','name');
-		$user_j->addField('username')->sortable(true);
-		$user_j->addField('password');
+		$user_j->addField('username')->sortable(true)->group('b~6~Customer Loign');
+		$user_j->addField('password')->type('password')->group('b~6');
+		$user_j->addField('customer_name','name')->group('a~6~Basic Info')->mandatory(true);
+		$user_j->addField('customer_email','email')->sortable(true)->group('a~6');
 		$user_j->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(50)->group('a~6')->sortable(true)->mandatory(false);
-		$user_j->addField('customer_email','email')->sortable(true);
 
-		$this->add('Controller_Validator');
-		$this->is(array(
-							// 'name|to_trim|required?type User name here',
-							'email|email|unique','if','*','[email]',
-							'username|to_trim|unique'
-						)
-				);
+		$this->addCondition('type',50);
+
+		$this->addExpression('customer_search_phrase')->set($this->dsql()->concat(
+				$this->getElement('customer_name'),
+				' :: ',
+				$this->getElement('customer_email'),
+				' :: ',
+				$this->getElement('mobile_number')
+				
+			));
 
 		$this->hasMany('xShop/Oppertunity','customer_id');
 		$this->hasMany('xShop/Quotation','customer_id');
+
+		$this->arrangeFields();
+
+
+
+	}
+
+	function arrangeFields(){
+		$o=$this->add('Order');
+		$o->move($this->getElement('mobile_number'),'first');
+		$o->move($this->getElement('customer_email'),'first');
+		$o->move($this->getElement('customer_name'),'first');
+		$o->move($this->getElement('username'),'last');
+		$o->move($this->getElement('password'),'last');
+
+		$o->now();
 	}
 }

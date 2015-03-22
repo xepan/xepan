@@ -26,7 +26,7 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
         $crud = $container->add('CRUD');
         $order_detail->getElement('item_id')->display(array('form'=>'xShop/Item'));
 
-        $crud->setModel($order_detail,array('item_id','qty','unit','rate','amount','status','custom_fields'),array('id','item','qty','unit','rate','amount','status'));
+        $crud->setModel($order_detail,array('item_id','qty','rate','amount','status','custom_fields'),array('id','item','qty','rate','unit','amount','status'));
         
         if(!$crud->isEditing()){
             $grid = $crud->grid;

@@ -15,7 +15,7 @@ class Model_Order extends \Model_Document{
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
 		$this->hasOne('xShop/PaymentGateway','paymentgateway_id');
-		$f = $this->hasOne('xShop/MemberDetails','member_id')->group('a~3~<i class="fa fa-info"></i> Order Info')->sortable(true);
+		$f = $this->hasOne('xShop/Customer','member_id')->group('a~3')->sortable(true)->display(array('form'=>'autocomplete/Plus'))->caption('Customer');
 		$f->icon = "fa fa-user~red";
 		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3')->sortable(true)->defaultValue(rand(1000,9999));
 		$f = $this->addField('email')->group('a~3')->sortable(true);

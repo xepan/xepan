@@ -16,8 +16,8 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 			return $m->refSQL('orderitem_id')->fieldQuery('qty');
 		});
 		
-		$this->addExpression('Unit')->set(function($m,$q){
-			return $m->refSQL('orderitem_id')->fieldQuery('unit');
+		$this->addExpression('unit')->set(function($m,$q){
+			return $m->add('xShop/Model_Item')->addCondition('id',$m->add('xShop/Model_OrderDetails')->addCondition('id',$q->getField('orderitem_id'))->fieldQuery('item_id'))->fieldQuery('qty_unit');
 		});
 
 		$this->addField('status')->defaultValue('Waiting');
