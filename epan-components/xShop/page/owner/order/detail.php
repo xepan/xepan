@@ -40,7 +40,7 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
         if($crud->isEditing('add') or $crud->isEditing('edit')){
             $item_field = $crud->form->getElement('item_id');
             $item_field->custom_field_element = 'custom_fields';
-            $item_field->qty_effected_custom_fields_only = true;
+            $item_field->qty_effected_custom_fields_only = false;
 
         }
 

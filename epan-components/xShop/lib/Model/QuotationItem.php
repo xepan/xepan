@@ -7,10 +7,16 @@ class Model_QuotationItem extends \Model_Document{
 	public $status=array();
 	public $root_document_name="QuotationItem";
 
+	public $actions=array(
+			'allow_edit'=>array('caption'=>'Whose created Jobcard this post can edit'),
+			'allow_add'=>array('caption'=>'Can this post create new Jobcard'),
+			'allow_del'=>array('caption'=>'Whose Created Jobcard this post can delete'),
+		);
+
 	function init(){
 		parent::init();
 		$this->hasOne('xShop/Quotation','quotation_id')->sortable(true);
-		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'autocomplete/Basic'))->sortable(true);
+		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'xShop/Item'))->sortable(true);
 		
 		$this->addField('qty')->sortable(true);
 		$this->addField('rate')->sortable(true);

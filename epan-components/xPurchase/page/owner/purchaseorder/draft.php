@@ -30,12 +30,7 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
 
         if($crud->isEditing()){
         	$item_field = $crud->form->getElement('item_id');
-            $f = $item_field->other_field;
-            $custom_fields_field = $crud->form->getElement('custom_fields');
-            // $custom_fields_field->js(true)->hide();
-            
-            $btn = $item_field->other_field->belowField()->add('Button')->set('CustomFields');
-            $btn->js('click',$this->js()->univ()->frameURL('Custome Field Values',array($this->api->url('xPurchase_page_owner_purchaseorder_customfields',array('orderitem_id'=>$crud->id,'custom_field_name'=>$crud->form->getElement('custom_fields')->name)),"selected_item_id"=>$item_field->js()->val(),'current_json'=>$custom_fields_field->js()->val())));
+        	$item_field->qty_effected_custom_fields_only = true;
         }
 
 

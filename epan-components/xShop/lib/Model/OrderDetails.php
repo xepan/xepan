@@ -23,11 +23,11 @@ class Model_OrderDetails extends \Model_Document{
 		$this->hasOne('xShop/Item_Saleable','item_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
 
 		$this->addField('qty')->type('money')->group('b~3~Order Details');
-		$this->addField('unit')->group('b~3');
+		// $this->addField('unit')->group('b~3');
 		$this->addField('rate')->type('money')->group('b~3');
 		$this->addField('amount')->type('money')->group('b~3');
 		$this->addField('narration')->type('text')->system(false)->group('c~12~ Narration');
-		$this->addField('custom_fields')->type('text')->system(false)->group('c~12~ Custom Fields');
+		$this->addField('custom_fields')->type('text')->system(false);
 
 		$this->addExpression('name')->set(function($m,$q){
 			return $m->refSQL('item_id')->fieldQuery('name');
