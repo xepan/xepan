@@ -10,7 +10,7 @@ class Model_MaterialRequestItem extends \Model_Document{
 		parent::init();
 
 		$this->hasOne('xStore/MaterialRequest','material_request_jobcard_id');
-		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'autocomplete/Basic'))->sortable(true);
+		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'xShop/Item'))->sortable(true);
 		
 		$this->addField('qty')->sortable(true);
 		$this->addField('unit')->sortable(true);
