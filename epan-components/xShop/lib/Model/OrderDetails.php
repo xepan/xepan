@@ -198,19 +198,33 @@ class Model_OrderDetails extends \Model_Document{
 
 	//Return OrderItem DepartmentalStatus
 	//$with_custom_Fields = true; means also return departmnet associated CustomFields of OrderItem in Human Redable
-	function redableDeptartmentalStatus($with_custom_fields=false){
+	//Show Department Status
+	//departmemt_object if passed return with the highlited string
+		// Highlight the Passes Department
+	function redableDeptartmentalStatus($with_custom_fields=false,$show_status=true,$department_hightlight=false){
 		if(!$this->loaded())
 			return false;
 
 		$d = $this->deptartmentalStatus();
 		$str = "";
-		foreach ($d as $department) {
-			$str .= '<b>' . $department['department']."</b> ( ".$department['status']." )";
+		foreach ($d as $department_asso) {
+			//Hightlight the PassDepartment mostly used in Jobcard
+			if($department_hightlight and $department_hightlight instanceof \xHR\Model_Department){
+				if($department_hightlight['id'] == $department_asso['department_id'])
+					$str .= "<b class='atk-swatch-green'>".$department_asso['department']."</b>";
+				else
+					$str .= '<b>' .$department_asso['department']."</b>";
+			}else	
+				$str .= '<b>' .$department_asso['department']."</b>";
+			
+			if($show_status)//Show Department Status
+				$str .=" ( ".$department_asso['status']." )";
+
 			if($with_custom_fields){
 				$array = json_decode($this['custom_fields'],true);
 				foreach ($array as $id => $cf ) {
 					// $str.=$this['custom_fields'];
-					if($department['department_id'] == $id){
+					if($department_asso['department_id'] == $id){
 						if(!empty($cf)){
 							$ar[$id] = $cf;
 							$str .= "<br>[".$this->ref('item_id')->genericRedableCustomFieldAndValue(json_encode($ar))." ]<br>";
