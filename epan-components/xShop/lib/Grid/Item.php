@@ -27,7 +27,17 @@ class Grid_Item extends \Grid{
 		$this->addColumn('Button','duplicate',array("descr"=>"Duplicate",'icon'=>'cog','icon_only'=>true));
 
 		if($_GET['duplicate']){
-			$this->add('xShop/Model_Item')->load($_GET['duplicate'])->duplicate(false);
+			try{
+				$this->api->db->beginTransaction();
+				$this->add('xShop/Model_Item')->load($_GET['duplicate'])->duplicate(false);
+				$this->api->db->commit();
+			}catch(\Exception $e){
+				$this->api->db->rollback();
+				if($this->api->getConfig('developer_mode'))
+					throw $e;
+				else
+					$this->js()->univ()->errorMessage($e->getMessage())->execute();
+			}
 			$this->js()->reload()->execute();
 		}
 
