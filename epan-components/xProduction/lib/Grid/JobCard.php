@@ -9,7 +9,7 @@ class Grid_JobCard extends \Grid{
 		$this->addSno();
 
 		$this->vp=$this->add('VirtualPage')->set(function($p)use($self){
-			$p->add('xProduction/View_Jobcard',array('jobcard'=>$p->add('xProduction/Model_JobCard')->load($this->api->stickyGET('jobcard_clicked'))));
+			$p->add('xProduction/View_Jobcard',array('jobcard'=>$p->add('xProduction/Model_JobCard')->load($p->api->stickyGET('jobcard_clicked'))));
 		});
 	}
 	
