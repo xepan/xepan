@@ -31,7 +31,7 @@ class page_xShop_page_owner_item_prophases extends page_xShop_page_owner_main{
 			foreach ($selected_department as $department_id) {
 				$department_model = $this->add('xHR/Model_Department');
 				$department_model->load($department_id);
-				$department_model->createAssociationWithItem($_GET['item_id']);
+				$department_model->createAssociationWithItem($item->id);
 			}
 			$form->js(null,$this->js()->univ()->successMessage('Updated'))->reload()->execute();
 		}		
@@ -46,8 +46,14 @@ class page_xShop_page_owner_item_prophases extends page_xShop_page_owner_main{
 			$itemcomposition=$p->add('xShop/Model_ItemComposition');
 			$itemcomposition->addCondition('item_id',$_GET['item_id']);
 			$itemcomposition->addCondition('department_id',$p->id);
-			
-			$dept_assos = $item->ref('xShop/ItemDepartmentAssociation')->addCondition('department_id',$p->id)->loadAny();
+
+			$dept_assos = $item->ref('xShop/ItemDepartmentAssociation')->addCondition('is_active',true)->addCondition('department_id',$p->id)->tryLoadAny();
+
+			if(!$dept_assos->loaded()){
+				$p->add('View_Error')->set('Please define item\'s association with this department first');
+				return;
+			}
+
 			$form = $p->add('Form');
 			$form->addField('Checkbox','can_redefine_qty','Quantity can be redefined when marking processed ')->set($dept_assos['can_redefine_qty']);
 			$form->addField('Checkbox','can_redefine_items','Items can be redefined when marking processed ')->set($dept_assos['can_redefine_items']);
