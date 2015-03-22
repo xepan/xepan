@@ -45,8 +45,8 @@ class page_xShop_page_owner_member extends page_xShop_page_owner_main{
 										'pincode','billing_address',
 										'shipping_address',
 										)
-								,array('users','username','password',
-										'type','email','mobile_number',
+								,array('customer_name','customer_email','username',
+										'type','mobile_number',
 										'landmark','city','state',
 										'country','address',
 										'pincode','billing_address',

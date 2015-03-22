@@ -24,6 +24,7 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 		$this->validateField(function($field)use($self){
 
 			if(!$field->get()) $field->displayFieldError('Please specify Item');
+			
 			$item = $field->add('xShop/Model_Item')->load($field->get());
 			$cf_filled = $field->owner->get('custom_fields');
 
@@ -68,7 +69,7 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 	}
 
 	function manageCustomFields(){
-		$btn = $this->other_field->belowField()->add('Button')->set('CustomFields');
+		$btn = $this->other_field->belowField()->add('ButtonSet')->addButton()->set('Custome Fields')->addClass('atk-swatch-red');
 		$btn->js('click',$this->js()->univ()->frameURL
 			(
 				'Custom Field Values',
@@ -124,7 +125,7 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 			$phases = $p->add('xProduction/Model_Phase');
 			
 			if($qty_cf_only)
-				$phases->addCondition('id',$this->add('xHr/Model_Department')->loadStore()->get('id'));
+				$phases->addCondition('id',$p->add('xHr/Model_Department')->loadStore()->get('id'));
 
 			foreach ($phases as $phase) {
 			// add all phases
@@ -152,7 +153,7 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 						$field->set($p->existing_values[$phase->id][$cf->id]);
 					}
 
-					$custom_fields_array[] = 'custom_field_'.$cf->id;
+					$custom_fields_array[] = 'custom_field_'.$custom_fields_asso->id;
 				}
 			}
 
@@ -165,6 +166,11 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 				foreach ($phases as $phase) {
 					// echo "phase ".$phase['name'] .'<br>';
 					if( $form['phase_'.$phase->id] ){
+
+						$custom_fields_asso = $item->ref('xShop/ItemCustomFieldAssos')->addCondition('department_phase_id',$phase->id);		
+						if($qty_cf_only)
+							$custom_fields_asso->addCondition('can_effect_stock',true);
+
 						$custom_fields_asso_values [$phase->id]=array();
 						foreach ($custom_fields_asso as $cfassos) {
 							$cf = $cfassos->ref('customfield_id');
@@ -208,7 +214,7 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 				//Check For the One Department at One Leve
 				$level_touched=array();
 				foreach ($selected_phases as $ph) {
-					if(in_array(($prd_level=$this->add('xHR/Model_Department')->load($ph)->get('production_level')),$level_touched)){
+					if(in_array(($prd_level=$p->add('xHR/Model_Department')->load($ph)->get('production_level')),$level_touched)){
 						$form->displayError('phase_'.$ph,' Cannot Select More phases/Departments at a level');
 					}
 					$level_touched[] = $prd_level;

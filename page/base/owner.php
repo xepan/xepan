@@ -142,6 +142,7 @@ class page_base_owner extends Page {
 			$sales_m->addItem(array('Payment Gateway Config','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_paygateconfig',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
+			$sales_m->addItem(array('Terms & Conditions','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_termsandcondition',array('department_id'=>$dept_model->id)));
 
 			$this->shorcut_menus[]=array('keys'=>'sales dashboard, mainpage department summery',"page"=>"Sales Dashboard","url"=>$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array('keys'=>'opportunity hot leads',"page"=>"Opportunity","url"=>$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
@@ -159,6 +160,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Sales Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Sales Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Sales Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Terms and Conditions","url"=>$this->api->url('xShop_page_owner_termsandcondition',array('department_id'=>$dept_model->id)));
 
 		}
 

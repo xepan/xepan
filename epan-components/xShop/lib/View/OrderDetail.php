@@ -4,7 +4,7 @@ namespace xShop;
 
 class View_OrderDetail extends \CompleteLister{
 	public $sno=1;
-	public $show_price = 0;
+	public $show_price = false;
 	function init(){
 		parent::init();
 

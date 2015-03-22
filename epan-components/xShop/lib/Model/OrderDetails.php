@@ -22,7 +22,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->hasOne('xShop/Order','order_id');
 		$this->hasOne('xShop/Item_Saleable','item_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
 
-		$this->addField('qty')->type('money')->group('b~3~Order Details');
+		$this->addField('qty')->group('b~3~Order Details')->mandatory(true);
 		// $this->addField('unit')->group('b~3');
 		$this->addField('rate')->type('money')->group('b~3');
 		$this->addField('amount')->type('money')->group('b~3');

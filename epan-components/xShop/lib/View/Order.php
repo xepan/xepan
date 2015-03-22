@@ -3,6 +3,9 @@
 namespace xShop;
 
 class View_Order extends \View{
+
+	public $show_price = true;
+
 	function init(){
 		parent::init();
 
@@ -13,7 +16,7 @@ class View_Order extends \View{
 		$application_id=$this->api->recall('xshop_application_id');
 		
 		$order_detail = $this->add('xShop/Model_OrderDetails')->addCondition('order_id',$model->id);
-		$view=$this->add('xShop/View_OrderDetail',null,'order_detail');
+		$view=$this->add('xShop/View_OrderDetail',array('show_price'=>true),'order_detail');
 		$view->setModel($order_detail);
 		
 
@@ -22,6 +25,11 @@ class View_Order extends \View{
 		if(!$approved_activity instanceof \Dummy)
 			$this->template->trySet('approved_date', $approved_activity['created_at'] . ' by '. $approved_activity['action_from']);
 		$this->template->trySet('created_by_x',$this->model->ref('created_by_id')->get('name_with_designation') . ' on ' .$this->model['created_at']);
+		
+		if(!$this->model['termsandcondition_id'])
+			$this->template->del('tandc_section');
+		else
+			$this->template->trySetHTML('termsandcondition_matter',$this->model->ref('termsandcondition_id')->get('terms_and_condition'));
 	}
 
 	function defaultTemplate(){

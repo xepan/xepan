@@ -8,6 +8,15 @@ class Model_Document extends SQL_Model{
 	public $document_name=null;
 	public $root_document_name=null;
 
+	public $default_icons=array(
+			'can_submit'=>'lock atk-swatch-red',
+			'can_manage_attachments'=>'attach',
+			'can_approve'=>'thumbs-up-alt atk-swatch-green',
+			'can_reject'=>'ccw atk-swatch-red',
+			'can_reject'=>'ccw atk-swatch-red',
+			'can_see_activities'=>'comment atk-swatch-blue',
+		);
+
 	function init(){
 		parent::init();
 
@@ -29,8 +38,20 @@ class Model_Document extends SQL_Model{
 		if(!$this instanceof \xCRM\Model_Activity){
 			$this->actions = array_merge(array('can_view'=>array('caption'=>'Whose created Document you can see')),$this->actions);
 			$this->actions = array_merge(array('can_manage_attachments' => array('caption'=>'Whose created Documents Attachemnt you can manage')),$this->actions);
-			$this->actions = array_merge(array('can_see_activities' => array('caption'=>'Whose created Documents Communications you can see','icon'=>'comment')),$this->actions);
+			$this->actions = array_merge(array('can_see_activities' => array('caption'=>'Whose created Documents Communications you can see')),$this->actions);
 		}
+
+		// set icons
+		foreach ($this->actions as $ac_view=>$details) {
+			if(!isset($details['icon']) and isset($this->default_icons[$ac_view]))
+				$this->actions[$ac_view]['icon'] = $this->default_icons[$ac_view];
+		}
+
+		// if($this->document_name == 'xShop\Order_Draft'){
+		// 	echo "<pre>";
+		// 	echo print_r($this->actions,true);
+		// 	echo "</pre>";
+		// }
 
 		$this->addField('related_document_id')->system(true);
 		$this->addField('related_root_document_name')->system(true);
@@ -167,7 +188,7 @@ class Model_Document extends SQL_Model{
 		$crud = $page->add('CRUD');
 
 		if($crud->isEditing('add')){
-			$activities->addCondition('action','comment');
+			$activities->getElement('action')->enum(array('comment','email','call','sms','personal'));
 		}
 
 		if($crud->isEditing('edit')){
@@ -178,6 +199,15 @@ class Model_Document extends SQL_Model{
 
 		if(!$crud->isEditing()){
 			$crud->grid->controller->importField('created_at');
+		}
+
+		if($crud->isEditing('add')){
+			$action_field = $crud->form->getElement('action');
+			$crud->form->addField('email_to');
+
+			$action_field->js(true)->univ()->bindConditionalShow(array(
+				'action'=>array('email_to')
+			),'div.atk-form-row');
 		}
 
 		$crud->add('xHR/Controller_Acl');

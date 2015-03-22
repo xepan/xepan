@@ -25,8 +25,8 @@ class Form_Field_Basic extends \Form_Field_Hidden
     public $other_field;
 
     // Model ID field and title field names
-    protected $id_field;
-    protected $title_field;
+    public $id_field;
+    public $title_field;
 
     public $send_other_fields=array();
 
@@ -180,10 +180,6 @@ class Form_Field_Basic extends \Form_Field_Hidden
     }
 
     function filter($array){
-
-        $scheme_join = $this->model->leftJoin('schemes','scheme_id');
-        $scheme_join->addField('schemeType','SchemeType');
-        $scheme_join->addField('schemeName','name');
 
         $wq=$this->api->db->dsql()->orExpr();
         $hq=$this->api->db->dsql()->orExpr();

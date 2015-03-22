@@ -15,6 +15,8 @@ class Model_Order extends \Model_Document{
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
 		$this->hasOne('xShop/PaymentGateway','paymentgateway_id');
+		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->display(array('form'=>'autocomplete/Basic'))->caption('Terms & Cond.');
+
 		$f = $this->hasOne('xShop/Customer','member_id')->group('a~3')->sortable(true)->display(array('form'=>'autocomplete/Plus'))->caption('Customer');
 		$f->icon = "fa fa-user~red";
 		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3')->sortable(true)->defaultValue(rand(1000,9999));
@@ -257,7 +259,7 @@ class Model_Order extends \Model_Document{
 	function reject_page($page){
 		$form= $page->add('Form_Stacked');
 		$form->addField('text','reason');
-		$form->addSubmit('reject');
+		$form->addSubmit('Reject & Send to Re Design');
 		if($form->isSubmitted()){
 			$this->setStatus('redesign',$form['reason']);
 			return true;
@@ -275,19 +277,20 @@ class Model_Order extends \Model_Document{
 	}
 
 	function approve_page($page){
-		$page->add('View_Info')->set('Approving Job Card will move this order to approved status and create JobCards to receive in respective FIRST Departments for each Item');
-		$page->add('View_Error')->set('Are you sure?');
-		$form = $page->add('Form');
-		$form->addSubmit('Yes');
 
+		$form = $page->add('Form_Stacked');
+		$form->addField('text','comments');
+		$form->addSubmit('Approve & Create Jobcards');
+
+		$page->add('HtmlElement')->setElement('H3')->setHTML('<small>Approving Job Card will move this order to approved status and create JobCards to receive in respective FIRST Departments for EACH Item</small>');
 		if($form->isSubmitted()){
-			$this->approve();
+			$this->approve($form['comments']);
 			return true;
 		}
 		return false;
 	}
 
-	function approve(){
+	function approve($message){
 		// check conditions
 		foreach ($ois=$this->orderItems() as $oi) {
 			if($department_association = $oi->nextDeptStatus()){
@@ -295,7 +298,7 @@ class Model_Order extends \Model_Document{
 			}
 		}
 
-		$this->setStatus('approved');
+		$this->setStatus('approved',$message);
 		return $this;
 	}
 }
