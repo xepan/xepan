@@ -17,7 +17,7 @@ class Model_ItemCustomFieldAssos extends \Model_Table{
 
 		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true);
-		$this->addField('can_effect_stock')->type('boolean')->defaultValue(true);
+		$this->addField('can_effect_stock')->type('boolean')->defaultValue(false);
 
 		$this->hasMany('xShop/CustomFieldValue','itemcustomfiledasso_id');
 
@@ -66,6 +66,8 @@ class Model_ItemCustomFieldAssos extends \Model_Table{
 		$new_asso['customfield_id'] = $this['customfield_id'];
 		$new_asso['item_id'] = $new_item_id;
 		$new_asso['is_active'] = $this['is_active'];
+		$new_asso['department_phase_id'] = $this['department_phase_id'];
+		$new_asso['can_effect_stock'] = $this['can_effect_stock'];
 		$new_asso->save();
 		return $new_asso;
 	}
