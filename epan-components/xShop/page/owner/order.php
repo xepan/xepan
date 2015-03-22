@@ -10,15 +10,15 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 		$this->add('xShop/View_Badges_OrderPage');
 
 		$tab = $this->add('Tabs');
-co			$tab->addTabURL('xShop/page/owner/order_draft','Draft '.$this->add('xShop/Model_Order_Draft')->myCounts(true,false));
-			$tab->addTabURL('xShop/page/owner/order_submitted','Submitted '.$this->add('xShop/Model_Order_Submitted')->myUnRead());
-			$tab->addTabURL('xShop/page/owner/order_approved','Approved '.$this->add('xShop/Model_Order_Approved')->myUnRead());
-			$tab->addTabURL('xShop/page/owner/order_processing','Processing '.$this->add('xShop/Model_Order_Processing')->myUnRead());
-			$tab->addTabURL('xShop/page/owner/order_processed','Processed '.$this->add('xShop/Model_Order_Processed')->myUnRead());
-			$tab->addTabURL('xShop/page/owner/order_shipping','Shipping '.$this->add('xShop/Model_Order_Shipping')->myUnRead());
-			$tab->addTabURL('xShop/page/owner/order_completed','Complete '.$this->add('xShop/Model_Order_Completed')->myUnRead());
-			$tab->addTabURL('xShop/page/owner/order_cancelled','Cancel / Return '.$this->add('xShop/Model_Order_Cancelled')->myUnRead());
-			$tab->addTabURL('xShop/page/owner/order_redesign','Redesign '.$this->add('xShop/Model_Order_Redesign')->myUnRead());
+			$tab->addTabURL('xShop/page/owner/order_draft','Draft '.$this->add('xShop/Model_Order_Draft')->myCounts(true,false));
+			$tab->addTabURL('xShop/page/owner/order_submitted','Submitted '.$this->add('xShop/Model_Order_Submitted')->myCounts(true,false));
+			$tab->addTabURL('xShop/page/owner/order_approved','Approved '.$this->add('xShop/Model_Order_Approved')->myCounts(true,false));
+			$tab->addTabURL('xShop/page/owner/order_processing','Processing '.$this->add('xShop/Model_Order_Processing')->myCounts(true,false));
+			$tab->addTabURL('xShop/page/owner/order_processed','Processed '.$this->add('xShop/Model_Order_Processed')->myCounts(true,false));
+			$tab->addTabURL('xShop/page/owner/order_shipping','Shipping '.$this->add('xShop/Model_Order_Shipping')->myCounts(true,false));
+			$tab->addTabURL('xShop/page/owner/order_completed','Complete '.$this->add('xShop/Model_Order_Completed')->myCounts(true,false));
+			$tab->addTabURL('xShop/page/owner/order_cancelled','Cancel / Return '.$this->add('xShop/Model_Order_Cancelled')->myCounts(true,false));
+			$tab->addTabURL('xShop/page/owner/order_redesign','Redesign '.$this->add('xShop/Model_Order_Redesign')->myCounts(true,false));
 
 		// $application_id=$this->api->recall('xshop_application_id');
 		// //$order_model->addCondition('application_id',$application_id);	

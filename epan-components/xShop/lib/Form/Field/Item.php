@@ -9,7 +9,7 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 	public $show_custom_fields=true;
 	public $qty_effected_custom_fields_only=false;
 	
-	public $custom_field_element;//='custom_fields';
+	public $custom_field_element='custom_fields';
 	public $selected_item_id;
 	public $existing_json;
 

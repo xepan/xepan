@@ -190,8 +190,12 @@ class Model_JobCard extends \Model_Document{
 
 
 		$ti=$form->add('CRUD'); //Temp_items
-		$tm = $form->add('xStore/Model_TempItems');
+		$tm = $this->add('xStore/Model_TempItems');
 		$ti->setModel($tm);
+		if($ti->isEditing('add') or $ti->isEditing('edit')){
+			$f = $ti->form->getElement('item_id');
+			$f->qty_effected_custom_fields_only = true;
+		}
 
 		$dtpw = $form->addField('Checkbox','dispatch_directly','Dispatch Direclty (If Purchase Request)');
 		
