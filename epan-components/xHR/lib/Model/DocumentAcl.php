@@ -11,10 +11,10 @@ class Model_DocumentAcl extends \Model_Table{
 
 		$this->addExpression('department')->set(function($m,$q){
 			return $m->refSQL('document_id')->fieldQuery('department');
-		});
+		})->sortable(true);
 
 
-		$this->hasOne('xHR/Document','document_id')->display(array('form'=>'Readonly'))->mandatory(true);
+		$this->hasOne('xHR/Document','document_id')->display(array('form'=>'Readonly'))->mandatory(true)->sortable(true);
 	
 		$this->hasOne('xHR/Post','post_id')->mandatory(true);
 		
