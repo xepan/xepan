@@ -768,6 +768,31 @@ class Model_Item extends \Model_Table{
 
 	}
 
+	function validateStoreCustomFields($item_id,$custom_fields){
+		if($this->loaded())
+			$this->unload();
+
+		$this->load($item_id);
+		// if custom_fields empty
+		if($custom_fields != ""){
+			// check for Item PrePhases of Store
+			$dept_store = $this->departmentalAssociations($this->add('xHR/Model_Department')->loadStore());
+			// Item Associated with Store Department
+			if($dept_store->loaded()){
+				$cf_id_array = $this->getStockEffectAssociatedCustomFields($dept_store['department_id'];//return CustomField id		
+				//if check of prePhase is True
+				if(count($cf_id_array)){
+					throw new \Exception("CustomFields Not Proper");
+					//then throw exception
+				}
+			}else // Item Not Associated with Store Department
+				return "{}";// Return Empty custom Field string
+		}
+
+		//if CustomField NotEmpty Validation check at FormField Item CustomButton
+	}
+
+
 
 }	
 
