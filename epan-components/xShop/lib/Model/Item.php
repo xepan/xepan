@@ -779,7 +779,7 @@ class Model_Item extends \Model_Table{
 			$dept_store = $this->departmentalAssociations($this->add('xHR/Model_Department')->loadStore());
 			// Item Associated with Store Department
 			if($dept_store->loaded()){
-				$cf_id_array = $this->getStockEffectAssociatedCustomFields($dept_store['department_id'];//return CustomField id		
+				$cf_id_array = $this->getStockEffectAssociatedCustomFields($dept_store['department_id']);//return CustomField id	
 				//if check of prePhase is True
 				if(count($cf_id_array)){
 					throw new \Exception("CustomFields Not Proper");
