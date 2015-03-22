@@ -58,4 +58,21 @@ $.atk4(function(){
 			});
 		event.stopPropagation();
 	});
+
+	shortcut.add("Ctrl+down", function(event) {
+
+		var inp = $('<input type="text"/>');
+
+		var d = $(inp).dialog({
+			open: function (event,ui){
+				$(inp).focus();
+			}
+		});
+
+		$(inp).autocomplete({
+				delay: 0
+			});
+		event.stopPropagation();
+	});
+
 });

@@ -10,7 +10,7 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 		$this->add('xShop/View_Badges_OrderPage');
 
 		$tab = $this->add('Tabs');
-			$tab->addTabURL('xShop/page/owner/order_draft','Draft '.$this->add('xShop/Model_Order_Draft')->myUnRead());
+co			$tab->addTabURL('xShop/page/owner/order_draft','Draft '.$this->add('xShop/Model_Order_Draft')->myCounts(true,false));
 			$tab->addTabURL('xShop/page/owner/order_submitted','Submitted '.$this->add('xShop/Model_Order_Submitted')->myUnRead());
 			$tab->addTabURL('xShop/page/owner/order_approved','Approved '.$this->add('xShop/Model_Order_Approved')->myUnRead());
 			$tab->addTabURL('xShop/page/owner/order_processing','Processing '.$this->add('xShop/Model_Order_Processing')->myUnRead());

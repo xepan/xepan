@@ -240,6 +240,14 @@ class Model_Order extends \Model_Document{
 		
 	}	
 
+	function isOrderClose($close_as_well=true){
+		if($this->unCompletedOrderItems()->count()->getOne() == 0){
+			if($close_as_well)
+				$this->setStatus('processed');
+			return true;
+		}
+		return false;
+	}
 
 	function submit(){
 		$this->setStatus('submitted');

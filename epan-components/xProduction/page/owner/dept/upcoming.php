@@ -6,6 +6,8 @@ class page_xProduction_page_owner_dept_upcoming extends page_xProduction_page_ow
 		parent::init();
 		
 		$departmental_status=$this->add('xShop/Model_OrderItemDepartmentalStatus');
+		// $departmental_status->addExpression('order_no')->set($this->add('xShop/Model_Order')->addCondition('id',$departmental_status->refSQL('orderitem_id')->getElement('order_id')));
+
 
 		if($this->api->stickyGET('department_id'))
 			$departmental_status->addCondition('department_id',$_GET['department_id']);
@@ -13,7 +15,7 @@ class page_xProduction_page_owner_dept_upcoming extends page_xProduction_page_ow
 		// $departmental_status->addCondition('status',"Waiting");
 
 		$crud=$this->add('CRUD',array('allow_add'=>false,'allow_del'=>false,'allow_edit'=>false));
-		$crud->setModel($departmental_status,array('orderitem','status'));
+		$crud->setModel($departmental_status,array('orderitem','status','order_no'));
 		
 		if(!$crud->isEditing()){
 			$g=$crud->grid;

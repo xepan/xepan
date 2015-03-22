@@ -77,7 +77,8 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 	}
 
 	function mark_processed_page($page){
-
+		
+		$page->add('View')->set('AUTO Processed from DeliveryNote');
 		
 		$page->add('View')->set('stock se minus kar do ... status processed kar do');
 	}
