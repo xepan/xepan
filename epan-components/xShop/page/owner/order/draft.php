@@ -4,7 +4,7 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 		parent::init();
 
 		$crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_Order'));
-		$crud->setModel('xShop/Model_Order_Draft',array('member_id','order_summary','termsandcondition_id'),array('name','created_at','member','net_amount','last_action','created_by','orderitem_count'));
+		$crud->setModel('xShop/Model_Order_Draft',array('member_id','order_summary','delivery_date','termsandcondition_id','priority_id'),array('name','created_at','member','net_amount','last_action','created_by','orderitem_count'));
 		$crud->add('xHR/Controller_Acl');
 		
 		if(!$crud->isEditing()){

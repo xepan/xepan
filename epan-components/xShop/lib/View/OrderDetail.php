@@ -25,7 +25,9 @@ class View_OrderDetail extends \CompleteLister{
 
 		if($this->show_price){
 			$order= $model->ref('order_id');
+			// $order= $model->ref('priority_id');
 			$this->template->set('gross_amount',$order['amount']);
+			//$this->template->set('delivery_date',$order['delivery_date']);
 			// $this->template->set('discount_voucher',$order['discount_voucher']);
 			$this->template->set('discount_voucher_amount',$order['discount_voucher_amount']);
 			$this->template->set('net_amount',$order['net_amount']);

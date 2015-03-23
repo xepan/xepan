@@ -10,3 +10,14 @@ Application Todos:
 
    ATK:
  ☐ quicksearch if paginator page is set and records are less than it.. should go to last page
+
+
+ Order .. approx delivery date, priority ....
+ Dispatch as last dept ... addItem looks wrong ... cannot forward to dispatch ... 
+ Quotation View as per Sales Order ... 
+ and terms and condition add in template ... 
+
+ all action must have comment or message on click ... (_page type of functions)
+
+
+Dispatch .. Out Source check
