@@ -4,11 +4,11 @@ namespace xProduction;
 
 class Model_Jobcard_Draft extends Model_JobCard {
 	public $actions=array(
-			'can_view'=>array('caption'=>'Whose created Jobcard this post can see'),
-			'allow_edit'=>array('caption'=>'Whose created Jobcard this post can edit'),
-			'allow_add'=>array('caption'=>'Can this post create new Jobcard'),
-			'allow_del'=>array('caption'=>'Whose Created Jobcard this post can delete'),
-			'can_submit'=>array('caption'=>'Whose Created Jobcard this post can submit'),
+			'can_view'=>array(),
+			'allow_edit'=>array(),
+			'allow_add'=>array(),
+			'allow_del'=>array(),
+			'can_submit'=>array(),
 		);
 	
 	

@@ -4,7 +4,7 @@ namespace xProduction;
 
 class Model_Jobcard_Processed extends Model_JobCard{
 	public $actions=array(
-			'can_view'=>array('caption'=>'Whose created Jobcard this post can see'),
+			'can_view'=>array(),
 			'can_forward'=>array('icon'=>'forward'),
 							
 		);
