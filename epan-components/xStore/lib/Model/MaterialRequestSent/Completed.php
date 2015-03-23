@@ -4,7 +4,7 @@ namespace xStore;
 
 class Model_MaterialRequestSent_Completed extends Model_MaterialRequestSent{
 	public $actions=array(
-			'can_view'=>array('caption'=>'Whose created Jobcard this post can see'),
+			'can_view'=>array(),
 				
 		);
 	function init(){
