@@ -2,7 +2,7 @@
 namespace xDispatch;
 class Model_DeliveryNote_Forwarded extends Model_DeliveryNote{
 	public $actions=array(
-			'can_view'=>array('caption'=>'Whose created Jobcard this post can see'),
+			'can_view'=>array(),
 		);
 	function init(){
 		parent::init();
