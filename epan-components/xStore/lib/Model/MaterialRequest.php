@@ -55,7 +55,7 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 			$new_request->save();
 		}
 
-		$new_request->addItem($order_item->ref('item_id'),$order_item['qty']);
+		$new_request->addItem($order_item->ref('item_id'),$order_item['qty'], $order_item->ref('item_id')->get('qty_unit'),$order_item['custom_fields']);
 
 	}
 

@@ -17,7 +17,7 @@ class Model_Order extends \Model_Document{
 		$this->hasOne('xShop/PaymentGateway','paymentgateway_id');
 		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->display(array('form'=>'autocomplete/Basic'))->caption('Terms & Cond.');
 
-		$f = $this->hasOne('xShop/Customer','member_id')->group('a~3')->sortable(true)->display(array('form'=>'autocomplete/Plus'))->caption('Customer');
+		$f = $this->hasOne('xShop/Customer','member_id')->group('a~3')->sortable(true)->display(array('form'=>'autocomplete/Plus'))->caption('Customer')->mandatory(true);
 		$f->icon = "fa fa-user~red";
 		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3')->sortable(true)->defaultValue(rand(1000,9999));
 		$f = $this->addField('email')->group('a~3')->sortable(true);

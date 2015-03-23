@@ -16,7 +16,7 @@ class View_Order extends \View{
 		$application_id=$this->api->recall('xshop_application_id');
 		
 		$order_detail = $this->add('xShop/Model_OrderDetails')->addCondition('order_id',$model->id);
-		$view=$this->add('xShop/View_OrderDetail',array('show_price'=>true),'order_detail');
+		$view=$this->add('xShop/View_OrderDetail',array('show_price'=>$this->show_price),'order_detail');
 		$view->setModel($order_detail);
 		
 

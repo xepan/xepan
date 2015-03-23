@@ -8,7 +8,7 @@ class page_xShop_page_owner_opportunity extends page_xShop_page_owner_main{
 		
 		$oppertunity_model = $this->add('xShop/Model_Opportunity');
 
-		$crud=$this->app->layout->add('CRUD');
+		$crud=$this->add('CRUD');
 		$crud->setModel($oppertunity_model);
 
 

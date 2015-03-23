@@ -220,7 +220,7 @@ class Model_Item extends \Model_Table{
 
 		$m->ref('xShop/CategoryItem')->deleteAll();
 		$m->ref('xShop/ItemImages')->deleteAll();
-		$m->ref('xShop/Attachments')->deleteAll();	 
+		// $m->ref('xShop/Attachments')->deleteAll();	 
 		$m->ref('xShop/ItemCustomFieldAssos')->deleteAll();	
 	}
 

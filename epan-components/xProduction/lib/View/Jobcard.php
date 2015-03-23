@@ -14,7 +14,7 @@ class View_Jobcard extends \View{
 		$self = $this;
 		$this->vp = $this->add('VirtualPage')->set(function($p)use($self){
 			$o = $p->add('xShop/Model_Order')->load($_GET['sales_order_clicked']);
-			$order = $p->add('xShop/View_Order');
+			$order = $p->add('xShop/View_Order',array('show_price'=>false));
 			$order->setModel($o);
 		});
 
