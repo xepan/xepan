@@ -30,6 +30,16 @@ class Model_JobCard extends \Model_Document{
 			return $p->fieldQuery('name');
 		})->sortable(true);
 
+		$this->addExpression('order_no')->set(
+				$this->add('xShop/Model_Order',array('table_alias'=>'order_no_als'))
+					->addCondition('id',
+						$this->add('xShop/Model_OrderDetails',array('table_alias'=>'od_4_order_no'))
+						->addCondition('id',$this->getElement('orderitem_id'))
+						->fieldQuery('order_id')
+					)
+				->fieldQuery('name')
+			)->sortable(true);
+
 		$this->hasMany('xProduction/JobCardEmployeeTeamAssociation','jobcard_id');
 		$this->hasMany('xStore/Model_StockMovement','jobcard_id');
 
