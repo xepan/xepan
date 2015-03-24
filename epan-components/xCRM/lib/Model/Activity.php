@@ -53,7 +53,7 @@ class Model_Activity extends \Model_Document{
 		$this->addField('subject');
 		$this->addField('message')->type('text');
 		
-		$this->addField('action')->enum(array('created','comment','email','call','sms','personal','submitted','approved','rejected','redesign','canceled','forwarded','reply'))->mandatory(true);
+		$this->addField('action')->enum(array('created','comment','email','call','sms','personal','submitted','approved','rejected','redesign','cancelled','forwarded','reply','recieved','processed'))->mandatory(true);
 
 		$this->setOrder('created_at','desc');
 
