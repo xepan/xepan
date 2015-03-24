@@ -97,5 +97,7 @@ class page_owner_message extends page_base_owner{
 				$msg_model->save();
 				$crud->grid->js(null,$this->js()->univ()->successMessage('Watch Changes'))->reload()->execute();
 		}
+
+		$crud->grid->removeColumn('name');
 	}	
 }
