@@ -46,7 +46,7 @@ class Model_Opportunity extends \Model_Document{
 				'message'=> 'Opportunity Created'
 				);
 
-		$log = $this->add('xCRM/Model_Communication');
+		$log = $this->add('xCRM/Model_Activity');
 		$log->create($log_array,'Created');
 		
 	}
