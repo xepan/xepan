@@ -191,6 +191,7 @@ class Model_JobCard extends \Model_Document{
 
 		$ti=$form->add('CRUD'); //Temp_items
 		$tm = $ti->add('xStore/Model_TempItems');
+		$tm->getElement('item_id')->setModel('xShop/Model_Item_Stockable');
 		$ti->setModel($tm,array('item_id','qty','unit','custom_fields'),array('item_id','qty','unit'));
 		if($ti->isEditing('add') or $ti->isEditing('edit')){
 			$f = $ti->form->getElement('item_id');
