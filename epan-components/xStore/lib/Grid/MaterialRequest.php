@@ -8,7 +8,7 @@ class Grid_MaterialRequest extends \Grid{
 		$this->addSno();
 
 		$this->vp = $this->add('VirtualPage')->set(function($p)use($self){
-			$p->add('xStore/View_MaterialRequest',array('materialrequest'=>$p->add('xStore/Model_MaterialRequest')->load($_GET['material_request_clicked'])));
+			$p->add('xStore/View_MaterialRequest',array('materialrequest'=>$p->add('xStore/Model_MaterialRequest')->load($p->api->stickyGET('material_request_clicked'))));
 		});
 	}
 	

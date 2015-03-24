@@ -19,7 +19,7 @@ $.atk4(function(){
 			location: 0,
 			distance: 100,
 			maxPatternLength: 32,
-			keys: ["page"]
+			keys: ["page",'keys']
 		});
 
 		var inp = $('<input type="text"/>');
@@ -59,20 +59,20 @@ $.atk4(function(){
 		event.stopPropagation();
 	});
 
-	shortcut.add("Ctrl+down", function(event) {
+	// shortcut.add("Ctrl+down", function(event) {
 
-		var inp = $('<input type="text"/>');
+	// 	var inp = $('<input type="text"/>');
 
-		var d = $(inp).dialog({
-			open: function (event,ui){
-				$(inp).focus();
-			}
-		});
+	// 	var d = $(inp).dialog({
+	// 		open: function (event,ui){
+	// 			$(inp).focus();
+	// 		}
+	// 	});
 
-		$(inp).autocomplete({
-				delay: 0
-			});
-		event.stopPropagation();
-	});
+	// 	$(inp).autocomplete({
+	// 			delay: 0
+	// 		});
+	// 	event.stopPropagation();
+	// });
 
 });
