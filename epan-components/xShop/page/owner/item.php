@@ -33,7 +33,7 @@ class page_xShop_page_owner_item extends page_xShop_page_owner_main{
 
 
 		
-		$cols = $this->app->layout->add('Columns');
+		$cols = $this->add('Columns');
 		$cat_col = $cols->addColumn(3);
 		$item_col = $cols->addColumn(9);
 		
