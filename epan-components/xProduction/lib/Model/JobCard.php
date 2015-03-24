@@ -50,7 +50,6 @@ class Model_JobCard extends \Model_Document{
 
 		if($new_job_card->loaded())
 			return false;
-		
 		$new_job_card['orderitem_id'] = $order_item->id;
 		$new_job_card['to_department_id'] = $order_dept_status['department_id'];
 		
@@ -150,7 +149,7 @@ class Model_JobCard extends \Model_Document{
 			$this['status'] = $status;
 
 		$this->save();
-
+		
 		foreach ($items_array as $item) {
 			$this->addItem($this->add('xShop/Model_Item')->load($item['id']),$item['qty'],$item['unit'],$item['custom_fields']);
 		}

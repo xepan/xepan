@@ -14,6 +14,7 @@ class Model_DispatchRequest_Draft extends Model_DispatchRequest{
 		parent::init();
 
 		$this->addCondition('status','draft');
-
+		//Get All Orders with checking it's orderitem status is completed and it's next department is Dispatch/Delivery
+		
 	}
 }

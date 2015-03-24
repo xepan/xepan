@@ -5,8 +5,8 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 	
 	public $table = 'xdispatch_dispatch_request';
 
-	public $root_document_name='xStore\DispatchRequest';
-	public $status = array('draft','submitted','approved','assigned','processing','processed','forwarded',
+	public $root_document_name='xDispatch\DispatchRequest';
+	public $status = array('approved','assigned','processing','processed','forwarded',
 							'completed','cancelled','return','redesign','received');
 
 	function init(){
@@ -76,11 +76,17 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$mr_item->save();
 	}
 
-	function mark_processed_page($page){
+	function mark_processed_page($p){
+		$p->add('View_Info')->set('Add Form Order Dispatch Master Detail');
+		$form = $p->add('Form');
+		$form->addSubmit('Dispatch the Order');
+		if($form->isSubmitted()){
+			$this->setStatus('submitted');
+			// create the DeliveryNote
+			return true;
+		}
+		return false;
 		
-		$page->add('View')->set('AUTO Processed from DeliveryNote');
-		
-		$page->add('View')->set('stock se minus kar do ... status processed kar do');
 	}
 
 	function submit_page($p){
@@ -111,19 +117,20 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		}
 	}
 
-	function setStatus($status){
-		if($this['orderitem_id']){
-			$ds = $this->orderItem()->deptartmentalStatus($this->toDepartment());
-			$ds->setStatus(ucwords($status) .' in ' . $this['department']);
+	function receive_page($p){
+		$p->add('View_Info')->set('Dispatch Request To Received');
+		$p->add('View_Warning')->set('add here meterial request received also');
+		$form = $p->add('Form');
+		$form->addSubmit();
+		if($form->isSubmitted()){
+			$this->setStatus('received');
+			return true;
 		}
-		$this['status']=$status;
-		$this->saveAs('xStore/Model_MaterialRequest');
+		return false;		
 	}
 
+	function submit(){
 
-
-function submit(){
-
-}
+	}
 
 }
