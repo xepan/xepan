@@ -10,7 +10,7 @@ class CRUD_User extends CRUD{
 		parent::init();
 
 		if(!$this->isEditing()){
-			$this->grid->addQuickSearch(array('name','username','email'));
+			$this->grid->addQuickSearch(array('name','username'));
 			$this->grid->addPaginator(100);
 			$this->grid->add_sno();
 		}

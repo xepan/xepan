@@ -8,7 +8,6 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 	function init(){
 		parent::init();
 
-		$this->js()->_load('xShop-js');
 		//Memorize checkout page if not logged in
 		$this->api->memorize('next_url',array('subpage'=>$_GET['subpage'],'order_id'=>$_GET['order_id']));
 
@@ -221,6 +220,22 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		if($_GET['order_done'] =='true'){
 			
 		}
+	}
+
+	function render(){
+		$this->app->pathfinder->base_location->addRelativeLocation(
+		    'epan-components/'.__NAMESPACE__, array(
+		        'php'=>'lib',
+		        'template'=>'templates',
+		        'css'=>array('templates/css','templates/js'),
+		        'img'=>array('templates/css','templates/js'),
+		        'js'=>'templates/js',
+		    )
+		);
+
+		$this->js()->_load('xShop-js');
+		// $this->api->jquery->addStylesheet('xShop-js');
+		// 	$this->api->template->appendHTML('js_include','<script src="epan-components/xShop/templates/js/xShop-js.js"></script>'."\n");
 	}
 
 	// defined in parent class

@@ -330,7 +330,7 @@ class page_base_owner extends Page {
 			$web_designing_menu->addItem(array('Extended Elements','icon'=>'right-hand'),'ExtendedElement_page_owner_dashboard');
 			$web_designing_menu->addItem(array('Slide Shows','icon'=>'right-hand'),'slideShows_page_owner_dashboard');
 			$web_designing_menu->addItem(array('Extended Images','icon'=>'right-hand'),'extendedImages_page_owner_dashboard');
-			$web_designing_menu->addItem(array('Image Gallaries','icon'=>'right-hand'),'xImageGallary_page_owner_dashboard');
+			$web_designing_menu->addItem(array('Image Gallaries','icon'=>'right-hand'),'xImageGallery_page_owner_dashboard');
 
 			$menu=$this->app->layout->user_menu->addMenu(array($this->api->auth->model['name'] . '('.$this->api->current_employee->department()->get('name').'/'.$this->api->current_employee->post()->get('name').')','icon'=>'user'));
 			$menu->addItem(array_merge(array('Alert'),$alert_badge),'/owner/alert');
