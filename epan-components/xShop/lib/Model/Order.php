@@ -16,6 +16,7 @@ class Model_Order extends \Model_Document{
 
 		$this->hasOne('xShop/PaymentGateway','paymentgateway_id');
 		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->display(array('form'=>'autocomplete/Basic'))->caption('Terms & Cond.');
+		$this->hasOne('xShop/Priority','priority_id')->group('z~6')->mandatory(true)->defaultValue($this->add('xShop/Model_Priority')->addCondition('name','medium')->fieldQuery('id'));
 
 		$f = $this->hasOne('xShop/Customer','member_id')->group('a~3')->sortable(true)->display(array('form'=>'autocomplete/Plus'))->caption('Customer')->mandatory(true);
 		$f->icon = "fa fa-user~red";
@@ -35,6 +36,7 @@ class Model_Order extends \Model_Document{
 		$f = $this->addField('billing_address')->mandatory(true)->group('x~6~<i class="fa fa-map-marker"> Address</i>');
 		$f = $this->addField('shipping_address')->mandatory(true)->group('x~6');	
 		$f = $this->addField('order_summary')->type('text')->group('y~12');
+		$f = $this->addField('delivery_date')->type('date')->group('z~6');
 
 		// Payment GateWay related Info
 		$this->addField('transaction_reference');
@@ -67,7 +69,7 @@ class Model_Order extends \Model_Document{
 		
 		$this->addHook('beforeDelete',$this);
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete($m){

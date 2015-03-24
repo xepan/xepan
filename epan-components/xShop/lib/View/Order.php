@@ -14,13 +14,14 @@ class View_Order extends \View{
 
 	function setModel($model){
 		$application_id=$this->api->recall('xshop_application_id');
-		
 		$order_detail = $this->add('xShop/Model_OrderDetails')->addCondition('order_id',$model->id);
 		$view=$this->add('xShop/View_OrderDetail',array('show_price'=>$this->show_price),'order_detail');
 		$view->setModel($order_detail);
 		
 
 		parent::setModel($model);
+		$this->template->set('delivery_date',$order['delivery_date']);
+		$this->template->set('priority',$order['priority']);
 		$approved_activity = $this->model->searchActivity('approved');
 		if(!$approved_activity instanceof \Dummy)
 			$this->template->trySet('approved_date', $approved_activity['created_at'] . ' by '. $approved_activity['action_from']);
