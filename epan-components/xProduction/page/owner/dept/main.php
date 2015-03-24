@@ -38,8 +38,8 @@ class page_xProduction_page_owner_dept_main extends page_xProduction_page_owner_
 		$tab = $this->add('Tabs');
 			$tab->addTabURL('xProduction/page/owner/dept_draft','Draft '.$this->add('xProduction/Model_Jobcard_Draft')->myCounts(true,false));
 			$tab->addTabURL('xProduction/page/owner/dept_submitted','Submitted '.$this->add('xProduction/Model_Jobcard_Submitted')->myCounts(true,false));
-			$tab->addTabURL('xProduction/page/owner/dept_approved','Approved / To Recieve '.$this->add('xProduction/Model_Jobcard_Approved')->myCounts(true,false));
-			$tab->addTabURL('xProduction/page/owner/dept_recieved','Recieved '.$this->add('xProduction/Model_Jobcard_Received')->myCounts(true,false));
+			$tab->addTabURL('xProduction/page/owner/dept_approved','Approved / To Receive '.$this->add('xProduction/Model_Jobcard_Approved')->myCounts(true,false));
+			$tab->addTabURL('xProduction/page/owner/dept_received','Received '.$this->add('xProduction/Model_Jobcard_Received')->myCounts(true,false));
 			$tab->addTabURL('xProduction/page/owner/dept_assigned','Assigned '.$this->add('xProduction/Model_Jobcard_Assigned')->myCounts(true,false));
 			$tab->addTabURL('xProduction/page/owner/dept_processing','Processing '.$this->add('xProduction/Model_Jobcard_Processing')->myCounts(true,false));
 			$tab->addTabURL('xProduction/page/owner/dept_processed','Processed '.$this->add('xProduction/Model_Jobcard_Processed')->myCounts(true,false));
