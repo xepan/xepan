@@ -374,6 +374,7 @@ class Model_JobCard extends \Model_Document{
 			}
 			
 			$movement_items = $m->ref('xStore/StockMovementItem');
+			$movement_items->getElement('item_id')->setModel('xShop/Model_Item_Stockable');
 
 			$crud_permissions=array('allow_add'=>false,'allow_edit'=>false,'allow_del'=>false);
 
@@ -389,10 +390,15 @@ class Model_JobCard extends \Model_Document{
 			}
 
 			$crud = $p->add('CRUD',$crud_permissions);
-			$crud->setModel($movement_items);
+			$crud->setModel($movement_items,array('item_id','qty','custom_fields'),array('stock_movement','item','qty'));
 			
+			if($crud->isEditing('add') or $crud->isEditing('edit')){
+				$fi=$crud->form->getElement('item_id');
+				$fi->qty_effected_custom_fields_only=true;
+			}
+
 			if(!$crud->isEditing() and $crud->add_button)
-				$crud->add_button->set('Add Consuption Item');
+				$crud->add_button->set('Add Consumption Item');
 
 			$p->add('HR');
 

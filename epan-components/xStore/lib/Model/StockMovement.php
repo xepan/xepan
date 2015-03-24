@@ -23,6 +23,8 @@ class Model_StockMovement extends \Model_Document{
 		$this->hasOne('xPurchase/PurchaseOrder','po_id');
 		$this->hasOne('xDispatch/DispatchRequest','dispatch_request_id');
 		
+		$this->addField('name');
+
 		$this->addField('type')->enum(array('StockTransfer','Sales','Purchase','SalesReturn','PurchaseReturn','ProductionConsume'));
 
 		$this->getElement('status')->defaultValue('submitted');
