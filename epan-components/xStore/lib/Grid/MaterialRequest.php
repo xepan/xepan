@@ -2,28 +2,24 @@
 namespace xStore;
 
 class Grid_MaterialRequest extends \Grid{
-	function init(){
+		function init(){
 		parent::init();
-		$this->addQuickSearch(array('to_department','status'));
-		$this->addPaginator($ipp=50);
-		
-	}
-	function setModel($material_request_model,$fields=null){
+		$self= $this;
+		$this->addSno();
 
-		// if(!$fields){
-		// 	$fields=array('created_by','from_department','name','forwarded_to');
-		// }
-
-		$m=parent::setModel($material_request_model,$fields);
-
-		$vp = $this->add('VirtualPage')->set(function($p){
-			$p->add('xStore/View_MaterialRequest',array('materialrequest'=>$p->add('xStore/Model_MaterialRequest')->load($_GET['material_request_clicked'])));
+		$this->vp = $this->add('VirtualPage')->set(function($p)use($self){
+			$p->add('xStore/View_MaterialRequest',array('materialrequest'=>$p->add('xStore/Model_MaterialRequest')->load($p->api->stickyGET('material_request_clicked'))));
 		});
-		$this->js(true)->find('tr')->css('cursor','pointer');
-		$this->on('click','tbody td:not(:has(button))',$this->js()->univ()->frameURL('Material Request',array($this->api->url($vp->getURL()),'material_request_clicked'=>$this->js()->_selectorThis()->closest('tr')->data('id'))));
+	}
+	
+	function format_view($field){		
+		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Material Request', $this->api->url($this->vp->getURL(),array('material_request_clicked'=>$this->model->id))).'">'. $this->current_row[$field] ."</a>";
+	}
 
-		// $this->addOrder()->move('Details','last')->now();
+
+	function setModel($model){
+		$m=parent::setModel($model,array('name','created_by','from_department','forwarded_to'));
+		$this->addFormatter('name','view');
 		return $m;
-
 	}
 }

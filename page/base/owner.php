@@ -136,7 +136,7 @@ class page_base_owner extends Page {
 			$sales_m->addItem(array('Item','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_item',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Affiliate','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('E-Voucher','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_voucher',array('department_id'=>$dept_model->id)));
-			$sales_m->addItem(array('Member','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_member',array('department_id'=>$dept_model->id)));
+			$sales_m->addItem(array('Customer','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_customer',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Sales Order','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_order',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('AddBlock','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_addblock',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Payment Gateway Config','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_paygateconfig',array('department_id'=>$dept_model->id)));
@@ -152,7 +152,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Item","url"=>$this->api->url('xShop_page_owner_item',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Affiliate","url"=>$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"E-Voucher","url"=>$this->api->url('xShop_page_owner_voucher',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Member","url"=>$this->api->url('xShop_page_owner_member',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Customer","url"=>$this->api->url('xShop_page_owner_customer',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Sales Orders","url"=>$this->api->url('xShop_page_owner_order',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"AddBlock","url"=>$this->api->url('xShop_page_owner_addblock',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Payment Gateway Config","url"=>$this->api->url('xShop_page_owner_paygateconfig',array('department_id'=>$dept_model->id)));
@@ -330,7 +330,7 @@ class page_base_owner extends Page {
 			$web_designing_menu->addItem(array('Extended Elements','icon'=>'right-hand'),'ExtendedElement_page_owner_dashboard');
 			$web_designing_menu->addItem(array('Slide Shows','icon'=>'right-hand'),'slideShows_page_owner_dashboard');
 			$web_designing_menu->addItem(array('Extended Images','icon'=>'right-hand'),'extendedImages_page_owner_dashboard');
-			$web_designing_menu->addItem(array('Image Gallaries','icon'=>'right-hand'),'xImageGallary_page_owner_dashboard');
+			$web_designing_menu->addItem(array('Image Gallaries','icon'=>'right-hand'),'xImageGallery_page_owner_dashboard');
 
 			$menu=$this->app->layout->user_menu->addMenu(array($this->api->auth->model['name'] . '('.$this->api->current_employee->department()->get('name').'/'.$this->api->current_employee->post()->get('name').')','icon'=>'user'));
 			$menu->addItem(array_merge(array('Alert'),$alert_badge),'/owner/alert');

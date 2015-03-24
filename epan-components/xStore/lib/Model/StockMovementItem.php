@@ -6,10 +6,9 @@ class Model_StockMovementItem extends \Model_Table{
 		parent::init();
 
 		$this->hasOne('xStore/StockMovement','stock_movement_id')->sortable(true);
-		$this->hasOne('xShop/Item','item_id')->sortable(true);
+		$this->hasOne('xShop/Item','item_id')->sortable(true)->display(array('form'=>'xShop/Item'));
 		
-		$this->addField('qty');
-		$this->addField('unit');
+		$this->addField('qty')->mandatory(true);
 		$this->addField('custom_fields')->type('text');
 
 		//$this->add('dynamic_model/Controller_AutoCreator');

@@ -21,11 +21,11 @@ class View_Tools_xCart extends \componentBase\View_Component{
 			//Place Order
 			$order = $this->add('xShop/Model_Order');
 			try{
-				$this->api->db->beginTransaction();
+				// $this->api->db->beginTransaction();
 				$new_order = $order->placeOrderFromCart();
-				$this->api->db->commit();
+				// $this->api->db->commit();
 			}catch(Exception $e){
-				$this->api->db->rollback();
+				// $this->api->db->rollback();
 				throw $e;
 			}
 

@@ -72,7 +72,7 @@ class View_DynamicDataTable extends \View{
 
 		// $information_model->_dsql()->debug()->render();
 
-		$grid->addColumn($this->analytic['grid_group_by_meta_information']);
+		$grid->addColumn($this->api->normalizeName($this->analytic['grid_group_by_meta_information']));
 		$grid->addColumn('result');
 
 		$grid->setSource($information_model->_dsql());

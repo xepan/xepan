@@ -7,14 +7,23 @@ class View_MaterialRequest extends \CompleteLister{
 	
 	function init(){
 		parent::init();
-		// $this->add('View_Info')->set('Material Request Details Here');
 
+		$sale_order = $this->materialrequest->ref('orderitem_id')->order();
+		$self = $this;
+		$this->vp = $this->add('VirtualPage')->set(function($p)use($self){
+			$o = $p->add('xShop/Model_Order')->load($self->api->stickyGET('sales_order_clicked'));
+			$order = $p->add('xShop/View_Order',array('show_price'=>false));
+			$order->setModel($o);
+		});
+
+		// $this->add('View_Info')->set('Material Request Details Here');
 		$this->template->setHtml('request_on',"Request On: <b>".$this->materialrequest['created_at']."</b>");
 		$this->template->setHtml('status',"Status: <b>".ucwords($this->materialrequest['status'])."</b>");
 		$this->template->setHtml('form_dept',"From Department: <b>".$this->materialrequest['from_department']."</b>");
 		$this->template->setHtml('to_dept',"To Department: <b>".$this->materialrequest['to_department']."</b>");
 		$this->template->setHtml('name',"Job Number: <b>".$this->materialrequest['name']."</b>");
-	
+		$this->template->setHtml('order',"Order Number: <b>".'<a href="#void" onclick="javascript:'.$this->js()->univ()->frameURL('Sale Order', $this->api->url($this->vp->getURL(),array('sales_order_clicked'=>$sale_order['id']))).'">'. $sale_order['name'] ."</a>");
+		
 		$this->setModel($this->materialrequest->itemrows());
 	}
 

@@ -1,6 +1,6 @@
 <?php
 
-class page_xShop_page_owner_member extends page_xShop_page_owner_main{
+class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 
 	function page_index(){
 
@@ -20,7 +20,7 @@ class page_xShop_page_owner_member extends page_xShop_page_owner_main{
 		// $users_join->addField('is_user_active','is_active')->type('boolean');
 		// $users_join->addField('joining_date','created_at')->type('date');
 
-			$btn = $crud->grid->addButton('System User to Member Create');
+			$btn = $crud->grid->addButton('System User to Customer Create');
 			if($btn->isClicked()){
 				foreach ($um=$this->add('Model_Users') as $junk) {
 					$nm = $this->add('xShop/Model_MemberDetails');
@@ -45,7 +45,7 @@ class page_xShop_page_owner_member extends page_xShop_page_owner_main{
 										'pincode','billing_address',
 										'shipping_address',
 										)
-								,array('customer_name','customer_email','username',
+								,array('customer_name','customer_email',
 										'type','mobile_number',
 										'landmark','city','state',
 										'country','address',

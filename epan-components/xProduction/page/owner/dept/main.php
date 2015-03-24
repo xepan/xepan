@@ -26,14 +26,26 @@ class page_xProduction_page_owner_dept_main extends page_xProduction_page_owner_
 			$counts_array[$cnt['status']] = $cnt['cnt'];
 		}
 
-		$tabs->addTabURL('xProduction_page_owner_dept_upcoming','UpComings');
+		// $tabs->addTabURL('xProduction_page_owner_dept_upcoming','UpComings');
 
-		foreach ($document->status as $st) {
-			if($st=='approved'){
-				$tabs->addTabURL('xProduction_page_owner_dept_'.$st,'Approved / To Receive '. $this->add('xProduction/Model_Jobcard_'.ucwords($st))->myUnRead() );
-			}else{
-				$tabs->addTabURL('xProduction_page_owner_dept_'.$st,ucwords($st).$this->add('xProduction/Model_Jobcard_'.ucwords($st))->myUnRead());
-			}
-		}
+		// foreach ($document->status as $st) {
+		// 	if($st=='approved'){
+		// 		$tabs->addTabURL('xProduction_page_owner_dept_'.$st,'Approved / To Receive '. $this->add('xProduction/Model_Jobcard_'.ucwords($st))->myUnRead() );
+		// 	}else{
+		// 		$tabs->addTabURL('xProduction_page_owner_dept_'.$st,ucwords($st).$this->add('xProduction/Model_Jobcard_'.ucwords($st))->myUnRead());
+		// 	}
+		// }
+		$tab = $this->add('Tabs');
+			// $tab->addTabURL('xProduction_page_owner_dept_upcoming','UpComings'.$this->add('xShop/Model_OrderItemDepartmentalStatus')->addCondition('department_id',$_GET['department_id']));
+			$tab->addTabURL('xProduction/page/owner/dept_draft','Draft '.$this->add('xProduction/Model_Jobcard_Draft')->myCounts(true,false));
+			$tab->addTabURL('xProduction/page/owner/dept_submitted','Submitted '.$this->add('xProduction/Model_Jobcard_Submitted')->myCounts(true,false));
+			$tab->addTabURL('xProduction/page/owner/dept_approved','Approved / To Receive '.$this->add('xProduction/Model_Jobcard_Approved')->myCounts(true,false));
+			$tab->addTabURL('xProduction/page/owner/dept_received','Received '.$this->add('xProduction/Model_Jobcard_Received')->myCounts(true,false));
+			$tab->addTabURL('xProduction/page/owner/dept_assigned','Assigned '.$this->add('xProduction/Model_Jobcard_Assigned')->myCounts(true,false));
+			$tab->addTabURL('xProduction/page/owner/dept_processing','Processing '.$this->add('xProduction/Model_Jobcard_Processing')->myCounts(true,false));
+			$tab->addTabURL('xProduction/page/owner/dept_processed','Processed '.$this->add('xProduction/Model_Jobcard_Processed')->myCounts(true,false));
+			$tab->addTabURL('xProduction/page/owner/dept_forwarded','Forwarded '.$this->add('xProduction/Model_Jobcard_Forwarded')->myCounts(true,false));
+			$tab->addTabURL('xProduction/page/owner/dept_completed','Complete '.$this->add('xProduction/Model_Jobcard_Completed')->myCounts(true,false));
+			$tab->addTabURL('xProduction/page/owner/dept_cancelled','Cancel'.$this->add('xProduction/Model_Jobcard_Cancelled')->myCounts(true,false));
 	}
 }

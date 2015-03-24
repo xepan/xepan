@@ -17,7 +17,7 @@ class Model_Activity extends \Model_Document{
 	function init(){
 		parent::init();
 
-		$from_to = array('Lead','Oppertunity','Customer','Employee','Supplier','OutSource Party');
+		$from_to = array('Lead','Opportunity','Customer','Employee','Supplier','OutSource Party');
 
 		$this->addField('from')->enum($from_to)->defaultValue('Employee');
 		$this->addField('from_id')->defaultValue($this->api->current_employee->id);
@@ -53,7 +53,7 @@ class Model_Activity extends \Model_Document{
 		$this->addField('subject');
 		$this->addField('message')->type('text');
 		
-		$this->addField('action')->enum(array('created','comment','email','call','sms','personal','submitted','approved','rejected','redesign','canceled','forwarded','reply'))->mandatory(true);
+		$this->addField('action')->enum(array('created','comment','email','call','sms','personal','submitted','approved','rejected','redesign','canceled','forwarded','reply','received','processed','active'))->mandatory(true);
 
 		$this->setOrder('created_at','desc');
 

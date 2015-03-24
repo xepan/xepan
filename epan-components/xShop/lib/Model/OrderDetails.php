@@ -70,6 +70,23 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function afterSave(){
+		
+	}
+
+	function afterInsert($obj,$new_id){
+		// For online orders that are already approved and create their departmental associations
+		$new_order_details = $this->add('xShop/Model_OrderDetails')->load($new_id);
+		if($new_order_details->order()->isFromOnline()){
+			$new_order_details->createDepartmentalAssociations();
+		}
+
+		if($department_association = $new_order_details->nextDeptStatus()){
+				$department_association->createJobCardFromOrder();
+		}
+		// else .. form_orderItem is doing for offline orders
+	}
+
+	function createDepartmentalAssociations(){
 		$depts = $this->add('xHR/Model_Department');
 			
 		if($this['custom_fields']==''){
@@ -93,17 +110,6 @@ class Model_OrderDetails extends \Model_Document{
 					// throw $this->exception('Job Has Been forwarded to department '. $dept['name'].' and cannot be removed');
 			}
 		}
-	}
-
-	function afterInsert($obj,$new_id){
-		$new_order_details = $this->add('xShop/Model_OrderDetails')->load($new_id);
-		if($new_order_details->order()->isFromOnline()){
-			$item_departments = $new_order_details->item()->associatedDepartments();
-			foreach($item_departments as $dept){
-				$new_order_details->addToDepartment($dept);
-			}
-		}
-		// else .. form_orderItem is doing for offline orders
 	}
 
 	function associatedWithDepartment($department){
@@ -147,17 +153,26 @@ class Model_OrderDetails extends \Model_Document{
 		return "Waiting";
 	}
 
-	function deptartmentalStatus($department=false){
-		$m = $this->add('xShop/Model_OrderItemDepartmentalStatus');
-		$m->addCondition('orderitem_id',$this->id);
-		
-		if($department){
-			$m->addCondition('department_id',$department->id);
-			$m->tryLoadAny();
-			if(!$m->loaded()) return false;
-		}
+	function deptartmentalStatus($department=false,$from_custom_fields=false){
+		if($from_custom_fields){
+			$return_array=array();
+			$cf = json_decode($this['custom_fields'],true);
+			foreach ($cf as $dept_id => $cfvalues_array) {
+				$return_array[] = array('department_id'=>$dept_id,'department'=>$this->add('xHR/Model_Department')->load($dept_id)->get('name'));
+			}
+			return $return_array;
+		}else{
+			$m = $this->add('xShop/Model_OrderItemDepartmentalStatus');
+			$m->addCondition('orderitem_id',$this->id);
+			
+			if($department){
+				$m->addCondition('department_id',$department->id);
+				$m->tryLoadAny();
+				if(!$m->loaded()) return false;
+			}
 
-		return $m;
+			return $m;
+		}
 	}
 
 	function nextDeptStatus($after_department=false){
@@ -205,7 +220,11 @@ class Model_OrderDetails extends \Model_Document{
 		if(!$this->loaded())
 			return false;
 
-		$d = $this->deptartmentalStatus();
+		$d = $this->deptartmentalStatus($department=false);
+
+		if(!$d->count()->getOne())
+			$d = $this->deptartmentalStatus($department=false,$from_custom_fields=true);
+		
 		$str = "";
 		foreach ($d as $department_asso) {
 			//Hightlight the PassDepartment mostly used in Jobcard
@@ -218,7 +237,7 @@ class Model_OrderDetails extends \Model_Document{
 				$str .= '<b>' .$department_asso['department']."</b>";
 			
 			if($show_status)//Show Department Status
-				$str .=" ( ".$department_asso['status']." )";
+				$str .=" ( ".($department_asso['status']?:'Waiting')." )";
 
 			if($with_custom_fields){
 				$array = json_decode($this['custom_fields'],true);
