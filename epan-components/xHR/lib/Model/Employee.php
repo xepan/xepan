@@ -125,7 +125,37 @@ class Model_Employee extends \Model_Table{
 		// if($job_count ){
 		// 	$this->api->js(true)->univ()->errorMessage('Cannot Delete,first delete Job card')->execute();	
 		// }
+	}
+
+	function totalPresent(){
+		return $this->ref('xHR/EmployeeAttendence')->addCondition('status','present')->count()->getOne();
 	}	
+
+	function markPresent($date){
+		$emp_att=$this->add('xHR/Model_EmployeeAttendence');
+		$emp_att->addCondition('date',$date);
+		$emp_att->addCondition('employee_id',$this['id']);
+		$emp_att->tryLoadAny();
+		$emp_att['status']='present';
+		$emp_att->save();
+	}
+
+	function markAbsent($date){
+		$emp_att=$this->add('xHR/Model_EmployeeAttendence');
+		$emp_att->addCondition('date',$date);
+		$emp_att->addCondition('employee_id',$this['id']);
+		$emp_att->tryLoadAny();
+		$emp_att['status']='absent';
+		$emp_att->save();	
+	}
+	function markHalfDay($date){
+		$emp_att=$this->add('xHR/Model_EmployeeAttendence');
+		$emp_att->addCondition('date',$date);
+		$emp_att->addCondition('employee_id',$this['id']);
+		$emp_att->tryLoadAny();
+		$emp_att['status']='half_day';
+		$emp_att->save();	
+	}
 
 	function makeUser($user_id){
 
