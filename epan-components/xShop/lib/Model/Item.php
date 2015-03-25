@@ -792,6 +792,11 @@ class Model_Item extends \Model_Table{
 		//if CustomField NotEmpty Validation check at FormField Item CustomButton
 	}
 
+	function stockEffectCustomFields(){
+		return $this->ref('ItemCustomFieldAssos')
+				->addCondition('can_effect_stock',true)
+				->addCondition('department_phase_id',null)->tryLoadAny();
+	}
 
 
 }	
