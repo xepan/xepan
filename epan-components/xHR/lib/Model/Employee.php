@@ -102,6 +102,7 @@ class Model_Employee extends \Model_Table{
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('afterInsert',$this);
 		
 		$this->add('Controller_Validator');
 		$this->is(array(
@@ -126,6 +127,11 @@ class Model_Employee extends \Model_Table{
 		// 	$this->api->js(true)->univ()->errorMessage('Cannot Delete,first delete Job card')->execute();	
 		// }
 	}	
+	function afterInsert($obj,$new_id){		
+		$employee_model=$this->add('xHR/Model_Employee')->load($new_id);
+		$employee_model_value = array($employee_model);
+		$this->api->event('new_employee_registered',$employee_model_value);
+	}
 
 	function makeUser($user_id){
 

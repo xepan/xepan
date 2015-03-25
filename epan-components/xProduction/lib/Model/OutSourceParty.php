@@ -15,6 +15,7 @@ class Model_OutSourceParty extends \Model_Table{
 		$this->hasMany('xStore/Warehouse','out_source_party_id');
 
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('afterInsert',$this);
 
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
@@ -42,5 +43,11 @@ class Model_OutSourceParty extends \Model_Table{
 		if(!count($array)) $array = array(0);
 
 		return $array;
+	}
+
+	function afterInsert($obj,$new_id){		
+		$out_source_party_model=$this->add('xProduction/Model_OutSourceParty')->load($new_id);
+		$out_source_party_model_value = array($out_source_party_model);
+		$this->api->event('new_out_source_party_registered',$out_source_party_model_value);
 	}
 }
