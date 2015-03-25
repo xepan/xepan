@@ -76,12 +76,32 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$mr_item->save();
 	}
 
-	function mark_processed_page($p){
+	function order(){
+		return $this->add('xShop/Model_Order')->load($this['order_id']);
+	}
+
+	function orderDetail(){
+		return $this->add('xShop/Model_OrderDetails')->addCondition('order_id');
+	}
+
+	function mark_processed_page($p){//Mark Processd = Delivey in this case
+		
+		if(!$this->loaded())
+			throw new \Exception("Error Processing Request", 1);
+
 		$p->add('View_Info')->set('Add Form Order Dispatch Master Detail');
+		//Get the Order of DispatchRequest
+		$o = $this->order();
+		$orderdetail = $o->orderItems();//return orderDetais
+		$crud = $p->add('Grid');
+		$crud->setModel($orderdetail);
+
 		$form = $p->add('Form');
 		$form->addSubmit('Dispatch the Order');
 		if($form->isSubmitted()){
-			$this->setStatus('submitted');
+			//According to OrderDetail(Item) Select insert into DispatchRequestItem under single entry od dispatchRequest
+			//and set Status of orderitem is dispatched
+			$this->setStatus('submitted');//submitted Equal to Dispatched but not received by customer
 			// create the DeliveryNote
 			return true;
 		}
