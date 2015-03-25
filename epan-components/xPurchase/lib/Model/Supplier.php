@@ -21,6 +21,7 @@ class Model_Supplier extends \Model_Table{
 
 		$this->hasMany('xPurchase/PurchaseOrder','xpurchase_supplier_id');
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('afterInsert',$this);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
@@ -29,6 +30,11 @@ class Model_Supplier extends \Model_Table{
 		if($this->ref('xPurchase/PurchaseOrder')->count()->getOne())
 			throw new \Exception("Supplier cannot be delete");
 			
+	}
+	function afterInsert($obj,$new_id){		
+		$supplier_model=$this->add('xPurchase/Model_Supplier')->load($new_id);
+		$supplier_model_value = array($supplier_model);
+		$this->api->event('new_supplier_registered',$supplier_model_value);
 	}
 
 }		
