@@ -15,6 +15,7 @@ class Model_DispatchRequestItem extends \Model_Document{
 		
 		$this->addField('qty');
 		$this->addField('unit');
+		$this->addField('custom_fields');
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 
@@ -23,4 +24,9 @@ class Model_DispatchRequestItem extends \Model_Document{
 	function item(){
 		return $this->ref('item_id');
 	}
+
+	function dispatchItem(){
+		
+	}
+
 }
