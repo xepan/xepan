@@ -36,6 +36,7 @@ class page_xProduction_page_owner_dept_main extends page_xProduction_page_owner_
 		// 	}
 		// }
 		$tab = $this->add('Tabs');
+			// $tab->addTabURL('xProduction_page_owner_dept_upcoming','UpComings'.$this->add('xShop/Model_OrderItemDepartmentalStatus')->addCondition('department_id',$_GET['department_id']));
 			$tab->addTabURL('xProduction/page/owner/dept_draft','Draft '.$this->add('xProduction/Model_Jobcard_Draft')->myCounts(true,false));
 			$tab->addTabURL('xProduction/page/owner/dept_submitted','Submitted '.$this->add('xProduction/Model_Jobcard_Submitted')->myCounts(true,false));
 			$tab->addTabURL('xProduction/page/owner/dept_approved','Approved / To Receive '.$this->add('xProduction/Model_Jobcard_Approved')->myCounts(true,false));
