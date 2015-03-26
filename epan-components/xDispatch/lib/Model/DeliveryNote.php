@@ -23,6 +23,19 @@ class Model_DeliveryNote extends \xProduction\Model_JobCard {
 	//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
+	function create($order,$from_warehouse,$shipping_address,$shipping_via,$docket_no,$narration,$items_array){
+
+	}
+
+	function addItem($item,$qty,$unit,$custom_fields){
+		$mr_item = $this->ref('xDispatch/DeliveryNoteItems');
+		$mr_item['item_id'] = $item->id;
+		$mr_item['qty'] = $qty;
+		$mr_item['unit'] = $unit;
+		$mr_item['custom_fields'] = $custom_fields;
+		$mr_item->save();
+	}
+
 	function submit(){
 
 	}

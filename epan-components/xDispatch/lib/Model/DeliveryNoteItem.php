@@ -10,6 +10,7 @@ class Model_DeliveryNoteItem extends \Model_Document{
 	function init(){
 		parent::init();
 
+		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
 		$this->hasOne('xDispatch/DeliveyNote','delivery_note_id');
 		$this->addField('qty');
 		$this->addField('unit');
