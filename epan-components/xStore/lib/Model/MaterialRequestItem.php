@@ -42,7 +42,7 @@ class Model_MaterialRequestItem extends \Model_Document{
 			$custom_fields_assos_ids = $custom_fields_assos_ids->getAssociatedCustomFields($phase->id);
 			foreach ($custom_fields_assos_ids as $cf_id) {
 				if(!isset($cust_field_array[$phase->id][$cf_id]) or $cust_field_array[$phase->id][$cf_id] == ''){
-					throw $this->exception('Custom Field Values not proper','Growl');
+					throw $this->exception('Custom Field Values not proper');
 				}
 			}
 		// }
