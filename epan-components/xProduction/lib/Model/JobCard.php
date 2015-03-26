@@ -327,7 +327,7 @@ class Model_JobCard extends \Model_Document{
 		if($next = $this->orderItem()->nextDeptStatus()){
 			if($next->department()->isDispatch()){
 				$oi=$this->orderItem();
-				$items_array=array(array('id'=>$oi->item()->get('id'),$oi['qty'],$oi['unit']));
+				$items_array=array(array('id'=>$oi->item()->get('id'),'qty'=>$oi['qty'],'unit'=>$oi['unit'],'custom_fields'=>$oi['custom_fields']));
 
 				$this->add('xStore/Model_MaterialRequest')
 					->create(
