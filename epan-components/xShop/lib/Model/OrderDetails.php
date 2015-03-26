@@ -158,7 +158,11 @@ class Model_OrderDetails extends \Model_Document{
 			$return_array=array();
 			$cf = json_decode($this['custom_fields'],true);
 			foreach ($cf as $dept_id => $cfvalues_array) {
-				$return_array[] = array('department_id'=>$dept_id,'department'=>$this->add('xHR/Model_Department')->load($dept_id)->get('name'));
+				if($dept_id == 'stockeffectcustomfield'){//check for the stockeffect customfields
+					$return_array[] = array('department_id'=>$dept_id,'department'=>'stockeffectcustomfield');
+				}else
+					$return_array[] = array('department_id'=>$dept_id,'department'=>$this->add('xHR/Model_Department')->load($dept_id)->get('name'));
+
 			}
 			return $return_array;
 		}else{
@@ -227,16 +231,21 @@ class Model_OrderDetails extends \Model_Document{
 		
 		$str = "";
 		foreach ($d as $department_asso) {
+			// throw new \Exception($department_asso[''], 1);	
 			//Hightlight the PassDepartment mostly used in Jobcard
 			if($department_hightlight and $department_hightlight instanceof \xHR\Model_Department){
 				if($department_hightlight['id'] == $department_asso['department_id'])
 					$str .= "<b class='atk-swatch-green'>".$department_asso['department']."</b>";
 				else
 					$str .= '<b>' .$department_asso['department']."</b>";
-			}else	
-				$str .= '<b>' .$department_asso['department']."</b>";
+			}else{
+				if($department_asso['department'] == 'stockeffectcustomfield')
+					$str .= '<b class="label label-primary">' .$department_asso['department']."</b>";
+				else		
+					$str .= '<b>' .$department_asso['department']."</b>";
+			}
 			
-			if($show_status)//Show Department Status
+			if($show_status and $department_asso['department'] != 'stockeffectcustomfield')//Show Department Status and check for the department is stockeffect
 				$str .=" ( ".($department_asso['status']?:'Waiting')." )";
 
 			if($with_custom_fields){
