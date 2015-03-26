@@ -12,11 +12,12 @@ class Plugins_newuserregistered extends \componentBase\Plugin{
 	}
 
 	function new_user_registered($obj,$user_model){
-
+		$group = $this->add('xAccount/Model_Group');
+		$group->loadSunderyCreditor();
 		$account_model = $this->add('xAccount/Model_Account');
-		// $account_model['member_id'] = $user_model->getMember();
-		$account_model['name'] = $user_model['name'];
-		$account_model->save();
+		$account_model->createNewAccount($user_model,$group,$user_model['name']);
+		
 	}
 
 }
+

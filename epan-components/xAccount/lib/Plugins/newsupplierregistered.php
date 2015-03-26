@@ -11,9 +11,10 @@ class Plugins_newsupplierregistered extends \componentBase\Plugin {
 	}
 
 	function new_supplier_registered($obj, $supplier_model){		
+		$group = $this->add('xAccount/Model_Group');
+		$group->loadSunderyCreditor();
 		$account_model = $this->add('xAccount/Model_Account');
-		$account_model['name'] = $supplier_model['name'];
-		$account_model->save();
-
+		$account_model->createNewAccount($supplier_model,$group,$supplier_model['name']);
+		
 	}
 }

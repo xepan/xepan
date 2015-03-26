@@ -6,5 +6,6 @@ class page_xAccount_page_owner_account extends page_xAccount_page_owner_main{
 	$account = $this->add('xAccount/Model_Account');
 		$crud = $this->app->layout->add('CRUD');
 		$crud->setModel($account);
+		$crud->add('xHR/Controller_Acl');
 	}
 }
