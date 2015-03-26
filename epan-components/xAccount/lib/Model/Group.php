@@ -11,10 +11,15 @@ class Model_Group extends \Model_Table{
 		$this->addField('name')->caption('Group Name')->mandatory(true);
 		$this->addField('created_at')->type('date')->defaultValue(date('Y-m-d'));
 
+
 		$this->hasMany('Account','group_id');
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
-	
+
+	function loadSunderyCreditor(){
+		
+	}
+
 	function createNewGroup($name,$balance_sheet_id,$other_values=array(),$form=null,$on_date=null){
 		
 		$this['name'] = $name;
