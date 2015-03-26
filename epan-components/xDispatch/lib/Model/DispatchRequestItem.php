@@ -10,6 +10,7 @@ class Model_DispatchRequestItem extends \Model_Document{
 	function init(){
 		parent::init();
 
+		$this->hasOne('xDispatch/DeliveryNote','deliverynote_id'); // to know if this item is already dilivered
 		$this->hasOne('xDispatch/DispatchRequest','dispatch_request_id');
 		$this->hasOne('xShop/Item','item_id');
 		
@@ -25,8 +26,8 @@ class Model_DispatchRequestItem extends \Model_Document{
 		return $this->ref('item_id');
 	}
 
-	function dispatchItem(){
-		
+	function isDelivered(){
+		return $this['deliverynote_id'];
 	}
 
 }

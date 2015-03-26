@@ -20,6 +20,16 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$this->hasMany('xDispatch/DispatchRequestItem','dispatch_request_id');
 		$this->hasMany('xStore/StockMovement','dispatch_request_id');
 
+		$this->addExpression('pending_items_to_dispatch')->set(function($m,$q){
+			$depstat = $m->add('xShop/Model_OrderItemDepartmentalStatus');
+			$depstat->join('xshop_orderDetails','orderitem_id')
+			->addField('dsorder_id','order_id');
+
+			$depstat->addCondition('status','Waiting');
+			$depstat->addCondition('dsorder_id',$q->getField('order_id'));
+			return $depstat->count();
+		});
+
 		$this->addHook('beforeInsert',$this);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
@@ -27,6 +37,10 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 	function beforeInsert($obj){
 		$obj['name'] = rand(1000,9999);
+	}
+
+	function itemRows(){
+		return $this->ref('xDispatch/DispatchRequestItem');
 	}
 
 	function relatedChallan(){
@@ -64,15 +78,16 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 				);
 		}
 
-		$new_request->addItem($order_item->ref('item_id'),$order_item['qty']);
+		$new_request->addItem($order_item->ref('item_id'),$order_item['qty'],$order_item->ref('item_id')->get('qty_unit'),$order_item['custom_fields']);
 
 	}
 
-	function addItem($item,$qty,$unit='Nos'){
+	function addItem($item,$qty,$unit,$custom_fields){
 		$mr_item = $this->ref('xDispatch/DispatchRequestItem');
 		$mr_item['item_id'] = $item->id;
 		$mr_item['qty'] = $qty;
 		$mr_item['unit'] = $unit;
+		$mr_item['custom_fields'] = $custom_fields;
 		$mr_item->save();
 	}
 
@@ -86,17 +101,19 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 	function mark_processed_page($p){//Mark Processd = Delivey in this case
 		
-		if(!$this->loaded())
-			throw new \Exception("Error Processing Request", 1);
-
-		$p->add('View_Info')->set('Add Form Order Dispatch Master Detail');
-		//Get the Order of DispatchRequest
-		$o = $this->order();
-		$orderdetail = $o->orderItems();//return orderDetais
-		$crud = $p->add('Grid');
-		$crud->setModel($orderdetail);
-
 		$form = $p->add('Form');
+		$form->addField('line','delivery_from');
+		$form->addField('line','delivery_docket_no');
+		$form->addField('text','delivery_narration');
+
+		
+		//Get the Order of DispatchRequest
+		
+		$crud = $p->add('Grid');
+		$crud->setModel($this->itemRows());
+
+
+
 		$form->addSubmit('Dispatch the Order');
 		if($form->isSubmitted()){
 			//According to OrderDetail(Item) Select insert into DispatchRequestItem under single entry od dispatchRequest
