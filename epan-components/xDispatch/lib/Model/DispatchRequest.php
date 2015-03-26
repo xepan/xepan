@@ -20,7 +20,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$this->hasMany('xDispatch/DispatchRequestItem','dispatch_request_id');
 		$this->hasMany('xStore/StockMovement','dispatch_request_id');
 
-		$this->addExpression('pending_items_to_dispatch')->set(function($m,$q){
+		$this->addExpression('pending_items_to_receive')->set(function($m,$q){
 			$depstat = $m->add('xShop/Model_OrderItemDepartmentalStatus');
 			$depstat->join('xshop_orderDetails','orderitem_id')
 			->addField('dsorder_id','order_id');
@@ -29,6 +29,11 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 			$depstat->addCondition('dsorder_id',$q->getField('order_id'));
 			return $depstat->count();
 		});
+
+		$this->addExpression('pending_items_to_deliver')->set(function($m,$q){
+
+		});
+
 
 		$this->addHook('beforeInsert',$this);
 
@@ -95,9 +100,6 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		return $this->add('xShop/Model_Order')->load($this['order_id']);
 	}
 
-	function orderDetail(){
-		return $this->add('xShop/Model_OrderDetails')->addCondition('order_id');
-	}
 
 	function mark_processed_page($p){//Mark Processd = Delivey in this case
 		
@@ -160,10 +162,21 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$form = $p->add('Form');
 		$form->addSubmit();
 		if($form->isSubmitted()){
-			$this->setStatus('received');
+			$this->receive();
 			return true;
 		}
 		return false;		
+	}
+
+	function receive(){
+		$this->setStatus('received');
+		if($pre_dept_job_card = $this->previousDeptJobCard()){
+			$pre_dept_job_card->complete();
+		}
+		$ds = $this->orderItem()->deptartmentalStatus($this->department());
+		if($ds) {
+			$ds->setStatus(ucwords('received') .' in ' . $this->department()->get('name'));
+		}
 	}
 
 	function submit(){

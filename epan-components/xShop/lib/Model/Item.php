@@ -793,7 +793,7 @@ class Model_Item extends \Model_Table{
 	}
 
 	function stockEffectCustomFields(){
-		return $this->ref('ItemCustomFieldAssos')
+	 return $this->ref('xShop/ItemCustomFieldAssos')
 				->addCondition('can_effect_stock',true)
 				->addCondition('department_phase_id',null)->tryLoadAny();
 	}

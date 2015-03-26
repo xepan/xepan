@@ -287,6 +287,8 @@ class Model_JobCard extends \Model_Document{
 		}
 
 		if($this['orderitem_id']){
+			throw new Exception($this['orderitem_id'], 1);
+			
 			$this->orderItem()->order()->setStatus('processing');
 		}
 
@@ -308,6 +310,10 @@ class Model_JobCard extends \Model_Document{
 	function complete(){
 		$this->setStatus('completed');
 		if($this['orderitem_id']){
+			$ds = $this->orderItem()->deptartmentalStatus($this->department());
+			if($ds) {
+				$ds->close();
+			}
 			$this->orderItem()->order()->isOrderClose(true);
 		}
 	}
