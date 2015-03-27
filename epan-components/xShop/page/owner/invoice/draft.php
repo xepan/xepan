@@ -56,6 +56,6 @@ class page_xShop_page_owner_invoice_draft extends page_xShop_page_owner_main{
 		}
 
 		$crud->add('xHR/Controller_Acl');
-		$this->add('xShop/View_Invoice',array('invoice'=>$this->add('xShop/Model_Invoice')->load(7)));
+		// $this->add('xShop/View_Invoice',array('invoice'=>$this->add('xShop/Model_Invoice')->load(7)));
 	}
 }		
