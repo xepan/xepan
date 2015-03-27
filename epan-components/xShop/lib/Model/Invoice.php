@@ -16,19 +16,30 @@ class Model_Invoice extends \Model_Document{
 		parent::init();
 		
 		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
+		$this->hasOne('xShop/Customer','customer_id')->sortable(true);
 		$this->hasOne('xShop/Model_Order','sales_order_id');
 		$this->hasOne('xPurchase/Model_PurchaseOrder','po_id')->caption('Purchase Order');
 		$this->addField('type')->enum(array('salesInvoice','purchaseInvoice'));
 		$this->addField('name')->caption('Invoice No');
-		$this->addField('customer_name');
-		$this->addField('mobile_no');
 		$this->addField('amount');
 		$this->addField('discount');
 		$this->addField('tax');
 		$this->addField('net_amount');
 		$this->addField('billing_address')->type('text');
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function netAmount(){
+		return $this['net_amount'];
+	}
+
+	function discount(){
+		return $this['discount'];
+	}
+
+	function tax(){
+		return $this['tax'];
 	}
 
 	function itemrows(){
@@ -39,5 +50,17 @@ class Model_Invoice extends \Model_Document{
 			return false;
 		}
 		return $this->ref('orderitem_id');
+	}
+
+	function addItem($item,$qty,$rate,$amount,$unit,$narration,$custom_fields){
+		$in_item = $this->ref('xShop/InvoiceItem');
+		$in_item['item_id'] = $item->id;
+		$in_item['qty'] = $qty;
+		$in_item['rate'] = $rate;
+		$in_item['amount'] = $amount;
+		// $in_item['unit'] = $unit;
+		$in_item['narration'] = $narration;
+		$in_item['custom_fields'] = $custom_fields;
+		$in_item->save();
 	}
 }

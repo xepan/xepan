@@ -16,7 +16,29 @@ class page_xShop_page_owner_invoice_draft extends page_xShop_page_owner_main{
 			$form->addSubmit('Create');
 
 			if($form->isSubmitted()){
+				$sale_order = $p->add('xShop/Model_Order')->load($form['sales_order']);
+				$invoice = $p->add('xShop/Model_Invoice_Draft');
+				$invoice['sales_order_id'] = $sale_order['id'];
+				$invoice['customer_id'] = $sale_order->ref('customer_id');
+				$invoice['billing_address'] = $sale_order['billing_address'];
+				$invoice->save();
 				
+				$invoice->relatedDocument($sale_order);
+
+				$ois = $sale_order->orderItems();
+				foreach ($ois as $oi) {
+					$invoice->addItem(
+							$oi->item(),
+							$oi['qty'],
+							$oi['rate'],
+							$oi['amount'],
+							$oi['unit'],
+							$oi['narration'],
+							$oi['custom_fields']
+						);					
+				}
+				// $form->js(null,$form->js()->univ()->closeDialog())->execute();
+				$form->js(null,$form->js()->univ()->closeDialog())->univ()->reload()->execute();
 			}
 
 		});
@@ -34,5 +56,6 @@ class page_xShop_page_owner_invoice_draft extends page_xShop_page_owner_main{
 		}
 
 		$crud->add('xHR/Controller_Acl');
+		$this->add('xShop/View_Invoice',array('invoice'=>$this->add('xShop/Model_Invoice')->load(7)));
 	}
 }		

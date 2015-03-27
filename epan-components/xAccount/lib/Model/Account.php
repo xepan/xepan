@@ -94,5 +94,8 @@ class Model_Account extends \Model_Document{
 		$this->hook('afterAccountCredited',array($amount));
 	}
 
+	function loadDefaultSalesAccount(){
+		
+	}
 	
 }

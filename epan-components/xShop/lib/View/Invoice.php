@@ -13,7 +13,8 @@ class View_Invoice extends  \CompleteLister{
 		$this->template->setHtml('invoice_no',$this->invoice['name']);
 		$this->template->setHtml('billing_address',$this->invoice['billing_address']);
 		$this->template->setHtml('customer_name',$this->invoice['customer_name']);
-		$this->template->setHtml('mobile_no',$this->invoice['mobile_no']);
+		$this->template->setHtml('billing_address',$this->invoice['billing_address']);
+		$this->template->setHtml('mobile_no',$this->invoice->ref('customer_id')->get('mobile_number'));
 		// $this->template->setHtml('customer_name',$this->invoice['customer_name']);
 		$this->invoice['type']?$this->template->setHtml('type',"Invoice: <b>".ucwords($this->invoice['type'])."</b>"):"";
 		$this->invoice['sales_order']?$this->template->setHtml('sales_order_no',"Sales Order No: <b>".ucwords($this->invoice['sales_order'])."</b>"):"";
