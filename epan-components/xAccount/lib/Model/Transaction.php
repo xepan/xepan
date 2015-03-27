@@ -32,7 +32,7 @@ class Model_Transaction extends \Model_Document{
 		$this->hasMany('xAccount/TransactionRow','transaction_id');
 
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
 	function createNewTransaction($transaction_type, $transaction_date=null, $Narration=null, $only_transaction=null,$options=array()){

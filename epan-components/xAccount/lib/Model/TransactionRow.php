@@ -13,6 +13,6 @@ class Model_TransactionRow extends \Model_Table{
 		$this->addField('side');
 		$this->addField('accounts_in_side')->type('int');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

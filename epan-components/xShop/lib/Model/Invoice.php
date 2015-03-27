@@ -24,7 +24,7 @@ class Model_Invoice extends \Model_Document{
 		$this->addField('net_amount');
 		$this->addField('billing_address')->type('text');
 		$this->hasMany('xShop/Model_InvoiceItem','invoice_id');
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function itemrows(){
