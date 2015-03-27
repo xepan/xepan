@@ -204,6 +204,18 @@ class Model_Order extends \Model_Document{
 		return $this->ref('xShop/OrderDetails');
 	}
 
+	function customer(){
+		return $this->ref('member_id');
+	}
+
+	function member(){
+		return $this->customer();
+	}
+
+	function from(){
+		return $this->customer();
+	}
+
 	function unCompletedOrderItems(){
 		$oi=$this->orderItems();
 		$oi->addExpression('open_departments')->set($oi->refSQL('xShop/OrderItemDepartmentalStatus')->addCondition('is_open',true)->count());

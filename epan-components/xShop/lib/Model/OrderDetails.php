@@ -51,9 +51,11 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function afterLoad(){
-		$cf_array=json_decode($this['custom_fields'],true);
-		$qty_json = json_encode(array('stockeffectcustomfield'=>$cf_array['stockeffectcustomfield']));
-		$this['item_with_qty_fields'] = $this['item'] .' [' .$this->item()->genericRedableCustomFieldAndValue($qty_json) .']';
+		if($this['custom_fields']){
+			$cf_array=json_decode($this['custom_fields'],true);
+			$qty_json = json_encode(array('stockeffectcustomfield'=>$cf_array['stockeffectcustomfield']));
+			$this['item_with_qty_fields'] = $this['item'] .' [' .$this->item()->genericRedableCustomFieldAndValue($qty_json) .']';
+		}
 	}
 
 	function beforeSave(){
