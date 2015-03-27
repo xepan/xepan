@@ -1,8 +1,16 @@
 <?php
 namespace xShop;
 
-class Model_InvoiceItem extends \Model_Table{
+class Model_InvoiceItem extends \Model_Document{
 	public $table="xshop_invoice_item";
+	public $status  = array('draft','submitted','approved','canceled','completed');
+	public $root_document_name = 'xShop\InvoiceItem';
+	public $actions=array(
+			'allow_edit'=>array(),
+			'allow_add'=>array(),
+			'allow_del'=>array(),
+			'can_view'=>array(),
+		);
 	function init(){
 		parent::init();
 
@@ -12,11 +20,12 @@ class Model_InvoiceItem extends \Model_Table{
 		
 		$this->addField('qty');
 		$this->addField('unit');
+		$this->addField('rate');
 		$this->addField('narration');
 		
 		$this->addField('custom_fields')->type('text');
 
-		$this->addHook('beforeSave',$this);
+		// $this->addHook('beforeSave',$this);
 
 	$this->add('dynamic_model/Controller_AutoCreator');
 
@@ -26,26 +35,31 @@ class Model_InvoiceItem extends \Model_Table{
 		return $this->ref('item_id');
 	}
 
-	function beforeSave(){
+	function redableDeptartmentalStatus($with_custom_fields=false){
+		if(!$this->loaded())
+			return false;
 
-		// validate custom field entries
-		$phase = $this->add('xHR/Model_Department')->loadStore();
-
-		if($this['custom_fields']==''){
-			// $phases_ids = $this->ref('item_id')->getAssociatedDepartment();
-			$cust_field_array = array();
-		}else{
-			$cust_field_array = json_decode($this['custom_fields'],true);
-			// $phases_ids = array_keys($cust_field_array);
-		}
-
-		// foreach ($phases_ids as $phase_id) {
-			$custom_fields_assos_ids = $this->ref('item_id')->getAssociatedCustomFields($phase->id);
-			foreach ($custom_fields_assos_ids as $cf_id) {
-				if(!isset($cust_field_array[$phase->id][$cf_id]) or $cust_field_array[$phase->id][$cf_id] == ''){
-					throw $this->exception('Custom Field Values not proper','Growl');
+		$str = "";
+		$array = json_decode($this['custom_fields'],true);
+		if(!$array) return false;
+		
+		foreach ($array as $department_id => $cf) {
+			$d = $this->add('xHR/Model_Department')->load($department_id);
+			$str .= $d['name'];
+			if($with_custom_fields){
+				if(!empty($cf)){
+					$ar[$department_id] = $cf;
+					$str .= "<br>[".$this->ref('item_id')->genericRedableCustomFieldAndValue(json_encode($ar))." ]<br>";
+					unset($ar[$department_id]);							
+				}else{
+					$str.="<br>";
 				}
 			}
+		}
+			
+		return $str;
+	}
+
 	
 	}
-}	
+	
