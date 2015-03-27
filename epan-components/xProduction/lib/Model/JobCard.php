@@ -429,10 +429,10 @@ class Model_JobCard extends \Model_Document{
 		}
 	}
 
-	function setStatus($status,$message=null,$subject=null){
+	function setStatus($status,$message=null,$subject=null,$set_dept_satatus=true){
 		if($this['orderitem_id']){
 			$ds = $this->orderItem()->deptartmentalStatus($this->department());
-			if($ds) {
+			if($ds and $set_dept_satatus) {
 				$ds->setStatus(ucwords($status) .' in ' . $this->department()->get('name'));
 			}
 		}
