@@ -17,9 +17,11 @@ class Model_Account extends \Model_Document{
 		$this->addField('account_type');
 		$this->addField('AccountDisplayName')->caption('Account Displ. Name');
 		$this->addField('Status')->enum(array('Active','Dead'));
-		$this->addField('LoanInsurranceDate')->type('datetime');
 		$this->addField('OpeningBalanceDr')->type('money')->defaultValue(0);
 		$this->addField('OpeningBalanceCr')->type('money')->defaultValue(0);
+		$this->addField('CurrentBalanceDr')->type('money')->defaultValue(0);
+		$this->addField('CurrentBalanceCr')->type('money')->defaultValue(0);
+
 		$this->addField('affectsBalanceSheet')->type('boolean')->defaultValue(true);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
@@ -48,6 +50,48 @@ class Model_Account extends \Model_Document{
 	
 		$this->save();
 		return $this;
+	}
+
+	function debitWithTransaction($amount,$transaction_id,$no_of_accounts_in_side=null){
+
+		$transaction_row=$this->add('Model_TransactionRow');
+		$transaction_row['amountDr']=$amount;
+		$transaction_row['side']='DR';
+		$transaction_row['transaction_id']=$transaction_id;
+		$transaction_row['account_id']=$this->id;
+		// $transaction_row['accounts_in_side']=$no_of_accounts_in_side;
+		$transaction_row->save();
+
+		$this->debitOnly($amount);
+	}
+
+	function creditWithTransaction($amount,$transaction_id,$only_transaction=null,$no_of_accounts_in_side=null){
+
+		$transaction_row=$this->add('Model_TransactionRow');
+		$transaction_row['amountCr']=$amount;
+		$transaction_row['side']='CR';
+		$transaction_row['transaction_id']=$transaction_id;
+		$transaction_row['account_id']=$this->id;
+		// $transaction_row['accounts_in_side']=$no_of_accounts_in_side;
+		$transaction_row->save();
+
+		if($only_transaction) return;
+		
+		$this->creditOnly($amount);
+	}
+
+	function debitOnly($amount){ 
+		$this->hook('beforeAccountDebited',array($amount));
+		$this['CurrentBalanceDr']=$this['CurrentBalanceDr']+$amount;
+		$this->save();
+		$this->hook('afterAccountDebited',array($amount));
+	}
+
+	function creditOnly($amount){
+		$this->hook('beforeAccountCredited',array($amount));
+		$this['CurrentBalanceCr']=$this['CurrentBalanceCr']+$amount;
+		$this->save();
+		$this->hook('afterAccountCredited',array($amount));
 	}
 
 	
