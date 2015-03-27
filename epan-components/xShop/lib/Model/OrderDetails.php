@@ -37,6 +37,8 @@ class Model_OrderDetails extends \Model_Document{
 			return $m->refSQL('order_id')->fieldQuery('created_by_id');
 		});
 
+		$this->addExpression('item_with_qty_fields','custom_fields');
+
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');
 		$this->hasMany('xShop/SalesOrderDetailAttachment','related_document_id',null,'Attachements');
 

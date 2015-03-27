@@ -64,6 +64,7 @@ class Model_Order extends \Model_Document{
 
 		$this->hasMany('xShop/OrderDetails','order_id');
 		$this->hasMany('xShop/SalesOrderAttachment','related_document_id',null,'Attachements');
+		$this->hasMany('xShop/SalesInvoice','sales_order_id');
 		
 		$this->addExpression('orderitem_count')->set($this->refSQL('xShop/OrderDetails')->count());
 		
@@ -71,6 +72,8 @@ class Model_Order extends \Model_Document{
 
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+
 
 	function beforeDelete($m){
 		if($m['discount_voucher'] != null and $m['discount_voucher'] != 0 ){
@@ -207,6 +210,17 @@ class Model_Order extends \Model_Document{
 		$oi->addCondition('open_departments',true);
 
 		return $oi;
+	}
+
+	function invoice(){
+		$inv = $this->ref('xShop/SalesInvoice');
+		$inv->tryLoadAny();
+		if($inv->loaded()) return $inv;
+		return false;
+	}
+
+	function createInvoice($status='approved'){
+
 	}
 
 	function placeOrderFromQuotation($quotation_approved_id){
