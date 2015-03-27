@@ -7,8 +7,10 @@ class page_xDispatch_page_owner_dispatchrequest extends page_xDispatch_page_owne
 
 		$tabs=$this->add('Tabs');
 		//Dispatch Request
-		$tabs->addTabURL('xDispatch_page_owner_dispatchrequest_toreceive','Dispatch Request/ To Receive');
-		$tabs->addTabURL('xDispatch_page_owner_dispatchrequest_received','Dispatch Request/ Received');
+		$tabs->addTabURL('xDispatch_page_owner_dispatchrequest_toreceive','To Receive');
+		$tabs->addTabURL('xDispatch_page_owner_dispatchrequest_received','Received');
+		$tabs->addTabURL('xDispatch_page_owner_dispatchrequest_partialcomplete','Partial Complete');		
+		$tabs->addTabURL('xDispatch_page_owner_dispatchrequest_complete','Complete');		
 		
 		//deliveryNote Start
 		// $tabs->addTabURL('xDispatch_page_owner_deliverynote_submitted','Submitted');
