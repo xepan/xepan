@@ -60,4 +60,8 @@ class Model_DeliveryNote extends \xProduction\Model_JobCard {
 	function receive(){
 
 	}
+
+	function itemRows(){
+		return $this->add('xDispatch/Model_DeliveryNoteItem')->addCondition('delivery_note_id',$this->id);
+	}
 }
