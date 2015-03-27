@@ -27,13 +27,17 @@ class Model_DeliveryNote extends \xProduction\Model_JobCard {
 
 	}
 
-	function addItem($item,$qty,$unit,$custom_fields){
+	function addItem($orderitem, $item,$qty,$unit,$custom_fields){
 		$mr_item = $this->ref('xDispatch/DeliveryNoteItems');
+		$mr_item['orderitem_id'] = $orderitem->id;
 		$mr_item['item_id'] = $item->id;
 		$mr_item['qty'] = $qty;
 		$mr_item['unit'] = $unit;
 		$mr_item['custom_fields'] = $custom_fields;
 		$mr_item->save();
+
+		$orderitem['deliverynote_id'] = $this->id;
+		$orderitem->save();
 	}
 
 	function submit(){
