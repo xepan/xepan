@@ -7,7 +7,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 	public $root_document_name='xDispatch\DispatchRequest';
 	public $status = array('approved','assigned','processing','processed','forwarded',
-							'completed','cancelled','return','redesign','received');
+							'completed','cancelled','return','redesign','received','partial complete');
 
 	function init(){
 		parent::init();
@@ -192,8 +192,12 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 				$itm_model->setStatus('delivered');
 			}
 
-			if(!$this->ref('xDispatch/DispatchRequestItem')->addCondition('status','<>','delivered')->count()->getOne())
-				$this->setStatus('submitted',null,null,false);//submitted Equal to Dispatched but not received by customer
+			if(!$this->ref('xDispatch/DispatchRequestItem')->addCondition('status','<>','delivered')->count()->getOne()){
+				if($this['item_under_process'])
+					$this->setStatus('partial complete',null,null,false);//submitted Equal to Dispatched but not received by customer
+				else				
+					$this->setStatus('completed',null,null,false);//submitted Equal to Dispatched but not received by customer
+			}
 				
 			// create the DeliveryNote
 			return true;

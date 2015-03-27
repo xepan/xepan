@@ -1,0 +1,41 @@
+<div id="{$_name}">
+	<div class="row">
+		<div class="col-md-4">
+			To Member: <b>{$to_memberdetails}</b><br>
+			Created at: <b>{$created_at}</b><br>
+			Shipping Address: <b>{$shipping_address}</b><br>
+			Shipping Via: <b>{$shipping_via}</b><br>
+			Docket No: <b>{$docket_no}</b><br>
+		</div>
+		<div class="col-md-4 text-center">
+			<div class="atk-swatch-ink">Status: <b>{$status}</b></div>
+		</div>
+		<div class="col-md-4 text-right">
+			Order No: <b>{$order}</b></br>
+			Deliver No: <b>{$name}</b><br>
+		</div>
+	</div>
+		
+	<table width='100%' class='table'>
+		<tbody class='table-striped'>
+			<tr>
+				<th align="left">Sno</th>
+				<th align="left">  Item Name </th> 
+				<th align="left">  Qty </th>
+				<th align="left">  Unit </th>
+			</tr>
+		{rows}
+			{row}
+				<tr>
+					<td align="left">{$sno}</td>
+					 <td align="left">{$orderitem}</td> 
+					 <td align="left">{qty}{/qty}</td> 
+					 <td align="left">{unit}{/unit}</td> 
+				</tr>
+			{/row}
+		{/rows}
+		</tbody>
+	</table>
+</div>
+</div>	
+
