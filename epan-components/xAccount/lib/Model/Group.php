@@ -13,6 +13,13 @@ class Model_Group extends \Model_Table{
 
 
 		$this->hasMany('Account','group_id');
+
+		$this->add('Controller_Validator');
+		$this->is(array(
+							'name!|to_trim|unique'
+						)
+				);
+
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
@@ -192,6 +199,7 @@ class Model_Group extends \Model_Table{
 	function isIndirectExpenses(){
 		return $this['name'] == "Indirect Expenses";
 	}
+
 	function loadIndirectIncome(){
 		if($this->loaded())
 			$this->unload();
@@ -204,6 +212,7 @@ class Model_Group extends \Model_Table{
 	function isIndirectIncome(){
 		return $this['name'] == "Indirect Income";
 	}
+
 	function loadInvestment(){
 		if($this->loaded())
 			$this->unload();
@@ -216,6 +225,7 @@ class Model_Group extends \Model_Table{
 	function isInvestment(){
 		return $this['name'] == "Investment";
 	}
+
 	function loadLoanAdvanceAssets(){
 		if($this->loaded())
 			$this->unload();
@@ -228,6 +238,7 @@ class Model_Group extends \Model_Table{
 	function isLoanAdvanceAssets(){
 		return $this['name'] == "Loan Advance(Assets)";
 	}
+
 	function loadLoanLiabilities(){
 		if($this->loaded())
 			$this->unload();
@@ -239,7 +250,8 @@ class Model_Group extends \Model_Table{
 
 	function isLoanLiabilities(){
 		return $this['name'] == "Loan(Liabilities)";
-	}	
+	}
+
 	function loadMiscExpensesAssets(){
 		if($this->loaded())
 			$this->unload();
@@ -252,6 +264,7 @@ class Model_Group extends \Model_Table{
 	function isMiscExpensesAssets(){
 		return $this['name'] == "Misc Expenses(Assets)";
 	}
+
 	function loadProvision(){
 		if($this->loaded())
 			$this->unload();
@@ -264,6 +277,7 @@ class Model_Group extends \Model_Table{
 	function isProvision(){
 		return $this['name'] == "Provision";
 	}
+
 	function loadReserveSurpuls(){
 		if($this->loaded())
 			$this->unload();
@@ -276,6 +290,7 @@ class Model_Group extends \Model_Table{
 	function isReserveSurpuls(){
 		return $this['name'] == "Reserve Surpuls";
 	}
+
 	function loadRetainedEarnings(){
 		if($this->loaded())
 			$this->unload();
@@ -288,6 +303,7 @@ class Model_Group extends \Model_Table{
 	function isRetainedEarnings(){
 		return $this['name'] == "Retained Earnings";
 	}
+
 	function loadSecuredLoan(){
 		if($this->loaded())
 			$this->unload();
@@ -300,6 +316,7 @@ class Model_Group extends \Model_Table{
 	function isSecuredLoan(){
 		return $this['name'] == "Secured(Loan)";
 	}
+
 	function loadSundryCreditor(){
 		if($this->loaded())
 			$this->unload();
@@ -312,6 +329,7 @@ class Model_Group extends \Model_Table{
 	function isSundryCreditor(){
 		return $this['name'] == "Sundry Creditor";
 	}
+
 	function loadSundryDebtor(){
 		if($this->loaded())
 			$this->unload();
@@ -324,16 +342,17 @@ class Model_Group extends \Model_Table{
 	function isSundryDebtor(){
 		return $this['name'] == "Sundry Debtor";
 	}
+
 	function loadSuspenceAccount(){
 		if($this->loaded())
 			$this->unload();
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentAssets()->get('id'));
-		$this->addCondition('name','Suspence Account')
+		$this->addCondition('name','Suspense Account')
 			->loadAny();
 		return $this;	
 	}
 
 	function isSuspenceAccount(){
-		return $this['name'] == "Suspence Account";
+		return $this['name'] == "Suspense Account";
 	}
 }
