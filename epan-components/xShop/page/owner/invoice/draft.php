@@ -20,6 +20,8 @@ class page_xShop_page_owner_invoice_draft extends page_xShop_page_owner_main{
 				$invoice = $p->add('xShop/Model_Invoice_Draft');
 				$invoice['sales_order_id'] = $sale_order['id'];
 				$invoice->save();
+				
+				$invoice->relatedDocument($sale_order);
 
 				$ois = $sale_order->orderItems();
 				foreach ($ois as $oi) {

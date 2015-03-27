@@ -47,6 +47,8 @@ class Model_Transaction extends \Model_Document{
 		$this['Narration'] = $Narration;
 		$this['created_at'] = $transaction_date;
 
+		$this->related_document = $related_document;
+
 		$this->create_called=true;
 	}
 
@@ -83,6 +85,10 @@ class Model_Transaction extends \Model_Document{
 
 
 		$this->executeSingleBranch();
+
+		if($this->related_document){
+			$this->relatedDocument($this->related_document);
+		}
 
 		$this->executed=true;
 	}

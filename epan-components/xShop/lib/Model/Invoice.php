@@ -31,6 +31,18 @@ class Model_Invoice extends \Model_Document{
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
+	function netAmount(){
+		return $this['net_amount'];
+	}
+
+	function discount(){
+		return $this['discount'];
+	}
+
+	function tax(){
+		return $this['tax'];
+	}
+
 	function itemrows(){
 		return $this->ref('xShop/InvoiceItem');
 	}
