@@ -122,8 +122,8 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$form->addField('text','billing_address');
 		$form->addField('text','shipping_address');
 		$form->addField('text','delivery_narration');
-		$form->addField('Checkbox','generate_invoice');
-		$form->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'));
+		// $form->addField('Checkbox','generate_invoice');
+		// $form->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'));
 		$form->addField('Checkbox','send_invoice_via_email');
 		$form->addField('line','email_to');
 
@@ -143,31 +143,47 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 
 		if($form->isSubmitted()){
+			$items_selected = json_decode($form['include_items'],true);
 
 
 			// TODO : A LOT OF CHECKINGS REGARDING INVOICE ETC ...
+			if($form['send_invoice_via_email']){
+				$inv = $this->order()->invoice();
+				
+				if(!$inv){
+					$form->displayError('send_invoice_via_email','Invoice Not Created. ');
+				}
+				
+				if(!$inv->isApproved())
+					$form->displayError('send_invoice_via_email','Invoice Not Approved. '. $inv['name']);
 
+				if(!$form['email_to'])
+					$form->displayError('email_to','Email Not Proper. ');
+
+				$inv->send_via_email();
+
+			}
 
 			//According to OrderDetail(Item) Select insert into DispatchRequestItem under single entry od dispatchRequest
 			//and set Status of orderitem is dispatched
 			
-			$items_selected = json_decode($form['include_items'],true);
-			$items_array=array();
-			foreach ($items_selected as $itm) {
-				$itm_model = $this->add('xDispatch/Model_DispatchRequestItem')->load($itm);
-				$itm_model->setStatus('delivered');
-				$items_array[] = array('orderitem'=>$itm_model->orderItem(),'item'=>$itm_model->item(),'qty'=>)
-			}
-
 			$new_delivery_note = $this->add('xDispatch/Model_DeliverNote');
 			$new_delivery_note->create($order,$from_warehouse,$shipping_address,$shipping_via,$docket_no,$narration,$items_array);
 			
-			$this->setStatus('submitted');//submitted Equal to Dispatched but not received by customer
+			foreach ($items_selected as $itm) {
+				$itm_model = $this->add('xDispatch/Model_DispatchRequestItem')->load($itm);
+				$itm_model->setStatus('delivered');
+				$new_delivery_note->addItem($itm_model->orderItem(), $itm_model->item(),$itm_model['qty'],$itm_model['unit'],$itm_model['custom_fields']);
+			}
+
+			if(!$this->ref('xDispatch/Model_DispatchRequestItem')->addCondition('status','<>','delivered')->count()->getOne())
+				$this->setStatus('submitted');//submitted Equal to Dispatched but not received by customer
+				
 			// create the DeliveryNote
 			return true;
 		}
+
 		return false;
-		
 	}
 
 	function submit_page($p){
