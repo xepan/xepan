@@ -16,7 +16,27 @@ class page_xShop_page_owner_invoice_draft extends page_xShop_page_owner_main{
 			$form->addSubmit('Create');
 
 			if($form->isSubmitted()){
-				
+				$sale_order = $p->add('xShop/Model_Order')->load($form['sales_orders']);
+				$invoice = $p->add('xShop/Model_Invoice');
+				$invoice['sales_order_id'] = $sale_order['id'];
+				$invoice['status'] = "draft";
+				$invoice->save();
+
+				$ois = $sale_order->orderItems();
+				foreach ($ois as $oi) {
+					$invoice_itm = $p->add('xShop/Model_InvoiceItem');
+					$invoice_itm['item_id'] =  $oi['item_id'];
+					$invoice_itm['name'] =  $oi['name'];
+					$invoice_itm['qty'] =  $oi['qty'];
+					$invoice_itm['rate'] =  $oi['rate'];
+					$invoice_itm['custom_fields'] =  $oi['custom_fields'];
+					$invoice_itm['narration'] =  $oi['narration'];
+					$invoice_itm['amount'] =  $oi['amount'];
+					$invoice_itm['net_amount'] =  $oi['net_amount'];
+					$invoice_itm->save();
+				}
+				$form->js(null,$form->js()->univ()->closeDialog())->execute();
+				// $form->js()->univ()->reload()->execute();
 			}
 
 		});
