@@ -630,6 +630,8 @@ class Model_Item extends \Model_Table{
 		$array = json_decode($cf_value_json,true);
 		$str = "";
 		foreach ($array as $department) {
+			if(!$department) continue;
+			
 			$i = 1;
 			foreach ($department as $cf_id => $cf_value_id) {
 				$cf_model = $this->add('xShop/Model_CustomFields')->load($cf_id);
