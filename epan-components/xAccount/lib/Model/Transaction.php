@@ -1,8 +1,10 @@
 <?php
 namespace xAccount;
 
-class Model_Transaction extends \Model_Table{
-	public $table="xaccount_transactions";
+class Model_Transaction extends \Model_Document{
+	public $table="xaccount_transaction";
+	public $status=array();
+	public $root_document_name = 'xAccount\Transaction';
 	public $dr_accounts=array();
 	public $cr_accounts=array();
 
@@ -20,14 +22,12 @@ class Model_Transaction extends \Model_Table{
 
 	function init(){
 		parent::init();
-
+		$this->hasOne('xAccount/TransactionType','transaction_type_id');
 		$this->hasOne('xAccount/Account','reference_account_id');
-		$this->hasOne('xHR/Employee','staff_id');
+		$this->hasOne('xHR/Employee','employee_id');
 		$this->addField('voucher_no_original')->type('int'); 
 		$this->addField('voucher_no')->type('int'); 
 		$this->addField('Narration')->type('text');
-		$this->addField('created_at')->type('datetime');
-		$this->addField('updated_at')->type('datetime');
 
 		$this->hasMany('xAccount/TransactionRow','transaction_id');
 

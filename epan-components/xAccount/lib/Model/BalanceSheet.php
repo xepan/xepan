@@ -1,13 +1,14 @@
 <?php
 namespace xAccount;
 
-class Model_BalanceSheet extends \Model_Table{
+class Model_BalanceSheet extends \Model_Document{
 	public $table="xaccount_balance_sheet";
+	public $status=array();
+	public $root_document_name = 'xAccount\Balance_Sheet';
 	function init(){
 		parent::init();
 
 		$this->addField('name')->mandatory(true);
-		$this->addField('created_at')->type('date')->defaultValue(date('Y-m-d'));
 		$this->addField('positive_side')->enum(array('LT','RT'))->mandatory(true);
 		$this->addField('is_pandl')->type('boolean')->mandatory(true);
 		$this->addField('show_sub')->enum(array('SchemeGroup','SchemeName','Accounts'))->mandatory(true);
@@ -17,4 +18,114 @@ class Model_BalanceSheet extends \Model_Table{
 
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+
+	function loadDepositeLibilities(){
+		if($this->loaded())
+			$this->unload();
+		$this->addCondition('name','Deposits - Liabilities')
+			->loadAny();
+		return $this;
+	}
+
+	function isDepositeLibilities(){
+		return $this['name'] =='Deposits - Liabilities';
+	}
+
+	function loadCurrentAssets(){
+		if($this->loaded())
+			$this->unload();
+		$this->addCondition('name','Current Assets')
+			->loadAny();
+		return $this;	
+	}
+
+	function isCurrentAssets(){
+		return $this['name'] == "Current Assets";
+	}
+
+	function loadCapitalAccount(){
+		if($this->loaded())
+			$this->unload();
+		$this->addCondition('name','Capital Account')
+			->loadAny();
+			return $this;
+	}
+	
+	function is_CapitalAccount(){
+		return $this['name'] == 'Capital Account';
+	}
+
+	function loadExpenses(){
+			if($this->loaded())
+				$this->unload();
+			$this->addCondition('name','Expenses')
+				->loadAny();
+				return $this;
+		}
+
+	function is_Expenses(){
+		return $this['name'] == 'Expenses';
+	}
+
+	function loadIncome(){
+			if($this->loaded())
+				$this->unload();
+			$this->addCondition('name','Income')
+				->loadAny();
+				return $this;
+		}
+
+	function is_Income(){
+		return $this['name'] == 'Income';
+	}
+
+	function loadSuspenceAccount(){
+			if($this->loaded())
+				$this->unload();
+			$this->addCondition('name','Suspence Account')
+				->loadAny();
+				return $this;
+		}
+
+	function is_SuspenceAccount(){
+		return $this['name'] == 'Suspence Account';
+	}
+
+	function loadFixedAssets(){
+			if($this->loaded())
+				$this->unload();
+			$this->addCondition('name','Fixed Assets')
+				->loadAny();
+				return $this;
+		}
+
+	function is_FixedAssets(){
+		return $this['name'] == 'Fixed Assets';
+	}
+
+	function loadBranchDivisions(){
+			if($this->loaded())
+				$this->unload();
+			$this->addCondition('name','Branch/Divisions')
+				->loadAny();
+				return $this;
+		}
+
+	function is_BranchDivisions(){
+		return $this['name'] == 'Branch/Divisions';
+	}
+
+	function loadCurrentLiabilities(){
+			if($this->loaded())
+				$this->unload();
+			$this->addCondition('name','Current Liabilities')
+				->loadAny();
+				return $this;
+		}
+
+	function is_CurrentLiabilities(){
+		return $this['name'] == 'Current Liabilities';
+	}
+
 }

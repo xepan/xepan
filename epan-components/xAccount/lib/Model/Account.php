@@ -1,19 +1,19 @@
 <?php
 namespace xAccount;
 
-class Model_Account extends \Model_Table{
+class Model_Account extends \Model_Document{
 	public $table="xaccount_account";
+	public $status=array();
+	public $root_document_name = 'xAccount\Account';
 	function init(){
 		parent::init();
 
 		$this->hasOne('xPurchase/Supplier','supplier_id');
 		$this->hasOne('xProduction/OutSourceParty','out_source_party_id');
 		$this->hasOne('xShop/MemberDetails','member_id');
-
-
+		$this->hasOne('xHR/Model_Employee','employee_id');
 		$this->hasOne('xAccount/Group','group_id')->mandatory(true);
 		$this->addField('name')->mandatory(true);
-		$this->addField('created_at')->type('date')->defaultValue(date('Y-m-d'));
 		$this->addField('account_type');
 		$this->addField('AccountDisplayName')->caption('Account Displ. Name');
 		$this->addField('Status')->enum(array('Active','Dead'));
@@ -36,6 +36,10 @@ class Model_Account extends \Model_Table{
 		}
 
 		if($account_for instanceof \xHR\Model_Employee){
+			$this['employee_id'] = $account_for->id;
+		}
+
+		if($account_for instanceof \xProduction\Model_OutSourceParty){
 			$this['employee_id'] = $account_for->id;
 		}
 
