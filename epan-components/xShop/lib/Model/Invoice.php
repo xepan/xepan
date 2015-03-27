@@ -14,7 +14,6 @@ class Model_Invoice extends \Model_Document{
 
 	function init(){
 		parent::init();
-
 		
 		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
 		$this->hasOne('xShop/Model_Order','sales_order_id');
@@ -29,7 +28,7 @@ class Model_Invoice extends \Model_Document{
 		$this->addField('net_amount');
 		$this->addField('billing_address')->type('text');
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function itemrows(){

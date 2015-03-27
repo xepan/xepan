@@ -16,7 +16,7 @@ class Model_BalanceSheet extends \Model_Document{
 		$this->addField('order');
 
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 

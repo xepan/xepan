@@ -274,7 +274,12 @@ class Model_JobCard extends \Model_Document{
 			$pre_dept_job_card->complete();
 		}
 
+		
 		$this['created_by_id']=$this->api->current_employee->id;
+		
+		if($this['orderitem_id']){
+			$this->orderItem()->order()->setStatus('processing');
+		}
 		// self status received
 		if($this->department()->isOutSourced()){
 			if(!$this->outSourceParty())
@@ -285,13 +290,6 @@ class Model_JobCard extends \Model_Document{
 		}else{
 			$this->setStatus('received');
 		}
-
-		if($this['orderitem_id']){
-			throw new Exception($this['orderitem_id'], 1);
-			
-			$this->orderItem()->order()->setStatus('processing');
-		}
-
 	}
 
 	function cancel_page($page){
@@ -431,10 +429,10 @@ class Model_JobCard extends \Model_Document{
 		}
 	}
 
-	function setStatus($status,$message=null,$subject=null){
+	function setStatus($status,$message=null,$subject=null,$set_dept_satatus=true){
 		if($this['orderitem_id']){
 			$ds = $this->orderItem()->deptartmentalStatus($this->department());
-			if($ds) {
+			if($ds and $set_dept_satatus) {
 				$ds->setStatus(ucwords($status) .' in ' . $this->department()->get('name'));
 			}
 		}

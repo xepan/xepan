@@ -22,7 +22,7 @@ class Model_Account extends \Model_Document{
 		$this->addField('OpeningBalanceCr')->type('money')->defaultValue(0);
 		$this->addField('affectsBalanceSheet')->type('boolean')->defaultValue(true);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function createNewAccount($account_for,$group,$name){

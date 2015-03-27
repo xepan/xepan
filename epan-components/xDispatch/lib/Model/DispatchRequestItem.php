@@ -29,7 +29,7 @@ class Model_DispatchRequestItem extends \Model_Document{
 
 		$this->addHook('afterLoad',$this);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

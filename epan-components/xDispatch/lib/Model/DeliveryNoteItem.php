@@ -11,11 +11,11 @@ class Model_DeliveryNoteItem extends \Model_Document{
 		parent::init();
 
 		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
-		$this->hasOne('xDispatch/DeliveyNote','delivery_note_id');
+		$this->hasOne('xDispatch/DeliveryNote','delivery_note_id');
 		$this->addField('qty');
 		$this->addField('unit');
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

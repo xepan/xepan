@@ -37,6 +37,8 @@ class Model_OrderDetails extends \Model_Document{
 			return $m->refSQL('order_id')->fieldQuery('created_by_id');
 		});
 
+		$this->addExpression('item_with_qty_fields','custom_fields');
+
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');
 		$this->hasMany('xShop/SalesOrderDetailAttachment','related_document_id',null,'Attachements');
 
@@ -49,9 +51,11 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function afterLoad(){
-		$cf_array=json_decode($this['custom_fields'],true);
-		$qty_json = json_encode(array('stockeffectcustomfield'=>$cf_array['stockeffectcustomfield']));
-		$this['item_with_qty_fields'] = $this['item'] .' [' .$this->item()->genericRedableCustomFieldAndValue($qty_json) .']';
+		if($this['custom_fields']){
+			$cf_array=json_decode($this['custom_fields'],true);
+			$qty_json = json_encode(array('stockeffectcustomfield'=>$cf_array['stockeffectcustomfield']));
+			$this['item_with_qty_fields'] = $this['item'] .' [' .$this->item()->genericRedableCustomFieldAndValue($qty_json) .']';
+		}
 	}
 
 	function beforeSave(){
