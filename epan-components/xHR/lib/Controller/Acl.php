@@ -195,7 +195,7 @@ class Controller_Acl extends \AbstractController {
 				$this->owner->add_button->destroy();
 		}
 
-		if($this->permissions['allow_edit'] =='No'){
+		if($this->permissions['allow_edit'] and $this->permissions['allow_edit'] =='No'){
 			$this->owner->allow_edit=false;
 			$this->owner->grid->removeColumn('edit');
 		}else{

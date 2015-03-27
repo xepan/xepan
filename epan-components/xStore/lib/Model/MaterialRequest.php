@@ -166,6 +166,11 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 	function receive(){
 		$this->setStatus('received');
 		if($this['orderitem_id']){
+			$ds = $this->orderItem()->deptartmentalStatus($this->department());
+			if($ds) {
+				$ds->setStatus(ucwords($status) .' in ' . $this->department()->get('name'));
+			}
+			
 			$this->orderItem()->order()->setStatus('processing','Material Request Received at '.$this->department()->get('name'). ' for ' . $this->orderItem()->get('name'));
 		}
 	}

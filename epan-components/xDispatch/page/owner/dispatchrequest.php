@@ -11,13 +11,13 @@ class page_xDispatch_page_owner_dispatchrequest extends page_xDispatch_page_owne
 		$tabs->addTabURL('xDispatch_page_owner_dispatchrequest_received','Dispatch Request/ Received');
 		
 		//deliveryNote Start
-		$tabs->addTabURL('xDispatch_page_owner_deliverynote_submitted','Submitted');
-		$tabs->addTabURL('xDispatch_page_owner_deliverynote_approved','Approved');
-		$tabs->addTabURL('xDispatch_page_owner_deliverynote_assigned','Assigned');
-		$tabs->addTabURL('xDispatch_page_owner_deliverynote_processed','Processed');
-		$tabs->addTabURL('xDispatch_page_owner_deliverynote_processing','Processing');
-		$tabs->addTabURL('xDispatch_page_owner_deliverynote_completed','Completed');
-		$tabs->addTabURL('xDispatch_page_owner_deliverynote_cancelled','Cancel');
+		// $tabs->addTabURL('xDispatch_page_owner_deliverynote_submitted','Submitted');
+		// $tabs->addTabURL('xDispatch_page_owner_deliverynote_approved','Approved');
+		// $tabs->addTabURL('xDispatch_page_owner_deliverynote_assigned','Assigned');
+		// $tabs->addTabURL('xDispatch_page_owner_deliverynote_processed','Processed');
+		// $tabs->addTabURL('xDispatch_page_owner_deliverynote_processing','Processing');
+		// $tabs->addTabURL('xDispatch_page_owner_deliverynote_completed','Completed');
+		// $tabs->addTabURL('xDispatch_page_owner_deliverynote_cancelled','Cancel');
 	}
 
 }

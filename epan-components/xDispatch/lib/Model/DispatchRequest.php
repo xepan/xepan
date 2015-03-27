@@ -20,6 +20,26 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$this->hasMany('xDispatch/DispatchRequestItem','dispatch_request_id');
 		$this->hasMany('xStore/StockMovement','dispatch_request_id');
 
+		$this->addExpression('recent_items_to_receive')->set(function($m,$q){
+			return $m->refSQL('xDispatch/DispatchRequestItem')->addCondition('status','to_receive')->count();
+		})->sortable(true);
+
+		$this->addExpression('item_under_process')->set(function($m,$q){
+			$depstat = $m->add('xShop/Model_OrderItemDepartmentalStatus');
+			$depstat->join('xshop_orderDetails','orderitem_id')
+			->addField('dsorder_id','order_id');
+
+			$depstat->addCondition('department_id',$m->add('xHR/Model_Department')->loadDispatch()->get('id'));
+			$depstat->addCondition('status','Waiting');
+			$depstat->addCondition('dsorder_id',$q->getField('order_id'));
+			return $depstat->count();
+		})->sortable(true);
+
+		$this->addExpression('pending_items_to_deliver')->set(
+			$this->refSQL('xDispatch/DispatchRequestItem')->addCondition('status','received')->count()
+		)->sortable(true);
+
+
 		$this->addHook('beforeInsert',$this);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
@@ -27,6 +47,10 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 	function beforeInsert($obj){
 		$obj['name'] = rand(1000,9999);
+	}
+
+	function itemRows(){
+		return $this->add('xDispatch/Model_DispatchRequestItem')->addCondition('dispatch_request_id',$this->id);
 	}
 
 	function relatedChallan(){
@@ -64,15 +88,17 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 				);
 		}
 
-		$new_request->addItem($order_item->ref('item_id'),$order_item['qty']);
+		$new_request->addItem($order_item,$order_item->ref('item_id'),$order_item['qty'],$order_item->ref('item_id')->get('qty_unit'),$order_item['custom_fields']);
 
 	}
 
-	function addItem($item,$qty,$unit='Nos'){
+	function addItem($order_item,$item,$qty,$unit,$custom_fields){
 		$mr_item = $this->ref('xDispatch/DispatchRequestItem');
+		$mr_item['orderitem_id'] = $order_item->id;
 		$mr_item['item_id'] = $item->id;
 		$mr_item['qty'] = $qty;
 		$mr_item['unit'] = $unit;
+		$mr_item['custom_fields'] = $custom_fields;
 		$mr_item->save();
 	}
 
@@ -80,27 +106,62 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		return $this->add('xShop/Model_Order')->load($this['order_id']);
 	}
 
-	function orderDetail(){
-		return $this->add('xShop/Model_OrderDetails')->addCondition('order_id');
-	}
 
 	function mark_processed_page($p){//Mark Processd = Delivey in this case
 		
-		if(!$this->loaded())
-			throw new \Exception("Error Processing Request", 1);
+		$p->add('H3')->set('Items to Deliver');
+		$grid = $p->add('Grid');
+		$grid->setModel($this->itemRows()->addCondition('status','received'),array('dispatch_request','item_with_qty_fields','qty','unit','custom_fields','item'));
 
-		$p->add('View_Info')->set('Add Form Order Dispatch Master Detail');
+		$grid->removeColumn('custom_fields');
+		$grid->removeColumn('item');
+		
+		$form = $p->add('Form_Stacked');
+		$form->addField('line','delivery_via');
+		$form->addField('line','delivery_docket_no','Docket No / Person name / Other Reference');
+		$form->addField('text','billing_address');
+		$form->addField('text','shipping_address');
+		$form->addField('text','delivery_narration');
+		$form->addField('Checkbox','generate_invoice');
+		$form->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'));
+		$form->addField('Checkbox','send_invoice_via_email');
+		$form->addField('line','email_to');
+
+
+		$include_field = $form->addField('hidden','include_items');
+
+		$grid->addSelectable($include_field);
+		
 		//Get the Order of DispatchRequest
-		$o = $this->order();
-		$orderdetail = $o->orderItems();//return orderDetais
-		$crud = $p->add('Grid');
-		$crud->setModel($orderdetail);
 
-		$form = $p->add('Form');
+
 		$form->addSubmit('Dispatch the Order');
+
+		$p->add('H3')->set('Items Delivered');
+		$grid = $p->add('Grid');
+		$grid->setModel($this->itemRows()->addCondition('status','delivered'),array('dispatch_request','item_with_qty_fields','qty','unit','custom_fields','item'));
+
+
 		if($form->isSubmitted()){
+
+
+			// TODO : A LOT OF CHECKINGS REGARDING INVOICE ETC ...
+
+
 			//According to OrderDetail(Item) Select insert into DispatchRequestItem under single entry od dispatchRequest
 			//and set Status of orderitem is dispatched
+			
+			$items_selected = json_decode($form['include_items'],true);
+			$items_array=array();
+			foreach ($items_selected as $itm) {
+				$itm_model = $this->add('xDispatch/Model_DispatchRequestItem')->load($itm);
+				$itm_model->setStatus('delivered');
+				$items_array[] = array('orderitem'=>$itm_model->orderItem(),'item'=>$itm_model->item(),'qty'=>)
+			}
+
+			$new_delivery_note = $this->add('xDispatch/Model_DeliverNote');
+			$new_delivery_note->create($order,$from_warehouse,$shipping_address,$shipping_via,$docket_no,$narration,$items_array);
+			
 			$this->setStatus('submitted');//submitted Equal to Dispatched but not received by customer
 			// create the DeliveryNote
 			return true;
@@ -143,10 +204,21 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$form = $p->add('Form');
 		$form->addSubmit();
 		if($form->isSubmitted()){
-			$this->setStatus('received');
+			$this->receive();
 			return true;
 		}
 		return false;		
+	}
+
+	function receive(){
+		$this->setStatus('received');
+		if($pre_dept_job_card = $this->previousDeptJobCard()){
+			$pre_dept_job_card->complete();
+		}
+		$ds = $this->orderItem()->deptartmentalStatus($this->department());
+		if($ds) {
+			$ds->setStatus(ucwords('received') .' in ' . $this->department()->get('name'));
+		}
 	}
 
 	function submit(){

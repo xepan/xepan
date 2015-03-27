@@ -21,15 +21,15 @@
 				<th align="left">Sno</th>
 				<th align="center">Item</th>
 				<th align="right" class="text-right">Qty</th>
-				<th align="right" class="text-right">Custom Fields</th>
+				<!-- <th align="right" class="text-right">Custom Fields</th> -->
 			</tr>
 		{rows}
 			{row}
 				<tr>
 					<td align="left">{$sno}</td>
-					<td align="left">{$item}</td>
+					<td align="left">{$item_with_qty_fields}</td>
 					<td align="right">{$qty}</td>
-					<td align="right">{$custom_field}</td>
+					<!-- <td align="right">{$custom_field}</td> -->
 				</tr>
 			{/row}
 		{/rows}
