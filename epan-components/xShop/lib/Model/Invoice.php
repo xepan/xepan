@@ -16,7 +16,7 @@ class Model_Invoice extends \Model_Document{
 		parent::init();
 		
 		$this->hasOne('xShop/Customer','customer_id')->sortable(true);
-		// $this->hasOne('xShop/Model_Order','sales_order_id');
+		$this->hasOne('xShop/Model_Order','sales_order_id');
 		$this->hasOne('xPurchase/Model_PurchaseOrder','po_id')->caption('Purchase Order');
 		$this->addField('type')->enum(array('salesInvoice','purchaseInvoice'));
 		$this->addField('name')->caption('Invoice No');
