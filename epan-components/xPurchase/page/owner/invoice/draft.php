@@ -37,7 +37,7 @@ class page_xPurchase_page_owner_invoice_draft extends page_xPurchase_page_owner_
 		}
 
 		$crud->add('xHR/Controller_Acl');
-		$this->add('xPurchase/View_Invoice',array('invoice'=>$this->add('xShop/Model_Invoice')->load(22)));
+		//$this->add('xPurchase/View_Invoice',array('invoice'=>$this->add('xShop/Model_Invoice')->load(20)));
 		
 	}
 }		
