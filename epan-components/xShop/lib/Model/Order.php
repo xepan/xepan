@@ -23,7 +23,14 @@ class Model_Order extends \Model_Document{
 		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3')->sortable(true)->defaultValue(rand(1000,9999));
 		$f = $this->addField('email')->group('a~3')->sortable(true);
 		$f = $this->addField('mobile')->group('a~3')->sortable(true);
-		
+	
+		$this->addExpression('search_phrase')->set($this->dsql()->concat(
+				'Order No - ',
+				$this->getElement('name'),
+				' [',
+				$this->refSQL('member_id')->fieldQuery('customer_search_phrase'),
+				' ]'
+			));
 
 		$this->addField('order_from')->enum(array('online','offline'))->defaultValue('offline');
 		$f = $this->getElement('status')->group('a~2');
@@ -231,27 +238,40 @@ class Model_Order extends \Model_Document{
 		return false;
 	}
 
-	function createInvoice($status='approved'){
-		$invoice = $this->add('xShop/Model_Invoice_Draft');
-		$invoice['sales_order_id'] = $this['id'];
-		$invoice['customer_id'] = $this->customer()->get('id');
-		$invoice['billing_address'] = $this['billing_address'];
-		$invoice->save();
-		
-		$invoice->relatedDocument($this);
+	function createInvoice($status='approved',$salesLedger=null){
+		try{
+			$this->api->db->beginTransaction();
+			$invoice = $this->add('xShop/Model_Invoice_Draft');
 
-		$ois = $this->orderItems();
-		foreach ($ois as $oi) {
-			$invoice->addItem(
-					$oi->item(),
-					$oi['qty'],
-					$oi['rate'],
-					$oi['amount'],
-					$oi['unit'],
-					$oi['narration'],
-					$oi['custom_fields']
-				);					
+			$invoice['sales_order_id'] = $this['id'];
+			$invoice['customer_id'] = $this->customer()->get('id');
+			$invoice['billing_address'] = $this['billing_address'];
+			$invoice->save();
+			
+			$invoice->relatedDocument($this);
+
+			$ois = $this->orderItems();
+			foreach ($ois as $oi) {
+				$invoice->addItem(
+						$oi->item(),
+						$oi['qty'],
+						$oi['rate'],
+						$oi['amount'],
+						$oi['unit'],
+						$oi['narration'],
+						$oi['custom_fields']
+					);					
+			}
+			$invoice->createVoucher($salesLedger);
+			$this->api->db->commit();
+			return $invoice;
+		}catch(\Exception $e){
+			echo $e->getMessage();
+			$this->api->db->rollback();
+			if($this->api->getConfig('developer_mode',false))
+				throw $e;
 		}
+
 	}
 
 	function placeOrderFromQuotation($quotation_approved_id){

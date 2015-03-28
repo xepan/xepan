@@ -5,18 +5,20 @@ class Model_Account extends \Model_Document{
 	public $table="xaccount_account";
 	public $status=array();
 	public $root_document_name = 'xAccount\Account';
+	
 	function init(){
 		parent::init();
 
 		$this->hasOne('xPurchase/Supplier','supplier_id');
 		$this->hasOne('xProduction/OutSourceParty','out_source_party_id');
-		$this->hasOne('xShop/MemberDetails','member_id');
+		$this->hasOne('xShop/Customer','customer_id');
 		$this->hasOne('xHR/Model_Employee','employee_id');
 		$this->hasOne('xAccount/Group','group_id')->mandatory(true);
 		$this->addField('name')->mandatory(true);
 		$this->addField('account_type');
 		$this->addField('AccountDisplayName')->caption('Account Displ. Name');
-		$this->addField('Status')->enum(array('Active','Dead'));
+		$this->addField('is_active')->type('boolean')->defaultValue(true);
+
 		$this->addField('OpeningBalanceDr')->type('money')->defaultValue(0);
 		$this->addField('OpeningBalanceCr')->type('money')->defaultValue(0);
 		$this->addField('CurrentBalanceDr')->type('money')->defaultValue(0);
@@ -95,7 +97,40 @@ class Model_Account extends \Model_Document{
 	}
 
 	function loadDefaultSalesAccount(){
-		
+		$this->addCondition('name','Sales Account');
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadDirectIncome()->get('id'));
+		$this->tryLoadAny();
+
+		if(!$this->loaded()){
+			$this->save();
+		}
+
+		return $this;
+	}
+
+	function loadDefaultTaxAccount(){
+		$this->addCondition('name','Tax Account');
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadDutiesAndTaxes()->get('id'));
+		$this->tryLoadAny();
+
+		if(!$this->loaded()){
+			$this->save();
+		}
+
+		return $this;
+	}
+
+
+	function loadDefaultDiscountAccount(){
+		$this->addCondition('name','Discount Given');
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadDirectExpenses()->get('id'));
+		$this->tryLoadAny();
+
+		if(!$this->loaded()){
+			$this->save();
+		}
+
+		return $this;
 	}
 	
 }

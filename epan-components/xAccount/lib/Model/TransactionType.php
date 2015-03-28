@@ -14,6 +14,8 @@ class Model_TransactionType extends \Model_Table{
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	
+	function newVoucherNumber(){
+		return rand(10000,99999);
+	}	
 
 }

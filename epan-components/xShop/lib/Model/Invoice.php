@@ -23,7 +23,7 @@ class Model_Invoice extends \Model_Document{
 
 		$this->addField('type')->enum(array('salesInvoice','purchaseInvoice'));
 		$this->addField('name')->caption('Invoice No');
-		$this->addField('amount');
+		$this->addField('total_amount');
 		$this->addField('discount');
 		$this->addField('tax');
 		$this->addField('net_amount');

@@ -12,6 +12,8 @@ class page_xShop_page_owner_invoice_draft extends page_xShop_page_owner_main{
 			$sales_orders->addExpression('has_invoice')->set($sales_orders->refSQL('xShop/SalesInvoice')->count());
 			$sales_orders->addCondition('has_invoice',0);
 
+			$sales_orders->title_field='search_phrase';
+
 			$form = $p->add('Form_Stacked');
 			$form->addField('autocomplete/Basic','sales_order')->setModel($sales_orders);
 			$form->addSubmit('Create');

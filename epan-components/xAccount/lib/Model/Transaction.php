@@ -28,7 +28,7 @@ class Model_Transaction extends \Model_Document{
 		$this->addField('Narration')->type('text');
 
 		$this->hasMany('xAccount/TransactionRow','transaction_id');
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
 	function createNewTransaction($transaction_type, $related_document=false, $transaction_date=null, $Narration=null){
@@ -81,7 +81,7 @@ class Model_Transaction extends \Model_Document{
 		// $this->senitizeTransaction();
 		
 		if(($msg=$this->isValidTransaction($this->dr_accounts,$this->cr_accounts, $this['transaction_type_id'])) !== true)
-			throw $this->exception('Transaction is Not Valid')->addMoreInfo('message',$msg);
+			throw $this->exception('Transaction is Not Valid ' .  $msg)->addMoreInfo('message',$msg);
 
 
 		$this->executeSingleBranch();
@@ -121,8 +121,8 @@ class Model_Transaction extends \Model_Document{
 	}
 
 	function isValidTransaction($DRs, $CRs, $transaction_type_id){
-		if(count($DRs) > 1 AND count($CRs) > 1)
-			return "Dr and Cr both have multiple accounts";
+		// if(count($DRs) > 1 AND count($CRs) > 1)
+		// 	return "Dr and Cr both have multiple accounts";
 
 		if(!count($DRs) or !count($CRs))
 			return "Either Dr or Cr accounts are not present. DRs =>".count($DRs). " and CRs =>".count($CRs);
