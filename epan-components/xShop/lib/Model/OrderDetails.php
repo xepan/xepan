@@ -37,7 +37,7 @@ class Model_OrderDetails extends \Model_Document{
 			return $m->refSQL('order_id')->fieldQuery('created_by_id');
 		});
 
-		$this->addExpression('item_with_qty_fields','custom_fields');
+		// $this->addExpression('item_with_qty_fields','custom_fields');
 
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');
 		$this->hasMany('xShop/SalesOrderDetailAttachment','related_document_id',null,'Attachements');
@@ -45,18 +45,18 @@ class Model_OrderDetails extends \Model_Document{
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
 		$this->addHook('afterInsert',$this);
-		$this->addHook('afterLoad',$this);
+		// $this->addHook('afterLoad',$this);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function afterLoad(){
-		if($this['custom_fields']){
-			$cf_array=json_decode($this['custom_fields'],true);
-			$qty_json = json_encode(array('stockeffectcustomfield'=>$cf_array['stockeffectcustomfield']));
-			$this['item_with_qty_fields'] = $this['item'] .' [' .$this->item()->genericRedableCustomFieldAndValue($qty_json) .']';
-		}
-	}
+	// function afterLoad(){
+	// 	if($this['custom_fields']){
+	// 		$cf_array=json_decode($this['custom_fields'],true);
+	// 		$qty_json = json_encode(array('stockeffectcustomfield'=>$cf_array['stockeffectcustomfield']));
+	// 		$this['item_with_qty_fields'] = $this['item'] .' [' .$this->item()->genericRedableCustomFieldAndValue($qty_json) .']';
+	// 	}
+	// }
 
 	function beforeSave(){
 
@@ -168,6 +168,7 @@ class Model_OrderDetails extends \Model_Document{
 		if($from_custom_fields){
 			$return_array=array();
 			$cf = json_decode($this['custom_fields'],true);
+			if(!$cf) return $return_array;
 			foreach ($cf as $dept_id => $cfvalues_array) {
 				if($dept_id == 'stockeffectcustomfield'){//check for the stockeffect customfields
 					$return_array[] = array('department_id'=>$dept_id,'department'=>'stockeffectcustomfield','status'=>'');

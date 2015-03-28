@@ -27,7 +27,7 @@ class Model_Users extends Model_Table {
 		$f = $this->addField('is_active')->type('boolean')->defaultValue(true)->group('c~6')->sortable(true);
 		$f->icon = "fa fa-exclamation~blue";
 
-		$f = $this->addField('user_management')->type('boolean')->defaultValue(false)->group('c~6')->display(array('grid'=>'wrap'));
+		$f = $this->addField('user_management')->type('boolean')->defaultValue(false)->group('c~6');
 		$f = $this->addField('general_settings')->type('boolean')->defaultValue(false)->group('c~6');
 		$f = $this->addField('application_management')->type('boolean')->defaultValue(false)->group('c~6');
 		$f = $this->addField('website_designing')->type('boolean')->defaultValue(false)->group('c~6');
