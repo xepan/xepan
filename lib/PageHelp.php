@@ -16,8 +16,8 @@ class PageHelp extends View{
 
 		$bs = $this->add('ButtonSet');
 		
-		$help=$bs->addButton('')->addClass('icon-help');
-		$guide=$bs->addButton('')->addClass('icon-eye');
+		$help=$bs->addButton('')->addClass('icon-help')->addStyle('width','10px')->addStyle('height','20px');
+		$guide=$bs->addButton('')->addClass('icon-eye')->addStyle('width','10px')->addStyle('height','20px');;
 		if(is_array($this->page)){
 			$pov = $this->add('View_Popover');
 			$view= $pov->add('View');
@@ -35,7 +35,7 @@ class PageHelp extends View{
 				$this->add('Controller_Guide',array('guide'=>$this->page));
 			}
 		}
-		$faq=$bs->addButton('')->addClass('icon-book');
+		$faq=$bs->addButton('')->addClass('icon-book')->addStyle('width','10px')->addStyle('height','20px');;
 
 		if($help->isClicked()){
 			$help->js()->univ()->successMessage('Hello')->execute();
