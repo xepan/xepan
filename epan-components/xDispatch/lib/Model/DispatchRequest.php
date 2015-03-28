@@ -124,8 +124,12 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$form->addField('text','shipping_address');
 		$form->addField('text','delivery_narration');
 		$form->addField('Checkbox','complete_on_receive');
-		// $form->addField('Checkbox','generate_invoice');
-		// $form->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'));
+		$form->addField('Checkbox','generate_invoice');
+		$form->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'));
+		$form->addField('DropDown','payment')->setValueList(array('credit'=>'Credit','cheque'=>'Bank Account/Cheque','cash'=>'Cash'));
+		$form->addField('line','cheque_no');
+		$form->addField('Datetime','chaque_date');
+		$form->addField('line','bank_account_no');
 		$form->addField('Checkbox','send_invoice_via_email');
 		$form->addField('line','email_to');
 
