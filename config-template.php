@@ -8,6 +8,8 @@ $config['js']['versions']['jquery']='1.8.2.min';
 $config['url_postfix']='';
 $config['url_prefix']='?page=';
 
+$config['autocreator']=false;
+
 //Enable SEF Url only if .htaccess file provided 
 $config['sef_url']=false;
 

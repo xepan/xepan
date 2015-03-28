@@ -12,6 +12,8 @@ class Model_PurchaseOrderItem extends \Model_Table{
 		
 		$this->addField('qty');
 		$this->addField('unit');
+		$this->addField('rate');
+		$this->addField('amount');
 		$this->addField('narration');
 		
 		$this->addField('custom_fields')->type('text');
@@ -19,7 +21,7 @@ class Model_PurchaseOrderItem extends \Model_Table{
 		$this->addHook('beforeSave',$this);
 
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

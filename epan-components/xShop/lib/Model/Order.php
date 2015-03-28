@@ -16,7 +16,7 @@ class Model_Order extends \Model_Document{
 
 		$this->hasOne('xShop/PaymentGateway','paymentgateway_id');
 		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->display(array('form'=>'autocomplete/Basic'))->caption('Terms & Cond.');
-		$this->hasOne('xShop/Priority','priority_id')->group('z~6')->mandatory(true)->defaultValue($this->add('xShop/Model_Priority')->addCondition('name','medium')->tryLoadAny()->get('id'));
+		$this->hasOne('xShop/Priority','priority_id')->group('z~6')->mandatory(true)->defaultValue($this->add('xShop/Model_Priority')->addCondition('name','Medium')->tryLoadAny()->get('id'));
 
 		$f = $this->hasOne('xShop/Customer','member_id')->group('a~3')->sortable(true)->display(array('form'=>'autocomplete/Plus'))->caption('Customer')->mandatory(true);
 		$f->icon = "fa fa-user~red";
@@ -70,7 +70,7 @@ class Model_Order extends \Model_Document{
 		
 		$this->addHook('beforeDelete',$this);
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 
@@ -232,7 +232,26 @@ class Model_Order extends \Model_Document{
 	}
 
 	function createInvoice($status='approved'){
+		$invoice = $this->add('xShop/Model_Invoice_Draft');
+		$invoice['sales_order_id'] = $this['id'];
+		$invoice['customer_id'] = $this->customer()->get('id');
+		$invoice['billing_address'] = $this['billing_address'];
+		$invoice->save();
+		
+		$invoice->relatedDocument($this);
 
+		$ois = $this->orderItems();
+		foreach ($ois as $oi) {
+			$invoice->addItem(
+					$oi->item(),
+					$oi['qty'],
+					$oi['rate'],
+					$oi['amount'],
+					$oi['unit'],
+					$oi['narration'],
+					$oi['custom_fields']
+				);					
+		}
 	}
 
 	function placeOrderFromQuotation($quotation_approved_id){
@@ -299,9 +318,13 @@ class Model_Order extends \Model_Document{
 		$form->addField('text','reason');
 		$form->addSubmit('reject');
 		if($form->isSubmitted()){
-			$this->setStatus('cancelled',$form['reason']);
+			$this->cancel($form['reason']);
 			return true;
 		}
+	}
+
+	function cancel($reason){
+		$this->setStatus('cancelled',$form['reason']);
 	}
 
 	function approve_page($page){

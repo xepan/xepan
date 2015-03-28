@@ -6,37 +6,25 @@ class Grid_PurchaseOrder extends \Grid {
 
 	function init(){
 		parent::init();
-		}
-	function setModel($m){
-		parent::setModel($m);
-
 		$self= $this;
+		$this->addSno();
 
-		$vp = $this->add('VirtualPage')->set(function($p)use($self){
-			$p->add('xPurchase/View_PurchaseOrder',array('purchaseorder'=>$self->add('xPurchase/Model_PurchaseOrder')->load($_GET['purchase_order_clicked'])));
+		$this->vp=$this->add('VirtualPage')->set(function($p)use($self){
+			$p->add('xPurchase/View_PurchaseOrder',array('purchaseorder'=>$p->add('xPurchase/Model_PurchaseOrder')->load($p->api->stickyGET('purchaseorder_clicked'))));
 		});
-		
-		$this->js(true)->find('tr')->css('cursor','pointer');
-		$this->on('click','tbody td:not(:has(button))',$this->js()->univ()->frameURL('Purchase Order',array($this->api->url($vp->getURL()),'purchase_order_clicked'=>$this->js()->_selectorThis()->closest('tr')->data('id'))));
+	}
+	
+	function format_view($field){
+		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('PurchaseOrder', $this->api->url($this->vp->getURL(),array('purchaseorder_clicked'=>$this->model->id))).'">'. $this->current_row[$field] ."</a>";
+	}
 
-		$this->addColumn('expander','purchase_order_item',array('page'=>'xPurchase_page_purchase_order_item'));
 
+	function setModel($purchase_order_model){
+		$m=parent::setModel($purchase_order_model,array('name','created_at','xpurchase_supplier'));
+		$this->addFormatter('name','view');
 
-	function setModel($model,$fields=null){
-
-		if($fields==null){
-			$fields = array( 'created_at','name'
-						// 'name','order_from','on_date','member',
-						// 'net_amount','last_action'
-						);
-		}
-
-		$m = parent::setModel($model,$fields);
-
-		$this->addPaginator(100);
-		$this->addQuickSearch(array('order_id'));
 		return $m;
-	}	
+	}
+	
 
-}
-}
+	}	

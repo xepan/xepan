@@ -19,7 +19,8 @@ class Model_Supplier extends \Model_Table{
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
 		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'))->sortable(true);
 
-		$this->hasMany('xPurchase/PurchaseOrder','xpurchase_supplier_id');
+		$this->hasMany('xPurchase/PurchaseOrder','supplier_id');
+		$this->hasMany('xPurchase/PurchaseInvoice','supplier_id');
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('afterInsert',$this);
 

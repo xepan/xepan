@@ -11,7 +11,7 @@ class Model_ItemCustomFieldAssos extends \Model_Table{
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
-		$this->hasOne('xShop/CustomFields','customfield_id');
+		$this->hasOne('xShop/CustomFields','customfield_id')->display(array('form'=>'autocomplete/Plus'));
 		$this->hasOne('xShop/Item','item_id');
 		$this->hasOne('xProduction/Phase','department_phase_id');
 
