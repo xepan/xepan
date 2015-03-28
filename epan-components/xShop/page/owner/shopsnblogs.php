@@ -22,6 +22,7 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 		$itemoffer_crud=$crud->addRef('xShop/ItemOffer',array('label'=>'Item Offers'));
 		if(!$crud->isEditing()){
 			$crud->grid->addColumn('expander','configuration',array("descr"=>"Configuration",'icon'=>'cog'));
+			$crud->grid->addColumn('expander','tax',array("descr"=>"Taxs",'icon'=>'money'));
 		}
 
 		$crud->grid->addQuickSearch(array('name'));
@@ -44,6 +45,12 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 
 	function page_shops_configuration(){
 		$this->page_blogs_configuration();
+	}
+	
+	function page_shops_tax(){
+		$tax = $this->add('xShop/Model_Tax');
+		$crud = $this->add('CRUD');
+		$crud->setModel($tax,array('name','value'));
 	}
 
 	function page_blogs_configuration(){
