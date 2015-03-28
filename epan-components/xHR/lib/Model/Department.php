@@ -71,7 +71,7 @@ class Model_Department extends \Model_Table{
 	}
 
 	function afterInsert($obj,$new_id){
-		$this->newInsatce()->load($new_id)->warehouse();
+		$this->newInstance()->load($new_id)->warehouse();
 	}
 
 	function beforeDelete($m){

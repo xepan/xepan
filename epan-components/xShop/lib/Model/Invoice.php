@@ -15,7 +15,9 @@ class Model_Invoice extends \Model_Document{
 	function init(){
 		parent::init();
 		
+		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
 		$this->hasOne('xShop/Customer','customer_id')->sortable(true);
+		$this->hasOne('xPurchase/Supplier','supplier_id')->sortable(true);
 		$this->hasOne('xShop/Model_Order','sales_order_id');
 		$this->hasOne('xPurchase/Model_PurchaseOrder','po_id')->caption('Purchase Order');
 		$this->addField('type')->enum(array('salesInvoice','purchaseInvoice'));
@@ -26,8 +28,7 @@ class Model_Invoice extends \Model_Document{
 		$this->addField('net_amount');
 		$this->addField('billing_address')->type('text');
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
-		$this->hasMany('xShop/OrderDetails','invoice_id');
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function netAmount(){

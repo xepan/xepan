@@ -78,7 +78,9 @@ class Model_Document extends SQL_Model{
 			$qty_json = json_encode(array('stockeffectcustomfield'=>$cf_array['stockeffectcustomfield']));
 			$this['item_name'] = $this['item'] .' [' .$this->item()->genericRedableCustomFieldAndValue($qty_json) .' ]';
 		}elseif($this->hasElement('item_id')){
-			$this['item_name'] ="load custom fields and remove column as well";
+			$this['item_name'] = $this['item'];
+		}else{
+			$this['item_name'] = $this['item'];
 		}
 	}
 
