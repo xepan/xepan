@@ -28,7 +28,7 @@ class Model_Transaction extends \Model_Document{
 		$this->addField('Narration')->type('text');
 
 		$this->hasMany('xAccount/TransactionRow','transaction_id');
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
 	function createNewTransaction($transaction_type, $related_document=false, $transaction_date=null, $Narration=null){
