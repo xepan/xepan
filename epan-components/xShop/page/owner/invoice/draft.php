@@ -4,6 +4,7 @@ class page_xShop_page_owner_invoice_draft extends page_xShop_page_owner_main{
 	function init(){
 		parent::init();
 
+
 		$from_saled_order_vp = $this->add('VirtualPage')->set(function($p){
 			
 			$sales_orders = $p->add('xShop/Model_Order');

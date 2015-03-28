@@ -9,7 +9,9 @@ class Model_PurchaseOrder extends \Model_Document{
 		parent::init();
 
 
-		$this->hasOne('xPurchase/Supplier','xpurchase_supplier_id')->sortable(true);
+		$this->hasOne('xPurchase/Supplier','supplier_id')->sortable(true);
+		$this->addField('name');
+		
 
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
 
@@ -112,6 +114,34 @@ class Model_PurchaseOrder extends \Model_Document{
 		}
 
 
+	}
+	function supplier(){
+		$this->ref('supplier_id');
+	}
+	function purchaseOrderItems(){
+		return $this->ref('xPurchase/PurchaseOrderItem');
+	}
+	function createInvoice($status='approved'){
+		$invoice = $this->add('xPurchase/Model_Invoice_Draft');
+		$invoice['supplier_id'] = $this->supplier()->get('id');
+		$invoice['purchase_order_id'] = $this['id'];
+		//$invoice['billing_address'] = $this['billing_address'];
+		$invoice->save();
+		
+		$invoice->relatedDocument($this);
+
+		$ois = $this->purchaseOrderItems();
+		foreach ($ois as $oi) {
+			$invoice->addItem(
+					$oi->item(),
+					$oi['qty'],
+					$oi['rate'],
+					$oi['amount'],
+					$oi['unit'],
+					$oi['narration'],
+					$oi['custom_fields']
+				);					
+		}
 	}
 	
 

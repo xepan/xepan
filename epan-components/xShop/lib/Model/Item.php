@@ -1,5 +1,4 @@
 <?php
-
 namespace xShop;
 
 class Model_Item extends \Model_Table{
@@ -102,6 +101,10 @@ class Model_Item extends \Model_Table{
 		$this->addField('meta_title');
 		$this->addField('meta_description')->type('text');
 		$this->addField('tags')->type('text')->PlaceHolder('Comma Separated Value');
+
+		//others
+		$this->addField('terms_condition')->type('text')->display(array('form'=>'RichText'));//->group('c~12');
+		
 		
 		$this->hasMany('xShop/CategoryItem','item_id');
 		$this->hasMany('xShop/ItemAffiliateAssociation','item_id');
@@ -130,7 +133,7 @@ class Model_Item extends \Model_Table{
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterInsert',$this);
 		$this->addHook('beforeDelete',$this);
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave($m){
