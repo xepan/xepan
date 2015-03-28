@@ -1,5 +1,6 @@
 <?php
 namespace xShop;
+
 class Model_SalesInvoice extends Model_Invoice{
 	public $root_document_name = 'xShop\SalesInvoice';
 
@@ -12,8 +13,6 @@ class Model_SalesInvoice extends Model_Invoice{
 		return $this->ref('customer_id');
 	}
 
-
-
 	function submit(){
 		$transaction = $this->add('xAccount/Model_Transaction');
 		$transaction->createNewTransaction('SALE_INVOICE',$this);
@@ -23,5 +22,6 @@ class Model_SalesInvoice extends Model_Invoice{
 		$transaction->addCreditAccount($this->add('xAccount/Model_Account')->loadDiscountAccount(),$this->discount());
 		$transaction->addCreditAccount($this->add('xAccount/Model_Account')->loadTaxAccount(),$this->discount());
 
+		$transaction->execute();
 	}
 }

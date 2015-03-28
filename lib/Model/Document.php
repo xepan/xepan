@@ -53,6 +53,8 @@ class Model_Document extends SQL_Model{
 		// 	echo "</pre>";
 		// }
 
+		$this->addExpression('item_name','"item_name"');
+
 		$this->addField('related_document_id')->system(true);
 		$this->addField('related_root_document_name')->system(true);
 		$this->addField('related_document_name')->system(true);
@@ -66,7 +68,18 @@ class Model_Document extends SQL_Model{
 
 		$this->addHook('beforeSave',array($this,'defaultBeforeSave'));
 		$this->addHook('afterInsert',array($this,'defaultAfterInsert'));
+		$this->addHook('afterLoad',array($this,'defaultAfterLoad'));
 
+	}
+
+	function defaultAfterLoad(){
+		if($this->hasElement('custom_fields') and $this['custom_fields']){
+			$cf_array=json_decode($this['custom_fields'],true);
+			$qty_json = json_encode(array('stockeffectcustomfield'=>$cf_array['stockeffectcustomfield']));
+			$this['item_name'] = $this['item'] .' [' .$this->item()->genericRedableCustomFieldAndValue($qty_json) .']';
+		}elseif($this->hasElement('item_id')){
+			$this['item_name'] ="load custom fields and remove column as well";
+		}
 	}
 
 	function defaultBeforeSave(){
