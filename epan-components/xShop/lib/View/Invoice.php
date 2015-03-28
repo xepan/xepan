@@ -9,6 +9,7 @@ class View_Invoice extends  \CompleteLister{
 		
 		$self = $this;
 		$this->vp = $this->add('VirtualPage')->set(function($p)use($self){
+			$p->api->stickyGET('sales_order_clicked');
 			$o = $p->add('xShop/Model_Order')->load($_GET['sales_order_clicked']);
 			$view_order = $p->add('xShop/View_Order');
 			$view_order->setModel($o);
@@ -21,7 +22,8 @@ class View_Invoice extends  \CompleteLister{
 		$this->template->setHtml('billing_address',$this->invoice['billing_address']);
 		$this->template->setHtml('mobile_no',$this->invoice->ref('customer_id')->get('mobile_number'));
 		$this->invoice['type']?$this->template->setHtml('type',"Invoice: <b>".ucwords($this->invoice['type'])."</b>"):"";
-		$this->invoice['sales_order']?$this->template->setHtml('sales_order_no',"Sales Order No: <b>".ucwords($this->invoice['sales_order'])."</b>"):"";
+		$this->invoice['sales_order']?$this->template->setHtml('sales_order_no',"Sales Order No: <b>".'<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Order '. $this->invoice['sales_order'], $this->api->url($this->vp->getURL(),array('sales_order_clicked'=>$this->invoice['sales_order_id']))).'">'.$this->invoice['sales_order']."</a></b>"):"";
+
 		$this->invoice['po']?$this->template->setHtml('po',"Purchase Order No: <b>".ucwords($this->invoice['po'])."</b>"):"";
 		
 		$this->setModel($this->invoice->itemrows());
