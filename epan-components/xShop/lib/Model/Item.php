@@ -51,6 +51,8 @@ class Model_Item extends \Model_Table{
 		$this->addField('is_template')->type('boolean')->defaultValue(false)->group('f~2');
 		$this->addField('is_enquiry_allow')->type('boolean')->group('f~2');
 		$this->addField('is_attachment_allow')->type('boolean')->group('f~2');
+		$this->addField('is_fixed_assest')->type('boolean')->group('f~2');
+		$this->addField('warrenty_days')->type('int')->group('f~2');
 		
 		//Item Display Options
 		$this->addField('show_detail')->type('boolean')->defaultValue(true)->group('g~2~Item Display Options');

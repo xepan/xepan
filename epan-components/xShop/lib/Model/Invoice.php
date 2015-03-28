@@ -20,7 +20,6 @@ class Model_Invoice extends \Model_Document{
 		$this->hasOne('xPurchase/Supplier','supplier_id')->sortable(true);
 		$this->hasOne('xShop/Model_Order','sales_order_id');
 		$this->hasOne('xPurchase/Model_PurchaseOrder','po_id')->caption('Purchase Order');
-
 		$this->addField('type')->enum(array('salesInvoice','purchaseInvoice'));
 		$this->addField('name')->caption('Invoice No');
 		$this->addField('total_amount');

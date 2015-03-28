@@ -21,6 +21,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		$this->hasOne('xShop/Order','order_id');
 		$this->hasOne('xShop/Item_Saleable','item_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
+		$this->hasOne('xShop/Invoice','invoice_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
 
 		$this->addField('qty')->group('b~3~Order Details')->mandatory(true);
 		// $this->addField('unit')->group('b~3');
@@ -47,7 +48,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->addHook('afterInsert',$this);
 		// $this->addHook('afterLoad',$this);
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	// function afterLoad(){
