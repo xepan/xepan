@@ -3,6 +3,8 @@ class page_xAccount_page_owner_daybook extends page_xAccount_page_owner_main{
 	function init(){
 		parent::init();
 		
+		$this->app->title=$this->api->current_department['name'] .': DayBook';
+
 		$form = $this->add('Form');
 		$form->addField('DatePicker','date')->validateNotNull();
 		$form->addSubmit('Open Day Book');

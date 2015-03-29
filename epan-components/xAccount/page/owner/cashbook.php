@@ -3,6 +3,8 @@ class page_xAccount_page_owner_cashbook extends page_xAccount_page_owner_main{
 	function init(){
 		parent::init();
 		
+		$this->app->title=$this->api->current_department['name'] .': CashBook';
+
 		$form = $this->add('Form');
 		$form->addField('DatePicker','from_date')->validateNotNull();
 		$form->addField('DatePicker','to_date')->validateNotNull();
