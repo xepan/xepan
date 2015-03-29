@@ -140,8 +140,6 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$grid->addSelectable($include_field);
 		
 		//Get the Order of DispatchRequest
-
-
 		$form->addSubmit('Dispatch the Order');
 
 		$p->add('H3')->set('Items Delivered');
