@@ -212,7 +212,7 @@ class page_base_owner extends Page {
 		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xAccounts')->tryLoadAny()->get('id'))){
 			$accounts_m = $m->addMenu('Accounts');
 			$dept_model->loadAccounts();
-			$accounts_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			// $accounts_m->addItem(array('Balance Sheet','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_balancesheet',array('department_id'=>$dept_model->id)));
 			// $accounts_m->addItem(array('Group','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_group',array('department_id'=>$dept_model->id)));
 			$accounts_m->addItem(array('Payment Paid','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_amtpaid',array('department_id'=>$dept_model->id)));
@@ -226,10 +226,13 @@ class page_base_owner extends Page {
 			$accounts_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
 			$this->shorcut_menus[]=array("page"=>"Accounts Dashboard","url"=>$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Accounts Balance Sheet","url"=>$this->api->url('xAccounts_page_owner_balancesheet',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Accounts Group","url"=>$this->api->url('xAccount_page_owner_group',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Accounts Account","url"=>$this->api->url('xAccount_page_owner_account',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Accounts Transaction","url"=>$this->api->url('xAccount_page_owner_transaction',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Payment Paid","url"=>$this->api->url('xAccount_page_owner_amtpaid',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Payment Received","url"=>$this->api->url('xAccount_page_owner_amtreceived',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array('keys'=>'Cash bank and withdraw deposit',"page"=>"Cash And Bank","url"=>$this->api->url('xAccount_page_owner_contra',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Account Statement","url"=>$this->api->url('xAccount_page_owner_acstatement',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Cash Book","url"=>$this->api->url('xAccount_page_owner_cashbook',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Day Book","url"=>$this->api->url('xAccount_page_owner_daybook',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Ledgers","url"=>$this->api->url('xAccount_page_owner_ledgers',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Accounts Material Request","url"=>$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Accounts Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Accounts Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
