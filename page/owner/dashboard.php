@@ -4,10 +4,10 @@ class page_owner_dashboard extends page_base_owner {
 	function init() {
 		parent::init();
 
-		$this->app->layout->add('PageHelp',array('page'=>'main_dashboard'),'guide_block');
+		// $this->app->layout->add('PageHelp',array('page'=>'main_dashboard'),'guide_block');
 		$this->app->title="xEpan CMS" .': Dashboard';
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-bullhorn"></i> DashBoard <small> xEpan, Smart business assistant</small>');
 		$this->app->layout->add( 'H3' )->setHTML('<i class="fa fa-dashboard"></i> '. strtoupper($this->api->current_website['name']) . " Dashboard <small>One shot view for your Website/Application</small>" );
-
 
 		$main_cols = $this->app->layout->add('Columns');
 		$app_dash = $main_cols->addColumn(8);
