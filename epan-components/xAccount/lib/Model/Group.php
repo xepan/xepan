@@ -121,7 +121,7 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadExpenses()->fieldquery('id'));
 		$this->addCondition('name','Direct Expenses')
 			->tryLoadAny();
-		return $this;	
+		return $this;
 	}
 
 	function isDirectExpenses(){
