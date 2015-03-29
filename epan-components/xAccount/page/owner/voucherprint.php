@@ -20,7 +20,7 @@ class page_xAccount_page_owner_voucherprint extends page_xAccount_page_owner_mai
 				$m->load($p->api->stickyGET('document_id'));
 
 				$v_class = explode("\\", $related_root_document_name);
-				$v_class=$m_class[0].'/View_'.$m_class[1];
+				$v_class=$v_class[0].'/View_'.$v_class[1];
 				echo $v_class;
 
 				$model_field = $array[$related_root_document_name];
@@ -41,6 +41,8 @@ class page_xAccount_page_owner_voucherprint extends page_xAccount_page_owner_mai
 			$right->add('View')
 				->setElement('a')
 				->set(array($transaction->relatedDocument()->get('name'),'icon'=>'export'))
+				->setAttr('href','#xepan')
+
 				->js('click',$this->js()->univ()->frameURL($transaction->relatedDocument()->get('name'), $this->api->url($this->vp->getURL(),array('root_document_name'=>$transaction['related_root_document_name'],'document_id'=>$transaction['related_document_id'])) ));
 
 			$grid=$this->add('Grid');
