@@ -214,8 +214,11 @@ class page_base_owner extends Page {
 			$dept_model->loadAccounts();
 			$accounts_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			// $accounts_m->addItem(array('Balance Sheet','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_balancesheet',array('department_id'=>$dept_model->id)));
-			$accounts_m->addItem(array('Group','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_group',array('department_id'=>$dept_model->id)));
-			$accounts_m->addItem(array('Account Ledgers','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_account',array('department_id'=>$dept_model->id)));
+			// $accounts_m->addItem(array('Group','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_group',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Payment Paid','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_amtpaid',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Payment Received','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_amtreceived',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Account Statement','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_acstatement',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Cash Book','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_cashbook',array('department_id'=>$dept_model->id)));
 			$accounts_m->addItem(array('Day Book','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_daybook',array('department_id'=>$dept_model->id)));
 			$accounts_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$accounts_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));

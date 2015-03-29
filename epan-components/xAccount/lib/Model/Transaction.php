@@ -24,7 +24,9 @@ class Model_Transaction extends \Model_Document{
 		parent::init();
 		$this->hasOne('xAccount/TransactionType','transaction_type_id');
 		$this->addField('name')->caption('Voucher No');
-		$this->addExpression('voucher_no','name');
+		$this->addExpression('voucher_no')->set(function ($m,$q){
+			return $q->getField('name');
+		});
 		 
 		$this->addField('Narration')->type('text');
 

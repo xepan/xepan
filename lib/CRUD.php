@@ -7,4 +7,23 @@ class CRUD extends View_CRUD{
 		parent::setModel($model,$f,$f2);
 		$this->add('Controller_FormBeautifier');
 	}
+
+	function formSubmit($form){
+		try {
+			$hook_value = $this->hook('crud_form_submit',array($form));
+			if($hook_value[0]){
+	            $self = $this;
+	            $this->api->addHook('pre-render', function () use ($self) {
+	                $self->formSubmitSuccess()->execute();
+	            });
+				return parent::formSubmit($form);
+				// return;	
+			}else{
+				// return parent::formSubmit($form);
+			}
+        } catch (Exception_ValidityCheck $e) {
+            $form->displayError($e->getField(), $e->getMessage());
+        }
+		return false;		
+	}
 }

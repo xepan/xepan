@@ -77,11 +77,13 @@ class Model_SalesInvoice extends Model_Invoice{
 		$form = $p->add('Form_Stacked');
 		$form->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
 		$form->addField('Money','amount');
+		$form->addField('line','bank_account_detail');
 		$form->addField('line','cheque_no');
-		$form->addField('Date','cheque_date');
-		$form->addField('line','bank_account_no');
+		$form->addField('DatePicker','cheque_date');
 		$form->addField('Checkbox','send_invoice_via_email');
 		$form->addField('line','email_to');
+
+
 
 		$form->addSubmit('PayNow');
 
@@ -97,8 +99,8 @@ class Model_SalesInvoice extends Model_Invoice{
 						if(!$form['cheque_date'])
 							$form->displayError('cheque_date','Date Canot be Empty.');
 
-						if(trim($form['bank_account_no']) == "")
-							$form->displayError('bank_account_no','Account Number Cannot  be Null');
+						if(trim($form['bank_account_detail']) == "")
+							$form->displayError('bank_account_detail','Account Number Cannot  be Null');
 					break;
 
 					default:
@@ -107,13 +109,15 @@ class Model_SalesInvoice extends Model_Invoice{
 					break;
 				}
 				
-				if($form['payment'] == "cash")
+				if($form['payment'] == "cash"){					
 					$invoice->payViaCash($form['amount']);
-				
-				if($form['payment'] == "cheque")
-					$invoice->payViaCheque($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_no'],$self_bank_account);
+				}
+				elseif($form['payment'] == "cheque"){
+					$invoice->payViaCheque($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_detail'],$self_bank_account=null);
+				}
 			}
 
+			return true;
 
 		}
 		

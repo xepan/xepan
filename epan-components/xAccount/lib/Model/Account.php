@@ -97,6 +97,42 @@ class Model_Account extends \Model_Document{
 		$this->hook('afterAccountCredited',array($amount));
 	}
 
+	function getOpeningBalance($on_date=null,$side='both',$forPandL=false) {
+		if(!$on_date) $on_date = '1970-01-02';
+		if(!$this->loaded()) throw $this->exception('Model Must be loaded to get opening Balance','Logic');
+		
+
+		$transaction_row=$this->add('xAccount/Model_TransactionRow');
+		$transaction_join=$transaction_row->join('xaccount_transaction.id','transaction_id');
+		$transaction_join->addField('transaction_date','created_at');
+		$transaction_row->addCondition('transaction_date','<',$on_date);
+		$transaction_row->addCondition('account_id',$this->id);
+
+		if($forPandL){
+			$financial_start_date = $this->api->getFinancialYear($on_date,'start');
+			$transaction_row->addCondition('created_at','>=',$financial_start_date);
+		}
+
+		$transaction_row->_dsql()->del('fields')->field('SUM(amountDr) sdr')->field('SUM(amountCr) scr');
+		$result = $transaction_row->_dsql()->getHash();
+
+		if($this['OpeningBalanceCr'] ==null){
+			$temp_account = $this->add('xAccount/Model_Account')->load($this->id);
+			$this['OpeningBalanceCr'] = $temp_account['OpeningBalanceCr'];
+			$this['OpeningBalanceDr'] = $temp_account['OpeningBalanceDr'];
+		}
+
+		$cr = $result['scr'];
+		if(!$forPandL) $cr = $cr + $this['OpeningBalanceCr'];
+		if(strtolower($side) =='cr') return $cr;
+
+		$dr = $result['sdr'];		
+		if(!$forPandL) $dr = $dr + $this['OpeningBalanceDr'];
+		if(strtolower($side) =='dr') return $dr;
+
+		return array('CR'=>$cr,'DR'=>$dr,'cr'=>$cr,'dr'=>$dr,'Cr'=>$cr,'Dr'=>$dr);
+	}
+
 	function loadDefaultSalesAccount(){
 		$this->addCondition('name','Sales Account');
 		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadDirectIncome()->get('id'));
@@ -145,5 +181,17 @@ class Model_Account extends \Model_Document{
 		}
 
 		return $this;
-	}	
+	}
+
+	function loadDefaultBankAccount(){
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadBankAccounts()->fieldQuery('id'));
+		$this->tryLoadAny();
+
+		if(!$this->loaded()){
+			$this['name']='Your Default Bank Account';
+			$this->save();
+		}
+
+		return $this;
+	}
 }

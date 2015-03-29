@@ -614,8 +614,9 @@ class Controller_Acl extends \AbstractController {
 		if($string and !$new_only){
 			$out="";
 			if($new_doc_count)
-			$out .= "<span class='label label-danger'>$new_doc_count</span>";
-			$out .= "<span class='label label-default'>$total_doc_count</span>";
+				$out .= "<span class='label label-danger'>$new_doc_count</span>";
+			if($total_doc_count)
+				$out .= "<span class='label label-default'>$total_doc_count</span>";
 			return $out;
 		}
 
