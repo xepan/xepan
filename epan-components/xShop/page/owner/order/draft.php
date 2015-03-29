@@ -6,24 +6,28 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 		$crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_Order','add_form_beautifier'=>false));
 		
 		$crud->addHook('crud_form_submit',function($crud,$form){
-			$order = $crud->model;				
+			$order = $crud->model;
 			//CHECK FOR GENERATE INVOICE
 			if($form['payment']){
 				switch ($form['payment']) {
 					case 'cheque':
+						if(trim($form['amount']) == "")
+							$form->displayError('amount','Amount Cannot be Null');
+
+						if(trim($form['bank_account_detail']) == "")
+							$form->displayError('bank_account_detail','Account Number Cannot  be Null');
+						
 						if(trim($form['cheque_no']) =="")
 							$form->displayError('cheque_no','Cheque Number not valid.');
 
 						if(!$form['cheque_date'])
 							$form->displayError('cheque_date','Date Canot be Empty.');
 
-						if(trim($form['bank_account_detail']) == "")
-							$form->displayError('bank_account_detail','Account Number Cannot  be Null');
 					break;
 
-					default:
-						if(trim($form['amount']) == "")
-							$form->displayError('amount','Amount Cannot be Null');
+					case 'cash':
+						if(trim($form['amount']) == "" or $form['amount'] == 0)
+							$form->displayError('amount','Amount Cannot be Null');						
 					break;
 				}
 				
