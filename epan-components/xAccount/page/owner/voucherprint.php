@@ -37,13 +37,15 @@ class page_xAccount_page_owner_voucherprint extends page_xAccount_page_owner_mai
 			$right=$cols->addColumn(4);
 
 			$left->add('View')->set(array('Transaction Date : ' . $transaction['created_at'],'icon'=>'calendar'));
-			$mid->add('View')->set(array($transaction['transaction_type'],'icon'=>'check'));
-			$right->add('View')
-				->setElement('a')
-				->set(array($transaction->relatedDocument()->get('name'),'icon'=>'export'))
-				->setAttr('href','#xepan')
-
-				->js('click',$this->js()->univ()->frameURL($transaction->relatedDocument()->get('name'), $this->api->url($this->vp->getURL(),array('root_document_name'=>$transaction['related_root_document_name'],'document_id'=>$transaction['related_document_id'])) ));
+			$mid->add('View')->set(array($transaction['transaction_type'],'icon'=>'check'))->addClass('text-center');
+			
+			if(!$transaction->relatedDocument() instanceof \Dummy){
+				$right->add('View')
+					->setElement('a')
+					->set(array($transaction->relatedDocument()->get('name'),'icon'=>'export'))
+					->setAttr('href','#xepan')
+					->js('click',$this->js()->univ()->frameURL($transaction->relatedDocument()->get('name'), $this->api->url($this->vp->getURL(),array('root_document_name'=>$transaction['related_root_document_name'],'document_id'=>$transaction['related_document_id'])) ));				
+			}
 
 			$grid=$this->add('Grid');
 			$grid->setModel($transaction->ref('xAccount/TransactionRow')->setOrder('amountDr desc, amountCr desc'),array('account','amountDr','amountCr'));
