@@ -24,11 +24,12 @@ class Model_Transaction extends \Model_Document{
 		parent::init();
 		$this->hasOne('xAccount/TransactionType','transaction_type_id');
 		$this->addField('name')->caption('Voucher No');
+		$this->addExpression('voucher_no','name');
 		 
 		$this->addField('Narration')->type('text');
 
 		$this->hasMany('xAccount/TransactionRow','transaction_id');
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
 	function createNewTransaction($transaction_type, $related_document=false, $transaction_date=null, $Narration=null){

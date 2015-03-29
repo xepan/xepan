@@ -20,6 +20,6 @@ class Model_Email extends \Model_Document{
 		$this->addField('message')->type('text');
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id');
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 }

@@ -21,9 +21,12 @@ class Model_SalesInvoice extends Model_Invoice{
 		$transaction = $this->add('xAccount/Model_Transaction');
 		$transaction->createNewTransaction('SALES INVOICE', $this, $transaction_date=$this['created_at'], $Narration=null);
 
+		// echo $salesLedger . ' ' . $this['total_amount'] ' <br/>';
 		$transaction->addCreditAccount($salesLedger,$this['total_amount']);
+		// echo $taxLedger . ' ' . $this['tax'] ' <br/>';
 		$transaction->addCreditAccount($taxLedger,$this['tax']);
 		
+		// echo $discountLedger . ' ' . $this['discount'] ' <br/>';
 		$transaction->addDebitAccount($discountLedger,$this['discount']);
 		$transaction->addDebitAccount($this->customer()->account(),$this['net_amount']);
 

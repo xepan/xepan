@@ -14,6 +14,7 @@ class Model_Account extends \Model_Document{
 		$this->hasOne('xShop/Customer','customer_id');
 		$this->hasOne('xHR/Model_Employee','employee_id');
 		$this->hasOne('xAccount/Group','group_id')->mandatory(true);
+		
 		$this->addField('name')->mandatory(true);
 		$this->addField('account_type');
 		$this->addField('AccountDisplayName')->caption('Account Displ. Name');
@@ -56,7 +57,7 @@ class Model_Account extends \Model_Document{
 
 	function debitWithTransaction($amount,$transaction_id,$no_of_accounts_in_side=null){
 
-		$transaction_row=$this->add('Model_TransactionRow');
+		$transaction_row=$this->add('xAccount/Model_TransactionRow');
 		$transaction_row['amountDr']=$amount;
 		$transaction_row['side']='DR';
 		$transaction_row['transaction_id']=$transaction_id;
@@ -69,7 +70,7 @@ class Model_Account extends \Model_Document{
 
 	function creditWithTransaction($amount,$transaction_id,$only_transaction=null,$no_of_accounts_in_side=null){
 
-		$transaction_row=$this->add('Model_TransactionRow');
+		$transaction_row=$this->add('xAccount/Model_TransactionRow');
 		$transaction_row['amountCr']=$amount;
 		$transaction_row['side']='CR';
 		$transaction_row['transaction_id']=$transaction_id;

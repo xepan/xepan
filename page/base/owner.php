@@ -213,10 +213,10 @@ class page_base_owner extends Page {
 			$accounts_m = $m->addMenu('Accounts');
 			$dept_model->loadAccounts();
 			$accounts_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-			$accounts_m->addItem(array('Balance Sheet','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_balancesheet',array('department_id'=>$dept_model->id)));
+			// $accounts_m->addItem(array('Balance Sheet','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_balancesheet',array('department_id'=>$dept_model->id)));
 			$accounts_m->addItem(array('Group','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_group',array('department_id'=>$dept_model->id)));
-			$accounts_m->addItem(array('Account','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_account',array('department_id'=>$dept_model->id)));
-			$accounts_m->addItem(array('Transaction','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_transaction',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Account Ledgers','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_account',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Day Book','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_daybook',array('department_id'=>$dept_model->id)));
 			$accounts_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$accounts_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 

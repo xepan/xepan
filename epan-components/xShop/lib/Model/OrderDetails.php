@@ -48,7 +48,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->addHook('afterInsert',$this);
 		// $this->addHook('afterLoad',$this);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	// function afterLoad(){

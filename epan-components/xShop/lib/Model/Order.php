@@ -35,9 +35,10 @@ class Model_Order extends \Model_Document{
 		$this->addField('order_from')->enum(array('online','offline'))->defaultValue('offline');
 		$f = $this->getElement('status')->group('a~2');
 
-		$f = $this->addField('amount')->mandatory(true)->group('b~3~<i class="fa fa-money"></i> Order Amount')->sortable(true);
+		$f = $this->addField('total_amount')->mandatory(true)->group('b~3~<i class="fa fa-money"></i> Order Amount')->sortable(true);
 		$f = $this->addField('discount_voucher')->group('b~3');
 		$f = $this->addField('discount_voucher_amount')->group('b~3');
+		$f = $this->addField('tax')->group('b~3');
 		$f = $this->addField('net_amount')->mandatory(true)->group('b~3')->sortable(true);
 
 		$f = $this->addField('billing_address')->mandatory(true)->group('x~6~<i class="fa fa-map-marker"> Address</i>');
@@ -246,6 +247,10 @@ class Model_Order extends \Model_Document{
 			$invoice['sales_order_id'] = $this['id'];
 			$invoice['customer_id'] = $this->customer()->get('id');
 			$invoice['billing_address'] = $this['billing_address'];
+			$invoice['total_amount'] = $this['total_amount'];
+			$invoice['discount'] = $this['discount_voucher_amount'];
+			$invoice['tax'] = $this['tax'];
+			$invoice['net_amount'] = $this['net_amount'];
 			$invoice->save();
 			
 			$invoice->relatedDocument($this);
@@ -266,7 +271,7 @@ class Model_Order extends \Model_Document{
 			$this->api->db->commit();
 			return $invoice;
 		}catch(\Exception $e){
-			echo $e->getMessage();
+			echo $e->getHTML();
 			$this->api->db->rollback();
 			if($this->api->getConfig('developer_mode',false))
 				throw $e;

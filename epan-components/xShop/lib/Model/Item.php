@@ -51,7 +51,7 @@ class Model_Item extends \Model_Table{
 		$this->addField('is_template')->type('boolean')->defaultValue(false)->group('f~2');
 		$this->addField('is_enquiry_allow')->type('boolean')->group('f~2');
 		$this->addField('is_attachment_allow')->type('boolean')->group('f~2');
-		$this->addField('is_fixed_assest')->type('boolean')->group('f~2');
+		$this->addField('is_fixed_asset')->type('boolean')->group('f~2');
 		$this->addField('warrenty_days')->type('int')->group('f~2');
 		
 		//Item Display Options
@@ -135,7 +135,7 @@ class Model_Item extends \Model_Table{
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterInsert',$this);
 		$this->addHook('beforeDelete',$this);
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave($m){
