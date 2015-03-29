@@ -20,7 +20,7 @@ class Model_Order extends \Model_Document{
 
 		$f = $this->hasOne('xShop/Customer','member_id')->group('a~3')->sortable(true)->display(array('form'=>'autocomplete/Plus'))->caption('Customer')->mandatory(true);
 		$f->icon = "fa fa-user~red";
-		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3')->sortable(true)->defaultValue(rand(1000,9999));
+		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3')->sortable(true);
 		$f = $this->addField('email')->group('a~3')->sortable(true);
 		$f = $this->addField('mobile')->group('a~3')->sortable(true);
 	

@@ -27,8 +27,11 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 					break;
 				}
 				
-				if($form['payment'] == "cash")
-					$order->cashAdvance($form['amount']);
+				if($form['payment'] == "cash"){
+					$form->model->addHook('afterSave',function($m)use($form){
+						$m->cashAdvance($form['amount']);
+					});
+				}
 				
 				if($form['payment'] == "cheque")
 					$order->bankAdvance($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_detail'],$self_bank_account=null);
@@ -59,7 +62,7 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 		
 		if($crud->isEditing('add') OR $crud->isEditing('edit')){
 			$o = $form->add('Order');
-			$o->move('payment','after','termsandcondition_id');
+			$o->move('payment','last');
 			$o->move('amount','last');
 			$o->move('bank_account_detail','last');
 			$o->move('cheque_no','last');

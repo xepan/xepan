@@ -5,6 +5,14 @@ namespace xShop;
 class View_Order extends \View{
 
 	public $show_price = true;
+	public $order=null;
+
+	function init(){
+		parent::init();
+
+		if($this->order)
+			$this->setModel($this->order);
+	}
 
 	function setModel($model){
 		

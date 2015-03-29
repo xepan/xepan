@@ -6,7 +6,7 @@ class CRUD extends View_CRUD{
 
 	function setModel($model,$f=null,$f2=null){
 		parent::setModel($model,$f,$f2);
-		if($this->add_form_beautifier)
+		// if($this->add_form_beautifier)
 			$this->add('Controller_FormBeautifier');
 	}
 
@@ -21,7 +21,7 @@ class CRUD extends View_CRUD{
 				return parent::formSubmit($form);
 				// return;	
 			}else{
-				// return parent::formSubmit($form);
+				return parent::formSubmit($form);
 			}
         } catch (Exception_ValidityCheck $e) {
             $form->displayError($e->getField(), $e->getMessage());

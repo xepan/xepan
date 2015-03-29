@@ -64,7 +64,7 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 
 	function recursiveRender(){
 		if($this->show_custom_fields){
-			// $this->owner->getElement($this->custom_field_element)->js(true)->closest('.atk-form-row')->hide();
+			$this->owner->getElement($this->custom_field_element)->js(true)->closest('.atk-form-row')->hide();
 			$this->manageCustomFields();
 		}
 
