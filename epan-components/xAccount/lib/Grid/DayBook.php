@@ -16,6 +16,7 @@ class Grid_DayBook extends Grid_AccountsBase{
 			$this->current_row[$field]=$this->model->get('Narration');
 		else{
 			$this->voucher_no=$this->model->get('voucher_no');
+			$this->current_row[$field] = $this->voucher_no . ' [ '. $this->model['transaction_type'] .' ]';
 		}
 		parent::format_voucherNo($field);
 	}

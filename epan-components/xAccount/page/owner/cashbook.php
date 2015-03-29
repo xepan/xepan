@@ -10,7 +10,7 @@ class page_xAccount_page_owner_cashbook extends page_xAccount_page_owner_main{
 		$form->addField('DatePicker','to_date')->validateNotNull();
 		$form->addSubmit('Open Cash Book');
 
-		$grid = $this->add('xAccount/Grid_DayBook');
+		$grid = $this->add('xAccount/Grid_AccountsBase');
 
 		$cash_transaction_model = $this->add('xAccount/Model_Transaction');
 		$transaction_row=$cash_transaction_model->join('xaccount_transaction_row.transaction_id');
@@ -49,8 +49,9 @@ class page_xAccount_page_owner_cashbook extends page_xAccount_page_owner_main{
 			$cash_transaction_model->addCondition('id',-1);
 		}
 
-		$grid->setModel($cash_transaction_model,array('voucher_no','created_at','Narration','account','amountDr','amountCr'));
+		$grid->setModel($cash_transaction_model,array('voucher_no','transaction_type','created_at','Narration','account','amountDr','amountCr'));
 		$grid->addSno();
+		$grid->removeColumn('account');
 
 		// $grid->addTotals(array('amountCr','amountDr'));
 

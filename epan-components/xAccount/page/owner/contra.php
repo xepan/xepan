@@ -30,7 +30,7 @@ class page_xAccount_page_owner_contra extends page_xAccount_page_owner_main {
 
 		if($cash_to_bank_form->isSUbmitted()){
 			$transaction = $this->add('xAccount/Model_Transaction');
-			$transaction->createNewTransaction('CASH TO BANK', null , $transaction_date=$this->api->today, $Narration=null);
+			$transaction->createNewTransaction('CASH TO BANK', null , $transaction_date=$this->api->now, $Narration=null);
 
 			$bank_account_model = $this->add('xAccount/Model_Account')->load($cash_to_bank_form['to_bank_account']);
 
@@ -69,7 +69,7 @@ class page_xAccount_page_owner_contra extends page_xAccount_page_owner_main {
 
 		if($bank_to_cash_form->isSUbmitted()){
 			$transaction = $this->add('xAccount/Model_Transaction');
-			$transaction->createNewTransaction('CASH WITHDRAW', null , $transaction_date=$this->api->today, $Narration=null);
+			$transaction->createNewTransaction('CASH WITHDRAW', null , $transaction_date=$this->api->now, $Narration=null);
 
 			$bank_account_model = $this->add('xAccount/Model_Account')->load($bank_to_cash_form['from_bank_account']);
 

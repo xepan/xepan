@@ -16,6 +16,7 @@ class Model_TransactionRow extends \Model_Table{
 		$this->addExpression('created_at')->set($this->refSQL('transaction_id')->fieldQuery('created_at'));
 		$this->addExpression('voucher_no')->set($this->refSQL('transaction_id')->fieldQuery('voucher_no'));
 		$this->addExpression('Narration')->set($this->refSQL('transaction_id')->fieldQuery('Narration'));
+		$this->addExpression('transaction_type')->set($this->refSQL('transaction_id')->fieldQuery('transaction_type'));
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}

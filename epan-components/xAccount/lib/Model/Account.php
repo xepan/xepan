@@ -170,6 +170,10 @@ class Model_Account extends \Model_Document{
 		return $this;
 	}
 
+	function loadCashAccounts(){
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadCashAccount()->fieldQuery('id'));
+		return $this;
+	}
 
 	function loadDefaultCashAccount(){
 		$this->addCondition('name','Cash Account');

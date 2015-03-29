@@ -60,7 +60,7 @@ class page_xAccount_page_owner_acstatement extends page_xAccount_page_owner_main
 		}
 
 		$transactions->setOrder('created_at');
-		$grid->setModel($transactions,array('voucher_no','created_at','Narration','amountDr','amountCr'));
+		$grid->setModel($transactions,array('voucher_no','transaction_type','created_at','Narration','amountDr','amountCr'));
 		// $grid->addPaginator(10);
 
 		$grid->addSno();
