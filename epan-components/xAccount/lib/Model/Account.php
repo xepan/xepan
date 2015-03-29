@@ -135,7 +135,7 @@ class Model_Account extends \Model_Document{
 
 	function loadDefaultSalesAccount(){
 		$this->addCondition('name','Sales Account');
-		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadDirectIncome()->get('id'));
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadDirectIncome()->fieldQuery('id'));
 		$this->tryLoadAny();
 
 		if(!$this->loaded()){
@@ -147,7 +147,7 @@ class Model_Account extends \Model_Document{
 
 	function loadDefaultTaxAccount(){
 		$this->addCondition('name','Tax Account');
-		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadDutiesAndTaxes()->get('id'));
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadDutiesAndTaxes()->fieldQuery('id'));
 		$this->tryLoadAny();
 
 		if(!$this->loaded()){
@@ -160,7 +160,7 @@ class Model_Account extends \Model_Document{
 
 	function loadDefaultDiscountAccount(){
 		$this->addCondition('name','Discount Given');
-		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadDirectExpenses()->get('id'));
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadDirectExpenses()->fieldQuery('id'));
 		$this->tryLoadAny();
 
 		if(!$this->loaded()){
@@ -173,7 +173,7 @@ class Model_Account extends \Model_Document{
 
 	function loadDefaultCashAccount(){
 		$this->addCondition('name','Cash Account');
-		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadCashAccount()->get('id'));
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadCashAccount()->fieldQuery('id'));
 		$this->tryLoadAny();
 
 		if(!$this->loaded()){
@@ -183,12 +183,29 @@ class Model_Account extends \Model_Document{
 		return $this;
 	}
 
+	function loadBankAccounts(){
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadBankAccounts()->fieldQuery('id'));
+		return $this;
+	}
+
 	function loadDefaultBankAccount(){
 		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadBankAccounts()->fieldQuery('id'));
 		$this->tryLoadAny();
 
 		if(!$this->loaded()){
 			$this['name']='Your Default Bank Account';
+			$this->save();
+		}
+
+		return $this;
+	}
+
+	function loadDefaultBankChargesAccount(){
+		$this->addCondition('name','Bank Charges');
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadIndirectExpenses()->fieldQuery('id'));
+		$this->tryLoadAny();
+
+		if(!$this->loaded()){
 			$this->save();
 		}
 
