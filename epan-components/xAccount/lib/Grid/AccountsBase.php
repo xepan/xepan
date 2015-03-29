@@ -8,29 +8,9 @@ class Grid_AccountsBase extends \Grid{
 	public $opening_balance = 0;
 	public $current_row_balance = 0;
 
-	public $voucher_vp;
 	function init(){
 		parent::init();
 		$this->order = $this->addOrder();
-
-		$this->voucher_vp = $this->add('VirtualPage')->set(function($p){
-			$this->api->stickyGET('transaction_id');
-
-			$transaction = $this->add('Model_Transaction');
-			$transaction->load($_GET['transaction_id']);
-
-			$cols= $this->add('Columns');
-			$left=$cols->addColumn(6);
-			$right=$cols->addColumn(6);
-
-			$left->add('View')->set(array('Transaction Date : ' . $transaction['created_at'],'icon'=>'calendar'));
-			$right->add('View')->set(array($transaction['transaction_type'],'icon'=>'check'));
-			$grid=$this->add('Grid');
-			$grid->setModel($transaction->ref('TransactionRow')->setOrder('amountDr desc, amountCr desc'),array('account','amountDr','amountCr'));
-
-			$this->add('View')->set(array($transaction['Narration'],'icon'=>'pencil'));
-		});
-
 	}
 
 	function addSno(){
@@ -47,7 +27,7 @@ class Grid_AccountsBase extends \Grid{
 	}
 
 	function format_voucherNo($field){
-		$url = $this->api->url('voucher_print');
+		$url = $this->api->url('xAccount_page_owner_voucherprint');
 		$transaction_id = ($this->model instanceof Model_TransactionRow)? $this->model['transaction_id']: $this->model->id;
 		$this->current_row_html[$field] = "<a href='#voucher' class='voucher' onclick='$(this).univ().frameURL(\"Transaction Voucher\",\"" .
                     $url->set(array(

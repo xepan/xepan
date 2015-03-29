@@ -175,6 +175,8 @@ class Model_Document extends SQL_Model{
 			$this['related_root_document_name'] = $document->root_document_name;
 			$this['related_document_name'] = $document->document_name;
 		}else{
+			if(!$this['related_document_id']) return new \Dummy();
+			
 			if($root){
 				$class = explode("\\", $this['related_root_document_name']);
 			}else{

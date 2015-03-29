@@ -239,7 +239,7 @@ class Model_Order extends \Model_Document{
 		return false;
 	}
 
-	function createInvoice($status='approved',$salesLedger=null){
+	function createInvoice($status='draft',$salesLedger=null){
 		try{
 			$this->api->db->beginTransaction();
 			$invoice = $this->add('xShop/Model_Invoice_Draft');
@@ -251,9 +251,10 @@ class Model_Order extends \Model_Document{
 			$invoice['discount'] = $this['discount_voucher_amount'];
 			$invoice['tax'] = $this['tax'];
 			$invoice['net_amount'] = $this['net_amount'];
+			$invoice->relatedDocument($this);
+
 			$invoice->save();
 			
-			$invoice->relatedDocument($this);
 
 			$ois = $this->orderItems();
 			foreach ($ois as $oi) {
@@ -267,11 +268,15 @@ class Model_Order extends \Model_Document{
 						$oi['custom_fields']
 					);					
 			}
-			$invoice->createVoucher($salesLedger);
+
+			if($status !== 'draft' and $status !== 'submitted'){
+				$invoice->createVoucher($salesLedger);
+			}
+			
 			$this->api->db->commit();
 			return $invoice;
 		}catch(\Exception $e){
-			echo $e->getHTML();
+			echo $e->getmessage();
 			$this->api->db->rollback();
 			if($this->api->getConfig('developer_mode',false))
 				throw $e;

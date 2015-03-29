@@ -84,12 +84,12 @@ class Model_Transaction extends \Model_Document{
 		if(($msg=$this->isValidTransaction($this->dr_accounts,$this->cr_accounts, $this['transaction_type_id'])) !== true)
 			throw $this->exception('Transaction is Not Valid ' .  $msg)->addMoreInfo('message',$msg);
 
-
-		$this->executeSingleBranch();
-
 		if($this->related_document){
 			$this->relatedDocument($this->related_document);
 		}
+
+		$this->executeSingleBranch();
+
 
 		$this->executed=true;
 	}

@@ -133,5 +133,18 @@ class Model_Account extends \Model_Document{
 
 		return $this;
 	}
+
+
+	function loadDefaultCashAccount(){
+		$this->addCondition('name','Cash Account');
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadCashAccount()->get('id'));
+		$this->tryLoadAny();
+
+		if(!$this->loaded()){
+			$this->save();
+		}
+
+		return $this;
+	}
 	
 }
