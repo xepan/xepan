@@ -181,5 +181,17 @@ class Model_Account extends \Model_Document{
 		}
 
 		return $this;
-	}	
+	}
+
+	function loadDefaultBankAccount(){
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadBankAccounts()->fieldQuery('id'));
+		$this->tryLoadAny();
+
+		if(!$this->loaded()){
+			$this['name']='Your Default Bank Account';
+			$this->save();
+		}
+
+		return $this;
+	}
 }
