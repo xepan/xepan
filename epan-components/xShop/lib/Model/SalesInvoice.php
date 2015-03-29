@@ -47,4 +47,6 @@ class Model_SalesInvoice extends Model_Invoice{
 
 		$transaction->execute();
 	}
+
+	
 }

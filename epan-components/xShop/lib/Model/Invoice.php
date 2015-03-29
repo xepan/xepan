@@ -27,6 +27,8 @@ class Model_Invoice extends \Model_Document{
 		$this->addField('tax');
 		$this->addField('net_amount');
 		$this->addField('billing_address')->type('text');
+		$this->addField('transaction_reference')->type('text');
+		$this->addField('transaction_response_data')->type('text');
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
@@ -64,4 +66,26 @@ class Model_Invoice extends \Model_Document{
 		$in_item['custom_fields'] = $custom_fields;
 		$in_item->save();
 	}
+
+	function payViaCash($cash_amount){
+		$transaction = $this->add('xAccount/Model_Transaction');
+		$transaction->createNewTransaction('SALES INVOICE', $this, $transaction_date=date('Y-m-d'), $Narration=null);
+		
+		$transaction->addCreditAccount($salesLedger,$this['total_amount']);
+		
+		$transaction->addDebitAccount($discountLedger,$this['discount']);
+
+		$transaction->execute();
+	}
+
+	function payViaCheque($cheque_no,$cheque_date,$bank_account_no)){
+		
+	}
+
+	function PayViaOnline($transaction_reference,$transaction_reference_data){
+		$this['transaction_reference'] =  $transaction_reference;
+	    $this['transaction_response_data'] = json_encode($transaction_reference_data);
+	    $this->save();
+	}
+
 }

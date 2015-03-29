@@ -125,10 +125,11 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$form->addField('text','delivery_narration');
 		$form->addField('Checkbox','complete_on_receive');
 		$form->addField('Checkbox','generate_invoice');
-		$form->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'));
-		$form->addField('DropDown','payment')->setValueList(array('credit'=>'Credit','cheque'=>'Bank Account/Cheque','cash'=>'Cash'));
+		$form->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'))->setEmptyText('Select Items Included in Invoice');
+		$form->addField('DropDown','payment')->setValueList(array('credit'=>'Credit','cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
+		$form->addField('line','cash_amount');
 		$form->addField('line','cheque_no');
-		$form->addField('Datetime','chaque_date');
+		$form->addField('Date','cheque_date');
 		$form->addField('line','bank_account_no');
 		$form->addField('Checkbox','send_invoice_via_email');
 		$form->addField('line','email_to');
@@ -150,9 +151,49 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 		if($form->isSubmitted()){
 			$items_selected = json_decode($form['include_items'],true);
-
-
 			// TODO : A LOT OF CHECKINGS REGARDING INVOICE ETC ...
+
+			//CHECK FOR GENERATE INVOICE
+			if($form['generate_invoice']){
+				if(!$form['include_items'])
+					$form->displayError('include_items','Select Items Tobe Included in Invoice.');
+
+				if($form['payment']){
+					switch ($form['payment']) {
+						case 'cheque':
+							if(trim($form['cheque_no']) =="")
+								$form->displayError('cheque_no','Cheque Number not valid.');
+
+							if(!$form['cheque_date'])
+								$form->displayError('cheque_date','Date Canot be Empty.');
+
+							if(trim($form['bank_account_no']) == "")
+								$form->displayError('bank_account_no','Account Number Cannot  be Null');
+						break;
+
+						case 'cash':
+							if(trim($form['cash_amount']) == "")
+								$form->displayError('cash_amount','Amount Cannot be Null');
+						break;
+					}
+				}else
+					$form->displayError('payment','Select One Payment Mode.');
+
+				
+				//GENERATE INVOICE FOR SELECTED ITEMS
+				if($form['include_items'] == "Selected"){
+					$sales_invoive = $this->add('xShop/Model_SalesInvoice');
+					
+				}
+
+				//GENERATE INVOOICE FOR ALL ORDERD ITEMS
+				if($form['include_items'] == "All"){
+					$invoice = $this->order()->createInvoice();
+					$invoice->payViaCash($form['cash_amount']);
+				}
+
+			}
+			
 			if($form['send_invoice_via_email']){
 				$inv = $this->order()->invoice();
 				
@@ -169,7 +210,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 				$inv->send_via_email();
 
 			}
-
+			
 			//According to OrderDetail(Item) Select insert into DispatchRequestItem under single entry od dispatchRequest
 			//and set Status of orderitem is dispatched
 			
