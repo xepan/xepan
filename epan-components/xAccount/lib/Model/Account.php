@@ -145,6 +145,18 @@ class Model_Account extends \Model_Document{
 		return $this;
 	}
 
+	function loadDefaultPurchaseAccount(){
+		$this->addCondition('name','Purchase Account');
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadDirectExpenses()->fieldQuery('id'));
+		$this->tryLoadAny();
+
+		if(!$this->loaded()){
+			$this->save();
+		}
+
+		return $this;	
+	}
+
 	function loadDefaultTaxAccount(){
 		$this->addCondition('name','Tax Account');
 		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadDutiesAndTaxes()->fieldQuery('id'));
