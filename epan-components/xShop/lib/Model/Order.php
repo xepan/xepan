@@ -389,4 +389,30 @@ class Model_Order extends \Model_Document{
 		$this->setStatus('approved',$message);
 		return $this;
 	}
+
+	function cashAdvance($cash_amount, $cash_account=null){
+
+		if(!$cash_account) $cash_account = $this->add('xAccount/Model_Account')->loadDefaultCashAccount();
+
+		$transaction = $this->add('xAccount/Model_Transaction');
+		$transaction->createNewTransaction('ORDER ADVANCE CASH PAYMENT RECEIVED', $this, $transaction_date=$this->api->now, $Narration=null);
+		
+		$transaction->addCreditAccount($this->customer()->account(),$cash_amount);
+		$transaction->addDebitAccount($cash_account ,$cash_amount);
+		
+
+		$transaction->execute();
+	}
+
+	function bankAdvance($amount, $cheque_no,$cheque_date,$bank_account_detail, $self_bank_account=null){
+		if(!$self_bank_account) $self_bank_account = $this->add('xAccount/Model_Account')->loadDefaultBankAccount();
+
+		$transaction = $this->add('xAccount/Model_Transaction');
+		$transaction->createNewTransaction('ORDER ADVANCE BANK PAYMENT RECEIVED', $this, $transaction_date=$this->api->now, $Narration=null);
+		
+		$transaction->addCreditAccount($this->customer()->account(),$amount);
+		$transaction->addDebitAccount($self_bank_account ,$amount);
+		
+		$transaction->execute();
+	}
 }
