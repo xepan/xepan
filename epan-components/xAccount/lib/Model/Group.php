@@ -41,6 +41,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentAssets()->get('id'));
 		$this->addCondition('name','Cash Account')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -54,6 +57,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentAssets()->get('id'));
 		$this->addCondition('name','Bank Accounts')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -67,7 +73,10 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentAssets()->get('id'));
 		$this->addCondition('name','Bank OD')
 			->tryLoadAny();
-		return $this;	
+		
+		if(!$this->loaded()) $this->save();
+
+		return $this;
 	}
 
 	function isBankOD(){
@@ -80,6 +89,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentAssets()->get('id'));
 		$this->addCondition('name','F.D. Assets')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -93,6 +105,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentAssets()->get('id'));
 		$this->addCondition('name','Share Capital')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -119,6 +134,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadIncome()->get('id'));
 		$this->addCondition('name','Direct Income')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -132,6 +150,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadDutiesAndTaxes()->get('id'));
 		$this->addCondition('name','Duties & Taxes')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -145,6 +166,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadFixedAssets()->get('id'));
 		$this->addCondition('name','Fixed Assets')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -158,6 +182,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadExpenses()->get('id'));
 		$this->addCondition('name','Indirect Expenses')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -171,6 +198,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadIncome()->get('id'));
 		$this->addCondition('name','Indirect Income')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -184,6 +214,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentAssets()->get('id'));
 		$this->addCondition('name','Loan Advances (Assets)')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -197,6 +230,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentLiabilities()->get('id'));
 		$this->addCondition('name','Loan (Liabilities)')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -210,6 +246,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentAssets()->get('id'));
 		$this->addCondition('name','Misc Expenses (Assets)')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -236,6 +275,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentAssets()->get('id'));
 		$this->addCondition('name','Reserve Surpuls')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -249,6 +291,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentAssets()->get('id'));
 		$this->addCondition('name','Retained Earnings')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -262,6 +307,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentAssets()->get('id'));
 		$this->addCondition('name','Secured (Loan)')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -275,6 +323,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentLiabilities()->get('id'));
 		$this->addCondition('name','Sundry Creditor')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -288,6 +339,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentAssets()->get('id'));
 		$this->addCondition('name','Sundry Debtor')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+
 		return $this;	
 	}
 
@@ -301,6 +355,9 @@ class Model_Group extends \Model_Table{
 		$this->addCondition('balance_sheet_id',$this->add('xAccount/Model_BalanceSheet')->loadCurrentAssets()->get('id'));
 		$this->addCondition('name','Suspense Account')
 			->tryLoadAny();
+		
+		if(!$this->loaded()) $this->save();
+		
 		return $this;	
 	}
 

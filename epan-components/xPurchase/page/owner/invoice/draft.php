@@ -4,8 +4,12 @@ class page_xPurchase_page_owner_invoice_draft extends page_xPurchase_page_owner_
 	function init(){
 		parent::init();
 
+		$invoice_draft = $this->add('xPurchase/Model_Invoice_Draft');
+		
+		$crud=$this->add('CRUD',array('grid_class'=>'xPurchase/Grid_Invoice'));
+		$crud->setModel($invoice_draft);
 
-		$from_purchased_order_vp = $this->add('VirtualPage')->set(function($p){
+		$from_purchased_order_vp = $this->add('VirtualPage')->set(function($p)use($crud){
 			$purchased_orders = $p->add('xPurchase/Model_PurchaseOrder');
 			$purchased_orders->addCondition('status','<>',array('draft','submitted'));
 			//$purchased_orders->addExpression('has_invoice')->set($sales_orders->refSQL('xPurchase/PurchaseInvoice')->count());
@@ -17,17 +21,13 @@ class page_xPurchase_page_owner_invoice_draft extends page_xPurchase_page_owner_
 
 			if($form->isSubmitted()){
 				$purchase_order = $p->add('xPurchase/Model_PurchaseOrder')->load($form['purchase_orders']);
-				$purchase_order->createInvoice('approved');
+				$purchase_order->createInvoice('draft');
 				// echo "hi";
-				$form->js(null,$form->js()->univ()->closeDialog())->univ()->reload()->execute();
+				$crud->grid->js(null,$form->js()->univ()->closeDialog())->univ()->reload()->execute();
 			}
 
 		});
 
-		$invoice_draft = $this->add('xPurchase/Model_Invoice_Draft');
-		
-		$crud=$this->add('CRUD',array('grid_class'=>'xPurchase/Grid_Invoice'));
-		$crud->setModel($invoice_draft);
 
 		if(!$crud->isEditing()){
 			$btn = $crud->addButton('From Purchase order');	

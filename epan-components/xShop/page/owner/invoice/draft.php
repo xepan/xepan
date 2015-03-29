@@ -20,7 +20,7 @@ class page_xShop_page_owner_invoice_draft extends page_xShop_page_owner_main{
 
 			if($form->isSubmitted()){
 				$sale_order = $p->add('xShop/Model_Order')->load($form['sales_order']);
-				$sale_order->createInvoice('approved');
+				$sale_order->createInvoice('draft');
 				$form->js(null,$form->js()->univ()->closeDialog())->univ()->reload()->execute();
 			}
 
@@ -39,6 +39,5 @@ class page_xShop_page_owner_invoice_draft extends page_xShop_page_owner_main{
 		}
 
 		$crud->add('xHR/Controller_Acl');
-		// $this->add('xShop/View_Invoice',array('invoice'=>$this->add('xShop/Model_Invoice')->load(7)));
 	}
 }		

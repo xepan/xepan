@@ -2,7 +2,7 @@
 class page_xAccount_page_owner_daybook extends page_xAccount_page_owner_main{
 	function init(){
 		parent::init();
-
+		
 		$form = $this->add('Form');
 		$form->addField('DatePicker','date')->validateNotNull();
 		$form->addSubmit('Open Day Book');
@@ -25,9 +25,6 @@ class page_xAccount_page_owner_daybook extends page_xAccount_page_owner_main{
  
 		$daybook_lister_grid->setModel($day_transaction_model,array('voucher_no','Narration','account','amountDr','amountCr'));
 		$daybook_lister_grid->removeColumn('Narration');
-		// $daybook_lister_grid->addPaginator(10);
-
-
 
 		if($form->isSubmitted()){
 			$daybook_lister_grid->js()->reload(array('date_selected'=>$form['date']?:0))->execute();
