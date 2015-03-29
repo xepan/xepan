@@ -2,10 +2,12 @@
 
 class CRUD extends View_CRUD{
 	public $form_class='Form_Stacked';
-	
+	public $add_form_beautifier = true;
+
 	function setModel($model,$f=null,$f2=null){
 		parent::setModel($model,$f,$f2);
-		$this->add('Controller_FormBeautifier');
+		if($this->add_form_beautifier)
+			$this->add('Controller_FormBeautifier');
 	}
 
 	function formSubmit($form){

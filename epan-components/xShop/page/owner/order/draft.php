@@ -3,7 +3,7 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 	function init(){
 		parent::init();
 
-		$crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_Order'));
+		$crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_Order','add_form_beautifier'=>false));
 		
 		$crud->addHook('crud_form_submit',function($crud,$form){
 			$order = $crud->model;				
@@ -41,12 +41,10 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 		if(!$crud->isEditing()){
 			$crud->grid->removeColumn('order_from');
 		}
-		$crud->setModel('xShop/Model_Order_Draft',array('member_id','order_summary','delivery_date','termsandcondition_id','priority_id'),array('name','created_at','member','net_amount','last_action','created_by','orderitem_count'));
 
 		if($crud->isEditing('add') OR $crud->isEditing('edit')){
-			$crud->form->add('View_Info')->set('Payment Advanced ');
+			$v=$crud->form->add('View')->set('Payment Advanced ');
 			$form = $crud->form;
-			$o = $form->add('Order');
 			$form->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
 			$form->addField('Money','amount');
 			$form->addField('line','bank_account_detail');
@@ -55,20 +53,22 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 			$form->addField('Checkbox','send_invoice_via_email');
 			$form->addField('line','email_to');
 
-			$o->move('payment','last');
+		}
+
+		$crud->setModel('xShop/Model_Order_Draft',array('member_id','order_summary','delivery_date','termsandcondition_id','priority_id'),array('name','created_at','member','net_amount','last_action','created_by','orderitem_count'));
+		
+		if($crud->isEditing('add') OR $crud->isEditing('edit')){
+			$o = $form->add('Order');
+			$o->move('payment','after','termsandcondition_id');
 			$o->move('amount','last');
 			$o->move('bank_account_detail','last');
 			$o->move('cheque_no','last');
 			$o->move('cheque_date','last');
 			$o->move('send_invoice_via_email','last');
 			$o->move('email_to','last');
-		}
-
-		
-		if($crud->isEditing('add') OR $crud->isEditing('edit')){
 			$o->now();
 		}
-
+		$crud->add('Controller_FormBeautifier');
 		$crud->add('xHR/Controller_Acl');
 	}
 }		
