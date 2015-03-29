@@ -47,7 +47,7 @@ class Model_SalesInvoice extends Model_Invoice{
 		$transaction->execute();
 	}
 
-	function payViaCheque($amount, $cheque_no,$cheque_date,$bank_account_no, $self_bank_account=null)){
+	function payViaCheque($amount, $cheque_no,$cheque_date,$bank_account_no, $self_bank_account=null){
 		if(!$self_bank_account) $self_bank_account = $this->add('xAccount/Model_Account')->loadDefaultBankAccount();
 
 		$transaction = $this->add('xAccount/Model_Transaction');
