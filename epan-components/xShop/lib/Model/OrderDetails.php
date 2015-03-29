@@ -21,6 +21,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		$this->hasOne('xShop/Order','order_id');
 		$this->hasOne('xShop/Item_Saleable','item_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
+		$this->hasOne('xShop/Invoice','invoice_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
 
 		$this->addField('qty')->group('b~3~Order Details')->mandatory(true);
 		// $this->addField('unit')->group('b~3');
@@ -148,6 +149,11 @@ class Model_OrderDetails extends \Model_Document{
 
 	function order(){
 		return $this->ref('order_id');
+	}
+
+	function invoice(){
+		if(!$this['invoice_id']) return false;
+		return $this->ref('invoice_id');
 	}
 
 	function getCurrentStatus($department=false){

@@ -12,3 +12,4 @@ upload/*
 composer.lock
 composer.phar
 vendor/*
+*.sublime-workspace

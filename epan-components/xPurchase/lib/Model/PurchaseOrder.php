@@ -9,9 +9,11 @@ class Model_PurchaseOrder extends \Model_Document{
 		parent::init();
 
 
-		$this->hasOne('xPurchase/Supplier','supplier_id')->sortable(true);
-		$this->addField('name');
-		
+		$this->hasOne('xPurchase/Supplier','supplier_id')->sortable(true)->display(array('form'=>'autocomplete/Plus'));
+		$this->hasOne('xShop/Priority','priority_id')->group('z~6')->mandatory(true)->defaultValue($this->add('xShop/Model_Priority')->addCondition('name','Medium')->tryLoadAny()->get('id'));
+		$this->addField('name')->caption('Purchase Order');
+		$this->addField('order_summary')->type('text');
+		$this->addField('order_date')->type('datetime')->defaultValue(date('Y-m-d H:I:S'));
 
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
 
@@ -115,9 +117,11 @@ class Model_PurchaseOrder extends \Model_Document{
 
 
 	}
+
 	function supplier(){
-		$this->ref('supplier_id');
+		return $this->ref('supplier_id');
 	}
+
 	function purchaseOrderItems(){
 		return $this->ref('xPurchase/PurchaseOrderItem');
 	}
@@ -145,6 +149,30 @@ class Model_PurchaseOrder extends \Model_Document{
 	}
 	
 
-	
+	function cashAdvance($cash_amount, $cash_account=null){
+
+		if(!$cash_account) $cash_account = $this->add('xAccount/Model_Account')->loadDefaultCashAccount();
+
+		$transaction = $this->add('xAccount/Model_Transaction');
+		$transaction->createNewTransaction('PURCHASE ORDER ADVANCE CASH PAYMENT GIVEN', $this, $transaction_date=$this->api->now, $Narration=null);
+		
+		$transaction->addCreditAccount($cash_account,$cash_amount);
+		$transaction->addDebitAccount($this->supplier()->account() ,$cash_amount);
+		
+
+		$transaction->execute();
+	}
+
+	function bankAdvance($amount, $cheque_no,$cheque_date,$bank_account_detail, $self_bank_account=null){
+		if(!$self_bank_account) $self_bank_account = $this->add('xAccount/Model_Account')->loadDefaultBankAccount();
+
+		$transaction = $this->add('xAccount/Model_Transaction');
+		$transaction->createNewTransaction('PURCHASE ORDER ADVANCE BANK PAYMENT GIVEN', $this, $transaction_date=$this->api->now, $Narration=null);
+		
+		$transaction->addDebitAccount($this->supplier()->account(),$amount);
+		$transaction->addCreditAccount($self_bank_account ,$amount);
+		
+		$transaction->execute();
+	}	
 }
 

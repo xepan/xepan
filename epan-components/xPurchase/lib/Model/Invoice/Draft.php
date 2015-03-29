@@ -7,8 +7,7 @@ class Model_Invoice_Draft extends Model_PurchaseInvoice{
 			'allow_add'=>array(),
 			'allow_edit'=>array(),
 			'allow_del'=>array(),
-			'can_submit'=>array(),
-			
+			'can_submit'=>array()
 		);
 
 	function init(){

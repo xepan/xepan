@@ -52,7 +52,7 @@ class Model_BalanceSheet extends \Model_Document{
 			return $this;
 	}
 	
-	function is_CapitalAccount(){
+	function isCapitalAccount(){
 		return $this['name'] == 'Capital Account';
 	}
 
@@ -64,7 +64,7 @@ class Model_BalanceSheet extends \Model_Document{
 				return $this;
 		}
 
-	function is_Expenses(){
+	function isExpenses(){
 		return $this['name'] == 'Expenses';
 	}
 
@@ -76,8 +76,20 @@ class Model_BalanceSheet extends \Model_Document{
 				return $this;
 		}
 
-	function is_Income(){
+	function isIncome(){
 		return $this['name'] == 'Income';
+	}
+
+	function loadDutiesAndTaxes(){
+			if($this->loaded())
+				$this->unload();
+			$this->addCondition('name','Duties & Taxes')
+				->loadAny();
+				return $this;
+		}
+
+	function isDutiesAndTaxes(){
+		return $this['name'] == 'Duties & Taxes';
 	}
 
 	function loadSuspenceAccount(){
@@ -88,7 +100,7 @@ class Model_BalanceSheet extends \Model_Document{
 				return $this;
 		}
 
-	function is_SuspenceAccount(){
+	function isSuspenceAccount(){
 		return $this['name'] == 'Suspence Account';
 	}
 
@@ -100,7 +112,7 @@ class Model_BalanceSheet extends \Model_Document{
 				return $this;
 		}
 
-	function is_FixedAssets(){
+	function isFixedAssets(){
 		return $this['name'] == 'Fixed Assets';
 	}
 
@@ -112,7 +124,7 @@ class Model_BalanceSheet extends \Model_Document{
 				return $this;
 		}
 
-	function is_BranchDivisions(){
+	function isBranchDivisions(){
 		return $this['name'] == 'Branch/Divisions';
 	}
 
@@ -124,7 +136,7 @@ class Model_BalanceSheet extends \Model_Document{
 				return $this;
 		}
 
-	function is_CurrentLiabilities(){
+	function isCurrentLiabilities(){
 		return $this['name'] == 'Current Liabilities';
 	}
 

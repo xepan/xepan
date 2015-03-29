@@ -24,6 +24,9 @@ class Model_Transaction extends \Model_Document{
 		parent::init();
 		$this->hasOne('xAccount/TransactionType','transaction_type_id');
 		$this->addField('name')->caption('Voucher No');
+		$this->addExpression('voucher_no')->set(function ($m,$q){
+			return $q->getField('name');
+		});
 		 
 		$this->addField('Narration')->type('text');
 
@@ -81,14 +84,14 @@ class Model_Transaction extends \Model_Document{
 		// $this->senitizeTransaction();
 		
 		if(($msg=$this->isValidTransaction($this->dr_accounts,$this->cr_accounts, $this['transaction_type_id'])) !== true)
-			throw $this->exception('Transaction is Not Valid')->addMoreInfo('message',$msg);
-
-
-		$this->executeSingleBranch();
+			throw $this->exception('Transaction is Not Valid ' .  $msg)->addMoreInfo('message',$msg);
 
 		if($this->related_document){
 			$this->relatedDocument($this->related_document);
 		}
+
+		$this->executeSingleBranch();
+
 
 		$this->executed=true;
 	}
@@ -121,8 +124,8 @@ class Model_Transaction extends \Model_Document{
 	}
 
 	function isValidTransaction($DRs, $CRs, $transaction_type_id){
-		if(count($DRs) > 1 AND count($CRs) > 1)
-			return "Dr and Cr both have multiple accounts";
+		// if(count($DRs) > 1 AND count($CRs) > 1)
+		// 	return "Dr and Cr both have multiple accounts";
 
 		if(!count($DRs) or !count($CRs))
 			return "Either Dr or Cr accounts are not present. DRs =>".count($DRs). " and CRs =>".count($CRs);

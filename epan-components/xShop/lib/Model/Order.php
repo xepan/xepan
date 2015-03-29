@@ -20,17 +20,25 @@ class Model_Order extends \Model_Document{
 
 		$f = $this->hasOne('xShop/Customer','member_id')->group('a~3')->sortable(true)->display(array('form'=>'autocomplete/Plus'))->caption('Customer')->mandatory(true);
 		$f->icon = "fa fa-user~red";
-		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3')->sortable(true)->defaultValue(rand(1000,9999));
+		$f = $this->addField('name')->caption('Order ID')->mandatory(true)->group('a~3')->sortable(true);
 		$f = $this->addField('email')->group('a~3')->sortable(true);
 		$f = $this->addField('mobile')->group('a~3')->sortable(true);
-		
+	
+		$this->addExpression('search_phrase')->set($this->dsql()->concat(
+				'Order No - ',
+				$this->getElement('name'),
+				' [',
+				$this->refSQL('member_id')->fieldQuery('customer_search_phrase'),
+				' ]'
+			));
 
 		$this->addField('order_from')->enum(array('online','offline'))->defaultValue('offline');
 		$f = $this->getElement('status')->group('a~2');
 
-		$f = $this->addField('amount')->mandatory(true)->group('b~3~<i class="fa fa-money"></i> Order Amount')->sortable(true);
+		$f = $this->addField('total_amount')->mandatory(true)->group('b~3~<i class="fa fa-money"></i> Order Amount')->sortable(true);
 		$f = $this->addField('discount_voucher')->group('b~3');
 		$f = $this->addField('discount_voucher_amount')->group('b~3');
+		$f = $this->addField('tax')->group('b~3');
 		$f = $this->addField('net_amount')->mandatory(true)->group('b~3')->sortable(true);
 
 		$f = $this->addField('billing_address')->mandatory(true)->group('x~6~<i class="fa fa-map-marker"> Address</i>');
@@ -231,27 +239,55 @@ class Model_Order extends \Model_Document{
 		return false;
 	}
 
-	function createInvoice($status='approved'){
-		$invoice = $this->add('xShop/Model_Invoice_Draft');
-		$invoice['sales_order_id'] = $this['id'];
-		$invoice['customer_id'] = $this->customer()->get('id');
-		$invoice['billing_address'] = $this['billing_address'];
-		$invoice->save();
-		
-		$invoice->relatedDocument($this);
+	function createInvoice($status='draft',$salesLedger=null, $items_array=array()){
+		try{
+			$this->api->db->beginTransaction();
+			$invoice = $this->add('xShop/Model_Invoice_Draft');
 
-		$ois = $this->orderItems();
-		foreach ($ois as $oi) {
-			$invoice->addItem(
-					$oi->item(),
-					$oi['qty'],
-					$oi['rate'],
-					$oi['amount'],
-					$oi['unit'],
-					$oi['narration'],
-					$oi['custom_fields']
-				);					
+			$invoice['sales_order_id'] = $this['id'];
+			$invoice['customer_id'] = $this->customer()->get('id');
+			$invoice['billing_address'] = $this['billing_address'];
+			$invoice['total_amount'] = $this['total_amount'];
+			$invoice['discount'] = $this['discount_voucher_amount'];
+			$invoice['tax'] = $this['tax'];
+			$invoice['net_amount'] = $this['net_amount'];
+			$invoice->relatedDocument($this);
+
+			$invoice->save();
+			
+
+			$ois = $this->orderItems();
+			foreach ($ois as $oi) {
+				
+				if(!count($items_array) or !in_array($oi->id, $items_array) ) continue;
+				
+				if($oi->invoice())
+					throw $this->exception('Order Item already used in Invoice','ValidityCheck');
+
+				$invoice->addItem(
+						$oi->item(),
+						$oi['qty'],
+						$oi['rate'],
+						$oi['amount'],
+						$oi['unit'],
+						$oi['narration'],
+						$oi['custom_fields']
+					);					
+			}
+
+			if($status !== 'draft' and $status !== 'submitted'){
+				$invoice->createVoucher($salesLedger);
+			}
+			
+			$this->api->db->commit();
+			return $invoice;
+		}catch(\Exception $e){
+			echo $e->getmessage();
+			$this->api->db->rollback();
+			if($this->api->getConfig('developer_mode',false))
+				throw $e;
 		}
+
 	}
 
 	function placeOrderFromQuotation($quotation_approved_id){
@@ -352,5 +388,31 @@ class Model_Order extends \Model_Document{
 
 		$this->setStatus('approved',$message);
 		return $this;
+	}
+
+	function cashAdvance($cash_amount, $cash_account=null){
+
+		if(!$cash_account) $cash_account = $this->add('xAccount/Model_Account')->loadDefaultCashAccount();
+
+		$transaction = $this->add('xAccount/Model_Transaction');
+		$transaction->createNewTransaction('ORDER ADVANCE CASH PAYMENT RECEIVED', $this, $transaction_date=$this->api->now, $Narration=null);
+		
+		$transaction->addCreditAccount($this->customer()->account(),$cash_amount);
+		$transaction->addDebitAccount($cash_account ,$cash_amount);
+		
+
+		$transaction->execute();
+	}
+
+	function bankAdvance($amount, $cheque_no,$cheque_date,$bank_account_detail, $self_bank_account=null){
+		if(!$self_bank_account) $self_bank_account = $this->add('xAccount/Model_Account')->loadDefaultBankAccount();
+
+		$transaction = $this->add('xAccount/Model_Transaction');
+		$transaction->createNewTransaction('ORDER ADVANCE BANK PAYMENT RECEIVED', $this, $transaction_date=$this->api->now, $Narration=null);
+		
+		$transaction->addCreditAccount($this->customer()->account(),$amount);
+		$transaction->addDebitAccount($self_bank_account ,$amount);
+		
+		$transaction->execute();
 	}
 }

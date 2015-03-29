@@ -112,7 +112,7 @@ class page_xShop_page_owner_item extends page_xShop_page_owner_main{
 			$tab->addTabURL('xShop/page/owner/item_seo','SEO',array('item_id'));
 			$tab->addTabURL('xShop/page/owner/item_stock','Stock',array('item_id'));
 			$tab->addTabURL('xShop/page/owner/item_prophases','Production Phases',array('item_id'));
-			$tab->addTabURL('xShop/page/owner/item_others','Others',array('item_id'));
+			$tab->addTabURL('xShop/page/owner/item_account','Accounts',array('item_id'));
 			// $tab->addTabURL('xShop/page/owner/item_composition','Composition',array('item_id'));
 		}else{
 			$item_col->add('View_Warning')->set('Select any one Item');
