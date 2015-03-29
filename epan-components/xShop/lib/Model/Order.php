@@ -239,7 +239,7 @@ class Model_Order extends \Model_Document{
 		return false;
 	}
 
-	function createInvoice($status='draft',$salesLedger=null){
+	function createInvoice($status='draft',$salesLedger=null, $items_array=array()){
 		try{
 			$this->api->db->beginTransaction();
 			$invoice = $this->add('xShop/Model_Invoice_Draft');
@@ -258,6 +258,12 @@ class Model_Order extends \Model_Document{
 
 			$ois = $this->orderItems();
 			foreach ($ois as $oi) {
+				
+				if(!count($items_array) or !in_array($oi->id, $items_array) ) continue;
+				
+				if($oi->invoice())
+					throw $this->exception('Order Item already used in Invoice','ValidityCheck');
+
 				$invoice->addItem(
 						$oi->item(),
 						$oi['qty'],

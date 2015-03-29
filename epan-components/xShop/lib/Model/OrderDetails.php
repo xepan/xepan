@@ -151,6 +151,11 @@ class Model_OrderDetails extends \Model_Document{
 		return $this->ref('order_id');
 	}
 
+	function invoice(){
+		if(!$this['invoice_id']) return false;
+		return $this->ref('invoice_id');
+	}
+
 	function getCurrentStatus($department=false){
 		$last_ds = $this->deptartmentalStatus()->addCondition('status','<>','Waiting');
 		$last_ds->_dsql()->order('id','desc');
