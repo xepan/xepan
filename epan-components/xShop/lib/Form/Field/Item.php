@@ -119,10 +119,10 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 			//Make PredefinedPhase Array
 			$p->preDefinedPhase = array();
 			foreach ($item->getAssociatedDepartment() as $key => $value) {
-				$p->preDefinedPhase[$value] = $value;
+				$p->preDefinedPhase[$value] = array();
 			}
-
 			$p->existing_values = $_GET['current_json']?json_decode($_GET['current_json'],true):$p->preDefinedPhase;
+			// echo print_r($p->existing_values,true);
 			// $this->existing_values = $item->getAssociatedDepartment();
 			// print_r($this->existing_values);
 
