@@ -67,25 +67,4 @@ class Model_Invoice extends \Model_Document{
 		$in_item->save();
 	}
 
-	function payViaCash($cash_amount){
-		$transaction = $this->add('xAccount/Model_Transaction');
-		$transaction->createNewTransaction('SALES INVOICE', $this, $transaction_date=date('Y-m-d'), $Narration=null);
-		
-		$transaction->addCreditAccount($salesLedger,$this['total_amount']);
-		
-		$transaction->addDebitAccount($discountLedger,$this['discount']);
-
-		$transaction->execute();
-	}
-
-	function payViaCheque($cheque_no,$cheque_date,$bank_account_no)){
-		
-	}
-
-	function PayViaOnline($transaction_reference,$transaction_reference_data){
-		$this['transaction_reference'] =  $transaction_reference;
-	    $this['transaction_response_data'] = json_encode($transaction_reference_data);
-	    $this->save();
-	}
-
 }

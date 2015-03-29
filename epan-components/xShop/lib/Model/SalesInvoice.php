@@ -33,6 +33,38 @@ class Model_SalesInvoice extends Model_Invoice{
 
 	}
 
+	function payViaCash($cash_amount, $cash_account=null){
+
+		if(!$cash_account) $cash_account = $this->add('xAccount/Model_Account')->loadDefaultCashAccount();
+
+		$transaction = $this->add('xAccount/Model_Transaction');
+		$transaction->createNewTransaction('INVOICE CASH PAYMENT RECEIVED', $this, $transaction_date=$this->api->now, $Narration=null);
+		
+		$transaction->addCreditAccount($this->customer()->account(),$cash_amount);
+		$transaction->addDebitAccount($cash_account ,$cash_amount);
+		
+
+		$transaction->execute();
+	}
+
+	function payViaCheque($amount, $cheque_no,$cheque_date,$bank_account_no, $self_bank_account=null)){
+		if(!$self_bank_account) $self_bank_account = $this->add('xAccount/Model_Account')->loadDefaultBankAccount();
+
+		$transaction = $this->add('xAccount/Model_Transaction');
+		$transaction->createNewTransaction('INVOICE BANK PAYMENT RECEIVED', $this, $transaction_date=$this->api->now, $Narration=null);
+		
+		$transaction->addCreditAccount($this->customer()->account(),$amount);
+		$transaction->addDebitAccount($self_bank_account ,$amount);
+		
+		$transaction->execute();
+	}
+
+	function PayViaOnline($transaction_reference,$transaction_reference_data){
+		$this['transaction_reference'] =  $transaction_reference;
+	    $this['transaction_response_data'] = json_encode($transaction_reference_data);
+	    $this->save();
+	}
+
 	function submit(){
 		$this->setStatus('submitted');
 	}

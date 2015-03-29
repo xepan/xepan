@@ -145,6 +145,5 @@ class Model_Account extends \Model_Document{
 		}
 
 		return $this;
-	}
-	
+	}	
 }
