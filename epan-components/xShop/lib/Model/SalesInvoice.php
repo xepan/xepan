@@ -3,7 +3,6 @@ namespace xShop;
 
 class Model_SalesInvoice extends Model_Invoice{
 	public $root_document_name = 'xShop\SalesInvoice';
-
 	function init(){
 		parent::init();
 		$this->addCondition('type','salesInvoice');
@@ -74,5 +73,68 @@ class Model_SalesInvoice extends Model_Invoice{
 		$this->setStatus('approved');
 	}
 
-	
+	function mark_processed_page($p){
+		$form = $p->add('Form_Stacked');
+		$form->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
+		$form->addField('Money','amount');
+		$form->addField('line','cheque_no');
+		$form->addField('Date','cheque_date');
+		$form->addField('line','bank_account_no');
+		$form->addField('Checkbox','send_invoice_via_email');
+		$form->addField('line','email_to');
+
+		$form->addSubmit('PayNow');
+
+		if($form->isSubmitted()){
+			$invoice = $this;
+			//CHECK FOR GENERATE INVOICE
+			if($form['payment']){
+				switch ($form['payment']) {
+					case 'cheque':
+						if(trim($form['cheque_no']) =="")
+							$form->displayError('cheque_no','Cheque Number not valid.');
+
+						if(!$form['cheque_date'])
+							$form->displayError('cheque_date','Date Canot be Empty.');
+
+						if(trim($form['bank_account_no']) == "")
+							$form->displayError('bank_account_no','Account Number Cannot  be Null');
+					break;
+
+					default:
+						if(trim($form['amount']) == "")
+							$form->displayError('amount','Amount Cannot be Null');
+					break;
+				}
+				
+				if($form['payment'] == "cash")
+					$invoice->payViaCash($form['amount']);
+				
+				if($form['payment'] == "cheque")
+					$invoice->payViaCheque($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_no'],$self_bank_account);
+			}
+
+
+		}
+		
+		if($form['send_invoice_via_email']){
+			$inv = $this->order()->invoice();
+			
+			if(!$inv){
+				$form->displayError('send_invoice_via_email','Invoice Not Created. ');
+			}
+			
+			if(!$inv->isApproved())
+				$form->displayError('send_invoice_via_email','Invoice Not Approved. '. $inv['name']);
+
+			if(!$form['email_to'])
+				$form->displayError('email_to','Email Not Proper. ');
+
+			$inv->send_via_email();
+
+		}
+	}
+
+
+
 }
