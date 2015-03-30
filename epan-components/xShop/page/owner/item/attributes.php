@@ -28,8 +28,9 @@ class page_xShop_page_owner_item_attributes extends page_xShop_page_owner_main{
 		$item_model = $this->add('xShop/Model_Item')->load($item_id);
 		
 		$custom_fields = $this->add('xShop/Model_ItemCustomFieldAssos');
-		$custom_fields->addCondition('item_id',$item_id);
-		$custom_fields->addCondition('department_phase_id','<>',null);
+		$custom_fields->addCondition('item_id',$item_id)
+					->addCondition('can_effect_stock',false)
+					->addCondition('department_phase_id','<>',null);
 		$custom_fields->tryLoadAny();
 
 		$crud = $this->add('CRUD');
