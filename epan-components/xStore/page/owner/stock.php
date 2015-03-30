@@ -8,7 +8,7 @@ class page_xStore_page_owner_stock extends page_xStore_page_owner_main {
 
 
 
-		$crud=$this->app->layout->add('CRUD');
+		$crud=$this->add('CRUD');
 		$crud->setModel('xStore/Model_Stock');
 		$crud->grid->addQuickSearch(array('qty'));
 		$crud->grid->addPaginator($ipp=50);

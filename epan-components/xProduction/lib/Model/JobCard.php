@@ -49,7 +49,7 @@ class Model_JobCard extends \Model_Document{
 							// 'name|to_trim|required',
 							)
 					);
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function createFromOrder($order_item, $order_dept_status ){
