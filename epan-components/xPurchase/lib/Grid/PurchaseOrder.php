@@ -20,7 +20,7 @@ class Grid_PurchaseOrder extends \Grid {
 
 
 	function setModel($purchase_order_model){
-		$m=parent::setModel($purchase_order_model,array('name','created_at','xpurchase_supplier'));
+		$m=parent::setModel($purchase_order_model,array('name','created_at','supplier'));
 		$this->addFormatter('name','view');
 
 		return $m;

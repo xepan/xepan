@@ -8,8 +8,7 @@
 			 Status: <b>{$status}</b>
 		</div>
 		<div class="col-md-4 text-right">
-			<!-- <div><b>To Department:</b> {$to_dept}</div> -->
-			<div>Form Department: <b>{$form_dept}</b></div>
+			
 			<div>To Suppiler: <b>{$supplier}</b></div>
 		</div>
 	</div>	
@@ -20,6 +19,7 @@
 				<th align="left">Sno</th>
 				<th align="center">Item</th>
 				<th align="right" class="text-right">Qty</th>
+				<th align="right" class="text-right">Unit</th>
 				<th align="right" class="text-right">Custom Fields</th>
 			</tr>
 		{rows}
@@ -28,6 +28,7 @@
 					<td align="left">{$sno}</td>
 					<td align="left">{$item}</td>
 					<td align="right">{$qty}</td>
+					<td align="right">{$unit}</td>
 					<td align="right">{$custom_field}</td>
 				</tr>
 			{/row}
