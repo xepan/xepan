@@ -69,6 +69,11 @@ class page_xShop_page_owner_item_prophases extends page_xShop_page_owner_main{
 			$crud = $v->add('CRUD');
 			$crud->setModel($itemcomposition);
 
+			if($crud->isEditing('add') or $crud->isEditing('edit')){
+				
+				$tf = $crud->form->getElement('composition_item_id');
+				$tf->qty_effected_custom_fields_only = true;
+			}
 
 		});
 
