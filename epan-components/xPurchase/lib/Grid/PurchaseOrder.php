@@ -24,12 +24,8 @@ class Grid_PurchaseOrder extends \Grid {
 	}
 
 
-	function setModel($purchase_order_model,$fields=null){
-		if($fields==null){
-			$fields = array(
-						'supplier_id','priority_id','name','order_summary','order_date'
-						);
-		}
+	function setModel($purchase_order_model){
+		$this->addFormatter('name','view');
 
 		$m=parent::setModel($purchase_order_model,$fields);
 	
@@ -40,4 +36,4 @@ class Grid_PurchaseOrder extends \Grid {
 	}
 	
 
-}	
+	}	

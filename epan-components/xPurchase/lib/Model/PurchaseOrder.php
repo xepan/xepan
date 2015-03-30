@@ -234,6 +234,7 @@ class Model_PurchaseOrder extends \Model_Document{
 	function cashAdvance($cash_amount, $cash_account=null){
 
 		if(!$cash_account) $cash_account = $this->add('xAccount/Model_Account')->loadDefaultCashAccount();
+
 		$transaction = $this->add('xAccount/Model_Transaction');
 		$transaction->createNewTransaction('PURCHASE ORDER ADVANCE CASH PAYMENT GIVEN', $this, $transaction_date=$this->api->now, $Narration=null);
 		

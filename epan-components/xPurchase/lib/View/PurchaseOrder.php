@@ -11,9 +11,8 @@ class View_PurchaseOrder extends \CompleteLister{
 
 		$this->template->set('request_on',$this->purchaseorder['created_at']);
 		$this->template->set('status',ucwords($this->purchaseorder['status']));
-		$this->template->set('form_dept',$this->purchaseorder['from_department']);
-		$this->template->set('to_dept',$this->purchaseorder['to_department']);
-		$this->template->set('supplier',$this->purchaseorder['xpurchase_supplier']);
+		// $this->template->set('form_dept',$this->purchaseorder['name']);
+		$this->template->set('supplier',$this->purchaseorder['supplier']);
 	
 		$this->setModel($this->purchaseorder->itemrows());
 	}
