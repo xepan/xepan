@@ -13,7 +13,6 @@ class View_PurchaseOrder extends \CompleteLister{
 		$this->template->set('status',ucwords($this->purchaseorder['status']));
 		// $this->template->set('form_dept',$this->purchaseorder['name']);
 		$this->template->set('supplier',$this->purchaseorder['supplier']);
-	
 		$this->setModel($this->purchaseorder->itemrows());
 	}
 

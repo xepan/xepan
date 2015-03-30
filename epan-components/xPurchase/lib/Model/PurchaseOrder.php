@@ -16,6 +16,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->addField('order_date')->type('datetime')->defaultValue($this->api->now);
 
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
+		$this->hasMany('xPurchase/PurchaseInvoice','po_id');
 
 		$this->addHook('beforeDelete',$this);
 
