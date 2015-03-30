@@ -20,7 +20,7 @@ class Model_ItemTaxAssociation extends \Model_Document {
 		$this->hasOne('xShop/Item','item_id');
 		$this->addField('name')->caption('Tax in %');
 		$this->addHook('beforeSave',$this);
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 
 	}	
 

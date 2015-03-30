@@ -20,7 +20,7 @@ class Model_Tax extends \Model_Document{
 
 		$this->hasMany('xShop/ItemTaxAssociation','tax_id');
 		$this->addHook('beforeDelete',$this);
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 		
 	}
 

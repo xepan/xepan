@@ -169,6 +169,15 @@ class Model_JobCard extends \Model_Document{
 	function submit(){
 		$this->setStatus('submitted');
 	}
+	function assign_page($page){
+		$cols=$page->add('Columns');
+		$col=$cols->addColumn(6);
+		$form = $col->add('Form_Stacked');
+		$form->addField('dropdown','Assign to Employee')->setModel('xHR/Model_Employee');
+		$form->addField('dropdown','Assign to Team')->setModel('xProduction/Model_Team');
+		$form->addSubmit('Assign');
+		
+	}
 
 	function receive_page($page){
 

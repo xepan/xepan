@@ -17,7 +17,8 @@ class Model_Task extends \Model_Document{
 		$this->hasOne('xProduction/Team','team_id');
 		$this->hasOne('xHR/Employee','employee_id');
 
-		$this->addField('name')->caption('Subject');
+		$this->addField('name');
+		$this->addField('subject');
 		$this->addField('content')->type('text');
 		$this->addField('Priority')->enum(array('low','Medium','High','Urgent'));
 
@@ -26,7 +27,7 @@ class Model_Task extends \Model_Document{
 		$this->addField('expected_start_date')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		$this->addField('expected_end_date')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function getTeamMembers(){
@@ -72,6 +73,10 @@ class Model_Task extends \Model_Document{
 		$this->relatedDocument()->set('status','processed')->save();
 		$this['status']='processed';
 		$this->saveAndUnload();
+	}
+
+	function createTask(){
+	
 	}
 
 }
