@@ -13,7 +13,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->hasOne('xShop/Priority','priority_id')->group('z~6')->mandatory(true)->defaultValue($this->add('xShop/Model_Priority')->addCondition('name','Medium')->tryLoadAny()->get('id'));
 		$this->addField('name')->caption('Purchase Order');
 		$this->addField('order_summary')->type('text');
-		$this->addField('order_date')->type('datetime')->defaultValue(date('Y-m-d H:I:S'));
+		$this->addField('order_date')->type('datetime')->defaultValue(date('Y-m-d H:i:S'));
 
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
 
@@ -40,7 +40,7 @@ class Model_PurchaseOrder extends \Model_Document{
 	function approve(){
 		//TODO SEND MAIL
 			//COMMUNICATION LOG ENTRY 
-		
+		$this['order_date']=$this->api->now;
 		$this->setStatus('approved');
 	}
 

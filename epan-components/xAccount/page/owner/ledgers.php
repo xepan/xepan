@@ -8,6 +8,6 @@ class page_xAccount_page_owner_ledgers extends page_xAccount_page_owner_main{
 
 		$group = $this->add('xAccount/Model_Account');
 		$crud = $this->app->layout->add('CRUD');
-		$crud->setModel($group,array('name','group','CurrentBalanceCr','CurrentBalanceDr'));
+		$crud->setModel($group,array('name','group_id','OpeningBalanceCr','OpeningBalanceDr'),array('name','group','CurrentBalanceCr','CurrentBalanceDr'));
 	}
 }
