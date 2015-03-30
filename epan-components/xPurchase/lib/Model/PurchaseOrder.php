@@ -15,12 +15,16 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->addField('order_summary')->type('text');
 		$this->addField('order_date')->type('datetime')->defaultValue($this->api->now);
 
+		$this->addField('total_amount');
+		$this->addField('tax');
+		$this->addField('net_amount');
+
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
 
 		$this->addHook('beforeDelete',$this);
 
 		$this->addExpression('orderitem_count')->set($this->refSQL('xPurchase/PurchaseOrderItem')->count());
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
@@ -31,8 +35,8 @@ class Model_PurchaseOrder extends \Model_Document{
 		
 	}
 
-	function itemrows(){
-		return $this->ref('xPurchase/PurchaseOrderItem');
+	function itemRows(){
+		return $this->add('xPurchase/Model_PurchaseOrderItem')->addCondition('po_id',$this['id']);
 	}
 
 	function submit(){		
@@ -43,10 +47,70 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->setStatus('canceled');
 	}
 
+	function approve_page($page){
+		$page->add('View')->set('Advanced Payment');
+		$form = $page->add('Form_Stacked');
+		$form->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
+		$form->addField('Money','amount');
+		$form->addField('line','bank_account_detail');
+		$form->addField('line','cheque_no');
+		$form->addField('DatePicker','cheque_date');
+		$form->addSubmit('Approve & Pay Advance');
+		if($form->isSubmitted()){
+
+			if($form['payment']){
+				switch ($form['payment']) {
+					case 'cheque':
+						if(trim($form['amount']) == "" or $form['amount'] == 0)
+							$form->displayError('amount','Amount Cannot be Null');
+
+						if(trim($form['bank_account_detail']) == "")
+							$form->displayError('bank_account_detail','Account Number Cannot  be Null');
+
+						if(trim($form['cheque_no']) =="")
+							$form->displayError('cheque_no','Cheque Number not valid.');
+						
+						if(!$form['cheque_date'])
+							$form->displayError('cheque_date','Date Canot be Empty.');
+
+					break;
+
+					case 'cash':
+						if(trim($form['amount']) == "" or $form['amount'] == 0)
+							$form->displayError('amount','Amount Cannot be Null');
+					break;
+				}
+				
+				if($form['payment'] == "cash")
+					$this->cashAdvance($form['amount']);
+				
+				if($form['payment'] == "cheque")
+					$this->bankAdvance($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_detail'],$self_bank_account=null);
+				
+			}
+				
+			$this->approve();			
+			return true;
+		}
+
+	}
+
+
 	function approve(){
 		//TODO SEND MAIL
-			//COMMUNICATION LOG ENTRY 
+			//COMMUNICATION LOG ENTRY
 		$this['order_date']=$this->api->now;
+		
+		//Change PurchaseOrderItem Stautus Waiting to Processing
+		$ois = $this->itemRows();
+		foreach ($ois as $oi) {
+			$oi->addCondition('status','waiting')->tryLoadAny();
+			if($oi->loaded()){
+				$oi['status'] = "processing";
+				$oi->saveAndUnload();
+			}
+		}
+
 		$this->setStatus('approved');
 	}
 
@@ -95,12 +159,13 @@ class Model_PurchaseOrder extends \Model_Document{
 		// 	// $keep_open->addField('boolean','keep_open_'.$i,'Keep open')->set(false);
 		// 	$i++;
 		// }
-				
+		$ois = $this->itemRows();
+		$ois->addCondition('status','processing')->tryLoadAny();
 		$grid = $page->add('Grid');
-		$grid->setModel($this->itemRows()->addCondition('status','processing'));
+		$grid->setModel($ois);
 
-		// $grid->removeColumn('custom_fields');
-		// $grid->removeColumn('item');
+		$grid->removeColumn('custom_fields');
+		$grid->removeColumn('item');
 		
 		$form = $page->add('Form_Stacked');
 		$form->addField('line','received_via');
@@ -110,9 +175,9 @@ class Model_PurchaseOrder extends \Model_Document{
 		$form->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'))->setEmptyText('Select Items Included in Invoice');
 		$form->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
 		$form->addField('Money','amount');
+		$form->addField('line','bank_account_detail');
 		$form->addField('line','cheque_no');
-		$form->addField('Date','cheque_date');
-		$form->addField('line','bank_account_no');
+		$form->addField('DatePicker','cheque_date');
 
 		$include_field = $form->addField('hidden','selected_items');
 
@@ -126,7 +191,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		// 	->setModel('xStore/Warehouse');
 
 
-		$receive_btn = $form->addSubmit('Receive');
+		$receive_btn = $form->addSubmit('Receive and Pay');
 
 		if($form->isSubmitted()){
 			if(!$form['selected_items'])
@@ -134,11 +199,12 @@ class Model_PurchaseOrder extends \Model_Document{
 				
 			$items_selected = json_decode($form['selected_items'],true);
 			// TODO : A LOT OF CHECKINGS REGARDING INVOICE ETC ...
-
+			
 			//CHECK FOR GENERATE INVOICE
 			if($form['generate_purchase_invoice']){
-				if(!$form['selected_items'])
-					$form->displayError('selected_items','Select Received Item.');
+				if($form['include_items'] == "")
+					$form->displayError('include_items','Please Select');
+					
 
 				if($form['payment']){
 					switch ($form['payment']) {
@@ -146,29 +212,34 @@ class Model_PurchaseOrder extends \Model_Document{
 							if(trim($form['amount']) == "" or $form['amount']==0)
 								$form->displayError('amount','Amount Cannot be Null');
 
-							if(trim($sform['cheque_no']) =="")
+							if(trim($form['bank_account_detail']) == "")
+								$form->displayError('bank_account_detail','Account Number Cannot  be Null');
+
+							if(trim($form['cheque_no']) =="")
 								$form->displayError('cheque_no','Cheque Number not valid.');
 
 							if(!$form['cheque_date'])
 								$form->displayError('cheque_date','Date Canot be Empty.');
 
-							if(trim($form['bank_account_no']) == "")
-								$form->displayError('bank_account_no','Account Number Cannot  be Null');
 						break;
 						case 'cash':
 							if(trim($form['amount']) == "" or $form['amount']==0)
 								$form->displayError('amount','Amount Cannot be Null');
 						break;
 					}
-
-
 				}
-				
+
+				$count = $this->itemRows()->addCondition('status','received')->count()->getOne();
+				if( $count and $form['include_items'] =="All"){
+					$form->displayError('include_items',$count.' item\'s already in invoice, select selected option ' );
+				}
+
 				//GENERATE INVOICE FOR SELECTED ITEMS
 				$purchase_invoice = null;
 				if($form['include_items'] == "Selected"){
 					$purchase_invoice = $this->createInvoice($status='Approved',$purchaseLedger=null, $items_selected);
 				}
+				
 				//GENERATE INVOOICE FOR ALL ORDERD ITEMS
 				if($form['include_items'] == "All"){
 					$purchase_invoice = $this->createInvoice();
@@ -185,13 +256,28 @@ class Model_PurchaseOrder extends \Model_Document{
 				
 				$movement_challan = $to_warehouse->newPurchaseReceive($this);
 				$i=1;
-				foreach ($this->itemrows() as $ir) {
-					$movement_challan->addItem($ir->item(),$form['received_qty_'.$i],$form['req_uit_'.$i],$ir['custom_fields']);
+				foreach ($this->itemRows() as $ir) {
+					$movement_challan->addItem($ir->item(),$ir['qty'],$ir['unit'],$ir['custom_fields']);
 					$i++;
 				}
 
 				$movement_challan->executePurchase($add_to_stock=true);
-				$this->setStatus('completed');
+
+				//change the status of item to received
+				foreach ($this->itemRows() as $ir) {
+					$ir->setStatus('received');
+				}
+
+				if($form['include_items'] == "All"){
+					$this->setStatus('completed');
+				}
+				if($form['include_items'] == 'selected'){
+					if($this->itemRows()->addCondition('status','processing')->count()->getOne() == 0)
+						$this->setStatus('completed');
+					else	
+						$this->setStatus('processing');
+				}
+
 				return true;
 			}	
 
@@ -216,9 +302,9 @@ class Model_PurchaseOrder extends \Model_Document{
 			$invoice['po_id'] = $this['id'];
 			$invoice['supplier_id'] = $this->supplier()->get('id');
 			$invoice['total_amount'] = $this['total_amount'];
-			$invoice['discount'] = $this['discount_voucher_amount'];
 			$invoice['tax'] = $this['tax'];
 			$invoice['net_amount'] = $this['net_amount'];
+
 			$invoice->relatedDocument($this);
 
 			$invoice->save();
