@@ -151,9 +151,15 @@ class Model_OrderDetails extends \Model_Document{
 		return $this->ref('order_id');
 	}
 
-	function invoice(){
-		if(!$this['invoice_id']) return false;
-		return $this->ref('invoice_id');
+	function invoice($invoice=null){
+		if($invoice){
+			$this['invoice_id'] = $invoice->id;
+			$this->save();
+			return $invoice;
+		}else{
+			if(!$this['invoice_id']) return false;
+			return $this->ref('invoice_id');
+		}
 	}
 
 	function getCurrentStatus($department=false){

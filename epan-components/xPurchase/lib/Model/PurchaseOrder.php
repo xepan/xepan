@@ -327,7 +327,9 @@ class Model_PurchaseOrder extends \Model_Document{
 						$oi['unit'],
 						$oi['narration'],
 						$oi['custom_fields']
-					);					
+					);
+
+				$oi->invoice($invoice);					
 			}
 
 			if($status !== 'draft' and $status !== 'submitted'){
