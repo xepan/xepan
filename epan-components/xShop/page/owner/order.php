@@ -8,8 +8,14 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 		$this->app->title=$this->api->current_department['name'] .': Orders';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Sale Orders Management <small> Manage your sale Orders </small>');
 
-		$order_model = $this->add('xShop/Model_Order');
+		$this->vp = $this->add('VirtualPage')->set(function($p){
+			$o = $p->add('xShop/Model_Order')->load($_GET['sales_order_searched']);
+			$order = $p->add('xShop/View_Order');
+			$order->setModel($o);
+		});
 
+
+		$order_model = $this->add('xShop/Model_Order');
 		$order_model->title_field = 'search_phrase';
 
 		$cols = $this->app->layout->add('Columns',null,'page_title');
@@ -18,6 +24,12 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 		$lc->add('View')->setHTML('<i class="fa fa-users"></i> Sale Orders Management <small> Manage your sale Orders </small>');
 		$form = $rc->add('Form_Empty');
 		$form->addField('autocomplete/Basic','order')->setModel($order_model);
+
+		if($form->isSubmitted()){
+			$order_model->load($form['order']);
+
+			$form->js(null, $form->js()->reload())->univ()->frameURL('Order '. $order_model['name'],$this->api->url($this->vp->getURL(),array('sales_order_searched'=>$form['order'])))->execute();
+		}
 
 		$this->add('xShop/View_Badges_OrderPage');
 
