@@ -75,9 +75,9 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
 		// }
 
 		
-		// if(!$crud->isEditing()){
-		// 	$crud->grid->addColumn('expander','purchase_order_item');
-		// }
+		if(!$crud->isEditing()){
+			$crud->grid->addColumn('expander','purchase_order_item');
+		}
 
 		$crud->add('Controller_FormBeautifier');
 		$crud->add('xHR/Controller_Acl');
@@ -98,6 +98,7 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
         	$item_field->qty_effected_custom_fields_only = true;
         }
 
+		$crud->add('xHR/Controller_Acl',array('document'=>'xPurchase\PurchaseOrder_'. ucwords($po_item->order()->get('status')),'show_acl_btn'=>false,'override'=>array('can_view'=>'All','can_see_activities'=>'No')));
 
 	}
 	

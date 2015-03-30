@@ -33,6 +33,10 @@ class Model_PurchaseOrderItem extends \Model_Document{
 		return $this->ref('item_id');
 	}
 
+	function order(){
+		return $this->ref('po_id');
+	}
+
 	function beforeSave(){
 
 		// validate custom field entries
