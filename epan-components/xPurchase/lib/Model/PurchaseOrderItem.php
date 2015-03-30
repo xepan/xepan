@@ -8,8 +8,8 @@ class Model_PurchaseOrderItem extends \Model_Document{
 	function init(){
 		parent::init();
 
-		$this->hasOne('xPurchase/PurchaseOrder','po_id');
-		
+		$this->hasOne('xPurchase/PurchaseOrder','po_id')->caption('Purchase Order');
+		$this->hasOne('xPurchase/PurchaseInvoice','invoice_id')->display(array('form'=>'autocomplete/Basic'));
 		$this->hasOne('xShop/Item_Purchasable','item_id')->display(array('form'=>'xShop/Item'));
 		
 		$this->addField('qty');
@@ -31,6 +31,17 @@ class Model_PurchaseOrderItem extends \Model_Document{
 
 	function item(){
 		return $this->ref('item_id');
+	}
+
+	function invoice($invoice=null){
+		if($invoice){
+			$this['invoice_id'] = $invoice->id;
+			$this->save();
+			return $invoice;
+		}else{
+			if(!$this['invoice_id']) return false;
+			return $this->ref('invoice_id');
+		}
 	}
 
 	function order(){
