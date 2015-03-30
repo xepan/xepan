@@ -33,6 +33,11 @@ class Model_PurchaseOrderItem extends \Model_Document{
 		return $this->ref('item_id');
 	}
 
+	function invoice(){
+		if(!$this['invoice_id']) return false;
+		return $this->ref('invoice_id');
+	}
+
 	function order(){
 		return $this->ref('po_id');
 	}

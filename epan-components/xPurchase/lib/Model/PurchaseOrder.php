@@ -25,7 +25,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->addHook('beforeDelete',$this);
 
 		$this->addExpression('orderitem_count')->set($this->refSQL('xPurchase/PurchaseOrderItem')->count());
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
@@ -337,7 +337,7 @@ class Model_PurchaseOrder extends \Model_Document{
 			$this->api->db->commit();
 			return $invoice;
 		}catch(\Exception $e){
-			echo $e->getmessage();
+			echo $e->getHTML();
 			$this->api->db->rollback();
 			if($this->api->getConfig('developer_mode',false))
 				throw $e;
