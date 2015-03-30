@@ -20,7 +20,11 @@ class page_xShop_page_owner_invoice_draft extends page_xShop_page_owner_main{
 
 			if($form->isSubmitted()){
 				$sale_order = $p->add('xShop/Model_Order')->load($form['sales_order']);
-				$sale_order->createInvoice('draft');
+				$items_to_include_array=array();
+				foreach ($sale_order->itemrows() as $itm) {
+					$items_to_include_array[] = $item->id;
+				}
+				$sale_order->createInvoice('draft',null,$items_to_include_array);
 				$form->js(null,$form->js()->univ()->closeDialog())->univ()->reload()->execute();
 			}
 
