@@ -6,7 +6,6 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 		parent::init();
 		
 		$this->app->title=$this->api->current_department['name'] .': Orders';
-		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Sale Orders Management <small> Manage your sale Orders </small>');
 
 		$this->vp = $this->add('VirtualPage')->set(function($p){
 			$o = $p->add('xShop/Model_Order')->load($_GET['sales_order_searched']);
