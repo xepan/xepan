@@ -111,9 +111,9 @@ class Model_Document extends SQL_Model{
 		return $class;
 	}
 
-	function assign_page($page){
-		$page->add('View')->set('In Model Document ... complete me ');
-	}
+	// function assign_page($page){
+	// 	$page->add('View')->set('In Model Document ... complete me ');
+	// }m
 
 	function assignTo($to,$subject="",$message=""){
 			

@@ -2,18 +2,23 @@
 	{$Content}
 	<div class="row">
 		<div class="col-md-4">
-			Request On: <b>{$request_on}</b>
+			<div>PO No: <b>{$name}</b></div>
+			<div>Created On: <b>{$request_on}</b></div>
 		</div>
-		<div class="col-md-4 text-center">
-			 Status: <b>{$status}</b>
-		</div>
-		<div class="col-md-4 text-right">
-			
-			<div>To Suppiler: <b>{$supplier}</b></div>
-		</div>
-	</div>	
 		
-	<table width='100%' class="table">
+		<div class="col-md-4 text-center atk-swatch-ink" style='text-transform:capitalize'>{$status}
+		</div>
+		
+		<div class="col-md-4 text-right">
+		<div>Priority: <b>{$priority}</b></div>
+		</div>
+			
+		
+	</div>	
+	
+	<div>	Supplier: <b style='text-transform:capitalize'>{$supplier}</b></div>
+		
+	<table width='100%' class='table' style="font-size:11px;vertical-align:top;">
 		<tbody class="table-striped">
 			<tr>
 				<th align="left">Sno</th>
@@ -21,6 +26,7 @@
 				<th align="right" class="text-right">Qty</th>
 				<th align="right" class="text-right">Unit</th>
 				<th align="right" class="text-right">Custom Fields</th>
+				<th align="right" class="text-right">Total Amount</th>
 			</tr>
 		{rows}
 			{row}
@@ -30,6 +36,7 @@
 					<td align="right">{$qty}</td>
 					<td align="right">{$unit}</td>
 					<td align="right">{$custom_field}</td>
+					<td align="right">{$total_amount}</td>
 				</tr>
 			{/row}
 		{/rows}
