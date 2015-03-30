@@ -1,8 +1,10 @@
 <?php
 namespace xPurchase;
 
-class Model_PurchaseOrderItem extends \Model_Table{
+class Model_PurchaseOrderItem extends \Model_Document{
 	public $table="xpurchase_purchase_order_item";
+	public $status=array('waiting','processing','received','completed');
+	public $root_document_name='xPurchase\PurchaseOrder';
 	function init(){
 		parent::init();
 
@@ -15,7 +17,9 @@ class Model_PurchaseOrderItem extends \Model_Table{
 		$this->addField('rate');
 		$this->addField('amount');
 		$this->addField('narration');
-		
+
+		$this->getElement('status')->defaultValue('waiting');
+
 		$this->addField('custom_fields')->type('text');
 
 		$this->addHook('beforeSave',$this);

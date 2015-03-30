@@ -34,7 +34,7 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
 							$form->displayError('amount','Amount Cannot be Null');
 					break;
 				}
-
+				
 					$form->model->addHook('afterSave',function($m)use($form){
 						if($form['payment'] == "cash")
 							$m->cashAdvance($form['amount']);
@@ -60,7 +60,7 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
 
 		}
 
-		$crud->setModel($draft_purchase_order_model,array('supplier_id','priority','order_date','order_summary'),array('name','supplier_id','order_date'));
+		$crud->setModel($draft_purchase_order_model,array('supplier_id','priority','order_date','order_summary','orderitem_count'),array('name','supplier','order_date','orderitem_count'));
 		
 		if($crud->isEditing('add') OR $crud->isEditing('edit')){
 			$o = $form->add('Order');
@@ -90,7 +90,7 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
         $po_item=$this->add('xPurchase/Model_PurchaseOrderItem');
         $po_item->addCondition('po_id',$po_id);
 
-        $crud->setModel($po_item);
+        $crud->setModel($po_item,array('item_id','qty','unit','rate','amount','narration','custom_fields'),array('item','item_name','qty','rate','amount','status'));
         // $crud->add('xHR/Controller_Acl');
 
         if($crud->isEditing()){

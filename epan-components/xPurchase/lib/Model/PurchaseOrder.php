@@ -13,11 +13,13 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->hasOne('xShop/Priority','priority_id')->group('z~6')->mandatory(true)->defaultValue($this->add('xShop/Model_Priority')->addCondition('name','Medium')->tryLoadAny()->get('id'));
 		$this->addField('name')->caption('Purchase Order');
 		$this->addField('order_summary')->type('text');
-		$this->addField('order_date')->type('datetime')->defaultValue(date('Y-m-d H:i:S'));
+		$this->addField('order_date')->type('datetime')->defaultValue($this->api->now);
 
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
 
 		$this->addHook('beforeDelete',$this);
+
+		$this->addExpression('orderitem_count')->set($this->refSQL('xPurchase/PurchaseOrderItem')->count());
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
@@ -33,8 +35,12 @@ class Model_PurchaseOrder extends \Model_Document{
 		return $this->ref('xPurchase/PurchaseOrderItem');
 	}
 
-	function submit(){
+	function submit(){		
 		$this->setStatus('submitted');
+	}
+
+	function cancle(){
+		$this->setStatus('canceled');
 	}
 
 	function approve(){
@@ -67,44 +73,119 @@ class Model_PurchaseOrder extends \Model_Document{
 
 	function mark_processed_page($page){
 
-		$form = $page->add('Form_Stacked');
+		$page->add('H3')->set('Items for Receive');
+		// $cols = $form->add('Columns');
+		// $sno_cols= $cols->addColumn(1);
+		// $item_cols= $cols->addColumn(5);
+		// $req_qty_cols= $cols->addColumn(2);
+		// $unit_cols= $cols->addColumn(1);
+		// $received_qty= $cols->addColumn(2);
+		// $keep_open= $cols->addColumn(1);
 
+		// $i=1;
+		// foreach($this->itemrows() as $ir){
+		// 	$sno_cols->add('View')->set($i);
+		// 	$item_model = $this->add('xShop/Model_Item')->load($ir['item_id']);
+		// 	$item_name_with_customField = $ir['item']." </br>".$item_model->genericRedableCustomFieldAndValue($ir['custom_fields']);
+		// 	$item_cols->addField('Readonly','item_'.$i,'Item')->set($item_name_with_customField);
+			
+		// 	$req_qty_cols->addField('Readonly','req_qty_'.$i,'Qty')->set($ir['qty']);
+		// 	$unit_cols->addField('Readonly','req_uit_'.$i,'Unit')->set($ir['unit']);
+		// 	$received_qty->addField('Number','received_qty_'.$i,'Received Qty')->set($ir['qty']);
+		// 	// $keep_open->addField('boolean','keep_open_'.$i,'Keep open')->set(false);
+		// 	$i++;
+		// }
+				
+		$grid = $page->add('Grid');
+		$grid->setModel($this->itemRows()->addCondition('status','processing'));
+
+		// $grid->removeColumn('custom_fields');
+		// $grid->removeColumn('item');
+		
+		$form = $page->add('Form_Stacked');
+		$form->addField('line','received_via');
+		$form->addField('line','delivery_docket_no','Docket No / Person name / Other Reference');
+		$form->addField('text','received_narration');
+		$form->addField('Checkbox','generate_purchase_invoice');
+		$form->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'))->setEmptyText('Select Items Included in Invoice');
+		$form->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
+		$form->addField('Money','amount');
+		$form->addField('line','cheque_no');
+		$form->addField('Date','cheque_date');
+		$form->addField('line','bank_account_no');
+
+		$include_field = $form->addField('hidden','selected_items');
+
+		$grid->addSelectable($include_field);
+
+		$page->add('H3')->set('Items Received');
+		$grid = $page->add('Grid');
+		$grid->setModel($this->itemRows()->addCondition('status','received'),array('dispatch_request','item_with_qty_fields','qty','unit','custom_fields','item'));
 		// $form->addField('DropDown','to_warehouse')
 		// 	->setFieldHint('TODO : Check if warehouse is outsourced make challan and receive automatically')
 		// 	->setModel('xStore/Warehouse');
 
-		$cols = $form->add('Columns');
-		$sno_cols= $cols->addColumn(1);
-		$item_cols= $cols->addColumn(5);
-		$req_qty_cols= $cols->addColumn(2);
-		$unit_cols= $cols->addColumn(1);
-		$received_qty= $cols->addColumn(2);
-		$keep_open= $cols->addColumn(1);
-
-		$i=1;
-		foreach($this->itemrows() as $ir){
-			$sno_cols->add('View')->set($i);
-			$item_model = $this->add('xShop/Model_Item')->load($ir['item_id']);
-			$item_name_with_customField = $ir['item']." </br>".$item_model->genericRedableCustomFieldAndValue($ir['custom_fields']);
-			$item_cols->addField('Readonly','item_'.$i,'Item')->set($item_name_with_customField);
-			
-			$req_qty_cols->addField('Readonly','req_qty_'.$i,'Qty')->set($ir['qty']);
-			$unit_cols->addField('Readonly','req_uit_'.$i,'Unit')->set($ir['unit']);
-			$received_qty->addField('Number','received_qty_'.$i,'Received Qty')->set($ir['qty']);
-			// $keep_open->addField('boolean','keep_open_'.$i,'Keep open')->set(false);
-			$i++;
-		}
 
 		$receive_btn = $form->addSubmit('Receive');
 
 		if($form->isSubmitted()){
-			if($form->isClicked($receive_btn)){
+			if(!$form['selected_items'])
+				throw $this->Exception('No Item Selected'.$form['selected_items'],'Growl');
 				
+			$items_selected = json_decode($form['selected_items'],true);
+			// TODO : A LOT OF CHECKINGS REGARDING INVOICE ETC ...
+
+			//CHECK FOR GENERATE INVOICE
+			if($form['generate_purchase_invoice']){
+				if(!$form['selected_items'])
+					$form->displayError('selected_items','Select Received Item.');
+
+				if($form['payment']){
+					switch ($form['payment']) {
+						case 'cheque':
+							if(trim($form['amount']) == "" or $form['amount']==0)
+								$form->displayError('amount','Amount Cannot be Null');
+
+							if(trim($sform['cheque_no']) =="")
+								$form->displayError('cheque_no','Cheque Number not valid.');
+
+							if(!$form['cheque_date'])
+								$form->displayError('cheque_date','Date Canot be Empty.');
+
+							if(trim($form['bank_account_no']) == "")
+								$form->displayError('bank_account_no','Account Number Cannot  be Null');
+						break;
+						case 'cash':
+							if(trim($form['amount']) == "" or $form['amount']==0)
+								$form->displayError('amount','Amount Cannot be Null');
+						break;
+					}
+
+
+				}
+				
+				//GENERATE INVOICE FOR SELECTED ITEMS
+				$purchase_invoice = null;
+				if($form['include_items'] == "Selected"){
+					$purchase_invoice = $this->createInvoice($status='Approved',$purchaseLedger=null, $items_selected);
+				}
+				//GENERATE INVOOICE FOR ALL ORDERD ITEMS
+				if($form['include_items'] == "All"){
+					$purchase_invoice = $this->createInvoice();
+				}
+
+				if($form['payment'] == "cash")
+					$purchase_invoice->payViaCash($form['amount']);
+				
+				if($form['payment'] == "cheque")
+					$purchase_invoice->payViaCheque($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_no'],$self_bank_account);
+
+				//WAREHOUSE ENTRY
 				$to_warehouse = $this->add('xStore/Model_Warehouse')->loadPurchase();
 				
 				$movement_challan = $to_warehouse->newPurchaseReceive($this);
 				$i=1;
-				foreach ($this->itemrows() as $ir) {		
+				foreach ($this->itemrows() as $ir) {
 					$movement_challan->addItem($ir->item(),$form['received_qty_'.$i],$form['req_uit_'.$i],$ir['custom_fields']);
 					$i++;
 				}
@@ -112,7 +193,8 @@ class Model_PurchaseOrder extends \Model_Document{
 				$movement_challan->executePurchase($add_to_stock=true);
 				$this->setStatus('completed');
 				return true;
-			}
+			}	
+
 		}
 
 
