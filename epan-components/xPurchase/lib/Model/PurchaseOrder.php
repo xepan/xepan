@@ -207,26 +207,53 @@ class Model_PurchaseOrder extends \Model_Document{
 	function purchaseOrderItems(){
 		return $this->ref('xPurchase/PurchaseOrderItem');
 	}
-	function createInvoice($status='approved'){
-		$invoice = $this->add('xPurchase/Model_Invoice_Draft');
-		$invoice['supplier_id'] = $this->supplier()->get('id');
-		$invoice['purchase_order_id'] = $this['id'];
-		//$invoice['billing_address'] = $this['billing_address'];
-		$invoice->save();
-		
-		$invoice->relatedDocument($this);
 
-		$ois = $this->purchaseOrderItems();
-		foreach ($ois as $oi) {
-			$invoice->addItem(
-					$oi->item(),
-					$oi['qty'],
-					$oi['rate'],
-					$oi['amount'],
-					$oi['unit'],
-					$oi['narration'],
-					$oi['custom_fields']
-				);					
+	function createInvoice($status='draft',$purchaseLedger=null, $items_array=array()){
+		try{
+			$this->api->db->beginTransaction();
+			$invoice = $this->add('xPurchase/Model_Invoice_Draft');
+
+			$invoice['po_id'] = $this['id'];
+			$invoice['supplier_id'] = $this->supplier()->get('id');
+			$invoice['total_amount'] = $this['total_amount'];
+			$invoice['discount'] = $this['discount_voucher_amount'];
+			$invoice['tax'] = $this['tax'];
+			$invoice['net_amount'] = $this['net_amount'];
+			$invoice->relatedDocument($this);
+
+			$invoice->save();
+			
+
+			$ois = $this->purchaseOrderItems();
+			foreach ($ois as $oi) {
+				
+				if(!count($items_array) or !in_array($oi->id, $items_array) ) continue;
+				
+				if($oi->invoice())
+					throw $this->exception('Order Item already used in Invoice','ValidityCheck');
+
+				$invoice->addItem(
+						$oi->item(),
+						$oi['qty'],
+						$oi['rate'],
+						$oi['amount'],
+						$oi['unit'],
+						$oi['narration'],
+						$oi['custom_fields']
+					);					
+			}
+
+			if($status !== 'draft' and $status !== 'submitted'){
+				$invoice->createVoucher($salesLedger);
+			}
+			
+			$this->api->db->commit();
+			return $invoice;
+		}catch(\Exception $e){
+			echo $e->getmessage();
+			$this->api->db->rollback();
+			if($this->api->getConfig('developer_mode',false))
+				throw $e;
 		}
 	}
 	
