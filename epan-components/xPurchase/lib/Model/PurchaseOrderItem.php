@@ -8,7 +8,7 @@ class Model_PurchaseOrderItem extends \Model_Document{
 	function init(){
 		parent::init();
 
-		$this->hasOne('xPurchase/PurchaseOrder','po_id');
+		$this->hasOne('xPurchase/PurchaseOrder','po_id')->caption('Purchase Order');
 		
 		$this->hasOne('xShop/Item_Purchasable','item_id')->display(array('form'=>'xShop/Item'));
 		
