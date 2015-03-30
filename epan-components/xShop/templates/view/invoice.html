@@ -1,0 +1,57 @@
+<div id="{$_name}" class="{$Class}">
+		<!--job card detail  -->
+	<div  class="row">
+		<div class="col-md-4">
+			<div>Invoice No :<b>{$invoice_no}</b></div>
+			<div> Billing address :<b>{$billing_address}</b></div>
+			<div> Customer :<b>{$customer_name}</b></div>
+			<div> Mobile No :<b>{$mobile_no}</b></div>
+			
+		 </div>
+
+		<div class="col-md-4 text-center atk-swatch-ink"style='text-transform:capitalize'>{$type}</div>
+
+			<!--order detail  -->
+		<div class = "col-md-4 text-right">
+			<!-- <div>purchase Order No: <b>{$po}</b></div>
+			<div>Order Created Date: <b>{$order_created_at}</b></div> -->
+			<div>Sale Order No: <b>{$sales_order_no}</b></div>
+			<!-- <div>Purchase Order Created Date: <b>{$order_created_at}</b></div>
+			<div>Customer: <b>{$customer}</b></div>
+			<div>From Supplier: <b>{$customer}</b></div> -->
+		</div>
+	</div>
+		<table width='100%' class='table'>
+			<tbody class='table-striped'>
+				<tr>
+					<th align="left">Sno</th>
+					<th align="center">Item Name</th>
+					<th align="right" class="text-right">Qty</th>
+					<th align="right" class="text-right">Unit</th>
+					<th align="right" class="text-right">Rate</th>
+					<th align="right" class="text-right">Amount</th>
+					
+				</tr>
+			{rows}
+				{row}
+					<tr>
+						<td align="left">{$sno}</td>
+						<td align="left">{item_name} Item  Here{/item_name}</td>
+						<td align="right">{$qty}</td>
+						<td align="right">{$unit}</td>
+						<td align="right">{$rate}</td>
+						<td align="right">{$amount}</td>
+						
+					</tr>
+				{/row}
+			{/rows}
+			</tbody>
+	</table>	
+		<!-- <div class="col-md-12">
+			<b>Specifications</b><br>
+				{specification} Specification Here{/specification}
+		</div> -->
+
+</div>
+
+

@@ -1,0 +1,39 @@
+<div id="{$_name}">
+
+	<div class="row">
+		<div class="col-md-4">
+			<div><b>{$name}</b></div>
+			<div>Date: <b>{$created_at}</b></div>
+		</div>
+		<div class="col-md-4 text-center">
+			<div class="atk-swatch-ink">Status: <b>{$status}</b></div>
+		</div>
+		<div class="col-md-4 text-right">
+			<div>From Department: <b>{from_department}From Department{/from_department}</b></div>
+			<div>To Department: <b>{to_department}To Department{/to_department}</b></div>
+			<div>To Warehouse: <b>{dispatch_to_warehouse}{/dispatch_to_warehouse}</b></div>
+			<div>Order No: <b>{order}{/order}</b></div>
+		</div>
+	</div>
+		
+	<table width='100%' class='table'>
+		<tbody class='table-striped'>
+			<tr>
+				<th align="left">Sno</th>
+				<th align="left">  Item Name </th> 
+				<th align="left">  Qty </th>
+			</tr>
+		{rows}
+			{row}
+				<tr>
+					<td align="left">{$sno}</td>
+					 <td align="left">{$item_with_qty_fields}</td> 
+					 <td align="left">{qty}{/qty}</td> 
+				</tr>
+			{/row}
+		{/rows}
+		</tbody>
+	</table>
+</div>
+</div>	
+

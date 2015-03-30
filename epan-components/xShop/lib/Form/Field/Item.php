@@ -50,6 +50,15 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 				}
 			}
 
+			//Stock Effect CustomFields
+			$secf = $item ->stockEffectCustomFields();
+			foreach ($secf as $cf) {
+				$cf = $cf->ref('customfield_id');
+				if(!isset($cust_field_array['stockeffectcustomfield'][$cf['id']]) or $cust_field_array['stockeffectcustomfield'][$cf['id']] == ''){
+					$field->displayFieldError('This Item requires custom fields to be filled');
+				}
+			}
+
 		});
 	}
 
@@ -110,12 +119,13 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 			//Make PredefinedPhase Array
 			$p->preDefinedPhase = array();
 			foreach ($item->getAssociatedDepartment() as $key => $value) {
-				$p->preDefinedPhase[$value] = $value;
+				$p->preDefinedPhase[$value] = array();
 			}
-
 			$p->existing_values = $_GET['current_json']?json_decode($_GET['current_json'],true):$p->preDefinedPhase;
+			// echo print_r($p->existing_values,true);
 			// $this->existing_values = $item->getAssociatedDepartment();
 			// print_r($this->existing_values);
+
 			if(!$item->loaded()) {
 				$p->add('View_Error')->set('item not selcetd');
 				return;
@@ -127,6 +137,17 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 			if($qty_cf_only)
 				$phases->addCondition('id',$p->add('xHr/Model_Department')->loadStore()->get('id'));
 
+			//Stock Effect Custom Fields
+			$secf = $item->stockEffectCustomFields();
+			foreach ($secf as $cfassos) {
+				$cf = $cfassos->ref('customfield_id');
+				$field = $self->addCustomField($cf,$cfassos,"asas~12~Stock Effected Custom Fields", $p,true);
+				if(isset($p->existing_values['stockeffectcustomfield'][$cf->id])){
+						$field->set($p->existing_values['stockeffectcustomfield'][$cf->id]);
+					}				
+			}
+
+			//Department Associated CustomFields
 			foreach ($phases as $phase) {
 			// add all phases
 				$group = $phase['production_level']."~12~Level".$phase['production_level'];
@@ -181,6 +202,7 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 						}
 					}
 				}
+				
 
 				$selected_phases = array_keys($custom_fields_asso_values);
 				
@@ -220,6 +242,16 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 					$level_touched[] = $prd_level;
 				}
 
+				//Stock_effect_Custom_fields added into
+				$secf = $item->stockEffectCustomFields();
+				$custom_fields_asso_values['stockeffectcustomfield']=array();
+				foreach ($secf as $cfassos) {
+					$cf = $cfassos->ref('customfield_id');
+					$custom_fields_asso_values['stockeffectcustomfield'][$cf->id] =  $form['custom_field_'.$cfassos->id];
+					// if(!$form['custom_field_'.$cfassos->id])
+					// $form->displayError('custom_field_'.$cfassos->id,'Please define custom fields for selected phase');
+				}
+
 				$json = json_encode($custom_fields_asso_values);
 				$form->js(null,$form->js()->univ()->closeDialog())->_selector('#'.$_GET['custom_field_name'])->val($json)->execute();
 			}
@@ -229,7 +261,7 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 	}
 
 
-	function addCustomField(&$cf, $custom_fields_asso_assos,$group, $page){
+	function addCustomField(&$cf, $custom_fields_asso_assos,$group, $page,$mandatory=false){
 		$field=null;
 		
 		switch($cf['type']){
@@ -252,6 +284,9 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 			case "Color":
 			break;
 		}
+
+		if($mandatory)
+			$field->validateNotNull(true);
 
 		return $field;
 	}

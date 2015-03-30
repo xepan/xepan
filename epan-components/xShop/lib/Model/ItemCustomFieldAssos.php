@@ -11,13 +11,13 @@ class Model_ItemCustomFieldAssos extends \Model_Table{
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
-		$this->hasOne('xShop/CustomFields','customfield_id');
+		$this->hasOne('xShop/CustomFields','customfield_id')->display(array('form'=>'autocomplete/Plus'));
 		$this->hasOne('xShop/Item','item_id');
 		$this->hasOne('xProduction/Phase','department_phase_id');
 
 		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true);
-		$this->addField('can_effect_stock')->type('boolean')->defaultValue(false);
+		$this->addField('can_effect_stock')->type('boolean')->defaultValue(true)->mandatory(true);
 
 		$this->hasMany('xShop/CustomFieldValue','itemcustomfiledasso_id');
 
@@ -45,15 +45,15 @@ class Model_ItemCustomFieldAssos extends \Model_Table{
 		//check for the Can Effect Stock 
 		//Check selected Department Phase is Store
 		//if check_effect_stock is true
-			if($this['can_effect_stock']){
-				//load Store Department
-				$store = $this->add('xHR/Model_Department')->loadStore();
-				//if department phase is not store
-				if($store['id'] != $this['department_phase_id']){
-					// display error
-					throw $this->Exception('Only Apply With Store Department Phase','ValidityCheck')->setField('can_effect_stock');
-				}			
-			}
+			// if($this['can_effect_stock']){
+			// 	//load Store Department
+			// 	$store = $this->add('xHR/Model_Department')->loadStore();
+			// 	//if department phase is not store
+			// 	if($store['id'] != $this['department_phase_id']){
+			// 		// display error
+			// 		throw $this->Exception('Only Apply With Store Department Phase','ValidityCheck')->setField('can_effect_stock');
+			// 	}			
+			// }
 
 		//Check customField is empty
 		if(!$this['customfield_id'])

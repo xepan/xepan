@@ -21,6 +21,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		$this->hasOne('xShop/Order','order_id');
 		$this->hasOne('xShop/Item_Saleable','item_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
+		$this->hasOne('xShop/Invoice','invoice_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
 
 		$this->addField('qty')->group('b~3~Order Details')->mandatory(true);
 		// $this->addField('unit')->group('b~3');
@@ -37,15 +38,26 @@ class Model_OrderDetails extends \Model_Document{
 			return $m->refSQL('order_id')->fieldQuery('created_by_id');
 		});
 
+		// $this->addExpression('item_with_qty_fields','custom_fields');
+
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');
 		$this->hasMany('xShop/SalesOrderDetailAttachment','related_document_id',null,'Attachements');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
 		$this->addHook('afterInsert',$this);
+		// $this->addHook('afterLoad',$this);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+	// function afterLoad(){
+	// 	if($this['custom_fields']){
+	// 		$cf_array=json_decode($this['custom_fields'],true);
+	// 		$qty_json = json_encode(array('stockeffectcustomfield'=>$cf_array['stockeffectcustomfield']));
+	// 		$this['item_with_qty_fields'] = $this['item'] .' [' .$this->item()->genericRedableCustomFieldAndValue($qty_json) .']';
+	// 	}
+	// }
 
 	function beforeSave(){
 
@@ -139,6 +151,11 @@ class Model_OrderDetails extends \Model_Document{
 		return $this->ref('order_id');
 	}
 
+	function invoice(){
+		if(!$this['invoice_id']) return false;
+		return $this->ref('invoice_id');
+	}
+
 	function getCurrentStatus($department=false){
 		$last_ds = $this->deptartmentalStatus()->addCondition('status','<>','Waiting');
 		$last_ds->_dsql()->order('id','desc');
@@ -157,19 +174,31 @@ class Model_OrderDetails extends \Model_Document{
 		if($from_custom_fields){
 			$return_array=array();
 			$cf = json_decode($this['custom_fields'],true);
+			if(!$cf) return $return_array;
 			foreach ($cf as $dept_id => $cfvalues_array) {
-				$return_array[] = array('department_id'=>$dept_id,'department'=>$this->add('xHR/Model_Department')->load($dept_id)->get('name'));
+				if($dept_id == 'stockeffectcustomfield'){//check for the stockeffect customfields
+					$return_array[] = array('department_id'=>$dept_id,'department'=>'stockeffectcustomfield','status'=>'');
+				}else{
+					$m = $this->add('xShop/Model_OrderItemDepartmentalStatus');
+					$m->addCondition('orderitem_id',$this->id);
+					$m->addCondition('department_id',$dept_id);
+					$m->tryLoadAny();
+					$return_array[] = array('department_id'=>$dept_id,'department'=>$this->add('xHR/Model_Department')->load($dept_id)->get('name'),'status'=>$m['status']);
+				}
 			}
 			return $return_array;
 		}else{
 			$m = $this->add('xShop/Model_OrderItemDepartmentalStatus');
 			$m->addCondition('orderitem_id',$this->id);
-			
 			if($department){
 				$m->addCondition('department_id',$department->id);
 				$m->tryLoadAny();
 				if(!$m->loaded()) return false;
 			}
+
+			// Now add qty effected custom fields manually from json
+			// $cf = json_decode($this['custom_fields'],true);
+			// $m[] = array('department_id'=>null,'department'=>'stockeffectcustomfield','status'=>'');
 
 			return $m;
 		}
@@ -220,23 +249,25 @@ class Model_OrderDetails extends \Model_Document{
 		if(!$this->loaded())
 			return false;
 
-		$d = $this->deptartmentalStatus($department=false);
-
-		if(!$d->count()->getOne())
-			$d = $this->deptartmentalStatus($department=false,$from_custom_fields=true);
+		$d = $this->deptartmentalStatus($department=false,$from_custom_fields=true);
 		
 		$str = "";
 		foreach ($d as $department_asso) {
+			// throw new \Exception($department_asso[''], 1);	
 			//Hightlight the PassDepartment mostly used in Jobcard
 			if($department_hightlight and $department_hightlight instanceof \xHR\Model_Department){
 				if($department_hightlight['id'] == $department_asso['department_id'])
 					$str .= "<b class='atk-swatch-green'>".$department_asso['department']."</b>";
 				else
 					$str .= '<b>' .$department_asso['department']."</b>";
-			}else	
-				$str .= '<b>' .$department_asso['department']."</b>";
+			}else{
+				if($department_asso['department'] == 'stockeffectcustomfield')
+					$str .= '<b class="label label-primary">' .$department_asso['department']."</b>";
+				else		
+					$str .= '<b>' .$department_asso['department']."</b>";
+			}
 			
-			if($show_status)//Show Department Status
+			if($show_status and $department_asso['department'] != 'stockeffectcustomfield')//Show Department Status and check for the department is stockeffect
 				$str .=" ( ".($department_asso['status']?:'Waiting')." )";
 
 			if($with_custom_fields){

@@ -138,6 +138,7 @@ class page_base_owner extends Page {
 			$sales_m->addItem(array('E-Voucher','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_voucher',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Customer','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_customer',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Sales Order','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_order',array('department_id'=>$dept_model->id)));
+			$sales_m->addItem(array('Sales Invoice','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_invoice',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('AddBlock','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_addblock',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Payment Gateway Config','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_paygateconfig',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
@@ -194,6 +195,10 @@ class page_base_owner extends Page {
 			$dept_model->loadCRM();
 			
 			$crm_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+			$crm_m->addItem(array('Support Tickets','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+			$crm_m->addItem(array('General Emails','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+
+
 			$crm_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 			$crm_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
@@ -207,11 +212,27 @@ class page_base_owner extends Page {
 		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xAccounts')->tryLoadAny()->get('id'))){
 			$accounts_m = $m->addMenu('Accounts');
 			$dept_model->loadAccounts();
-			$accounts_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+			// $accounts_m->addItem(array('Balance Sheet','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_balancesheet',array('department_id'=>$dept_model->id)));
+			// $accounts_m->addItem(array('Group','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_group',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Payment Paid','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_amtpaid',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Payment Received','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_amtreceived',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Cash & Bank','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_contra',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Account Statement','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_acstatement',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Cash Book','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_cashbook',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Day Book','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_daybook',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Ledgers','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_ledgers',array('department_id'=>$dept_model->id)));
 			$accounts_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$accounts_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
 			$this->shorcut_menus[]=array("page"=>"Accounts Dashboard","url"=>$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Payment Paid","url"=>$this->api->url('xAccount_page_owner_amtpaid',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Payment Received","url"=>$this->api->url('xAccount_page_owner_amtreceived',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array('keys'=>'Cash bank and withdraw deposit',"page"=>"Cash And Bank","url"=>$this->api->url('xAccount_page_owner_contra',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Account Statement","url"=>$this->api->url('xAccount_page_owner_acstatement',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Cash Book","url"=>$this->api->url('xAccount_page_owner_cashbook',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Day Book","url"=>$this->api->url('xAccount_page_owner_daybook',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Ledgers","url"=>$this->api->url('xAccount_page_owner_ledgers',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Accounts Material Request","url"=>$this->api->url('xAccounts_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Accounts Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Accounts Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
@@ -225,6 +246,7 @@ class page_base_owner extends Page {
 			$purchase_m->addItem(array('Supplier','icon'=>'gauge-1'),$this->api->url('xPurchase_page_owner_supplier',array('department_id'=>$dept_model->id)));
 			$purchase_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 			$purchase_m->addItem(array('Purchase Order','icon'=>'gauge-1'),$this->api->url('xPurchase_page_owner_purchaseorder',array('department_id'=>$dept_model->id)));
+			$purchase_m->addItem(array('Purchase Invoice','icon'=>'gauge-1'),$this->api->url('xPurchase_page_owner_purchaseinvoice',array('department_id'=>$dept_model->id)));
 			$purchase_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 			// $purchase_m->addItem(array('Supplier','icon'=>'gauge-1'),'xPurchase_page_owner_supplier');
 

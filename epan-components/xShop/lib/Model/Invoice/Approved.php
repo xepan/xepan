@@ -1,13 +1,17 @@
 <?php
-namespace xDispatch;
-class Model_DeliveryNote_Approved extends Model_DeliveryNote{
+namespace xShop;
+
+class Model_Invoice_Approved extends Model_SalesInvoice{
+	
 	public $actions=array(
 			'can_view'=>array(),
-			'can_receive'=>array(),
-
+			'allow_del'=>array(),
+			'can_mark_processed'=>array(),
 		);
+
 	function init(){
 		parent::init();
+		
 		$this->addCondition('status','approved');
 	}
-}	
+}

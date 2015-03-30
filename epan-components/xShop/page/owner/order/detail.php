@@ -26,7 +26,7 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
         $crud = $container->add('CRUD');
         $order_detail->getElement('item_id')->display(array('form'=>'xShop/Item'));
 
-        $crud->setModel($order_detail,array('item_id','qty','rate','amount','status','custom_fields'),array('id','item','qty','rate','unit','amount','status'));
+        $crud->setModel($order_detail,array('item_id','qty','rate','amount','status','custom_fields'),array('item','item_name','custom_fields','qty','rate','unit','amount','status'));
         
         if(!$crud->isEditing()){
             $grid = $crud->grid;
@@ -34,6 +34,8 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
                 $g->current_row[$f] = $g->model->getCurrentStatus();
             });
             $grid->addColumn('status','status');
+            $grid->removeColumn('item');
+            $grid->removeColumn('custom_fields');
             // $grid->addColumn('expander','attachment',array('page'=>'xShop_page_owner_attachment','descr'=>'Attachments'));
         }
 

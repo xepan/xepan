@@ -49,4 +49,17 @@ class Model_Customer extends Model_MemberDetails{
 
 		$o->now();
 	}
+
+	function account(){
+		$acc = $this->add('xAccount/Model_Account')
+				->addCondition('customer_id',$this->id)
+				->addCondition('group_id',$this->add('xAccount/Model_Group')->loadSundryDebtor()->get('id'));
+		$acc->tryLoadAny();
+		if(!$acc->loaded()){
+			$acc['name'] = $this['customer_search_phrase'];
+			$acc->save();
+		}
+
+		return $acc;
+	}
 }

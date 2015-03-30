@@ -1,5 +1,4 @@
 <?php
-
 namespace xShop;
 
 class Model_Item extends \Model_Table{
@@ -52,6 +51,8 @@ class Model_Item extends \Model_Table{
 		$this->addField('is_template')->type('boolean')->defaultValue(false)->group('f~2');
 		$this->addField('is_enquiry_allow')->type('boolean')->group('f~2');
 		$this->addField('is_attachment_allow')->type('boolean')->group('f~2');
+		$this->addField('is_fixed_asset')->type('boolean')->group('f~2');
+		$this->addField('warrenty_days')->type('int')->group('f~2');
 		
 		//Item Display Options
 		$this->addField('show_detail')->type('boolean')->defaultValue(true)->group('g~2~Item Display Options');
@@ -102,6 +103,10 @@ class Model_Item extends \Model_Table{
 		$this->addField('meta_title');
 		$this->addField('meta_description')->type('text');
 		$this->addField('tags')->type('text')->PlaceHolder('Comma Separated Value');
+
+		//others
+		$this->addField('terms_condition')->type('text')->display(array('form'=>'RichText'));//->group('c~12');
+		
 		
 		$this->hasMany('xShop/CategoryItem','item_id');
 		$this->hasMany('xShop/ItemAffiliateAssociation','item_id');
@@ -130,7 +135,7 @@ class Model_Item extends \Model_Table{
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterInsert',$this);
 		$this->addHook('beforeDelete',$this);
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave($m){
@@ -630,6 +635,8 @@ class Model_Item extends \Model_Table{
 		$array = json_decode($cf_value_json,true);
 		$str = "";
 		foreach ($array as $department) {
+			if(!$department) continue;
+			
 			$i = 1;
 			foreach ($department as $cf_id => $cf_value_id) {
 				$cf_model = $this->add('xShop/Model_CustomFields')->load($cf_id);
@@ -792,6 +799,11 @@ class Model_Item extends \Model_Table{
 		//if CustomField NotEmpty Validation check at FormField Item CustomButton
 	}
 
+	function stockEffectCustomFields(){
+	 return $this->ref('xShop/ItemCustomFieldAssos')
+				->addCondition('can_effect_stock',true)
+				->addCondition('department_phase_id',null)->tryLoadAny();
+	}
 
 
 }	

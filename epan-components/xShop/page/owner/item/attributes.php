@@ -10,6 +10,7 @@ class page_xShop_page_owner_item_attributes extends page_xShop_page_owner_main{
 		$tabs = $this->add('Tabs');
 		$tabs->addTabURL('./specification','Specification');
 		$tabs->addTabURL('./customfields','CustomFields');
+		$tabs->addTabURL('./stockcustomfields','StockEffectCustomFieds');
 	}
 
 	function page_specification(){
@@ -28,10 +29,11 @@ class page_xShop_page_owner_item_attributes extends page_xShop_page_owner_main{
 		
 		$custom_fields = $this->add('xShop/Model_ItemCustomFieldAssos');
 		$custom_fields->addCondition('item_id',$item_id);
+		$custom_fields->addCondition('department_phase_id','<>',null);
 		$custom_fields->tryLoadAny();
 
 		$crud = $this->add('CRUD');
-		$crud->setModel($custom_fields,array('department_phase_id','customfield_id','rate_effect','is_active','can_effect_stock'),array('department_phase','customfield','rate_effect','is_active'));
+		$crud->setModel($custom_fields,array('department_phase_id','customfield_id','rate_effect','is_active'),array('department_phase','customfield','rate_effect','is_active'));
 		if($crud->form){
 			$crud->form->getElement('customfield_id')->getModel()->addCondition('application_id',$application_id);
 		}
@@ -113,4 +115,51 @@ class page_xShop_page_owner_item_attributes extends page_xShop_page_owner_main{
 				$form_model->addCondition('id',-1);
 		}
 	}
+
+	function page_stockcustomfields(){
+
+		$item_id=$this->api->stickyGET('item_id');
+		$application_id = $this->api->recall('xshop_application_id');
+		
+		$item_model = $this->add('xShop/Model_Item')->load($item_id);
+		
+		$custom_fields = $this->add('xShop/Model_ItemCustomFieldAssos');
+		$custom_fields->addCondition('item_id',$item_id)
+						->addCondition('can_effect_stock',true)
+						->addCondition('department_phase_id',null);
+		$custom_fields->tryLoadAny();
+
+		$stock_effetc_crud = $this->add('CRUD');
+		$stock_effetc_crud->setModel($custom_fields,array('customfield_id','is_active'),array('customfield','is_active'));
+		if($stock_effetc_crud->form){
+			$stock_effetc_crud->form->getElement('customfield_id')->getModel()->addCondition('application_id',$application_id);
+		}
+		$stock_effetc_crud->grid->addColumn('expander','values');
+		if(!$stock_effetc_crud->isEditing()){	
+			$g = $stock_effetc_crud->grid;
+			$g->addMethod('format_values',function($g,$f){
+				$temp = $g->add('xShop/Model_CustomFieldValue')->addCondition('itemcustomfiledasso_id',$g->model->id)->tryLoadAny();
+				$str = "";
+				if($temp->count()->getOne())
+					$str = '<span class=" atk-label atk-swatch-green">'.$temp->count()->getOne()."</span>";
+							
+				$g->current_row_html[$f] = $g->current_row_html[$f].$str;
+			});
+			$g->addFormatter('values','values');
+		}
+	}
+
+
+	function page_stockcustomfields_values(){
+		$item_id=$this->api->stickyGET('item_id');
+		$custom_field_asso_id = $this->api->stickyGET('xshop_item_customfields_assos_id');
+
+		$custom_feild_values_model = $this->add('xShop/Model_CustomFieldValue')->addCondition('itemcustomfiledasso_id',$custom_field_asso_id)->tryLoadAny();
+		$crud = $this->add('CRUD');
+		$crud->setModel($custom_feild_values_model,array('name','rate_effect'));
+
+		// $crud->grid->addColumn('expander','images');
+		// $crud->grid->addColumn('expander','filter');
+	}
+
 }

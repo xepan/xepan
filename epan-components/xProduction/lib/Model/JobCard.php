@@ -274,7 +274,12 @@ class Model_JobCard extends \Model_Document{
 			$pre_dept_job_card->complete();
 		}
 
+		
 		$this['created_by_id']=$this->api->current_employee->id;
+		
+		if($this['orderitem_id']){
+			$this->orderItem()->order()->setStatus('processing');
+		}
 		// self status received
 		if($this->department()->isOutSourced()){
 			if(!$this->outSourceParty())
@@ -285,11 +290,6 @@ class Model_JobCard extends \Model_Document{
 		}else{
 			$this->setStatus('received');
 		}
-
-		if($this['orderitem_id']){
-			$this->orderItem()->order()->setStatus('processing');
-		}
-
 	}
 
 	function cancel_page($page){
@@ -308,6 +308,10 @@ class Model_JobCard extends \Model_Document{
 	function complete(){
 		$this->setStatus('completed');
 		if($this['orderitem_id']){
+			$ds = $this->orderItem()->deptartmentalStatus($this->department());
+			if($ds) {
+				$ds->close();
+			}
 			$this->orderItem()->order()->isOrderClose(true);
 		}
 	}
@@ -327,7 +331,7 @@ class Model_JobCard extends \Model_Document{
 		if($next = $this->orderItem()->nextDeptStatus()){
 			if($next->department()->isDispatch()){
 				$oi=$this->orderItem();
-				$items_array=array(array('id'=>$oi->item()->get('id'),$oi['qty'],$oi['unit']));
+				$items_array=array(array('id'=>$oi->item()->get('id'),'qty'=>$oi['qty'],'unit'=>$oi['unit'],'custom_fields'=>$oi['custom_fields']));
 
 				$this->add('xStore/Model_MaterialRequest')
 					->create(
@@ -425,10 +429,10 @@ class Model_JobCard extends \Model_Document{
 		}
 	}
 
-	function setStatus($status,$message=null,$subject=null){
+	function setStatus($status,$message=null,$subject=null,$set_dept_satatus=true){
 		if($this['orderitem_id']){
 			$ds = $this->orderItem()->deptartmentalStatus($this->department());
-			if($ds) {
+			if($ds and $set_dept_satatus) {
 				$ds->setStatus(ucwords($status) .' in ' . $this->department()->get('name'));
 			}
 		}

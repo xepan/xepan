@@ -27,7 +27,9 @@ class View_Jobcard extends \View{
 		$this->template->setHtml('order_created_at',$order['created_at']);
 		$this->template->setHtml('customer',$order['member']);
 		$this->template->setHtml('order_from',$order['order_from']);
-		$this->template->setHtml('item',$oi['item']);
+		$this->template->setHtml('item',$oi['item_with_qty_fields']);
+		$this->template->setHtml('qty',$oi['qty']);
+		$this->template->setHtml('unit',$oi['unit']);
 		$this->template->setHtml('custom_fields',$oi->redableDeptartmentalStatus(true,false,$this->jobcard->toDepartment()));//item()->genericRedableCustomFieldAndValue($oi['custom_fields']));
 		$this->template->setHtml('specification',$oi->item()->redableSpecification());
 

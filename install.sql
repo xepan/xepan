@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 19, 2015 at 06:56 PM
+-- Generation Time: Mar 29, 2015 at 08:01 PM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.6
 
@@ -1164,6 +1164,158 @@ CREATE TABLE IF NOT EXISTS `user_custom_fields` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `xaccount_account`
+--
+
+CREATE TABLE IF NOT EXISTS `xaccount_account` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `account_type` varchar(255) DEFAULT NULL,
+  `AccountDisplayName` varchar(255) DEFAULT NULL,
+  `OpeningBalanceDr` decimal(10,2) DEFAULT NULL,
+  `OpeningBalanceCr` decimal(10,2) DEFAULT NULL,
+  `affectsBalanceSheet` tinyint(1) DEFAULT NULL,
+  `supplier_id` int(11) DEFAULT NULL,
+  `out_source_party_id` int(11) DEFAULT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `group_id` int(11) DEFAULT NULL,
+  `employee_id` int(11) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT NULL,
+  `CurrentBalanceDr` decimal(10,2) DEFAULT NULL,
+  `CurrentBalanceCr` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_supplier_id` (`supplier_id`) USING BTREE,
+  KEY `fk_out_source_party_id` (`out_source_party_id`) USING BTREE,
+  KEY `fk_group_id` (`group_id`) USING BTREE,
+  KEY `fk_employee_id` (`employee_id`) USING BTREE,
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xaccount_balance_sheet`
+--
+
+CREATE TABLE IF NOT EXISTS `xaccount_balance_sheet` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `positive_side` varchar(255) DEFAULT NULL,
+  `is_pandl` tinyint(1) DEFAULT NULL,
+  `show_sub` varchar(255) DEFAULT NULL,
+  `subtract_from` varchar(255) DEFAULT NULL,
+  `order` varchar(255) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+
+--
+-- Dumping data for table `xaccount_balance_sheet`
+--
+
+INSERT INTO `xaccount_balance_sheet` (`id`, `name`, `created_at`, `positive_side`, `is_pandl`, `show_sub`, `subtract_from`, `order`, `related_document_id`, `related_root_document_name`, `related_document_name`, `updated_at`, `created_by_id`) VALUES
+(1, 'Deposits - Liabilities', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 'Current Assets', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 'Capital Account', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 'Expenses', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'Income', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'Suspence Account', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'Fixed Assets', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'Branch/Divisions', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'Current Liabilities', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xaccount_group`
+--
+
+CREATE TABLE IF NOT EXISTS `xaccount_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `created_at` date DEFAULT NULL,
+  `balance_sheet_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_balance_sheet_id` (`balance_sheet_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xaccount_transaction`
+--
+
+CREATE TABLE IF NOT EXISTS `xaccount_transaction` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `transaction_type_id` int(11) DEFAULT NULL,
+  `reference_account_id` int(11) DEFAULT NULL,
+  `employee_id` int(11) DEFAULT NULL,
+  `voucher_no_original` int(11) DEFAULT NULL,
+  `voucher_no` int(11) DEFAULT NULL,
+  `Narration` text,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_transaction_type_id` (`transaction_type_id`) USING BTREE,
+  KEY `fk_reference_account_id` (`reference_account_id`) USING BTREE,
+  KEY `fk_employee_id` (`employee_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xaccount_transaction_row`
+--
+
+CREATE TABLE IF NOT EXISTS `xaccount_transaction_row` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `transaction_id` int(11) DEFAULT NULL,
+  `account_id` int(11) DEFAULT NULL,
+  `amountDr` decimal(10,2) DEFAULT NULL,
+  `amountCr` decimal(10,2) DEFAULT NULL,
+  `side` varchar(255) DEFAULT NULL,
+  `accounts_in_side` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_transaction_id` (`transaction_id`) USING BTREE,
+  KEY `fk_account_id` (`account_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xaccount_transaction_types`
+--
+
+CREATE TABLE IF NOT EXISTS `xaccount_transaction_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `FromAC` varchar(255) DEFAULT NULL,
+  `ToAC` varchar(255) DEFAULT NULL,
+  `Default_Narration` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `xai_blocks`
 --
 
@@ -1510,10 +1662,10 @@ CREATE TABLE IF NOT EXISTS `xdispatch_delivery_note` (
   `warehouse_id` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `shipping_address` text,
-  `billing_address` text,
-  `shipping_through` text,
   `narration` text,
   `updated_at` datetime DEFAULT NULL,
+  `shipping_via` text,
+  `docket_no` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
   KEY `fk_orderitem_id` (`orderitem_id`) USING BTREE,
@@ -1525,6 +1677,29 @@ CREATE TABLE IF NOT EXISTS `xdispatch_delivery_note` (
   KEY `fk_to_memberdetails_id` (`to_memberdetails_id`) USING BTREE,
   KEY `fk_warehouse_id` (`warehouse_id`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xdispatch_delivery_note_items`
+--
+
+CREATE TABLE IF NOT EXISTS `xdispatch_delivery_note_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `orderitem_id` int(11) DEFAULT NULL,
+  `delivery_note_id` int(11) DEFAULT NULL,
+  `qty` varchar(255) DEFAULT NULL,
+  `unit` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_orderitem_id` (`orderitem_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1575,10 +1750,17 @@ CREATE TABLE IF NOT EXISTS `xdispatch_dispatch_request_items` (
   `item_id` int(11) DEFAULT NULL,
   `qty` varchar(255) DEFAULT NULL,
   `unit` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `deliverynote_id` int(11) DEFAULT NULL,
+  `custom_fields` varchar(255) DEFAULT NULL,
+  `orderitem_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
   KEY `fk_dispatch_request_id` (`dispatch_request_id`) USING BTREE,
-  KEY `fk_item_id` (`item_id`) USING BTREE
+  KEY `fk_item_id` (`item_id`) USING BTREE,
+  KEY `fk_deliverynote_id` (`deliverynote_id`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1980,6 +2162,7 @@ CREATE TABLE IF NOT EXISTS `xhr_employees` (
   `pre_resignation_letter_date` date DEFAULT NULL,
   `pre_relieving_date` date DEFAULT NULL,
   `pre_reason_of_resignation` text,
+  `is_active` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_post_id` (`post_id`),
   KEY `fk_department_id` (`department_id`),
@@ -2625,11 +2808,37 @@ CREATE TABLE IF NOT EXISTS `xproduction_material_requirment` (
   `related_root_document_name` varchar(255) DEFAULT NULL,
   `related_document_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_created_by_id` (`created_by_id`),
-  KEY `fk_jobcard_id` (`jobcard_id`),
-  KEY `fk_orderitem_id` (`orderitem_id`),
-  KEY `fk_department_id` (`department_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_jobcard_id` (`jobcard_id`) USING BTREE,
+  KEY `fk_orderitem_id` (`orderitem_id`) USING BTREE,
+  KEY `fk_department_id` (`department_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xproduction_material_requirment_DELETE`
+--
+
+CREATE TABLE IF NOT EXISTS `xproduction_material_requirment_DELETE` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` varchar(255) DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `jobcard_id` int(11) DEFAULT NULL,
+  `orderitem_id` int(11) DEFAULT NULL,
+  `department_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `qty` varchar(255) DEFAULT NULL,
+  `narration` varchar(255) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_jobcard_id` (`jobcard_id`) USING BTREE,
+  KEY `fk_orderitem_id` (`orderitem_id`) USING BTREE,
+  KEY `fk_department_id` (`department_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2725,10 +2934,32 @@ CREATE TABLE IF NOT EXISTS `xpurcahse_material_request` (
   `related_root_document_name` varchar(255) DEFAULT NULL,
   `related_document_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_created_by_id` (`created_by_id`),
-  KEY `fk_from_department_id` (`from_department_id`),
-  KEY `fk_order_id` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_from_department_id` (`from_department_id`) USING BTREE,
+  KEY `fk_order_id` (`order_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xpurcahse_material_request_DELETE`
+--
+
+CREATE TABLE IF NOT EXISTS `xpurcahse_material_request_DELETE` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `from_department_id` int(11) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_from_department_id` (`from_department_id`) USING BTREE,
+  KEY `fk_order_id` (`order_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2742,9 +2973,25 @@ CREATE TABLE IF NOT EXISTS `xpurchase_purchase_material_request_items` (
   `item_id` int(11) DEFAULT NULL,
   `qty` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_purchase_material_request_id` (`purchase_material_request_id`),
-  KEY `fk_item_id` (`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_purchase_material_request_id` (`purchase_material_request_id`) USING BTREE,
+  KEY `fk_item_id` (`item_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xpurchase_purchase_material_request_items_DELETE`
+--
+
+CREATE TABLE IF NOT EXISTS `xpurchase_purchase_material_request_items_DELETE` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `purchase_material_request_id` int(11) DEFAULT NULL,
+  `item_id` int(11) DEFAULT NULL,
+  `qty` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_purchase_material_request_id` (`purchase_material_request_id`) USING BTREE,
+  KEY `fk_item_id` (`item_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2760,11 +3007,12 @@ CREATE TABLE IF NOT EXISTS `xpurchase_purchase_order` (
   `related_document_id` varchar(255) DEFAULT NULL,
   `related_root_document_name` varchar(255) DEFAULT NULL,
   `related_document_name` varchar(255) DEFAULT NULL,
-  `xpurchase_supplier_id` int(11) DEFAULT NULL,
+  `supplier_id` int(11) DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`),
-  KEY `fk_xpurchase_supplier_id` (`xpurchase_supplier_id`) USING BTREE
+  KEY `fk_xpurchase_supplier_id` (`supplier_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2781,6 +3029,8 @@ CREATE TABLE IF NOT EXISTS `xpurchase_purchase_order_item` (
   `qty` varchar(255) DEFAULT NULL,
   `unit` varchar(255) DEFAULT NULL,
   `narration` varchar(255) DEFAULT NULL,
+  `rate` varchar(255) DEFAULT NULL,
+  `amount` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_item_id` (`item_id`),
   KEY `fk_po_id` (`po_id`)
@@ -2975,8 +3225,22 @@ CREATE TABLE IF NOT EXISTS `xshop_categorygroup` (
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_epan_id` (`epan_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_epan_id` (`epan_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xshop_categorygroup_DELETE`
+--
+
+CREATE TABLE IF NOT EXISTS `xshop_categorygroup_DELETE` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `epan_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_epan_id` (`epan_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -3006,9 +3270,9 @@ CREATE TABLE IF NOT EXISTS `xshop_category_product_TODELETE` (
   `product_id` int(11) DEFAULT NULL,
   `is_associate` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_category_id` (`category_id`),
-  KEY `fk_product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_category_id` (`category_id`) USING BTREE,
+  KEY `fk_product_id` (`product_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -3154,8 +3418,73 @@ CREATE TABLE IF NOT EXISTS `xshop_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_epan_id` (`epan_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_epan_id` (`epan_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xshop_invoices`
+--
+
+CREATE TABLE IF NOT EXISTS `xshop_invoices` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` varchar(255) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `sales_order_id` int(11) DEFAULT NULL,
+  `po_id` int(11) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `discount` varchar(255) DEFAULT NULL,
+  `tax` varchar(255) DEFAULT NULL,
+  `net_amount` varchar(255) DEFAULT NULL,
+  `billing_address` text,
+  `orderitem_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `supplier_id` int(11) DEFAULT NULL,
+  `total_amount` varchar(255) DEFAULT NULL,
+  `transaction_reference` text,
+  `transaction_response_data` text,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_po_id` (`po_id`) USING BTREE,
+  KEY `fk_sales_order_id` (`sales_order_id`) USING BTREE,
+  KEY `fk_orderitem_id` (`orderitem_id`) USING BTREE,
+  KEY `fk_customer_id` (`customer_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xshop_invoice_item`
+--
+
+CREATE TABLE IF NOT EXISTS `xshop_invoice_item` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `invoice_id` int(11) DEFAULT NULL,
+  `item_id` int(11) DEFAULT NULL,
+  `qty` varchar(255) DEFAULT NULL,
+  `unit` varchar(255) DEFAULT NULL,
+  `narration` varchar(255) DEFAULT NULL,
+  `custom_fields` text,
+  `status` varchar(255) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `rate` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_invoice_id` (`invoice_id`) USING BTREE,
+  KEY `fk_item_id` (`item_id`) USING BTREE,
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -3245,6 +3574,7 @@ CREATE TABLE IF NOT EXISTS `xshop_items` (
   `is_rentable` tinyint(1) DEFAULT NULL,
   `is_enquiry_allow` tinyint(1) DEFAULT NULL,
   `is_template` tinyint(1) DEFAULT NULL,
+  `is_fixed_asset` tinyint(1) DEFAULT NULL,
   `negative_qty_allowed` varchar(255) DEFAULT NULL,
   `is_visible_sold` tinyint(1) DEFAULT NULL,
   `offer_id` int(11) DEFAULT NULL,
@@ -3263,6 +3593,8 @@ CREATE TABLE IF NOT EXISTS `xshop_items` (
   `website_display` tinyint(1) DEFAULT NULL,
   `allow_negative_stock` tinyint(1) DEFAULT NULL,
   `is_productionable` tinyint(1) DEFAULT NULL,
+  `warrenty_days` varchar(255) DEFAULT NULL,
+  `terms_condition` text,
   PRIMARY KEY (`id`),
   KEY `fk_application_id` (`application_id`),
   KEY `fk_epan_id` (`epan_id`),
@@ -3613,6 +3945,7 @@ CREATE TABLE IF NOT EXISTS `xshop_orderDetails` (
   `related_document_name` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `invoice_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_order_id` (`order_id`),
   KEY `fk_epan_id` (`epan_id`),
@@ -3632,6 +3965,7 @@ CREATE TABLE IF NOT EXISTS `xshop_orderitem_departmental_status` (
   `department_id` int(11) DEFAULT NULL,
   `outsource_party_id` int(11) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
+  `is_open` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_orderitem_id` (`orderitem_id`),
   KEY `fk_department_id` (`department_id`),
@@ -3648,15 +3982,15 @@ CREATE TABLE IF NOT EXISTS `xshop_orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `amount` varchar(255) DEFAULT NULL,
+  `total_amount` varchar(255) DEFAULT NULL,
   `discount_voucher` varchar(255) DEFAULT NULL,
   `discount_voucher_amount` varchar(255) DEFAULT NULL,
+  `tax` varchar(255) DEFAULT NULL,
   `net_amount` varchar(255) DEFAULT NULL,
   `order_summary` text,
   `billing_address` varchar(255) DEFAULT NULL,
   `shipping_address` varchar(255) DEFAULT NULL,
   `epan_id` int(11) DEFAULT NULL,
-  `on_date` date DEFAULT NULL,
   `paymentgateway_id` int(11) DEFAULT NULL,
   `transaction_reference` varchar(255) DEFAULT NULL,
   `transaction_response_data` text,
@@ -3670,10 +4004,14 @@ CREATE TABLE IF NOT EXISTS `xshop_orders` (
   `related_document_name` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `termsandcondition_id` int(11) DEFAULT NULL,
+  `priority_id` int(11) DEFAULT NULL,
+  `delivery_date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_member_id` (`member_id`),
   KEY `fk_epan_id` (`epan_id`),
-  KEY `fk_created_by_id` (`created_by_id`)
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_termsandcondition_id` (`termsandcondition_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3739,6 +4077,25 @@ CREATE TABLE IF NOT EXISTS `xshop_payment_gateways` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `xshop_priorities`
+--
+
+CREATE TABLE IF NOT EXISTS `xshop_priorities` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `xshop_productenquiry`
 --
 
@@ -3754,9 +4111,9 @@ CREATE TABLE IF NOT EXISTS `xshop_productenquiry` (
   `product_code` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_epan_id` (`epan_id`),
-  KEY `fk_product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_epan_id` (`epan_id`) USING BTREE,
+  KEY `fk_product_id` (`product_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -3805,11 +4162,11 @@ CREATE TABLE IF NOT EXISTS `xshop_products` (
   `custom_button_text` varchar(255) DEFAULT NULL,
   `custom_button_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_supplier_id` (`supplier_id`),
-  KEY `fk_manufacturer_id` (`manufacturer_id`),
-  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_supplier_id` (`supplier_id`) USING BTREE,
+  KEY `fk_manufacturer_id` (`manufacturer_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`) USING BTREE,
   FULLTEXT KEY `search_string` (`search_string`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -3858,11 +4215,11 @@ CREATE TABLE IF NOT EXISTS `xshop_products_DELETE` (
   `custom_button_text` varchar(255) DEFAULT NULL,
   `custom_button_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_supplier_id` (`supplier_id`),
-  KEY `fk_manufacturer_id` (`manufacturer_id`),
-  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_supplier_id` (`supplier_id`) USING BTREE,
+  KEY `fk_manufacturer_id` (`manufacturer_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`) USING BTREE,
   FULLTEXT KEY `search_string` (`search_string`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -3877,8 +4234,8 @@ CREATE TABLE IF NOT EXISTS `xshop_product_images` (
   `alt_text` varchar(255) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_product_id` (`product_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -3984,9 +4341,16 @@ CREATE TABLE IF NOT EXISTS `xShop_supplier` (
 
 CREATE TABLE IF NOT EXISTS `xshop_termsandcondition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
   `terms_and_condition` text,
-  PRIMARY KEY (`id`)
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -4107,6 +4471,7 @@ CREATE TABLE IF NOT EXISTS `xstore_stock_movement_master` (
   `material_request_jobcard_id` int(11) DEFAULT NULL,
   `dispatch_request_id` int(11) DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`),
   KEY `fk_from_supplier_id` (`from_supplier_id`),
@@ -4141,6 +4506,50 @@ CREATE TABLE IF NOT EXISTS `xstore_warehouse` (
 --
 
 --
+-- Constraints for table `xaccount_account`
+--
+ALTER TABLE `xaccount_account`
+  ADD CONSTRAINT `xaccount_account_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `xpurchase_supplier` (`id`),
+  ADD CONSTRAINT `xaccount_account_ibfk_2` FOREIGN KEY (`out_source_party_id`) REFERENCES `xproduction_out_source_parties` (`id`),
+  ADD CONSTRAINT `xaccount_account_ibfk_4` FOREIGN KEY (`group_id`) REFERENCES `xaccount_group` (`id`),
+  ADD CONSTRAINT `xaccount_account_ibfk_5` FOREIGN KEY (`employee_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xaccount_account_ibfk_6` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
+
+--
+-- Constraints for table `xaccount_balance_sheet`
+--
+ALTER TABLE `xaccount_balance_sheet`
+  ADD CONSTRAINT `xaccount_balance_sheet_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
+
+--
+-- Constraints for table `xaccount_group`
+--
+ALTER TABLE `xaccount_group`
+  ADD CONSTRAINT `xaccount_group_ibfk_1` FOREIGN KEY (`balance_sheet_id`) REFERENCES `xaccount_balance_sheet` (`id`);
+
+--
+-- Constraints for table `xaccount_transaction`
+--
+ALTER TABLE `xaccount_transaction`
+  ADD CONSTRAINT `xaccount_transaction_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xaccount_transaction_ibfk_2` FOREIGN KEY (`transaction_type_id`) REFERENCES `xaccount_transaction_types` (`id`),
+  ADD CONSTRAINT `xaccount_transaction_ibfk_3` FOREIGN KEY (`reference_account_id`) REFERENCES `xaccount_account` (`id`),
+  ADD CONSTRAINT `xaccount_transaction_ibfk_4` FOREIGN KEY (`employee_id`) REFERENCES `xhr_employees` (`id`);
+
+--
+-- Constraints for table `xaccount_transaction_row`
+--
+ALTER TABLE `xaccount_transaction_row`
+  ADD CONSTRAINT `xaccount_transaction_row_ibfk_2` FOREIGN KEY (`account_id`) REFERENCES `xaccount_account` (`id`);
+
+--
+-- Constraints for table `xdispatch_delivery_note_items`
+--
+ALTER TABLE `xdispatch_delivery_note_items`
+  ADD CONSTRAINT `xdispatch_delivery_note_items_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xdispatch_delivery_note_items_ibfk_2` FOREIGN KEY (`orderitem_id`) REFERENCES `xshop_orderDetails` (`id`);
+
+--
 -- Constraints for table `xproduction_jobcard`
 --
 ALTER TABLE `xproduction_jobcard`
@@ -4148,16 +4557,34 @@ ALTER TABLE `xproduction_jobcard`
   ADD CONSTRAINT `xproduction_jobcard_ibfk_2` FOREIGN KEY (`dispatch_to_warehouse_id`) REFERENCES `xstore_warehouse` (`id`);
 
 --
--- Constraints for table `xpurchase_purchase_order`
+-- Constraints for table `xshop_invoices`
 --
-ALTER TABLE `xpurchase_purchase_order`
-  ADD CONSTRAINT `xpurchase_purchase_order_ibfk_1` FOREIGN KEY (`xpurchase_supplier_id`) REFERENCES `xpurchase_supplier` (`id`);
+ALTER TABLE `xshop_invoices`
+  ADD CONSTRAINT `xshop_invoices_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_invoices_ibfk_2` FOREIGN KEY (`sales_order_id`) REFERENCES `xshop_orders` (`id`),
+  ADD CONSTRAINT `xshop_invoices_ibfk_3` FOREIGN KEY (`po_id`) REFERENCES `xpurchase_purchase_order` (`id`),
+  ADD CONSTRAINT `xshop_invoices_ibfk_4` FOREIGN KEY (`orderitem_id`) REFERENCES `xshop_orderDetails` (`id`),
+  ADD CONSTRAINT `xshop_invoices_ibfk_5` FOREIGN KEY (`customer_id`) REFERENCES `xshop_memberdetails` (`id`);
 
 --
--- Constraints for table `xstore_material_request`
+-- Constraints for table `xshop_invoice_item`
 --
-ALTER TABLE `xstore_material_request`
-  ADD CONSTRAINT `xstore_material_request_ibfk_1` FOREIGN KEY (`orderitem_departmental_status_id`) REFERENCES `xshop_orderitem_departmental_status` (`id`);
+ALTER TABLE `xshop_invoice_item`
+  ADD CONSTRAINT `xshop_invoice_item_ibfk_1` FOREIGN KEY (`invoice_id`) REFERENCES `xshop_invoices` (`id`),
+  ADD CONSTRAINT `xshop_invoice_item_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`),
+  ADD CONSTRAINT `xshop_invoice_item_ibfk_3` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
+
+--
+-- Constraints for table `xshop_orders`
+--
+ALTER TABLE `xshop_orders`
+  ADD CONSTRAINT `xshop_orders_ibfk_1` FOREIGN KEY (`termsandcondition_id`) REFERENCES `xshop_termsandcondition` (`id`);
+
+--
+-- Constraints for table `xshop_termsandcondition`
+--
+ALTER TABLE `xshop_termsandcondition`
+  ADD CONSTRAINT `xshop_termsandcondition_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
 
 --
 -- Constraints for table `xstore_material_request_items`

@@ -23,11 +23,22 @@ $.atk4(function(){
 		});
 
 		var inp = $('<input type="text"/>');
+		var outer = $('<div>');
+		$(outer)
+			.append($('<div><i class="glyphicon glyphicon-leaf"> xEpan </i> Quick Menu </div>').addClass('label label-success'))
+			.append(inp)
+			.addClass('text-center');
 
-		var d = $(inp).dialog({
+
+		var d = $(outer).dialog({
+			modal: true,
 			open: function (event,ui){
 				$(inp).focus();
 			}
+		});
+
+		$(inp).css({
+			width: '100%'
 		});
 
 		$(inp).autocomplete({
@@ -40,7 +51,7 @@ $.atk4(function(){
 					callback(options);
 				},
 				select: function(event, ui){
-					$(inp).dialog('close');
+					$(outer).dialog('close');
 					if($.inArray(ui.item.value,opened_pages) != -1){
 						$.univ.errorMessage('Already Opened, Cannot ReOpen');
 						return;
@@ -59,20 +70,35 @@ $.atk4(function(){
 		event.stopPropagation();
 	});
 
-	// shortcut.add("Ctrl+down", function(event) {
+	shortcut.add("Ctrl+down", function(event) {
 
-	// 	var inp = $('<input type="text"/>');
+		var inp = $('<input type="text"/>');
 
-	// 	var d = $(inp).dialog({
-	// 		open: function (event,ui){
-	// 			$(inp).focus();
-	// 		}
-	// 	});
+		var outer = $('<div>');
+		$(outer)
+			.append($('<div><i class="glyphicon glyphicon-leaf"> xEpan </i> Document Search </div>').addClass('label label-info'))
+			.append(inp)
+			.addClass('text-center');
 
-	// 	$(inp).autocomplete({
-	// 			delay: 0
-	// 		});
-	// 	event.stopPropagation();
-	// });
+
+		var d = $(outer).dialog({
+			modal: true,
+			open: function (event,ui){
+				$(inp).focus();
+			}
+		});
+
+		$(inp).css({
+			width: '100%'
+		});
+
+		$(inp).autocomplete({
+				delay: 0,
+				source: "index.php?page=owner_searchdoc",
+				minLength: 3
+			});
+
+		event.stopPropagation();
+	});
 
 });
