@@ -139,29 +139,8 @@ class Model_PurchaseOrder extends \Model_Document{
 	function mark_processed_page($page){
 
 		$page->add('H3')->set('Items for Receive');
-		// $cols = $form->add('Columns');
-		// $sno_cols= $cols->addColumn(1);
-		// $item_cols= $cols->addColumn(5);
-		// $req_qty_cols= $cols->addColumn(2);
-		// $unit_cols= $cols->addColumn(1);
-		// $received_qty= $cols->addColumn(2);
-		// $keep_open= $cols->addColumn(1);
-
-		// $i=1;
-		// foreach($this->itemrows() as $ir){
-		// 	$sno_cols->add('View')->set($i);
-		// 	$item_model = $this->add('xShop/Model_Item')->load($ir['item_id']);
-		// 	$item_name_with_customField = $ir['item']." </br>".$item_model->genericRedableCustomFieldAndValue($ir['custom_fields']);
-		// 	$item_cols->addField('Readonly','item_'.$i,'Item')->set($item_name_with_customField);
-			
-		// 	$req_qty_cols->addField('Readonly','req_qty_'.$i,'Qty')->set($ir['qty']);
-		// 	$unit_cols->addField('Readonly','req_uit_'.$i,'Unit')->set($ir['unit']);
-		// 	$received_qty->addField('Number','received_qty_'.$i,'Received Qty')->set($ir['qty']);
-		// 	// $keep_open->addField('boolean','keep_open_'.$i,'Keep open')->set(false);
-		// 	$i++;
-		// }
 		$ois = $this->itemRows();
-		$ois->addCondition('status','processing')->tryLoadAny();
+		$ois->addCondition('invoice_id',null)->tryLoadAny();
 		$grid = $page->add('Grid');
 		$grid->setModel($ois);
 
@@ -186,7 +165,7 @@ class Model_PurchaseOrder extends \Model_Document{
 
 		$page->add('H3')->set('Items Received');
 		$grid = $page->add('Grid');
-		$grid->setModel($this->itemRows()->addCondition('status','received'),array('dispatch_request','item_with_qty_fields','qty','unit','custom_fields','item'));
+		$grid->setModel($this->itemRows()->addCondition('invoice_id','<>',null));
 		// $form->addField('DropDown','to_warehouse')
 		// 	->setFieldHint('TODO : Check if warehouse is outsourced make challan and receive automatically')
 		// 	->setModel('xStore/Warehouse');
@@ -230,7 +209,7 @@ class Model_PurchaseOrder extends \Model_Document{
 					}
 				}
 
-				$count = $this->itemRows()->addCondition('status','received')->count()->getOne();
+				$count = $this->itemRows()->addCondition('invoice_id','<>',null)->count()->getOne();
 				if( $count and $form['include_items'] =="All"){
 					$form->displayError('include_items',$count.' item\'s already in invoice, select selected option ' );
 				}
@@ -250,11 +229,10 @@ class Model_PurchaseOrder extends \Model_Document{
 					$purchase_invoice->payViaCash($form['amount']);
 				
 				if($form['payment'] == "cheque")
-					$purchase_invoice->payViaCheque($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_no'],$self_bank_account);
+					$purchase_invoice->payViaCheque($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_no'],$self_bank_account=null);
 
 				//WAREHOUSE ENTRY
 				$to_warehouse = $this->add('xStore/Model_Warehouse')->loadPurchase();
-				
 				$movement_challan = $to_warehouse->newPurchaseReceive($this);
 				$i=1;
 				foreach ($this->itemRows() as $ir) {
@@ -265,15 +243,12 @@ class Model_PurchaseOrder extends \Model_Document{
 				$movement_challan->executePurchase($add_to_stock=true);
 
 				//change the status of item to received
-				foreach ($this->itemRows() as $ir) {
-					$ir->setStatus('received');
-				}
 
 				if($form['include_items'] == "All"){
 					$this->setStatus('completed');
 				}
 				if($form['include_items'] == 'selected'){
-					if($this->itemRows()->addCondition('status','processing')->count()->getOne() == 0)
+					if($this->itemRows()->addCondition('invoice_id',null)->count()->getOne() == 0)
 						$this->setStatus('completed');
 					else	
 						$this->setStatus('processing');
@@ -329,17 +304,17 @@ class Model_PurchaseOrder extends \Model_Document{
 						$oi['custom_fields']
 					);
 
-				$oi->invoice($invoice);					
+				$oi->invoice($invoice);	
 			}
 
 			if($status !== 'draft' and $status !== 'submitted'){
-				$invoice->createVoucher($salesLedger);
+				$invoice->createVoucher($purchaseLedger);
 			}
 			
 			$this->api->db->commit();
 			return $invoice;
 		}catch(\Exception $e){
-			echo $e->getHTML();
+			echo $e->getmessage();
 			$this->api->db->rollback();
 			if($this->api->getConfig('developer_mode',false))
 				throw $e;
