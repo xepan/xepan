@@ -16,8 +16,8 @@ class Grid_Invoice extends \Grid{
 		$this->vp_order = $this->add('VirtualPage')->set(function($p)use($self){
 			$p->api->stickyGET('Purchase_order_no_clicked');
 			$o = $p->add('xPurchase/Model_PurchaseOrder')->load($_GET['purchase_order_no_clicked']);
-			$order = $p->add('xPurchase/View_PurchaseOrder');
-			$order->setModel($o);
+			$order = $p->add('xPurchase/View_PurchaseOrder',array('purchaseorder'=>$o));
+			// $order->setModel($o);
 		});
 	}
 	

@@ -20,6 +20,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->addField('net_amount');
 
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
+		$this->hasMany('xPurchase/PurchaseInvoice','po_id');
 
 		$this->addHook('beforeDelete',$this);
 

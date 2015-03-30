@@ -13,7 +13,7 @@ class page_xPurchase_page_owner_purchaseorder extends page_xPurchase_page_owner_
 	$tab->addTabURL('xPurchase/page/owner/purchaseorder_redesign','Redesign '.$this->add('xPurchase/Model_PurchaseOrder_Redesign')->myCounts(true,false));
 	$tab->addTabURL('xPurchase/page/owner/purchaseorder_submitted','Submitted '.$this->add('xPurchase/Model_PurchaseOrder_Submitted')->myCounts(true,false));
 	$tab->addTabURL('xPurchase/page/owner/purchaseorder_approved','Approved '.$this->add('xPurchase/Model_PurchaseOrder_Approved')->myCounts(true,false));
-	$tab->addTabURL('xPurchase/page/owner/purchaseorder_processing','Processing '.$this->add('xPurchase/Model_PurchaseOrder_Processing')->myCounts(true,false));
+	// $tab->addTabURL('xPurchase/page/owner/purchaseorder_processing','Processing '.$this->add('xPurchase/Model_PurchaseOrder_Processing')->myCounts(true,false));
 	$tab->addTabURL('xPurchase/page/owner/purchaseorder_completed','Completed '.$this->add('xPurchase/Model_PurchaseOrder_Completed')->myCounts(true,false));
 	$tab->addTabURL('xPurchase/page/owner/purchaseorder_rejected','Rejected '.$this->add('xPurchase/Model_PurchaseOrder_Rejected')->myCounts(true,false));
 	}
