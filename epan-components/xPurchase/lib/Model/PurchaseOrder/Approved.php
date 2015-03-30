@@ -6,6 +6,7 @@ class Model_PurchaseOrder_Approved extends Model_PurchaseOrder{
 			'can_reject'=>array(),
 			'can_redesign'=>array(),
 			'can_start_processing'=>array(),
+			'can_mark_processed'=>array(),
 		);
 	function init(){
 		parent::init();
