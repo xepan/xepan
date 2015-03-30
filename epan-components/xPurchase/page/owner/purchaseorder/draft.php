@@ -34,7 +34,7 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
         	$item_field = $crud->form->getElement('item_id');
         	$item_field->qty_effected_custom_fields_only = true;
         }
-
+        $crud->add('xShop/Controller_getRate');
 		$crud->add('xHR/Controller_Acl',array('document'=>'xPurchase\PurchaseOrder_'. ucwords($po_item->order()->get('status')),'show_acl_btn'=>false,'override'=>array('can_view'=>'All','can_see_activities'=>'No')));
 
 	}

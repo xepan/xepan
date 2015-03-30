@@ -144,6 +144,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$grid = $page->add('Grid');
 		$grid->setModel($ois);
 
+
 		$grid->removeColumn('custom_fields');
 		$grid->removeColumn('item');
 		
@@ -214,16 +215,15 @@ class Model_PurchaseOrder extends \Model_Document{
 					$form->displayError('include_items',$count.' item\'s already in invoice, select selected option ' );
 				}
 
-				//GENERATE INVOICE FOR SELECTED ITEMS
-				$purchase_invoice = null;
-				if($form['include_items'] == "Selected"){
-					$purchase_invoice = $this->createInvoice($status='Approved',$purchaseLedger=null, $items_selected);
+				//GENERATE INVOICE FOR SELECTED / ALL ITEMS
+				if($form['include_items']=='All'){
+					$items_selected=array();
+					foreach ($this->itemRows() as $itm) {
+						$items_selected [] = $itm->id;
+					}
 				}
-				
-				//GENERATE INVOOICE FOR ALL ORDERD ITEMS
-				if($form['include_items'] == "All"){
-					$purchase_invoice = $this->createInvoice();
-				}
+
+				$purchase_invoice = $this->createInvoice($status='approved',$purchaseLedger=null, $items_selected);
 
 				if($form['payment'] == "cash")
 					$purchase_invoice->payViaCash($form['amount']);
@@ -232,10 +232,13 @@ class Model_PurchaseOrder extends \Model_Document{
 					$purchase_invoice->payViaCheque($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_no'],$self_bank_account=null);
 
 				//WAREHOUSE ENTRY
+				$items_selected = json_decode($form['selected_items'],true);
 				$to_warehouse = $this->add('xStore/Model_Warehouse')->loadPurchase();
 				$movement_challan = $to_warehouse->newPurchaseReceive($this);
 				$i=1;
 				foreach ($this->itemRows() as $ir) {
+					if(!in_array($ir->id, $items_selected)) continue;
+
 					$movement_challan->addItem($ir->item(),$ir['qty'],$ir['unit'],$ir['custom_fields']);
 					$i++;
 				}
@@ -267,7 +270,7 @@ class Model_PurchaseOrder extends \Model_Document{
 	}
 
 	function purchaseOrderItems(){
-		return $this->ref('xPurchase/PurchaseOrderItem');
+		return $this->itemRows();
 	}
 
 	function createInvoice($status='draft',$purchaseLedger=null, $items_array=array()){

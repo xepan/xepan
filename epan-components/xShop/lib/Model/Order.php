@@ -76,12 +76,15 @@ class Model_Order extends \Model_Document{
 		
 		$this->addExpression('orderitem_count')->set($this->refSQL('xShop/OrderDetails')->count());
 		
+		$this->addHook('afterSave',$this);
 		$this->addHook('beforeDelete',$this);
 
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-
+	function afterSave(){
+		$this->updateAmounts();
+	}
 
 	function beforeDelete($m){
 		if($m['discount_voucher'] != null and $m['discount_voucher'] != 0 ){
@@ -159,6 +162,15 @@ class Model_Order extends \Model_Document{
 		// throw new \Exception($member['']);
 	}
 
+	function updateAmounts(){
+		foreach ($this->itemRows() as $oi) {
+			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
+			$this['tax'] = $this['tax'] + $oi['tax_amount'];
+			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
+		}
+		$this->save();
+	}
+
 	function sendOrderDetail($email_id=null, $order_id=null){
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
@@ -210,6 +222,10 @@ class Model_Order extends \Model_Document{
 
 	function orderItems(){
 		return $this->ref('xShop/OrderDetails');
+	}
+
+	function itemrows(){
+		return $this->orderItems();
 	}
 
 	function customer(){

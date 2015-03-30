@@ -12,7 +12,7 @@ class Model_QuantitySet extends \Model_Table{
 		$this->addField('name'); // To give special name to a quantity Set .. leave empty to have qty value here too
 		$this->addField('qty')->type('number')->mandatory(true);
 		$this->addField('old_price')->type('money')->mandatory(true);
-		$this->addField('price')->type('money')->mandatory(true);
+		$this->addField('price')->type('money')->mandatory(true)->caption('Unit Price');
 		$this->addField('is_default')->type('boolean')->defaultValue(false);
 
 		$this->addExpression('custom_fields_conditioned')->set(function($m,$q){

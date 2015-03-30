@@ -47,6 +47,7 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 		
 		if(!$crud->isEditing()){
 			$crud->grid->removeColumn('order_from');
+			$crud->grid->addClass('order-grid');
 		}
 
 		if($crud->isEditing('add') OR $crud->isEditing('edit')){
