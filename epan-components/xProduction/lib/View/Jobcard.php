@@ -17,8 +17,8 @@ class View_Jobcard extends \View{
 			$view_order = $p->add('xShop/View_Order',array('show_price'=>false));
 			$view_order->setModel($o);
 		});
-
-		$this->template->setHtml('jobcard_no',$this->jobcard['name']);
+		
+		$this->template->setHtml('name',$this->jobcard['name']);
 		$this->template->setHtml('from_dept',$this->jobcard['from_department']);
 		$this->template->setHtml('to_dept',$this->jobcard['to_department']);
 		$this->template->setHtml('next_dept','Todo');
@@ -30,7 +30,7 @@ class View_Jobcard extends \View{
 		$this->template->setHtml('item',$oi['item_with_qty_fields']);
 		$this->template->setHtml('qty',$oi['qty']);
 		$this->template->setHtml('unit',$oi['unit']);
-		$this->template->setHtml('custom_fields',$oi->redableDeptartmentalStatus(true,false,$this->jobcard->toDepartment()));//item()->genericRedableCustomFieldAndValue($oi['custom_fields']));
+		$this->template->setHtml('custom_fields',$oi->redableDeptartmentalStatus(true,false,$this->jobcard->toDepartment()->item()->genericRedableCustomFieldAndValue($oi['custom_fields'])));
 		$this->template->setHtml('specification',$oi->item()->redableSpecification());
 
 		$received_activity = $this->jobcard->searchActivity('received');
