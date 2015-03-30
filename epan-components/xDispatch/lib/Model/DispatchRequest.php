@@ -112,7 +112,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		
 		$p->add('H3')->set('Items to Deliver');
 		$grid = $p->add('Grid');
-		$grid->setModel($this->itemRows()->addCondition('status','received'),array('dispatch_request','item_with_qty_fields','qty','unit','custom_fields','item'));
+		$grid->setModel($this->itemRows()->addCondition('status','sent'),array('dispatch_request','item_with_qty_fields','qty','unit','custom_fields','item'));
 
 		$grid->removeColumn('custom_fields');
 		$grid->removeColumn('item');
@@ -144,7 +144,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 		$p->add('H3')->set('Items Delivered');
 		$grid = $p->add('Grid');
-		$grid->setModel($this->itemRows()->addCondition('status','delivered'),array('dispatch_request','item_with_qty_fields','qty','unit','custom_fields','item'));
+		$grid->setModel($this->itemRows()->addCondition('status','received'));
 
 
 		if($form->isSubmitted()){

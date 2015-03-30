@@ -391,7 +391,7 @@ class Model_JobCard extends \Model_Document{
 			if(!$m->loaded()){
 				$m->save();
 				foreach ($c=$item->composition($this->department()) as $comp) {
-					$m->addItem($comp->item(),$comp['qty'],$comp['unit']);
+					$m->addItem($comp->item(),$comp['qty'],$comp['unit'],$comp['custom_fields']);
 				}
 			}
 			

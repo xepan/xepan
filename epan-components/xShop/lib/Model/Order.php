@@ -242,7 +242,8 @@ class Model_Order extends \Model_Document{
 	function createInvoice($status='draft',$salesLedger=null, $items_array=array()){
 		try{
 			$this->api->db->beginTransaction();
-			$invoice = $this->add('xShop/Model_Invoice_Draft');
+
+			$invoice = $this->add('xShop/Model_Invoice_'.ucwords($status));
 
 			$invoice['sales_order_id'] = $this['id'];
 			$invoice['customer_id'] = $this->customer()->get('id');
