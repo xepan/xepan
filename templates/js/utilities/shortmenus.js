@@ -113,7 +113,7 @@ $.atk4(function(){
 	            select: function(event, ui) {
 	                $(this).val(ui.item['name']);
 	                dd.dialog('close');
-	                $.univ.frameURL(ui.item['name'],'index.php?page=owner_searchdoc_display');
+	                $.univ.frameURL(ui.item['name'],'index.php?page=owner_searchdoc_display&key='+ui.item['key']);
 	                return false;
 	            },
 			}).data("ui-autocomplete")._renderItem = function(ul, item) {

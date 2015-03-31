@@ -28,26 +28,29 @@ class page_xAccount_page_owner_cashbook extends page_xAccount_page_owner_main{
 			$this->api->stickyGET('to_date');
 			$cash_transaction_model->addCondition('created_at','>=',$_GET['from_date']);
 			$cash_transaction_model->addCondition('created_at','<',$this->api->nextDate($_GET['to_date']));
-			
 			$cash_account = $this->add('xAccount/Model_Account')->loadDefaultCashAccount();
 			$opening_balance = $cash_account->getOpeningBalance($_GET['from_date']);
-
-			if(($opening_balance['DR'] - $opening_balance['CR']) > 0){
-				$opening_column = 'amountDr';
-				$opening_amount = $opening_balance['DR'] - $opening_balance['CR'];
-				$opening_narration = "To Opening balance";
-				$opening_side = 'DR';
-			}else{
-				$opening_column = 'amountCr';
-				$opening_amount = $opening_balance['CR'] - $opening_balance['DR'];
-				$opening_narration = "By Opening balance";
-				$opening_side = 'CR';
-			}
-			$grid->addOpeningBalance($opening_amount,$opening_column,array('Narration'=>$opening_narration),$opening_side);
-			$grid->addCurrentBalanceInEachRow();
 		}else{
-			$cash_transaction_model->addCondition('id',-1);
+			$cash_transaction_model->addCondition('created_at','>=',$this->api->today);
+			$cash_transaction_model->addCondition('created_at','<',$this->api->nextDate($this->api->today));
+			$cash_account = $this->add('xAccount/Model_Account')->loadDefaultCashAccount();
+			$opening_balance = $cash_account->getOpeningBalance($this->api->today);
 		}
+			
+
+		if(($opening_balance['DR'] - $opening_balance['CR']) > 0){
+			$opening_column = 'amountDr';
+			$opening_amount = $opening_balance['DR'] - $opening_balance['CR'];
+			$opening_narration = "To Opening balance";
+			$opening_side = 'DR';
+		}else{
+			$opening_column = 'amountCr';
+			$opening_amount = $opening_balance['CR'] - $opening_balance['DR'];
+			$opening_narration = "By Opening balance";
+			$opening_side = 'CR';
+		}
+		$grid->addOpeningBalance($opening_amount,$opening_column,array('Narration'=>$opening_narration),$opening_side);
+		$grid->addCurrentBalanceInEachRow();
 
 		$grid->setModel($cash_transaction_model,array('voucher_no','transaction_type','created_at','Narration','account','amountDr','amountCr'));
 		$grid->addSno();
