@@ -39,20 +39,20 @@ class Model_OrderDetails extends \Model_Document{
 			$tax_assos = $m->add('xShop/Model_ItemTaxAssociation');
 			$tax_assos->addCondition('item_id',$q->getField('item_id'));
 			return $tax_assos->sum('name'); // tax in percentage save in name ;)
-		});
+		})->type('money')->caption('Total Tax %');
 
 		$this->addExpression('tax_amount')->set(function($m,$q){
 			$tpa = $m->add('xShop/Model_OrderDetails',array('table_alias'=>'tps'));
 			$tpa->addCondition('id',$q->getField('id'));
 
-			return "((".$q->getField('amount').") * ( ". $tpa->_dsql()->del('fields')->field('tax_per_sum')->render().") / 100)";
-		});
+			return "((".$q->getField('amount').") * ( IFNULL((". $tpa->_dsql()->del('fields')->field('tax_per_sum')->render()."),0) ) / 100)";
+		})->type('money');
 
 		$this->addExpression('texted_amount')->set(function($m,$q){
 			$tpa = $m->add('xShop/Model_OrderDetails',array('table_alias'=>'txdamt'));
 			$tpa->addCondition('id',$q->getField('id'));
 
-			return "((".$q->getField('amount').") + ( ". $tpa->_dsql()->del('fields')->field('tax_amount')->render()."))";
+			return "((".$q->getField('amount').") + ( IFNULL((". $tpa->_dsql()->del('fields')->field('tax_amount')->render()."),0) ))";
 		});
 
 

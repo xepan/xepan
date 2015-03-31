@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 29, 2015 at 08:01 PM
+-- Generation Time: Mar 31, 2015 at 10:44 AM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.6
 
@@ -3010,6 +3010,12 @@ CREATE TABLE IF NOT EXISTS `xpurchase_purchase_order` (
   `supplier_id` int(11) DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `priority_id` int(11) DEFAULT NULL,
+  `order_summary` text,
+  `order_date` datetime DEFAULT NULL,
+  `total_amount` decimal(10,2) DEFAULT NULL,
+  `tax` decimal(10,2) DEFAULT NULL,
+  `net_amount` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`),
   KEY `fk_xpurchase_supplier_id` (`supplier_id`) USING BTREE
@@ -3031,6 +3037,14 @@ CREATE TABLE IF NOT EXISTS `xpurchase_purchase_order_item` (
   `narration` varchar(255) DEFAULT NULL,
   `rate` varchar(255) DEFAULT NULL,
   `amount` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `invoice_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_item_id` (`item_id`),
   KEY `fk_po_id` (`po_id`)
@@ -3607,6 +3621,29 @@ CREATE TABLE IF NOT EXISTS `xshop_items` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `xshop_itemtaxasso`
+--
+
+CREATE TABLE IF NOT EXISTS `xshop_itemtaxasso` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `tax_id` int(11) DEFAULT NULL,
+  `item_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_tax_id` (`tax_id`) USING BTREE,
+  KEY `fk_item_id` (`item_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `xshop_item_affiliate_ass`
 --
 
@@ -3635,6 +3672,7 @@ CREATE TABLE IF NOT EXISTS `xshop_item_compositions` (
   `qty` varchar(255) DEFAULT NULL,
   `department_id` int(11) DEFAULT NULL,
   `unit` varchar(255) DEFAULT NULL,
+  `custom_fields` text,
   PRIMARY KEY (`id`),
   KEY `fk_item_id` (`item_id`),
   KEY `fk_composition_item_id` (`composition_item_id`),
@@ -4336,6 +4374,27 @@ CREATE TABLE IF NOT EXISTS `xShop_supplier` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `xshop_taxs`
+--
+
+CREATE TABLE IF NOT EXISTS `xshop_taxs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `tax_account_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `xshop_termsandcondition`
 --
 
@@ -4575,10 +4634,24 @@ ALTER TABLE `xshop_invoice_item`
   ADD CONSTRAINT `xshop_invoice_item_ibfk_3` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
 
 --
+-- Constraints for table `xshop_itemtaxasso`
+--
+ALTER TABLE `xshop_itemtaxasso`
+  ADD CONSTRAINT `xshop_itemtaxasso_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_itemtaxasso_ibfk_2` FOREIGN KEY (`tax_id`) REFERENCES `xshop_taxs` (`id`),
+  ADD CONSTRAINT `xshop_itemtaxasso_ibfk_3` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
+
+--
 -- Constraints for table `xshop_orders`
 --
 ALTER TABLE `xshop_orders`
   ADD CONSTRAINT `xshop_orders_ibfk_1` FOREIGN KEY (`termsandcondition_id`) REFERENCES `xshop_termsandcondition` (`id`);
+
+--
+-- Constraints for table `xshop_taxs`
+--
+ALTER TABLE `xshop_taxs`
+  ADD CONSTRAINT `xshop_taxs_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
 
 --
 -- Constraints for table `xshop_termsandcondition`
