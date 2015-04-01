@@ -752,8 +752,13 @@ class Model_Item extends \Model_Table{
 		$image = $this->add('xShop/Model_ItemImages')->addCondition('customefieldvalue_id',Null)->addCondition('item_id',$this->id);
 		$image->duplicate($duplicate_template['id']);
 
-		// $old_tax_asso = $this->add('xShop/Model_ItemTaxAssociation')->addCondition('item_id',$this['id']);
-				
+		$old_tax_asso = $this->add('xShop/Model_ItemTaxAssociation')->addCondition('item_id',$this->id);
+		foreach ($old_tax_asso as $junk) {
+			$old_tax_asso->duplicate($duplicate_template['id']);
+		}
+		
+		//Duplicate Phrases
+
 		// //Attachment Document Dupliacte
 		// $docs = $this->add('xShop/Model_Attachments')->addCondition('item_id',$this->id);
 		// $docs->duplicate($duplicate_template['id']);

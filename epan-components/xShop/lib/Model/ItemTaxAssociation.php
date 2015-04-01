@@ -37,4 +37,14 @@ class Model_ItemTaxAssociation extends \Model_Document {
 		return $this->add('xShop/Model_Tax')->load($tax_id);
 	}
 
+	function duplicate($new_item_id){
+		if(!$new_item_id)
+			return;
+		$m = $this->add('xShop/Model_ItemTaxAssociation');
+		$m['tax_id'] = $this['tax_id'];
+		$m['item_id'] = $new_item_id;
+		$m['name'] = $this['name'];
+		$m->saveAndUnload();
+	}
+
 }

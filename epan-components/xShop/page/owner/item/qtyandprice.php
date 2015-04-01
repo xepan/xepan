@@ -29,10 +29,14 @@ class page_xShop_page_owner_item_qtyandprice extends page_xShop_page_owner_main{
 			$g->addColumn('expander','conditions');
 
 			$g->addMethod('format_image_thumbnail',function($g,$f){
-				if($g->model['is_default'])
+				if($g->model['is_default']){
 					$g->current_row_html[$f] = "";
+				}
 			});
+
 			$g->addFormatter('conditions','image_thumbnail');
+			$g->addFormatter('edit','image_thumbnail');
+			$g->addFormatter('delete','image_thumbnail');
 		}
 	}
 
