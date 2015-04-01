@@ -5,6 +5,12 @@ namespace xShop;
 class Model_Customer extends Model_MemberDetails{
 	public $title_field ='customer_search_phrase';
 
+	public $actions=array(
+			'allow_add'=>array(),
+			'allow_edit'=>array(),
+			'allow_del'=>array(),
+		);
+
 	function init(){
 		parent::init();
 
