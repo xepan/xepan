@@ -294,12 +294,14 @@ class Model_Order extends \Model_Document{
 						$oi['narration'],
 						$oi['custom_fields']
 					);					
+				
+				$oi->invoice($invoice);	
 			}
 
 			if($status !== 'draft' and $status !== 'submitted'){
 				$invoice->createVoucher($salesLedger);
 			}
-			
+
 			$this->api->db->commit();
 			return $invoice;
 		}catch(\Exception $e){

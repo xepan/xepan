@@ -182,14 +182,23 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 				
 				//GENERATE INVOICE FOR SELECTED ITEMS
-				$invoice = "";
-				if($form['include_items'] == "Selected"){
-					$invoice = $this->order()->createInvoice($status='Approved',$salesLedger=null, $items_selected);
+				// $invoice = "";
+				// if($form['include_items'] == "Selected"){
+				// 	$invoice = $this->order()->createInvoice($status='Approved',$salesLedger=null, $items_selected);
+				// }
+				// //GENERATE INVOOICE FOR ALL ORDERD ITEMS
+				// if($form['include_items'] == "All"){
+				// 	$invoice = $this->order()->createInvoice();
+				// }
+									//GENERATE INVOICE FOR SELECTED / ALL ITEMS
+				if($form['include_items']=='All'){
+					$items_selected=array();
+					foreach ($this->itemRows() as $itm) {
+						$items_selected [] = $itm->id;
+					}
 				}
-				//GENERATE INVOOICE FOR ALL ORDERD ITEMS
-				if($form['include_items'] == "All"){
-					$invoice = $this->order()->createInvoice();
-				}
+
+				$invoice = $this->order()->createInvoice($status='approved',$salesLedger=null, $items_selected);
 
 				if($form['payment'] == "cash")
 					$invoice->payViaCash($form['amount']);
