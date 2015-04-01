@@ -12,7 +12,7 @@ class Plugins_newemployeeregistered extends \componentBase\Plugin {
 
 	function new_employee_registered($obj, $employee_model){		
 		$group = $this->add('xAccount/Model_Group');
-		$group->loadSunderyCreditor();
+		$group->loadSundryCreditor();
 
 		$account_model = $this->add('xAccount/Model_Account');
 		$account_model->createNewAccount($employee_model,$group,$employee_model['name']);

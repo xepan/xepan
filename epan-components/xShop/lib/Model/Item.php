@@ -125,6 +125,7 @@ class Model_Item extends \Model_Table{
 		$this->hasMany('xStore/TransferNoteItem','item_id');
 		$this->hasMany('xStore/MaterialRequestItem','item_id');
 		$this->hasMany('xStore/PurchaseMaterialRequestItem','item_id');
+		$this->hasMany('xStore/ItemTaxAssociation','item_id');
 
 		$this->hasMany('xShop/QuantitySet','item_id');
 		$this->hasMany('xShop/CustomRate','item_id');
@@ -751,6 +752,8 @@ class Model_Item extends \Model_Table{
 		$image = $this->add('xShop/Model_ItemImages')->addCondition('customefieldvalue_id',Null)->addCondition('item_id',$this->id);
 		$image->duplicate($duplicate_template['id']);
 
+		// $old_tax_asso = $this->add('xShop/Model_ItemTaxAssociation')->addCondition('item_id',$this['id']);
+				
 		// //Attachment Document Dupliacte
 		// $docs = $this->add('xShop/Model_Attachments')->addCondition('item_id',$this->id);
 		// $docs->duplicate($duplicate_template['id']);

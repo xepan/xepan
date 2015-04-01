@@ -30,7 +30,10 @@ class Model_Tax extends \Model_Document{
 	}
 
 	function beforeSave(){
-		$this->account()->set('name',$this['name'])->save();
+		$account = $this->account();
+				
+		if($account->loaded())
+			$account->set('name',$this['name'])->save();
 	}
 
 	function afterInsert($obj,$new_id){
@@ -41,6 +44,9 @@ class Model_Tax extends \Model_Document{
 		$acc->addCondition('name',$tax_m['name']);
 		$acc->tryLoadAny();
 		$acc->save();
+
+		$this['tax_account_id']=$acc['id'];
+		$this->save();
 	}
 
 	function account(){

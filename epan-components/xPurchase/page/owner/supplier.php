@@ -8,10 +8,12 @@ class page_xPurchase_page_owner_supplier extends page_xPurchase_page_owner_main 
 
 
 
-		$crud=$this->app->layout->add('CRUD');
+		$crud=$this->add('CRUD');
 		$crud->setModel('xPurchase/Model_Supplier');
 		
 		$crud->grid->addQuickSearch(array('name','code','city','state','pin_code','email','contact_no','created_at'));
 		$crud->grid->addPaginator($ipp=50);
+		$crud->add('xHR/Controller_Acl');
+		$crud->grid->add_sno();
 	}
 }

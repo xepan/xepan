@@ -13,7 +13,7 @@ class page_owner_users extends page_base_owner {
 		$this->app->layout->template->trySetHTML('page_title',"<i class='fa fa-users'></i> User Management <small>Manage your website / applications registered users</small>");
 		
 		//User Badges
-		$bg=$this->app->layout->add('View_BadgeGroup');
+		$bg=$this->add('View_BadgeGroup');
 		$data=$this->add('Model_Users')->count()->getOne();
 		$v=$bg->add('View_Badge')->set('Total Users')->setCount($data)->setCountSwatch('ink');
 		
@@ -35,7 +35,7 @@ class page_owner_users extends page_base_owner {
 
 		//end of Badges
 
-		$crud=$this->app->layout->add('CRUD_User',array('option_page'=>$this->api->url('./options'),'config_page'=>$this->api->url('./customfieldconfig'),'app_page'=>$this->api->url('./xyz')));
+		$crud=$this->add('CRUD_User',array('option_page'=>$this->api->url('./options'),'config_page'=>$this->api->url('./customfieldconfig'),'app_page'=>$this->api->url('./xyz')));
 
 		$usr=$this->add('Model_Users');
 		$usr->addCondition('epan_id',$this->api->current_website->id);

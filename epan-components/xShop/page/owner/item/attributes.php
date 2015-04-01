@@ -31,7 +31,13 @@ class page_xShop_page_owner_item_attributes extends page_xShop_page_owner_main{
 		$custom_fields->addCondition('item_id',$item_id)
 					->addCondition('can_effect_stock',false)
 					->addCondition('department_phase_id','<>',null);
+		$dept_j = $custom_fields->leftJoin('xhr_departments','department_phase_id');
+		$dept_j->addField('production_level');
+		$custom_fields->setOrder("department_phase_id,production_level");
+
 		$custom_fields->tryLoadAny();
+
+
 
 		$crud = $this->add('CRUD');
 		$crud->setModel($custom_fields,array('department_phase_id','customfield_id','rate_effect','is_active'),array('department_phase','customfield','rate_effect','is_active'));
@@ -58,6 +64,7 @@ class page_xShop_page_owner_item_attributes extends page_xShop_page_owner_main{
 		$custom_field_asso_id = $this->api->stickyGET('xshop_item_customfields_assos_id');
 
 		$custom_feild_values_model = $this->add('xShop/Model_CustomFieldValue')->addCondition('itemcustomfiledasso_id',$custom_field_asso_id)->tryLoadAny();
+		$custom_feild_values_model->setOrder('name');
 		$crud = $this->add('CRUD');
 		$crud->setModel($custom_feild_values_model,array('name','rate_effect'));
 

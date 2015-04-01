@@ -23,6 +23,7 @@ class page_xAccount_page_owner_ledgers extends page_xAccount_page_owner_main{
 			});
 
 			$crud->grid->addColumn('balance','balance');
+			$crud->grid->add_sno();
 			$crud->grid->removeColumn('CurrentBalanceDr');
 			$crud->grid->removeColumn('CurrentBalanceCr');
 			$crud->grid->removeColumn('OpeningBalanceCr');

@@ -2,13 +2,12 @@
 
 class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 	
-	function init(){
-		parent::init();
+	function page_index(){
 		
 		$this->app->title=$this->api->current_department['name'] .': Shops & Blogs';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Shops & Blogs Management <small> Manage your shops and blogs here </small>');
 
-		$tabs= $this->app->layout->add('Tabs');
+		$tabs= $this->add('Tabs');
 		$shop_tab = $tabs->addTabURL('./shops','Shops');
 		$shop_tab = $tabs->addTabURL('./blogs','Blogs');
 	}

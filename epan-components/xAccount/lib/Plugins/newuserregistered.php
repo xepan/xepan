@@ -13,7 +13,7 @@ class Plugins_newuserregistered extends \componentBase\Plugin{
 
 	function new_user_registered($obj,$user_model){
 		$group = $this->add('xAccount/Model_Group');
-		$group->loadSunderyCreditor();
+		$group->loadSundryCreditor();
 		$account_model = $this->add('xAccount/Model_Account');
 		$account_model->createNewAccount($user_model,$group,$user_model['name']);
 		
