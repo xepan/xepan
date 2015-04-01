@@ -112,7 +112,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		
 		$p->add('H3')->set('Items to Deliver');
 		$grid = $p->add('Grid');
-		$grid->setModel($this->itemRows()->addCondition('status','sent'),array('dispatch_request','item_with_qty_fields','qty','unit','custom_fields','item'));
+		$grid->setModel($this->itemRows()->addCondition('status','received'),array('dispatch_request','item_with_qty_fields','qty','unit','custom_fields','item'));
 
 		$grid->removeColumn('custom_fields');
 		$grid->removeColumn('item');
@@ -144,7 +144,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 		$p->add('H3')->set('Items Delivered');
 		$grid = $p->add('Grid');
-		$grid->setModel($this->itemRows()->addCondition('status','received'));
+		$grid->setModel($this->itemRows()->addCondition('status','delivered'));
 
 
 		if($form->isSubmitted()){
@@ -158,6 +158,9 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 			if($form['generate_invoice']){
 				if(!$form['selected_items'])
 					$form->displayError('selected_items','Select Items tobe Included in Invoice.');
+
+				if($form['include_items'] == "")
+					$form->displayError('include_items','Please Select');
 
 				if($form['payment']){
 					switch ($form['payment']) {
@@ -177,10 +180,13 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 								$form->displayError('amount','Amount Cannot be Null');
 						break;
 					}
-				}else
-					$form->displayError('payment','Select One Payment Mode.');
-
+				}
 				
+				if($form['send_invoice_via_email']){
+					if(trim($form['email_to'] == ""))
+						$form->displayError('email_to','Not Specified');
+
+				}
 				//GENERATE INVOICE FOR SELECTED ITEMS
 				// $invoice = "";
 				// if($form['include_items'] == "Selected"){
