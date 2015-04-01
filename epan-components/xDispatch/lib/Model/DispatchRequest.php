@@ -109,30 +109,31 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 
 	function mark_processed_page($p){//Mark Processd = Delivey in this case
-		
+		$customer = $this->order()->customer();
+
 		$p->add('H3')->set('Items to Deliver');
 		$grid = $p->add('Grid');
 		$grid->setModel($this->itemRows()->addCondition('status','received'),array('dispatch_request','item_with_qty_fields','qty','unit','custom_fields','item'));
 
 		$grid->removeColumn('custom_fields');
 		$grid->removeColumn('item');
-		
+			
 		$form = $p->add('Form_Stacked');
 		$form->addField('line','delivery_via');
 		$form->addField('line','delivery_docket_no','Docket No / Person name / Other Reference');
-		$form->addField('text','billing_address');
-		$form->addField('text','shipping_address');
+		// $form->addField('text','billing_address')->set($customer['billing_address']);
+		$form->addField('text','shipping_address')->set($customer['shipping_address']);
 		$form->addField('text','delivery_narration');
 		$form->addField('Checkbox','complete_on_receive');
 		$form->addField('Checkbox','generate_invoice');
 		$form->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'))->setEmptyText('Select Items Included in Invoice');
 		$form->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
 		$form->addField('Money','amount');
+		$form->addField('line','bank_account_detail');
 		$form->addField('line','cheque_no');
-		$form->addField('Date','cheque_date');
-		$form->addField('line','bank_account_no');
+		$form->addField('DatePicker','cheque_date');
 		$form->addField('Checkbox','send_invoice_via_email');
-		$form->addField('line','email_to');
+		$form->addField('line','email_to')->set($customer['customer_email']);
 
 
 		$include_field = $form->addField('hidden','selected_items');
@@ -165,17 +166,21 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 				if($form['payment']){
 					switch ($form['payment']) {
 						case 'cheque':
+							if(trim($form['amount']) == "")
+								$form->displayError('amount','Amount Cannot be Null');
+
+							if(trim($form['bank_account_detail']) == "")
+								$form->displayError('bank_account_detail','Account Number Cannot  be Null');
+					
 							if(trim($form['cheque_no']) =="")
 								$form->displayError('cheque_no','Cheque Number not valid.');
 
 							if(!$form['cheque_date'])
 								$form->displayError('cheque_date','Date Canot be Empty.');
 
-							if(trim($form['bank_account_no']) == "")
-								$form->displayError('bank_account_no','Account Number Cannot  be Null');
 						break;
 
-						default:
+						case 'cash':
 							if(trim($form['amount']) == "")
 								$form->displayError('amount','Amount Cannot be Null');
 						break;
@@ -210,7 +215,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 					$invoice->payViaCash($form['amount']);
 				
 				if($form['payment'] == "cheque")
-					$invoice->payViaCheque($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_no'],$self_bank_account);
+					$invoice->payViaCheque($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_detail'],$self_bank_account=null);
 
 			}
 			
