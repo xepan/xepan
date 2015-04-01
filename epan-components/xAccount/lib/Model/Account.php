@@ -45,7 +45,7 @@ class Model_Account extends \Model_Document{
 		}
 
 		if($account_for instanceof \xProduction\Model_OutSourceParty){
-			$this['employee_id'] = $account_for->id;
+			$this['out_source_party_id'] = $account_for->id;
 		}
 
 		$this['group_id'] = $group->id;
