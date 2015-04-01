@@ -283,7 +283,7 @@ class Model_Order extends \Model_Document{
 				if(!count($items_array) or !in_array($oi->id, $items_array) ) continue;
 				
 				if($oi->invoice())
-					throw $this->exception('Order Item already used in Invoice','ValidityCheck');
+					throw $this->exception('Order Item already used in Invoice','Growl');
 
 				$invoice->addItem(
 						$oi->item(),
