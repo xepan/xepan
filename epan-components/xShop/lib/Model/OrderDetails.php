@@ -64,10 +64,12 @@ class Model_OrderDetails extends \Model_Document{
 
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');
 		$this->hasMany('xShop/SalesOrderDetailAttachment','related_document_id',null,'Attachements');
+		$this->hasMany('xShop/Jobcard','orderitem_id');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
 		$this->addHook('afterInsert',$this);
+		$this->addHook('beforeDelete',$this);
 		// $this->addHook('afterLoad',$this);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
@@ -106,6 +108,19 @@ class Model_OrderDetails extends \Model_Document{
 	function afterSave(){
 		$this->order()->updateAmounts();
 	}
+
+	function beforeDelete(){
+
+	}
+
+	function jobCards($item_id=null){
+		if($this->loaded())
+			$item_id = $this->id;
+
+		return $this->add('xProduction/Model_JobCard')->addCondition('orderitem_id',$item_id);
+		
+	}
+
 
 	function afterInsert($obj,$new_id){
 		// For online orders that are already approved and create their departmental associations
