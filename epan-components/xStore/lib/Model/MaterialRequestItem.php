@@ -13,7 +13,7 @@ class Model_MaterialRequestItem extends \Model_Document{
 		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'xShop/Item'));
 		$this->addField('qty')->sortable(true);
 		$this->addField('unit')->sortable(true);
-		$this->addField('narration');
+		$this->addField('narration')->type('text');
 		
 		$this->addField('custom_fields')->type('text')->sortable(true);
 		$this->addHook('beforeSave',$this);
