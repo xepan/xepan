@@ -13,10 +13,10 @@ class Model_PurchaseOrderItem extends \Model_Document{
 		$this->hasOne('xShop/Item_Purchasable','item_id')->display(array('form'=>'xShop/Item'));
 		
 		$this->addField('qty');
-		$this->addField('unit');
-		$this->addField('rate');
-		$this->addField('amount');
-		$this->addField('narration');
+		// $this->addField('unit');
+		$this->addField('rate')->type('money');
+		$this->addField('amount')->type('money');
+		$this->addField('narration')->type('text');
 
 		$this->getElement('status')->defaultValue('waiting');
 
