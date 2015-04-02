@@ -86,6 +86,8 @@ class Model_Document extends SQL_Model{
 
 	function defaultBeforeSave(){
 		$this['updated_at']= date('Y-m-d H:i:s');
+
+		//Create Log entry
 	}
 
 	function getSeries(){
