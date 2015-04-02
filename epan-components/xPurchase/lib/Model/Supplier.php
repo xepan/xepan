@@ -18,11 +18,11 @@ class Model_Supplier extends \Model_Document{
 
 		$this->addField('name')->caption('Company name')->mandatory(true)->sortable(true);
 		$this->addField('owner_name')->sortable(true);
+		$this->addField('city')->mandatory(true)->sortable(true);
 		$this->addField('contact_person_name')->sortable(true);
 		$this->addField('accounts_person_name')->sortable(true);
 		$this->addField('code')->mandatory(true)->sortable(true);
 		$this->addField('address')->type('text')->mandatory(true)->sortable(true);
-		$this->addField('city')->mandatory(true)->sortable(true);
 		$this->addField('state')->mandatory(true)->sortable(true);
 		$this->addField('pin_code')->type('Number')->sortable(true);
 		$this->addField('fax_number')->type('Number')->sortable(true);
