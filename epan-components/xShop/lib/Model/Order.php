@@ -275,7 +275,7 @@ class Model_Order extends \Model_Document{
 		$this->save();
 	}
 
-	function send_page($email_id=null, $order_id=null){
+	function send_via_email_page($email_id=null, $order_id=null){
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		

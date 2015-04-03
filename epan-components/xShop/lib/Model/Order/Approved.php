@@ -6,8 +6,8 @@ class Model_Order_Approved extends Model_Order{
 	public $actions=array(
 			'can_view'=>array(),
 			'can_reject'=>array(),
+			'can_send_via_email'=>array(),
 			'can_forcedelete'=>array(),
-			'can_send'=>array()
 		);
 	
 
