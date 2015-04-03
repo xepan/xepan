@@ -111,14 +111,38 @@ class Model_OrderDetails extends \Model_Document{
 
 	function beforeDelete(){
 
+		$dnis = $this->deliveryNoteItems();
+		foreach ($dnis as $dni) {
+			$dni->delete();
+		}
+
+		$dris = $this->dispatchRequestItems();
+		foreach ($dris as $dri) {
+			$dri->delete();
+		}
+
+		$jcs = $this->Jobcards();
+		foreach ($jcs as $jc) {
+			//ALL JOBCARD DELETE
+			$jc->delete();
+		}
+
+	}
+
+	function deliveryNoteItems(){
+		return $this->add('xDispatch/Model_DeliveryNoteItem')->addCondition('orderitem_id',$this->id)->tryLoadAny();
+
+	}
+
+	function dispatchRequestItems(){
+		return $this->add('xDispatch/Model_DispatchRequestItem')->addCondition('orderitem_id',$this->id)->tryLoadAny();
 	}
 
 	function jobCards($item_id=null){
 		if($this->loaded())
 			$item_id = $this->id;
-
-		return $this->add('xProduction/Model_JobCard')->addCondition('orderitem_id',$item_id);
-		
+		$jobCards = $this->add('xProduction/Model_JobCard')->addCondition('orderitem_id',$item_id)->tryLoadAny();
+		return $jobCards;
 	}
 
 

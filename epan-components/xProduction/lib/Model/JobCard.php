@@ -49,8 +49,15 @@ class Model_JobCard extends \Model_Document{
 							// 'name|to_trim|required',
 							)
 					);
-		$this->add('dynamic_model/Controller_AutoCreator');
+		$this->addHook('beforeDelete',$this);
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+	function beforeDelete(){
+		throw new \Exception("Error Processing Request", 1);
+		
+		// throw new \Exception($this->id.$this->get('name'));
+	}	
 
 	function createFromOrder($order_item, $order_dept_status ){
 		$new_job_card = $this;
