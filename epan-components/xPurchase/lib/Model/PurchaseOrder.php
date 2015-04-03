@@ -29,15 +29,11 @@ class Model_PurchaseOrder extends \Model_Document{
 	}
 
 	function beforeDelete(){
-		if($this['status']=='draft')
-			$this->ref('xPurchase/PurchaseOrderItem')->deleteAll();
-		else
-			throw $this->exception("can not be delete",'Growl');
 		
 	}
 
 	function itemRows(){
-		return $this->add('xPurchase/Model_PurchaseOrderItem')->addCondition('po_id',$this['id']);
+		return $this->add('xPurchase/Model_PurchaseOrderItem')->addCondition('po_id',$this['id'])->tryLoadAny();
 	}
 
 	function submit(){		
@@ -46,6 +42,41 @@ class Model_PurchaseOrder extends \Model_Document{
 
 	function cancle(){
 		$this->setStatus('canceled');
+	}
+
+	function invoice(){
+		return $this->add('xShop/Model_PurchaseInvoice')->addCondition('po_id',$this->id)->tryLoadAny();
+	}
+
+
+	function forceDelete_page($page){
+		$page->add('View_Warning')->set('All Item, and Invoice will be delete');
+		$str = "";
+		$ois = $this->purchaseOrderItems();
+		foreach ($ois as $oi) {
+			$str.= " Item :: ".$oi['item_name']."<br>";
+		}
+		$invcs = $this->invoice();
+		foreach ($invcs as $invc) {
+			$str.= "Invoices <br>";
+			$str.= $invc['name'];
+		}
+
+		$form = $page->add('Form');
+		$form->addField('checkbox','delete_invoice_also')->set(true);
+		$form->addSubmit('ForceDelete');
+
+		if($form->isSubmitted()){
+			foreach ($ois as $oi) {
+				$oi->delete();
+			}
+			foreach ($invcs as $inc) {
+				$inc->delete();
+			}
+			$this->delete();
+			return true;
+		}
+
 	}
 
 	function approve_page($page){
@@ -137,18 +168,39 @@ class Model_PurchaseOrder extends \Model_Document{
 	}
 
 	function mark_processed_page($page){
-
-		$page->add('H3')->set('Items for Receive');
 		$ois = $this->itemRows();
 		$ois->addCondition('invoice_id',null)->tryLoadAny();
+		
+		$form = $page->add('Form_Stacked',null,null,array('form/minimal'));
+		$th = $form->add('Columns');
+		$th_name =$th->addColumn(4);
+		$th_name->add('H4')->set('Items');
+		$th_qty =$th->addColumn(2);
+		$th_qty->add('H4')->set('Order Qty');
+		$th_received_qty = $th->addColumn(3);
+		$th_received_qty->add('H4')->set('Receive Qty');
+		// $form = $page->add('Form');
+		$i = 1;
+		foreach ($ois as $oi) {
+			$c = $form->add('Columns');
+			$c1 = $c->addColumn(4);
+			$c1->addField('Readonly','item_name_'.$oi->id)->set($oi['item_name']);
+			$c2 = $c->addColumn(2);
+			$c2->addField('Readonly','item_qty_'.$oi->id)->set($oi['qty']." ".$oi['unit']);
+			$c3 = $c->addColumn(3);
+			$c3->addField('Number','item_received_qty_'.$oi->id)->set($oi['qty']);
+			// $c4 = $c->addColumn(2);
+			// $c4->addField('Checkbox','item_received_'.$i);
+			$i++;
+		}
+
+		$page->add('H3')->set('Items for Receive');
 		$grid = $page->add('Grid');
 		$grid->setModel($ois);
-
 
 		$grid->removeColumn('custom_fields');
 		$grid->removeColumn('item');
 		
-		$form = $page->add('Form_Stacked');
 		$form->addField('line','received_via');
 		$form->addField('line','delivery_docket_no','Docket No / Person name / Other Reference');
 		$form->addField('text','received_narration');
@@ -159,6 +211,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$form->addField('line','bank_account_detail');
 		$form->addField('line','cheque_no');
 		$form->addField('DatePicker','cheque_date');
+		$form->addField('Checkbox','keep_open');
 
 		$include_field = $form->addField('hidden','selected_items');
 
@@ -167,62 +220,71 @@ class Model_PurchaseOrder extends \Model_Document{
 		$page->add('H3')->set('Items Received');
 		$grid = $page->add('Grid');
 		$grid->setModel($this->itemRows()->addCondition('invoice_id','<>',null));
-		// $form->addField('DropDown','to_warehouse')
-		// 	->setFieldHint('TODO : Check if warehouse is outsourced make challan and receive automatically')
-		// 	->setModel('xStore/Warehouse');
-
 
 		$receive_btn = $form->addSubmit('Receive and Pay');
 
 		if($form->isSubmitted()){
-			if(!$form['selected_items'])
-				throw $this->Exception('No Item Selected'.$form['selected_items'],'Growl');
-				
-			$items_selected = json_decode($form['selected_items'],true);
-			// TODO : A LOT OF CHECKINGS REGARDING INVOICE ETC ...
+			//Selected Item Array
+			$items_selected = array();
+			$i = 1;
+			foreach ($ois as $oi) {
+				if($form['item_received_qty_'.$oi->id] > 0){
+					$items_selected [] = $oi->id ;
+					// $items_selected [$oi->id]['received_qty'] = $form['item_qty_'.$i];
+					// $items_selected [$oi->id]['qty'] = $form['item_qty_'.$i] ;
+					// $items_selected [$oi->id]['received_qty'] = $form['item_received_qty_'.$i];
+				}
+
+				$i++;
+			}
 			
+			// throw new \Exception(print_r($items_selected,true));
+									
+			if(empty($items_selected))
+				throw $this->Exception('No Item Selected','Growl');
+			
+			// $items_selected = json_decode($form['selected_items'],true);			
+			if($form['payment']){
+				switch ($form['payment']) {
+					case 'cheque':
+						if(trim($form['amount']) == "" or $form['amount']==0)
+							$form->displayError('amount','Amount Cannot be Null');
+
+						if(trim($form['bank_account_detail']) == "")
+							$form->displayError('bank_account_detail','Account Number Cannot  be Null');
+
+						if(trim($form['cheque_no']) =="")
+							$form->displayError('cheque_no','Cheque Number not valid.');
+
+						if(!$form['cheque_date'])
+							$form->displayError('cheque_date','Date Canot be Empty.');
+
+					break;
+					case 'cash':
+						if(trim($form['amount']) == "" or $form['amount']==0)
+							$form->displayError('amount','Amount Cannot be Null');
+					break;
+				}
+			}
+
 			//CHECK FOR GENERATE INVOICE
 			if($form['generate_purchase_invoice']){
 				if($form['include_items'] == "")
 					$form->displayError('include_items','Please Select');
-					
-
-				if($form['payment']){
-					switch ($form['payment']) {
-						case 'cheque':
-							if(trim($form['amount']) == "" or $form['amount']==0)
-								$form->displayError('amount','Amount Cannot be Null');
-
-							if(trim($form['bank_account_detail']) == "")
-								$form->displayError('bank_account_detail','Account Number Cannot  be Null');
-
-							if(trim($form['cheque_no']) =="")
-								$form->displayError('cheque_no','Cheque Number not valid.');
-
-							if(!$form['cheque_date'])
-								$form->displayError('cheque_date','Date Canot be Empty.');
-
-						break;
-						case 'cash':
-							if(trim($form['amount']) == "" or $form['amount']==0)
-								$form->displayError('amount','Amount Cannot be Null');
-						break;
-					}
-				}
 
 				$count = $this->itemRows()->addCondition('invoice_id','<>',null)->count()->getOne();
-				if( $count and $form['include_items'] =="All"){
+				if( $count and $form['include_items'] == "All"){
 					$form->displayError('include_items',$count.' item\'s already in invoice, select selected option ' );
 				}
 
-				//GENERATE INVOICE FOR SELECTED / ALL ITEMS
+			// 	//GENERATE INVOICE FOR SELECTED / ALL ITEMS
 				if($form['include_items']=='All'){
 					$items_selected=array();
 					foreach ($this->itemRows() as $itm) {
 						$items_selected [] = $itm->id;
 					}
 				}
-
+				
 				$purchase_invoice = $this->createInvoice($status='approved',$purchaseLedger=null, $items_selected);
 
 				if($form['payment'] == "cash")
@@ -230,36 +292,28 @@ class Model_PurchaseOrder extends \Model_Document{
 				
 				if($form['payment'] == "cheque")
 					$purchase_invoice->payViaCheque($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_no'],$self_bank_account=null);
+			}
 
-				//WAREHOUSE ENTRY
-				$items_selected = json_decode($form['selected_items'],true);
-				$to_warehouse = $this->add('xStore/Model_Warehouse')->loadPurchase();
-				$movement_challan = $to_warehouse->newPurchaseReceive($this);
-				$i=1;
-				foreach ($this->itemRows() as $ir) {
-					if(!in_array($ir->id, $items_selected)) continue;
+			//WAREHOUSE ENTRY
+			// $items_selected = json_decode($form['selected_items'],true);
+			$to_warehouse = $this->add('xStore/Model_Warehouse')->loadPurchase();
+			$movement_challan = $to_warehouse->newPurchaseReceive($this);
+			$i=1;
+			foreach ($this->itemRows() as $ir) {
+				if(!in_array($ir->id, $items_selected)) continue;
+				$movement_challan->addItem($ir->item(),$form['item_received_qty_'.$ir->id],$ir['unit'],$ir['custom_fields']);
+				$i++;
+			}
 
-					$movement_challan->addItem($ir->item(),$ir['qty'],$ir['unit'],$ir['custom_fields']);
-					$i++;
-				}
+			$movement_challan->executePurchase($add_to_stock=true);
 
-				$movement_challan->executePurchase($add_to_stock=true);
-
-				//change the status of item to received
-
-				if($form['include_items'] == "All"){
-					$this->setStatus('completed');
-				}
-				if($form['include_items'] == 'selected'){
-					if($this->itemRows()->addCondition('invoice_id',null)->count()->getOne() == 0)
-						$this->setStatus('completed');
-					else	
-						$this->setStatus('processing');
-				}
-
-				return true;
-			}	
-
+			if(!$form['keep_open'])
+				$this->setStatus('completed');
+			return true;
+			// if($form['include_items'] == 'Selected'){
+			// 	if($this->itemRows()->addCondition('invoice_id',null)->count()->getOne() == 0)
+			// }else	
+			// 	$this->setStatus('processing');
 		}
 
 
@@ -276,17 +330,17 @@ class Model_PurchaseOrder extends \Model_Document{
 	function createInvoice($status='draft',$purchaseLedger=null, $items_array=array()){
 		try{
 			$this->api->db->beginTransaction();
-			$invoice = $this->add('xPurchase/Model_Invoice_Draft');
+			$invoice = $this->add('xPurchase/Model_Invoice')->addCondition('status', $status)->tryLoadAny();
 
 			$invoice['po_id'] = $this['id'];
 			$invoice['supplier_id'] = $this->supplier()->get('id');
 			$invoice['total_amount'] = $this['total_amount'];
 			$invoice['tax'] = $this['tax'];
-			$invoice['net_amount'] = $this['net_amount'];
-
+			
 			$invoice->relatedDocument($this);
 
 			$invoice->save();
+			$invoice['net_amount'] = $this['net_amount'];
 			
 
 			$ois = $this->purchaseOrderItems();
@@ -306,7 +360,6 @@ class Model_PurchaseOrder extends \Model_Document{
 						$oi['narration'],
 						$oi['custom_fields']
 					);
-
 				$oi->invoice($invoice);	
 			}
 
@@ -319,8 +372,8 @@ class Model_PurchaseOrder extends \Model_Document{
 		}catch(\Exception $e){
 			echo $e->getmessage();
 			$this->api->db->rollback();
-			if($this->api->getConfig('developer_mode',false))
-				throw $e;
+			// if($this->api->getConfig('developer_mode',false))
+			// 	throw $e;
 		}
 	}
 	
