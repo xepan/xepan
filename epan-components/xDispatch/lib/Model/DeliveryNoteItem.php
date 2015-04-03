@@ -15,7 +15,13 @@ class Model_DeliveryNoteItem extends \Model_Document{
 		$this->addField('qty');
 		$this->addField('unit');
 
+		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeDelete(){
+		// throw new \Exception("Error Processing Request", 1);
+		
 	}
 	
 }

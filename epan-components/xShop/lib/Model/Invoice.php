@@ -15,7 +15,7 @@ class Model_Invoice extends \Model_Document{
 	function init(){
 		parent::init();
 		
-		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
+		// $this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
 		$this->hasOne('xShop/Customer','customer_id')->sortable(true);
 		$this->hasOne('xPurchase/Supplier','supplier_id')->sortable(true);
 		$this->hasOne('xShop/Model_Order','sales_order_id');
@@ -30,7 +30,13 @@ class Model_Invoice extends \Model_Document{
 		$this->addField('transaction_reference')->type('text');
 		$this->addField('transaction_response_data')->type('text');
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
+		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+
+	function beforeDelete(){
+		$this->ref('xShop/InvoiceItem')->deleteAll();
 	}
 
 	function netAmount(){

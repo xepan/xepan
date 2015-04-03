@@ -98,6 +98,7 @@ class Model_Order extends \Model_Document{
 		$delivery_notes = $this->add('xDispatch/Model_DeliveryNote');
 		$delivery_notes->addCondition('order_id',$this->id);
 		return $delivery_notes->tryLoadAny();
+
 	}
 
 	
@@ -108,18 +109,20 @@ class Model_Order extends \Model_Document{
 		$ois = $this->orderItems();
 		foreach ($ois as $oi) {
 			$str.= " Item :: ".$oi['name']."<br>";
-			//Related Jobcards
+			// Related Jobcards
 			$jcs = $oi->jobCards();
 			foreach ($jcs as $jc) {
 				$str.= "JobCard No. ".$jc['name']." Department ".$jc['to_department']." :: ". $jc['status']."<br>";
 			}
-		
 		}
 
 		//Related Invoice
-		$str .= "<br> Invoice No. :: ".$this->invoice()->get('name');
-		//Related DeliveryNote
+		$inv = $this->invoice();
+		if($inv and $inv->loaded())
+			$str .= "<br> Invoice No. :: ".$this->invoice()->get('name');
+		
 		$dns = $this->deliveryNotes();
+		//Related DeliveryNote
 		foreach ($dns as $dn) {
 			$str .= "<br> DeliveryNote :: ".$dn['docket_no']." :: ".$dn['narration'];
 		}
@@ -133,56 +136,37 @@ class Model_Order extends \Model_Document{
 		$form = $page->add('Form');
 		$form->addField('checkbox','delete_invoice_also')->set(true);
 		$form->addSubmit('ForceDelete');
-		if($form->isSubmitted()){
-			//First Delete Jobcard
-			$dns = $this->deliveryNotes();
-			foreach ($dns as $dn) {
-				$dnis = $this->add('xDispatch/DeliveryNoteItem')->addCondition('delivery_note_id',$dn->id);
-				foreach ($dnis as $dni) {
-					$dni['orderitem_id'] = null;
-					$dni->save();
-					$dni->delete();
-				}
-				$dn['order_id'] = null;
-				$dn['to_memberdetails_id'] = null;
-				$dn['warehouse_id'] = null;
-				$dn->save();
-				$dn->delete();
-			}
-			foreach ($ois as $oi) {
-				$jcs = $oi->Jobcards();
-				foreach ($jcs as $jc) {
-					$jc->delete();
-				}
-				$oi->delete();				
-			}
-			if($form['delete_invoice_also']){
-				$invs = $this->invoice();
-				foreach ($invs as $inv) {
-					$in_itms = $page->add('xShop/InvoiceItem')->addCondition('invoice_id',$inv->id);
-					foreach ($in_itms as $in_itm) {
-						$in_itm['item_id'] = null;
-						$in_itm->save();
-						$in_itm->delete();
-					}
-					$inv['customer_id'] = null;
-					$inv->save();
-					$inv->delete();
-				}
-			}
 
-			$this['priority_id'] = null;
-			$this['priority_id'] = null;
-			$this['paymentgateway_id'] = null;
-			$this['member_id'] = null;
-			$this->save();
+		if($form->isSubmitted()){
+			foreach ($ois as $oi) {
+				//ORDER DETAIL (ITEMS) DELETE
+				//Create Log
+				$oi->delete();
+			}
+			$invs = $this->invoice();
+			if($form['delete_invoice_also'] and $invs){
+				foreach ($invs as $inv) {
+					//Create Log
+					$invs->delete();
+				}
+			}elseif($invs){
+				foreach ($invs as $inv) {
+					$inv['sales_order_id'] = null;
+					$inv->saveAndUnload();
+				}
+				// if($invs->count()->getOne()){
+				// 	$form->displayError('delete_invoice_also','First Delete it\'s Invoice ( '.$invs->count()->getOne()." )" );
+				// }
+			}
+			//ORDER DELETE
+			//create Log
 			$this->delete();
 			return true;
 		}
 
 	}
 
-	function beforeDelete($m){		
+	function beforeDelete($m){
 
 		if($m['discount_voucher'] != null and $m['discount_voucher'] != 0 ){
 			$discountvoucher = $this->add('xShop/Model_DiscountVoucher');		
@@ -195,9 +179,6 @@ class Model_Order extends \Model_Document{
 				$voucher_used->delete();
 			}
 		}
-
-
-		$m->ref('xShop/OrderDetails')->deleteAll();
 
 	}
 
@@ -346,7 +327,7 @@ class Model_Order extends \Model_Document{
 	}
 
 	function invoice(){
-		$inv = $this->ref('xShop/SalesInvoice');
+		$inv = $this->add('xShop/Model_SalesInvoice')->addCondition('sales_order_id',$this->id);
 		$inv->tryLoadAny();
 		if($inv->loaded()) return $inv;
 		return false;
