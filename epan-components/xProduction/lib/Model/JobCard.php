@@ -54,9 +54,6 @@ class Model_JobCard extends \Model_Document{
 	}
 
 	function beforeDelete(){
-		throw new \Exception("Error Processing Request", 1);
-		
-		// throw new \Exception($this->id.$this->get('name'));
 	}	
 
 	function createFromOrder($order_item, $order_dept_status ){
@@ -311,7 +308,7 @@ class Model_JobCard extends \Model_Document{
 	function cancel_page($page){
 		$form= $page->add('Form_Stacked');
 		$form->addField('text','reason');
-		$form->addSubmit('reject');
+		$form->addSubmit('cancle');
 		if($form->isSubmitted()){
 			$this->setStatus('cancelled',$form['reason']);
 			if($this['orderitem_id']){
@@ -320,6 +317,7 @@ class Model_JobCard extends \Model_Document{
 			return true;
 		}
 	}
+
 
 	function complete(){
 		$this->setStatus('completed');
