@@ -11,7 +11,7 @@ class Model_CustomRate extends \Model_Table {
 		$this->hasOne('xShop/Item','item_id');
 		$this->addField('name');
 		$this->addField('qty');
-		$this->addField('price');
+		$this->addField('price')->type('money');
 
 		$this->hasMany('xShop/CustomRateCustomeValueCondition','custom_rate_id');
 

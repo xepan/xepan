@@ -29,6 +29,7 @@ class Model_Supplier extends \Model_Document{
 		$this->addField('contact_no')->mandatory(true)->sortable(true);
 		$this->addField('email')->sortable(true);
 		$this->addField('tin_no');
+		$this->addField('pan_no');
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
 		// $this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'))->sortable(true);
 

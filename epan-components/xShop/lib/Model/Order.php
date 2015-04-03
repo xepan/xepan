@@ -35,11 +35,11 @@ class Model_Order extends \Model_Document{
 		$this->addField('order_from')->enum(array('online','offline'))->defaultValue('offline');
 		$f = $this->getElement('status')->group('a~2');
 
-		$f = $this->addField('total_amount')->mandatory(true)->group('b~3~<i class="fa fa-money"></i> Order Amount')->sortable(true);
+		$f = $this->addField('total_amount')->type('money')->mandatory(true)->group('b~3~<i class="fa fa-money"></i> Order Amount')->sortable(true);
 		$f = $this->addField('discount_voucher')->group('b~3');
 		$f = $this->addField('discount_voucher_amount')->group('b~3');
-		$f = $this->addField('tax')->group('b~3');
-		$f = $this->addField('net_amount')->mandatory(true)->group('b~3')->sortable(true);
+		$f = $this->addField('tax')->type('money')->group('b~3');
+		$f = $this->addField('net_amount')->type('money')->mandatory(true)->group('b~3')->sortable(true);
 
 		$f = $this->addField('billing_address')->mandatory(true)->group('x~6~<i class="fa fa-map-marker"> Address</i>');
 		$f = $this->addField('shipping_address')->mandatory(true)->group('x~6');	

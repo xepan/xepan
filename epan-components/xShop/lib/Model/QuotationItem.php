@@ -19,8 +19,8 @@ class Model_QuotationItem extends \Model_Document{
 		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'xShop/Item'))->sortable(true);
 		
 		$this->addField('qty')->sortable(true);
-		$this->addField('rate')->sortable(true);
-		$this->addField('amount')->sortable(true);
+		$this->addField('rate')->type('money')->sortable(true);
+		$this->addField('amount')->type('money')->sortable(true);
 		$this->addField('narration');
 		$this->addField('custom_fields')->type('text')->sortable(true);
 		// $this->add('dynamic_model/Controller_AutoCreator');
