@@ -16,20 +16,23 @@ class Model_Supplier extends \Model_Document{
 	function init(){
 		parent::init();
 
-		$this->addField('name')->caption('Company name')->mandatory(true)->sortable(true);
-		$this->addField('owner_name')->sortable(true);
-		$this->addField('city')->mandatory(true)->sortable(true);
-		$this->addField('contact_person_name')->sortable(true);
-		$this->addField('accounts_person_name')->sortable(true);
-		$this->addField('code')->mandatory(true)->sortable(true);
-		$this->addField('address')->type('text')->mandatory(true)->sortable(true);
-		$this->addField('state')->mandatory(true)->sortable(true);
-		$this->addField('pin_code')->type('Number')->sortable(true);
-		$this->addField('fax_number')->type('Number')->sortable(true);
-		$this->addField('contact_no')->mandatory(true)->sortable(true);
-		$this->addField('email')->sortable(true);
-		$this->addField('tin_no');
-		$this->addField('is_active')->type('boolean')->defaultValue(true);
+		$this->addField('name')->caption('Company name')->mandatory(true)->sortable(true)->group('a~3~Basic Detail');
+		$this->addField('owner_name')->sortable(true)->group('a~3');
+		$this->addField('accounts_person_name')->sortable(true)->group('a~3');
+		$this->addField('contact_person_name')->sortable(true)->group('a~3');
+		
+		$this->addField('address')->type('text')->mandatory(true)->sortable(true)->group('b~4~Address Detail');
+		$this->addField('city')->mandatory(true)->sortable(true)->group('b~2');
+		$this->addField('code')->mandatory(true)->sortable(true)->group('b~3');
+		$this->addField('state')->mandatory(true)->sortable(true)->group('b~3');
+		// $this->addField('pin_code')->type('Number')->sortable(true)->group('b~2');
+		
+		$this->addField('contact_no')->mandatory(true)->sortable(true)->group('c~4~Contact Detail');
+		$this->addField('fax_number')->type('Number')->sortable(true)->group('c~4');
+		$this->addField('email')->sortable(true)->group('c~4');
+
+		$this->addField('tin_no')->group('d~4~Company Detail');
+		$this->addField('is_active')->type('boolean')->defaultValue(true)->group('d~4');
 		// $this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'))->sortable(true);
 
 		$this->hasMany('xPurchase/PurchaseOrder','supplier_id');

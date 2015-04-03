@@ -4,17 +4,20 @@ class Model_OutSourceParty extends \Model_Table{
 	public $table="xproduction_out_source_parties";
 	function init(){
 		parent::init();
-
-		$this->addField('name')->Caption('Party')->sortable(true);
-		$this->addField('code')->Caption('Party Code')->sortable(true);
-		$this->addField('contact_person')->sortable(true);
-		$this->addField('contact_no')->sortable(true);
-		$this->addField('email_id')->sortable(true);
-		$this->addField('address')->type('text')->sortable(true);
-		$this->addField('bank_detail')->type('text');
-		$this->addField('pan_it_no')->caption('Pan / IT No.');//type('text');
-		$this->addField('tin_no')->caption('TIN / CST No.');
-		$this->addField('maintain_stock')->type('boolean')->defaultValue(false)->group('a~4')->sortable(true);
+		$this->addField('name')->Caption('Party')->sortable(true)->group('a~5~Basic Info');
+		$this->addField('contact_person')->sortable(true)->group('a~5');
+		$this->addField('code')->Caption('Party Code')->sortable(true)->group('a~2');
+		
+		$this->addField('contact_no')->sortable(true)->group('b~4~ Contact Detail');
+		$this->addField('email_id')->sortable(true)->group('b~4');
+		$this->addField('address')->type('text')->sortable(true)->group('b~4');
+		
+		$this->addField('bank_detail')->type('text')->group('c~12~ Bank Detail');
+		
+		$this->addField('pan_it_no')->caption('Pan / IT No.')->group('d~4~ Company Detail');//type('text');
+		$this->addField('tin_no')->caption('TIN / CST No.')->group('d~4~');
+		
+		$this->addField('maintain_stock')->type('boolean')->defaultValue(false)->group('e~4~MaintainStock')->sortable(true);
 
 		$this->hasMany('xProduction/OutSourcePartyDeptAssociation','out_source_party_id');
 		$this->hasMany('xStore/Warehouse','out_source_party_id');
