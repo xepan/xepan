@@ -295,4 +295,16 @@ class Model_Document extends SQL_Model{
 		$current_lastseen['seen_till'] = date('Y-m-d H:i:s');
 		$current_lastseen->save();
 	}
+
+	function sendEmail($email,$subject,$email_body){
+		$tm=$this->add( 'TMail_Transport_PHPMailer' );	
+		try{
+			//Send Message to All Associate Affiliates
+			$tm->send($email, $email,$subject, $email_body ,false,null);
+		}catch( phpmailerException $e ) {
+			$this->api->js(null,'$("#form-'.$_REQUEST['form_id'].'")[0].reset()')->univ()->errorMessage( $e->errorMessage() . " " . $email )->execute();
+		}catch( Exception $e ) {
+			throw $e;
+		}
+	}
 }

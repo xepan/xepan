@@ -18,6 +18,7 @@ class Controller_Acl extends \AbstractController {
 		'allow_del'=>'No',
 
 		'can_submit'=>'No',
+		'can_send'=>'No',
 		'can_select_outsource'=>'No',
 		'can_approve'=>'No',
 		'can_reject'=>'No',
@@ -264,6 +265,10 @@ class Controller_Acl extends \AbstractController {
 
 		if($this->permissions['can_forceDelete'] !='No'){
 			$this->manageAction('forceDelete','can_forceDelete','do-delete');
+		}
+		
+		if($this->permissions['can_send'] !='No'){
+			$this->manageAction('send','can_send');
 		}
 
 		if($this->permissions['can_manage_tasks'] !='No'){
