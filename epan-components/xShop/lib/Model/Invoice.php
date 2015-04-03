@@ -15,7 +15,7 @@ class Model_Invoice extends \Model_Document{
 	function init(){
 		parent::init();
 		
-		// $this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
+		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
 		$this->hasOne('xShop/Customer','customer_id')->sortable(true);
 		$this->hasOne('xPurchase/Supplier','supplier_id')->sortable(true);
 		$this->hasOne('xShop/Model_Order','sales_order_id');
