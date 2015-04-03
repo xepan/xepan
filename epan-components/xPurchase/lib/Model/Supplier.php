@@ -37,6 +37,8 @@ class Model_Supplier extends \Model_Document{
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('afterInsert',$this);
 
+		
+
 		$this->addExpression('customer_search_phrase')->set($this->dsql()->concat(
 				$this->getElement('name'),
 				' :: ',

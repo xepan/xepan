@@ -6,7 +6,7 @@ class page_xAi_page_owner_main extends page_componentBase_page_owner_main {
 		parent::init();
 		
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-bullhorn"></i> '.$this->component_name. '<small> xAi Small</small>');
-		$this->api->component_common_menu->addItem(array('Reset','icon'=>'gauge-1'),$this->api->url('xAi_page_owner_main_reset'));		
+		// $this->api->component_common_menu->addItem(array('Reset','icon'=>'gauge-1'),$this->api->url('xAi_page_owner_main_reset'));		
 		// $btn = $this->toolbar->addButton('Reset');
 		// $btn->js('click',$this->js()->univ()->frameURL('Reset',$this->api->url('./reset')));
 

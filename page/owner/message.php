@@ -42,7 +42,6 @@ class page_owner_message extends page_base_owner{
 				$g->current_row[$f]=$g->add('Model_Messages')->addCondition('sender_namespace',$g->model['namespace'])->count()->getOne();
 			});
 			$g->addColumn('total','Total');
-			$g->addColumn('total','Total');
 
 			$g->addMethod('format_unread', function($g,$f){
 			$msg_model = $g->add('Model_Messages');
