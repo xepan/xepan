@@ -22,10 +22,10 @@ class Model_Invoice extends \Model_Document{
 		$this->hasOne('xPurchase/Model_PurchaseOrder','po_id')->caption('Purchase Order');
 		$this->addField('type')->enum(array('salesInvoice','purchaseInvoice'));
 		$this->addField('name')->caption('Invoice No');
-		$this->addField('total_amount');
-		$this->addField('discount');
-		$this->addField('tax');
-		$this->addField('net_amount');
+		$this->addField('total_amount')->type('money');
+		$this->addField('discount')->type('money');
+		$this->addField('tax')->type('money');
+		$this->addField('net_amount')->type('money');
 		$this->addField('billing_address')->type('text');
 		$this->addField('transaction_reference')->type('text');
 		$this->addField('transaction_response_data')->type('text');

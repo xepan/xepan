@@ -12,13 +12,13 @@ class Model_Cart extends \Model{
 		$this->addField('item_code');
 		$this->addField('item_name');
 		$this->addField('item_member_design_id');
-		$this->addField('rateperitem');
+		$this->addField('rateperitem')->type('money');
 		$this->addField('qty');
-		$this->addField('original_amount');
-		$this->addField('sales_amount');
+		$this->addField('original_amount')->type('money');
+		$this->addField('sales_amount')->type('money');
 		$this->addField('shipping_charge')->defaultValue(0);
 		$this->addField('tax')->defaultValue(0);
-		$this->addField('total_amount')->defaultValue(0);
+		$this->addField('total_amount')->type('money')->defaultValue(0);
 
 		$this->addField('custom_fields')->type('text');
 		

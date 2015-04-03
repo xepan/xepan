@@ -53,7 +53,7 @@ class Model_OrderDetails extends \Model_Document{
 			$tpa->addCondition('id',$q->getField('id'));
 
 			return "((".$q->getField('amount').") + ( IFNULL((". $tpa->_dsql()->del('fields')->field('tax_amount')->render()."),0) ))";
-		});
+		})->type('money');
 
 
 		$this->addExpression('created_by_id')->set(function($m,$q){
