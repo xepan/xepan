@@ -1,32 +1,51 @@
 <?php
 namespace xPurchase;
 
-class Model_PurchaseOrderItem extends \Model_Table{
+class Model_PurchaseOrderItem extends \Model_Document{
 	public $table="xpurchase_purchase_order_item";
+	public $status=array('waiting','processing','received','completed');
+	public $root_document_name='xPurchase\PurchaseOrder';
 	function init(){
 		parent::init();
 
-		$this->hasOne('xPurchase/PurchaseOrder','po_id');
-		
+		$this->hasOne('xPurchase/PurchaseOrder','po_id')->caption('Purchase Order');
+		$this->hasOne('xPurchase/PurchaseInvoice','invoice_id')->display(array('form'=>'autocomplete/Basic'));
 		$this->hasOne('xShop/Item_Purchasable','item_id')->display(array('form'=>'xShop/Item'));
 		
 		$this->addField('qty');
-		$this->addField('unit');
-		$this->addField('rate');
-		$this->addField('amount');
-		$this->addField('narration');
-		
+		// $this->addField('unit');
+		$this->addField('rate')->type('money');
+		$this->addField('amount')->type('money');
+		$this->addField('narration')->type('text');
+
+		$this->getElement('status')->defaultValue('waiting');
+
 		$this->addField('custom_fields')->type('text');
 
 		$this->addHook('beforeSave',$this);
 
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 
 	function item(){
 		return $this->ref('item_id');
+	}
+
+	function invoice($invoice=null){
+		if($invoice){
+			$this['invoice_id'] = $invoice->id;
+			$this->save();
+			return $invoice;
+		}else{
+			if(!$this['invoice_id']) return false;
+			return $this->ref('invoice_id');
+		}
+	}
+
+	function order(){
+		return $this->ref('po_id');
 	}
 
 	function beforeSave(){

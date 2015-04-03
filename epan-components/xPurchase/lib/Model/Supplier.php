@@ -1,25 +1,36 @@
 <?php
 namespace xPurchase;
 
-class Model_Supplier extends \Model_Table{
+class Model_Supplier extends \Model_Document{
 	public $table="xpurchase_supplier";
+	public $status = array();
+	public $actions = array(
+				'allow_del'=>array(),
+				'allow_edit'=>array(),
+				'allow_add'=>array()
+				);
 	public $title_field ='customer_search_phrase';
+	public $root_document_name = 'xPurchase\Supplier';
+
 
 	function init(){
 		parent::init();
 
 		$this->addField('name')->caption('Company name')->mandatory(true)->sortable(true);
-		$this->addField('owner_name')->mandatory(true)->sortable(true);
-		$this->addField('code')->mandatory(true)->sortable(true);
-		$this->addField('address')->mandatory(true)->sortable(true);
+		$this->addField('owner_name')->sortable(true);
 		$this->addField('city')->mandatory(true)->sortable(true);
+		$this->addField('contact_person_name')->sortable(true);
+		$this->addField('accounts_person_name')->sortable(true);
+		$this->addField('code')->mandatory(true)->sortable(true);
+		$this->addField('address')->type('text')->mandatory(true)->sortable(true);
 		$this->addField('state')->mandatory(true)->sortable(true);
 		$this->addField('pin_code')->type('Number')->sortable(true);
 		$this->addField('fax_number')->type('Number')->sortable(true);
 		$this->addField('contact_no')->mandatory(true)->sortable(true);
 		$this->addField('email')->sortable(true);
+		$this->addField('tin_no');
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
-		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'))->sortable(true);
+		// $this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'))->sortable(true);
 
 		$this->hasMany('xPurchase/PurchaseOrder','supplier_id');
 		$this->hasMany('xPurchase/PurchaseInvoice','supplier_id');
@@ -36,7 +47,13 @@ class Model_Supplier extends \Model_Table{
 				$this->getElement('contact_no')
 				
 			));
-		// $this->add('dynamic_model/Controller_AutoCreator');
+
+		$this->add('Controller_Validator');
+		$this->is(array(
+							'code|unique'
+						)
+				);
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){

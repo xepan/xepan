@@ -27,7 +27,7 @@ class page_xAccount_page_owner_amtreceived extends page_xAccount_page_owner_main
 
 		$form->addField('Money','amount')->validateNotNull(true);
 		$form->addField('Text','narration');
-		$form->addSubmit('Pay Now');
+		$form->addSubmit('Receive Now');
 
 		if($form->isSubmitted()){
 
@@ -63,7 +63,7 @@ class page_xAccount_page_owner_amtreceived extends page_xAccount_page_owner_main
 
 		$form->addField('Money','amount')->validateNotNull(true);
 		$form->addField('Text','narration');
-		$form->addSubmit('Pay Now');
+		$form->addSubmit('Receive Now');
 
 		if($form->isSubmitted()){
 

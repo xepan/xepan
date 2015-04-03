@@ -175,6 +175,7 @@ class page_base_owner extends Page {
 				->addCondition('is_production_department',true)
 				->addCondition('is_system',false)
 				;
+			$this->shorcut_menus[]=array("page"=>'Outsource Parties',"url"=>$this->api->url('xProduction_page_owner_outsourceparties',array('department_id'=>$dept_model->id)));
 
 			foreach($production_depts as $d){
 				// if($d->id != $this->api->current_employee->department()->get('id')) continue;

@@ -8,34 +8,32 @@ class page_xShop_page_owner_item extends page_xShop_page_owner_main{
 		$application_id=$this->api->recall('xshop_application_id');	
 		$this->app->title=$this->api->current_department['name'] .': Items';
 
-		// $l=$this->api->layout->add('splitter/LayoutContainer');
-		// $item_col = $l->getPane('center');
-		// $cat_col = $l->addPane('west',
-		// 	array(
-		// 		'size'=>					250
-		// ,	'spacing_closed'=>			21			// wider space when closed
-		// ,	'togglerLength_closed'=>	21			// make toggler 'square' - 21x21
-		// ,	'togglerAlign_closed'=>	"top"		// align to top of resizer
-		// ,	'togglerLength_open'=>		10			// NONE - using custom togglers INSIDE west-pane
-		// ,	'togglerTip_open'=>		"Close West Pane"
-		// ,	'togglerTip_closed'=>		"Open West Pane"
-		// ,	'resizerTip_open'=>		"Resize West Pane"
-		// ,	'slideTrigger_open'=>		"click" 	// default
-		// ,	'initClosed'=>				true
-		// //	add 'bounce' option to default 'slide' effect
-		// ,	'fxSettings_open'=>		array('easing'=> "easeOutBounce" )
+		$l=$this->add('splitter/LayoutContainer');
+		$item_col = $l->getPane('center');
+		$cat_col = $l->addPane('west',
+			array(
+				'size'=>					500
+		,	'spacing_closed'=>			21			// wider space when closed
+		,	'togglerLength_closed'=>	21			// make toggler 'square' - 21x21
+		,	'togglerAlign_closed'=>	"top"		// align to top of resizer
+		,	'togglerLength_open'=>		10			// NONE - using custom togglers INSIDE west-pane
+		,	'togglerTip_open'=>		"Close West Pane"
+		,	'togglerTip_closed'=>		"Open West Pane"
+		,	'resizerTip_open'=>		"Resize West Pane"
+		,	'slideTrigger_open'=>		"click" 	// default
+		,	'initClosed'=>				false
+		//	add 'bounce' option to default 'slide' effect
+		,	'fxSettings_open'=>		array('easing'=> "easeOutBounce" )
 
-		// 	)
-		// 	);
+			)
+			);
 		// $l->addPane('south')->add('View')->set('South');
 		// $l->addPane('east')->add('View')->set('East');
 		// $l->addPane('west')->add('View')->set('West');
-
-
 		
-		$cols = $this->add('Columns');
-		$cat_col = $cols->addColumn(3);
-		$item_col = $cols->addColumn(9);
+		// $cols = $this->add('Columns');
+		// $cat_col = $cols->addColumn(3);
+		// $item_col = $cols->addColumn(9);
 		
 		//Category
 		// $cat_col->add('xShop/View_Badges_CategoryPage');

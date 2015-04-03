@@ -23,9 +23,9 @@ class Model_OrderDetails extends \Model_Document{
 		$this->hasOne('xShop/Item_Saleable','item_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
 		$this->hasOne('xShop/Invoice','invoice_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
 
+		$this->addField('rate')->type('money')->group('b~3');
 		$this->addField('qty')->group('b~3~Order Details')->mandatory(true);
 		// $this->addField('unit')->group('b~3');
-		$this->addField('rate')->type('money')->group('b~3');
 		$this->addField('amount')->type('money')->group('b~3');
 		$this->addField('narration')->type('text')->system(false)->group('c~12~ Narration');
 		$this->addField('custom_fields')->type('text')->system(false);
@@ -33,6 +33,28 @@ class Model_OrderDetails extends \Model_Document{
 		$this->addExpression('name')->set(function($m,$q){
 			return $m->refSQL('item_id')->fieldQuery('name');
 		});
+
+
+		$this->addExpression('tax_per_sum')->set(function($m,$q){
+			$tax_assos = $m->add('xShop/Model_ItemTaxAssociation');
+			$tax_assos->addCondition('item_id',$q->getField('item_id'));
+			return $tax_assos->sum('name'); // tax in percentage save in name ;)
+		})->type('money')->caption('Total Tax %');
+
+		$this->addExpression('tax_amount')->set(function($m,$q){
+			$tpa = $m->add('xShop/Model_OrderDetails',array('table_alias'=>'tps'));
+			$tpa->addCondition('id',$q->getField('id'));
+
+			return "((".$q->getField('amount').") * ( IFNULL((". $tpa->_dsql()->del('fields')->field('tax_per_sum')->render()."),0) ) / 100)";
+		})->type('money');
+
+		$this->addExpression('texted_amount')->set(function($m,$q){
+			$tpa = $m->add('xShop/Model_OrderDetails',array('table_alias'=>'txdamt'));
+			$tpa->addCondition('id',$q->getField('id'));
+
+			return "((".$q->getField('amount').") + ( IFNULL((". $tpa->_dsql()->del('fields')->field('tax_amount')->render()."),0) ))";
+		});
+
 
 		$this->addExpression('created_by_id')->set(function($m,$q){
 			return $m->refSQL('order_id')->fieldQuery('created_by_id');
@@ -42,10 +64,12 @@ class Model_OrderDetails extends \Model_Document{
 
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');
 		$this->hasMany('xShop/SalesOrderDetailAttachment','related_document_id',null,'Attachements');
+		$this->hasMany('xShop/Jobcard','orderitem_id');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
 		$this->addHook('afterInsert',$this);
+		$this->addHook('beforeDelete',$this);
 		// $this->addHook('afterLoad',$this);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
@@ -82,8 +106,21 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function afterSave(){
+		$this->order()->updateAmounts();
+	}
+
+	function beforeDelete(){
+
+	}
+
+	function jobCards($item_id=null){
+		if($this->loaded())
+			$item_id = $this->id;
+
+		return $this->add('xProduction/Model_JobCard')->addCondition('orderitem_id',$item_id);
 		
 	}
+
 
 	function afterInsert($obj,$new_id){
 		// For online orders that are already approved and create their departmental associations
@@ -151,9 +188,15 @@ class Model_OrderDetails extends \Model_Document{
 		return $this->ref('order_id');
 	}
 
-	function invoice(){
-		if(!$this['invoice_id']) return false;
-		return $this->ref('invoice_id');
+	function invoice($invoice=null){
+		if($invoice){
+			$this['invoice_id'] = $invoice->id;
+			$this->save();
+			return $invoice;
+		}else{
+			if(!$this['invoice_id']) return false;
+			return $this->ref('invoice_id');
+		}
 	}
 
 	function getCurrentStatus($department=false){

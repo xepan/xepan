@@ -111,7 +111,7 @@ class Model_Item extends \Model_Table{
 		$this->hasMany('xShop/CategoryItem','item_id');
 		$this->hasMany('xShop/ItemAffiliateAssociation','item_id');
 		$this->hasMany('xShop/ItemImages','item_id');
-		$this->hasMany('xShop/Attachments','item_id');
+		// $this->hasMany('xShop/Attachments','item_id');
 		$this->hasMany('xShop/ItemEnquiry','item_id');
 		$this->hasMany('xShop/OrderDetails','item_id');
 		$this->hasMany('xShop/ItemSpecificationAssociation','item_id');
@@ -122,10 +122,10 @@ class Model_Item extends \Model_Table{
 		$this->hasMany('xShop/ItemDepartmentAssociation','item_id');
 		$this->hasMany('xShop/ItemComposition','item_id',null,'CompositionItems');
 		$this->hasMany('xShop/ItemComposition','composition_item_id',null,'UsedInComposition');
-		$this->hasMany('xStore/TransferNoteItem','item_id');
+		$this->hasMany('xShop/ItemTaxAssociation','item_id');
+		// $this->hasMany('xStore/TransferNoteItem','item_id');
 		$this->hasMany('xStore/MaterialRequestItem','item_id');
-		$this->hasMany('xStore/PurchaseMaterialRequestItem','item_id');
-
+		// $this->hasMany('xStore/PurchaseMaterialRequestItem','item_id');
 		$this->hasMany('xShop/QuantitySet','item_id');
 		$this->hasMany('xShop/CustomRate','item_id');
 		$this->hasMany('xPurchase/PurchaseOrderItem','item_id');
@@ -216,17 +216,34 @@ class Model_Item extends \Model_Table{
 	}
 
 	function beforeDelete($m){
+		
 		$order_count = $m->ref('xShop/OrderDetails')->count()->getOne();
 		$item_enquiry_count = $m->ref('xShop/ItemEnquiry')->count()->getOne();
+		$design_count = $m->ref('xShop/ItemMemberDesign')->count()->getOne();
+		$material_request = $m->ref('xStore/MaterialRequestItem')->count()->getOne();
+		$po_item = $m->ref('xPurchase/PurchaseOrderItem')->count()->getOne();
 		
-		if($this->api->auth->model['type'] and($order_count or $item_enquiry_count)){
+		if($this->api->auth->model['type'] and ($order_count or $item_enquiry_count or $design_count or $material_request or $po_item)){
 			$this->api->js(true)->univ()->errorMessage('Cannot Delete,first delete Orders or Enquiry')->execute();	
 		}
 
 		$m->ref('xShop/CategoryItem')->deleteAll();
 		$m->ref('xShop/ItemImages')->deleteAll();
 		// $m->ref('xShop/Attachments')->deleteAll();	 
-		$m->ref('xShop/ItemCustomFieldAssos')->deleteAll();	
+		$m->ref('xShop/ItemCustomFieldAssos')->deleteAll();
+		$m->ref('xShop/ItemAffiliateAssociation')->deleteAll();
+		// $m->ref('xShop/Attachments')->deleteAll();
+		$m->ref('xShop/ItemEnquiry')->deleteAll();
+		$m->ref('xShop/ItemSpecificationAssociation')->deleteAll();
+		$m->ref('xShop/ItemReview');
+		$m->ref('xShop/ItemDepartmentAssociation')->deleteAll();
+		// $m->ref('xShop/ItemComposition,composition_item_id')->deleteAll();
+		$m->ref('xShop/ItemTaxAssociation')->deleteAll();
+		$m->ref('xShop/CustomFieldValueFilterAssociation')->deleteAll();
+		$m->ref('xShop/QuantitySet')->deleteAll();
+		$m->ref('xShop/CustomRate')->deleteAll();
+
+		//TOOOODOOOOOOOO   Log Entry Item Deleted by User
 	}
 
 	function updateSearchString($item_id=null){
@@ -750,6 +767,13 @@ class Model_Item extends \Model_Table{
 		//Image Dupliacte
 		$image = $this->add('xShop/Model_ItemImages')->addCondition('customefieldvalue_id',Null)->addCondition('item_id',$this->id);
 		$image->duplicate($duplicate_template['id']);
+
+		$old_tax_asso = $this->add('xShop/Model_ItemTaxAssociation')->addCondition('item_id',$this->id);
+		foreach ($old_tax_asso as $junk) {
+			$old_tax_asso->duplicate($duplicate_template['id']);
+		}
+		
+		//Duplicate Phrases
 
 		// //Attachment Document Dupliacte
 		// $docs = $this->add('xShop/Model_Attachments')->addCondition('item_id',$this->id);

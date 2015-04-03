@@ -2,13 +2,12 @@
 
 class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 	
-	function init(){
-		parent::init();
+	function page_index(){
 		
 		$this->app->title=$this->api->current_department['name'] .': Shops & Blogs';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Shops & Blogs Management <small> Manage your shops and blogs here </small>');
 
-		$tabs= $this->app->layout->add('Tabs');
+		$tabs= $this->add('Tabs');
 		$shop_tab = $tabs->addTabURL('./shops','Shops');
 		$shop_tab = $tabs->addTabURL('./blogs','Blogs');
 	}
@@ -23,6 +22,7 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 		if(!$crud->isEditing()){
 			$crud->grid->addColumn('expander','configuration',array("descr"=>"Configuration",'icon'=>'cog'));
 			$crud->grid->addColumn('expander','tax',array("descr"=>"Taxs",'icon'=>'money'));
+			$crud->grid->addColumn('expander','priority',array("descr"=>"Priority",'icon'=>'signal'));
 		}
 
 		$crud->grid->addQuickSearch(array('name'));
@@ -51,6 +51,12 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 		$tax = $this->add('xShop/Model_Tax');
 		$crud = $this->add('CRUD');
 		$crud->setModel($tax,array('name','value'));
+	}
+
+	function page_shops_priority(){
+		$priority = $this->add('xShop/Model_Priority');
+		$crud = $this->add('CRUD');
+		$crud->setModel($priority,array('name','value'));
 	}
 
 	function page_blogs_configuration(){

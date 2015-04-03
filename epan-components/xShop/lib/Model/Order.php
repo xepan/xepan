@@ -76,14 +76,113 @@ class Model_Order extends \Model_Document{
 		
 		$this->addExpression('orderitem_count')->set($this->refSQL('xShop/OrderDetails')->count());
 		
+		$this->addHook('afterSave',$this);
 		$this->addHook('beforeDelete',$this);
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
+	function afterSave(){
+		$this->updateAmounts();
+	}
 
+	function relatedActivity(){
+		$activities = $this->add('xCRM/Model_Activity');
+		$activities->addCondition('related_root_document_name',$this->root_document_name);
+		$activities->addCondition('related_document_id',$this->id);
+		return $activities->tryLoadAny();
 
-	function beforeDelete($m){
+	}
+
+	function deliveryNotes(){
+		$delivery_notes = $this->add('xDispatch/Model_DeliveryNote');
+		$delivery_notes->addCondition('order_id',$this->id);
+		return $delivery_notes->tryLoadAny();
+	}
+
+	function forceDelete_page($page){
+		$page->add('View_Warning')->set('All Item, Jobcard, Invoice and Attachments will be delete');
+		$str = "";
+		//get all item_jobcard with status
+		$ois = $this->orderItems();
+		foreach ($ois as $oi) {
+			$str.= " Item :: ".$oi['name']."<br>";
+			//Related Jobcards
+			$jcs = $oi->jobCards();
+			foreach ($jcs as $jc) {
+				$str.= "JobCard No. ".$jc['name']." Department ".$jc['to_department']." :: ". $jc['status']."<br>";
+			}
+		
+		}
+
+		//Related Invoice
+		$str .= "<br> Invoice No. :: ".$this->invoice()->get('name');
+		//Related DeliveryNote
+		$dns = $this->deliveryNotes();
+		foreach ($dns as $dn) {
+			$str .= "<br> DeliveryNote :: ".$dn['docket_no']." :: ".$dn['narration'];
+		}
+
+		$page->add('View')->setHtml($str);
+		//Related activity
+		$page->add('Grid')->setModel($this->relatedActivity());
+		//Related Financial Account
+		//Create the log 
+		//and delete all related above-4 functionality
+		$form = $page->add('Form');
+		$form->addField('checkbox','delete_invoice_also')->set(true);
+		$form->addSubmit('ForceDelete');
+		if($form->isSubmitted()){
+			//First Delete Jobcard
+			$dns = $this->deliveryNotes();
+			foreach ($dns as $dn) {
+				$dnis = $this->add('xDispatch/DeliveryNoteItem')->addCondition('delivery_note_id',$dn->id);
+				foreach ($dnis as $dni) {
+					$dni['orderitem_id'] = null;
+					$dni->save();
+					$dni->delete();
+				}
+				$dn['order_id'] = null;
+				$dn['to_memberdetails_id'] = null;
+				$dn['warehouse_id'] = null;
+				$dn->save();
+				$dn->delete();
+			}
+			foreach ($ois as $oi) {
+				$jcs = $oi->Jobcards();
+				foreach ($jcs as $jc) {
+					$jc->delete();
+				}
+				$oi->delete();				
+			}
+			if($form['delete_invoice_also']){
+				$invs = $this->invoice();
+				foreach ($invs as $inv) {
+					$in_itms = $page->add('xShop/InvoiceItem')->addCondition('invoice_id',$inv->id);
+					foreach ($in_itms as $in_itm) {
+						$in_itm['item_id'] = null;
+						$in_itm->save();
+						$in_itm->delete();
+					}
+					$inv['customer_id'] = null;
+					$inv->save();
+					$inv->delete();
+				}
+			}
+
+			$this['priority_id'] = null;
+			$this['priority_id'] = null;
+			$this['paymentgateway_id'] = null;
+			$this['member_id'] = null;
+			$this->save();
+			$this->delete();
+			return true;
+		}
+
+	}
+
+	function beforeDelete($m){		
+
 		if($m['discount_voucher'] != null and $m['discount_voucher'] != 0 ){
 			$discountvoucher = $this->add('xShop/Model_DiscountVoucher');		
 			$discountvoucher->addCondition('name',$m['discount_voucher']);
@@ -95,7 +194,10 @@ class Model_Order extends \Model_Document{
 				$voucher_used->delete();
 			}
 		}
+
+
 		$m->ref('xShop/OrderDetails')->deleteAll();
+
 	}
 
 	function placeOrderFromCart(){
@@ -159,6 +261,19 @@ class Model_Order extends \Model_Document{
 		// throw new \Exception($member['']);
 	}
 
+	function updateAmounts(){
+		$this['total_amount']=0;
+		$this['tax']=0;
+		$this['net_amount']=0;
+		
+		foreach ($this->itemRows() as $oi) {
+			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
+			$this['tax'] = $this['tax'] + $oi['tax_amount'];
+			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
+		}
+		$this->save();
+	}
+
 	function sendOrderDetail($email_id=null, $order_id=null){
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
@@ -212,6 +327,10 @@ class Model_Order extends \Model_Document{
 		return $this->ref('xShop/OrderDetails');
 	}
 
+	function itemrows(){
+		return $this->orderItems();
+	}
+
 	function customer(){
 		return $this->ref('member_id');
 	}
@@ -241,9 +360,10 @@ class Model_Order extends \Model_Document{
 
 	function createInvoice($status='draft',$salesLedger=null, $items_array=array()){
 		try{
-			$this->api->db->beginTransaction();
-			$invoice = $this->add('xShop/Model_Invoice_Draft');
 
+			$this->api->db->beginTransaction();
+
+			$invoice = $this->add('xShop/Model_Invoice_'.ucwords($status));
 			$invoice['sales_order_id'] = $this['id'];
 			$invoice['customer_id'] = $this->customer()->get('id');
 			$invoice['billing_address'] = $this['billing_address'];
@@ -262,7 +382,7 @@ class Model_Order extends \Model_Document{
 				if(!count($items_array) or !in_array($oi->id, $items_array) ) continue;
 				
 				if($oi->invoice())
-					throw $this->exception('Order Item already used in Invoice','ValidityCheck');
+					throw $this->exception('Order Item already used in Invoice','Growl');
 
 				$invoice->addItem(
 						$oi->item(),
@@ -273,12 +393,14 @@ class Model_Order extends \Model_Document{
 						$oi['narration'],
 						$oi['custom_fields']
 					);					
+				
+				$oi->invoice($invoice);	
 			}
 
 			if($status !== 'draft' and $status !== 'submitted'){
 				$invoice->createVoucher($salesLedger);
 			}
-			
+
 			$this->api->db->commit();
 			return $invoice;
 		}catch(\Exception $e){

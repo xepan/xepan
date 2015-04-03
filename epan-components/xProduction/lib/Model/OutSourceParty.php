@@ -7,21 +7,45 @@ class Model_OutSourceParty extends \Model_Table{
 
 		$this->addField('name')->Caption('Party')->sortable(true);
 		$this->addField('code')->Caption('Party Code')->sortable(true);
-		$this->addField('contact_no')->Caption('number')->sortable(true);
+		$this->addField('contact_person')->sortable(true);
+		$this->addField('contact_no')->sortable(true);
+		$this->addField('email_id')->sortable(true);
 		$this->addField('address')->type('text')->sortable(true);
+		$this->addField('bank_detail')->type('text');
+		$this->addField('pan_it_no')->caption('Pan / IT No.');//type('text');
+		$this->addField('tin_no')->caption('TIN / CST No.');
 		$this->addField('maintain_stock')->type('boolean')->defaultValue(false)->group('a~4')->sortable(true);
 
 		$this->hasMany('xProduction/OutSourcePartyDeptAssociation','out_source_party_id');
 		$this->hasMany('xStore/Warehouse','out_source_party_id');
+		$this->hasMany('xAccount/Account','out_source_party_id');
 
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeSave',$this);
 		$this->addHook('afterInsert',$this);
-
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('Controller_Validator');
+		$this->is(array(
+							'code|unique'
+						)
+				);
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
-		throw $this->exception('Delete Warehouse');
+		
+		// throw $this->exception('Delete Warehouse');
+	}
+
+	function beforeSave(){
+		if($this->loaded()){
+			$account = $this->account();
+			if($account->loaded() and $this->dirty['name'])
+				$account->set('name',$this['name'])->save();		
+		}
+	}
+
+	function account(){
+		return $this->ref('xAccount/Account')->addCondition('group_id',$this->add('xAccount/Model_Group')->loadSundryCreditor()->fieldQuery('id'))->tryLoadAny();
 	}
 
 	function warehouse(){

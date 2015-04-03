@@ -47,11 +47,12 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 		
 		if(!$crud->isEditing()){
 			$crud->grid->removeColumn('order_from');
+			$crud->grid->addClass('order-grid');
 		}
 
 		if($crud->isEditing('add') OR $crud->isEditing('edit')){
-			$v=$crud->form->add('View')->set('Payment Advanced ');
 			$form = $crud->form;
+			$form->addField('Readonly','advance_payment_section')->set('');
 			$form->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
 			$form->addField('Money','amount');
 			$form->addField('line','bank_account_detail');
@@ -59,13 +60,13 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 			$form->addField('DatePicker','cheque_date');
 			$form->addField('Checkbox','send_invoice_via_email');
 			$form->addField('line','email_to');
-
 		}
 
 		$crud->setModel('xShop/Model_Order_Draft',array('member_id','order_summary','delivery_date','termsandcondition_id','priority_id'),array('name','created_at','member','net_amount','last_action','created_by','orderitem_count'));
 		
 		if($crud->isEditing('add') OR $crud->isEditing('edit')){
 			$o = $form->add('Order');
+			$o->move('advance_payment_section','last');
 			$o->move('payment','last');
 			$o->move('amount','last');
 			$o->move('bank_account_detail','last');

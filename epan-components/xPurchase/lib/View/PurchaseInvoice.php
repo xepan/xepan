@@ -1,6 +1,6 @@
 <?php
 namespace xPurchase;
-class View_Invoice extends  \CompleteLister{
+class View_PurchaseInvoice extends  \CompleteLister{
 	public $invoice;
 	public $sno=1;
 

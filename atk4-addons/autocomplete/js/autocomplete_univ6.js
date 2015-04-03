@@ -19,7 +19,7 @@ $.each({
                 $.each(send_other_fields, function(index, val) {
                     other_fields_to_send['o_' + val.replace('#', '')] = $(val).val();
                 });
-                console.log(other_fields_to_send);
+                // console.log(other_fields_to_send);
                 $.getJSON(data,
                     $.extend(other_fields_to_send, {
                         term: request.term

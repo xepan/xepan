@@ -17,27 +17,29 @@ class View_Jobcard extends \View{
 			$view_order = $p->add('xShop/View_Order',array('show_price'=>false));
 			$view_order->setModel($o);
 		});
-
-		$this->template->setHtml('jobcard_no',$this->jobcard['name']);
-		$this->template->setHtml('from_dept',$this->jobcard['from_department']);
-		$this->template->setHtml('to_dept',$this->jobcard['to_department']);
-		$this->template->setHtml('next_dept','Todo');
-		$this->template->setHtml('status',$this->jobcard['status']);
-		$this->template->setHtml('sales_order_no','<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Sale Order', $this->api->url($this->vp->getURL(),array('sales_order_clicked'=>$order->id))).'">'. $order['name'] ."</a>");
-		$this->template->setHtml('order_created_at',$order['created_at']);
-		$this->template->setHtml('customer',$order['member']);
-		$this->template->setHtml('order_from',$order['order_from']);
-		$this->template->setHtml('item',$oi['item_with_qty_fields']);
-		$this->template->setHtml('qty',$oi['qty']);
-		$this->template->setHtml('unit',$oi['unit']);
-		$this->template->setHtml('custom_fields',$oi->redableDeptartmentalStatus(true,false,$this->jobcard->toDepartment()));//item()->genericRedableCustomFieldAndValue($oi['custom_fields']));
-		$this->template->setHtml('specification',$oi->item()->redableSpecification());
+		
+		$this->template->trySetHtml('name',$this->jobcard['name']);
+		$this->template->trySetHtml('from_dept',$this->jobcard['from_department']);
+		$this->template->trySetHtml('to_dept',$this->jobcard['to_department']);
+		$this->template->trySetHtml('next_dept','Todo');
+		$this->template->trySetHtml('status',$this->jobcard['status']);
+		$this->template->trySetHtml('sales_order_no','<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Sale Order', $this->api->url($this->vp->getURL(),array('sales_order_clicked'=>$order->id))).'">'. $order['name'] ."</a>");
+		$this->template->trySetHtml('order_created_at',$order['created_at']);
+		$this->template->trySetHtml('customer',$order['member']);
+		$this->template->trySetHtml('order_from',$order['order_from']);
+		$this->template->trySetHtml('item',$oi['item_name']);
+		$this->template->trySetHtml('qty',$oi['qty']);
+		$this->template->trySetHtml('unit',$oi['unit']);
+		$out = $oi->redableDeptartmentalStatus(true,false,$this->jobcard->toDepartment()); // all departments
+		// $out= $oi->item()->genericRedableCustomFieldAndValue($oi['custom_fields']); // Department only
+		$this->template->trySetHtml('custom_fields',$out);
+		$this->template->trySetHtml('specification',$oi->item()->redableSpecification());
 
 		$received_activity = $this->jobcard->searchActivity('received');
 		if(!$received_activity instanceof \Dummy)
-			$this->template->setHtml('receive_date', $received_activity['created_at']);
+			$this->template->trySetHtml('receive_date', $received_activity['created_at']);
 
-		$this->template->setHtml('received_by_x',$this->jobcard->ref('created_by_id')->get('name_with_designation') . ' on ' .$this->jobcard['created_at']);
+		$this->template->trySetHtml('received_by_x',$this->jobcard->ref('created_by_id')->get('name_with_designation') . ' on ' .$this->jobcard['created_at']);
 		// $this->current_row['sno']=$this->sno;
 		// $this->current_row['current_status'] = $this->model->getCurrentStatus();
 	}

@@ -74,6 +74,9 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 			$this->forget('qty_cf_only');
 		}
 
+		// RESET Custom Fields if Item is changed
+        $this->other_field->on('change',$this->owner->getElement($this->custom_field_element)->js()->val(''));
+
 		parent::recursiveRender();
 	}
 

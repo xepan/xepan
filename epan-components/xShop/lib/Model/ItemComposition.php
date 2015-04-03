@@ -7,12 +7,13 @@ class Model_ItemComposition extends \Model_Table{
 
 		$this->hasOne('xShop/Item','item_id');
 		$this->hasOne('xHR/Department','department_id');
-		$this->hasOne('xShop/Item','composition_item_id');
+		$this->hasOne('xShop/Item','composition_item_id')->display(array('form'=>'xShop/Item'));
 
 		$this->addField('qty');
 		$this->addField('unit');
+		$this->addField('custom_fields')->type('text');
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function item(){

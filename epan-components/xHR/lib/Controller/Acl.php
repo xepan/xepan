@@ -37,6 +37,7 @@ class Controller_Acl extends \AbstractController {
 		'can_send_via_email'=>'No',
 
 		'can_see_activities'=>'No',
+		'can_forceDelete'=>'No',
 
 		);
 
@@ -259,6 +260,10 @@ class Controller_Acl extends \AbstractController {
 
 		if($this->permissions['can_manage_attachments'] !='No'){
 			$this->manageAction('manage_attachments','can_manage_attachments');
+		}
+
+		if($this->permissions['can_forceDelete'] !='No'){
+			$this->manageAction('forceDelete','can_forceDelete','do-delete');
 		}
 
 		if($this->permissions['can_manage_tasks'] !='No'){

@@ -12,8 +12,9 @@ class page_xPurchase_page_owner_invoice_draft extends page_xPurchase_page_owner_
 		$from_purchased_order_vp = $this->add('VirtualPage')->set(function($p)use($crud){
 			$purchased_orders = $p->add('xPurchase/Model_PurchaseOrder');
 			$purchased_orders->addCondition('status','<>',array('draft','submitted'));
-			//$purchased_orders->addExpression('has_invoice')->set($sales_orders->refSQL('xPurchase/PurchaseInvoice')->count());
-			//$purchased_orders->addCondition('has_invoice',0);
+			
+			$purchased_orders->addExpression('has_invoice')->set($purchased_orders->refSQL('xPurchase/PurchaseInvoice')->count());
+			$purchased_orders->addCondition('has_invoice',0);
 
 			$form = $p->add('Form_Stacked');
 			$form->addField('autocomplete/Basic','purchase_orders')->setModel($purchased_orders);
@@ -23,7 +24,7 @@ class page_xPurchase_page_owner_invoice_draft extends page_xPurchase_page_owner_
 				$purchase_order = $p->add('xPurchase/Model_PurchaseOrder')->load($form['purchase_orders']);
 				$purchase_order->createInvoice('draft');
 				// echo "hi";
-				$crud->grid->js(null,$form->js()->univ()->closeDialog())->univ()->reload()->execute();
+				$crud->grid->js(null,$form->js()->univ()->closeDialog())->_selector('.inv-grid')->trigger('reload')->execute();
 			}
 
 		});
@@ -34,6 +35,7 @@ class page_xPurchase_page_owner_invoice_draft extends page_xPurchase_page_owner_
 			if($btn->isClicked()){
 				$crud->js()->univ()->frameURL('Create Invoice From Purchase Order',$from_purchased_order_vp->getURL())->execute();
 			}
+			$crud->grid->addClass('inv-grid')->js('reload')->reload();
 		}
 
 		$crud->add('xHR/Controller_Acl');

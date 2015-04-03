@@ -24,9 +24,17 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
         $order_detail=$this->add('xShop/Model_OrderDetails');
         $order_detail->addCondition('order_id',$order_id);
         $crud = $container->add('CRUD');
+
+        $crud->js('reload',array(
+                    $crud->js()->_selector('.order-grid')
+                    ->atk4_grid('highlightRow',$order_id),
+                    $crud->js()->univ()->successMessage('Done')
+                    )
+            );
+
         $order_detail->getElement('item_id')->display(array('form'=>'xShop/Item'));
 
-        $crud->setModel($order_detail,array('item_id','qty','rate','amount','status','custom_fields'),array('item','item_name','custom_fields','qty','rate','unit','amount','status'));
+        $crud->setModel($order_detail,array('item_id','qty','rate','amount','status','custom_fields'),array('item','item_name','custom_fields','qty','rate','unit','amount','status','tax_per_sum','tax_amount','texted_amount'));
         
         if(!$crud->isEditing()){
             $grid = $crud->grid;
@@ -43,8 +51,9 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
             $item_field = $crud->form->getElement('item_id');
             $item_field->custom_field_element = 'custom_fields';
             $item_field->qty_effected_custom_fields_only = false;
-
         }
+
+        $crud->add('xShop/Controller_getRate');
 
         $crud->add('xHR/Controller_Acl',array('document'=>'xShop\Order_'. ucwords($order['status']),'show_acl_btn'=>false,'override'=>array('can_view'=>'All','can_see_activities'=>'No')));
         // $crud->add('Controller_FormBeautifier');
