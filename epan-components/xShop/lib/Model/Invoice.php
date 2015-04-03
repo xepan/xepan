@@ -15,22 +15,28 @@ class Model_Invoice extends \Model_Document{
 	function init(){
 		parent::init();
 		
-		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
+		// $this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
 		$this->hasOne('xShop/Customer','customer_id')->sortable(true);
 		$this->hasOne('xPurchase/Supplier','supplier_id')->sortable(true);
 		$this->hasOne('xShop/Model_Order','sales_order_id');
 		$this->hasOne('xPurchase/Model_PurchaseOrder','po_id')->caption('Purchase Order');
 		$this->addField('type')->enum(array('salesInvoice','purchaseInvoice'));
 		$this->addField('name')->caption('Invoice No');
-		$this->addField('total_amount');
-		$this->addField('discount');
-		$this->addField('tax');
-		$this->addField('net_amount');
+		$this->addField('total_amount')->type('money');
+		$this->addField('discount')->type('money');
+		$this->addField('tax')->type('money');
+		$this->addField('net_amount')->type('money');
 		$this->addField('billing_address')->type('text');
 		$this->addField('transaction_reference')->type('text');
 		$this->addField('transaction_response_data')->type('text');
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
+		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+
+	function beforeDelete(){
+		$this->ref('xShop/InvoiceItem')->deleteAll();
 	}
 
 	function netAmount(){

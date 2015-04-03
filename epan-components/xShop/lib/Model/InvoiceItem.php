@@ -15,12 +15,13 @@ class Model_InvoiceItem extends \Model_Document{
 		parent::init();
 
 		$this->hasOne('xShop/Invoice','invoice_id');
-	
+		$this->hasOne('xShop/OrderDetails','orderitem_id');
+		
 		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'xShop/Item'));
 		
 		$this->addField('qty');
 		$this->addField('unit');
-		$this->addField('rate');
+		$this->addField('rate')->type('money');
 		$this->addField('narration');
 		
 		$this->addField('custom_fields')->type('text');
