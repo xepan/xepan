@@ -16,7 +16,7 @@
 		
 	</div>	
 	
-	<div>	Supplier: <b style='text-transform:capitalize'>{$supplier}</b></div>
+		<div>Supplier: <b style='text-transform:capitalize'>{$supplier_info}</b></div>
 		
 	<table width='100%' class='table' style="font-size:11px;vertical-align:top;">
 		<tbody class="table-striped">
@@ -25,23 +25,24 @@
 				<th align="center">Item</th>
 				<th align="right" class="text-right">Qty</th>
 				<th align="right" class="text-right">Unit</th>
-				<th align="right" class="text-right">Custom Fields</th>
-				<th align="right" class="text-right">Total Amount</th>
+				<!-- <th align="right" class="text-right">Total Amount</th> -->
 			</tr>
 		{rows}
 			{row}
 				<tr>
 					<td align="left">{$sno}</td>
-					<td align="left">{$item}</td>
+					<td align="left">
+					<h4>{$item}<br><small>{$custom_field}</small></h4>
+					</td>
 					<td align="right">{$qty}</td>
 					<td align="right">{$unit}</td>
-					<td align="right">{$custom_field}</td>
-					<td align="right">{$total_amount}</td>
+					<!-- <td align="right">{$total_amount}</td> -->
 				</tr>
 			{/row}
 		{/rows}
 		</tbody>
 	</table>
-
+	<i class='atk-text-dimmed'>{$order_summary}</i>
+		<div><b>Created by :</b> {$created_by_x}</div>
 </div>
 

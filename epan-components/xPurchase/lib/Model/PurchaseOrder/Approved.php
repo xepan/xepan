@@ -5,7 +5,7 @@ class Model_PurchaseOrder_Approved extends Model_PurchaseOrder{
 			'can_view'=>array(),
 			'can_reject'=>array(),
 			'can_redesign'=>array(),
-			// 'can_start_processing'=>array(),
+			'can_send_via_email'=>array(),
 			'can_mark_processed'=>array(),
 		);
 	function init(){

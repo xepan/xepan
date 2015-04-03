@@ -6,7 +6,6 @@ class View_PurchaseInvoice extends  \CompleteLister{
 
 	function init(){
 		parent::init();
-		
 		$self = $this;
 		$this->vp = $this->add('VirtualPage')->set(function($p)use($self){
 			$o = $p->add('xPurchase/Model_Order')->load($_GET['purchase_order_clicked']);

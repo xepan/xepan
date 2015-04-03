@@ -6,9 +6,11 @@ class Model_EmployeeAttendence extends \Model_Table{
 	function init(){
 		parent::init();
 
-		//$this->hasOne('xHR/Employee',)
-		$this->addField('name');
-		//$this->add('dynamic_model/Controller_AutoCreator');
-
+		$this->hasOne('xHR/Employee','employee_id');
+		$this->addField('date')->type('date');
+		$this->addField('status')->enum(array('present','absent','half_day'));
+		
+		// $this->add('dynamic_model/Controller_AutoCreator');
+		
 	}
 }

@@ -265,6 +265,8 @@ class Controller_Acl extends \AbstractController {
 		if($this->permissions['can_forceDelete'] !='No'){
 			$this->manageAction('forceDelete','can_forceDelete','do-delete');
 		}
+		
+		
 
 		if($this->permissions['can_manage_tasks'] !='No'){
 			if($tt=$this->permissions['task_types']){
@@ -290,10 +292,14 @@ class Controller_Acl extends \AbstractController {
 			$this->manageAction('see_activities','can_see_activities');
 		}
 
-		if($this->permissions['can_send_via_email'] !='No' AND $this->owner->model->hasMethod('send_via_email')){
-			$this->owner->addAction('send_via_email',array('toolbar'=>false));		
-			$this->filterGrid('send_via_email');
+		if($this->permissions['can_send_via_email'] !='No'){
+			$this->manageAction('send_via_email','can_send_via_email');
 		}
+
+		// if($this->permissions['can_send_via_email'] !='No' AND $this->owner->model->hasMethod('send_via_email')){
+		// 	$this->owner->addAction('send_via_email',array('toolbar'=>false));		
+		// 	$this->filterGrid('send_via_email');
+		// }
 	}
 
 	function doGRID(){

@@ -101,6 +101,7 @@ class Model_Order extends \Model_Document{
 
 	}
 
+	
 	function forceDelete_page($page){
 		$page->add('View_Warning')->set('All Item, Jobcard, Invoice and Attachments will be delete');
 		$str = "";
@@ -255,18 +256,17 @@ class Model_Order extends \Model_Document{
 		$this->save();
 	}
 
-	function sendOrderDetail($email_id=null, $order_id=null){
+	function send_via_email_page($email_id=null, $order_id=null){
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
 		$subject ="Thanku for Order";
+		$customer = $this->customer();
+		$customer_email=$customer->get('customer_email');
+
 		$config_model=$this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
-
-		$epan=$this->add('Model_Epan');//load epan model
-		$epan->tryLoadAny();
 		
-		$tm=$this->add( 'TMail_Transport_PHPMailer' );
 		$print_order=$this->add('xShop/View_PrintOrder');
 		$print_order->setModel($this);
 
@@ -278,26 +278,20 @@ class Model_Order extends \Model_Document{
 			$email_body=$config_model['order_detail_email_body'];		
 		}
 		
-		$user_model = $this->add('xShop/Model_MemberDetails');
-		$user_model->getAllDetail($this->api->auth->model->id);
-		$email_body = $print_order->getHTML(false);
-
-		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
-		$email_body = str_replace("{{user_name}}", $this->api->auth->model['name'], $email_body);
-		$email_body = str_replace("{{mobile_number}}", $user_model['mobile_number'], $email_body);
-		$email_body = str_replace("{{billing_address}}",$this['billing_address'], $email_body);
-		$email_body = str_replace("{{shipping_address}}", $this['shipping_address'], $email_body);
-		$email_body = str_replace("{{email}}", $this->api->auth->model['email'], $email_body);
-		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
 		
-		try{
-			//Send Message to All Associate Affiliates
-			$tm->send($this->api->auth->model['email'], $epan['email_username'], $subject, $email_body ,false,null);
-		}catch( phpmailerException $e ) {
-			$this->api->js(null,'$("#form-'.$_REQUEST['form_id'].'")[0].reset()')->univ()->errorMessage( $e->errorMessage() . " " . $epan['email_username'] )->execute();
-		}catch( Exception $e ) {
-			throw $e;
-		}
+		$email_body = $print_order->getHTML(false);
+		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
+		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);
+		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number'], $email_body);
+		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address'], $email_body);
+		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address'], $email_body);
+		$email_body = str_replace("{{customer_email}}", $customer['customer_email'], $email_body);
+		$email_body = str_replace("{{order_no}}", $this['name'], $email_body);
+		$email_body = str_replace("{{Order_date}}", $this['created_at'], $email_body);
+		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
+		// return;
+		$this->sendEmail($customer_email,$subject,$email_body);
+		
 	}
 
 	function isFromOnline(){
