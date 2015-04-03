@@ -5,6 +5,15 @@ class Model_EmployeeLeave extends \Model_Table{
 	public $table="xhr_employee_leave";
 	function init(){
 		parent::init();
+
+		$this->addExpression('department')->set(function($m,$q){
+			return $m->refSQL('employee_id')->fieldQuery('department');
+		})->sortable(true);
+
+		$this->addExpression('post')->set(function($m,$q){
+			return $m->refSQL('employee_id')->fieldQuery('post');
+		})->sortable(true);
+		
 		$this->hasOne('xHR/Employee','employee_id');
 		$this->hasOne('xHR/LeaveType','leave_type_id');
 		$this->addField('from_date')->type('date');
@@ -16,7 +25,7 @@ class Model_EmployeeLeave extends \Model_Table{
 		// $this->addExpression('total_leave')->set(function($m,$q){
 		// 	return ('DATEDIFF("'.$m['from_date'].'","'.$m['to_date'].'")');
 		// })->sortable(true);
-	
+
 		// $this->add('dynamic_model/Controller_AutoCreator');
 
 	}

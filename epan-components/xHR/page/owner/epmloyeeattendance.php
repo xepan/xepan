@@ -45,6 +45,6 @@ class page_xHR_page_owner_epmloyeeattendance extends page_xHR_page_owner_main{
 					$emp_model->markHalfDay($this->date);
 					$grid->js(null,$this->js()->univ()->successMessage('Mark Half Day Successfully'))->reload()->execute();
 		}
-	
+		
 	}
 }
