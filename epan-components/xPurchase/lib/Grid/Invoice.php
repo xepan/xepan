@@ -5,12 +5,11 @@ namespace xPurchase;
 class Grid_Invoice extends \Grid{
 	function init(){
 		parent::init();
-
 		$self= $this;
 		$this->addSno();
 
 		$this->vp=$this->add('VirtualPage')->set(function($p)use($self){
-			$p->add('xPurchase/View_Invoice',array('invoice'=>$p->add('xShop/Model_Invoice')->load($p->api->stickyGET('invoice_clicked'))));
+			$p->add('xPurchase/View_PurchaseInvoice',array('invoice'=>$p->add('xShop/Model_Invoice')->load($p->api->stickyGET('invoice_clicked'))));
 		});
 		
 		$this->vp_order = $this->add('VirtualPage')->set(function($p)use($self){
