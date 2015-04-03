@@ -15,9 +15,9 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->addField('order_summary')->type('text');
 		$this->addField('order_date')->type('datetime')->defaultValue($this->api->now);
 
-		$this->addField('total_amount');
-		$this->addField('tax');
-		$this->addField('net_amount');
+		$this->addField('total_amount')->type('money');
+		$this->addField('tax')->type('money');
+		$this->addField('net_amount')->type('money');
 
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
 		$this->hasMany('xPurchase/PurchaseInvoice','po_id');
