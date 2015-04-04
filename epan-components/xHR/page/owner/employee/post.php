@@ -19,7 +19,8 @@ class page_xHR_page_owner_employee_post extends Page{
 		if($form->isSubmitted()){	
 			$employee['post_id'] = $form['post'];
 			$employee->save();
-			$form->js()->univ()->successMessage(' Update Information')->execute();
+			$form->js(null,$form->js()->reload())->univ()->successMessage(' Update Information')->execute();
+			// $form->js()->univ()->successMessage(' Update Information')->execute();
 		}
 	}
 }

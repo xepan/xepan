@@ -31,7 +31,8 @@ class page_xHR_page_owner_employee_account extends Page{
 
 		if($form->isSubmitted()){
 			$emp->makeUser($form['user']);
-			$form->js()->univ()->successMessage(' Update Information')->execute();
+			$form->js(null,$form->js()->reload())->univ()->successMessage(' Update Information')->execute();
+			// $form->js()->univ()->successMessage(' Update Information')->execute();
 		}
 
 	}

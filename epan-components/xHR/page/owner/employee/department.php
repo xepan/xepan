@@ -37,7 +37,8 @@ class page_xHR_page_owner_employee_department extends Page{
 			$employee['department_id'] = $form['department'];
 			$employee['post_id'] = $form['post'];
 			$employee->save();
-			$form->js()->univ()->successMessage(' Update Information')->execute();
+			$form->js(null,$form->js()->reload())->univ()->successMessage(' Update Information')->execute();
+			// $form->js()->univ()->successMessage(' Update Information')->execute();
 		}
 		
 		$salary_template_model=$this->add('xHR/Model_SalaryTemplate');
