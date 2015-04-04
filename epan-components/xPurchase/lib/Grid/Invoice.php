@@ -9,7 +9,7 @@ class Grid_Invoice extends \Grid{
 		$this->addSno();
 
 		$this->vp=$this->add('VirtualPage')->set(function($p)use($self){
-			$p->add('xPurchase/View_PurchaseInvoice',array('invoice'=>$p->add('xShop/Model_Invoice')->load($p->api->stickyGET('invoice_clicked'))));
+			$p->add('xPurchase/View_PurchaseInvoice',array('invoice'=>$p->add('xPurchase/Model_PurchaseInvoice')->load($p->api->stickyGET('invoice_clicked'))));
 		});
 		
 		$this->vp_order = $this->add('VirtualPage')->set(function($p)use($self){
