@@ -20,6 +20,7 @@ class Model_Quotation extends \Model_Document{
 		$this->addHook('beforeDelete',$this);
 
 		$this->hasMany('xShop/QuotationItem','quotation_id');
+		$this->hasMany('xShop/SalesOrderAttachment','related_document_id',null,'Attachements');
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}

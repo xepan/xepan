@@ -21,6 +21,7 @@ class Model_PurchaseOrder extends \Model_Document{
 
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
 		$this->hasMany('xPurchase/PurchaseInvoice','po_id');
+		$this->hasMany('xPurchase/PurchaseOrderAttachment','related_document_id',null,'Attachements');
 
 		$this->addHook('beforeDelete',$this);
 
