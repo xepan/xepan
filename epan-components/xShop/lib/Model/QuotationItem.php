@@ -28,30 +28,8 @@ class Model_QuotationItem extends \Model_Document{
 
 	//Return OrderItem DepartmentalStatus
 	//$with_custom_Fields = true; means also return departmnet associated CustomFields of OrderItem in Human Redable
-	function redableDeptartmentalStatus($with_custom_fields=false){
-		if(!$this->loaded())
-			return false;
-
-		$str = "";
-		$array = json_decode($this['custom_fields'],true);
-		if(!$array) return false;
-		
-		foreach ($array as $department_id => $cf) {
-			$d = $this->add('xHR/Model_Department')->load($department_id);
-			$str .= $d['name'];
-			if($with_custom_fields){
-				if(!empty($cf)){
-					$ar[$department_id] = $cf;
-					$str .= "<br>[".$this->ref('item_id')->genericRedableCustomFieldAndValue(json_encode($ar))." ]<br>";
-					unset($ar[$department_id]);							
-				}else{
-					$str.="<br>";
-				}
-			}
-		}
-			
-		return $str;
+	function item(){
+		return $this->ref('item_id');
 	}
-
-
+	
 }

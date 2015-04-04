@@ -6,11 +6,10 @@ class Grid_Quotation extends \Grid{
 	function init(){
 		parent::init();
 
-		$self= $this;
 		$this->addSno();
-
-		$this->vp=$this->add('VirtualPage')->set(function($p)use($self){
-			$p->add('xShop/View_Quotation',array('quotation'=>$p->add('xshop/Model_Quotation')->load($p->api->stickyGET('quotation_clicked'))));
+		$this->vp=$this->add('VirtualPage')->set(function($p){
+			$p->api->stickyGET('quotation_clicked');
+			$p->add('xShop/View_Quotation',array('quotation'=>$p->add('xShop/Model_Quotation')->tryLoadAny($_GET['quotation_clicked'])));
 		});
 	}
 	
@@ -41,6 +40,7 @@ class Grid_Quotation extends \Grid{
 		if($this->model->status() == 'approved')
 			$this->current_row_html[$field]='';
 	}
+	
 	function setModel($job_card_model){
 		$m=parent::setModel($job_card_model,array('name','created_at'));
 		$this->addFormatter('name','view');
