@@ -173,33 +173,41 @@ class Model_PurchaseOrder extends \Model_Document{
 		
 		$form = $page->add('Form_Stacked',null,null,array('form/minimal'));
 		$th = $form->add('Columns');
+		$th_name =$th->addColumn(1);
+		$th_name->add('H4')->set('S.No');
 		$th_name =$th->addColumn(4);
 		$th_name->add('H4')->set('Items');
 		$th_qty =$th->addColumn(2);
 		$th_qty->add('H4')->set('Order Qty');
-		$th_received_qty = $th->addColumn(3);
-		$th_received_qty->add('H4')->set('Receive Qty');
+		$th_received_qty = $th->addColumn(2);
+		$th_received_qty->add('H4')->set('Received Qty');
+		$th_receive_qty = $th->addColumn(3);
+		$th_receive_qty->add('H4')->set('Receive Qty');
 		// $form = $page->add('Form');
 		$i = 1;
 		foreach ($ois as $oi) {
 			$c = $form->add('Columns');
+			$c0 = $c->addColumn(1);
+			$c0->addField('Readonly','item_sno')->set($i);
 			$c1 = $c->addColumn(4);
 			$c1->addField('Readonly','item_name_'.$oi->id)->set($oi['item_name']);
 			$c2 = $c->addColumn(2);
 			$c2->addField('Readonly','item_qty_'.$oi->id)->set($oi['qty']." ".$oi['unit']);
-			$c3 = $c->addColumn(3);
-			$c3->addField('Number','item_received_qty_'.$oi->id)->set($oi['qty']);
+			$c3 = $c->addColumn(2);
+			$c3->addField('Readonly','item_received_before_qty_'.$oi->id)->set($oi['received_qty']?:0);
+			$c4 = $c->addColumn(3);
+			$c4->addField('Number','item_received_qty_'.$oi->id)->set(0);
 			// $c4 = $c->addColumn(2);
 			// $c4->addField('Checkbox','item_received_'.$i);
 			$i++;
 		}
 
 		$page->add('H3')->set('Items for Receive');
-		$grid = $page->add('Grid');
-		$grid->setModel($ois);
+		// $grid = $page->add('Grid');
+		// $grid->setModel($ois);
 
-		$grid->removeColumn('custom_fields');
-		$grid->removeColumn('item');
+		// $grid->removeColumn('custom_fields');
+		// $grid->removeColumn('item');
 		
 		$form->addField('line','received_via');
 		$form->addField('line','delivery_docket_no','Docket No / Person name / Other Reference');
@@ -215,12 +223,14 @@ class Model_PurchaseOrder extends \Model_Document{
 
 		$include_field = $form->addField('hidden','selected_items');
 
-		$grid->addSelectable($include_field);
+		// $grid->addSelectable($include_field);
 
 		$page->add('H3')->set('Items Received');
 		$grid = $page->add('Grid');
-		$grid->setModel($this->itemRows()->addCondition('invoice_id','<>',null));
-
+		$grid->setModel($this->itemRows(),array('item','item_name','qty','received_qty','custom_fields'));
+		$grid->removeColumn('custom_fields');
+		$grid->removeColumn('item');
+		
 		$receive_btn = $form->addSubmit('Receive and Pay');
 
 		if($form->isSubmitted()){
@@ -234,17 +244,14 @@ class Model_PurchaseOrder extends \Model_Document{
 					// $items_selected [$oi->id]['qty'] = $form['item_qty_'.$i] ;
 					// $items_selected [$oi->id]['received_qty'] = $form['item_received_qty_'.$i];
 				}
-
 				$i++;
 			}
-			
-			// throw new \Exception(print_r($items_selected,true));
-									
+
 			if(empty($items_selected))
 				throw $this->Exception('No Item Selected','Growl');
-			
 			// $items_selected = json_decode($form['selected_items'],true);			
-			if($form['payment']){
+					
+			if($form['payment']){//Payment Validation Checked
 				switch ($form['payment']) {
 					case 'cheque':
 						if(trim($form['amount']) == "" or $form['amount']==0)
@@ -272,12 +279,13 @@ class Model_PurchaseOrder extends \Model_Document{
 				if($form['include_items'] == "")
 					$form->displayError('include_items','Please Select');
 
+				//Check for the Invoice Already Created or Not
 				$count = $this->itemRows()->addCondition('invoice_id','<>',null)->count()->getOne();
 				if( $count and $form['include_items'] == "All"){
 					$form->displayError('include_items',$count.' item\'s already in invoice, select selected option ' );
 				}
 
-			// 	//GENERATE INVOICE FOR SELECTED / ALL ITEMS
+				//GENERATE INVOICE FOR SELECTED / ALL ITEMS
 				if($form['include_items']=='All'){
 					$items_selected=array();
 					foreach ($this->itemRows() as $itm) {
@@ -286,7 +294,7 @@ class Model_PurchaseOrder extends \Model_Document{
 				}
 				
 				$purchase_invoice = $this->createInvoice($status='approved',$purchaseLedger=null, $items_selected);
-
+				
 				if($form['payment'] == "cash")
 					$purchase_invoice->payViaCash($form['amount']);
 				
@@ -298,11 +306,13 @@ class Model_PurchaseOrder extends \Model_Document{
 			// $items_selected = json_decode($form['selected_items'],true);
 			$to_warehouse = $this->add('xStore/Model_Warehouse')->loadPurchase();
 			$movement_challan = $to_warehouse->newPurchaseReceive($this);
-			$i=1;
 			foreach ($this->itemRows() as $ir) {
 				if(!in_array($ir->id, $items_selected)) continue;
 				$movement_challan->addItem($ir->item(),$form['item_received_qty_'.$ir->id],$ir['unit'],$ir['custom_fields']);
-				$i++;
+				
+				//PurchaseOrderItem Receievd Qty Add
+				$ir['received_qty'] = $ir['received_qty'] + $form['item_received_qty_'.$ir->id];
+				$ir->save();
 			}
 
 			$movement_challan->executePurchase($add_to_stock=true);
@@ -330,7 +340,7 @@ class Model_PurchaseOrder extends \Model_Document{
 	function createInvoice($status='draft',$purchaseLedger=null, $items_array=array()){
 		try{
 			$this->api->db->beginTransaction();
-			$invoice = $this->add('xPurchase/Model_Invoice')->addCondition('status', $status)->tryLoadAny();
+			$invoice = $this->add('xPurchase/Model_PurchaseInvoice')->addCondition('status', $status)->tryLoadAny();
 
 			$invoice['po_id'] = $this['id'];
 			$invoice['supplier_id'] = $this->supplier()->get('id');

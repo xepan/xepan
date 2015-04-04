@@ -12,8 +12,8 @@ class Model_PurchaseOrderItem extends \Model_Document{
 		$this->hasOne('xPurchase/PurchaseInvoice','invoice_id')->display(array('form'=>'autocomplete/Basic'));
 		$this->hasOne('xShop/Item_Purchasable','item_id')->display(array('form'=>'xShop/Item'));
 		
-		$this->addField('qty');
-		$this->addField('received_qty');
+		$this->addField('qty')->type('int');
+		$this->addField('received_qty')->type('int');
 		// $this->addField('unit');
 		$this->addField('rate')->type('money');
 		$this->addField('amount')->type('money');
