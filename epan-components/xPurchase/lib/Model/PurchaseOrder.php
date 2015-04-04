@@ -45,22 +45,25 @@ class Model_PurchaseOrder extends \Model_Document{
 	}
 
 	function invoice(){
-		return $this->add('xShop/Model_PurchaseInvoice')->addCondition('po_id',$this->id)->tryLoadAny();
+		return $this->add('xPurchase/Model_PurchaseInvoice')->addCondition('po_id',$this->id)->tryLoadAny();
 	}
 
 
 	function forceDelete_page($page){
-		$page->add('View_Warning')->set('All Item, and Invoice will be delete');
+		$page->add('View_Warning')->set('All Purchase order Item, and Invoice will be delete');
 		$str = "";
 		$ois = $this->purchaseOrderItems();
 		foreach ($ois as $oi) {
 			$str.= " Item :: ".$oi['item_name']."<br>";
 		}
+		
 		$invcs = $this->invoice();
 		foreach ($invcs as $invc) {
 			$str.= "Invoices <br>";
 			$str.= $invc['name'];
 		}
+
+		$page->add('View')->setHtml($str);
 
 		$form = $page->add('Form');
 		$form->addField('checkbox','delete_invoice_also')->set(true);
