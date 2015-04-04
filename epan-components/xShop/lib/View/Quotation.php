@@ -7,7 +7,7 @@ class View_Quotation extends \CompleteLister{
 	
 	function init(){
 		parent::init();
-
+		
 		$this->template->setHtml('name',"Quotation No: <b>".$this->quotation['name']."</b>");
 		$this->template->setHtml('created_at',"Created At: <b>".$this->quotation['created_at']."</b>");
 		$this->template->setHtml('status',"Status: <b>".ucwords($this->quotation['status'])."</b>");
@@ -19,7 +19,7 @@ class View_Quotation extends \CompleteLister{
 
 	function formatRow(){
 		$this->current_row['sno']=$this->sno;
-		$this->current_row_html['departments']=$this->model->redableDeptartmentalStatus(true);
+		$this->current_row_html['departments']=$this->model['item_name'];
 		$this->sno++;
 	}
 
