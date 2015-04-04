@@ -234,17 +234,14 @@ class Model_PurchaseOrder extends \Model_Document{
 					// $items_selected [$oi->id]['qty'] = $form['item_qty_'.$i] ;
 					// $items_selected [$oi->id]['received_qty'] = $form['item_received_qty_'.$i];
 				}
-
 				$i++;
 			}
-			
-			// throw new \Exception(print_r($items_selected,true));
-									
+
 			if(empty($items_selected))
 				throw $this->Exception('No Item Selected','Growl');
-			
 			// $items_selected = json_decode($form['selected_items'],true);			
-			if($form['payment']){
+					
+			if($form['payment']){//Payment Validation Checked
 				switch ($form['payment']) {
 					case 'cheque':
 						if(trim($form['amount']) == "" or $form['amount']==0)
@@ -272,12 +269,13 @@ class Model_PurchaseOrder extends \Model_Document{
 				if($form['include_items'] == "")
 					$form->displayError('include_items','Please Select');
 
+				//Check for the Invoice Already Created or Not
 				$count = $this->itemRows()->addCondition('invoice_id','<>',null)->count()->getOne();
 				if( $count and $form['include_items'] == "All"){
 					$form->displayError('include_items',$count.' item\'s already in invoice, select selected option ' );
 				}
 
-			// 	//GENERATE INVOICE FOR SELECTED / ALL ITEMS
+				//GENERATE INVOICE FOR SELECTED / ALL ITEMS
 				if($form['include_items']=='All'){
 					$items_selected=array();
 					foreach ($this->itemRows() as $itm) {
@@ -286,7 +284,7 @@ class Model_PurchaseOrder extends \Model_Document{
 				}
 				
 				$purchase_invoice = $this->createInvoice($status='approved',$purchaseLedger=null, $items_selected);
-
+				
 				if($form['payment'] == "cash")
 					$purchase_invoice->payViaCash($form['amount']);
 				
@@ -298,11 +296,13 @@ class Model_PurchaseOrder extends \Model_Document{
 			// $items_selected = json_decode($form['selected_items'],true);
 			$to_warehouse = $this->add('xStore/Model_Warehouse')->loadPurchase();
 			$movement_challan = $to_warehouse->newPurchaseReceive($this);
-			$i=1;
 			foreach ($this->itemRows() as $ir) {
 				if(!in_array($ir->id, $items_selected)) continue;
 				$movement_challan->addItem($ir->item(),$form['item_received_qty_'.$ir->id],$ir['unit'],$ir['custom_fields']);
-				$i++;
+				
+				//PurchaseOrderItem Receievd Qty Add
+				$ir['received_qty'] = $ir['received_qty'] + $form['item_received_qty_'.$ir->id];
+				$ir->save();
 			}
 
 			$movement_challan->executePurchase($add_to_stock=true);
@@ -329,7 +329,7 @@ class Model_PurchaseOrder extends \Model_Document{
 
 	function createInvoice($status='draft',$purchaseLedger=null, $items_array=array()){
 		try{
-			$this->api->db->beginTransaction();
+			// $this->api->db->beginTransaction();
 			$invoice = $this->add('xPurchase/Model_Invoice')->addCondition('status', $status)->tryLoadAny();
 
 			$invoice['po_id'] = $this['id'];
@@ -367,11 +367,11 @@ class Model_PurchaseOrder extends \Model_Document{
 				$invoice->createVoucher($purchaseLedger);
 			}
 			
-			$this->api->db->commit();
+			// $this->api->db->commit();
 			return $invoice;
 		}catch(\Exception $e){
 			echo $e->getmessage();
-			$this->api->db->rollback();
+			// $this->api->db->rollback();
 			// if($this->api->getConfig('developer_mode',false))
 			// 	throw $e;
 		}
