@@ -220,15 +220,17 @@ class Model_PurchaseOrder extends \Model_Document{
 		$form->addField('line','cheque_no');
 		$form->addField('DatePicker','cheque_date');
 		$form->addField('Checkbox','keep_open');
-		
+
 		$include_field = $form->addField('hidden','selected_items');
 
 		// $grid->addSelectable($include_field);
 
 		$page->add('H3')->set('Items Received');
 		$grid = $page->add('Grid');
-		$grid->setModel($this->itemRows()->addCondition('invoice_id','<>',null));
-
+		$grid->setModel($this->itemRows(),array('item','item_name','qty','received_qty','custom_fields'));
+		$grid->removeColumn('custom_fields');
+		$grid->removeColumn('item');
+		
 		$receive_btn = $form->addSubmit('Receive and Pay');
 
 		if($form->isSubmitted()){
