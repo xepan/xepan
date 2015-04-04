@@ -72,8 +72,9 @@ class Model_Document extends SQL_Model{
 
 	}
 
+
 	function defaultAfterLoad(){
-		if($this->hasElement('custom_fields') and $this['custom_fields']){
+		if($this->hasElement('custom_fields') and $this['custom_fields'] and $this->hasElement('item_id')){
 			$cf_array=json_decode($this['custom_fields'],true);
 			$qty_json = json_encode(array('stockeffectcustomfield'=>$cf_array['stockeffectcustomfield']));
 			$this['item_name'] = $this['item'] .' [' .$this->item()->genericRedableCustomFieldAndValue($qty_json) .' ]';

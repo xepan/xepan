@@ -32,10 +32,13 @@ class Model_Configuration extends \Model_Table {
 		$f = $this->addField('order_detail_email_body')->type('text')->caption('Order Detail Email Body')->hint('Order Bill Email Body : this Bill send to member who placed order, {{user_name}},{{mobile_number}},{{billing_address}},{{shipping_address}},{{order_destination}}')->group('c~11')->display(array('form'=>'RichText'));
 		$f->icon = "glyphicon glyphicon-send~blue";
 
-		$f = $this->addField('purchase_order_detail_email_subject')->group('c~12~<i class="fa fa-envelope"></i> Order Detail ( Bill ) Email');
-		$f = $this->addField('purchase_order_detail_email_body')->type('text')->caption('Order Detail Email Body')->hint('Order Bill Email Body : this Bill send to member who placed order, {{user_name}},{{mobile_number}},{{billing_address}},{{shipping_address}},{{order_destination}}')->group('c~11')->display(array('form'=>'RichText'));
+		$f = $this->addField('purchase_order_detail_email_subject')->group('d~12~<i class="fa fa-envelope"></i> Purchase Order  Detail ( Bill ) Email');
+		$f = $this->addField('purchase_order_detail_email_body')->type('text')->caption('Purchase Order Detail Email Body')->hint('fkjgdfkg')->group('d~11')->display(array('form'=>'RichText'));
+
+		$f = $this->addField('quotation_email_subject')->group('e~12~<i class="fa fa-envelope"></i>Quotation Order Detail ( Bill ) Email');
+		$f = $this->addField('quotation_email_body')->type('text')->caption('Quotation Detail Email Body')->hint('Quotation Order Email Body : this Bill send to Customer who placed order, {{user_name}},{{mobile_number}},{{billing_address}},{{shipping_address}},{{order_destination}}')->group('e~11')->display(array('form'=>'RichText'));
 		// TODO GROUP ACCESS of Category and other feature
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
 }
