@@ -7,6 +7,16 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 		$this->app->title=$this->api->current_department['name'] .': Customers';		
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Customers Management <small> Manage your customers </small>');
 
+			$this->vp = $this->add('VirtualPage')->set(function($p){
+			$this->api->StickyGET('customer_id');
+			$p->add('View')->set('hghjg'.$_GET['customer_id']);
+
+			$grid = $p->add('xShop/Grid_Order');
+			$so = $p->add('xShop/Model_Order')->addCondition('member_id',$_GET['customer_id']);
+			$grid->setModel($so);
+		});
+
+
 		$crud=$this->app->layout->add('CRUD');
 		
 
@@ -52,6 +62,14 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 										'pincode','billing_address',
 										'shipping_address',));
         $crud->add('xHR/Controller_Acl');
+        	if(!$crud->isEditing()){
+			$g=$crud->grid;	
+			$g->addColumn('total_sales_order');
+			$g->addMethod('format_total_sales_order',function($g,$f){
+				$g->current_row_html[$f] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Sales Order List ', $this->api->url($this->vp->getURL(),array('customer_id'=>$g->model['id']))).'">'. $g->model->ref('xShop/Order')->count()->getOne()."</a>";
+			});
+			$g->addFormatter('total_sales_order','total_sales_order');
+		}
 		
 	}
 }	

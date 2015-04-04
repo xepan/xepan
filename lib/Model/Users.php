@@ -92,6 +92,13 @@ class Model_Users extends Model_Table {
 			
 	}
 
+	function updatePassword($new_password){
+		if(!$this->loaded()) return false;
+			$this['password']=$new_password;
+			$this->save();
+			return $this;
+	}
+
 	function sendVerificationMail($email=null,$type=null,$activation_code=null){
 		
 		if(!$this->loaded()){

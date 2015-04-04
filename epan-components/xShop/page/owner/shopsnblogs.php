@@ -68,7 +68,8 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 		if($form->Submitted()){
 			// throw new \Exception("Error Processing Request");
 			$form->Update();
-			$form->js()->univ()->successMessage('Update Successfully')->execute();	
+			$form->js(null,$form->js()->reload())->univ()->successMessage('Update Information')->execute();
+			// $form->js()->univ()->successMessage('Update Successfully')->execute();	
 		}
 		$form->addClass('panel panel-default');
 		$form->addStyle('padding','20px');

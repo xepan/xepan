@@ -38,6 +38,7 @@ class Model_Customer extends Model_MemberDetails{
 
 		$this->hasMany('xShop/Oppertunity','customer_id');
 		$this->hasMany('xShop/Quotation','customer_id');
+		$this->hasMany('xShop/Order','customer_id');
 
 		$this->arrangeFields();
 

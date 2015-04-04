@@ -12,7 +12,7 @@ class Model_CustomFields extends \Model_Table{
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		$this->hasOne('xShop/Application','application_id');
 
-		$f = $this->addField('name')->mandatory(true)->group('a~6~<i class=\'fa fa-cog\'> Item Custom Fields</i>')->mandatory(true);
+		$f = $this->addField('name')->mandatory(true)->group('a~6~<i class=\'fa fa-cog\'> Item Custom Fields</i>');
 		$f->icon = 'fa fa-circle~blue';
 		$this->addField('type')->enum(array('line','DropDown','Color'))->mandatory('true')->defaultValue('DropDown');
 		$f->icon = 'fa fa-circle~red';

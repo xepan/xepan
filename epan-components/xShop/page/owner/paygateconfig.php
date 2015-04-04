@@ -93,7 +93,9 @@ class page_xShop_page_owner_paygateconfig extends page_xShop_page_owner_main {
 			$payment_gateway['parameters'] = json_encode($fields);
 
 			$payment_gateway->save();
-			$form->js()->univ()->successMessage('Updated')->execute();
+
+			$form->js(null,$form->js()->reload())->univ()->successMessage('Update Information')->execute();
+			// $form->js()->univ()->successMessage('Updated')->execute();
 
 		}
 

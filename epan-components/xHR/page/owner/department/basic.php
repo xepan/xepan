@@ -21,7 +21,8 @@ class page_xHR_page_owner_department_basic extends Page{
 		$form->add('Controller_FormBeautifier');
 		if($form->isSubmitted()){	
 			$form->update();
-			$form->js()->univ()->successMessage('Department Updtaed')->execute();
+			$form->js(null,$form->js()->reload())->univ()->successMessage(' Update Information')->execute();
+			// $form->js()->univ()->successMessage('Department Updtaed')->execute();
 		}
 
 	}
