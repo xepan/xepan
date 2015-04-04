@@ -3,13 +3,14 @@
 class page_xHR_page_owner_employee_workexperience extends Page{
 	function init(){
 		parent::init();
+		
 
 		if(!$_GET['employee_id'])
 			// throw new \Exception($_GET['department_id']);
 			
 			return;
 		
-		$this->api->stickyGET('department_id');
+		$this->api->stickyGET('employee_id');
 		$selected_dept_model = $this->add('xHR/Model_Employee')->load($_GET['employee_id']);		
 		if(!$selected_dept_model->loaded())
 			return;
