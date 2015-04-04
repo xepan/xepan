@@ -62,7 +62,8 @@ class page_xShop_page_owner_item_prophases extends page_xShop_page_owner_main{
 				$dept_assos['can_redefine_qty'] = $form['can_redefine_qty'];
 				$dept_assos['can_redefine_items'] = $form['can_redefine_items'];
 				$dept_assos->save();
-				$form->js()->univ()->successMessage('Information Saved')->execute();
+				$form->js(null,$form->js()->reload())->univ()->successMessage('Information Saved')->execute();
+				// $form->js()->univ()->successMessage('Information Saved')->execute();
 			}
 
 			$v=$p->add('View_Box')->set('Define Comsuption Items and Quantity');

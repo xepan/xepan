@@ -41,7 +41,8 @@ class page_xShop_page_owner_item_affliate extends page_xShop_page_owner_main{
 			foreach ($selected_affiliate as $affiliate_id) {
 				$item_model->activeAffiliate($affiliate_id);		
 			}
-			$selectable_form->js(null,$this->js()->univ()->successMessage('Updated'))->execute();
+			$selectable_form->js(null,$selectable_form->js()->reload())->univ()->successMessage(' Update Information')->execute();
+			// $selectable_form->js(null,$this->js()->univ()->successMessage('Updated'))->execute();
 		}
 
 		$grid->addMethod('format_image_thumbnail',function($g,$f){
