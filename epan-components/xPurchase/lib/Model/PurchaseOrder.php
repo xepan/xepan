@@ -173,33 +173,41 @@ class Model_PurchaseOrder extends \Model_Document{
 		
 		$form = $page->add('Form_Stacked',null,null,array('form/minimal'));
 		$th = $form->add('Columns');
+		$th_name =$th->addColumn(1);
+		$th_name->add('H4')->set('S.No');
 		$th_name =$th->addColumn(4);
 		$th_name->add('H4')->set('Items');
 		$th_qty =$th->addColumn(2);
 		$th_qty->add('H4')->set('Order Qty');
-		$th_received_qty = $th->addColumn(3);
-		$th_received_qty->add('H4')->set('Receive Qty');
+		$th_received_qty = $th->addColumn(2);
+		$th_received_qty->add('H4')->set('Received Qty');
+		$th_receive_qty = $th->addColumn(3);
+		$th_receive_qty->add('H4')->set('Receive Qty');
 		// $form = $page->add('Form');
 		$i = 1;
 		foreach ($ois as $oi) {
 			$c = $form->add('Columns');
+			$c0 = $c->addColumn(1);
+			$c0->addField('Readonly','item_sno')->set($i);
 			$c1 = $c->addColumn(4);
 			$c1->addField('Readonly','item_name_'.$oi->id)->set($oi['item_name']);
 			$c2 = $c->addColumn(2);
 			$c2->addField('Readonly','item_qty_'.$oi->id)->set($oi['qty']." ".$oi['unit']);
-			$c3 = $c->addColumn(3);
-			$c3->addField('Number','item_received_qty_'.$oi->id)->set($oi['qty']);
+			$c3 = $c->addColumn(2);
+			$c3->addField('Readonly','item_received_before_qty_'.$oi->id)->set($oi['received_qty']?:0);
+			$c4 = $c->addColumn(3);
+			$c4->addField('Number','item_received_qty_'.$oi->id)->set(0);
 			// $c4 = $c->addColumn(2);
 			// $c4->addField('Checkbox','item_received_'.$i);
 			$i++;
 		}
 
 		$page->add('H3')->set('Items for Receive');
-		$grid = $page->add('Grid');
-		$grid->setModel($ois);
+		// $grid = $page->add('Grid');
+		// $grid->setModel($ois);
 
-		$grid->removeColumn('custom_fields');
-		$grid->removeColumn('item');
+		// $grid->removeColumn('custom_fields');
+		// $grid->removeColumn('item');
 		
 		$form->addField('line','received_via');
 		$form->addField('line','delivery_docket_no','Docket No / Person name / Other Reference');
@@ -212,10 +220,10 @@ class Model_PurchaseOrder extends \Model_Document{
 		$form->addField('line','cheque_no');
 		$form->addField('DatePicker','cheque_date');
 		$form->addField('Checkbox','keep_open');
-
+		
 		$include_field = $form->addField('hidden','selected_items');
 
-		$grid->addSelectable($include_field);
+		// $grid->addSelectable($include_field);
 
 		$page->add('H3')->set('Items Received');
 		$grid = $page->add('Grid');
@@ -329,8 +337,8 @@ class Model_PurchaseOrder extends \Model_Document{
 
 	function createInvoice($status='draft',$purchaseLedger=null, $items_array=array()){
 		try{
-			// $this->api->db->beginTransaction();
-			$invoice = $this->add('xPurchase/Model_Invoice')->addCondition('status', $status)->tryLoadAny();
+			$this->api->db->beginTransaction();
+			$invoice = $this->add('xPurchase/Model_PurchaseInvoice')->addCondition('status', $status)->tryLoadAny();
 
 			$invoice['po_id'] = $this['id'];
 			$invoice['supplier_id'] = $this->supplier()->get('id');
@@ -367,11 +375,11 @@ class Model_PurchaseOrder extends \Model_Document{
 				$invoice->createVoucher($purchaseLedger);
 			}
 			
-			// $this->api->db->commit();
+			$this->api->db->commit();
 			return $invoice;
 		}catch(\Exception $e){
 			echo $e->getmessage();
-			// $this->api->db->rollback();
+			$this->api->db->rollback();
 			// if($this->api->getConfig('developer_mode',false))
 			// 	throw $e;
 		}
