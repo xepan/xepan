@@ -44,17 +44,21 @@ class page_xShop_page_owner_item_attributes extends page_xShop_page_owner_main{
 		if($crud->form){
 			$crud->form->getElement('customfield_id')->getModel()->addCondition('application_id',$application_id);
 		}
-		$crud->grid->addColumn('expander','values');
 		if(!$crud->isEditing()){	
 			$g = $crud->grid;
+			$crud->grid->addColumn('expander','values');
+			
 			$g->addMethod('format_values',function($g,$f){
 				$temp = $g->add('xShop/Model_CustomFieldValue')->addCondition('itemcustomfiledasso_id',$g->model->id)->tryLoadAny();
 				$str = "";
 				if($temp->count()->getOne())
 					$str = '<span class=" atk-label atk-swatch-green">'.$temp->count()->getOne()."</span>";
-							
+				
 				$g->current_row_html[$f] = $g->current_row_html[$f].$str;
+				if($g->model->ref('customfield_id')->get('type') == 'line')
+					$g->current_row_html[$f] = " ";
 			});
+
 			$g->addFormatter('values','values');
 		}
 	}
