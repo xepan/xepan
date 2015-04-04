@@ -11,7 +11,6 @@ class View_PurchaseOrder extends \CompleteLister{
 
 		$supplier  = $this->add('xPurchase/Model_Supplier')->tryLoad($this->purchaseorder['supplier_id']);
 		// throw new \Exception("Error Processing Request");
-		
 		$this->template->set('name',$this->purchaseorder['name']);
 		$this->template->set('request_on',$this->purchaseorder['created_at']);
 		$this->template->set('status',ucwords($this->purchaseorder['status']));

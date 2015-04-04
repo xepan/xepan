@@ -309,6 +309,7 @@ class page_base_owner extends Page {
 				// if user ->post->can_create_teams
 					$my_menu->addItem("Teams",$this->api->url('xProduction_page_owner_teammanager',array('department_id'=>$this->api->current_employee['department_id'])));
 					$my_menu->addItem("My Material Requests",$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$this->api->current_employee['department_id'])));
+					$my_menu->addItem("Accounts Settings",$this->api->url('xProduction_page_owner_user_accountinfo',array('department_id'=>$this->api->current_employee['department_id'])));
 					
 					$this->shorcut_menus[]=array("page"=>"My Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 					$this->shorcut_menus[]=array("page"=>"My Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));

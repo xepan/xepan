@@ -171,7 +171,6 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 	}
 
 	function submit_page($p){
-		$p->add('View')->set('Hello');
 		$form = $p->add('Form');
 		$form->addSubmit();
 
