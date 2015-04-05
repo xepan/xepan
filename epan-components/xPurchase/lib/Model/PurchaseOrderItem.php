@@ -14,7 +14,7 @@ class Model_PurchaseOrderItem extends \Model_Document{
 		
 		$this->addField('qty')->type('int');
 		$this->addField('received_qty')->type('int');
-		// $this->addField('unit');
+		$this->addField('unit');
 		$this->addField('rate')->type('money');
 		$this->addField('amount')->type('money');
 		$this->addField('narration')->type('text');
@@ -24,10 +24,16 @@ class Model_PurchaseOrderItem extends \Model_Document{
 		$this->addField('custom_fields')->type('text');
 
 		$this->addHook('beforeSave',$this);
+		$this->addHook('afterSave',$this);
 
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 
+	}
+
+	function afterSave(){
+		$this['unit'] = $this->ref('item_id')->get('qty_unit');
+		$this->save();
 	}
 
 	function item(){
