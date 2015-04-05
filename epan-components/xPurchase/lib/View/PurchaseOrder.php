@@ -20,7 +20,7 @@ class View_PurchaseOrder extends \CompleteLister{
 		
 		$supplier_info = $this->purchaseorder['supplier']."<br>".$supplier['address']."<br>".$supplier['city'].",".$supplier['state'];
 		$this->template->trySetHtml('supplier_info',$supplier_info);
-		// $this->template->trySet('created_by_x',$this->model->ref('created_by_id')->get('name_with_designation') . ' on ' .$this->model['created_at']);
+		$this->template->trySet('created_by_x',$this->purchaseorder->ref('created_by_id')->get('name_with_designation') . ' on ' .$this->purchaseorder['created_at']);
 		
 		$this->setModel($this->purchaseorder->itemrows());
 	}
