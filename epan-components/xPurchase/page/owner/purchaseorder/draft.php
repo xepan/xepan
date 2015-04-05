@@ -27,7 +27,7 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
         $po_item=$this->add('xPurchase/Model_PurchaseOrderItem');
         $po_item->addCondition('po_id',$po_id);
 
-        $crud->setModel($po_item,array('item_id','qty','unit','rate','amount','narration','custom_fields'),array('item','item_name','qty','rate','amount','status'));
+        $crud->setModel($po_item,array('item_id','qty','rate','amount','narration','custom_fields'),array('item','item_name','qty','rate','amount','status'));
         // $crud->add('xHR/Controller_Acl');
 
         if($crud->isEditing()){
