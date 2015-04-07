@@ -119,8 +119,8 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$grid->removeColumn('item');
 			
 		$form = $p->add('Form_Stacked');
-		$form->addField('line','delivery_via');
-		$form->addField('line','delivery_docket_no','Docket No / Person name / Other Reference');
+		$form->addField('line','delivery_via')->validateNotNull(true);
+		$form->addField('line','delivery_docket_no','Docket No / Person name / Other Reference')->validateNotNull(true);
 		// $form->addField('text','billing_address')->set($customer['billing_address']);
 		$form->addField('text','shipping_address')->set($customer['shipping_address']);
 		$form->addField('text','delivery_narration');
