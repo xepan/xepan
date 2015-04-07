@@ -375,7 +375,7 @@ class Model_JobCard extends \Model_Document{
 		$oi= $this->orderItem();
 		
 		if($oi){
-			$p->add('View_Info')->set('Mark Consuption If Required First');
+			$p->add('View_Info')->set('Mark Consumption If Required First');
 
 			$item = $oi->item();
 			$with_this_dept = $item->departmentalAssociations($this->department());
