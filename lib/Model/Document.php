@@ -37,8 +37,12 @@ class Model_Document extends SQL_Model{
 
 		if(!$this instanceof \xCRM\Model_Activity){
 			$this->actions = array_merge(array('can_view'=>array('caption'=>'Whose created Document you can see')),$this->actions);
-			$this->actions = array_merge(array('can_manage_attachments' => array('caption'=>'Whose created Documents Attachemnt you can manage')),$this->actions);
-			$this->actions = array_merge(array('can_see_activities' => array('caption'=>'Whose created Documents Communications you can see')),$this->actions);
+			
+			if(!$this instanceof \Model_Attachment){
+				$this->actions = array_merge(array('can_manage_attachments' => array('caption'=>'Whose created Documents Attachemnt you can manage')),$this->actions);
+				$this->actions = array_merge(array('can_see_activities' => array('caption'=>'Whose created Documents Communications you can see')),$this->actions);
+			}
+			
 		}
 
 		// set icons
