@@ -256,7 +256,7 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 				}
 
 				$json = json_encode($custom_fields_asso_values);
-				$form->js(null,$form->js()->univ()->closeDialog())->_selector('#'.$_GET['custom_field_name'])->val($json)->execute();
+				$form->js(null,$form->js()->univ()->closeDialog())->_selector('#'.$_GET['custom_field_name'])->val($json)->trigger('change')->execute();
 			}
 			$p->form->add('Controller_FormBeautifier');
 		});

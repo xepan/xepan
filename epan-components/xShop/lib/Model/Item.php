@@ -437,39 +437,46 @@ class Model_Item extends \Model_Table{
 	*/
 
 	function  getPrice($custom_field_values_array, $qty, $rate_chart='retailer'){
+		
+		// throw new \Exception(print_r($custom_field_values_array,true));
 
 		$cf_array = array();
 		$cf = array();
+		$dept=array();
 		if($custom_field_values_array != ""){
 			foreach ($custom_field_values_array as $dept_id => $cf_value) {
-				$dept = $this->add('xHR/Model_Department')->addCondition('id',$dept_id)->tryLoadAny();
+				if($dept_id=='stockeffectcustomfield'){
+					$dept['name'] = 'stockeffectcustomfield';
+				}else{
+					$dept = $this->add('xHR/Model_Department')->addCondition('id',$dept_id)->tryLoadAny();
+				}
+
 				$cf_array[$dept_id] = $cf_value;
 				$c = $this->genericRedableCustomFieldAndValue(json_encode($cf_array));
 				$arry = explode(",", $c);
 				foreach ($arry as $key => $value) {
 					$temp = explode("::", $value);
-					$cf[trim($dept['name'])][trim($temp[0])] = trim($temp[1]);
+					$cf[]= trim($dept['name'])." :: ".trim($temp[0]) . ' :: '. trim($temp[1]);
 				}
 			}
 		}
 
+		// echo implode("<br/>",$cf);
+
 		$quantitysets = $this->ref('xShop/QuantitySet')->setOrder(array('custom_fields_conditioned desc','qty desc','is_default asc'));
-		foreach ($quantitysets as $junk) {
+
+		foreach ($quantitysets as $qsjunk) {
 			// check if all conditioned match AS WELL AS qty
-			$cond = $quantitysets->ref('xShop/QuantitySetCondition');
-			$cond->title_field = 'name';
-			foreach ($cond as $junk) {
-				$value = explode("::",$cond['custom_field_value']);
-				// throw new \Exception( print_r($cond['customfield'],true));
-				// $value = $value[1];
-				// $value = trim($value);
-				// echo $custom_field_values_array[$cond['customfield']] ." != ". $value;
-				if($cf[trim($value[0])][$cond['customfield']] != trim($value[2]))
+			$cond = $this->add('xShop/Model_QuantitySetCondition')->addCondition('quantityset_id',$qsjunk->id);
+			foreach ($cond as $condjunk) {				
+				if(!in_array(trim(str_replace("  ", " ", $condjunk['custom_field_value'])),$cf)){
 					continue 2;
+				}
 			}
 
-			if($qty < $quantitysets['qty']) continue;
-			break;
+			if($qty >= $qsjunk['qty']){
+				break;
+			}
 		}
 
 		// throw new \Exception(print_r(array('original_price'=>$quantitysets['old_price']?:$quantitysets['price'],'sale_price'=>$quantitysets['price']),true));
