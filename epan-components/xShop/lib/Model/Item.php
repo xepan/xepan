@@ -437,18 +437,34 @@ class Model_Item extends \Model_Table{
 	*/
 
 	function  getPrice($custom_field_values_array, $qty, $rate_chart='retailer'){
-		$quantitysets = $this->ref('xShop/QuantitySet')->setOrder(array('custom_fields_conditioned desc','qty desc','is_default asc'));
 
+		$cf_array = array();
+		$cf = array();
+		if($custom_field_values_array != ""){
+			foreach ($custom_field_values_array as $dept_id => $cf_value) {
+				$dept = $this->add('xHR/Model_Department')->addCondition('id',$dept_id)->tryLoadAny();
+				$cf_array[$dept_id] = $cf_value;
+				$c = $this->genericRedableCustomFieldAndValue(json_encode($cf_array));
+				$arry = explode(",", $c);
+				foreach ($arry as $key => $value) {
+					$temp = explode("::", $value);
+					$cf[trim($dept['name'])][trim($temp[0])] = trim($temp[1]);
+				}
+			}
+		}
+
+		$quantitysets = $this->ref('xShop/QuantitySet')->setOrder(array('custom_fields_conditioned desc','qty desc','is_default asc'));
 		foreach ($quantitysets as $junk) {
 			// check if all conditioned match AS WELL AS qty
 			$cond = $quantitysets->ref('xShop/QuantitySetCondition');
 			$cond->title_field = 'name';
 			foreach ($cond as $junk) {
 				$value = explode("::",$cond['custom_field_value']);
-				$value = $value[1];
-				$value = trim($value);
+				// throw new \Exception( print_r($cond['customfield'],true));
+				// $value = $value[1];
+				// $value = trim($value);
 				// echo $custom_field_values_array[$cond['customfield']] ." != ". $value;
-				if($custom_field_values_array[$cond['customfield']] != $value)
+				if($cf[trim($value[0])][$cond['customfield']] != trim($value[2]))
 					continue 2;
 			}
 
@@ -456,6 +472,7 @@ class Model_Item extends \Model_Table{
 			break;
 		}
 
+		// throw new \Exception(print_r(array('original_price'=>$quantitysets['old_price']?:$quantitysets['price'],'sale_price'=>$quantitysets['price']),true));
 		return array('original_price'=>$quantitysets['old_price']?:$quantitysets['price'],'sale_price'=>$quantitysets['price']);
 		// return array('original_price'=>rand(1000,9999),'sale_price'=>rand(100,999));
 

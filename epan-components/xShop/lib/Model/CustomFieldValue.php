@@ -22,10 +22,14 @@ class Model_CustomFieldValue extends \Model_Table{
 		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true);
 
 		$this->addExpression('field_name_with_value')->set(function($m,$q){
-			$custome_field_m = $m->add('xShop/Model_CustomFields',array('table_alias'=>'x'));
-			$custome_field_m->addCondition('id',$q->getField('customfield_id'));
-
-			return "(concat((".$custome_field_m->_dsql()->fieldQuery('name')->render()."),' :: ',".$q->getField('name')."))";
+			
+			return $q->concat(
+				$m->add('xShop/Model_ItemCustomFieldAssos',array('table_alias'=>'cfdept'))->addCondition('id',$q->getField('itemcustomfiledasso_id'))->fieldQuery('department_phase'),
+				' :: ',
+				$m->refSQL('customfield_id')->fieldQuery('name'),
+				' :: ',
+				$q->getField('name')
+				);
 		});
 
 		$this->hasMany('xShop/ItemImages','customefieldvalue_id');

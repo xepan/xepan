@@ -42,6 +42,7 @@ class Model_JobCard extends \Model_Document{
 
 		$this->hasMany('xProduction/JobCardEmployeeTeamAssociation','jobcard_id');
 		$this->hasMany('xStore/Model_StockMovement','jobcard_id');
+		$this->hasMany('xProduction/JobCardAttachment','related_document_id',null,'Attachements');
 
 
 		$this->add('Controller_Validator');

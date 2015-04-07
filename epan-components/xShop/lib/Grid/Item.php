@@ -7,7 +7,7 @@ class Grid_Item extends \Grid{
 		parent::init();
 		
 		$this->add_sno();
-		$this->addQuickSearch(array('sku','name','sale_price'));
+		$this->addQuickSearch(array('name'));
 		$this->addPaginator($ipp=100);
 		$self = $this;
 	}

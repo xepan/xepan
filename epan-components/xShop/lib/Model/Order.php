@@ -249,7 +249,7 @@ class Model_Order extends \Model_Document{
 		$this['net_amount']=0;
 		
 		foreach ($this->itemRows() as $oi) {
-			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
+			$this['total_amount'] = $this['total_amount'] + $oi['tax_amount'];
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
 			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
 		}
@@ -286,6 +286,8 @@ class Model_Order extends \Model_Document{
 		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address'], $email_body);
 		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address'], $email_body);
 		$email_body = str_replace("{{customer_email}}", $customer['customer_email'], $email_body);
+		$email_body = str_replace("{{customer_tin_no}}", $customer['tin_no'], $email_body);
+		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no'], $email_body);
 		$email_body = str_replace("{{order_no}}", $this['name'], $email_body);
 		$email_body = str_replace("{{Order_date}}", $this['created_at'], $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY

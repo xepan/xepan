@@ -51,7 +51,7 @@ class page_xShop_page_owner_item_qtyandprice extends page_xShop_page_owner_main{
 							->addCondition('quantityset_id',$qs_id);
 
 		$crud = $this->add('CRUD');
-		$crud->setModel($qty_set_condition_model);//,array('custom_field_value_id'),array('custom_field_value'));
+		$crud->setModel($qty_set_condition_model,array('quantityset_id','custom_field_value_id','customfield_id'),array('quantityset','custom_field_value','customfield'));//,array('custom_field_value_id'),array('custom_field_value'));
 
         /*
             Get All item's custom fields and let select its value

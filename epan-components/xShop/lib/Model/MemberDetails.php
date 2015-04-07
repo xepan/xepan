@@ -24,6 +24,8 @@ class Model_MemberDetails extends \Model_Document{
 		$this->addField('address')->type('text')->group('a~6')->caption('Permanent Address');
 		$this->addField('billing_address')->type('text')->group('a~6');
 		$this->addField('shipping_address')->type('text')->group('a~6');
+		$this->addField('tin_no')->group('a~6');
+		$this->addField('pan_no')->group('a~6');
 
 		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true)->group('a~6');
 

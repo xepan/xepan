@@ -9,7 +9,7 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 
 			$this->vp = $this->add('VirtualPage')->set(function($p){
 			$this->api->StickyGET('customer_id');
-			$p->add('View')->set('hghjg'.$_GET['customer_id']);
+			// $p->add('View')->set('hghjg'.$_GET['customer_id']);
 
 			$grid = $p->add('xShop/Grid_Order');
 			$so = $p->add('xShop/Model_Order')->addCondition('member_id',$_GET['customer_id']);
@@ -17,7 +17,7 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 		});
 
 
-		$crud=$this->app->layout->add('CRUD');
+		$crud=$this->add('CRUD');
 		
 
 		$members=$this->add('xShop/Model_Customer');
@@ -49,19 +49,19 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 		$members->setOrder('id');
 		$crud->setModel($members,array(
 										'username','password',
+										'customer_name','customer_email',
 										'type','email','mobile_number',
-										'landmark','city','state',
+										'landmark','city','state','pan_no','tin_no',
 										'country','address',
 										'pincode','billing_address',
-										'shipping_address',
+										'shipping_address'
 										)
 								,array('customer_name','customer_email',
-										'type','mobile_number',
-										'landmark','city','state',
-										'country','address',
-										'pincode','billing_address',
-										'shipping_address',));
+										'mobile_number','city','state',
+										'country','pincode'));
+
         $crud->add('xHR/Controller_Acl');
+        
         	if(!$crud->isEditing()){
 			$g=$crud->grid;	
 			$g->addColumn('total_sales_order');
