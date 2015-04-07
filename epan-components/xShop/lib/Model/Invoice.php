@@ -61,6 +61,16 @@ class Model_Invoice extends \Model_Document{
 		return $this->ref('orderitem_id');
 	}
 
+	function isApproved(){
+		if(!$this->loaded())
+			return false;
+		
+		$this->addCondition('status','<>','submitted');
+		$this->addCondition('status','<>','draft');
+		$this->tryLoadAny();
+		return $this;
+	}
+
 	function addItem($item,$qty,$rate,$amount,$unit,$narration,$custom_fields){
 		$in_item = $this->ref('xShop/InvoiceItem');
 		$in_item['item_id'] = $item->id;
