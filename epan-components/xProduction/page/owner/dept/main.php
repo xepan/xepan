@@ -37,8 +37,8 @@ class page_xProduction_page_owner_dept_main extends page_xProduction_page_owner_
 		// }
 		$tab = $this->add('Tabs');
 			// $tab->addTabURL('xProduction_page_owner_dept_upcoming','UpComings'.$this->add('xShop/Model_OrderItemDepartmentalStatus')->addCondition('department_id',$_GET['department_id']));
-			$tab->addTabURL('xProduction/page/owner/dept_draft','Draft '.$this->add('xProduction/Model_Jobcard_Draft')->addCondition('to_department_id',$this->api->current_department->id)->myCounts(true,false));
-			$tab->addTabURL('xProduction/page/owner/dept_submitted','Submitted '.$this->add('xProduction/Model_Jobcard_Submitted')->addCondition('to_department_id',$this->api->current_department->id)->myCounts(true,false));
+			// $tab->addTabURL('xProduction/page/owner/dept_draft','Draft '.$this->add('xProduction/Model_Jobcard_Draft')->addCondition('to_department_id',$this->api->current_department->id)->myCounts(true,false));
+			// $tab->addTabURL('xProduction/page/owner/dept_submitted','Submitted '.$this->add('xProduction/Model_Jobcard_Submitted')->addCondition('to_department_id',$this->api->current_department->id)->myCounts(true,false));
 			$tab->addTabURL('xProduction/page/owner/dept_approved','Approved / To Receive '.$this->add('xProduction/Model_Jobcard_Approved')->addCondition('to_department_id',$this->api->current_department->id)->myCounts(true,false));
 			$tab->addTabURL('xProduction/page/owner/dept_received','Received '.$this->add('xProduction/Model_Jobcard_Received')->addCondition('to_department_id',$this->api->current_department->id)->myCounts(true,false));
 			$tab->addTabURL('xProduction/page/owner/dept_assigned','Assigned '.$this->add('xProduction/Model_Jobcard_Assigned')->addCondition('to_department_id',$this->api->current_department->id)->myCounts(true,false));
