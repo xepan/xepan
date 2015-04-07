@@ -208,7 +208,6 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 						$items_selected [] = $itm->id;
 					}
 				}
-
 				$invoice = $this->order()->createInvoice($status='approved',$salesLedger=null, $items_selected);
 
 				if($form['payment'] == "cash")
@@ -232,7 +231,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 				if(!$form['email_to'])
 					$form->displayError('email_to','Email Not Proper. ');
 
-				$inv->send_via_email();
+				// $inv->send_via_email();
 
 			}
 			
