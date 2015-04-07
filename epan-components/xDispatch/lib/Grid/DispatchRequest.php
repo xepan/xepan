@@ -43,7 +43,7 @@ class Grid_DispatchRequest extends \Grid{
 
 		if(in_array('order_no', $fields))
 			$this->addFormatter('order_no','orderview');
-		// $this->addFormatter('name','dispatchrequest');
+		$this->addFormatter('name','dispatchrequest');
 		return $m;
 	}
 

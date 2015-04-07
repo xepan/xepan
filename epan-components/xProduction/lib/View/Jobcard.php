@@ -40,6 +40,20 @@ class View_Jobcard extends \View{
 			$this->template->trySetHtml('receive_date', $received_activity['created_at']);
 
 		$this->template->trySetHtml('received_by_x',$this->jobcard->ref('created_by_id')->get('name_with_designation') . ' on ' .$this->jobcard['created_at']);
+		
+		
+		$o_attachments = "";
+		foreach ($order->attachments() as $attachment) {
+			$o_attachments .= '<a target="_blank" href="'.$attachment['attachment_url'].'">'.$attachment['name'].'</a>, ';
+		}
+		$this->template->trySetHtml('order_attachments',$o_attachments);
+		
+		$oi_attachments = "";
+		foreach ($oi->attachments() as $attachment) {
+			$oi_attachments .= '<a target="_blank" href="'.$attachment['attachment_url'].'">'.$attachment['name'].'</a>, ';
+		}
+
+		$this->template->trySetHtml('order_item_attachments',$oi_attachments);
 		// $this->current_row['sno']=$this->sno;
 		// $this->current_row['current_status'] = $this->model->getCurrentStatus();
 	}

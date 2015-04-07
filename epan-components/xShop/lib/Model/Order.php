@@ -514,4 +514,18 @@ class Model_Order extends \Model_Document{
 		
 		$transaction->execute();
 	}
+
+	function attachments(){
+		if(!$this->loaded())
+			return false;
+
+		$atts = $this->add('xShop/Model_SalesOrderAttachment');
+		$atts->addCondition('related_root_document_name','xShop\Order');
+		$atts->addCondition('related_document_id',$this->id);
+		$atts->tryLoadAny();
+		if($atts->loaded())
+			return $atts;
+		return false;
+		// return $this->ref('Attachements')->tryLoadAny();
+	}
 }

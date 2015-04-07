@@ -11,7 +11,7 @@ class page_xProduction_page_owner_dept_forwarded extends page_xProduction_page_o
 		$forwarded_to_me=$this->add('xProduction/Model_Jobcard_Forwarded');
 		$forwarded_to_me->addCondition('to_department_id',$_GET['department_id']?:$this->api->current_employee->department()->get('id'));
 		
-		$crud=$this->add('CRUD');
+		$crud=$this->add('CRUD',array('grid_class'=>'xProduction/Grid_JobCard'));
 		$crud->setModel($forwarded_to_me);
 		if(!$crud->isEditing()){
 			$g=$crud->grid;
