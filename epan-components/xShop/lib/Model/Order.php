@@ -339,7 +339,6 @@ class Model_Order extends \Model_Document{
 		try{
 
 			$this->api->db->beginTransaction();
-
 			$invoice = $this->add('xShop/Model_Invoice_'.ucwords($status));
 			$invoice['sales_order_id'] = $this['id'];
 			$invoice['customer_id'] = $this->customer()->get('id');
@@ -355,12 +354,12 @@ class Model_Order extends \Model_Document{
 
 			$ois = $this->orderItems();
 			foreach ($ois as $oi) {
-				
-				if(!count($items_array) or !in_array($oi->id, $items_array) ) continue;
+
+				if(!count($items_array)) continue;
 				
 				if($oi->invoice())
 					throw $this->exception('Order Item already used in Invoice','Growl');
-
+				
 				$invoice->addItem(
 						$oi->item(),
 						$oi['qty'],
@@ -382,7 +381,7 @@ class Model_Order extends \Model_Document{
 			return $invoice;
 		}catch(\Exception $e){
 			echo $e->getmessage();
-			$this->api->db->rollback();
+			// $this->api->db->rollback();
 			if($this->api->getConfig('developer_mode',false))
 				throw $e;
 		}
