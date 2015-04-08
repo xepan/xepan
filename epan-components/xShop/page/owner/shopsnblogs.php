@@ -67,6 +67,7 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 		$config_model=$this->add('xShop/Model_Configuration')->addCondition('application_id',$application_id)->tryLoadAny();
 		$tab=$this->add('Tabs');
 			$comment_tab=$tab->addTab('Comments');
+
 				$comment_form=$comment_tab->add('Form');
 				$comment_form->setModel($config_model,array('disqus_code'));
 				$comment_form->addSubmit('Update');
@@ -118,7 +119,7 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 						$i_form->setModel($config_model,array('invoice_email_subject','invoice_email_body'));
 						$i_form->addSubmit('Update');
 						if($i_form->Submitted()){
-							$q_form->Update();
+							$i_form->Update();
 							$i_form->js(null,$i_form->js()->reload())->univ()->successMessage('Update Information')->execute();
 						}
 						$i_form->addClass('panel panel-default');

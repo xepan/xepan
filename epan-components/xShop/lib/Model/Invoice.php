@@ -127,8 +127,8 @@ class Model_Invoice extends \Model_Document{
 		$email_body = str_replace("{{customer_email}}", $customer['customer_email'], $email_body);
 		$email_body = str_replace("{{customer_tin_no}}", $customer['tin_no'], $email_body);
 		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no'], $email_body);
-		$email_body = str_replace("{{order_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{Order_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{invoice_no}}", $this['name'], $email_body);
+		$email_body = str_replace("{{Invoice_date}}", $this['created_at'], $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
 		// return;
 		$this->sendEmail($customer_email,$subject,$email_body);
