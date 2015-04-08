@@ -3,6 +3,12 @@ namespace xShop;
 
 class Model_SalesInvoice extends Model_Invoice{
 	public $root_document_name = 'xShop\SalesInvoice';
+	public $actions=array(
+			'can_view'=>array(),
+			'can_reject'=>array(),
+			'can_send_via_email'=>array(),
+		);
+
 	function init(){
 		parent::init();
 		$this->addCondition('type','salesInvoice');

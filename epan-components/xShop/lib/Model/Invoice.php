@@ -10,6 +10,7 @@ class Model_Invoice extends \Model_Document{
 			'allow_edit'=>array(),
 			'allow_add'=>array(),
 			'allow_del'=>array(),
+			'can_send_via_email'=>array(),
 		);
 
 	function init(){
@@ -31,7 +32,17 @@ class Model_Invoice extends \Model_Document{
 		$this->addField('transaction_response_data')->type('text');
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeSave',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+
+	function beforeSave(){
+		if($this['customer'] and $this['supplier'])
+			throw $this->Exception('Select Either Customer or Supplier','ValidityCheck')->setField('customer_id');
+		
+		if($this['sales_order'] and $this['po'])
+			throw $this->Exception('Select Either Sales Order or Purchase Order','ValidityCheck')->setField('sales_order_id');
 	}
 
 
@@ -83,4 +94,44 @@ class Model_Invoice extends \Model_Document{
 		$in_item->save();
 	}
 
+
+	function send_via_email_page($email_id=null, $order_id=null){
+
+		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
+		
+		$subject ="Thanku for Order";
+		$customer = $this->customer();
+		$customer_email=$customer->get('customer_email');
+
+		$config_model=$this->add('xShop/Model_Configuration');
+		$config_model->tryLoadAny();
+		
+		$print_order=$this->add('xShop/View_PrintOrder');
+		$print_order->setModel($this);
+
+		if($config_model['order_detail_email_subject']){
+			$subject=$config_model['order_detail_email_subject'];
+		}
+
+		if($config_model['order_detail_email_body']){
+			$email_body=$config_model['order_detail_email_body'];		
+		}
+		
+		
+		$email_body = $print_order->getHTML(false);
+		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
+		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);
+		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number'], $email_body);
+		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address'], $email_body);
+		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address'], $email_body);
+		$email_body = str_replace("{{customer_email}}", $customer['customer_email'], $email_body);
+		$email_body = str_replace("{{customer_tin_no}}", $customer['tin_no'], $email_body);
+		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no'], $email_body);
+		$email_body = str_replace("{{order_no}}", $this['name'], $email_body);
+		$email_body = str_replace("{{Order_date}}", $this['created_at'], $email_body);
+		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
+		// return;
+		$this->sendEmail($customer_email,$subject,$email_body);
+		
+	}
 }
