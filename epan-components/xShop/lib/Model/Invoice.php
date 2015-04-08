@@ -21,6 +21,7 @@ class Model_Invoice extends \Model_Document{
 		$this->hasOne('xPurchase/Supplier','supplier_id')->sortable(true);
 		$this->hasOne('xShop/Model_Order','sales_order_id');
 		$this->hasOne('xPurchase/Model_PurchaseOrder','po_id')->caption('Purchase Order');
+
 		$this->addField('type')->enum(array('salesInvoice','purchaseInvoice'));
 		$this->addField('name')->caption('Invoice No');
 		$this->addField('total_amount')->type('money');
@@ -33,9 +34,18 @@ class Model_Invoice extends \Model_Document{
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
+		// $this->addHook('afterLoad',$this);
+
+		// $this->addExpression('againts','"againts"');
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
+	function afterLoad(){ 
+		if($this['supplier_id'] and $this['po_id'])
+			$this['againts']  = $this['po'];
+		elseif($this['customer_id'] and $this['sales_order_id'])
+			$this['againts'] = $this['sales_order'];
+	}
 
 	function beforeSave(){
 		if($this['customer'] and $this['supplier'])
@@ -95,30 +105,20 @@ class Model_Invoice extends \Model_Document{
 	}
 
 
-	function send_via_email_page($email_id=null, $order_id=null){
+	function send_via_email_page($p){
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
-		$subject ="Thanku for Order";
 		$customer = $this->customer();
 		$customer_email=$customer->get('customer_email');
 
 		$config_model=$this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
 		
-		$print_order=$this->add('xShop/View_PrintOrder');
-		$print_order->setModel($this);
-
-		if($config_model['order_detail_email_subject']){
-			$subject=$config_model['order_detail_email_subject'];
-		}
-
-		if($config_model['order_detail_email_body']){
-			$email_body=$config_model['order_detail_email_body'];		
-		}
+		$subject = $config_model['invoice_email_subject']?:"INVOICE";
 		
+		$email_body=$config_model['invoice_email_body']?:"Invoice Layout Is Empty";
 		
-		$email_body = $print_order->getHTML(false);
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);
 		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number'], $email_body);
@@ -131,7 +131,15 @@ class Model_Invoice extends \Model_Document{
 		$email_body = str_replace("{{Order_date}}", $this['created_at'], $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
 		// return;
-		$this->sendEmail($customer_email,$subject,$email_body);
+		$form = $p->add('Form');
+		$form->addField('line','To')->set($customer['customer_email']);
+		$form->addField('line','subject')->set($subject);
+		$form->addField('text','Message')->set($email_body);
+		$form->addSubmit('Send');
+		if($form->isSubmitted()){
+			$this->sendEmail($form['to'],$form['subject'],$form['email_body']);	
+			$form->js(null,$form()->js()->univ()->closeDialog())->univ()->successMessage('Mail Send Successfully')->execute();
+		}
 		
 	}
 }
