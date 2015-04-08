@@ -71,7 +71,7 @@ class Model_JobCard extends \Model_Document{
 		$sales_dept = $this->add('xHR/Model_Department')->loadBy('related_application_namespace','xShop');
 		$new_job_card['from_department_id'] = $sales_dept->id;
 
-		$new_job_card['name']=rand(1000,9999);
+		// $new_job_card['name']=rand(1000,9999);
 		$new_job_card['status']='approved';
 		$new_job_card->save();
 
