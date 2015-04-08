@@ -103,7 +103,7 @@ class Model_Document extends SQL_Model{
 		$x=$this->newInstance();
 		$x->load($id);
 		if($x['name']==''){
-			$x['name'] = $this->getSeries() .' ' . sprintf("%05d", $x->id);
+			$x['name'] = /* $this->getSeries() .' ' .*/ sprintf("%05d", $x->id);
 			$x->save();
 		}
 	}

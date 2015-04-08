@@ -33,12 +33,15 @@ class Model_Configuration extends \Model_Table {
 		$f->icon = "glyphicon glyphicon-send~blue";
 
 		$f = $this->addField('purchase_order_detail_email_subject')->group('d~12~<i class="fa fa-envelope"></i> Purchase Order  Detail ( Bill ) Email');
-		$f = $this->addField('purchase_order_detail_email_body')->type('text')->caption('Purchase Order Detail Email Body')->hint('fkjgdfkg')->group('d~11')->display(array('form'=>'RichText'));
+		$f = $this->addField('purchase_order_detail_email_body')->type('text')->caption('Purchase Order Detail Email Body')->hint('Purchase Order Email Body : this Bill send to Suppliers who placed Purchase order,{{company_name}},{{owner_name}},{{mobile_number}},{{purchase_order_address}},{{supplier_email}},{{supplier_tin_no}},{{supplier_pan_no}},{{purchase_Order_no}},{{purchase_Order_date}}')->group('d~11')->display(array('form'=>'RichText'));
 
 		$f = $this->addField('quotation_email_subject')->group('e~12~<i class="fa fa-envelope"></i>Quotation Order Detail ( Bill ) Email');
-		$f = $this->addField('quotation_email_body')->type('text')->caption('Quotation Detail Email Body')->hint('Quotation Order Email Body : this Bill send to Customer who placed order, {{user_name}},{{mobile_number}},{{billing_address}},{{shipping_address}},{{order_destination}}')->group('e~11')->display(array('form'=>'RichText'));
+		$f = $this->addField('quotation_email_body')->type('text')->caption('Quotation Detail Email Body')->hint('Quotation Order Email Body : this Bill send to Customer who placed Quotation , {{customer_name}},{{mobile_number}},{{address}},{{order_billing_address}},{{order_shipping_address}},{{customer_email}},{{quotation_no}},{{quotation_date}}')->group('e~11')->display(array('form'=>'RichText'));
+
+		$f = $this->addField('invoice_email_subject')->group('e~12~<i class="fa fa-envelope"></i>Invoice Email Mail Subject ( Bill ) Email');
+		$f = $this->addField('invoice_email_body')->type('text')->caption('Invoice Email Body')->hint('Invoice  Email Body : this Bill send to Customer who placed order, {{company_name}},{{owner_name}},{{mobile_number}},{{purchase_order_address}},{{supplier_email}},{{supplier_tin_no}},{{supplier_pan_no}},{{purchase_Order_no}},{{purchase_Order_date}}')->group('e~11')->display(array('form'=>'RichText'));
 		// TODO GROUP ACCESS of Category and other feature
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
 }
