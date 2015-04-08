@@ -36,6 +36,7 @@ class Model_Order extends \Model_Document{
 		$f = $this->getElement('status')->group('a~2');
 
 		$f = $this->addField('total_amount')->type('money')->mandatory(true)->group('b~3~<i class="fa fa-money"></i> Order Amount')->sortable(true);
+		$f = $this->addField('gross_amount')->type('money')->mandatory(true)->group('b~3~<i class="fa fa-money"></i> Order Amount')->sortable(true);
 		$f = $this->addField('discount_voucher')->group('b~3');
 		$f = $this->addField('discount_voucher_amount')->group('b~3');
 		$f = $this->addField('tax')->type('money')->group('b~3');
@@ -245,11 +246,13 @@ class Model_Order extends \Model_Document{
 
 	function updateAmounts(){
 		$this['total_amount']=0;
+		$this['gross_amount']=0;
 		$this['tax']=0;
 		$this['net_amount']=0;
 		
 		foreach ($this->itemRows() as $oi) {
-			$this['total_amount'] = $this['total_amount'] + $oi['tax_amount'];
+			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
+			$this['gross_amount'] = $this['gross_amount'] + $oi['texted_amount'];
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
 			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
 		}
@@ -339,7 +342,6 @@ class Model_Order extends \Model_Document{
 		try{
 
 			$this->api->db->beginTransaction();
-
 			$invoice = $this->add('xShop/Model_Invoice_'.ucwords($status));
 			$invoice['sales_order_id'] = $this['id'];
 			$invoice['customer_id'] = $this->customer()->get('id');
@@ -355,12 +357,12 @@ class Model_Order extends \Model_Document{
 
 			$ois = $this->orderItems();
 			foreach ($ois as $oi) {
-				
-				if(!count($items_array) or !in_array($oi->id, $items_array) ) continue;
+
+				if(!count($items_array)) continue;
 				
 				if($oi->invoice())
 					throw $this->exception('Order Item already used in Invoice','Growl');
-
+				
 				$invoice->addItem(
 						$oi->item(),
 						$oi['qty'],
@@ -382,7 +384,7 @@ class Model_Order extends \Model_Document{
 			return $invoice;
 		}catch(\Exception $e){
 			echo $e->getmessage();
-			$this->api->db->rollback();
+			// $this->api->db->rollback();
 			if($this->api->getConfig('developer_mode',false))
 				throw $e;
 		}

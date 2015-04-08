@@ -71,6 +71,10 @@ class Grid extends Grid_Advanced{
         }
     }
 
+    function format_image($field){
+        $this->current_row_html[$field]='<a href="'.$this->current_row[$field].'" target="_blank">'.$this->current_row['name'].'</a>';
+    }
+
 	function recursiveRender(){
 		if($this->hasColumn('edit'))
 			$this->order->move('edit','last');

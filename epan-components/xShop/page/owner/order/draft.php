@@ -58,7 +58,7 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 			$form->addField('line','bank_account_detail');
 			$form->addField('line','cheque_no');
 			$form->addField('DatePicker','cheque_date');
-			$form->addField('Checkbox','send_invoice_via_email');
+			$form->addField('Checkbox','send_receipt_via_email');
 			$form->addField('line','email_to');
 		}
 
@@ -72,7 +72,7 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 			$o->move('bank_account_detail','last');
 			$o->move('cheque_no','last');
 			$o->move('cheque_date','last');
-			$o->move('send_invoice_via_email','last');
+			$o->move('send_receipt_via_email','last');
 			$o->move('email_to','last');
 			$o->now();
 		}

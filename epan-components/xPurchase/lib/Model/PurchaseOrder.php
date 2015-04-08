@@ -359,8 +359,8 @@ class Model_PurchaseOrder extends \Model_Document{
 
 			$ois = $this->purchaseOrderItems();
 			foreach ($ois as $oi) {
-				
-				if(!count($items_array) or !in_array($oi->id, $items_array) ) continue;
+				// or !in_array($oi->id, $items_array) 
+				if(!count($items_array)) continue;
 				
 				if($oi->invoice())
 					throw $this->exception('Order Item already used in Invoice','ValidityCheck');

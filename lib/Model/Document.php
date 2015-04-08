@@ -199,6 +199,11 @@ class Model_Document extends SQL_Model{
 	function manage_attachments_page($page){
 		$crud = $page->add('CRUD');
 		$crud->setModel($this->ref('Attachements'));
+
+		if(!$crud->isEditing()){
+			$crud->grid->addformatter('attachment_url','image');
+		}
+
 		$crud->add('xHR/Controller_Acl');
 	}
 
