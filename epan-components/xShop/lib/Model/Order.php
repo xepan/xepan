@@ -249,7 +249,7 @@ class Model_Order extends \Model_Document{
 		$this['net_amount']=0;
 		
 		foreach ($this->itemRows() as $oi) {
-			$this['total_amount'] = $this['total_amount'] + $oi['tax_amount'];
+			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
 			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
 		}
