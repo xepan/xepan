@@ -22,7 +22,7 @@ class Model_InvoiceItem extends \Model_Document{
 		$this->addField('qty');
 		$this->addField('unit');
 		$this->addField('rate')->type('money');
-		$this->addField('narration');
+		$this->addField('narration')->type('text');
 		
 		$this->addField('custom_fields')->type('text');
 

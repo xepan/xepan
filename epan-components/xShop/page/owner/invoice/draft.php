@@ -19,13 +19,14 @@ class page_xShop_page_owner_invoice_draft extends page_xShop_page_owner_main{
 			$form->addSubmit('Create');
 
 			if($form->isSubmitted()){
+				
 				$sale_order = $p->add('xShop/Model_Order')->load($form['sales_order']);
 				$items_to_include_array=array();
 				foreach ($sale_order->itemrows() as $itm) {
-					$items_to_include_array[] = $item->id;
+					$items_to_include_array[] = $itm->id;
 				}
 				$sale_order->createInvoice('draft',null,$items_to_include_array);
-				$form->js(null,$form->js()->univ()->closeDialog())->univ()->reload()->execute();
+				$form->js(null,$form->js()->univ()->closeDialog())->univ()->successMessage('Invoice Created')->reload()->execute();
 			}
 
 		});
@@ -33,7 +34,7 @@ class page_xShop_page_owner_invoice_draft extends page_xShop_page_owner_main{
 		$invoice_draft = $this->add('xShop/Model_Invoice_Draft');
 		
 		$crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_Invoice'));
-		$crud->setModel($invoice_draft);
+		$crud->setModel($invoice_draft,array('sales_order_id','customer_id','total_amount','discount','tax','net_amount','billing_address'),array('name','invoice_no','sales_order','total_amount','discount','tax','net_amount'));
 
 		if(!$crud->isEditing()){
 			$btn = $crud->addButton('From Sales order');	
