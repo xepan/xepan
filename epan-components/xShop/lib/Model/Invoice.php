@@ -132,13 +132,14 @@ class Model_Invoice extends \Model_Document{
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
 		// return;
 		$form = $p->add('Form');
-		$form->addField('line','To')->set($customer['customer_email']);
+		$form->addField('line','to')->set($customer['customer_email']);
 		$form->addField('line','subject')->set($subject);
-		$form->addField('text','Message')->set($email_body);
+		$form->addField('RichText','message')->set($email_body);
 		$form->addSubmit('Send');
 		if($form->isSubmitted()){
-			$this->sendEmail($form['to'],$form['subject'],$form['email_body']);	
-			$form->js(null,$form()->js()->univ()->closeDialog())->univ()->successMessage('Mail Send Successfully')->execute();
+			$this->sendEmail($form['to'],$form['subject'],$form['message']);	
+			// $form->js(null,$form()->js()->univ()->closeDialog())->univ()->successMessage('Mail Send Successfully')->execute();
+			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
 		}
 		
 	}

@@ -80,7 +80,7 @@ class Model_Order extends \Model_Document{
 		$this->addHook('afterSave',$this);
 		$this->addHook('beforeDelete',$this);
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function afterSave(){
