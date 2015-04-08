@@ -36,6 +36,7 @@ class Model_Order extends \Model_Document{
 		$f = $this->getElement('status')->group('a~2');
 
 		$f = $this->addField('total_amount')->type('money')->mandatory(true)->group('b~3~<i class="fa fa-money"></i> Order Amount')->sortable(true);
+		$f = $this->addField('gross_amount')->type('money')->mandatory(true)->group('b~3~<i class="fa fa-money"></i> Order Amount')->sortable(true);
 		$f = $this->addField('discount_voucher')->group('b~3');
 		$f = $this->addField('discount_voucher_amount')->group('b~3');
 		$f = $this->addField('tax')->type('money')->group('b~3');
@@ -245,11 +246,13 @@ class Model_Order extends \Model_Document{
 
 	function updateAmounts(){
 		$this['total_amount']=0;
+		$this['gross_amount']=0;
 		$this['tax']=0;
 		$this['net_amount']=0;
 		
 		foreach ($this->itemRows() as $oi) {
 			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
+			$this['gross_amount'] = $this['gross_amount'] + $oi['texted_amount'];
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
 			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
 		}
