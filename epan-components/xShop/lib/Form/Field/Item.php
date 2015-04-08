@@ -147,13 +147,13 @@ class Form_Field_Item extends \autocomplete\Form_Field_Basic {
 				$field = $self->addCustomField($cf,$cfassos,"asas~12~Stock Effected Custom Fields", $p,true);
 				if(isset($p->existing_values['stockeffectcustomfield'][$cf->id])){
 						$field->set($p->existing_values['stockeffectcustomfield'][$cf->id]);
-					}				
+					}
 			}
 
 			//Department Associated CustomFields
 			foreach ($phases as $phase) {
 			// add all phases
-				$group = $phase['production_level']."~12~Level".$phase['production_level'];
+				$group = $phase['production_level']."~12~Level: ".$phase['production_level'];
 				$field_type = 'Checkbox';
 				if($qty_cf_only){
 					$field_type = 'Readonly';

@@ -10,7 +10,11 @@ class page_xStore_page_owner_stock extends page_xStore_page_owner_main {
 
 		$crud=$this->add('CRUD');
 		$crud->setModel('xStore/Model_Stock');
-		$crud->grid->addQuickSearch(array('qty'));
-		$crud->grid->addPaginator($ipp=50);
+		$crud->grid->addQuickSearch(array('qty','custom_fields','warehouse'));
+		$crud->grid->addPaginator($ipp=200);
+
+		$crud->grid->removeColumn('item');
+		$crud->grid->removeColumn('custom_fields');
+
 	}
 }
