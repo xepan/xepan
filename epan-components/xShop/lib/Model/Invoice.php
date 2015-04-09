@@ -109,6 +109,9 @@ class Model_Invoice extends \Model_Document{
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
+		$view=$this->add('xShop/View_InvoiceDetail');
+		$view->setModel($this->itemrows());
+
 		$customer = $this->customer();
 		$customer_email=$customer->get('customer_email');
 
@@ -125,12 +128,18 @@ class Model_Invoice extends \Model_Document{
 		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address'], $email_body);
 		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address'], $email_body);
 		$email_body = str_replace("{{customer_email}}", $customer['customer_email'], $email_body);
-		$email_body = str_replace("{{customer_tin_no}}", $customer['tin_no'], $email_body);
-		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no'], $email_body);
-		$email_body = str_replace("{{invoice_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{Invoice_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{customer_tin_no}}", $customer['tin_no']?"TIN No.:".$customer['tin_no']:" ", $email_body);
+		$email_body = str_replace("{{invoice_details}}", $view->getHtml(), $email_body);
+		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no']?"PAN No.:".$customer['pan_no']:" ", $email_body);
+		$email_body = str_replace("{{invoice_order_no}}", $this['name'], $email_body);
+		$email_body = str_replace("{{invoice_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{dispatch_challan_no}}", $this['name'], $email_body);
+		$email_body = str_replace("{{dispatch_challan_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{dispatch_challan_date}}", $this['created_at'], $email_body);
+		// $email_body = str_replace("{{terms_and_condition}}", "", $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
-		// return;
+			echo $email_body;
+		return;
 		$form = $p->add('Form');
 		$form->addField('line','to')->set($customer['customer_email']);
 		$form->addField('line','subject')->set($subject);
@@ -138,7 +147,6 @@ class Model_Invoice extends \Model_Document{
 		$form->addSubmit('Send');
 		if($form->isSubmitted()){
 			$this->sendEmail($form['to'],$form['subject'],$form['message']);	
-			// $form->js(null,$form()->js()->univ()->closeDialog())->univ()->successMessage('Mail Send Successfully')->execute();
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
 		}
 		
