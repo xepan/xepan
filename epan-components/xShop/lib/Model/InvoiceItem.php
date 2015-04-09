@@ -19,11 +19,11 @@ class Model_InvoiceItem extends \Model_Document{
 		
 		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'xShop/Item'));
 		
+		$this->addField('rate')->type('money');
 		$this->addField('qty');
 		$this->addField('unit');
-		$this->addField('rate')->type('money');
+		$this->addField('amount')->type('money')->group('b~3');
 		$this->addField('narration')->type('text');
-		
 		$this->addField('custom_fields')->type('text');
 
 		// $this->addHook('beforeSave',$this);

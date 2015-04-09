@@ -98,7 +98,7 @@ class Model_Invoice extends \Model_Document{
 		$in_item['qty'] = $qty;
 		$in_item['rate'] = $rate;
 		$in_item['amount'] = $amount;
-		// $in_item['unit'] = $unit;
+		$in_item['unit'] = $unit;
 		$in_item['narration'] = $narration;
 		$in_item['custom_fields'] = $custom_fields;
 		$in_item->save();
