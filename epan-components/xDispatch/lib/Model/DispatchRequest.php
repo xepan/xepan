@@ -149,6 +149,9 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 
 		if($form->isSubmitted()){
+			$order_id = $this['order_id'];
+			$dispatch_id = $this['id']; 
+
 			if(!$form['selected_items'])
 				throw $this->Exception('No Item Selected'.$form['selected_items'],'Growl');
 				
@@ -192,16 +195,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 						$form->displayError('email_to','Not Specified');
 
 				}
-				//GENERATE INVOICE FOR SELECTED ITEMS
-				// $invoice = "";
-				// if($form['include_items'] == "Selected"){
-				// 	$invoice = $this->order()->createInvoice($status='Approved',$salesLedger=null, $items_selected);
-				// }
-				// //GENERATE INVOOICE FOR ALL ORDERD ITEMS
-				// if($form['include_items'] == "All"){
-				// 	$invoice = $this->order()->createInvoice();
-				// }
-									//GENERATE INVOICE FOR SELECTED / ALL ITEMS
+				//GENERATE INVOICE FOR SELECTED / ALL ITEMS
 				if($form['include_items']=='All'){
 					$items_selected=array();
 					foreach ($this->itemRows() as $itm) {
@@ -231,7 +225,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 				if(!$form['email_to'])
 					$form->displayError('email_to','Email Not Proper. ');
 
-				// $inv->send_via_email();
+				$inv->send_via_email_page($this);
 
 			}
 			
@@ -242,6 +236,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 			if($form['complete_on_receive'])
 				$status='processed';
 
+			// create the DeliveryNote
 			$new_delivery_note = $this->add('xDispatch/Model_DeliveryNote');
 			$new_delivery_note->create(
 					$this->order(),
@@ -260,15 +255,22 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 				$itm_model->orderItem()->associatedWithDepartment($this->department())->setStatus('Delivered via '. $new_delivery_note['name']);
 				$itm_model->setStatus('delivered');
 			}
-
+			//Change Status of DispatchRequest Item
 			if(!$this->ref('xDispatch/DispatchRequestItem')->addCondition('status','<>','delivered')->count()->getOne()){
 				if($this['item_under_process'])
 					$this->setStatus('partial_complete',null,null,false);//submitted Equal to Dispatched but not received by customer
 				else				
 					$this->setStatus('completed',null,null,false);//submitted Equal to Dispatched but not received by customer
 			}
-				
-			// create the DeliveryNote
+			
+			//Set Satus of Order Complete
+			$des_req_m = $this->add('xDispatch/Model_DispatchRequest')->load($dispatch_id);
+					
+			if($des_req_m['item_under_process'] == 0 and $des_req_m['pending_items_to_deliver'] == 0){
+				if(!$order_id) return;
+				$o = $this->add('xShop/Model_Order')->load($order_id);
+				$o->setStatus('completed');
+			}
 			return true;
 		}
 
