@@ -21,22 +21,27 @@ class View_SalesInvoice extends  \CompleteLister{
 		$this->template->setHtml('customer_name',$this->invoice->ref('customer_id')->get('customer_name'));
 		$this->template->setHtml('billing_address',$this->invoice['billing_address']);
 		$this->template->setHtml('mobile_no',$this->invoice->ref('customer_id')->get('mobile_number'));
-		$this->invoice['type']?$this->template->setHtml('type',"Invoice: <b>".ucwords($this->invoice['type'])."</b>"):"";
+		$this->invoice['status']?$this->template->setHtml('status',"Invoice: <b>".ucwords($this->invoice['status'])."</b>"):"";
 		$this->invoice['sales_order']?$this->template->setHtml('sales_order_no',"Sales Order No: <b>".'<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Order '. $this->invoice['sales_order'], $this->api->url($this->vp->getURL(),array('sales_order_clicked'=>$this->invoice['sales_order_id']))).'">'.$this->invoice['sales_order']."</a></b>"):"";
 
 		$this->invoice['po']?$this->template->setHtml('po',"Purchase Order No: <b>".ucwords($this->invoice['po'])."</b>"):"";
-		
+		$this->template->trySetHtml('gross_amount',$this->invoice['gross_amount']?:'0.00');
+		$this->template->trySetHtml('discount_voucher_amount',$this->invoice['discount_voucher_amount']?:'0.00');
+		$this->template->trySetHtml('net_amount',$this->invoice['net_amount']);
+
+		if(!$this->invoice['termsandcondition_id'])
+			$this->template->del('tandc_section');
+		else
+			$this->template->trySetHTML('termsandcondition_matter',$this->invoice->ref('termsandcondition_id')->get('terms_and_condition'));
+
 		$this->setModel($this->invoice->itemrows());
 	}
 
 	function formatRow(){
-		 $this->current_row['sno']=$this->sno;
-		// $this->current_row('item',$this->invoice['name']);
-		// $this->current_row('qty',$this->invoice['name']);
-		// $this->current_row('unit',$this->invoice['name']);
-		// $this->current_row('rate',$this->invoice['name']);
-		// $this->current_row('discount',$this->invoice['name']);
-		// $this->current_row('net_amount',$this->invoice['name']);
+		$this->current_row['sno']=$this->sno;
+		$this->current_row['redable_custom_fields']=$this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
+
+		// $this->current_row['tax_amount']=$this->model['tax_amount'];	
 		$this->sno++;
 	}
 		
@@ -49,8 +54,6 @@ class View_SalesInvoice extends  \CompleteLister{
 		        'js'=>'templates/js',
 		    )
 		);
-		
-		
 		return array('view/invoice');
 	}
 	

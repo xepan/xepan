@@ -12,7 +12,6 @@ class Grid_Invoice extends \Grid{
 		$this->vp=$this->add('VirtualPage')->set(function($p)use($self){
 			$p->api->stickyGET('invoice_clicked');
 			$p->add('xShop/View_SalesInvoice',array('invoice'=>$p->add('xShop/Model_SalesInvoice')->load($_GET['invoice_clicked'])));
-			echo"hello".$_GET['invoice_clicked'];
 		});
 		
 		$this->vp_order = $this->add('VirtualPage')->set(function($p)use($self){

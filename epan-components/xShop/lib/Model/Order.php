@@ -350,6 +350,7 @@ class Model_Order extends \Model_Document{
 			$invoice['discount'] = $this['discount_voucher_amount'];
 			$invoice['tax'] = $this['tax'];
 			$invoice['net_amount'] = $this['net_amount'];
+			$invoice['termsandcondition_id'] = $this['termsandcondition_id'];
 			$invoice->relatedDocument($this);
 
 			$invoice->save();

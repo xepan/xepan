@@ -21,10 +21,12 @@ class Model_Invoice extends \Model_Document{
 		$this->hasOne('xPurchase/Supplier','supplier_id')->sortable(true);
 		$this->hasOne('xShop/Model_Order','sales_order_id');
 		$this->hasOne('xPurchase/Model_PurchaseOrder','po_id')->caption('Purchase Order');
+		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->display(array('form'=>'autocomplete/Basic'))->caption('Terms & Cond.');
 
 		$this->addField('type')->enum(array('salesInvoice','purchaseInvoice'));
 		$this->addField('name')->caption('Invoice No');
 		$this->addField('total_amount')->type('money');
+		$this->addField('gross_amount')->type('money')->sortable(true);
 		$this->addField('discount')->type('money');
 		$this->addField('tax')->type('money');
 		$this->addField('net_amount')->type('money');
@@ -34,17 +36,28 @@ class Model_Invoice extends \Model_Document{
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
-		// $this->addHook('afterLoad',$this);
+		$this->addHook('afterSave',$this);
 
-		// $this->addExpression('againts','"againts"');
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
+	
+	function afterSave(){
+		$this->updateAmounts();
+	}
 
-	function afterLoad(){ 
-		if($this['supplier_id'] and $this['po_id'])
-			$this['againts']  = $this['po'];
-		elseif($this['customer_id'] and $this['sales_order_id'])
-			$this['againts'] = $this['sales_order'];
+	function updateAmounts(){
+		$this['total_amount']=0;
+		$this['gross_amount']=0;
+		$this['tax']=0;
+		$this['net_amount']=0;
+		
+		foreach ($this->itemrows() as $oi) {
+			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
+			$this['gross_amount'] = $this['gross_amount'] + $oi['texted_amount'];
+			$this['tax'] = $this['tax'] + $oi['tax_amount'];
+			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
+		}	
+		$this->save();
 	}
 
 	function beforeSave(){
@@ -138,8 +151,6 @@ class Model_Invoice extends \Model_Document{
 		$email_body = str_replace("{{dispatch_challan_date}}", $this['created_at'], $email_body);
 		// $email_body = str_replace("{{terms_and_condition}}", "", $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
-			echo $email_body;
-		return;
 		$form = $p->add('Form');
 		$form->addField('line','to')->set($customer['customer_email']);
 		$form->addField('line','subject')->set($subject);

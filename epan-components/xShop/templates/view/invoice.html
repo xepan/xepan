@@ -9,7 +9,7 @@
 			
 		 </div>
 
-		<div class="col-md-4 text-center atk-swatch-ink"style='text-transform:capitalize'>{$type}</div>
+		<div class="col-md-4 text-center atk-swatch-ink"style='text-transform:capitalize'>{$status}</div>
 
 			<!--order detail  -->
 		<div class = "col-md-4 text-right">
@@ -27,25 +27,56 @@
 					<th align="left">Sno</th>
 					<th align="center">Item Name</th>
 					<th align="right" class="text-right">Qty</th>
-					<th align="right" class="text-right">Unit</th>
+					<!-- <th align="right" class="text-right">Unit</th> -->
 					<th align="right" class="text-right">Rate</th>
-					<th align="right" class="text-right">Amount</th>
+					<th align="right" class="text-right">Tax</th>
+					<th align="right" class="text-right">Taxed Amount</th>
 					
 				</tr>
 			{rows}
 				{row}
 					<tr>
 						<td align="left">{$sno}</td>
-						<td align="left">{item_name} Item  Here{/item_name}</td>
+						<td align="left">{item} Item {/item}<br><small>{$redable_custom_fields}</small></td>
 						<td align="right">{$qty}</td>
-						<td align="right">{$unit}</td>
+						<!-- <td align="right">{$unit}</td> -->
 						<td align="right">{$rate}</td>
-						<td align="right">{$amount}</td>
+						<td align="right">{$tax_amount}<br>@  {tax_per_sum}{/tax_per_sum} %</td>
+						<td align="right">{$texted_amount}</td>
 						
 					</tr>
 				{/row}
 			{/rows}
-			</tbody>
+
+		<tr align="right">
+			<td>&nbsp;</td>
+			<th>Gross Amount</th>
+			<td class='' colspan="4"><b>&#8377;{$gross_amount} </b> </td>
+		</tr>
+		<tr align="right">
+			<td>&nbsp;</td>
+			<th>Discount Voucher Amount</th>
+			<td class='' colspan="4"><b> - &#8377;{discount_voucher_amount}{/discount_voucher_amount} </b> </td>
+		</tr>		
+		<tr align="right">
+			<td>&nbsp;</td>
+			<th>Net Amount</th>
+			<td colspan="4" class=''><b>&#8377; {$net_amount} </b> </td>
+		</tr>
+
+		<tr>
+			<td colspan="6">
+			{tandc_section}
+			<!-- <hr> -->
+				<div>
+					<h3>Terms &amp; Conditions</h3>
+					{$termsandcondition_matter}
+					{$item_specific_conditions}
+				</div>
+			{/tandc_section}
+			</td>
+		</tr>
+		</tbody>
 	</table>
 </div>
 

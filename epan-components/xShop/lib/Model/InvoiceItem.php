@@ -26,15 +26,44 @@ class Model_InvoiceItem extends \Model_Document{
 		$this->addField('narration')->type('text');
 		$this->addField('custom_fields')->type('text');
 
-		// $this->addHook('beforeSave',$this);
+		$this->addExpression('tax_per_sum')->set(function($m,$q){
+			$tax_assos = $m->add('xShop/Model_ItemTaxAssociation');
+			$tax_assos->addCondition('item_id',$q->getField('item_id'));
+			return $tax_assos->sum('name'); // tax in percentage save in name ;)
+		})->type('money')->caption('Total Tax %');
 
-	// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->addExpression('tax_amount')->set(function($m,$q){
+			$tpa = $m->add('xShop/Model_InvoiceItem',array('table_alias'=>'tps'));
+			$tpa->addCondition('id',$q->getField('id'));
+
+			return "((".$q->getField('amount').") * ( IFNULL((". $tpa->_dsql()->del('fields')->field('tax_per_sum')->render()."),0) ) / 100)";
+		})->type('money');
+
+		$this->addExpression('texted_amount')->set(function($m,$q){
+			$tpa = $m->add('xShop/Model_InvoiceItem',array('table_alias'=>'txdamt'));
+			$tpa->addCondition('id',$q->getField('id'));
+
+			return "((".$q->getField('amount').") + ( IFNULL((". $tpa->_dsql()->del('fields')->field('tax_amount')->render()."),0) ))";
+		})->type('money');
+
+		$this->addHook('afterSave',$this);
+
+		// $this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 
 	function item(){
 		return $this->ref('item_id');
 	}
+
+	function invoice(){
+		return $this->ref('invoice_id');
+	}
+
+	function afterSave(){
+		$this->invoice()->updateAmounts();
+	}
+
 
 	function redableDeptartmentalStatus($with_custom_fields=false){
 		if(!$this->loaded())

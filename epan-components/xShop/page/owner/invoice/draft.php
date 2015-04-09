@@ -34,7 +34,7 @@ class page_xShop_page_owner_invoice_draft extends page_xShop_page_owner_main{
 		$invoice_draft = $this->add('xShop/Model_Invoice_Draft');
 		
 		$crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_Invoice'));
-		$crud->setModel($invoice_draft,array('sales_order_id','customer_id','total_amount','discount','tax','net_amount','billing_address'),array('name','invoice_no','sales_order','total_amount','discount','tax','net_amount'));
+		$crud->setModel($invoice_draft,array('sales_order_id','customer_id','total_amount','tax','gross_amount','discount','net_amount','billing_address'),array('name','invoice_no','sales_order','total_amount','tax','gross_amount','discount','net_amount'));
 
 		if(!$crud->isEditing()){
 			$btn = $crud->addButton('From Sales order');	
