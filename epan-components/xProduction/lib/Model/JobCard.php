@@ -446,9 +446,12 @@ class Model_JobCard extends \Model_Document{
 
 	function setStatus($status,$message=null,$subject=null,$set_dept_satatus=true){
 		if($this['orderitem_id']){
+			$verb = ' in ';
 			$ds = $this->orderItem()->deptartmentalStatus($this->department());
 			if($ds and $set_dept_satatus) {
-				$ds->setStatus(ucwords($status) .' in ' . $this->department()->get('name'));
+				if($status=='forwarded')
+					$verb = ' from ';
+				$ds->setStatus(ucwords($status) . $verb . $this->department()->get('name'));
 			}
 		}
 		parent::setStatus($status,$message,$subject);
