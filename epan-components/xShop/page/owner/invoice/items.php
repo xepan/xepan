@@ -11,7 +11,10 @@ class page_xShop_page_owner_invoice_items extends page_xShop_page_owner_main{
 		$item_model->addCondition('invoice_id',$invoice_id);
 		
 		$item_crud=$this->add('CRUD');
-		$item_crud->setModel($item_model);
+		$item_crud->setModel($item_model,array('item_name','item_id','custom_fields','qty','rate','narration'),array('item_name','item','custom_fields','qty','rate','narration'));
 		$item_crud->add('xHR/Controller_Acl');
+		if(!$item_crud->isEditing()){
+			$item_crud->grid->removeColumn('item');
+		}
 	}
 }
