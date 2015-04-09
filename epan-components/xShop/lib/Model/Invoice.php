@@ -46,6 +46,7 @@ class Model_Invoice extends \Model_Document{
 	}
 
 	function updateAmounts(){
+		
 		$this['total_amount']=0;
 		$this['gross_amount']=0;
 		$this['tax']=0;

@@ -60,7 +60,10 @@ class Model_InvoiceItem extends \Model_Document{
 		return $this->ref('invoice_id');
 	}
 
-	function afterSave(){
+	function afterSave(){		
+		
+		$this['amount'] = $this['qty'] * $this['rate'];
+		$this->save();
 		$this->invoice()->updateAmounts();
 	}
 
