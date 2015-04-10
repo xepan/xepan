@@ -38,7 +38,7 @@ class Model_Invoice extends \Model_Document{
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
 	function afterSave(){
@@ -139,28 +139,35 @@ class Model_Invoice extends \Model_Document{
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);
 		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number'], $email_body);
-		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address'], $email_body);
-		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address'], $email_body);
+		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address']?"Address.:".$customer['billing_address']:" ", $email_body);
+		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address']?"Shipping Address.:".$customer['shipping_address']:" ", $email_body);
 		$email_body = str_replace("{{customer_email}}", $customer['customer_email'], $email_body);
 		$email_body = str_replace("{{customer_tin_no}}", $customer['tin_no']?"TIN No.:".$customer['tin_no']:" ", $email_body);
 		$email_body = str_replace("{{invoice_details}}", $view->getHtml(), $email_body);
 		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no']?"PAN No.:".$customer['pan_no']:" ", $email_body);
 		$email_body = str_replace("{{invoice_order_no}}", $this['name'], $email_body);
 		$email_body = str_replace("{{invoice_date}}", $this['created_at'], $email_body);
-		$email_body = str_replace("{{dispatch_challan_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{dispatch_challan_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{dispatch_challan_no}}", "", $email_body);
+		$email_body = str_replace("{{dispatch_challan_date}}", "", $email_body);
 		// $email_body = str_replace("{{dispatch_challan_date}}", $this['created_at'], $email_body);
 		// $email_body = str_replace("{{terms_and_condition}}", "", $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
-		// echo $email_body;
 		// return;
+		$emails = explode(',', $customer['customer_email']);
+		
 		$form = $p->add('Form');
-		$form->addField('line','to')->set($customer['customer_email']);
+		$form->addField('line','to')->set($emails[0]);
+		// array_pop(array_re/verse($emails));
+		unset($emails[0]);
+
+		$form->addField('line','cc')->set(implode(',',$emails));
+		$form->addField('line','bcc');
 		$form->addField('line','subject')->set($subject);
 		$form->addField('RichText','message')->set($email_body);
 		$form->addSubmit('Send');
+		// echo 'hello';
 		if($form->isSubmitted()){
-			$this->sendEmail($form['to'],$form['subject'],$form['message']);	
+			$this->sendEmail($form['to'],$form['subject'],$form['message'],explode(',',$form['cc']),explode(',',$form['bcc']));	
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
 		}
 		
