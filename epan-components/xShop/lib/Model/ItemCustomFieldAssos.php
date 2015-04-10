@@ -31,7 +31,11 @@ class Model_ItemCustomFieldAssos extends \Model_Table{
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function beforeSave(){
+	function beforeSave(){		
+		if(!$this['department_phase_id']){
+			throw $this->Exception('Department Cannot be Empty','ValidityCheck')->setField('department_phase_id');
+		}
+
 		$old_model = $this->add('xShop/Model_ItemCustomFieldAssos');
 		
 		$old_model->addCondition('item_id',$this['item_id'])
