@@ -28,6 +28,13 @@ class View_Order extends \View{
 		$this->template->set('priority',$model['priority']);
 		$approved_activity = $this->model->searchActivity('approved');
 		
+		//Customer Opening Balance
+		$op_bal_array = $this->model->customer()->account()->getOpeningBalance($this->api->nextDate($this->api->today));
+		$op_bal = $op_bal_array['cr'] - $op_bal_array['dr'];
+		if( $op_bal > 0 )
+			$this->template->trySetHTML('current_balance',"Current Balance: <b>".$op_bal." DR</b>");
+		else
+			$this->template->trySetHTML('current_balance',"Current Balance: <b>".$op_bal." CR</b>");
 		
 		if(!$approved_activity instanceof \Dummy)
 			$this->template->trySet('approved_date', $approved_activity['created_at'] . ' by '. $approved_activity['action_from']);
@@ -38,6 +45,9 @@ class View_Order extends \View{
 			$this->template->del('tandc_section');
 		else
 			$this->template->trySetHTML('termsandcondition_matter',$this->model->ref('termsandcondition_id')->get('terms_and_condition'));
+		
+		
+
 		return $m;
 	}
 

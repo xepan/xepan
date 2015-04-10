@@ -13,3 +13,5 @@ composer.lock
 composer.phar
 vendor/*
 *.sublime-workspace
+todo
+/*.sql
