@@ -332,4 +332,23 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 	}
 
+	function cancel_page($page){		
+		$dr_id = $this->id;
+		$form = $page->add('Form');
+		$form->addField('text','reason');
+		$form->addSubmit('cancel');
+		if($form->isSubmitted()){
+			// if($this['item_under_process'] == 0)
+			// 	$this->order()->setStatus('cancelled',$form['reason']);
+			$dr_m = $this->add('xDispatch/Model_DispatchRequest')->load($dr_id);
+			$dr_m->cancel($form['reason']);
+			return true;
+		}
+
+	}
+
+	function cancel($reason){
+		$this->setStatus('cancelled',$reason);
+	}
+
 }
