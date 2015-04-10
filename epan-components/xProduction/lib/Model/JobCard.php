@@ -285,7 +285,8 @@ class Model_JobCard extends \Model_Document{
 	function receive(){
 		// mark complete previous dept jobcard
 		if($pre_dept_job_card = $this->previousDeptJobCard()){
-			$pre_dept_job_card->complete();
+			if($pre_dept_job_card['status'] != "cancelled")
+				$pre_dept_job_card->complete();
 		}
 
 		
@@ -307,14 +308,20 @@ class Model_JobCard extends \Model_Document{
 	}
 
 	function cancel_page($page){
+		$jobcard_id = $this['id'];
+
 		$form= $page->add('Form_Stacked');
 		$form->addField('text','reason');
 		$form->addSubmit('cancle');
 		if($form->isSubmitted()){
-			$this->setStatus('cancelled',$form['reason']);
+			//Forwarding Jobcard to Its Next Department
+			$this->forward();
+			//check if Ordee Is Closed then Complete the Order
 			if($this['orderitem_id']){
 				$this->orderItem()->order()->isOrderClose(true);
 			}
+
+			$this->add('xProduction/Model_JobCard')->load($jobcard_id)->setStatus('cancelled',$form['reason']);
 			return true;
 		}
 	}
