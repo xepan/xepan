@@ -4,7 +4,7 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 	
 	function page_index(){
 		
-		$this->app->title=$this->api->current_department['name'] .': Shops & Blogs';
+		$this->app->title=$this->api->current_department['name'] .': Configuration';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Shops & Blogs Management <small> Manage your shops and blogs here </small>');
 
 		$tabs= $this->add('Tabs');

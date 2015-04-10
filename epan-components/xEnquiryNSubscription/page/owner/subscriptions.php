@@ -5,6 +5,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 	function init(){
 		$this->rename('xEnSubs');
 		parent::init();
+		$this->app->title=$this->component_name .': Subscriptions';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-bullhorn"></i> '.$this->component_name. '<small> Email Data Management </small>');
 	}
 
@@ -304,6 +305,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 	}
                                                          
 	function page_newsletter(){
+		$this->app->title=$this->component_name .': NewsLetters';
 		$preview_vp = $this->add('VirtualPage');
 		$preview_vp->set(function($p){
 			$m=$p->add('xEnquiryNSubscription/Model_NewsLetter')->load($_GET['newsletter_id']);
