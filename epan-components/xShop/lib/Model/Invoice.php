@@ -132,19 +132,22 @@ class Model_Invoice extends \Model_Document{
 		$config_model=$this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
 		
-		$subject = $config_model['invoice_email_subject']?:"INVOICE";
+		$subject = $config_model['invoice_email_subject']?:$this['name']." "."::"." "."INVOICE";
 		
 		$email_body=$config_model['invoice_email_body']?:"Invoice Layout Is Empty";
 		
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);
-		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number'], $email_body);
+		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number']?"Contact No.:".$customer['mobile_number'].",":" ", $email_body);
+		$email_body = str_replace("{{city}}", $customer['city']? $customer['city']:" ", $email_body);
+		$email_body = str_replace("{{state}}", $customer['state']?",".$customer['state']:" ", $email_body);
+		$email_body = str_replace("{{country}}", $customer['country']?",".$customer['country']:" ", $email_body);
 		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address']?"Address.:".$customer['billing_address']:" ", $email_body);
 		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address']?"Shipping Address.:".$customer['shipping_address']:" ", $email_body);
 		$email_body = str_replace("{{customer_email}}", $customer['customer_email'], $email_body);
 		$email_body = str_replace("{{customer_tin_no}}", $customer['tin_no']?"TIN No.:".$customer['tin_no']:" ", $email_body);
-		$email_body = str_replace("{{invoice_details}}", $view->getHtml(), $email_body);
 		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no']?"PAN No.:".$customer['pan_no']:" ", $email_body);
+		$email_body = str_replace("{{invoice_details}}", $view->getHtml(), $email_body);
 		$email_body = str_replace("{{invoice_order_no}}", $this['name'], $email_body);
 		$email_body = str_replace("{{invoice_date}}", $this['created_at'], $email_body);
 		$email_body = str_replace("{{dispatch_challan_no}}", "", $email_body);
