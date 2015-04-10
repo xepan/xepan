@@ -113,15 +113,33 @@ class Model_OrderDetails extends \Model_Document{
 		return $this->add('xDispatch/Model_DispatchRequestItem')->addCondition('orderitem_id',$this->id)->tryLoadAny();
 	}
 
-	function jobCards($item_id=null,$department_id=null){
-		if($this->loaded())
-			$item_id = $this->id;
-		$jobCards = $this->add('xProduction/Model_JobCard')->addCondition('orderitem_id',$item_id);
+	function jobCards($department_id=null){
+		$job_cards=array();
+		$dept_status_all = $this->deptartmentalStatus();
+
 		if($department_id)
-			$jobCards->addCondition('to_department_id',$department_id);
+			$dept_status_all->addCondition('department_id',$department_id);
+
+		foreach ($dept_status_all as $dept_status) {
+			$dept_status_dept=$dept_status->department();
+			$jc = $this->add($dept_status_dept['related_application_namespace'].'/'.$dept_status_dept['jobcard_document']);
+			$js->addCondition('orderitem_id',$this['item_id']);
+			$js->addCondition('to_department_id',$dept_status_dept->id);
+			$js->tryLoadAny();
+			$job_cards[] = $js;
+		}
+
+		return $job_cards;
+
+
+		// if($this->loaded())
+		// 	$item_id = $this->id;
+		// $jobCards = $this->add('xProduction/Model_JobCard')->addCondition('orderitem_id',$item_id);
+		// if($department_id)
+		// 	$jobCards->addCondition('to_department_id',$department_id);
 		
-		$jobCards->tryLoadAny();
-		return $jobCards;
+		// $jobCards->tryLoadAny();
+		// return $jobCards;
 	}
 
 
