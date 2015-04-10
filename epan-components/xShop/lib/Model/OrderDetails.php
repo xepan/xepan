@@ -115,16 +115,14 @@ class Model_OrderDetails extends \Model_Document{
 
 	function jobCards($department_id=null){
 		$job_cards=array();
-		$jc = "";
-		$dept_status_all = $this->deptartmentalStatus();
-
+		$dept_status_all = $this->deptartmentalStatus();						
 		if($department_id)
 			$dept_status_all->addCondition('department_id',$department_id);
 
 		foreach ($dept_status_all as $dept_status) {
 			$dept_status_dept=$dept_status->department();
 			$jc = $this->add($dept_status_dept['related_application_namespace'].'/Model_'.$dept_status_dept['jobcard_document']);
-			$jc->addCondition('orderitem_id',$this['item_id']);
+			$jc->addCondition('orderitem_id',$this['id']);
 			$jc->addCondition('to_department_id',$dept_status_dept->id);
 			$jc->tryLoadAny();
 			$job_cards[] = $jc;
@@ -354,8 +352,8 @@ class Model_OrderDetails extends \Model_Document{
 			if($show_status and $department_asso['department'] != 'stockeffectcustomfield'){//Show Department Status and check for the department is stockeffect
 				$str .=" ( ".($department_asso['status']?:'Waiting')." )";
 				if($with_jobcard){
-					$jobcard_no = $this->jobCards($department_asso['department_id']);
-					$str.= "[ Jobcard : ".$jobcard_no[0]." ]";
+					$jobcard_no = $this->jobCards($department_asso['department_id'])->get('name')?:'Not Created';
+					$str.= "[ Jobcard : ".$jobcard_no." ]";
 				}
 			}
 
