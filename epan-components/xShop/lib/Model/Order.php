@@ -453,16 +453,35 @@ class Model_Order extends \Model_Document{
 
 	function cancel_page($page){
 		$form= $page->add('Form_Stacked');
+		$str = "";
+		//get all item_jobcard with status
+		$ois = $this->orderItems();
+		foreach ($ois as $oi) {
+			// Related Jobcards
+			$jcs = $oi->jobCards();
+			foreach ($jcs as $jc) {
+				$str.= " Item :: ".$oi['name']."<br>";
+				$str.= "JobCard No. ".$jc['name']." Department ".$jc['to_department']." :: ". $jc['status']."<br>";
+			}
+		}
+		if($str != ""){
+			$form->addField('Readonly','JobCards')->set($str);
+			$form->add('View_Warning')->set('ALL Jobcard will be Canceled');
+		}
+
 		$form->addField('text','reason');
-		$form->addSubmit('reject');
+		$form->addSubmit('cancel');
 		if($form->isSubmitted()){
+			foreach ($ois as $oi) {
+				$oi->jobCards()->setStatus('cancelled',$form['reason']);
+			}
 			$this->cancel($form['reason']);
 			return true;
 		}
 	}
 
 	function cancel($reason){
-		$this->setStatus('cancelled',$form['reason']);
+		$this->setStatus('cancelled',$reason);
 	}
 
 	function approve_page($page){
