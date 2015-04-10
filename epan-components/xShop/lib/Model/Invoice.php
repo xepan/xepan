@@ -155,7 +155,7 @@ class Model_Invoice extends \Model_Document{
 		// return;
 		$emails = explode(',', $customer['customer_email']);
 		
-		$form = $p->add('Form');
+		$form = $p->add('Form_Stacked');
 		$form->addField('line','to')->set($emails[0]);
 		// array_pop(array_re/verse($emails));
 		unset($emails[0]);
@@ -163,7 +163,7 @@ class Model_Invoice extends \Model_Document{
 		$form->addField('line','cc')->set(implode(',',$emails));
 		$form->addField('line','bcc');
 		$form->addField('line','subject')->set($subject);
-		$form->addField('RichText','message')->set($email_body);
+		$form->add('View')->setHTML($email_body);
 		$form->addSubmit('Send');
 		// echo 'hello';
 		if($form->isSubmitted()){
