@@ -1,13 +1,10 @@
 <?php
 
 class page_xMarketingCampaign_page_owner_socialcontents extends page_xMarketingCampaign_page_owner_main{
-
-
-
-
 	function init(){
 		$this->rename('y');
 		parent::init();
+		$this->app->title=$this->api->current_department['name'] .': Social Contents';
 
 		$total_posts_vp = $this->total_posts_vp();
 	

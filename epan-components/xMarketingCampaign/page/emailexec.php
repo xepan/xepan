@@ -4,9 +4,9 @@ class page_xMarketingCampaign_page_emailexec extends Page {
 
 	function init(){
 		parent::init();
-
 		include_once('lib/Swift/swift_init.php');
 
+		// $this->app->title=$this->api->current_department['name'] .': Mass Email';
 		$email_job = $this->add('xEnquiryNSubscription/Model_EmailJobs');
 		$email_job->addExpression('un_processed_job')->set(function($m,$q){
 			return $m->refSQL('xEnquiryNSubscription/EmailQueue')->addCondition('is_sent',false)->count(true);
