@@ -132,15 +132,19 @@ class Model_OrderDetails extends \Model_Document{
 		$order = $new_order_item->order();
 		$processing_order = $order->addCondition('status','<>',array('draft','submitted'));
 		$processing_order->tryLoadAny();
-		
+
 		if($processing_order->loaded()){
 			$new_order_item->createDepartmentalAssociations();
 			if($department_association = $new_order_item->nextDeptStatus()){
 				$department_association->createJobCardFromOrder();
 			}
 		}
-		//======================================================
-		
+
+		if($processing_order['status'] == "processed"){
+			$processing_order->setStatus('processing','Due to New OrdreItem ( '.$new_order_item['name']." ) Add");
+		}
+		//End of Jobcrad Creation at Middle======================================================
+
 		// For online orders that are already approved and create their departmental associations
 		if($new_order_item->order()->isFromOnline()){
 			$new_order_item->createDepartmentalAssociations();
