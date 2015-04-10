@@ -31,7 +31,7 @@ class Grid_DispatchRequestItem extends \Grid{
 
 	function format_dispatchrequest($field){
 
-		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Dispatch Request '. $this->model['name'], $this->api->url($this->vp_dispatchrequest->getURL(),array('dispatch_request_clicked'=>$this->model['id']))).'">'. $this->current_row[$field] ."</a>";
+		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Dispatch Request '. $this->model['dispatch_request'], $this->api->url($this->vp_dispatchrequest->getURL(),array('dispatch_request_clicked'=>$this->model['dispatch_request_id']))).'">'. $this->current_row[$field] ."</a>";
 	}
 
 	function setModel($dispatch_request, $fields=null){
