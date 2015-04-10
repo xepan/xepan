@@ -149,9 +149,11 @@ class Model_Invoice extends \Model_Document{
 		$email_body = str_replace("{{invoice_date}}", $this['created_at'], $email_body);
 		$email_body = str_replace("{{dispatch_challan_no}}", $this['name'], $email_body);
 		$email_body = str_replace("{{dispatch_challan_date}}", $this['created_at'], $email_body);
-		$email_body = str_replace("{{dispatch_challan_date}}", $this['created_at'], $email_body);
+		// $email_body = str_replace("{{dispatch_challan_date}}", $this['created_at'], $email_body);
 		// $email_body = str_replace("{{terms_and_condition}}", "", $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
+		// echo $email_body;
+		// return;
 		$form = $p->add('Form');
 		$form->addField('line','to')->set($customer['customer_email']);
 		$form->addField('line','subject')->set($subject);
