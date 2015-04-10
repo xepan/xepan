@@ -77,7 +77,7 @@ class Model_OrderDetails extends \Model_Document{
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function beforeSave(){
+	function beforeSave(){		
 	}
 
 	function afterSave(){
@@ -128,20 +128,17 @@ class Model_OrderDetails extends \Model_Document{
 	function afterInsert($obj,$new_id){
 
 		//Add Item At Middle of Order Processing
-		$new_order_item = $this->add('xShop/Model_OrderDetails')->load($new_id);	
+		$new_order_item = $this->add('xShop/Model_OrderDetails')->load($new_id);
 		$order = $new_order_item->order();
-		$processing_order = $order->addCondition('status','<>',array('draft','submitted'));
-		$processing_order->tryLoadAny();
-
-		if($processing_order->loaded()){
+		if(in_array($order->get('status'), array('approved','processing','processed','redesign')) ){
 			$new_order_item->createDepartmentalAssociations();
 			if($department_association = $new_order_item->nextDeptStatus()){
 				$department_association->createJobCardFromOrder();
-			}
+			}			
 		}
 
-		if($processing_order['status'] == "processed"){
-			$processing_order->setStatus('processing','Due to New OrdreItem ( '.$new_order_item['name']." ) Add");
+		if($order['status'] == "processed"){
+			$order->setStatus('processing','Due to New OrdreItem ( '.$new_order_item['name']." ) Add");
 		}
 		//End of Jobcrad Creation at Middle======================================================
 
