@@ -3,7 +3,7 @@
 class page_xMarketingCampaign_page_owner_leads extends page_xMarketingCampaign_page_owner_main{
 	
 	function page_index(){
-			
+			$this->app->title=$this->api->current_department['name'] .': Leads';
 		// Add Badges
 
 		// filter line if filter is there

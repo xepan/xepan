@@ -4,6 +4,7 @@ class page_xMarketingCampaign_page_updatesocialactivityexec extends Page {
 	
 	function init(){
 		parent::init();
+		// $this->app->title=$this->api->current_department['name'] .': Social Activities';
 		$dummy_cont = $this->add('xMarketingCampaign/Controller_SocialPosters_Base_Social');
 
 		$posts_to_watch = $this->add('xMarketingCampaign/Model_SocialPosting');

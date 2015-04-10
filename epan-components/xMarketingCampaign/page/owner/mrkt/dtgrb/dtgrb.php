@@ -2,10 +2,9 @@
 
 
 class page_xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb extends page_xMarketingCampaign_page_owner_main {
-	
+
 	function page_index(){
-		// parent::init();
-		
+		$this->app->title=$this->api->current_department['name'] .': Data Grabbeer';
 		$bg=$this->app->layout->add('View_BadgeGroup');
 		$data =$this->add('xMarketingCampaign/Model_DataSearchPhrase')->count()->getOne();
 		$v=$bg->add('View_Badge')->set('Total Phrases')->setCount($data)->setCountSwatch('ink');

@@ -4,7 +4,7 @@ class page_xMarketingCampaign_page_owner_scheduledjobs extends page_xMarketingCa
 	
 	function init(){
 		parent::init();
-
+		$this->app->title=$this->api->current_department['name'] .': Job Scheduled';
 		$timeline = $this->app->layout->add('xMarketingCampaign/View_CampaignTimeline');
 		// $tabs = $this->app->layout->add('Tabs');
 		// $email_tab = $tabs->addTabURL('./email','<i class="fa fa-reorder"></i> Email Jobs');

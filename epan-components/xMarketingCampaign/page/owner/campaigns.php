@@ -5,6 +5,7 @@ class page_xMarketingCampaign_page_owner_campaigns extends page_xMarketingCampai
 	function init(){
 		$this->rename('x');
 		parent::init();
+		$this->app->title=$this->api->current_department['name'] .': Campaigns';
 	}
 
 	function page_index(){
