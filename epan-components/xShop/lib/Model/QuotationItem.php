@@ -55,13 +55,20 @@ class Model_QuotationItem extends \Model_Document{
 		$this->addExpression('created_by_id')->set(function($m,$q){
 			return $m->refSQL('quotation_id')->fieldQuery('created_by_id');
 		});
+
+		$this->addHook('afterSave',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	//Return OrderItem DepartmentalStatus
-	//$with_custom_Fields = true; means also return departmnet associated CustomFields of OrderItem in Human Redable
+	function afterSave(){
+		$this->quotation()->updateAmounts();
+	}
+
 	function item(){
 		return $this->ref('item_id');
 	}
 	
+	function quotation(){
+		return $this->ref('quotation_id');	
+	}
 }
