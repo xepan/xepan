@@ -146,8 +146,8 @@ class Model_Invoice extends \Model_Document{
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);
 		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number']?"Contact No.:".$customer['mobile_number'].",":" ", $email_body);
 		$email_body = str_replace("{{city}}", $customer['city']? $customer['city']:" ", $email_body);
-		$email_body = str_replace("{{state}}", $customer['state']?",".$customer['state']:" ", $email_body);
-		$email_body = str_replace("{{country}}", $customer['country']?",".$customer['country']:" ", $email_body);
+		$email_body = str_replace("{{state}}", $customer['state']?", ".$customer['state']:" ", $email_body);
+		$email_body = str_replace("{{country}}", $customer['country']?", ".$customer['country']:" ", $email_body);
 		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address']?"Address.:".$customer['billing_address']:" ", $email_body);
 		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address']?"Shipping Address.:".$customer['shipping_address']:" ", $email_body);
 		$email_body = str_replace("{{customer_email}}", $customer['customer_email'], $email_body);
@@ -158,7 +158,7 @@ class Model_Invoice extends \Model_Document{
 		$email_body = str_replace("{{invoice_date}}", $this['created_at'], $email_body);
 		$email_body = str_replace("{{dispatch_challan_no}}", "", $email_body);
 		$email_body = str_replace("{{dispatch_challan_date}}", "", $email_body);
-		$email_body = str_replace("{{terms_an_conditions}}", $tnc['terms_and_condition']?"Terms & Condition.:<br>".$tnc['terms_and_condition']:" ", $email_body);
+		$email_body = str_replace("{{terms_an_conditions}}", $tnc['terms_and_condition']?"<b>Terms & Condition.:</b><br>".$tnc['terms_and_condition']:" ", $email_body);
 		// $email_body = str_replace("{{dispatch_challan_date}}", $this['created_at'], $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
 		// return;
