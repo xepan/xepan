@@ -423,6 +423,9 @@ class Model_PurchaseOrder extends \Model_Document{
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
+		$view=$this->add('xShop/View_purchaseDetail');
+		$view->setModel($this->itemrows());		
+		
 		$subject ="Thanku for Purchase Order";
 
 		$supplier = $this->supplier();
@@ -441,8 +444,10 @@ class Model_PurchaseOrder extends \Model_Document{
 		}
 		// $email_body = $print_order->getHTML(false);
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
+		$email_body = str_replace("{{purchase_order_details}}", $view->getHtml(), $email_body);
 		$email_body = str_replace("{{company_name}}", $supplier['name'], $email_body);
 		$email_body = str_replace("{{owner_name}}", $supplier['owner_name'], $email_body);
+		$email_body = str_replace("{{supplier_code}}", $supplier['code'], $email_body);
 		$email_body = str_replace("{{mobile_number}}", $supplier['contact_no'], $email_body);
 		$email_body = str_replace("{{purchase_order_address}}",$supplier['address'], $email_body);
 		$email_body = str_replace("{{supplier_email}}", $supplier['email'], $email_body);
