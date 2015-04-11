@@ -423,7 +423,8 @@ class Model_PurchaseOrder extends \Model_Document{
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
-		$view=$this->add('xShop/View_purchaseDetail');
+		$view=$this->add('xPurchase/View_PurchaseOrderDetail');
+		echo "string";
 		$view->setModel($this->itemrows());		
 		
 		$subject ="Thanku for Purchase Order";
@@ -456,7 +457,8 @@ class Model_PurchaseOrder extends \Model_Document{
 		$email_body = str_replace("{{purchase_Order_no}}", $this['name'], $email_body);
 		$email_body = str_replace("{{purchase_Order_date}}", $this['created_at'], $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
-		// return;
+		echo $email_body;
+		return;
 		$this->sendEmail($supplier_email,$subject,$email_body);
 		
 	}
