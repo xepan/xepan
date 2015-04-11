@@ -337,6 +337,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$form = $page->add('Form');
 		$form->addField('text','reason');
 		$form->addSubmit('cancel');
+		//TODO Delivery Not 
 		if($form->isSubmitted()){
 			// if($this['item_under_process'] == 0)
 			// 	$this->order()->setStatus('cancelled',$form['reason']);

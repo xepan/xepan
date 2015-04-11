@@ -136,7 +136,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		//TODO SEND MAIL
 			//COMMUNICATION LOG ENTRY
 		$this['order_date']=$this->api->now;
-		
+		$this->save();
 		//Change PurchaseOrderItem Stautus Waiting to Processing
 		$ois = $this->itemRows();
 		foreach ($ois as $oi) {
