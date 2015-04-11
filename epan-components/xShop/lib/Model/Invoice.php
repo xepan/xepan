@@ -166,11 +166,13 @@ class Model_Invoice extends \Model_Document{
 		$form->addField('line','cc')->set(implode(',',$emails));
 		$form->addField('line','bcc');
 		$form->addField('line','subject')->set($subject);
+		$form->addField('RichText','custom_message');
 		$form->add('View')->setHTML($email_body);
 		$form->addSubmit('Send');
 		// echo 'hello';
 		if($form->isSubmitted()){
-			$this->sendEmail($form['to'],$form['subject'],$form['message'],explode(',',$form['cc']),explode(',',$form['bcc']));	
+			$email_body .= $form['custom_message']."<br>".$email_body;			
+			$this->sendEmail($form['to'],$form['subject'],$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));	
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
 		}
 		

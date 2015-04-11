@@ -3,7 +3,7 @@
 	<div  class="row">
 		<div class="col-md-4">
 			<div>Invoice No :<b>{$invoice_no}</b></div>
-			<div> Billing address :<b>{$billing_address}</b></div>
+			<div> {$billing_address}</div>
 			<div> Customer :<b>{$customer_name}</b></div>
 			<div> Mobile No :<b>{$mobile_no}</b></div>
 			
@@ -15,7 +15,7 @@
 		<div class = "col-md-4 text-right">
 			<!-- <div>purchase Order No: <b>{$po}</b></div>
 			<div>Order Created Date: <b>{$order_created_at}</b></div> -->
-			<div>Sale Order No: <b>{$sales_order_no}</b></div>
+			<div>{$sales_order_no}</div>
 			<!-- <div>Purchase Order Created Date: <b>{$order_created_at}</b></div>
 			<div>Customer: <b>{$customer}</b></div>
 			<div>From Supplier: <b>{$customer}</b></div> -->
@@ -30,7 +30,7 @@
 					<!-- <th align="right" class="text-right">Unit</th> -->
 					<th align="right" class="text-right">Rate</th>
 					<th align="right" class="text-right">Tax</th>
-					<th align="right" class="text-right">Taxed Amount</th>
+					<th align="right" class="text-right">Amount</th>
 					
 				</tr>
 			{rows}

@@ -22,11 +22,23 @@ class Grid_Quotation extends \Grid{
 			$this->current_row_html[$field]='';
 	}
 	
-	function setModel($quotation_model){
-		$m=parent::setModel($quotation_model);
+	function setModel($quotation_model,$field=array()){
+		if(empty($field))
+			$field = array('to','quotation_number','name','customer','lead','opportunity');
+		$m=parent::setModel($quotation_model,$field);
 		$this->addFormatter('name','view');
-		$this->addColumn('expander','items',array('page'=>'xShop_page_owner_quotation_items','descr'=>'Items'));
 
+		$this->addMethod('format_to',function($g,$f){
+				$g->current_row[$f]=$g->current_row['lead']? '(L) '.$g->current_row['lead']: '(C) '.$g->current_row	['customer'];
+			});
+		$this->addColumn('to','to');
+
+		$this->addColumn('expander','items',array('page'=>'xShop_page_owner_quotation_items','descr'=>'Items'));
+		
+		$this->removeColumn('customer');
+		$this->removeColumn('opportunity');
+		$this->removeColumn('lead');
+		
 		return $m;
 	}
 	

@@ -32,8 +32,8 @@ class Model_Quotation extends \Model_Document{
 	}
 
 	function beforeSave(){
-		if($this['lead_id'] and $this['customer_id'] and $this['opportunity_id'])
-			throw new \Exception("Error Processing Request", 1);
+		if($this['lead_id'] and $this['customer_id'])
+			throw $this->exception('Select Either Lead or Customer','ValidityCheck')->setField('customer_id');
 			
 	}
 

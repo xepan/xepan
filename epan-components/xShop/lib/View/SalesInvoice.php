@@ -15,11 +15,10 @@ class View_SalesInvoice extends  \CompleteLister{
 			$view_order->setModel($o);
 		});
 
-
 		$this->template->setHtml('invoice_no',$this->invoice['name']);
 		$this->template->setHtml('billing_address',$this->invoice['billing_address']);
 		$this->template->setHtml('customer_name',$this->invoice->ref('customer_id')->get('customer_name'));
-		$this->template->setHtml('billing_address',$this->invoice['billing_address']);
+		$this->invoice['billing_address']?$this->template->setHtml('billing_address',"Billing Address: ".$this->invoice['billing_address']):"";
 		$this->template->setHtml('mobile_no',$this->invoice->ref('customer_id')->get('mobile_number'));
 		$this->invoice['status']?$this->template->setHtml('status',"Invoice: <b>".ucwords($this->invoice['status'])."</b>"):"";
 		$this->invoice['sales_order']?$this->template->setHtml('sales_order_no',"Sales Order No: <b>".'<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Order '. $this->invoice['sales_order'], $this->api->url($this->vp->getURL(),array('sales_order_clicked'=>$this->invoice['sales_order_id']))).'">'.$this->invoice['sales_order']."</a></b>"):"";
