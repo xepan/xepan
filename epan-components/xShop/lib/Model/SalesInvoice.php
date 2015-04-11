@@ -34,6 +34,8 @@ class Model_SalesInvoice extends Model_Invoice{
 
 		$transaction->execute();
 
+		$transaction->relatedDocument($this);
+
 		return $transaction;
 
 	}
@@ -77,6 +79,30 @@ class Model_SalesInvoice extends Model_Invoice{
 	function approve(){
 		$this->createVoucher();
 		$this->setStatus('approved');
+	}
+
+	function cancel_page($p){
+		$transaction = $this->add('xAccount/Model_Transaction');
+		$form = $p->add('Form');
+		$form->addField('text','reason');
+
+		if($tr=$transaction->whoseRelatedDocIs($this)){
+			$form->addField('CheckBox','remove_related_transaction');
+		}
+
+		$form->addSubmit('Sure');
+		
+		if($form->isSubmitted()){
+			if($tr){
+				$tr->forceDelete();
+				$this->cancel();
+			}
+			return true;
+		}
+	}
+
+	function cancel(){
+			$this->setStatus('canceled',$form['reason']);
 	}
 
 	function mark_processed_page($p){
