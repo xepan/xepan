@@ -74,15 +74,9 @@ class Model_Quotation extends \Model_Document{
 		$config_model=$this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
 		
-
-		if($config_model['quotation_email_subject']){
-			$subject=$config_model['quotation_email_subject'];
-		}
-
-		if($config_model['quotation_email_body']){
-			$email_body=$config_model['quotation_email_body'];		
-		}
+		$subject = $config_model['quotation_email_subject']?:$this['name']." "."::"." "."Quotation";
 		
+		$email_body=$config_model['quotation_email_body']?:"Quotation Layout Is Empty";
 		
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);

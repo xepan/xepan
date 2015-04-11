@@ -48,7 +48,8 @@ class Model_Subscription extends \Model_Document {
 		$this->add('Controller_Validator');
 		$this->is(array(
 			'name|to_trim|to_alpha|len|>=3?Length must be more then 30 chars',
-			'email_id|email|unique?Email not perfact or already used'
+			'email|email',
+			'email|unique',
 			)
 		);
 
@@ -60,6 +61,10 @@ class Model_Subscription extends \Model_Document {
 	}
 
 	function beforeSave(){
+		if(!$this['name']){
+			$this['name']=$this['email'];
+		}				
+
 		if(!$this['ip']){
 			if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 			    $ip = $_SERVER['HTTP_CLIENT_IP'];

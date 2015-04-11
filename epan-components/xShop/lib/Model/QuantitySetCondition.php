@@ -15,7 +15,7 @@ class Model_QuantitySetCondition extends \Model_Table{
 		$this->hasOne('xShop/Item','item_id')->system(true);
 		// $this->addField('name'); // To give special name to a quantity Set Conditions.. leave empty to have qty value here too
 		$this->addHook('beforeSave',$this);
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){
