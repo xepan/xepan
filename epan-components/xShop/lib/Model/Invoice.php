@@ -171,6 +171,7 @@ class Model_Invoice extends \Model_Document{
 		// echo 'hello';
 		if($form->isSubmitted()){
 			$this->sendEmail($form['to'],$form['subject'],$form['message'],explode(',',$form['cc']),explode(',',$form['bcc']));	
+			$this->createActivity('email',$form['subject'],$form['message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
 		}
 		

@@ -262,12 +262,13 @@ class Model_Document extends SQL_Model{
 		$this->saveAs($this->getRootClass());
 	}
 
-	function createActivity($action,$subject,$message,$from=null,$from_id=null){
+	function createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null){
 		
 		if(!$from){
 			$from = 'Employee';
 			$from_id = $this->api->current_employee->id;
 		}
+
 
 		$new_activity = $this->add('xCRM/Model_Activity');
 		$new_activity['related_root_document_name'] = $this->root_document_name;
@@ -277,6 +278,12 @@ class Model_Document extends SQL_Model{
 		$new_activity['action'] = $action;
 		$new_activity['from']= $from;
 		$new_activity['from_id']= $from_id;
+		
+		if($to){
+			$new_activity['to']= $to;
+			$new_activity['to_id']= $to_id;
+		}
+
 		$new_activity['subject']= $subject;
 		$new_activity['message']= $message;
 
