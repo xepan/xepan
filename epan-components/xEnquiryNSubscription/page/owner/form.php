@@ -5,7 +5,7 @@ class page_xEnquiryNSubscription_page_owner_form extends page_xEnquiryNSubscript
 
 	function init(){
 		parent::init();
-
+		$this->app->title=$this->component_name .': Custom Forms';
 		$message_vp = $this->add('VirtualPage');
 		$message_vp->set(function($p){
 			$m=$p->add('xEnquiryNSubscription/Model_CustomFormEntry')->tryLoad($_GET['form_submission_id']);

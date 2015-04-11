@@ -352,6 +352,8 @@ class Model_Item extends \Model_Table{
 	}
 
 	function getAssociatedCustomFields($department_ids=null){
+		if(!$this->loaded())
+			return array();
 		$associate_customfields= $this->ref('xShop/ItemCustomFieldAssos');
 		$associate_customfields->addCondition('is_active',true);
 

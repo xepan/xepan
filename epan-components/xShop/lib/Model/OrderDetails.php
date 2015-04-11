@@ -77,7 +77,7 @@ class Model_OrderDetails extends \Model_Document{
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function beforeSave(){
+	function beforeSave(){		
 	}
 
 	function afterSave(){
@@ -113,35 +113,53 @@ class Model_OrderDetails extends \Model_Document{
 		return $this->add('xDispatch/Model_DispatchRequestItem')->addCondition('orderitem_id',$this->id)->tryLoadAny();
 	}
 
-	function jobCards($item_id=null,$department_id=null){
-		if($this->loaded())
-			$item_id = $this->id;
-		$jobCards = $this->add('xProduction/Model_JobCard')->addCondition('orderitem_id',$item_id);
+	function jobCards($department_id=null){
+		$job_cards=array();
+		$dept_status_all = $this->deptartmentalStatus();						
 		if($department_id)
-			$jobCards->addCondition('to_department_id',$department_id);
+			$dept_status_all->addCondition('department_id',$department_id);
+
+		foreach ($dept_status_all as $dept_status) {
+			$dept_status_dept=$dept_status->department();
+			$jc = $this->add($dept_status_dept['related_application_namespace'].'/Model_'.$dept_status_dept['jobcard_document']);
+			$jc->addCondition('orderitem_id',$this['id']);
+			$jc->addCondition('to_department_id',$dept_status_dept->id);
+			$jc->tryLoadAny();
+			$job_cards[] = $jc;
+		}
+
+		if($department_id){			
+			return $jc;
+		}
+
+		return $job_cards;
+
+
+		// if($this->loaded())
+		// 	$item_id = $this->id;
+		// $jobCards = $this->add('xProduction/Model_JobCard')->addCondition('orderitem_id',$item_id);
+		// if($department_id)
+		// 	$jobCards->addCondition('to_department_id',$department_id);
 		
-		$jobCards->tryLoadAny();
-		return $jobCards;
+		// $jobCards->tryLoadAny();
+		// return $jobCards;
 	}
 
 
 	function afterInsert($obj,$new_id){
 
 		//Add Item At Middle of Order Processing
-		$new_order_item = $this->add('xShop/Model_OrderDetails')->load($new_id);	
+		$new_order_item = $this->add('xShop/Model_OrderDetails')->load($new_id);
 		$order = $new_order_item->order();
-		$processing_order = $order->addCondition('status','<>',array('draft','submitted'));
-		$processing_order->tryLoadAny();
-
-		if($processing_order->loaded()){
+		if(in_array($order->get('status'), array('approved','processing','processed','redesign')) ){
 			$new_order_item->createDepartmentalAssociations();
 			if($department_association = $new_order_item->nextDeptStatus()){
 				$department_association->createJobCardFromOrder();
-			}
+			}			
 		}
 
-		if($processing_order['status'] == "processed"){
-			$processing_order->setStatus('processing','Due to New OrdreItem ( '.$new_order_item['name']." ) Add");
+		if($order['status'] == "processed"){
+			$order->setStatus('processing','Due to New OrdreItem ( '.$new_order_item['name']." ) Add");
 		}
 		//End of Jobcrad Creation at Middle======================================================
 
@@ -334,7 +352,7 @@ class Model_OrderDetails extends \Model_Document{
 			if($show_status and $department_asso['department'] != 'stockeffectcustomfield'){//Show Department Status and check for the department is stockeffect
 				$str .=" ( ".($department_asso['status']?:'Waiting')." )";
 				if($with_jobcard){
-					$jobcard_no = $this->jobCards(null,$department_asso['department_id'])->get('name')?:"Not Created";
+					$jobcard_no = $this->jobCards($department_asso['department_id'])->get('name')?:'Not Created';
 					$str.= "[ Jobcard : ".$jobcard_no." ]";
 				}
 			}

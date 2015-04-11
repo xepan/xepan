@@ -12,7 +12,7 @@ class page_xMarketingCampaign_page_owner_emailcontacts extends page_xMarketingCa
 		$other_email_by_other_apps_vp = $this->other_email_by_other_apps_vp();
 		$bounced_email_vp = $this->bounced_email_vp();
 
-		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-slideshare"></i> '.$this->component_name. '<small> Emails Data Management</small>');
+		$this->template->trySetHTML('page_title','<i class="fa fa-slideshare"></i> '.$this->component_name. '<small> Emails Data Management</small>');
 
 		$email_category_model = $this->add('xEnquiryNSubscription/Model_SubscriptionCategories');
 		$email_category_model->hasMany('xMarketingCampaign/DataSearchPhrase','subscription_category_id');
@@ -82,7 +82,7 @@ class page_xMarketingCampaign_page_owner_emailcontacts extends page_xMarketingCa
 
 		});
 
-		$crud = $this->app->layout->add('CRUD');
+		$crud = $this->add('CRUD');
 		$crud->setModel($email_category_model,array('name','is_active','total_phrases','un_grabbed_phrases','total_emails','grabbed_emails','emails_by_other_apps','bounced_emails'));
 
 		if(!$crud->isEditing()){
@@ -278,6 +278,13 @@ class page_xMarketingCampaign_page_owner_emailcontacts extends page_xMarketingCa
 			$grid->addPaginator(100);
 			$grid->addQuickSearch(array('subscriber'));
 			$grid->add_sno();
+
+			$grid->addMethod('format_weblink',function($g,$f){
+				preg_match_all("/@(.*)$/", $g->current_row[$f],$weblink);
+				// $g->current_row_html[$f] = print_r($weblink[1],true);
+				$g->current_row_html[$f]= '<a href="http://'.$weblink[1][0].'" target="_blank"> '.$g->current_row[$f].' </a>';
+			});
+			$grid->addFormatter('subscriber','weblink');
 
 		});	
 		return $total_assos_emails_vp;

@@ -31,10 +31,15 @@ class Model_ItemCustomFieldAssos extends \Model_Table{
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function beforeSave(){		
-		if(!$this['department_phase_id']){
-			throw $this->Exception('Department Cannot be Empty','ValidityCheck')->setField('department_phase_id');
+	function beforeSave(){
+		//Check customField is empty
+		if(!$this['can_effect_stock']){
+			if(!$this['department_phase_id'])
+				throw $this->Exception('Select Associated Department','ValidityCheck')->setField('department_phase_id');
 		}
+
+		if(!$this['customfield_id'])
+			throw $this->Exception('Select Any CustomField','ValidityCheck')->setField('customfield_id');
 
 		$old_model = $this->add('xShop/Model_ItemCustomFieldAssos');
 		
@@ -60,9 +65,6 @@ class Model_ItemCustomFieldAssos extends \Model_Table{
 			// 	}			
 			// }
 
-		//Check customField is empty
-		if(!$this['customfield_id'])
-			throw $this->Exception('Select Any CustomField','ValidityCheck')->setField('customfield_id');
 		
 	}
 

@@ -4,7 +4,7 @@ class page_xEnquiryNSubscription_page_owner_dashboard extends page_xEnquiryNSubs
 
 	function init(){
 		parent::init();
-
+		$this->app->title=$this->component_name .': Dashboard';
 		$total_emails =$this->add('xEnquiryNSubscription/Model_Subscription');
 		$dv = $this->app->layout->add('View_BackEndView',array('cols_widths'=>array(12)));
 		$mail=$total_emails->addCondition('from_app','xEnquiryNSubscription')->count()->getOne();		

@@ -31,7 +31,23 @@ class Model_Transaction extends \Model_Document{
 		$this->addField('Narration')->type('text');
 
 		$this->hasMany('xAccount/TransactionRow','transaction_id');
+
+		$this->addHook('beforeDelete',$this);
+
 		$this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeDelete(){
+		if($this->ref('xAccount/TransacionRow')->count()->getOne())
+			throw $this->exception('TRansaction Contains Rows, Cannot Delete','Growl');
+	}
+
+	function forceDelete(){
+		foreach ($this->ref('xAccount/TransacionRow') as $trrow) {
+			$trrow->delete();
+		}
+
+		$this->delete();
 	}
 	
 	function createNewTransaction($transaction_type, $related_document=false, $transaction_date=null, $Narration=null){

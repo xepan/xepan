@@ -6,6 +6,7 @@ class Model_Invoice_Approved extends Model_SalesInvoice{
 	public $actions=array(
 			'can_view'=>array(),
 			'allow_del'=>array(),
+			'can_cancel'=>array(),
 			'can_mark_processed'=>array(),
 			'can_send_via_email'=>array()
 		);
