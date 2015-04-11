@@ -31,9 +31,11 @@ class Model_PurchaseOrderItem extends \Model_Document{
 
 	}
 
-	function afterSave(){
-		$this['unit'] = $this->ref('item_id')->get('qty_unit');
-		$this->save();
+	function afterSave($obj){
+		if($this->loaded()){
+			$this['unit'] = $this->ref('item_id')->get('qty_unit');
+			$this->save();	
+		}
 	}
 
 	function item(){
@@ -56,7 +58,7 @@ class Model_PurchaseOrderItem extends \Model_Document{
 	}
 
 	function beforeSave(){
-
+		$item_id = $this['item_id'];
 		// validate custom field entries
 		$phase = $this->add('xHR/Model_Department')->loadStore();
 
@@ -69,7 +71,9 @@ class Model_PurchaseOrderItem extends \Model_Document{
 		}
 
 		// foreach ($phases_ids as $phase_id) {
-			$custom_fields_assos_ids = $this->ref('item_id')->getAssociatedCustomFields($phase->id);
+			$pur_itm = $this->add('xShop/Model_Item_Purchasable')->load($item_id);
+
+			$custom_fields_assos_ids = $pur_itm->getAssociatedCustomFields($phase->id);
 			foreach ($custom_fields_assos_ids as $cf_id) {
 				if(!isset($cust_field_array[$phase->id][$cf_id]) or $cust_field_array[$phase->id][$cf_id] == ''){
 					throw $this->exception('Custom Field Values not proper','Growl');
