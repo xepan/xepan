@@ -17,7 +17,7 @@ class Model_Invoice extends \Model_Document{
 		parent::init();
 		
 		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
-		$this->hasOne('xShop/Customer','customer_id')->sortable(true);
+		$this->hasOne('xShop/Customer','customer_id')->display(array('form'=>'autocomplete/Basic'))->caption('Customers')->sortable(true);
 		$this->hasOne('xPurchase/Supplier','supplier_id')->sortable(true);
 		$this->hasOne('xShop/Model_Order','sales_order_id');
 		$this->hasOne('xPurchase/Model_PurchaseOrder','po_id')->caption('Purchase Order');
@@ -43,6 +43,10 @@ class Model_Invoice extends \Model_Document{
 	
 	function afterSave(){
 		$this->updateAmounts();
+	}
+
+	function termAndCondition(){
+		return $this->ref('termsandcondition_id');
 	}
 
 	function updateAmounts(){
@@ -125,6 +129,8 @@ class Model_Invoice extends \Model_Document{
 		
 		$view=$this->add('xShop/View_InvoiceDetail');
 		$view->setModel($this->itemrows());
+		
+		$tnc=$this->termAndCondition();
 
 		$customer = $this->customer();
 		$customer_email=$customer->get('customer_email');
@@ -152,8 +158,8 @@ class Model_Invoice extends \Model_Document{
 		$email_body = str_replace("{{invoice_date}}", $this['created_at'], $email_body);
 		$email_body = str_replace("{{dispatch_challan_no}}", "", $email_body);
 		$email_body = str_replace("{{dispatch_challan_date}}", "", $email_body);
+		$email_body = str_replace("{{terms_an_conditions}}", $tnc['terms_and_condition']?"Terms & Condition.:<br>".$tnc['terms_and_condition']:" ", $email_body);
 		// $email_body = str_replace("{{dispatch_challan_date}}", $this['created_at'], $email_body);
-		// $email_body = str_replace("{{terms_and_condition}}", "", $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
 		// return;
 		$emails = explode(',', $customer['customer_email']);
@@ -166,11 +172,12 @@ class Model_Invoice extends \Model_Document{
 		$form->addField('line','cc')->set(implode(',',$emails));
 		$form->addField('line','bcc');
 		$form->addField('line','subject')->set($subject);
+		$form->addField('RichText','custom_message');
 		$form->add('View')->setHTML($email_body);
 		$form->addSubmit('Send');
-		// echo 'hello';
 		if($form->isSubmitted()){
-			$this->sendEmail($form['to'],$form['subject'],$form['message'],explode(',',$form['cc']),explode(',',$form['bcc']));	
+			$email_body .= $form['custom_message']."<br>".$email_body;
+			$this->sendEmail($form['to'],$form['subject'],$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));
 			$this->createActivity('email',$form['subject'],$form['message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
 		}
