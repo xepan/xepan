@@ -176,6 +176,19 @@ class Model_Document extends SQL_Model{
 		return $rt;
 	}
 
+	function whoseRelatedDocIs($document,$specific=false){
+		$this->addCondition('related_root_document_name',$document->root_document_name);
+		$this->addCondition('related_document_id',$document->id);
+		if($specific)
+			$this->addCondition('related_document_name',$document->document_name);
+
+		$this->tryLoadAny();
+
+		if($this->loaded()) return $this;
+
+		return false;
+	}
+
 	function relatedDocument($document=false,$root=true,$load_current_status=false){
 		if($document){
 			$this['related_document_id'] = $document->id;
