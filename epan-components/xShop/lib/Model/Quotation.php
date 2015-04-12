@@ -68,9 +68,8 @@ class Model_Quotation extends \Model_Document{
 		parent::setStatus('submitted');
 	}
 
-
 	function reject($message){
-		$this->setStatus('rejected');
+		$this->setStatus('redesign');
 	}
 	
 
