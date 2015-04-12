@@ -74,6 +74,8 @@ class Model_Document extends SQL_Model{
 		$this->addHook('afterInsert',array($this,'defaultAfterInsert'));
 		$this->addHook('afterLoad',array($this,'defaultAfterLoad'));
 
+		$this->addExpression('created_date')->set('DATE_FORMAT(created_at,"%Y-%m-%d")');
+		$this->addExpression('updated_date')->set('DATE_FORMAT(updated_at,"%Y-%m-%d")');
 	}
 
 
@@ -87,6 +89,7 @@ class Model_Document extends SQL_Model{
 		}else{
 			$this['item_name'] = $this['item'];
 		}
+		
 	}
 
 	function defaultBeforeSave(){

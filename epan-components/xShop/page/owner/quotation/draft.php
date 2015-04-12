@@ -13,7 +13,7 @@ class page_xShop_page_owner_quotation_draft extends page_xShop_page_owner_main{
 
 		$crud->add('xHR/Controller_Acl');
 
-		//$this->add('xShop/View_Quotation',array('quotation'=>$this->add('xShop/Model_Quotation')->load(3)));
+		// $this->add('xShop/View_Quotation',array('quotation'=>$this->add('xShop/Model_Quotation')->load(2)));
 		}
 
 	}
