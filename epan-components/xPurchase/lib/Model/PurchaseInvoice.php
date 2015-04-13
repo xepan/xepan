@@ -157,7 +157,7 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		$config_model=$this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
 		
-		$subject = $config_model['purchase_invoice_email_subject']?:$this['name']." "."::"." "."INVOICE";
+		$subject = $config_model['purchase_invoice_email_subject']?:"[ Invoice No.:".$this['name']." ]"." "."::"." "."PURCHASE INVOICE";
 		
 		$email_body=$config_model['purchase_invoice_email_body']?:"Purchase Invoice Layout Is Empty";
 		
@@ -175,10 +175,10 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		$email_body = str_replace("{{purchase_Order_date}}", $this['created_at'], $email_body);
 		$email_body = str_replace("{{terms_an_conditions}}", $tnc['terms_and_condition']?"<b>Terms & Condition.:</b><br>".$tnc['terms_and_condition']:" ", $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
-		echo $email_body;
-		return;
+		// echo $email_body;
+		// return;
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
-		$emails = explode(',', $supplier['supplier_email']);
+		$emails = explode(',', $supplier['email']);
 		
 		$form = $p->add('Form_Stacked');
 		$form->addField('line','to')->set($emails[0]);
@@ -193,7 +193,7 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		if($form->isSubmitted()){
 			$email_body .= $form['custom_message']."<br>".$email_body;
 			$this->sendEmail($form['to'],$form['subject'],$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));
-			$this->createActivity('email',$form['subject'],$form['message'],$from=null,$from_id=null, $to='supplier', $to_id=$supplier->id);
+			$this->createActivity('email',$form['subject'],$form['custom_message'],$from=null,$from_id=null, $to='supplier', $to_id=$supplier->id);
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
 		}
 	}
