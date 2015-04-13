@@ -1,8 +1,8 @@
 <?php
 
-namespace xShop;
+namespace xPurchase;
 
-class View_InvoiceDetail extends \CompleteLister{
+class View_PurchaseInvoiceDetail extends \CompleteLister{
 	public $sno=1;
 	public $show_price = false;
 	function init(){
@@ -43,7 +43,7 @@ class View_InvoiceDetail extends \CompleteLister{
 		        'js'=>'templates/js',
 		    )
 		);
-		return array('view/xShop-invoiceDetail');
+		return array('view/purchaseinvoiceDetail');
 	}
 
 }

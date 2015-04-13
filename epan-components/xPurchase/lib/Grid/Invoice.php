@@ -13,7 +13,7 @@ class Grid_Invoice extends \Grid{
 		});
 		
 		$this->vp_order = $this->add('VirtualPage')->set(function($p)use($self){
-			$p->api->stickyGET('Purchase_order_no_clicked');
+			$p->api->stickyGET('purchase_order_no_clicked');
 			$o = $p->add('xPurchase/Model_PurchaseOrder')->load($_GET['purchase_order_no_clicked']);
 			$order = $p->add('xPurchase/View_PurchaseOrder',array('purchaseorder'=>$o));
 			// $order->setModel($o);
@@ -28,8 +28,11 @@ class Grid_Invoice extends \Grid{
 		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Purchase Order '. $this->model['po'], $this->api->url($this->vp_order->getURL(),array('purchase_order_no_clicked'=>$this->model['po_id']))).'">'. $this->current_row[$field] ."</a>";
 	}
 	
-	function setModel($invoice_model){
-		$m=parent::setModel($invoice_model,array('name','amount','created_at','po','supplier'));
+	function setModel($invoice_model,$field=array()){
+		if(!$field)
+			$field = array('name','invoice_no','po','supplier','total_amount','discount','tax','net_amount');
+
+		$m=parent::setModel($invoice_model,$field);
 		 $this->addFormatter('name','view');
 		$this->addFormatter('po','orderview');
 		$this->addColumn('expander','items',array('page'=>'xShop_page_owner_invoice_items','descr'=>'Items'));
