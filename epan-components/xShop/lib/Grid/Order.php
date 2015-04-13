@@ -31,7 +31,7 @@ class Grid_Order extends \Grid {
 			$online = "<i class='fa fa-shopping-cart fa-2x'> </i>";
 		}
 
-		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Sale Order', $this->api->url($this->vp->getURL(),array('sales_order_clicked'=>$this->model->id))).'">'. $this->current_row[$field] . ' '. $online ."</a>";
+		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Sale Order', $this->api->url($this->vp->getURL(),array('sales_order_clicked'=>$this->model->id))).'">'. $this->current_row[$field] . ' '. $online."</a>".'<br><small style="color:gray;">'.$this->model['member']."</small>";
 	}
 
 	function setModel($model,$fields=null){
@@ -55,9 +55,10 @@ class Grid_Order extends \Grid {
 		$this->addFormatter('name','view');
 		$this->removeColumn('orderitem_count');
 		$this->removeColumn('order_from');
+		$this->removeColumn('member');
 
 		$this->addPaginator($this->ipp);
-		$this->addQuickSearch(array('order_id','order_from','on_date','discount_voucher'));
+		$this->addQuickSearch(array('name','net_amount'));
 		return $m;
 	}
 }
