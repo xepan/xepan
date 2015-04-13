@@ -4,6 +4,8 @@ namespace xShop;
 
 class Grid_Order extends \Grid {
 	public $vp;
+	public $ipp=100;
+
 	function init(){
 		parent::init();
 		$self = $this;
@@ -54,7 +56,7 @@ class Grid_Order extends \Grid {
 		$this->removeColumn('orderitem_count');
 		$this->removeColumn('order_from');
 
-		$this->addPaginator(100);
+		$this->addPaginator($this->ipp);
 		$this->addQuickSearch(array('order_id','order_from','on_date','discount_voucher'));
 		return $m;
 	}
