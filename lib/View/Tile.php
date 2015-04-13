@@ -15,7 +15,13 @@ class View_Tile extends View {
 		$this->template->trySetHTML('Content',$content);
 	}
 
+	function setFooter($text,$icon=null){
+		$html = '<i class="'.$icon.'">'.$text.'</i>';
+		$this->template->trySetHTML('footer',$html);
+	}
+
 	function defaultTemplate(){
 		return array('view/tile');
 	}
+
 }
