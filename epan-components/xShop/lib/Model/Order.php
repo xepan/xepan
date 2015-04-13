@@ -263,6 +263,10 @@ class Model_Order extends \Model_Document{
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
+		$print_order = $this->add('xShop/View_PrintOrder');
+		$print_order->setModel($this);
+		$order_detail = $print_order->getHTML(false);
+
 		$customer = $this->customer();
 		$customer_email=$customer->get('customer_email');
 
@@ -275,16 +279,42 @@ class Model_Order extends \Model_Document{
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name']?"<small> Mr/Mrs.</small> <b>".$customer['customer_name']."</b><br>":" ", $email_body);
 		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number']?"Contact No.:".$customer['mobile_number']:" ", $email_body);
+		$email_body = str_replace("{{customer_email}}", $customer['customer_email']?"E-mail id:".$customer['customer_email']:" ", $email_body);
 		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address']?"Billing Addess.:".$customer['billing_address']:" ", $email_body);
 		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address']?"Shipping Addess.:".$customer['shipping_address']:" ", $email_body);
-		$email_body = str_replace("{{customer_email}}", $customer['customer_email']?"Email.:".$customer['customer_email']:" ", $email_body);
 		$email_body = str_replace("{{customer_tin_no}}", $customer['tin_no'], $email_body);
 		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no'], $email_body);
 		$email_body = str_replace("{{order_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{Order_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{order_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{order_details}}", $order_detail, $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
-		$this->sendEmail($customer_email,$subject,$email_body);
+		$emails = explode(',', $customer['customer_email']);
 		
+		$form = $p->add('Form_Stacked');
+		$form->addField('line','to')->set($emails[0]);
+		// array_pop(array_re/verse($emails));
+		unset($emails[0]);
+
+		$form->addField('line','cc')->set(implode(',',$emails));
+		$form->addField('line','bcc');
+		$form->addField('line','subject')->set($subject);
+		$form->addField('RichText','custom_message');
+		$form->add('View')->setHTML($email_body);
+		$form->addSubmit('Send');
+		if($form->isSubmitted()){
+
+			$ccs=$bccs = array();
+			if($form['cc'])
+				$ccs = explode(',',$form['cc']);
+
+			if($form['bcc'])
+				$bccs = explode(',',$form['bcc']);
+
+			$email_body .= $form['custom_message']."<br>".$email_body;
+			$this->sendEmail($form['to'],$form['subject'],$email_body,$ccs,$bccs);
+			$this->createActivity('email',$form['subject'],$form['custom_message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
+			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
+		}			
 	}
 
 	function isFromOnline(){
