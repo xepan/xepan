@@ -47,7 +47,7 @@ class Model_Subscription extends \Model_Document {
 
 		$this->add('Controller_Validator');
 		$this->is(array(
-			'name|to_trim|to_alpha|len|>=3?Length must be more then 30 chars',
+			'name|to_trim',
 			'email|email',
 			'email|unique',
 			)
