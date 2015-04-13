@@ -3,7 +3,7 @@
 namespace developerZone;
 
 class Model_Attribute extends \SQL_Model{
-	public $table ="developerZone_entity_attributes";
+	public $table ="developerzone_entity_attributes";
 
 	function init(){
 		parent::init();

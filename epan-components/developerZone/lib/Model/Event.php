@@ -3,7 +3,7 @@
 namespace developerZone;
 
 class Model_Event extends \SQL_Model{
-	public $table ="developerZone_events";
+	public $table ="developerzone_events";
 
 	function init(){
 		parent::init();

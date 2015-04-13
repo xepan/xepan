@@ -2,7 +2,7 @@
 namespace slideShows;
 
 class Model_ThumbnailSliderImages extends \Model_Table {
-	var $table= "slideShows_thumbnailsliderimages";
+	var $table= "slideshows_thumbnailsliderimages";
 	function init(){
 		parent::init();
 

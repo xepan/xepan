@@ -2,7 +2,7 @@
 namespace xEnquiryNSubscription;
 
 class Model_CustomFormEntry extends \Model_Table {
-	var $table= "xEnquiryNSubscription_customformentry";
+	var $table= "xenquirynsubscription_customformentry";
 	function init(){
 		parent::init();
 		$this->hasOne('Epan','epan_id');

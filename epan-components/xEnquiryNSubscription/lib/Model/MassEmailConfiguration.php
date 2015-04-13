@@ -1,7 +1,7 @@
 <?php
 namespace xEnquiryNSubscription;
 class Model_MassEmailConfiguration extends \Model_Table{
-	var $table="xEnquiryNSubscription_massemailconfiguration";
+	var $table="xenquirynsubscription_massemailconfiguration";
 	function init(){
 		parent::init();
 

@@ -4,7 +4,7 @@ namespace xEnquiryNSubscription;
 
 
 class Model_EmailJobs extends \Model_Table {
-	public $table ='xEnquiryNSubscription_EmailJobs';
+	public $table ='xenquirynsubscription_emailjobs';
 	public $mailer_object=null;
 
 	function init(){

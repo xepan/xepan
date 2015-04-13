@@ -3,7 +3,7 @@
 namespace developerZone;
 
 class Model_Port extends \SQL_Model{
-	public $table = "developerZone_method_node_ports";
+	public $table = "developerzone_method_node_ports";
 
 	function init(){
 		parent::init();

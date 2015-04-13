@@ -3,7 +3,7 @@
 namespace xMarketingCampaign;
 
 class Model_SocialPostCategory extends \Model_Table {
-	public $table="xMarketingCampaign_SocialPost_Categories";
+	public $table="xmarketingcampaign_socialpost_categories";
 
 	function init(){
 		parent::init();

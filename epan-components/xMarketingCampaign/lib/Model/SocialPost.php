@@ -3,7 +3,7 @@
 namespace xMarketingCampaign;
 
 class Model_SocialPost extends \Model_Table {
-	public $table ="xMarketingCampaign_SocialPosts";
+	public $table ="xmarketingcampaign_socialposts";
 	
 	function init(){
 		parent::init();
@@ -67,7 +67,7 @@ class Model_SocialPost extends \Model_Table {
 
     	$this->addExpression('total_comments')->set(function($m,$q){
     		$act_m = $m->add('xMarketingCampaign/Model_Activity',array('table_alias'=>'temp'));
-    		$posting_j = $act_m->join('xMarketingCampaign_SocialPostings','posting_id');
+    		$posting_j = $act_m->join('xmarketingcampaign_socialpostings','posting_id');
     		$posting_j->addField('post_id');
 
     		$act_m->addCondition('post_id',$q->getField('id'));
@@ -77,7 +77,7 @@ class Model_SocialPost extends \Model_Table {
 
     	$this->addExpression('unread_comment')->set(function($m,$q){
     		$act_m = $m->add('xMarketingCampaign/Model_Activity',array('table_alias'=>'temp'));
-    		$posting_j = $act_m->join('xMarketingCampaign_SocialPostings','posting_id');
+    		$posting_j = $act_m->join('xmarketingcampaign_socialpostings','posting_id');
     		$posting_j->addField('post_id');
     		$act_m->addCondition('post_id',$q->getField('id'));	
     		
@@ -89,7 +89,7 @@ class Model_SocialPost extends \Model_Table {
     	$this->hasMany('xMarketingCampaign/SocialPosting','post_id');
     	$this->hasMany('xMarketingCampaign/CampaignSocialPost','socialpost_id');
     	$this->addHook('beforeDelete',$this);
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

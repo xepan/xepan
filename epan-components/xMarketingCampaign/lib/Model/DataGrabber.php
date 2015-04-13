@@ -3,7 +3,7 @@
 namespace xMarketingCampaign;
 
 class Model_DataGrabber extends \Model_Table{
-	public $table='xMarketingCampaign_data_grabber';
+	public $table='xmarketingcampaign_data_grabber';
 
 	function init(){
 		parent::init();

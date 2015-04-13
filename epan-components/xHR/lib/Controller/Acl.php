@@ -616,20 +616,9 @@ class Controller_Acl extends \AbstractController {
 
 		$new_docs_q = clone $doc->_dsql();
 		
-		$new_docs_q->where('updated_at','>',$current_lastseen['seen_till']?:'1970-01-01');
+		$new_docs_q->where($new_docs_q->getField('updated_at'),'>',$current_lastseen['seen_till']?:'1970-01-01');
 		$new_doc_count = $new_docs_q->del('fields')->field('count(*)')->getOne();
 		
-		$total_docs_q= clone $doc->_dsql();
-		$total_doc_count = $total_docs_q->del('fields')->field('count(*)')->getOne();
-
-		if($string and !$new_only){
-			$out="";
-			if($new_doc_count)
-				$out .= "<span class='label label-danger'>$new_doc_count</span>";
-			if($total_doc_count)
-				$out .= "<span class='label label-default'>$total_doc_count</span>";
-			return $out;
-		}
 
 		if($string and $new_only){
 			if($new_doc_count)
@@ -641,6 +630,19 @@ class Controller_Acl extends \AbstractController {
 		if(!$string and $new_only){
 			return $new_doc_count;
 		}
+
+		$total_docs_q= clone $doc->_dsql();
+		$total_doc_count = $total_docs_q->del('fields')->field('count(*)')->getOne();
+		
+		if($string and !$new_only){
+			$out="";
+			if($new_doc_count)
+				$out .= "<span class='label label-danger'>$new_doc_count</span>";
+			if($total_doc_count)
+				$out .= "<span class='label label-default'>$total_doc_count</span>";
+			return $out;
+		}
+
 
 		return array('new'=>$new_doc_count,'total'=>$total_doc_count);
 

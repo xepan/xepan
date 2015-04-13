@@ -87,10 +87,10 @@ INSERT INTO `branch` (`id`, `name`, `points`, `owner_name`, `mobile_number`, `ad
 -- --------------------------------------------------------
 
 --
--- Table structure for table `developerZone_editor_tools`
+-- Table structure for table `developerzone_editor_tools`
 --
 
-CREATE TABLE IF NOT EXISTS `developerZone_editor_tools` (
+CREATE TABLE IF NOT EXISTS `developerzone_editor_tools` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -108,10 +108,10 @@ CREATE TABLE IF NOT EXISTS `developerZone_editor_tools` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
--- Dumping data for table `developerZone_editor_tools`
+-- Dumping data for table `developerzone_editor_tools`
 --
 
-INSERT INTO `developerZone_editor_tools` (`id`, `category`, `name`, `template`, `is_output_multibranch`, `special_php_handler`, `icon`, `order`, `type`, `instance_ports`, `is_for_editor`, `js_widget`, `can_add_ports`) VALUES
+INSERT INTO `developerzone_editor_tools` (`id`, `category`, `name`, `template`, `is_output_multibranch`, `special_php_handler`, `icon`, `order`, `type`, `instance_ports`, `is_for_editor`, `js_widget`, `can_add_ports`) VALUES
 (1, 'General', 'Code Block', '// _name_  \\n \\t _code_  \\n\\t  // _name_', NULL, NULL, 'fa fa-users fa-2x', NULL, 'Process', '[]', 1, 'CodeBlock', 1),
 (3, 'General', 'ConnectorPort', NULL, NULL, NULL, 'port fa fa-play ', NULL, 'in-out', NULL, 0, 'Port', 0),
 (5, 'General', 'A>B ?', 'if( _port_A_ > _port_B) {\\n \\t _branch_true_code_ \\n\\t} else  { \\n\\t  _branch_false_code \\n\\t}', NULL, 'If', 'fa fa-cog fa-2x', NULL, 'PHPFunc', '[{"type":"DATA-IN","name":"A","mandatory":"YES","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"B","mandatory":"YES","caption":"","is_singlaton":"YES"},{"type":"DATA-OUT","name":"true","creates_block":"TRUE_BLOCK","caption":""},{"type":"DATA-OUT","name":"false","creates_block":"FALSE_BLOCK","caption":""}]', 0, 'Node', 0),
@@ -122,10 +122,10 @@ INSERT INTO `developerZone_editor_tools` (`id`, `category`, `name`, `template`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `developerZone_entities`
+-- Table structure for table `developerzone_entities`
 --
 
-CREATE TABLE IF NOT EXISTS `developerZone_entities` (
+CREATE TABLE IF NOT EXISTS `developerzone_entities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `component_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -144,10 +144,10 @@ CREATE TABLE IF NOT EXISTS `developerZone_entities` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
 
 --
--- Dumping data for table `developerZone_entities`
+-- Dumping data for table `developerzone_entities`
 --
 
-INSERT INTO `developerZone_entities` (`id`, `component_id`, `name`, `type`, `table_name`, `parent_class`, `owner_id`, `is_class`, `instance_ports`, `is_framework_class`, `js_widget`, `css_class`, `code_structure`) VALUES
+INSERT INTO `developerzone_entities` (`id`, `component_id`, `name`, `type`, `table_name`, `parent_class`, `owner_id`, `is_class`, `instance_ports`, `is_framework_class`, `js_widget`, `css_class`, `code_structure`) VALUES
 (1, NULL, 'AbstractObject', 'Object', NULL, NULL, NULL, 1, '[{"type":"DATA-IN","name":"owner","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"options","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"spot","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"template","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-OUT","name":"object","creates_block":"NO","caption":""}]', 0, 'Node', NULL, '{"name":"init","class":"View","attributes":[],"Method":[{"name":"destroy","uuid":"1","type":"Method","Ports":{"1":{"type":"In","name":"recursive","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"true"}},"Nodes":[],"Connections":[],"left":62,"top":51,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"removeElement","uuid":"4","type":"Method","Ports":{"1":{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":312,"top":20,"width":214,"height":157,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"getElement","uuid":"8","type":"Method","Ports":{"1":{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":599,"top":21,"width":255,"height":137,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"hasElement","uuid":"12","type":"Method","Ports":{"1":{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":20,"top":195,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"rename","uuid":"16","type":"Method","Ports":{"1":{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":276,"top":195,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"setModel","uuid":"20","type":"Method","Ports":{"1":{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"Out","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":540,"top":199,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"memorize","uuid":"28","type":"Method","Ports":{"1":{"type":"In","name":"key","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"value","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"3":{"type":"Out","name":"value","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":27,"top":336,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"recall","uuid":"47","type":"Method","Ports":{"1":{"type":"In","name":"key","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"default","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":296,"top":333,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"}],"id":"1"}'),
 (2, NULL, 'Test', 'View', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, '{"name":"init","class":"View","attributes":[],"Method":[{"name":"init","uuid":"1","type":"Method","Ports":[],"Nodes":[{"name":"1.1","uuid":"3","type":"PHPFunc","js_widget":"Node","Ports":[{"uuid":"4","type":"in-out","name":"Flow","left":0,"top":0,"creates_block":false},{"type":"DATA-OUT","name":"value","creates_block":"NO","caption":"","uuid":"5"}],"Nodes":[],"Connections":[],"top":29,"left":35,"width":100,"height":50,"tool_id":6,"ports_obj":[]},{"name":"2.2","uuid":"6","type":"PHPFunc","js_widget":"Node","Ports":[{"uuid":"7","type":"in-out","name":"Flow","left":0,"top":0,"creates_block":false},{"type":"DATA-OUT","name":"value","creates_block":"NO","caption":"","uuid":"8"}],"Nodes":[],"Connections":[],"top":147,"left":41,"width":100,"height":50,"tool_id":6,"ports_obj":[]},{"name":"ABCD","uuid":"9","type":"PHPFunc","js_widget":"Node","Ports":[{"uuid":"10","type":"in-out","name":"Flow","left":0,"top":0,"creates_block":false},{"type":"DATA-IN","name":"A","mandatory":"YES","caption":"","is_singlaton":"YES","uuid":"11"},{"type":"DATA-IN","name":"B","mandatory":"YES","caption":"","is_singlaton":"YES","uuid":"12"},{"type":"DATA-OUT","name":"true","creates_block":"TRUE_BLOCK","caption":"","uuid":"13"},{"type":"DATA-OUT","name":"false","creates_block":"FALSE_BLOCK","caption":"","uuid":"14"}],"Nodes":[],"Connections":[],"top":29,"left":230,"width":119,"height":94,"tool_id":5,"ports_obj":[]},{"name":"Variable","uuid":"15","type":"PHPFunc","js_widget":"Node","Ports":[{"uuid":"16","type":"in-out","name":"Flow","left":0,"top":0,"creates_block":false},{"type":"DATA-OUT","name":"value","creates_block":"NO","caption":"","uuid":"17"}],"Nodes":[],"Connections":[],"top":20,"left":414,"width":100,"height":50,"tool_id":6,"ports_obj":[]},{"name":"Variable","uuid":"18","type":"PHPFunc","js_widget":"Node","Ports":[{"uuid":"19","type":"in-out","name":"Flow","left":0,"top":0,"creates_block":false},{"type":"DATA-OUT","name":"value","creates_block":"NO","caption":"","uuid":"20"}],"Nodes":[],"Connections":[],"top":119,"left":420,"width":79,"height":39,"tool_id":6,"ports_obj":[]},{"name":"Variable","uuid":"21","type":"PHPFunc","js_widget":"Node","Ports":[{"uuid":"22","type":"in-out","name":"Flow","left":0,"top":0,"creates_block":false},{"type":"DATA-OUT","name":"value","creates_block":"NO","caption":"","uuid":"23"}],"Nodes":[],"Connections":[],"top":61,"left":588.00001525879,"width":100,"height":50,"tool_id":6,"ports_obj":[]},{"name":"AbstractObject","uuid":"29","type":"Object","js_widget":"Node","Ports":[{"uuid":"30","type":"in-out","name":"Flow","left":0,"top":0,"creates_block":false},{"type":"DATA-IN","name":"owner","mandatory":"NO","caption":"","is_singlaton":"YES","uuid":"31"},{"type":"DATA-IN","name":"options","mandatory":"NO","caption":"","is_singlaton":"YES","uuid":"32"},{"type":"DATA-IN","name":"spot","mandatory":"NO","caption":"","is_singlaton":"YES","uuid":"33"},{"type":"DATA-IN","name":"template","mandatory":"NO","caption":"","is_singlaton":"YES","uuid":"34"},{"type":"DATA-OUT","name":"object","creates_block":"NO","caption":"","uuid":"35"}],"Nodes":[],"Connections":[],"top":195,"left":586,"width":135,"height":61,"entity_id":1,"is_framework_class":0,"css_class":"","ports_obj":[]},{"name":"Process","uuid":"44","type":"Process","Ports":[{"uuid":"45","type":"in-out","name":"Flow","left":0,"top":0,"width":0,"height":0,"creates_block":false},{"uuid":"46","type":"in-out","name":"sadsad","mandatory":false,"is_singlaton":false,"left":0,"top":0,"creates_block":false,"default_value":""}],"Nodes":[{"name":"Variable","uuid":"47","type":"PHPFunc","js_widget":"Node","Ports":[{"uuid":"48","type":"in-out","name":"Flow","left":0,"top":0,"creates_block":false},{"type":"DATA-OUT","name":"value","creates_block":"NO","caption":"","uuid":"49"}],"Nodes":[],"Connections":[],"top":33,"left":40,"width":100,"height":50,"tool_id":6,"ports_obj":[]}],"Connections":[],"left":57,"top":263,"width":265,"height":158,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"setModel","uuid":"36","type":"PHPFunc","js_widget":"MethodCall","Ports":[{"type":"DATA-IN","name":"obj\\/this","mandatory":"NO","caption":"","is_singlaton":"NO","uuid":"37"},{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"","uuid":"50"},{"type":"Out","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"","uuid":"51"}],"Nodes":[],"Connections":[],"top":322,"left":450,"width":267,"height":96,"tool_id":8,"ports_obj":[],"method_list":{"setModel":[{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"","uuid":"50"},{"type":"Out","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"","uuid":"51"}],"memorize":[{"type":"In","name":"key","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"","uuid":"52"},{"type":"In","name":"value","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"","uuid":"53"},{"type":"Out","name":"value","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"","uuid":"54"}],"recall":[{"type":"In","name":"key","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"default","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}],"getElement":[{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}],"hasElement":[{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}],"rename":[{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}],"destroy":[{"type":"In","name":"recursive","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"true"}],"removeElement":[{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]}},{"name":"Variable","uuid":"40","type":"PHPFunc","js_widget":"Node","Ports":[{"uuid":"41","type":"in-out","name":"Flow","left":0,"top":0,"creates_block":false},{"type":"DATA-OUT","name":"value","creates_block":"NO","caption":"","uuid":"42"}],"Nodes":[],"Connections":[],"top":424,"left":757,"width":100,"height":50,"tool_id":6,"ports_obj":[]}],"Connections":[{"sourceId":"xxep_5","sourceParentId":"3","targetId":"xxep_11","taggetParentId":"9"},{"sourceId":"xxep_8","sourceParentId":"6","targetId":"xxep_12","taggetParentId":"9"},{"sourceId":"xxep_14","sourceParentId":"9","targetId":"xxep_16","taggetParentId":"15"},{"sourceId":"xxep_13","sourceParentId":"9","targetId":"xxep_19","taggetParentId":"18"},{"sourceId":"xxep_17","sourceParentId":"15","targetId":"xxep_22","taggetParentId":"21"},{"sourceId":"xxep_20","sourceParentId":"18","targetId":"xxep_22","taggetParentId":"21"},{"sourceId":"xxep_35","sourceParentId":"29","targetId":"xxep_41","taggetParentId":"40"},{"sourceId":"xxep_23","sourceParentId":"21","targetId":"xxep_30","taggetParentId":"29"},{"sourceId":"xxep_49","sourceParentId":"47","targetId":"xxep_46","taggetParentId":"44"},{"sourceId":"xxep_35","sourceParentId":"29","targetId":"xxep_37","taggetParentId":"36"}],"left":23,"top":65.5,"width":987,"height":559,"ports_obj":[],"js_widget":"CodeBlock"}],"id":"2"}'),
 (3, NULL, 'AbstractView', 'Object', NULL, NULL, 1, 1, '[{"type":"DATA-IN","name":"owner","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"options","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"spot","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"template","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-OUT","name":"object","creates_block":"NO","caption":""}]', 0, 'Node', 'Node', '{"name":"init","class":"View","attributes":[],"Method":[{"name":"setModel","uuid":"1","type":"Method","Ports":[{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"actual_fields","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}],"Nodes":[],"Connections":[],"left":31.16667175293,"top":20,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"getHTML","uuid":"9","type":"Method","Ports":{"1":{"type":"In","name":"destroy","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"true"},"2":{"type":"In","name":"execute_js","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"true"},"3":{"type":"Out","name":"html","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":330.58334350586,"top":20,"width":213,"height":127,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"js","uuid":"14","type":"Method","Ports":{"1":{"type":"In","name":"when","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"2":{"type":"In","name":"code","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"In","name":"instance","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"4":{"type":"Out","name":"jQuery_Chain","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":613.69998168945,"top":20,"width":244,"height":138,"ports_obj":[],"js_widget":"CodeBlock"}],"id":"3"}'),
@@ -159,7 +159,7 @@ INSERT INTO `developerZone_entities` (`id`, `component_id`, `name`, `type`, `tab
 (9, NULL, 'Lister', 'Object', NULL, NULL, 7, 1, '[{"type":"DATA-IN","name":"owner","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"options","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"spot","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"template","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-OUT","name":"object","creates_block":"NO","caption":""}]', 0, 'Node', 'Node', '{"name":"init","class":"View","attributes":[],"Method":[{"name":"setSource","uuid":"1","type":"Method","Ports":{"1":{"type":"In","name":"source","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"fields","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":45,"top":52,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"}],"id":"9"}'),
 (10, NULL, 'Form_Basic', 'Object', NULL, NULL, 7, 1, '[{"type":"DATA-IN","name":"owner","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"options","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"spot","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"template","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-OUT","name":"object","creates_block":"NO","caption":""}]', 0, 'Node', 'Node', '{"name":"init","class":"View","attributes":[],"Method":[{"name":"addField","uuid":"1","type":"Method","Ports":{"1":{"type":"In","name":"type","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"options","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"In","name":"caption","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"4":{"type":"In","name":"attr","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"5":{"type":"Out","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":264,"top":20,"width":200,"height":101,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"set","uuid":"6","type":"Method","Ports":{"1":{"type":"In","name":"field_or_array","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"value","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"undefined"},"3":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":506,"top":22,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"getAllFields","uuid":"11","type":"Method","Ports":{"1":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":79,"top":297,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"addSubmit","uuid":"14","type":"Method","Ports":{"1":{"type":"In","name":"label","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Save"},"2":{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"Out","name":"submit","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":652,"top":133,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"addButton","uuid":"19","type":"Method","Ports":{"1":{"type":"In","name":"label","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Button"},"2":{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"Out","name":"button","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":344,"top":295,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"update","uuid":"24","type":"Method","Ports":{"1":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":637,"top":368,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"save","uuid":"27","type":"Method","Ports":{"1":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":284,"top":441,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"submitted","uuid":"30","type":"Method","Ports":{"1":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":20,"top":175,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"isSubmitted","uuid":"33","type":"Method","Ports":{"1":{"type":"Out","name":"result","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":29,"top":452,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"onSubmit","uuid":"36","type":"Method","Ports":{"1":{"type":"In","name":"callback","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":548,"top":495,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"hasField","uuid":"39","type":"Method","Ports":{"1":{"type":"In","name":"","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"3":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":20,"top":21,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"isClicked","uuid":"43","type":"Method","Ports":{"1":{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":628,"top":250,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"addClass","uuid":"47","type":"Method","Ports":{"1":{"type":"Out","name":"$_POST","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":255,"top":150,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"}],"id":"10"}'),
 (11, NULL, 'Menu_Advanced', 'Object', NULL, NULL, 7, 1, '[{"type":"DATA-IN","name":"owner","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"options","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"spot","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"template","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-OUT","name":"object","creates_block":"NO","caption":""}]', 0, 'Node', 'Node', '{"name":"init","class":"View","attributes":[],"Method":[{"name":"addTitle","uuid":"1","type":"Method","Ports":{"1":{"type":"In","name":"title","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Menu_Advanced_Title"},"3":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":32,"top":47,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"addItem","uuid":"6","type":"Method","Ports":{"1":{"type":"In","name":"title","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"action","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Menu_Advanced_Item"},"4":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":295,"top":29,"width":224,"height":144,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"addMenu","uuid":"12","type":"Method","Ports":{"1":{"type":"In","name":"title","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"In","name":"options","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"array()"},"4":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":582,"top":46,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"addMenuItem","uuid":"18","type":"Method","Ports":{"1":{"type":"In","name":"page","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"label","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":61,"top":213,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"}],"id":"11"}');
-INSERT INTO `developerZone_entities` (`id`, `component_id`, `name`, `type`, `table_name`, `parent_class`, `owner_id`, `is_class`, `instance_ports`, `is_framework_class`, `js_widget`, `css_class`, `code_structure`) VALUES
+INSERT INTO `developerzone_entities` (`id`, `component_id`, `name`, `type`, `table_name`, `parent_class`, `owner_id`, `is_class`, `instance_ports`, `is_framework_class`, `js_widget`, `css_class`, `code_structure`) VALUES
 (12, NULL, 'View_Columns', 'Object', NULL, NULL, 7, 1, '[{"type":"DATA-IN","name":"owner","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"options","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"spot","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"template","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-OUT","name":"object","creates_block":"NO","caption":""}]', 0, 'Node', 'Node', '{"name":"init","class":"View","attributes":[],"Method":[{"name":"addColumn","uuid":"1","type":"Method","Ports":{"1":{"type":"In","name":"width","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"auto"},"2":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":52,"top":46,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"}],"id":"12"}'),
 (13, NULL, 'SQL_Model', 'Object', NULL, NULL, 8, 1, '[{"type":"DATA-IN","name":"owner","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"options","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"spot","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"template","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-OUT","name":"object","creates_block":"NO","caption":""}]', 0, 'Node', 'Node', '{"name":"init","class":"View","attributes":[],"Method":[{"name":"addField","uuid":"1","type":"Method","Ports":{"1":{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"actual_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":20,"top":20,"width":159,"height":66,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"_dsql","uuid":"6","type":"Method","Ports":{"1":{"type":"Out","name":"dsql","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":312.35000610352,"top":20,"width":151,"height":70,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"dsql","uuid":"9","type":"Method","Ports":{"1":{"type":"Out","name":"_dsql","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":599.46670532227,"top":20,"width":166,"height":76,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"selectQuery","uuid":"12","type":"Method","Ports":{"1":{"type":"In","name":"fields","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"2":{"type":"Out","name":"_selectQuery","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":20,"top":95.16667175293,"width":116,"height":84,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"fieldQuery","uuid":"21","type":"Method","Ports":{"1":{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"Out","name":"query","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":200.93333435059,"top":88.933334350586,"width":120,"height":92,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"titleQuery","uuid":"25","type":"Method","Ports":{"1":{"type":"Out","name":"query","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":795.11666870117,"top":20,"width":162,"height":82,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"addExpression","uuid":"28","type":"Method","Ports":{"1":{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"expression","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"Out","name":"expression","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":54.466674804688,"top":193.93334960938,"width":128,"height":71,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"join","uuid":"33","type":"Method","Ports":{"1":{"type":"In","name":"foreign_table","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"master_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"In","name":"join_kind","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"4":{"type":"In","name":"$_foreign_alias","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"5":{"type":"In","name":"relation","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"6":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":577.75003051758,"top":116.63333129883,"width":160,"height":79,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"leftJoin","uuid":"47","type":"Method","Ports":{"1":{"type":"In","name":"foreign_table","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"master_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"In","name":"join_kind","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"4":{"type":"In","name":"_foreign_alias","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"5":{"type":"In","name":"relation","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"6":{"type":"Out","name":"join","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":406.16665649414,"top":100.16667175293,"width":145,"height":88,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"hasOne","uuid":"55","type":"Method","Ports":{"1":{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"our_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"In","name":"display_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"4":{"type":"In","name":"as_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"5":{"type":"Out","name":"Field_Reference","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":44.050003051758,"top":262.04998779297,"width":140,"height":81,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"hasMany","uuid":"62","type":"Method","Ports":{"1":{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"their_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"In","name":"our_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"4":{"type":"In","name":"as_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"5":{"type":"Out","name":"SQL_Many","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":464.05001831055,"top":208.04998779297,"width":138,"height":98,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"ref","uuid":"69","type":"Method","Ports":{"1":{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"load","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":801.58334350586,"top":127.58331298828,"width":152,"height":69,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"refSQL","uuid":"74","type":"Method","Ports":{"1":{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":264.46667480469,"top":195.46667480469,"width":129,"height":88,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"getRef","uuid":"83","type":"Method","Ports":{"1":{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"load","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"3":{"type":"Out","name":"ref (name, load )","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":462.70001220703,"top":347.70001220703,"width":153,"height":73,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"addCondition","uuid":"88","type":"Method","Ports":{"1":{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"3":{"type":"In","name":"cond","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"undefined"},"4":{"type":"In","name":"value","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"undefined"},"5":{"type":"In","name":"dsql","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"}},"Nodes":[],"Connections":[],"left":683.05001831055,"top":224.04998779297,"width":135,"height":78,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"sum","uuid":"95","type":"Method","Ports":{"1":{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"Out","name":"dsql","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":137.46667480469,"top":349.46667480469,"width":171,"height":88,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"_load","uuid":"99","type":"Method","Ports":{"1":{"type":"In","name":"id","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"ignore_missing","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"false"},"3":{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":720.9333190918,"top":347.93334960938,"width":124,"height":67,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"loadData","uuid":"104","type":"Method","Ports":{"1":{"type":"In","name":"id","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"2":{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":42.466674804688,"top":437.46667480469,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"saveAndUnload","uuid":"108","type":"Method","Ports":{"1":{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":365.35000610352,"top":447.34997558594,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"update","uuid":"111","type":"Method","Ports":{"1":{"type":"In","name":"data","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"array"},"2":{"type":"Out","name":"save","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":693.58334350586,"top":458.58331298828,"width":123,"height":67,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"tryDelete","uuid":"115","type":"Method","Ports":{"1":{"type":"In","name":"id","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},"2":{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":638.23330688477,"top":544.23333740234,"width":109,"height":59,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"setActualFields","uuid":"119","type":"Method","Ports":{"1":{"type":"In","name":"array","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"In","name":"fields","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"3":{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":271.46667480469,"top":557.46667480469,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"}],"id":"13"}'),
 (14, NULL, 'View_Box', 'Object', NULL, NULL, 7, 1, '[{"type":"DATA-IN","name":"owner","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"options","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"spot","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-IN","name":"template","mandatory":"NO","caption":"","is_singlaton":"YES"},{"type":"DATA-OUT","name":"object","creates_block":"NO","caption":""}]', 0, 'Node', 'Node', '{"name":"init","class":"View","attributes":[],"Method":[{"name":"addIcon","uuid":"1","type":"Method","Ports":{"1":{"type":"In","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},"2":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":55,"top":70,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"},{"name":"addButton","uuid":"5","type":"Method","Ports":{"1":{"type":"In","name":"label","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Continue"},"2":{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}},"Nodes":[],"Connections":[],"left":305,"top":35,"width":200,"height":100,"ports_obj":[],"js_widget":"CodeBlock"}],"id":"14"}'),
@@ -170,41 +170,41 @@ INSERT INTO `developerZone_entities` (`id`, `component_id`, `name`, `type`, `tab
 -- --------------------------------------------------------
 
 --
--- Table structure for table `developerZone_entity_attributes`
+-- Table structure for table `developerzone_entity_attributes`
 --
 
-CREATE TABLE IF NOT EXISTS `developerZone_entity_attributes` (
+CREATE TABLE IF NOT EXISTS `developerzone_entity_attributes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `developerZone_entities_id` int(11) DEFAULT NULL,
+  `developerzone_entities_id` int(11) DEFAULT NULL,
   `attribute_type` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `value` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_developerZone_entities_id` (`developerZone_entities_id`)
+  KEY `fk_developerzone_entities_id` (`developerzone_entities_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `developerZone_entity_methods`
+-- Table structure for table `developerzone_entity_methods`
 --
 
-CREATE TABLE IF NOT EXISTS `developerZone_entity_methods` (
+CREATE TABLE IF NOT EXISTS `developerzone_entity_methods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `developerZone_entities_id` int(11) DEFAULT NULL,
+  `developerzone_entities_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `method_type` varchar(255) DEFAULT NULL,
   `properties` varchar(255) DEFAULT NULL,
   `default_ports` text,
   PRIMARY KEY (`id`),
-  KEY `fk_developerZone_entities_id` (`developerZone_entities_id`)
+  KEY `fk_developerzone_entities_id` (`developerzone_entities_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=847 ;
 
 --
--- Dumping data for table `developerZone_entity_methods`
+-- Dumping data for table `developerzone_entity_methods`
 --
 
-INSERT INTO `developerZone_entity_methods` (`id`, `developerZone_entities_id`, `name`, `method_type`, `properties`, `default_ports`) VALUES
+INSERT INTO `developerzone_entity_methods` (`id`, `developerzone_entities_id`, `name`, `method_type`, `properties`, `default_ports`) VALUES
 (206, 1, 'destroy', 'public', NULL, '[{"type":"In","name":"recursive","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"true"}]'),
 (207, 1, 'removeElement', 'public', NULL, '[{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
 (208, 1, 'getElement', 'public', NULL, '[{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
@@ -315,29 +315,29 @@ INSERT INTO `developerZone_entity_methods` (`id`, `developerZone_entities_id`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `developerZone_events`
+-- Table structure for table `developerzone_events`
 --
 
-CREATE TABLE IF NOT EXISTS `developerZone_events` (
+CREATE TABLE IF NOT EXISTS `developerzone_events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `developerZone_entities_id` int(11) DEFAULT NULL,
+  `developerzone_entities_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `condition` varchar(255) DEFAULT NULL,
   `fire_spot` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_developerZone_entities_id` (`developerZone_entities_id`)
+  KEY `fk_developerzone_entities_id` (`developerzone_entities_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `developerZone_method_nodes`
+-- Table structure for table `developerzone_method_nodes`
 --
 
-CREATE TABLE IF NOT EXISTS `developerZone_method_nodes` (
+CREATE TABLE IF NOT EXISTS `developerzone_method_nodes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `developerZone_entity_methods_id` int(11) DEFAULT NULL,
-  `developerZone_entities_id` int(11) DEFAULT NULL,
+  `developerzone_entity_methods_id` int(11) DEFAULT NULL,
+  `developerzone_entities_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `inputs` varchar(255) DEFAULT NULL,
   `outputs` varchar(255) DEFAULT NULL,
@@ -349,15 +349,15 @@ CREATE TABLE IF NOT EXISTS `developerZone_method_nodes` (
   `total_ins` varchar(255) DEFAULT NULL,
   `input_resolved_for_branch` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_developerZone_entity_methods_id` (`developerZone_entity_methods_id`),
-  KEY `fk_developerZone_entities_id` (`developerZone_entities_id`)
+  KEY `fk_developerzone_entity_methods_id` (`developerzone_entity_methods_id`),
+  KEY `fk_developerzone_entities_id` (`developerzone_entities_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
--- Dumping data for table `developerZone_method_nodes`
+-- Dumping data for table `developerzone_method_nodes`
 --
 
-INSERT INTO `developerZone_method_nodes` (`id`, `developerZone_entity_methods_id`, `developerZone_entities_id`, `name`, `inputs`, `outputs`, `reference_obj`, `action`, `is_processed`, `parent_node_id`, `branch`, `total_ins`, `input_resolved_for_branch`) VALUES
+INSERT INTO `developerzone_method_nodes` (`id`, `developerzone_entity_methods_id`, `developerzone_entities_id`, `name`, `inputs`, `outputs`, `reference_obj`, `action`, `is_processed`, `parent_node_id`, `branch`, `total_ins`, `input_resolved_for_branch`) VALUES
 (1, 2, NULL, 'Draft Quotations', NULL, NULL, NULL, 'Block', 1, NULL, NULL, NULL, NULL),
 (2, 2, 2, 'Model Quotation', NULL, NULL, NULL, 'Add', 1, NULL, NULL, NULL, NULL),
 (3, 2, NULL, 'status', 'status', NULL, NULL, 'Variable', 1, NULL, NULL, NULL, NULL),
@@ -369,10 +369,10 @@ INSERT INTO `developerZone_method_nodes` (`id`, `developerZone_entity_methods_id
 -- --------------------------------------------------------
 
 --
--- Table structure for table `developerZone_method_nodes_connections`
+-- Table structure for table `developerzone_method_nodes_connections`
 --
 
-CREATE TABLE IF NOT EXISTS `developerZone_method_nodes_connections` (
+CREATE TABLE IF NOT EXISTS `developerzone_method_nodes_connections` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `from_port_id` int(11) DEFAULT NULL,
@@ -383,10 +383,10 @@ CREATE TABLE IF NOT EXISTS `developerZone_method_nodes_connections` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
--- Dumping data for table `developerZone_method_nodes_connections`
+-- Dumping data for table `developerzone_method_nodes_connections`
 --
 
-INSERT INTO `developerZone_method_nodes_connections` (`id`, `name`, `from_port_id`, `to_port_id`) VALUES
+INSERT INTO `developerzone_method_nodes_connections` (`id`, `name`, `from_port_id`, `to_port_id`) VALUES
 (1, 'addCond->field', 3, 5),
 (2, 'addCond->value', 4, 5),
 (3, 'addCond_obj', 2, 8),
@@ -397,10 +397,10 @@ INSERT INTO `developerZone_method_nodes_connections` (`id`, `name`, `from_port_i
 -- --------------------------------------------------------
 
 --
--- Table structure for table `developerZone_method_node_ports`
+-- Table structure for table `developerzone_method_node_ports`
 --
 
-CREATE TABLE IF NOT EXISTS `developerZone_method_node_ports` (
+CREATE TABLE IF NOT EXISTS `developerzone_method_node_ports` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `node_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -410,10 +410,10 @@ CREATE TABLE IF NOT EXISTS `developerZone_method_node_ports` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 --
--- Dumping data for table `developerZone_method_node_ports`
+-- Dumping data for table `developerzone_method_node_ports`
 --
 
-INSERT INTO `developerZone_method_node_ports` (`id`, `node_id`, `name`, `type`) VALUES
+INSERT INTO `developerzone_method_node_ports` (`id`, `node_id`, `name`, `type`) VALUES
 (1, 1, 'draft_quotaions_from_block', 'OUT'),
 (2, 2, 'quotation_model', 'OUT'),
 (3, 3, 'field_status', 'OUT'),
@@ -950,10 +950,10 @@ CREATE TABLE IF NOT EXISTS `slideshows_awesomeslider` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `slideShows_thumbnailslidergallery`
+-- Table structure for table `slideshows_thumbnailslidergallery`
 --
 
-CREATE TABLE IF NOT EXISTS `slideShows_thumbnailslidergallery` (
+CREATE TABLE IF NOT EXISTS `slideshows_thumbnailslidergallery` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -971,10 +971,10 @@ CREATE TABLE IF NOT EXISTS `slideShows_thumbnailslidergallery` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `slideShows_thumbnailsliderimages`
+-- Table structure for table `slideshows_thumbnailsliderimages`
 --
 
-CREATE TABLE IF NOT EXISTS `slideShows_thumbnailsliderimages` (
+CREATE TABLE IF NOT EXISTS `slideshows_thumbnailsliderimages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gallery_id` int(11) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
@@ -988,10 +988,10 @@ CREATE TABLE IF NOT EXISTS `slideShows_thumbnailsliderimages` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `slideShows_transformgallery`
+-- Table structure for table `slideshows_transformgallery`
 --
 
-CREATE TABLE IF NOT EXISTS `slideShows_transformgallery` (
+CREATE TABLE IF NOT EXISTS `slideshows_transformgallery` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -1004,10 +1004,10 @@ CREATE TABLE IF NOT EXISTS `slideShows_transformgallery` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `slideShows_transformgalleryimages`
+-- Table structure for table `slideshows_transformgalleryimages`
 --
 
-CREATE TABLE IF NOT EXISTS `slideShows_transformgalleryimages` (
+CREATE TABLE IF NOT EXISTS `slideshows_transformgalleryimages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gallery_id` int(11) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
@@ -1019,10 +1019,10 @@ CREATE TABLE IF NOT EXISTS `slideShows_transformgalleryimages` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `slideShows_waterwheelgallery`
+-- Table structure for table `slideshows_waterwheelgallery`
 --
 
-CREATE TABLE IF NOT EXISTS `slideShows_waterwheelgallery` (
+CREATE TABLE IF NOT EXISTS `slideshows_waterwheelgallery` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -1042,10 +1042,10 @@ CREATE TABLE IF NOT EXISTS `slideShows_waterwheelgallery` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `slideShows_waterwheelimages`
+-- Table structure for table `slideshows_waterwheelimages`
 --
 
-CREATE TABLE IF NOT EXISTS `slideShows_waterwheelimages` (
+CREATE TABLE IF NOT EXISTS `slideshows_waterwheelimages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gallery_id` int(11) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
@@ -1766,10 +1766,10 @@ CREATE TABLE IF NOT EXISTS `xdispatch_dispatch_request_items` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xEnquiryNSubscription_Config`
+-- Table structure for table `xenquirynsubscription_config`
 --
 
-CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_Config` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `show_all_newsletters` tinyint(1) DEFAULT NULL,
@@ -1780,10 +1780,10 @@ CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_Config` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xEnquiryNSubscription_custome_customFields`
+-- Table structure for table `xenquirynsubscription_custome_customFields`
 --
 
-CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_custome_customFields` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_custome_customFields` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `forms_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -1797,10 +1797,10 @@ CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_custome_customFields` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xEnquiryNSubscription_customformentry`
+-- Table structure for table `xenquirynsubscription_customformentry`
 --
 
-CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_customformentry` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_customformentry` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `forms_id` int(11) DEFAULT NULL,
@@ -1817,10 +1817,10 @@ CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_customformentry` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xEnquiryNSubscription_customForm_forms`
+-- Table structure for table `xenquirynsubscription_customForm_forms`
 --
 
-CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_customForm_forms` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_customForm_forms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -1834,10 +1834,10 @@ CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_customForm_forms` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xEnquiryNSubscription_EmailJobs`
+-- Table structure for table `xenquirynsubscription_emailjobs`
 --
 
-CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_EmailJobs` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_emailjobs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `newsletter_id` int(11) DEFAULT NULL,
   `job_posted_at` datetime DEFAULT NULL,
@@ -1850,10 +1850,10 @@ CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_EmailJobs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xEnquiryNSubscription_EmailQueue`
+-- Table structure for table `xenquirynsubscription_emailqueue`
 --
 
-CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_EmailQueue` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_emailqueue` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `emailjobs_id` int(11) DEFAULT NULL,
   `subscriber_id` int(11) DEFAULT NULL,
@@ -1871,10 +1871,10 @@ CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_EmailQueue` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xEnquiryNSubscription_hosts_touched`
+-- Table structure for table `xenquirynsubscription_hosts_touched`
 --
 
-CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_hosts_touched` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_hosts_touched` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -1885,10 +1885,10 @@ CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_hosts_touched` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xEnquiryNSubscription_massemailconfiguration`
+-- Table structure for table `xenquirynsubscription_massemailconfiguration`
 --
 
-CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_massemailconfiguration` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_massemailconfiguration` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `use_mandril` tinyint(1) DEFAULT NULL,
@@ -1901,10 +1901,10 @@ CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_massemailconfiguration` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xEnquiryNSubscription_NewsLetter`
+-- Table structure for table `xenquirynsubscription_newsletter`
 --
 
-CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_NewsLetter` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_newsletter` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -1923,10 +1923,10 @@ CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_NewsLetter` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xEnquiryNSubscription_NewsLetterCategory`
+-- Table structure for table `xenquirynsubscription_newslettercategory`
 --
 
-CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_NewsLetterCategory` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_newslettercategory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -1935,19 +1935,19 @@ CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_NewsLetterCategory` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
--- Dumping data for table `xEnquiryNSubscription_NewsLetterCategory`
+-- Dumping data for table `xenquirynsubscription_newslettercategory`
 --
 
-INSERT INTO `xEnquiryNSubscription_NewsLetterCategory` (`id`, `epan_id`, `name`) VALUES
+INSERT INTO `xenquirynsubscription_newslettercategory` (`id`, `epan_id`, `name`) VALUES
 (1, 1, 'school');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xEnquiryNSubscription_SubsCatAss`
+-- Table structure for table `xenquirynsubscription_subscatass`
 --
 
-CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_SubsCatAss` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_subscatass` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `subscriber_id` int(11) DEFAULT NULL,
   `subscribed_on` datetime DEFAULT NULL,
@@ -1963,10 +1963,10 @@ CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_SubsCatAss` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xEnquiryNSubscription_Subscription`
+-- Table structure for table `xenquirynsubscription_subscription`
 --
 
-CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_Subscription` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_subscription` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
@@ -1983,10 +1983,10 @@ CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_Subscription` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xEnquiryNSubscription_Subscription_Categories`
+-- Table structure for table `xenquirynsubscription_subscription_categories`
 --
 
-CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_Subscription_Categories` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_subscription_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -1998,10 +1998,10 @@ CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_Subscription_Categories` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xEnquiryNSubscription_Subscription_Config`
+-- Table structure for table `xenquirynsubscription_subscription_Config`
 --
 
-CREATE TABLE IF NOT EXISTS `xEnquiryNSubscription_Subscription_Config` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_subscription_Config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) DEFAULT NULL,
   `email_caption` varchar(255) DEFAULT NULL,
@@ -2312,10 +2312,10 @@ CREATE TABLE IF NOT EXISTS `xImageGallery_gallery` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xImageGallery_images`
+-- Table structure for table `ximagegallery_images`
 --
 
-CREATE TABLE IF NOT EXISTS `xImageGallery_images` (
+CREATE TABLE IF NOT EXISTS `ximagegallery_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gallery_id` int(11) DEFAULT NULL,
   `image_url` varchar(255) DEFAULT NULL,
@@ -2473,10 +2473,10 @@ CREATE TABLE IF NOT EXISTS `xmarketingcampaign_cp_sub_cat` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xMarketingCampaign_data_grabber`
+-- Table structure for table `xmarketingcampaign_data_grabber`
 --
 
-CREATE TABLE IF NOT EXISTS `xMarketingCampaign_data_grabber` (
+CREATE TABLE IF NOT EXISTS `xmarketingcampaign_data_grabber` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -2502,10 +2502,10 @@ CREATE TABLE IF NOT EXISTS `xMarketingCampaign_data_grabber` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xMarketingCampaign_data_search_phrase`
+-- Table structure for table `xmarketingcampaign_data_search_phrase`
 --
 
-CREATE TABLE IF NOT EXISTS `xMarketingCampaign_data_search_phrase` (
+CREATE TABLE IF NOT EXISTS `xmarketingcampaign_data_search_phrase` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `data_grabber_id` int(11) DEFAULT NULL,
   `subscription_category_id` int(11) DEFAULT NULL,
@@ -2526,10 +2526,10 @@ CREATE TABLE IF NOT EXISTS `xMarketingCampaign_data_search_phrase` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xMarketingCampaign_FacebookConfig`
+-- Table structure for table `xmarketingcampaign_facebookconfig`
 --
 
-CREATE TABLE IF NOT EXISTS `xMarketingCampaign_FacebookConfig` (
+CREATE TABLE IF NOT EXISTS `xmarketingcampaign_facebookconfig` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `secret` varchar(255) DEFAULT NULL,
@@ -2544,10 +2544,10 @@ CREATE TABLE IF NOT EXISTS `xMarketingCampaign_FacebookConfig` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xMarketingCampaign_GoogleBloggerConfig`
+-- Table structure for table `xmarketingcampaign_googlebloggerconfig`
 --
 
-CREATE TABLE IF NOT EXISTS `xMarketingCampaign_GoogleBloggerConfig` (
+CREATE TABLE IF NOT EXISTS `xmarketingcampaign_googlebloggerconfig` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `userid` varchar(255) DEFAULT NULL,
@@ -2564,10 +2564,10 @@ CREATE TABLE IF NOT EXISTS `xMarketingCampaign_GoogleBloggerConfig` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
--- Dumping data for table `xMarketingCampaign_GoogleBloggerConfig`
+-- Dumping data for table `xmarketingcampaign_googlebloggerconfig`
 --
 
-INSERT INTO `xMarketingCampaign_GoogleBloggerConfig` (`id`, `name`, `userid`, `userid_returned`, `appId`, `secret`, `access_token`, `is_access_token_valid`, `refresh_token`, `blogid`, `access_token_secret`, `is_active`) VALUES
+INSERT INTO `xmarketingcampaign_googlebloggerconfig` (`id`, `name`, `userid`, `userid_returned`, `appId`, `secret`, `access_token`, `is_access_token_valid`, `refresh_token`, `blogid`, `access_token_secret`, `is_active`) VALUES
 (1, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
@@ -2619,10 +2619,10 @@ CREATE TABLE IF NOT EXISTS `xMarketingCampaign_LinkedinConfig` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xMarketingCampaign_SocialConfig`
+-- Table structure for table `xmarketingcampaign_socialconfig`
 --
 
-CREATE TABLE IF NOT EXISTS `xMarketingCampaign_SocialConfig` (
+CREATE TABLE IF NOT EXISTS `xmarketingcampaign_socialconfig` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `social_app` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -2636,10 +2636,10 @@ CREATE TABLE IF NOT EXISTS `xMarketingCampaign_SocialConfig` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xMarketingCampaign_SocialPostings`
+-- Table structure for table `xmarketingcampaign_socialpostings`
 --
 
-CREATE TABLE IF NOT EXISTS `xMarketingCampaign_SocialPostings` (
+CREATE TABLE IF NOT EXISTS `xmarketingcampaign_socialpostings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `post_id` int(11) DEFAULT NULL,
@@ -2662,10 +2662,10 @@ CREATE TABLE IF NOT EXISTS `xMarketingCampaign_SocialPostings` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xMarketingCampaign_SocialPostings_Activities`
+-- Table structure for table `xmarketingcampaign_socialpostings_activities`
 --
 
-CREATE TABLE IF NOT EXISTS `xMarketingCampaign_SocialPostings_Activities` (
+CREATE TABLE IF NOT EXISTS `xmarketingcampaign_socialpostings_activities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `posting_id` int(11) DEFAULT NULL,
   `activityid_returned` varchar(255) DEFAULT NULL,
@@ -2682,10 +2682,10 @@ CREATE TABLE IF NOT EXISTS `xMarketingCampaign_SocialPostings_Activities` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xMarketingCampaign_SocialPosts`
+-- Table structure for table `xmarketingcampaign_socialposts`
 --
 
-CREATE TABLE IF NOT EXISTS `xMarketingCampaign_SocialPosts` (
+CREATE TABLE IF NOT EXISTS `xmarketingcampaign_socialposts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `post_title` varchar(255) DEFAULT NULL,
@@ -2709,10 +2709,10 @@ CREATE TABLE IF NOT EXISTS `xMarketingCampaign_SocialPosts` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xMarketingCampaign_SocialPost_Categories`
+-- Table structure for table `xmarketingcampaign_socialpost_categories`
 --
 
-CREATE TABLE IF NOT EXISTS `xMarketingCampaign_SocialPost_Categories` (
+CREATE TABLE IF NOT EXISTS `xmarketingcampaign_socialpost_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,

@@ -3,7 +3,7 @@ namespace xEnquiryNSubscription;
 
 
 class Model_SubscriptionConfig extends \Model_Table {
-	var $table= "xEnquiryNSubscription_Subscription_Config";
+	var $table= "xenquirynsubscription_subscription_Config";
 	function init(){
 		parent::init();
 

@@ -3,7 +3,7 @@
 namespace xEnquiryNSubscription;
 
 class Model_Forms extends \Model_Table{
-	public $table='xEnquiryNSubscription_customForm_forms';
+	public $table='xenquirynsubscription_customForm_forms';
 
 	function init(){
 		parent::init();
