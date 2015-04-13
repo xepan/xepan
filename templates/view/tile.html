@@ -1,12 +1,12 @@
-<div id='{$_name}'>
-    <div class="tile bg-cyan {class}" style="background-color:{bgcolor};width:100%;height:150px;position:relative;">
+<div id='{$_name}' class="{$class}" style="{$style}">
+    <div class="" style="width:100%;height:180px;">
         <div class="brand">
-        	<h2 style="color:white;" class="text-center">{heading}</h2>
-            <div style="display:block;background-color:{bgcolor};position:absolute;" class="badge">
-            	<i class="icon-box">{Content}</i>
+        	<h2 class="text-center atk-size-giga panel-heading">{$title}</h2>
+            <div class="atk-size-mega atk-align-center" style="font-size: 80px; line-height: 60px; margin-bottom: 30px;">
+                {$Content}
             </div>
-            <div style="bottom:0;right:0;display:block;position:relative;background-color:{bgcolor};position:absolute;" class="badge">
-        	   <i class="icon-money">2000</i>
+            <div style="margin-right:10px;" class="pull-right atk-button atk-size-peta">
+        	   {$footer}
             </div>
         </div>
     </div>
