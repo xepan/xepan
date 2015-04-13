@@ -25,8 +25,9 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		$running_tile = $col_1->add('View_Tile')->addClass('atk-swatch-blue')->setStyle('box-shadow','');
 		$running_tile->setTitle('Running Works');
 		$running_tile->setContent($running_orders->count()->getOne());
+
 		if($is_superuser_login)
-			$running_tile->setFooter($running_orders->sum('net_amount'),'icon-money');
+			$running_tile->setFooter(money_format('%!i', $running_orders->sum('net_amount')->getOne()),'icon-money');
 		
 		//TODAY APPROVE ORDERS WITH AMOUNTS
 		$approved_order = $this->add('xShop/Model_Order');
@@ -47,7 +48,7 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		$approve_tile->setTitle('Today Approved Orderd');
 		$approve_tile->setContent($approved_order->count()->getOne());
 		if($is_superuser_login)
-			$approve_tile->setFooter($approved_order->sum('net_amount'),'icon-money');
+			$approve_tile->setFooter(money_format('%!i', $approved_order->sum('net_amount')->getOne()),'icon-money');
 
 		// //TODAY Complete ORDERS WITH AMOUNTS
 		$complete_order = $this->add('xShop/Model_Order');
@@ -68,7 +69,7 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		$complete_tile->setTitle('Today Complete Orders');
 		$complete_tile->setContent($complete_order->count()->getOne());
 		if($is_superuser_login)
-			$complete_tile->setFooter($complete_order->sum('net_amount'),'icon-money');
+			$complete_tile->setFooter(money_format('%!i', $complete_order->sum('net_amount')->getOne()),'icon-money');
 
 		// //TODAY CANCEL ORDERS WITH AMOUNTS
 		$cancel_order = $this->add('xShop/Model_Order_Cancelled')->addCondition('updated_date',$this->api->today);
@@ -76,8 +77,50 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		$complete_tile->setTitle('Today Canceled Orders');
 		$complete_tile->setContent($cancel_order->count()->getOne());
 		if($is_superuser_login)	
-			$complete_tile->setFooter($cancel_order->sum('net_amount'),'icon-money');
+			$complete_tile->setFooter(money_format('%!i', $cancel_order->sum('net_amount')->getOne()),'icon-money');
 
+		$commited_order = $this->add('xShop/Model_Order')->addCondition('status',array('approved','processing','processed'));
+		$commited_order->addCondition('delivery_date','>=',$this->api->today);
+		$commited_order->addCondition('delivery_date','<=',$this->api->nextDate($this->api->nextDate($this->api->today)));
+		$commited_order->setOrder('delivery_date','desc');
+
+		$this->add('View')->setElement('br');
+		$col1 = $this->add('Columns')->addClass('atk-box atk-swatch-gray');
+		$col_comit_tile = $col1->addColumn(3);
+		$col_comit_grid = $col1->addColumn(9);
+		$completed_tile = $col_comit_tile->add('View_Tile')->addClass('atk-swatch-red')->setStyle('height','220px');
+		$completed_tile->setTitle('Commitments (Today+Tomorrow)');
+		$completed_tile->setContent($commited_order->count()->getOne());
+		if($is_superuser_login)
+			$completed_tile->setFooter(money_format('%!i', $commited_order->sum('net_amount')->getOne()),'icon-money');
+
+		$crud= $col_comit_grid->add('CRUD',array('grid_class'=>'xShop/Grid_Order'));
+		$crud->grid->ipp=5;
+		$crud->setModel($commited_order,array('name','order_id','customer','created_at','net_amount','delivery_date','orderitem_count','member'));
+		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>"All",'allow_edit'=>'No','can_forceDelete'=>'No')));
+
+		$commited_order = $this->add('xShop/Model_Order')->addCondition('status',array('approved','processing','processed'));
+		$commited_order->addCondition('delivery_date','<',$this->api->today);
+		$commited_order->setOrder('delivery_date','desc');
+		
+		$this->add('View')->setHTML('<br>');
+
+		$col2 = $this->add('Columns')->addClass('atk-swatch-gray');
+		$col_overdue_tile = $col2->addColumn(3);
+		$col_overdue_grid = $col2->addColumn(9);
+		
+		$overdue_tile = $col_overdue_tile->add('View_Tile')->addClass('atk-swatch-gray');
+		$overdue_tile->setTitle('Over Due Orders');
+		$overdue_tile->setContent($commited_order->count()->getOne());
+		if($is_superuser_login)
+			$overdue_tile->setFooter(money_format('%!i', $commited_order->sum('net_amount')->getOne()),'icon-money');
+
+		$crud= $col_overdue_grid->add('CRUD',array('grid_class'=>'xShop/Grid_Order'));
+		$crud->grid->ipp=5;
+		$crud->setModel($commited_order,array('name','order_id','customer','created_at','net_amount','delivery_date','orderitem_count','member'));
+		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>"All",'allow_edit'=>'No','can_forceDelete'=>'No')));
+	
+		
 		// //DEPARTMENT WISE JOBCARD
 		$this->add('View')->setHtml('<br>');
 		$depts = $this->add('xHR/Model_Department');
@@ -106,48 +149,6 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 			$dept_jobcard_v = $dept_col->add('View_Tile')->addClasS('atk-swatch-gray');
 			$dept_jobcard_v->setTitle($str);
 		}
-
-		$commited_order = $this->add('xShop/Model_Order')->addCondition('status',array('approved','processing','processed'));
-		$commited_order->addCondition('delivery_date','>=',$this->api->today);
-		$commited_order->addCondition('delivery_date','<=',$this->api->nextDate($this->api->nextDate($this->api->today)));
-		$commited_order->setOrder('delivery_date','desc');
-
-		$col1 = $this->add('Columns')->addClass('atk-box atk-swatch-gray');
-		$col_comit_tile = $col1->addColumn(3);
-		$col_comit_grid = $col1->addColumn(9);
-		$completed_tile = $col_comit_tile->add('View_Tile')->addClasS('atk-swatch-red');
-		$completed_tile->setTitle('Commitments (Today+Tomorrow)');
-		$completed_tile->setContent($commited_order->count()->getOne());
-		if($is_superuser_login)
-			$completed_tile->setFooter($commited_order->sum('net_amount'),'icon-money');
-
-		$crud= $col_comit_grid->add('CRUD',array('grid_class'=>'xShop/Grid_Order'));
-		$crud->grid->ipp=5;
-		$crud->setModel($commited_order,array('name','order_id','customer','created_at','net_amount','delivery_date','orderitem_count','member'));
-		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>"All",'allow_edit'=>'No','can_forceDelete'=>'No')));
-
-		$commited_order = $this->add('xShop/Model_Order')->addCondition('status',array('approved','processing','processed'));
-		$commited_order->addCondition('delivery_date','<',$this->api->today);
-		$commited_order->setOrder('delivery_date','desc');
-		
-		$this->add('View')->setHTML('<br>');
-
-		$col2 = $this->add('Columns')->addClass('atk-swatch-gray');
-		$col_overdue_tile = $col2->addColumn(3);
-		$col_overdue_grid = $col2->addColumn(9);
-		
-		$overdue_tile = $col_overdue_tile->add('View_Tile')->addClass('atk-swatch-gray');
-		$overdue_tile->setTitle('Over Due Orders');
-		$overdue_tile->setContent($commited_order->count()->getOne());
-		if($is_superuser_login)
-			$overdue_tile->setFooter($commited_order->sum('net_amount'),'icon-money');
-
-		$crud= $col_overdue_grid->add('CRUD',array('grid_class'=>'xShop/Grid_Order'));
-		$crud->grid->ipp=5;
-		$crud->setModel($commited_order,array('name','order_id','customer','created_at','net_amount','delivery_date','orderitem_count','member'));
-		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>"All",'allow_edit'=>'No','can_forceDelete'=>'No')));
-	
-		
  
 		// //Colors
 		// //#e3c800(yellow),#004050(darkteal),#825a2c(brown),#003e00(DarkEmerald)

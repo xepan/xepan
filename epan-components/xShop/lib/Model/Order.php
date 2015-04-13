@@ -273,17 +273,16 @@ class Model_Order extends \Model_Document{
 		$email_body=$config_model['order_detail_email_body']?:"Order Layout Is Empty";
 				
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
-		$email_body = str_replace("{{order_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{order_date}}", $this['created_at'], $email_body);
-		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);
-		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number'], $email_body);
-		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address'], $email_body);
-		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address'], $email_body);
-		$email_body = str_replace("{{customer_email}}", $customer['customer_email'], $email_body);
+		$email_body = str_replace("{{customer_name}}", $customer['customer_name']?"<small> Mr/Mrs.</small> <b>".$customer['customer_name']."</b><br>":" ", $email_body);
+		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number']?"Contact No.:".$customer['mobile_number']:" ", $email_body);
+		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address']?"Billing Addess.:".$customer['billing_address']:" ", $email_body);
+		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address']?"Shipping Addess.:".$customer['shipping_address']:" ", $email_body);
+		$email_body = str_replace("{{customer_email}}", $customer['customer_email']?"Email.:".$customer['customer_email']:" ", $email_body);
 		$email_body = str_replace("{{customer_tin_no}}", $customer['tin_no'], $email_body);
 		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no'], $email_body);
+		$email_body = str_replace("{{order_no}}", $this['name'], $email_body);
+		$email_body = str_replace("{{Order_date}}", $this['created_at'], $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
-		// return;
 		$this->sendEmail($customer_email,$subject,$email_body);
 		
 	}

@@ -128,8 +128,11 @@ class Model_OrderDetails extends \Model_Document{
 			$job_cards[] = $jc;
 		}
 
-		if($department_id){			
-			return $jc;
+		if($department_id){
+			if(isset($jc))			
+				return $jc;
+			else
+				return new \Dummy();
 		}
 
 		return $job_cards;

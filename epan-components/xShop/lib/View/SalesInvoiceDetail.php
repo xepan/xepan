@@ -22,10 +22,11 @@ class View_SalesInvoiceDetail extends \CompleteLister{
 			$invoice= $model->ref('invoice_id');
 			// $invoice= $model->ref('priority_id');
 			// $this->template->set('gross_amount',$invoice['amount']);
-			$this->template->set('total_amount',$invoice['total_amount']);
-			//$this->template->set('delivery_date',$invoice['delivery_date']);
-			// $this->template->set('discount_voucher',$invoice['discount_voucher']);
-			$this->template->set('texted_amount',$invoice['tax']?:'0.00');
+			
+			$this->template->set('gross_amount',$invoice['gross_amount']);
+			//$this->template->set('delivery_date',$model['delivery_date']);
+			// $this->template->set('discount_voucher',$model['discount_voucher']);
+			$this->template->set('discount_voucher_amount',$invoice['discount_voucher_amount']?:'0.00');
 			$this->template->set('net_amount',$invoice['net_amount']);
 			// $this->template->set('departments',"1");
 			// $this->template->set('invoice_item_custom_field',$model['id']);
