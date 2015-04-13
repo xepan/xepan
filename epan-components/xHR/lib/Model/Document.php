@@ -23,4 +23,8 @@ class Model_Document extends \SQL_Model {
 		return $name;
 	}
 
+	function department(){
+		return $this->ref('department_id');
+	}
+
 }
