@@ -7,9 +7,31 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 
 		$this->app->title=$this->api->current_department['name'] .': Dashboard';
 
+		//Basic HTML Structurer
+		$cols = $this->add('Columns');
+		$col1 = $cols->addColumn(3);
+
+		$html = '<div class="tile bg-cyan" style="background-color:{bgcolor};width:100%;height:150px;position:relative;">
+                        <div class="brand">
+                        	<h2 style="color:white;" class="text-center">{heading}</h2>
+                            <div style="display:block;background-color:{bgcolor};position:absolute;" class="badge">
+                            	<i class="icon-box">
+                            	</i>
+                            </div>
+                            <div style="bottom:0;right:0;display:block;position:relative;background-color:{bgcolor};position:absolute;" class="badge">
+                            	<i class="icon-money">
+                            		2000
+                            	</i>
+                            </div>
+                        </div>
+                    </div>';
+
+
 		// TOTAL WORKING PROJECTS
 		$running_orders = $this->add('xShop/Model_Order')->addCondition('status',array('approved','processing','processed'));
 		$t_app_order = $this->add('View_Info')->setHtml('Running Works:'.$running_orders->count()->getOne() ." Amount :".$running_orders->sum('net_amount'));
+        $col1_html = str_replace('{bgcolor}', '#1ba1e2', $html);
+		$col1->add('View')->setHtml($col1_html);
 		
 		//TODAY APPROVE ORDERS WITH AMOUNTS
 		$approved_order = $this->add('xShop/Model_Order');
@@ -98,26 +120,6 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		$crud->setModel($commited_order);
 		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>"All",'allow_edit'=>'No','can_forceDelete'=>'No')));
 	
-$cols = $this->add('Columns');
-		$col1 = $cols->addColumn(3);
-
-		$html = '<div class="tile bg-cyan" style="background-color:{bgcolor};width:100%;height:150px;position:relative;">
-                        <div class="brand">
-                        	<h2 style="color:white;" class="text-center">New Order</h2>
-                            <div style="bottom:0;display:block;position:relative;background-color:{bgcolor};position:absolute;" class="badge">
-                            	<i class="icon-box">
-                            	</i>
-                            </div>
-                            <div style="bottom:0;right:0;display:block;position:relative;background-color:{bgcolor};position:absolute;" class="badge">
-                            	<i class="icon-money">
-                            		2000
-                            	</i>
-                            </div>
-                        </div>
-                    </div>';
-
-        $col1_html = str_replace('{bgcolor}', '#1ba1e2', $html);
-		$col1->add('View')->setHtml($col1_html);
 		
         $col2_html = str_replace('{bgcolor}', '#fa6800', $html);
 		$col2 = $cols->addColumn(3);
