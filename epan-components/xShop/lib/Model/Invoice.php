@@ -127,7 +127,7 @@ class Model_Invoice extends \Model_Document{
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
-		$view=$this->add('xShop/View_InvoiceDetail');
+		$view=$this->add('xShop/View_SalesInvoiceDetail');
 		$view->setModel($this->itemrows());
 		
 		$tnc=$this->termAndCondition();
@@ -176,8 +176,16 @@ class Model_Invoice extends \Model_Document{
 		$form->add('View')->setHTML($email_body);
 		$form->addSubmit('Send');
 		if($form->isSubmitted()){
+
+			$ccs=$bccs = array();
+			if($form['cc'])
+				$ccs = explode(',',$form['cc']);
+
+			if($form['bcc'])
+				$bccs = explode(',',$form['bcc']);
+
 			$email_body .= $form['custom_message']."<br>".$email_body;
-			$this->sendEmail($form['to'],$form['subject'],$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));
+			$this->sendEmail($form['to'],$form['subject'],$email_body,$ccs,$bccs);
 			$this->createActivity('email',$form['subject'],$form['message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
 		}
