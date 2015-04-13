@@ -127,7 +127,7 @@ class Model_Invoice extends \Model_Document{
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
-		$view=$this->add('xShop/View_InvoiceDetail');
+		$view=$this->add('xShop/View_SalesInvoiceDetail');
 		$view->setModel($this->itemrows());
 		
 		$tnc=$this->termAndCondition();

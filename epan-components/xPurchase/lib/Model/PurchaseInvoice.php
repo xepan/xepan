@@ -11,8 +11,9 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 	}
 
 	function supplier(){
-		return $this->ref('customer_id');
+		return $this->ref('supplier_id');
 	}
+
 
 	function submit(){
 		$this->setStatus('submitted');
@@ -139,7 +140,62 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		
 			return true;
 		}
+	}
 		
+		function send_via_email_page($p){
+
+		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
+		
+		$view=$this->add('xPurchase/View_PurchaseInvoiceDetail');
+		$view->setModel($this->itemrows());
+		
+		$tnc=$this->termAndCondition();
+
+		$supplier = $this->supplier();
+		$supplier_email=$supplier->get('email');
+
+		$config_model=$this->add('xShop/Model_Configuration');
+		$config_model->tryLoadAny();
+		
+		$subject = $config_model['purchase_invoice_email_subject']?:$this['name']." "."::"." "."INVOICE";
+		
+		$email_body=$config_model['purchase_invoice_email_body']?:"Purchase Invoice Layout Is Empty";
+		
+		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
+		$email_body = str_replace("{{purchase_invoice_details}}", $view->getHtml(), $email_body);
+		$email_body = str_replace("{{company_name}}", $supplier['name'], $email_body);
+		$email_body = str_replace("{{owner_name}}", $supplier['owner_name']?"Owner Name.:".$supplier['owner_name'].",":" ", $email_body);
+		$email_body = str_replace("{{supplier_code}}", $supplier['code']?"Code.:".$supplier['code'].",":" ", $email_body);
+		$email_body = str_replace("{{mobile_number}}", $supplier['contact_no']?"Contact No.:".$supplier['contact_no'].",":" ", $email_body);
+		$email_body = str_replace("{{purchase_order_address}}",$supplier['address']?"Address.:".$supplier['address'].",":" ", $email_body);
+		$email_body = str_replace("{{supplier_email}}", $supplier['email'], $email_body);
+		$email_body = str_replace("{{supplier_tin_no}}", $supplier['tin_no']?"TIN No.:".$supplier['tin_no'].",":" ", $email_body);
+		$email_body = str_replace("{{supplier_pan_no}}", $supplier['pan_no']?"PAN No.:".$supplier['pan_no'].",":" ", $email_body);
+		$email_body = str_replace("{{purchase_Order_no}}", $this['name'], $email_body);
+		$email_body = str_replace("{{purchase_Order_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{terms_an_conditions}}", $tnc['terms_and_condition']?"<b>Terms & Condition.:</b><br>".$tnc['terms_and_condition']:" ", $email_body);
+		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
+		echo $email_body;
+		return;
+		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
+		$emails = explode(',', $supplier['supplier_email']);
+		
+		$form = $p->add('Form_Stacked');
+		$form->addField('line','to')->set($emails[0]);
+		unset($emails[0]);
+
+		$form->addField('line','cc')->set(implode(',',$emails));
+		$form->addField('line','bcc');
+		$form->addField('line','subject')->set($subject);
+		$form->addField('RichText','custom_message');
+		$form->add('View')->setHTML($email_body);
+		$form->addSubmit('Send');
+		if($form->isSubmitted()){
+			$email_body .= $form['custom_message']."<br>".$email_body;
+			$this->sendEmail($form['to'],$form['subject'],$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));
+			$this->createActivity('email',$form['subject'],$form['message'],$from=null,$from_id=null, $to='supplier', $to_id=$supplier->id);
+			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
+		}
 	}
 
 }

@@ -78,7 +78,7 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 				$comment_form->addClass('panel panel-default');
 				$comment_form->addStyle('padding','20px');
 			
-			$mail_tab=$tab->addTab('layout');
+			$mail_tab=$tab->addTab('Layouts');
 			
 				$lay_tab=$mail_tab->add('Tabs');
 					$sales_tab=$lay_tab->addTab('Sales Order');
@@ -114,8 +114,8 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 						$q_form->addClass('panel panel-default');
 						$q_form->addStyle('padding','20px');
 					
-					$invoice_tab=$lay_tab->addTab('Sales Invoice');
-						$i_form=$invoice_tab->add('Form');
+					$sales_invoice_tab=$lay_tab->addTab('Sales Invoice');
+						$i_form=$sales_invoice_tab->add('Form');
 						$i_form->setModel($config_model,array('invoice_email_subject','invoice_email_body'));
 						$i_form->addSubmit('Update');
 						if($i_form->Submitted()){
@@ -124,6 +124,17 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 						}
 						$i_form->addClass('panel panel-default');
 						$i_form->addStyle('padding','20px');
+
+					$purchase_invoice_tab=$lay_tab->addTab('Purchase Invoice');
+						$p_form=$purchase_invoice_tab->add('Form');
+						$p_form->setModel($config_model,array('purchase_invoice_email_subject','purchase_invoice_email_body'));
+						$p_form->addSubmit('Update');
+						if($p_form->Submitted()){
+							$p_form->Update();
+							$p_form->js(null,$p_form->js()->reload())->univ()->successMessage('Update Information')->execute();
+						}
+						$p_form->addClass('panel panel-default');
+						$p_form->addStyle('padding','20px');	
 
 	}
 
