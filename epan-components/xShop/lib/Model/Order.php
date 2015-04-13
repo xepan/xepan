@@ -263,8 +263,8 @@ class Model_Order extends \Model_Document{
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
-		$print_order = $this->add('xShop/View_PrintOrder');
-		$print_order->setModel($this);
+		$print_order = $this->add('xShop/View_OrderDetail',array('show_department'=>false,'show_price'=>true,'show_customfield'=>true));
+		$print_order->setModel($this->itemrows());
 		$order_detail_html = $print_order->getHTML(false);
 
 		$customer = $this->customer();
@@ -288,6 +288,8 @@ class Model_Order extends \Model_Document{
 		$email_body = str_replace("{{order_date}}", $this['created_at'], $email_body);
 		$email_body = str_replace("{{sale_order_details}}", $order_detail_html, $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
+		// echo $email_body;
+		// return;
 		$emails = explode(',', $customer['customer_email']);
 		
 		$form = $p->add('Form_Stacked');

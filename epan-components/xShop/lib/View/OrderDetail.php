@@ -5,6 +5,8 @@ namespace xShop;
 class View_OrderDetail extends \CompleteLister{
 	public $sno=1;
 	public $show_price = false;
+	public $show_department = true;
+	public $show_customfield = false;
 	function init(){
 		parent::init();
 
@@ -13,9 +15,13 @@ class View_OrderDetail extends \CompleteLister{
 	function formatRow(){
 
 		$this->current_row_html['sno']=$this->sno;
-		$this->current_row_html['departments']=$this->model->redableDeptartmentalStatus(true,true,false,true);
+		if($this->show_department)
+			$this->current_row_html['departments']=$this->model->redableDeptartmentalStatus(true,true,false,true);
 		if(!$this->show_price){
 			$this->current_row_html['order_amount_section']= " ";
+		}
+		if($this->show_customfield){
+			$this->current_row_html['departments']=$this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
 		}
 		$this->sno++;
 	}
