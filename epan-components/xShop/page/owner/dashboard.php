@@ -6,6 +6,13 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		parent::init();
 
 		$this->app->title=$this->api->current_department['name'] .': Dashboard';
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-dashboard icon-gauge"></i> Sales Department Dashboard');
+
+		$is_superuser_login = false;
+		if($this->api->auth->model->id == $this->api->auth->model->isDefaultSuperUser()){
+			$is_superuser_login =true;
+		}
+		
 
 		$col = $this->add('Columns');
 		$col_1 = $col->addColumn(3)->set('11');
@@ -18,7 +25,8 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		$running_tile = $col_1->add('View_Tile')->addClass('atk-swatch-blue')->setStyle('box-shadow','');
 		$running_tile->setTitle('Running Works');
 		$running_tile->setContent($running_orders->count()->getOne());
-		$running_tile->setFooter($running_orders->sum('net_amount'),'icon-money');
+		if($is_superuser_login)
+			$running_tile->setFooter($running_orders->sum('net_amount'),'icon-money');
 		
 		//TODAY APPROVE ORDERS WITH AMOUNTS
 		$approved_order = $this->add('xShop/Model_Order');
@@ -38,7 +46,8 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		$approve_tile = $col_2->add('View_Tile')->addClass('atk-swatch-green');
 		$approve_tile->setTitle('Today Approved Orderd');
 		$approve_tile->setContent($approved_order->count()->getOne());
-		$approve_tile->setFooter($approved_order->sum('net_amount'),'icon-money');
+		if($is_superuser_login)
+			$approve_tile->setFooter($approved_order->sum('net_amount'),'icon-money');
 
 		// //TODAY Complete ORDERS WITH AMOUNTS
 		$complete_order = $this->add('xShop/Model_Order');
@@ -58,14 +67,16 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		$complete_tile = $col_3->add('View_Tile')->addClass('atk-swatch-yellow');
 		$complete_tile->setTitle('Today Complete Orders');
 		$complete_tile->setContent($complete_order->count()->getOne());
-		$complete_tile->setFooter($complete_order->sum('net_amount'),'icon-money');
+		if($is_superuser_login)
+			$complete_tile->setFooter($complete_order->sum('net_amount'),'icon-money');
 
 		// //TODAY CANCEL ORDERS WITH AMOUNTS
 		$cancel_order = $this->add('xShop/Model_Order_Cancelled')->addCondition('updated_date',$this->api->today);
 		$complete_tile = $col_4->add('View_Tile')->addClass('atk-swatch-ink');
 		$complete_tile->setTitle('Today Canceled Orders');
 		$complete_tile->setContent($cancel_order->count()->getOne());
-		$complete_tile->setFooter($cancel_order->sum('net_amount'),'icon-money');
+		if($is_superuser_login)	
+			$complete_tile->setFooter($cancel_order->sum('net_amount'),'icon-money');
 
 		// //DEPARTMENT WISE JOBCARD
 		$this->add('View')->setHtml('<br>');
@@ -93,7 +104,7 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 			$columns = $this->add('Columns');
 			$dept_col = $columns->addColumn(12);
 			$dept_jobcard_v = $dept_col->add('View_Tile')->addClasS('atk-swatch-gray');
-			$dept_jobcard_v->setContent($str);
+			$dept_jobcard_v->setTitle($str);
 		}
 
 		$commited_order = $this->add('xShop/Model_Order')->addCondition('status',array('approved','processing','processed'));
@@ -107,11 +118,12 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		$completed_tile = $col_comit_tile->add('View_Tile')->addClasS('atk-swatch-red');
 		$completed_tile->setTitle('Commitments (Today+Tomorrow)');
 		$completed_tile->setContent($commited_order->count()->getOne());
-		$completed_tile->setFooter($commited_order->sum('net_amount'));
+		if($is_superuser_login)
+			$completed_tile->setFooter($commited_order->sum('net_amount'),'icon-money');
 
 		$crud= $col_comit_grid->add('CRUD',array('grid_class'=>'xShop/Grid_Order'));
 		$crud->grid->ipp=5;
-		$crud->setModel($commited_order,array('name','order_id','customer','net_amount','delivery_date'));
+		$crud->setModel($commited_order,array('name','order_id','customer','created_at','net_amount','delivery_date','orderitem_count','member'));
 		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>"All",'allow_edit'=>'No','can_forceDelete'=>'No')));
 
 		$commited_order = $this->add('xShop/Model_Order')->addCondition('status',array('approved','processing','processed'));
@@ -127,11 +139,12 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		$overdue_tile = $col_overdue_tile->add('View_Tile')->addClass('atk-swatch-gray');
 		$overdue_tile->setTitle('Over Due Orders');
 		$overdue_tile->setContent($commited_order->count()->getOne());
-		$overdue_tile->setFooter($commited_order->sum('net_amount'));
+		if($is_superuser_login)
+			$overdue_tile->setFooter($commited_order->sum('net_amount'),'icon-money');
 
 		$crud= $col_overdue_grid->add('CRUD',array('grid_class'=>'xShop/Grid_Order'));
 		$crud->grid->ipp=5;
-		$crud->setModel($commited_order,array('name','order_id','customer','net_amount','delivery_date'));
+		$crud->setModel($commited_order,array('name','order_id','customer','created_at','net_amount','delivery_date','orderitem_count','member'));
 		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>"All",'allow_edit'=>'No','can_forceDelete'=>'No')));
 	
 		
