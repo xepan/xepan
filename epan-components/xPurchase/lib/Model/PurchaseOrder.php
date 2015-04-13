@@ -419,12 +419,11 @@ class Model_PurchaseOrder extends \Model_Document{
 	}	
 	
 
-	function send_via_email_page($email_id=null, $order_id=null){
+	function send_via_email_page($p){
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
 		$view=$this->add('xPurchase/View_PurchaseOrderDetail');
-		echo "string";
 		$view->setModel($this->itemrows());		
 		
 		$subject ="Thanku for Purchase Order";
@@ -435,32 +434,52 @@ class Model_PurchaseOrder extends \Model_Document{
 		$config_model=$this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
 		
-
-		if($config_model['purchase_order_detail_email_subject']){
-			$subject=$config_model['purchase_order_detail_email_subject'];
-		}
-
-		if($config_model['purchase_order_detail_email_body']){
-			$email_body=$config_model['purchase_order_detail_email_body'];		
-		}
+		$subject = $config_model['purchase_order_detail_email_subject']?:"[ Purchase Order No.:".$this['name']." ]"." "."::"." "."Purchase Order";
+		
+		$email_body=$config_model['purchase_order_detail_email_body']?:"Purchase Order Layout Is Empty";
+	
 		// $email_body = $print_order->getHTML(false);
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{purchase_order_details}}", $view->getHtml(), $email_body);
-		$email_body = str_replace("{{company_name}}", $supplier['name'], $email_body);
-		$email_body = str_replace("{{owner_name}}", $supplier['owner_name'], $email_body);
-		$email_body = str_replace("{{supplier_code}}", $supplier['code'], $email_body);
-		$email_body = str_replace("{{mobile_number}}", $supplier['contact_no'], $email_body);
-		$email_body = str_replace("{{purchase_order_address}}",$supplier['address'], $email_body);
-		$email_body = str_replace("{{supplier_email}}", $supplier['email'], $email_body);
+		$email_body = str_replace("{{company_name}}", $supplier['name']?"<b>To,<br>".$supplier['name']."</b>":" ", $email_body);
+		$email_body = str_replace("{{owner_name}}", $supplier['owner_name']?"Contact Person.:<small>Mr/Mrs.</small><b>".$supplier['owner_name']."</b><br>":" ", $email_body);
+		$email_body = str_replace("{{supplier_code}}", $supplier['code']?"Code.: ".$supplier['code']:" ", $email_body);
+		$email_body = str_replace("{{mobile_number}}", $supplier['contact_no']?"Contact No.:".$supplier['contact_no']:" ", $email_body);
+		$email_body = str_replace("{{supplier_email}}", $supplier['email']?"Email.:".$supplier['email']:" ", $email_body);
+		$email_body = str_replace("{{purchase_order_address}}",$supplier['address']?"Addess.:".$supplier['address']:" ", $email_body);
 		$email_body = str_replace("{{supplier_tin_no}}", $supplier['tin_no'], $email_body);
 		$email_body = str_replace("{{supplier_pan_no}}", $supplier['pan_no'], $email_body);
 		$email_body = str_replace("{{purchase_Order_no}}", $this['name'], $email_body);
 		$email_body = str_replace("{{purchase_Order_date}}", $this['created_at'], $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
-		echo $email_body;
-		return;
-		$this->sendEmail($supplier_email,$subject,$email_body);
+
+		$emails = explode(',', $supplier['email']);
 		
+		$form = $p->add('Form_Stacked');
+		$form->addField('line','to')->set($emails[0]);
+		// array_pop(array_re/verse($emails));
+		unset($emails[0]);
+
+		$form->addField('line','cc')->set(implode(',',$emails));
+		$form->addField('line','bcc');
+		$form->addField('line','subject')->set($subject);
+		$form->addField('RichText','custom_message');
+		$form->add('View')->setHTML($email_body);
+		$form->addSubmit('Send');
+		if($form->isSubmitted()){
+
+			$ccs=$bccs = array();
+			if($form['cc'])
+				$ccs = explode(',',$form['cc']);
+
+			if($form['bcc'])
+				$bccs = explode(',',$form['bcc']);
+
+			$email_body .= $form['custom_message']."<br>".$email_body;
+			$this->sendEmail($form['to'],$form['subject'],$email_body,$ccs,$bccs);
+			$this->createActivity('email',$form['subject'],$form['custom_message'],$from=null,$from_id=null, $to='Supplier', $to_id=$supplier->id);
+			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
+		}
 	}
 }
 
