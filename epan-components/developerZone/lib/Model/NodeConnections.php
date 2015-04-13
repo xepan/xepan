@@ -3,7 +3,7 @@
 namespace developerZone;
 
 class Model_NodeConnections extends \SQL_Model{
-	public $table = "developerZone_method_nodes_connections";
+	public $table = "developerzone_method_nodes_connections";
 
 	function init(){
 		parent::init();

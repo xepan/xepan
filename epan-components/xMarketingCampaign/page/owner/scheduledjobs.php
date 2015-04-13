@@ -48,14 +48,14 @@ class page_xMarketingCampaign_page_owner_scheduledjobs extends page_xMarketingCa
 	}
 
 	function page_email_email_list(){
-		$this->api->stickyGET('xEnquiryNSubscription_EmailJobs_id');
+		$this->api->stickyGET('xenquirynsubscription_emailjobs_id');
 		
 		$v= $this->add('View');
 		$v->addClass('panel panel-default');
 		$v->setStyle('padding','20px');
 
 		$emails = $this->add('xEnquiryNSubscription/Model_EmailQueue');
-		$emails->addCondition('emailjobs_id',$_GET['xEnquiryNSubscription_EmailJobs_id']);
+		$emails->addCondition('emailjobs_id',$_GET['xenquirynsubscription_emailjobs_id']);
 
 		// $emails = $email_job->ref('xEnquiryNSubscription/EmailQueue');
 

@@ -3,7 +3,7 @@ namespace xEnquiryNSubscription;
 
 
 class Model_Subscription extends \Model_Document {
-	var $table= "xEnquiryNSubscription_Subscription";
+	var $table= "xenquirynsubscription_subscription";
 	public $status=array();
 	public $root_document_name="xEnquiryNSubscription\Subscription";
 

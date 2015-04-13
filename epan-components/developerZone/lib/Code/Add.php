@@ -12,7 +12,7 @@ class Code_Add extends Model_CodeFlow {
 		$new_variable_name = $this->generateVariableName();
 
 		$code = "\n";
-		$code.= '$'.$new_variable_name .' = $this->add("'.$this->ref('developerZone_entities_id')->get('name').'");';
+		$code.= '$'.$new_variable_name .' = $this->add("'.$this->ref('developerzone_entities_id')->get('name').'");';
 		
 		$code_block->addCode($code);
 		// create a unique variable for next port here

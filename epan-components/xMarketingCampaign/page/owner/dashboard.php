@@ -28,9 +28,9 @@ class page_xMarketingCampaign_page_owner_dashboard extends page_xMarketingCampai
 		
 		//kab konsa newsletter send kara
 		$email_queue = $this->add('xEnquiryNSubscription/Model_EmailQueue');
-		$queue_job_j = $email_queue->join('xEnquiryNSubscription_EmailJobs','emailjobs_id');
+		$queue_job_j = $email_queue->join('xenquirynsubscription_emailjobs','emailjobs_id');
 		$queue_job_j->addField('newsletter_id')->system(true);
-		$newsletter_j = $queue_job_j->join('xEnquiryNSubscription_NewsLetter','newsletter_id');
+		$newsletter_j = $queue_job_j->join('xenquirynsubscription_newsletter','newsletter_id');
 		$newsletter_j->addField('name')->caption('Newsletter Title');
 		$email_queue->addCondition('sent_at','<',date('Y-m-d H:i:s'));
 		$email_queue->addCondition('is_sent',true);

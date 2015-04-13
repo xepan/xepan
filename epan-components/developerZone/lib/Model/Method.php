@@ -3,7 +3,7 @@
 namespace developerZone;
 
 class Model_Method extends \SQL_Model{
-	public $table ="developerZone_entity_methods";
+	public $table ="developerzone_entity_methods";
 
 	function init(){
 		parent::init();
@@ -39,7 +39,7 @@ class Model_Method extends \SQL_Model{
 
 		// $code_flow->_dsql()->set('is_processed',0)->do_update();
 
-		$this->add('developerZone/Model_CodeFlow')->addCondition('developerZone_entity_methods_id',$this->id)->_dsql()->set('is_processed',0)->do_update();
+		$this->add('developerZone/Model_CodeFlow')->addCondition('developerzone_entity_methods_id',$this->id)->_dsql()->set('is_processed',0)->do_update();
 
 		$code ="";
 
@@ -47,7 +47,7 @@ class Model_Method extends \SQL_Model{
 		$code_flow->addCondition('parent_block_id',0);
 		$code_flow->addCondition('connections_in',0);
 		$code_flow->addCondition('action','<>',array('methodCall'));
-		$code_flow->addCondition('developerZone_entity_methods_id',$this->id);
+		$code_flow->addCondition('developerzone_entity_methods_id',$this->id);
 
 		foreach ($code_flow as $cf) {
 			// echo "Rooted " . $cf['name'] ." for " . $cf['id'] ."<br/>";

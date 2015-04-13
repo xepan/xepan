@@ -144,17 +144,17 @@ class page_xMarketingCampaign_page_owner_socialcontents extends page_xMarketingC
 					$social_model->setOrder('updated_at',$_GET['order']);
 					break;
 				case 'recent_posted':
-					$posting_j=$social_model->join('xMarketingCampaign_SocialPostings.post_id');
+					$posting_j=$social_model->join('xmarketingcampaign_socialpostings.post_id');
 					$posting_j->addField('posted_on');
 					$social_model->setOrder('posted_on',$_GET['order']);
 					$social_model->_dsql()->group('post_id');
 					$cols_array=array_merge(array('posted_on'),$cols_array);
 					break;
 				case 'recent_commented':
-					$posting_j=$social_model->join('xMarketingCampaign_SocialPostings.post_id');
+					$posting_j=$social_model->join('xmarketingcampaign_socialpostings.post_id');
 					$posting_j->addField('posted_on');
 
-					$activity_j = $posting_j->join('xMarketingCampaign_SocialPostings_Activities.posting_id');
+					$activity_j = $posting_j->join('xmarketingcampaign_socialpostings_activities.posting_id');
 					$activity_j->addField('activity_on')->caption('Comment On');
 
 					$social_model->setOrder('activity_on',$_GET['order']);
@@ -239,7 +239,7 @@ class page_xMarketingCampaign_page_owner_socialcontents extends page_xMarketingC
 			$activity_m = $p->add('xMarketingCampaign/Model_Activity');
 			$activity_m->addCondition('posting_id',$_GET['posting_id']);
 
-			$p->api->db->dsql()->table('xMarketingCampaign_SocialPostings_Activities')->set('is_read',1)->where('posting_id',$_GET['posting_id'])->update();
+			$p->api->db->dsql()->table('xmarketingcampaign_socialpostings_activities')->set('is_read',1)->where('posting_id',$_GET['posting_id'])->update();
 
 			$activity_m->getElement('name')->caption('Comment');
 			$activity_m->getElement('activity_by')->caption('Comment By');
@@ -341,8 +341,8 @@ class page_xMarketingCampaign_page_owner_socialcontents extends page_xMarketingC
 
 	function page_post(){
 
-		$this->api->stickyGET('xMarketingCampaign_SocialPosts_id');
-		$post_m = $this->add('xMarketingCampaign/Model_SocialPost')->load($_GET['xMarketingCampaign_SocialPosts_id']);
+		$this->api->stickyGET('xmarketingcampaign_socialposts_id');
+		$post_m = $this->add('xMarketingCampaign/Model_SocialPost')->load($_GET['xmarketingcampaign_socialposts_id']);
 
 		$v= $this->add('View')->addClass('panel panel-default');
 		$v->setStyle('padding','20px');
@@ -356,7 +356,7 @@ class page_xMarketingCampaign_page_owner_socialcontents extends page_xMarketingC
         			$object = str_replace(".php", "", $object);
         			$btn = $btn_set->addButton($object);
         			if($btn->isClicked()){
-        				$btn->js()->univ()->frameURL('Post on '. $object, $this->api->url('./single',array('social'=>$object,'socialpost_id'=>$_GET['xMarketingCampaign_SocialPosts_id'])))->execute();
+        				$btn->js()->univ()->frameURL('Post on '. $object, $this->api->url('./single',array('social'=>$object,'socialpost_id'=>$_GET['xmarketingcampaign_socialposts_id'])))->execute();
         			}
         		}
     		}

@@ -46,12 +46,12 @@ class page_xMarketingCampaign_page_owner_campaignexec extends page_xMarketingCam
 			}
 
 			$candidate_subscribers = $this->add('xEnquiryNSubscription/Model_Subscription');
-			$asso_j = $candidate_subscribers->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			$asso_j = $candidate_subscribers->join('xenquirynsubscription_subscatass.subscriber_id');
 			$asso_j->addField('subscribed_on');
 
 			$candidate_subscribers->addExpression('is_this_newsletter_sent')->set(function($m,$q)use($junk){
 				$email_job = $m->add('xEnquiryNSubscription/Model_EmailJobs',array('table_alias'=>'ej'));
-				$email_que_j = $email_job->join('xEnquiryNSubscription_EmailQueue.emailjobs_id');
+				$email_que_j = $email_job->join('xenquirynsubscription_emailqueue.emailjobs_id');
 				$email_que_j->addField('subscriber_id');
 
 				$email_job->addCondition('subscriber_id',$q->getField('id'));
@@ -70,7 +70,7 @@ class page_xMarketingCampaign_page_owner_campaignexec extends page_xMarketingCam
 			$candidate_subscribers->addCondition('age_of_registration','>=',$news_letters_model['duration']);
 			$candidate_subscribers->addCondition('is_this_newsletter_sent',0);
 			
-			$asso_j = $candidate_subscribers->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			$asso_j = $candidate_subscribers->join('xenquirynsubscription_subscatass.subscriber_id');
 			$asso_j->addField('category_id');
 			$asso_j->addField('send_news_letters');
 

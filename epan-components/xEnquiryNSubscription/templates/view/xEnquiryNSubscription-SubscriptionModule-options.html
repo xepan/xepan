@@ -18,7 +18,7 @@
 								<b>Subscription Category</b>
 							</td>
 							<td colspan="2">
-								<select id='xEnquiryNSubscription_Subscription_Categories'>
+								<select id='xenquirynsubscription_subscription_categories'>
 								</select>
 							</td>
 						</tr>
@@ -42,8 +42,8 @@ $('#xEnquirySubscriptionServerSide').click(function(event){
 	$.univ.frameURL('Subscription Module Form','index.php?page=xEnquiryNSubscription_page_owner_subscriptions')
 });
 
-$('#xEnquiryNSubscription_Subscription_Categories').change(function(event) {
-	$(current_selected_component).attr('data-options',$('#xEnquiryNSubscription_Subscription_Categories').val());
+$('#xenquirynsubscription_subscription_categories').change(function(event) {
+	$(current_selected_component).attr('data-options',$('#xenquirynsubscription_subscription_categories').val());
 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
 
@@ -55,7 +55,7 @@ var {$component_type}_options = {
 			data: {param1: 'value1'},
 		})
 		.done(function(ret) {
-			$('#xEnquiryNSubscription_Subscription_Categories').html('<option value="">Please Select ...</option>'+ret);
+			$('#xenquirynsubscription_subscription_categories').html('<option value="">Please Select ...</option>'+ret);
 			console.log("success");
 		})
 		.fail(function() {

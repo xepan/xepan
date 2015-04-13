@@ -24,7 +24,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 			$p->api->stickyGET('category_id');
 
 			$m=$p->add('xEnquiryNSubscription/Model_Subscription');
-			$as_j=$m->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			$as_j=$m->join('xenquirynsubscription_subscatass.subscriber_id');
 			$as_j->addField('category_id');
 			$as_j->addField('send_news_letters')->type('boolean');
 			$as_j->addField('subscribed_on')->sortable(true);
@@ -34,7 +34,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 			$m->addCondition('from_app','Website');
 
 			$un_sub_m=$p->add('xEnquiryNSubscription/Model_Subscription');
-			$as_j=$un_sub_m->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			$as_j=$un_sub_m->join('xenquirynsubscription_subscatass.subscriber_id');
 			$as_j->addField('category_id');
 			$as_j->addField('send_news_letters');
 			$as_j->addField('subscribed_on')->sortable(true);
@@ -62,7 +62,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 			$p->api->stickyGET('category_id');
 
 			$m=$p->add('xEnquiryNSubscription/Model_Subscription');
-			$as_j=$m->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			$as_j=$m->join('xenquirynsubscription_subscatass.subscriber_id');
 			$as_j->addField('category_id');
 			$as_j->addField('send_news_letters')->type('boolean');
 			$as_j->addField('subscribed_on')->sortable(true);
@@ -71,7 +71,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 			$m->addCondition('from_app','<>','Website');
 
 			$un_sub_m=$p->add('xEnquiryNSubscription/Model_Subscription');
-			$as_j=$un_sub_m->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			$as_j=$un_sub_m->join('xenquirynsubscription_subscatass.subscriber_id');
 			$as_j->addField('category_id');
 			$as_j->addField('send_news_letters');
 			$as_j->addField('subscribed_on')->sortable(true);
@@ -114,8 +114,8 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 		$sub_cat_model->addExpression('web_entries')->sortable(true)->set(function($m,$q){
 
 			$mq=$m->add('xEnquiryNSubscription/Model_Subscription',array('table_alias'=>'tmq'));
-			// $s_j=$mq->join('xEnquiryNSubscription_Subscription','subscriber_id');
-			$as_j=$mq->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			// $s_j=$mq->join('xenquirynsubscription_subscription','subscriber_id');
+			$as_j=$mq->join('xenquirynsubscription_subscatass.subscriber_id');
 			$as_j->addField('category_id');
 
 			$mq->addCondition('category_id',$q->getField('id'));
@@ -127,8 +127,8 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 		$sub_cat_model->addExpression('other_entries')->sortable(true)->set(function($m,$q){
 
 			$mq=$m->add('xEnquiryNSubscription/Model_Subscription',array('table_alias'=>'tmq'));
-			// $s_j=$mq->join('xEnquiryNSubscription_Subscription','subscriber_id');
-			$as_j=$mq->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			// $s_j=$mq->join('xenquirynsubscription_subscription','subscriber_id');
+			$as_j=$mq->join('xenquirynsubscription_subscatass.subscriber_id');
 			$as_j->addField('category_id');
 
 			$mq->addCondition('category_id',$q->getField('id'));
@@ -139,8 +139,8 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 		$sub_cat_model->addExpression('last_communicated')->sortable(true)->set(function($m,$q){
 
 			$mq=$m->add('xEnquiryNSubscription/Model_EmailQueue',array('table_alias'=>'tmq'));
-			$s_j=$mq->join('xEnquiryNSubscription_Subscription','subscriber_id');
-			$as_j=$s_j->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			$s_j=$mq->join('xenquirynsubscription_subscription','subscriber_id');
+			$as_j=$s_j->join('xenquirynsubscription_subscatass.subscriber_id');
 			$as_j->addField('category_id');
 
 			$mq->addCondition('category_id',$q->getField('id'));
@@ -281,7 +281,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 
 	   function page_total_categories_config(){
 
-		$this->api->stickyGET('xEnquiryNSubscription_Subscription_Categories_id');
+		$this->api->stickyGET('xenquirynsubscription_subscription_categories_id');
 
 		$v=$this->add('View');
 		$v->addClass('panel panel-danger');
@@ -289,7 +289,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 
 		$config_form = $v->add('Form');
 		$config_model=$this->add('xEnquiryNSubscription/Model_SubscriptionConfig');
-		$config_model->addCondition('category_id',$_GET['xEnquiryNSubscription_Subscription_Categories_id']);
+		$config_model->addCondition('category_id',$_GET['xenquirynsubscription_subscription_categories_id']);
 		$config_model->tryLoadAny();
 
 		$config_form->setModel($config_model);
@@ -353,7 +353,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 		$newsletter_model = $this->add('xEnquiryNSubscription/Model_NewsLetter');
 		$newsletter_model->addExpression('unsend_emails')->set(function($m,$q){
 			$mq= $m->add('xEnquiryNSubscription/Model_EmailQueue');
-			$mq->join('xEnquiryNSubscription_EmailJobs','emailjobs_id')->addField('newsletter_id');
+			$mq->join('xenquirynsubscription_emailjobs','emailjobs_id')->addField('newsletter_id');
 			return $mq->addCondition('newsletter_id',$q->getField('id'))->addCondition('is_sent',false)->count();
 		})->sortable(true);
 
@@ -421,7 +421,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 			$email_to_process->setOrder('id','asc');
 			$email_to_process->setOrder('emailjobs_id','asc');
 
-			$job_j = $email_to_process->join('xEnquiryNSubscription_EmailJobs','emailjobs_id');
+			$job_j = $email_to_process->join('xenquirynsubscription_emailjobs','emailjobs_id');
 			$job_j->addField('process_via');
 			$email_to_process->addCondition('process_via','xEnquiryNSubscription');
 			$pending_count = $email_to_process->count()->getOne();
@@ -453,7 +453,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 
 
 	function page_newsletter_send(){
-		$this->api->stickyGET('xEnquiryNSubscription_NewsLetter_id');
+		$this->api->stickyGET('xenquirynsubscription_newsletter_id');
 
 		$v= $this->add('View');
 		$v->addClass('panel panel-default');
@@ -481,7 +481,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 		
 		if($form->isSubmitted()){
 			$subscribers = $this->add('xEnquiryNSubscription/Model_Subscription');
-			$asso_j = $subscribers->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			$asso_j = $subscribers->join('xenquirynsubscription_subscatass.subscriber_id');
 			$asso_j->addField('category_id');
 			$asso_j->addField('send_news_letters');
 
@@ -490,7 +490,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 				$subscribers->addCondition('send_news_letters',true);
 			
 			$new_job = $this->add('xEnquiryNSubscription/Model_EmailJobs');
-			$new_job['newsletter_id'] = $_GET['xEnquiryNSubscription_NewsLetter_id'];
+			$new_job['newsletter_id'] = $_GET['xenquirynsubscription_newsletter_id'];
 			$new_job['process_via']='xEnquiryNSubscription';
 			$new_job->save();
 
@@ -506,16 +506,16 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 		}
 
 		$existing_jobs = $this->add('xEnquiryNSubscription/Model_EmailQueue');
-		$job_j = $existing_jobs->join('xEnquiryNSubscription_EmailJobs','emailjobs_id');
+		$job_j = $existing_jobs->join('xenquirynsubscription_emailjobs','emailjobs_id');
 		$job_j->addField('newsletter_id');
-		$existing_jobs->addCondition('newsletter_id',$_GET['xEnquiryNSubscription_NewsLetter_id']);
+		$existing_jobs->addCondition('newsletter_id',$_GET['xenquirynsubscription_newsletter_id']);
 		$existing_jobs->setOrder('id','desc');
 
-		$subscriber_join = $existing_jobs->leftJoin('xEnquiryNSubscription_Subscription','subscriber_id');
+		$subscriber_join = $existing_jobs->leftJoin('xenquirynsubscription_subscription','subscriber_id');
 		// $subscriber_join->addField('subscriber','name');
 
-		$subscriber_asso = $subscriber_join->leftJoin('xEnquiryNSubscription_SubsCatAss.subscriber_id');
-		$category_join = $subscriber_asso->leftJoin('xEnquiryNSubscription_Subscription_Categories','category_id');
+		$subscriber_asso = $subscriber_join->leftJoin('xenquirynsubscription_subscatass.subscriber_id');
+		$category_join = $subscriber_asso->leftJoin('xenquirynsubscription_subscription_categories','category_id');
 		$category_join->addField('under_category','name')->sortable(true);
 
 		$crud->setModel($existing_jobs,array('subscriber','email','sent_at','is_sent','under_category'));
@@ -564,7 +564,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 			}
 
 			$new_job = $this->add('xEnquiryNSubscription/Model_EmailJobs');
-			$new_job['newsletter_id'] = $_GET['xEnquiryNSubscription_NewsLetter_id'];
+			$new_job['newsletter_id'] = $_GET['xenquirynsubscription_newsletter_id'];
 			$new_job->save();
 
 			$q= $this->add('xEnquiryNSubscription/Model_EmailQueue');

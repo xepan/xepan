@@ -4,7 +4,7 @@ namespace xEnquiryNSubscription;
 
 
 class Model_EmailQueue extends \Model_Table {
-	var $table='xEnquiryNSubscription_EmailQueue';
+	var $table='xenquirynsubscription_emailqueue';
 	public $mailer_object=null;
 	function init(){
 		parent::init();

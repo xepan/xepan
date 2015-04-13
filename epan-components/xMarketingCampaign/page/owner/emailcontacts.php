@@ -50,7 +50,7 @@ class page_xMarketingCampaign_page_owner_emailcontacts extends page_xMarketingCa
 
 			$emails = $m->add('xEnquiryNSubscription/Model_Subscription',array('table_alias'=>'subs'));
 			$emails->addCondition('from_app','DataGrabberPhrase');
-			$phrase_j = $emails->leftJoin('xMarketingCampaign_data_search_phrase','from_id');
+			$phrase_j = $emails->leftJoin('xmarketingcampaign_data_search_phrase','from_id');
 			$phrase_j->addField('subscription_category_id');
 			$emails->addCondition('subscription_category_id',$q->getField('id'));
 
@@ -60,8 +60,8 @@ class page_xMarketingCampaign_page_owner_emailcontacts extends page_xMarketingCa
 		$email_category_model->addExpression('emails_by_other_apps')->set(function($m,$q){
 			
 			$mq=$m->add('xEnquiryNSubscription/Model_Subscription',array('table_alias'=>'tmqa'));
-			// $s_j=$mq->join('xEnquiryNSubscription_Subscription','subscriber_id');
-			$as_j=$mq->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			// $s_j=$mq->join('xenquirynsubscription_subscription','subscriber_id');
+			$as_j=$mq->join('xenquirynsubscription_subscatass.subscriber_id');
 			$as_j->addField('category_id');
 
 			$mq->addCondition('category_id',$q->getField('id'));
@@ -73,8 +73,8 @@ class page_xMarketingCampaign_page_owner_emailcontacts extends page_xMarketingCa
 		$email_category_model->addExpression('bounced_emails')->set(function($m,$q){
 			
 			$mq=$m->add('xEnquiryNSubscription/Model_Subscription',array('table_alias'=>'tmqa'));
-			// $s_j=$mq->join('xEnquiryNSubscription_Subscription','subscriber_id');
-			$as_j=$mq->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			// $s_j=$mq->join('xenquirynsubscription_subscription','subscriber_id');
+			$as_j=$mq->join('xenquirynsubscription_subscatass.subscriber_id');
 			$as_j->addField('category_id');
 			$mq->addCondition('category_id',$q->getField('id'));
 			$mq->addCondition('is_ok',false);
@@ -133,7 +133,7 @@ class page_xMarketingCampaign_page_owner_emailcontacts extends page_xMarketingCa
 			$cat_id = $p->api->stickyGET('category_id');
 
 			$emails = $p->add('xEnquiryNSubscription/Model_Subscription',array('table_alias'=>'subs'));
-			$assos_j = $emails->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			$assos_j = $emails->join('xenquirynsubscription_subscatass.subscriber_id');
 			$assos_j->addField('category_id');
 			$emails->addCondition('category_id',$_GET['category_id']);
 			$emails->addCondition('is_ok',false);
@@ -162,7 +162,7 @@ class page_xMarketingCampaign_page_owner_emailcontacts extends page_xMarketingCa
 
 			$emails = $p->add('xEnquiryNSubscription/Model_Subscription',array('table_alias'=>'subs'));
 			$emails->addCondition('from_app','<>','DataGrabberPhrase');
-			$assos_j = $emails->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			$assos_j = $emails->join('xenquirynsubscription_subscatass.subscriber_id');
 			$assos_j->addField('category_id');
 			$emails->addCondition('category_id',$_GET['category_id']);
 
@@ -191,7 +191,7 @@ class page_xMarketingCampaign_page_owner_emailcontacts extends page_xMarketingCa
 
 			$emails = $p->add('xEnquiryNSubscription/Model_Subscription',array('table_alias'=>'subs'));
 			$emails->addCondition('from_app','DataGrabberPhrase');
-			$phrase_j = $emails->leftJoin('xMarketingCampaign_data_search_phrase','from_id');
+			$phrase_j = $emails->leftJoin('xmarketingcampaign_data_search_phrase','from_id');
 			$phrase_j->addField('subscription_category_id');
 			$emails->addCondition('subscription_category_id',$_GET['category_id']);
 
@@ -331,7 +331,7 @@ class page_xMarketingCampaign_page_owner_emailcontacts extends page_xMarketingCa
 	}
 
 	function page_emails(){
-		$group_id = $this->api->stickyGET('xEnquiryNSubscription_Subscription_Categories_id');
+		$group_id = $this->api->stickyGET('xenquirynsubscription_subscription_categories_id');
 		$subs_crud = $this->add('CRUD');
 		$cat_sub_model = $this->add('xEnquiryNSubscription/Model_SubscriptionCategoryAssociation')->addCondition('category_id',$group_id);
 

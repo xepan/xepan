@@ -11,7 +11,7 @@ class page_xEnquiryNSubscription_page_emailexec extends Page {
 		$jobs_processed_in_this_hour->addCondition('sent_at','>=',date('Y-m-d H:00:00'));
 		$jobs_processed_in_this_hour->addCondition('is_sent',true);
 
-		$job_j = $jobs_processed_in_this_hour->join('xEnquiryNSubscription_EmailJobs','emailjobs_id');
+		$job_j = $jobs_processed_in_this_hour->join('xenquirynsubscription_emailjobs','emailjobs_id');
 		$job_j->addField('process_via');
 		$jobs_processed_in_this_hour->addCondition('process_via','xEnquiryNSubscription');
 
@@ -30,7 +30,7 @@ class page_xEnquiryNSubscription_page_emailexec extends Page {
 		$email_to_process->setOrder('id','asc');
 		$email_to_process->setOrder('emailjobs_id','asc');
 
-		$job_j = $email_to_process->join('xEnquiryNSubscription_EmailJobs','emailjobs_id');
+		$job_j = $email_to_process->join('xenquirynsubscription_emailjobs','emailjobs_id');
 		$job_j->addField('process_via');
 		$email_to_process->addCondition('process_via','xEnquiryNSubscription');
 

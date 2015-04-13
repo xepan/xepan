@@ -48,7 +48,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 		$newsletter_model = $this->add('xEnquiryNSubscription/Model_NewsLetter');
 		$newsletter_model->addExpression('unsend_emails')->set(function($m,$q){
 			$mq= $m->add('xEnquiryNSubscription/Model_EmailQueue');
-			$mq->join('xEnquiryNSubscription_EmailJobs','emailjobs_id')->addField('newsletter_id');
+			$mq->join('xenquirynsubscription_emailjobs','emailjobs_id')->addField('newsletter_id');
 			return $mq->addCondition('newsletter_id',$q->getField('id'))->addCondition('is_sent',false)->count();
 		})->sortable(true);
 
@@ -111,7 +111,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 			$email_to_process->setOrder('id','asc');
 			$email_to_process->setOrder('emailjobs_id','asc');
 
-			$job_j = $email_to_process->join('xEnquiryNSubscription_EmailJobs','emailjobs_id');
+			$job_j = $email_to_process->join('xenquirynsubscription_emailjobs','emailjobs_id');
 			$job_j->addField('process_via');
 			$email_to_process->addCondition('process_via','xMarketingCampaign');
 		}
@@ -121,7 +121,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 	}
 
 	function page_send(){
-		$this->api->stickyGET('xEnquiryNSubscription_NewsLetter_id');
+		$this->api->stickyGET('xenquirynsubscription_newsletter_id');
 
 		$v= $this->add('View');
 		$v->addClass('panel panel-default');
@@ -149,7 +149,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 		
 		// if($form->isSubmitted()){
 		// 	$subscribers = $this->add('xEnquiryNSubscription/Model_Subscription');
-		// 	$asso_j = $subscribers->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+		// 	$asso_j = $subscribers->join('xenquirynsubscription_subscatass.subscriber_id');
 		// 	$asso_j->addField('category_id');
 		// 	$asso_j->addField('send_news_letters');
 
@@ -158,7 +158,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 		// 		$subscribers->addCondition('send_news_letters',true);
 			
 		// 	$new_job = $this->add('xEnquiryNSubscription/Model_EmailJobs');
-		// 	$new_job['newsletter_id'] = $_GET['xEnquiryNSubscription_NewsLetter_id'];
+		// 	$new_job['newsletter_id'] = $_GET['xenquirynsubscription_newsletter_id'];
 		// 	$new_job['process_via']='xEnquiryNSubscription';
 		// 	$new_job->save();
 
@@ -186,16 +186,16 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 
 		// $single_email_tab = $this->addTab('Send To Single');
 		$existing_jobs = $this->add('xEnquiryNSubscription/Model_EmailQueue');
-		$job_j = $existing_jobs->join('xEnquiryNSubscription_EmailJobs','emailjobs_id');
+		$job_j = $existing_jobs->join('xenquirynsubscription_emailjobs','emailjobs_id');
 		$job_j->addField('newsletter_id');
-		$existing_jobs->addCondition('newsletter_id',$_GET['xEnquiryNSubscription_NewsLetter_id']);
+		$existing_jobs->addCondition('newsletter_id',$_GET['xenquirynsubscription_newsletter_id']);
 		$existing_jobs->setOrder('id','desc');
 
-		$subscriber_join = $existing_jobs->leftJoin('xEnquiryNSubscription_Subscription','subscriber_id');
+		$subscriber_join = $existing_jobs->leftJoin('xenquirynsubscription_subscription','subscriber_id');
 		// $subscriber_join->addField('subscriber','name');
 
-		$subscriber_asso = $subscriber_join->leftJoin('xEnquiryNSubscription_SubsCatAss.subscriber_id');
-		$category_join = $subscriber_asso->leftJoin('xEnquiryNSubscription_Subscription_Categories','category_id');
+		$subscriber_asso = $subscriber_join->leftJoin('xenquirynsubscription_subscatass.subscriber_id');
+		$category_join = $subscriber_asso->leftJoin('xenquirynsubscription_subscription_categories','category_id');
 		$category_join->addField('under_category','name')->sortable(true);
 		
 		$this->add('H3')->set('NewsLetters Queue');
@@ -245,7 +245,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 
 			$new_job = $this->add('xEnquiryNSubscription/Model_EmailJobs');
 			$new_job['process_via'] = 'xMarketingCampaign';
-			$new_job['newsletter_id'] = $_GET['xEnquiryNSubscription_NewsLetter_id'];
+			$new_job['newsletter_id'] = $_GET['xenquirynsubscription_newsletter_id'];
 			$new_job->save();
 
 			$q= $this->add('xEnquiryNSubscription/Model_EmailQueue');

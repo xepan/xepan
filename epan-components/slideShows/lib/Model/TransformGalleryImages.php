@@ -3,7 +3,7 @@
 namespace slideShows;
 
 class Model_TransformGalleryImages extends \Model_Table{
-	var $table="slideShows_transformgalleryimages";
+	var $table="slideshows_transformgalleryimages";
 	function init(){
 		parent::init();
 

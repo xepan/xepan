@@ -23,10 +23,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xImageGallery_gallery`
+-- Table structure for table `ximagegallery_gallery`
 --
 
-CREATE TABLE IF NOT EXISTS `xImageGallery_gallery` (
+CREATE TABLE IF NOT EXISTS `ximagegallery_gallery` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -37,10 +37,10 @@ CREATE TABLE IF NOT EXISTS `xImageGallery_gallery` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xImageGallery_images`
+-- Table structure for table `ximagegallery_images`
 --
 
-CREATE TABLE IF NOT EXISTS `xImageGallery_images` (
+CREATE TABLE IF NOT EXISTS `ximagegallery_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gallery_id` int(11) DEFAULT NULL,
   `image_url` varchar(255) DEFAULT NULL,

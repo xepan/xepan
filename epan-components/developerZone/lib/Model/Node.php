@@ -3,7 +3,7 @@
 namespace developerZone;
 
 class Model_Node extends \SQL_Model{
-	public $table = "developerZone_method_nodes";
+	public $table = "developerzone_method_nodes";
 	public $compiled_code =" // Compiled Code !!! :)";
 	public $scope_variables = array();
 

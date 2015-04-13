@@ -111,10 +111,10 @@ CREATE TABLE IF NOT EXISTS `xmarketingcampaign_cp_sub_cat` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xMarketingCampaign_data_grabber`
+-- Table structure for table `xmarketingcampaign_data_grabber`
 --
 
-CREATE TABLE IF NOT EXISTS `xMarketingCampaign_data_grabber` (
+CREATE TABLE IF NOT EXISTS `xmarketingcampaign_data_grabber` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -138,10 +138,10 @@ CREATE TABLE IF NOT EXISTS `xMarketingCampaign_data_grabber` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `xMarketingCampaign_data_grabber`
+-- Dumping data for table `xmarketingcampaign_data_grabber`
 --
 
-INSERT INTO `xMarketingCampaign_data_grabber` (`id`, `epan_id`, `name`, `site_url`, `query_parameter`, `paginator_parameter`, `paginator_initial_value`, `records_per_page`, `paginator_based_on`, `extra_url_parameters`, `required_pause_between_hits`, `result_selector`, `result_format`, `json_url_key`, `reg_ex_on_href`, `created_at`, `last_run_at`, `is_active`) VALUES
+INSERT INTO `xmarketingcampaign_data_grabber` (`id`, `epan_id`, `name`, `site_url`, `query_parameter`, `paginator_parameter`, `paginator_initial_value`, `records_per_page`, `paginator_based_on`, `extra_url_parameters`, `required_pause_between_hits`, `result_selector`, `result_format`, `json_url_key`, `reg_ex_on_href`, `created_at`, `last_run_at`, `is_active`) VALUES
 (1, 1, 'http://www.bing.com', 'http://www.bing.com', 'q', 'first', '1', '10', 'records', '', '30', 'li.b_algo', 'HTML', '', '', '2014-10-25 09:55:21', '2014-10-25 09:55:21', 1),
 (2, 1, 'Google Ajax (Limited to max 64 records)', 'http://ajax.googleapis.com/ajax/services/search/web', 'q', 'start', '0', '8', 'records', 'v=1.0&rsz=8', '10', '', 'JSON', 'unescapedUrl', '', '2014-10-25 09:56:51', '2014-10-25 09:56:51', 1),
 (3, 1, 'Google.com', 'http://www.google.co.in/search', 'q', 'start', '0', '10', 'records', '', '10', '#ires li.g h3', 'HTML', '', '^\\/url\\?q=(.*)&sa=(.*)$', '2014-10-25 09:57:58', '2014-10-31 20:34:24', 1);
@@ -149,10 +149,10 @@ INSERT INTO `xMarketingCampaign_data_grabber` (`id`, `epan_id`, `name`, `site_ur
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xMarketingCampaign_data_search_phrase`
+-- Table structure for table `xmarketingcampaign_data_search_phrase`
 --
 
-CREATE TABLE IF NOT EXISTS `xMarketingCampaign_data_search_phrase` (
+CREATE TABLE IF NOT EXISTS `xmarketingcampaign_data_search_phrase` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `data_grabber_id` int(11) DEFAULT NULL,
   `subscription_category_id` int(11) DEFAULT NULL,
