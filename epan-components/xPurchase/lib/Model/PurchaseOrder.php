@@ -424,7 +424,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
 		$view=$this->add('xPurchase/View_PurchaseOrderDetail');
-		echo "string";
+		// echo "string";
 		$view->setModel($this->itemrows());		
 		
 		$subject ="Thanku for Purchase Order";

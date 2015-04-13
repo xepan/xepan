@@ -16,7 +16,7 @@ class View_Tile extends View {
 	}
 
 	function setFooter($text,$icon=null){
-		$html = '<i class="'.$icon.'">'.$text.'</i>';
+		$html = '<i class="'.$icon.'"> &nbsp;&nbsp;'.$text.'</i>';
 		$this->template->trySetHTML('footer',$html);
 	}
 
