@@ -7,6 +7,7 @@ class Model_Quotation_Approved extends Model_Quotation{
 			'can_view'=>array(),
 			'allow_edit'=>array(),
 			'can_send_via_email'=>array(),
+			'can_cancel'=>array(),
 		);
 
 	function init(){

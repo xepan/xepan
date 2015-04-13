@@ -68,9 +68,8 @@ class Model_Quotation extends \Model_Document{
 		parent::setStatus('submitted');
 	}
 
-
 	function reject($message){
-		$this->setStatus('rejected');
+		$this->setStatus('redesign');
 	}
 	
 
@@ -82,6 +81,10 @@ class Model_Quotation extends \Model_Document{
 		return $this['status'];
 	}
 
+	function cancel(){
+		$this->setStatus('cancelled');
+	}
+
 	function itemrows(){
 		return $this->add('xShop/Model_QuotationItem')->addCondition('quotation_id',$this->id);
 	}
@@ -90,11 +93,11 @@ class Model_Quotation extends \Model_Document{
 		return $this->ref('customer_id');
 	}
 
-	function send_via_email_page($email_id=null, $order_id=null){
+	function send_via_email_page($page){
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
-		$subject ="Thanku for Order";
+		$subject ="Thank You for Enquiry";
 		$customer = $this->customer();
 		$customer_email=$customer->get('customer_email');
 
@@ -117,7 +120,25 @@ class Model_Quotation extends \Model_Document{
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
 		// echo $email_body;
 		// return;
-		$this->sendEmail($customer_email,$subject,$email_body);
+		$emails = explode(',', $customer['customer_email']);
+		
+		$form = $page->add('Form_Stacked');
+		$form->addField('line','to')->set($emails[0]);
+		// array_pop(array_re/verse($emails));
+		unset($emails[0]);
+
+		$form->addField('line','cc')->set(implode(',',$emails));
+		$form->addField('line','bcc');
+		$form->addField('line','subject')->set($subject);
+		$form->addField('RichText','custom_message');
+		$form->add('View')->setHTML($email_body);
+		$form->addSubmit('Send');
+		if($form->isSubmitted()){
+			$email_body .= $form['custom_message']."<br>".$email_body;
+			$this->sendEmail($form['to'],$form['subject'],$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));
+			$this->createActivity('email',$form['subject'],$form['message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
+			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
+		}
 		
 	}
 
