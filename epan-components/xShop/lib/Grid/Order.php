@@ -34,6 +34,10 @@ class Grid_Order extends \Grid {
 		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Sale Order', $this->api->url($this->vp->getURL(),array('sales_order_clicked'=>$this->model->id))).'">'. $this->current_row[$field] . ' '. $online."</a>".'<br><small style="color:gray;">'.$this->model['member']."</small>";
 	}
 
+	function format_lastaction($field){
+		$this->current_row_html[$field] = $this->current_row[$field]. '<br/>Total Items: <small style="color:gray;">'.$this->model['orderitem_count']."</small>";
+	}
+
 	function setModel($model,$fields=null){
 
 		if($fields==null){
@@ -53,6 +57,8 @@ class Grid_Order extends \Grid {
 		// } 
 
 		$this->addFormatter('name','view');
+		if($this->hasColumn('last_action'))
+			$this->addFormatter('last_action','lastaction');
 		$this->removeColumn('orderitem_count');
 		$this->removeColumn('order_from');
 		$this->removeColumn('member');

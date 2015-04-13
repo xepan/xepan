@@ -253,6 +253,8 @@ class Frontend extends ApiFrontend{
 			// ->_load( 'ui.atk4_univ' )
 			->_load( 'ui.atk4_notify' )
 			;
+			
+			setlocale(LC_MONETARY, 'en_IN');
 		}
 	}
 
