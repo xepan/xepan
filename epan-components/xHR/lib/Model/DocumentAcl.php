@@ -60,5 +60,9 @@ class Model_DocumentAcl extends \Model_Table{
 			// must not be anything in terms of "assigned" or "if team leader" kind of
 	}
 
+	function document(){
+		return $this->ref('document_id');
+	}
+
 
 }
