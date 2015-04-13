@@ -318,13 +318,18 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 	}
 
 	function receive(){
+		$dispatch_request_id = $this['id'];
+
 		$this->setStatus('received');
-		if($pre_dept_job_card = $this->previousDeptJobCard()){
+
+		$dis_req_m = $this->add('xDispatch/Model_DispatchRequest')->load($dispatch_request_id);
+
+		if($pre_dept_job_card = $dis_req_m->previousDeptJobCard()){
 			$pre_dept_job_card->complete();
 		}
-		$ds = $this->orderItem()->deptartmentalStatus($this->department());
+		$ds = $dis_req_m->orderItem()->deptartmentalStatus($dis_req_m->department());
 		if($ds) {
-			$ds->setStatus(ucwords('received') .' in ' . $this->department()->get('name'));
+			$ds->setStatus(ucwords('received') .' in ' . $dis_req_m->department()->get('name'));
 		}
 	}
 

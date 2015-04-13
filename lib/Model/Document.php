@@ -74,6 +74,8 @@ class Model_Document extends SQL_Model{
 		$this->addHook('afterInsert',array($this,'defaultAfterInsert'));
 		$this->addHook('afterLoad',array($this,'defaultAfterLoad'));
 
+		$this->addExpression('created_date')->set('DATE_FORMAT('.$this->dsql()->getField('created_at').',"%Y-%m-%d")');
+		$this->addExpression('updated_date')->set('DATE_FORMAT('.$this->dsql()->getField('updated_at').',"%Y-%m-%d")');
 	}
 
 
@@ -87,6 +89,7 @@ class Model_Document extends SQL_Model{
 		}else{
 			$this['item_name'] = $this['item'];
 		}
+		
 	}
 
 	function defaultBeforeSave(){
@@ -262,12 +265,13 @@ class Model_Document extends SQL_Model{
 		$this->saveAs($this->getRootClass());
 	}
 
-	function createActivity($action,$subject,$message,$from=null,$from_id=null){
+	function createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null){
 		
 		if(!$from){
 			$from = 'Employee';
 			$from_id = $this->api->current_employee->id;
 		}
+
 
 		$new_activity = $this->add('xCRM/Model_Activity');
 		$new_activity['related_root_document_name'] = $this->root_document_name;
@@ -277,6 +281,12 @@ class Model_Document extends SQL_Model{
 		$new_activity['action'] = $action;
 		$new_activity['from']= $from;
 		$new_activity['from_id']= $from_id;
+		
+		if($to){
+			$new_activity['to']= $to;
+			$new_activity['to_id']= $to_id;
+		}
+
 		$new_activity['subject']= $subject;
 		$new_activity['message']= $message;
 

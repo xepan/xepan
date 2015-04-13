@@ -38,12 +38,12 @@ class Model_Transaction extends \Model_Document{
 	}
 
 	function beforeDelete(){
-		if($this->ref('xAccount/TransacionRow')->count()->getOne())
+		if($this->ref('xAccount/TransactionRow')->count()->getOne())
 			throw $this->exception('TRansaction Contains Rows, Cannot Delete','Growl');
 	}
 
 	function forceDelete(){
-		foreach ($this->ref('xAccount/TransacionRow') as $trrow) {
+		foreach ($this->ref('xAccount/TransactionRow') as $trrow) {
 			$trrow->delete();
 		}
 

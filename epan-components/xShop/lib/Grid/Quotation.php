@@ -9,7 +9,7 @@ class Grid_Quotation extends \Grid{
 		$this->addSno();
 		$this->vp=$this->add('VirtualPage')->set(function($p){
 			$p->api->stickyGET('quotation_clicked');
-			$p->add('xShop/View_Quotation',array('quotation'=>$p->add('xShop/Model_Quotation')->tryLoadAny($_GET['quotation_clicked'])));
+			$p->add('xShop/View_Quotation',array('quotation'=>$p->add('xShop/Model_Quotation')->load($_GET['quotation_clicked'])));
 		});
 	}
 	
@@ -24,7 +24,7 @@ class Grid_Quotation extends \Grid{
 	
 	function setModel($quotation_model,$field=array()){
 		if(empty($field))
-			$field = array('to','quotation_number','name','customer','lead','opportunity');
+			$field = array('to','quotation_number','name','customer','lead','opportunity','total_amount','tax','gross_amount','discount_voucher_amount','net_amount');
 		$m=parent::setModel($quotation_model,$field);
 		$this->addFormatter('name','view');
 
@@ -32,7 +32,6 @@ class Grid_Quotation extends \Grid{
 				$g->current_row[$f]=$g->current_row['lead']? '(L) '.$g->current_row['lead']: '(C) '.$g->current_row	['customer'];
 			});
 		$this->addColumn('to','to');
-
 		$this->addColumn('expander','items',array('page'=>'xShop_page_owner_quotation_items','descr'=>'Items'));
 		
 		$this->removeColumn('customer');

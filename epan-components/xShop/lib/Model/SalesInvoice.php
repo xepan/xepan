@@ -34,8 +34,6 @@ class Model_SalesInvoice extends Model_Invoice{
 
 		$transaction->execute();
 
-		$transaction->relatedDocument($this);
-
 		return $transaction;
 
 	}
@@ -95,14 +93,14 @@ class Model_SalesInvoice extends Model_Invoice{
 		if($form->isSubmitted()){
 			if($tr){
 				$tr->forceDelete();
-				$this->cancel();
+				$this->cancel($form['reason']);
 			}
 			return true;
 		}
 	}
 
-	function cancel(){
-			$this->setStatus('canceled',$form['reason']);
+	function cancel($reason){
+			$this->setStatus('canceled',$reason);
 	}
 
 	function mark_processed_page($p){

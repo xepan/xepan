@@ -18,6 +18,21 @@ class Model_TransactionRow extends \Model_Table{
 		$this->addExpression('Narration')->set($this->refSQL('transaction_id')->fieldQuery('Narration'));
 		$this->addExpression('transaction_type')->set($this->refSQL('transaction_id')->fieldQuery('transaction_type'));
 
+		$this->addHook('beforeDelete',$this);
+
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function account(){
+		return $this->ref('account_id');
+	}
+
+	function beforeDelete(){
+		if($this['amountCr'])
+			$this->account()->creditOnly(-1 * $this['amountCr']);
+
+		if($this['amountDr'])
+			$this->account()->debitOnly(-1 * $this['amountDr']);
+
 	}
 }

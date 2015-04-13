@@ -146,8 +146,8 @@ class Model_Invoice extends \Model_Document{
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);
 		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number']?"Contact No.:".$customer['mobile_number'].",":" ", $email_body);
 		$email_body = str_replace("{{city}}", $customer['city']? $customer['city']:" ", $email_body);
-		$email_body = str_replace("{{state}}", $customer['state']?",".$customer['state']:" ", $email_body);
-		$email_body = str_replace("{{country}}", $customer['country']?",".$customer['country']:" ", $email_body);
+		$email_body = str_replace("{{state}}", $customer['state']?", ".$customer['state']:" ", $email_body);
+		$email_body = str_replace("{{country}}", $customer['country']?", ".$customer['country']:" ", $email_body);
 		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address']?"Address.:".$customer['billing_address']:" ", $email_body);
 		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address']?"Shipping Address.:".$customer['shipping_address']:" ", $email_body);
 		$email_body = str_replace("{{customer_email}}", $customer['customer_email'], $email_body);
@@ -175,11 +175,10 @@ class Model_Invoice extends \Model_Document{
 		$form->addField('RichText','custom_message');
 		$form->add('View')->setHTML($email_body);
 		$form->addSubmit('Send');
-		// echo $email_body;
-		// return;
 		if($form->isSubmitted()){
-			$email_body .= $form['custom_message']."<br>".$email_body;			
-			$this->sendEmail($form['to'],$form['subject'],$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));	
+			$email_body .= $form['custom_message']."<br>".$email_body;
+			$this->sendEmail($form['to'],$form['subject'],$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));
+			$this->createActivity('email',$form['subject'],$form['message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
 		}
 		

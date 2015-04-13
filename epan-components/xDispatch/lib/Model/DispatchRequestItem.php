@@ -53,8 +53,8 @@ class Model_DispatchRequestItem extends \Model_Document{
 		return $this->ref('orderitem_id');
 	}
 
-	function receive(){
-		$this->ref('dispatch_request_id')->setStatus('received');
+	function receive(){		
+		$this->ref('dispatch_request_id')->receive();
 		parent::setStatus('received');
 	}
 

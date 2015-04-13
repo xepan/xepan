@@ -11,15 +11,24 @@ class View_Quotation extends \CompleteLister{
 		$this->template->setHtml('name',"Quotation No: <b>".$this->quotation['name']."</b>");
 		$this->template->setHtml('created_at',"Created At: <b>".$this->quotation['created_at']."</b>");
 		$this->template->setHtml('status',"Status: <b>".ucwords($this->quotation['status'])."</b>");
-		$this->template->setHtml('customer',"Customer: <b>".ucwords($this->quotation['customer'])."</b>");
-		$this->template->setHtml('lead',"Lead: <b>".ucwords($this->quotation['lead'])."<b>");
+		$this->quotation['customer']?$this->template->setHtml('customer',"Customer: <b>".ucwords($this->quotation['customer'])."</b>"):"";
+		$this->quotation['lead']?$this->template->setHtml('lead',"Lead: <b>".ucwords($this->quotation['lead'])."<b>"):"";
+
+		$this->template->trySetHtml('gross_amount',$this->quotation['gross_amount']?:'0.00');
+		$this->template->trySetHtml('discount_voucher_amount',$this->quotation['discount_voucher_amount']?:'0.00');
+		$this->template->trySetHtml('net_amount',$this->quotation['net_amount']?:'.00');
 		
+		if(!$this->quotation['termsandcondition_id'])
+			$this->template->del('tandc_section');
+		else
+			$this->template->trySetHTML('termsandcondition_matter',$this->quotation->ref('termsandcondition_id')->get('terms_and_condition'));
+
 		$this->setModel($this->quotation->itemrows());
 	}
 
 	function formatRow(){
 		$this->current_row['sno']=$this->sno;
-		$this->current_row_html['departments']=$this->model['item_name'];
+		$this->current_row['redable_custom_fields']=$this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
 		$this->sno++;
 	}
 
