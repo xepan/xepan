@@ -259,13 +259,13 @@ class Model_Order extends \Model_Document{
 		$this->save();
 	}
 
-	function send_via_email_page($page){
+	function send_via_email_page($p){
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
 		$print_order = $this->add('xShop/View_PrintOrder');
 		$print_order->setModel($this);
-		$order_detail = $print_order->getHTML(false);
+		$order_detail_html = $print_order->getHTML(false);
 
 		$customer = $this->customer();
 		$customer_email=$customer->get('customer_email');
@@ -277,7 +277,7 @@ class Model_Order extends \Model_Document{
 		$email_body=$config_model['order_detail_email_body']?:"Order Layout Is Empty";
 				
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
-		$email_body = str_replace("{{customer_name}}", $customer['customer_name']?"<small> Mr/Mrs.</small> <b>".$customer['customer_name']."</b><br>":" ", $email_body);
+		$email_body = str_replace("{{customer_name}}", $customer['customer_name']?"<b> Mr./Mrs.  ".$customer['customer_name']."</b><br>":" ", $email_body);
 		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number']?"Contact No.:".$customer['mobile_number']:" ", $email_body);
 		$email_body = str_replace("{{customer_email}}", $customer['customer_email']?"E-mail id:".$customer['customer_email']:" ", $email_body);
 		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address']?"Billing Addess.:".$customer['billing_address']:" ", $email_body);
@@ -286,7 +286,7 @@ class Model_Order extends \Model_Document{
 		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no'], $email_body);
 		$email_body = str_replace("{{order_no}}", $this['name'], $email_body);
 		$email_body = str_replace("{{order_date}}", $this['created_at'], $email_body);
-		$email_body = str_replace("{{order_details}}", $order_detail, $email_body);
+		$email_body = str_replace("{{sale_order_details}}", $order_detail_html, $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
 		$emails = explode(',', $customer['customer_email']);
 		
