@@ -3,7 +3,7 @@
 namespace xEnquiryNSubscription;
 
 class Model_SubscriptionCategoryAssociation extends \Model_Table {
-	var $table= "xEnquiryNSubscription_SubsCatAss";
+	var $table= "xenquirynsubscription_subscatass";
 	
 	function init(){
 		parent::init();

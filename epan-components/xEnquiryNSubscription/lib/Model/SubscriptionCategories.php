@@ -3,7 +3,7 @@ namespace xEnquiryNSubscription;
 
 
 class Model_SubscriptionCategories extends \Model_Table {
-	var $table= "xEnquiryNSubscription_Subscription_Categories";
+	var $table= "xenquirynsubscription_subscription_categories";
 	function init(){
 		parent::init();
 
@@ -18,8 +18,8 @@ class Model_SubscriptionCategories extends \Model_Table {
 
 		$this->addExpression('total_emails')->set(function($m,$q){
 			$mq=$m->add('xEnquiryNSubscription/Model_Subscription',array('table_alias'=>'tmq'));
-			// $s_j=$mq->join('xEnquiryNSubscription_Subscription','subscriber_id');
-			$as_j=$mq->join('xEnquiryNSubscription_SubsCatAss.subscriber_id');
+			// $s_j=$mq->join('xenquirynsubscription_subscription','subscriber_id');
+			$as_j=$mq->join('xenquirynsubscription_subscatass.subscriber_id');
 			$as_j->addField('category_id');
 
 			$mq->addCondition('category_id',$q->getField('id'));

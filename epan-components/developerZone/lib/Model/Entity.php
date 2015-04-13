@@ -4,7 +4,7 @@ namespace developerZone;
 
 class Model_Entity extends \SQL_Model{
 	
-	public $table = "developerZone_entities";
+	public $table = "developerzone_entities";
 
 	public $compiled_code="";
 

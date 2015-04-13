@@ -3,7 +3,7 @@
 namespace xMarketingCampaign;
 
 class Model_GoogleBloggerConfig extends \Model_Table{
-	public $table='xMarketingCampaign_GoogleBloggerConfig';
+	public $table='xmarketingcampaign_googlebloggerconfig';
 
 	function init(){
 		parent::init();

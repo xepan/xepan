@@ -2,7 +2,7 @@
 namespace slideShows;
 
 class Model_WaterWheelImages extends \Model_Table {
-	var $table= "slideShows_waterwheelimages";
+	var $table= "slideshows_waterwheelimages";
 	function init(){
 		parent::init();
 		$this->hasOne('slideShows/Model_WaterWheelGallery','gallery_id');

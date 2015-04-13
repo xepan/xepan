@@ -4,7 +4,7 @@ namespace xEnquiryNSubscription;
 
 
 class Model_NewsLetterCategory extends \Model_Table {
-	public $table ='xEnquiryNSubscription_NewsLetterCategory';
+	public $table ='xenquirynsubscription_newslettercategory';
 
 	function init(){
 		parent::init();

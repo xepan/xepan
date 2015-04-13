@@ -3,7 +3,7 @@
 namespace xEnquiryNSubscription;
 
 class Model_HostsTouched extends \Model_Table{
-	public $table ='xEnquiryNSubscription_hosts_touched';
+	public $table ='xenquirynsubscription_hosts_touched';
 
 	function init(){
 		parent::init();

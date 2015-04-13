@@ -3,7 +3,7 @@
 namespace developerZone;
 
 class Model_Tools extends \SQL_Model{
-	public $table = "developerZone_editor_tools";
+	public $table = "developerzone_editor_tools";
 
 	function init(){
 		parent::init();

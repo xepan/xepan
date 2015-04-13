@@ -3,7 +3,7 @@
 namespace xMarketingCampaign;
 
 class Model_SocialConfig extends \Model_Table{
-	public $table='xMarketingCampaign_SocialConfig';
+	public $table='xmarketingcampaign_socialconfig';
 
 	function init(){
 		parent::init();
@@ -52,7 +52,7 @@ class Model_SocialUsers extends \Model_Table{
 // Model Post
 
 class Model_SocialPosting extends \Model_Table{
-	public $table="xMarketingCampaign_SocialPostings";
+	public $table="xmarketingcampaign_socialpostings";
 
 	function init(){
 		parent::init();
@@ -142,7 +142,7 @@ class Model_SocialPosting extends \Model_Table{
 
 // Model Post Activity/Comments
 class Model_Activity extends \SQL_Model{
-	public $table = "xMarketingCampaign_SocialPostings_Activities";
+	public $table = "xmarketingcampaign_socialpostings_activities";
 
 	function init(){
 		parent::init();

@@ -3,7 +3,7 @@
 namespace xImageGallery;
 
 class Model_Images extends \Model_Table {
-	public $table ='xImageGallery_images';
+	public $table ='ximagegallery_images';
 
 	function init(){
 		parent::init();

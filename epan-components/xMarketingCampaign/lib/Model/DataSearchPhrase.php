@@ -3,7 +3,7 @@
 namespace xMarketingCampaign;
 
 class Model_DataSearchPhrase extends \Model_Table{
-	public $table = "xMarketingCampaign_data_search_phrase";
+	public $table = "xmarketingcampaign_data_search_phrase";
 
 	function init(){
 		parent::init();

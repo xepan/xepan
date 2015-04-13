@@ -36,10 +36,10 @@ class page_xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb extends page_xMarketin
 	}
 
 	function page_phrases(){
-		$this->api->stickyGET('xMarketingCampaign_data_grabber_id');
+		$this->api->stickyGET('xmarketingcampaign_data_grabber_id');
 
 		$data_grabber_model = $this->add('xMarketingCampaign/Model_DataGrabber');
-		$data_grabber_model->load($_GET['xMarketingCampaign_data_grabber_id']);
+		$data_grabber_model->load($_GET['xmarketingcampaign_data_grabber_id']);
 
 		$crud = $this->add('CRUD');
 
