@@ -148,41 +148,45 @@ class Controller_Acl extends \AbstractController {
 	function doCRUD(){
 		// echo "i m here 2 <br>";
 		if($this->show_acl_btn AND !$this->owner->isEditing()){
-			$btn = $this->owner->grid->buttonset->addButton()->set('ACL APPLIED');
-			$self= $this;
-			$vp = $this->owner->add('VirtualPage')->set(function($p)use($self){
-				// $p->add('View')->set($self->owner->model->document_name);
-				$p->api->stickyGET('department_id');
+			if($this->api->auth->model->isDefaultSuperUser()){
+				$btn = $this->owner->grid->buttonset->addButton()->set('ACL APPLIED');
+				$self= $this;
+				$vp = $this->owner->add('VirtualPage')->set(function($p)use($self){
+					// $p->add('View')->set($self->owner->model->document_name);
+					$p->api->stickyGET('department_id');
 
-				$m = $p->add('xHR/Model_DocumentAcl');
-				$j=$m->leftJoin('xhr_documents','document_id');
-				$j->addField('doc_name','name');
-				$j->addField('department_id');
-				$m->addCondition('doc_name',$self->owner->model->document_name);
-				$m->addCondition('post_id','<>',null); // is admin is not associated with any post athen post=null wali entries bhi dikhayega
-				
-				if(! $p->api->current_department instanceof \Dummy)
-					$m->addCondition('department_id',$p->api->current_department->id);
-				
-				$m->getElement('post_id')->display(array('form'=>'Readonly'));
-				$m->addExpression('post_department')->set($m->refSQL('post_id')->fieldQuery('department'))->caption('Department');
+					$m = $p->add('xHR/Model_DocumentAcl');
+					$j=$m->leftJoin('xhr_documents','document_id');
+					$j->addField('doc_name','name');
+					$j->addField('department_id');
+					$m->addCondition('doc_name',$self->owner->model->document_name);
+					$m->addCondition('post_id','<>',null); // is admin is not associated with any post athen post=null wali entries bhi dikhayega
+					
+					if(! $p->api->current_department instanceof \Dummy)
+						$m->addCondition('department_id',$p->api->current_department->id);
+					
+					$m->getElement('post_id')->display(array('form'=>'Readonly'));
+					$m->addExpression('post_department')->set($m->refSQL('post_id')->fieldQuery('department'))->caption('Department');
 
-				$c = $p->add('CRUD',array('allow_add'=>false));
-				$fields=null;
-				if(isset($self->owner->model->actions)){
-					$fields = array_merge(array('post_department','post','post_id'),array_keys($self->owner->model->actions));
+					$c = $p->add('CRUD',array('allow_add'=>false));
+					$fields=null;
+					if(isset($self->owner->model->actions)){
+						$fields = array_merge(array('post_department','post','post_id'),array_keys($self->owner->model->actions));
+					}
+					$c->setModel($m,$fields);
+					if(!$c->isEditing()){
+						$c->grid->removeColumn('post_id');
+					}
+				});
+
+				if($btn->isClicked()){
+					$dept = '';
+					if(!$this->api->current_department instanceof \Dummy)
+						$dept = ' In ' . $this->api->current_department['name'];
+					$this->owner->js()->univ()->frameURL('ACL Status for '.$self->owner->model->document_name . $dept , $vp->getURL())->execute();
 				}
-				$c->setModel($m,$fields);
-				if(!$c->isEditing()){
-					$c->grid->removeColumn('post_id');
-				}
-			});
-
-			if($btn->isClicked()){
-				$dept = '';
-				if(!$this->api->current_department instanceof \Dummy)
-					$dept = ' In ' . $this->api->current_department['name'];
-				$this->owner->js()->univ()->frameURL('ACL Status for '.$self->owner->model->document_name . $dept , $vp->getURL())->execute();
+			}else{
+				$btn = $this->owner->grid->buttonset->add('View')->set('ACL APPLIED');
 			}
 		}
 
