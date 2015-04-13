@@ -363,6 +363,8 @@ class page_base_owner extends Page {
 
 		}
 
+		// $this->add('View_Notification');
+
 	}
 
 	function render(){
