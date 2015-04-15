@@ -345,7 +345,7 @@ class Model_OrderDetails extends \Model_Document{
 			//Hightlight the PassDepartment mostly used in Jobcard
 			if($department_hightlight and $department_hightlight instanceof \xHR\Model_Department){
 				if($department_hightlight['id'] == $department_asso['department_id'])
-					$str .= "<b class='atk-swatch-green'>".$department_asso['department']."</b>";
+					$str .= "&nbsp;<b class='atk-swatch-green'>".$department_asso['department']."&nbsp;</b>";
 				else
 					$str .= '<b>' .$department_asso['department']."</b>";
 
@@ -367,7 +367,7 @@ class Model_OrderDetails extends \Model_Document{
 			}
 			
 			if($department_asso['outsource_party'])
-				$str .= '&nbsp;<span class="atk-swatch-yellow"> Out Source ( '.$department_asso['outsource_party'].' )&nbsp;</span>';
+				$str .= '&nbsp;<span class="atk-swatch-blue"> Out Source ( '.$department_asso['outsource_party'].' )&nbsp;</span>';
 
 			if($with_custom_fields){
 				$array = json_decode($this['custom_fields'],true);
