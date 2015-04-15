@@ -227,4 +227,23 @@ class Model_Account extends \Model_Document{
 
 		return $this;
 	}
+
+	function customer(){
+		if($this['customer_id'])
+			return $this->ref('customer_id');
+
+		return false;
+	}
+
+	function group(){
+		return $this->ref('group_id');
+	}
+
+	function isSundryDebtor(){
+		return $this->group()->isSundryDebtor();
+	}
+
+	function isSundryCreditor(){
+		return $this->group()->isSundryCreditor();
+	}
 }

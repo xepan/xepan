@@ -32,9 +32,12 @@ class Model_Transaction extends \Model_Document{
 
 		$this->hasMany('xAccount/TransactionRow','transaction_id');
 
+		// $this->addExpression('cr_sum')->set($this->refSQL('xAccount/TransactionRow')->sum('amountCr'));
+		// $this->addExpression('dr_sum')->set($this->refSQL('xAccount/TransactionRow')->sum('amountDr'));
+
 		$this->addHook('beforeDelete',$this);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
@@ -48,6 +51,10 @@ class Model_Transaction extends \Model_Document{
 		}
 
 		$this->delete();
+	}
+
+	function rows(){
+		return $this->ref('xAccount/TransactionRow');
 	}
 	
 	function createNewTransaction($transaction_type, $related_document=false, $transaction_date=null, $Narration=null){
@@ -117,7 +124,7 @@ class Model_Transaction extends \Model_Document{
 		$this->save();
 
 		$total_debit_amount =0;
-		// Foreach Dr add new TransacionRow (Dr wali)
+		// Foreach Dr add new TransactionRow (Dr wali)
 		foreach ($this->dr_accounts as $accountNumber => $dtl) {
 			if($dtl['amount'] ==0) continue;
 			$dtl['account']->debitWithTransaction($dtl['amount'],$this->id);
@@ -147,12 +154,62 @@ class Model_Transaction extends \Model_Document{
 			return "Either Dr or Cr accounts are not present. DRs =>".count($DRs). " and CRs =>".count($CRs);
 
 		if(!$this->all_debit_accounts_are_mine and !$this->all_credit_accounts_are_mine)
-			return "Dr and Cr both containes other branch accounts";
+			return "Dr and Cr both contains other branch accounts";
 
 		if(count($this->other_branches_involved) > 1)
 			return "More then one other branch involved";
 
 		return true;
+	}
+
+	function sendReceiptViaEmail($customer_email=false){
+		
+		if(!$this->loaded())
+			return false;
+		
+		$order = $this->relatedDocument();
+
+		$config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		$subject = $config['cash_voucher_email_subject'];
+		$subject = str_replace('{order_no}', $order['name'], $subject);
+		$subject = str_replace('{voucher_no}', $this['name'], $subject);
+		$email_body = $config['cash_voucher_email_body'];
+		
+		$email_body = str_replace('{voucher_no}', $this['name'], $email_body);
+		$email_body = str_replace('{date}', $this['created_at'], $email_body);
+		$email_body = str_replace('{amount}', $this->ref('xAccount/TransactionRow')->sum('amountCr'), $email_body);
+		$email_body = str_replace('{pay_to}', $order['member'], $email_body);
+		$email_body = str_replace('{approve_by}', $order->searchActivity('approved'), $email_body);
+
+		if(strpos($this['transaction_type'],"CASH") !==false){
+			$email_body = str_replace('{cash}',"Yes", $email_body);
+			$email_body = str_replace('{cheque}',"No", $email_body);
+		}
+
+		if(strpos($this['transaction_type'],"BANK") !==false){
+			$email_body = str_replace('{cash}',"No", $email_body);
+			$email_body = str_replace('{cheque}',"Yes", $email_body);
+		}
+
+		$customer = $this->customer();
+		if(!$customer_email){
+			$customer_email=$customer->get('customer_email');
+		}
+
+		if(!$customer_email) return;
+
+		$this->sendEmail($customer_email,$subject,$email_body,$ccs=array(),$bccs=array());
+		if(!$order instanceof \Dummy)
+			$order->createActivity('email',$subject,"Advanced Payment Voucher od Order (".$this['name'].")",$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
+		return true;
+	}
+
+	function customer(){
+		foreach ($this->rows() as $trrow) {
+			$acc = $trrow->account();
+			if($acc->isSundryDebtor())
+				return $trrow->account()->customer();
+		}
 	}
 
 }
