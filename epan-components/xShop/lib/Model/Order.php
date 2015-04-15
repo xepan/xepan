@@ -540,9 +540,9 @@ class Model_Order extends \Model_Document{
 		
 		$transaction->addCreditAccount($this->customer()->account(),$cash_amount);
 		$transaction->addDebitAccount($cash_account ,$cash_amount);
-		
 
 		$transaction->execute();
+		return $transaction;
 	}
 
 	function bankAdvance($amount, $cheque_no,$cheque_date,$bank_account_detail, $self_bank_account=null){
@@ -555,6 +555,7 @@ class Model_Order extends \Model_Document{
 		$transaction->addDebitAccount($self_bank_account ,$amount);
 		
 		$transaction->execute();
+		return $transaction;
 	}
 
 	function attachments(){
@@ -570,4 +571,49 @@ class Model_Order extends \Model_Document{
 		return false;
 		// return $this->ref('Attachements')->tryLoadAny();
 	}
+
+	function send_voucher($transaction,$form){
+		
+		if(!$this->loaded())
+			return false;
+		
+		throw new \Exception($transaction);
+
+		if(!$transaction instanceof xAccount\Model_Transaction)
+			return false;
+
+		$config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		$subject = $config['cash_voucher_email_subject'];
+		$subject = str_replace('{order_no}', $this['name'], $subject);
+		$subject = str_replace('{voucher_no}', $transaction['name'], $subject);
+		$email_body = $config['cash_voucher_email_body'];
+		
+		$email_body = str_replace('{voucher_no}', $transaction['name'], $email_body);
+		$email_body = str_replace('{date}', $transaction['create_at'], $email_body);
+		$email_body = str_replace('{amount}', $form['amount'], $email_body);
+		$email_body = str_replace('{pay_to}', $this['member'], $email_body);
+		$email_body = str_replace('{approve_by}', $this->api->current_employee['name'], $email_body);
+
+		if($form['payment'] == "cash"){
+			$email_body = str_replace('{cash}',"Yes", $email_body);
+			$email_body = str_replace('{cheque}',"No", $email_body);
+		}
+
+		if($form['payment'] == "cheque"){
+			$email_body = str_replace('{cash}',"No", $email_body);
+			$email_body = str_replace('{cheque}',"Yes", $email_body);
+		}
+
+		$customer = $this->customer();
+		$customer_email=$customer->get('customer_email');
+
+
+		echo $email_body;
+		return;
+
+		$this->sendEmail($from['email_to'],$subject,$email_body,$ccs=array(),$bccs=array());
+		$this->createActivity('email',$subject,"Advanced Payment Voucher od Order (".$this['name'].")",$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);		
+		return true;
+	}
+
 }
