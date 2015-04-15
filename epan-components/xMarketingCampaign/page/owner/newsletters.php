@@ -4,7 +4,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 
 	function init(){
 		parent::init();
-
+		$this->app->title=$this->api->current_department['name'] .': NewsLetters';
 		$preview_vp = $this->add('VirtualPage');
 		$preview_vp->set(function($p){
 			$m=$p->add('xEnquiryNSubscription/Model_NewsLetter')->load($_GET['newsletter_id']);

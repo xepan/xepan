@@ -1817,10 +1817,10 @@ CREATE TABLE IF NOT EXISTS `xenquirynsubscription_customformentry` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xenquirynsubscription_customForm_forms`
+-- Table structure for table `xenquirynsubscription_customform_forms`
 --
 
-CREATE TABLE IF NOT EXISTS `xenquirynsubscription_customForm_forms` (
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_customform_forms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -2723,10 +2723,10 @@ CREATE TABLE IF NOT EXISTS `xmarketingcampaign_socialpost_categories` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xMarketingCampaign_SocialUsers`
+-- Table structure for table `xmarketingcampaign_socialusers`
 --
 
-CREATE TABLE IF NOT EXISTS `xMarketingCampaign_SocialUsers` (
+CREATE TABLE IF NOT EXISTS `xmarketingcampaign_socialusers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `config_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,

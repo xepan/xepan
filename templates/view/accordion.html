@@ -1,0 +1,24 @@
+<div class="panel-group" id="{$_name}"  class="{$class}" style="{$style}">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {$titles}
+        </div>
+            {$Content}
+    </div>
+</div>
+
+{accordian_panel}
+<div id="{$_name}" class="panel-collapse collapse out">
+    <div class="panel-body">
+        {$Content}
+    </div>
+</div>
+{/accordian_panel}
+
+{title}
+<h4 class="panel-title">
+    <a data-toggle="collapse" data-parent="#{$_main_accordian_name}" href="#{$panel_name}">
+        {$Content}
+    </a>
+</h4>
+{/title}

@@ -30,7 +30,7 @@ class Model_SocialConfig extends \Model_Table{
 }
 
 class Model_SocialUsers extends \Model_Table{
-	public $table='xMarketingCampaign_SocialUsers';
+	public $table='xmarketingcampaign_socialusers';
 
 	function init(){
 		parent::init();
@@ -59,7 +59,7 @@ class Model_SocialPosting extends \Model_Table{
 
 		$this->addExpression('social_app')->set(function($m,$q){
 			$config = $m->add('xMarketingCampaign/Model_SocialConfig',array('table_alais'=>'tmp'));
-			$user_j = $config->join('xMarketingCampaign_SocialUsers.config_id');
+			$user_j = $config->join('xmarketingcampaign_socialusers.config_id');
 			$user_j->addField('user_j_id','id');
 
 			$config->addCondition('user_j_id',$q->getField('user_id'));

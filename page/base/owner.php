@@ -90,24 +90,24 @@ class page_base_owner extends Page {
 			$dept_model->loadMarketing();
 			
 			$marketing_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-			$marketing_m->addItem(array('Manage Contacts','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_emailcontacts',array('department_id'=>$dept_model->id)));
-			$marketing_m->addItem(array('Data Grabber','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb',array('department_id'=>$dept_model->id)));
+			$marketing_m->addItem(array('Leads','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_leads',array('department_id'=>$dept_model->id)));
 			$marketing_m->addItem(array('Manage NewsLetters','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_newsletters',array('department_id'=>$dept_model->id)));
 			$marketing_m->addItem(array('Add SocialContent','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_socialcontents',array('department_id'=>$dept_model->id)));
-			$marketing_m->addItem(array('Campaigns','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_campaigns',array('department_id'=>$dept_model->id)));
 			$marketing_m->addItem(array('Scheduled Jobs','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_scheduledjobs',array('department_id'=>$dept_model->id)));
-			$marketing_m->addItem(array('Leads','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_leads',array('department_id'=>$dept_model->id)));
+			$marketing_m->addItem(array('Data Grabber','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb',array('department_id'=>$dept_model->id)));
+			$marketing_m->addItem(array('Campaigns','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_campaigns',array('department_id'=>$dept_model->id)));
+			$marketing_m->addItem(array('Contacts Summery','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_emailcontacts',array('department_id'=>$dept_model->id)));
 			$marketing_m->addItem(array('Configurations','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_config',array('department_id'=>$dept_model->id)));
 			$marketing_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 			$marketing_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
 			$this->shorcut_menus[]=array("page"=>"Marketing Dashboard","url"=>$this->api->url('xMarketingCampaign_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Manage Contacts","url"=>$this->api->url('xMarketingCampaign_page_owner_emailcontacts',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Data Grabber","url"=>$this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Contacts Summery","url"=>$this->api->url('xMarketingCampaign_page_owner_emailcontacts',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Manage NewsLetters","url"=>$this->api->url('xMarketingCampaign_page_owner_newsletters',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Add SocialContent","url"=>$this->api->url('xMarketingCampaign_page_owner_socialcontents',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Campaigns","url"=>$this->api->url('xMarketingCampaign_page_owner_campaigns',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Scheduled Jobs","url"=>$this->api->url('xMarketingCampaign_page_owner_scheduledjobs',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Data Grabber","url"=>$this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Campaigns","url"=>$this->api->url('xMarketingCampaign_page_owner_campaigns',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Leads","url"=>$this->api->url('xMarketingCampaign_page_owner_leads',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Configurations","url"=>$this->api->url('xMarketingCampaign_page_owner_config',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Marketing Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
