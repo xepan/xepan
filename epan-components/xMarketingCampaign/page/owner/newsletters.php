@@ -2,8 +2,7 @@
 
 class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCampaign_page_owner_main{
 
-	function init(){
-		parent::init();
+	function page_index(){
 		$this->app->title=$this->api->current_department['name'] .': NewsLetters';
 		$preview_vp = $this->add('VirtualPage');
 		$preview_vp->set(function($p){
@@ -17,14 +16,14 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 
 		$config_model=$this->add('xEnquiryNSubscription/Model_Config')->tryLoadAny();
 
-		$bg=$this->app->layout->add('View_BadgeGroup');
+		$bg=$this->add('View_BadgeGroup');
 		$data=$this->add('xEnquiryNSubscription/Model_NewsLetter')->count()->getOne();
 		$v=$bg->add('View_Badge')->set('Total NewsLetters')->setCount($data)->setCountSwatch('ink');
 
 		$data=$this->add('xEnquiryNSubscription/Model_NewsLetter')->addCondition('created_by','xMarketingCampaign')->count()->getOne();
 		$v=$bg->add('View_Badge')->set('By This App')->setCount($data)->setCountSwatch('ink');
 
-		$cols = $this->app->layout->add('Columns');
+		$cols = $this->add('Columns');
 		$cat_col = $cols->addColumn(3);
 		$news_col = $cols->addColumn(9);
 
