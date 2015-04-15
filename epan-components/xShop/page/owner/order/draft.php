@@ -39,6 +39,13 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 				
 				if($form['payment'] == "cheque")
 					$order->bankAdvance($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_detail'],$self_bank_account=null);
+
+				if($form['send_receipt_via_email']){					
+					if(!filter_var($form->get('email_to'), FILTER_VALIDATE_EMAIL))
+						$form->displayError('email_to','Not a Valid Email Address');	
+					
+					//TODO Send Advance Payment Voucher  
+				}			
 			}
 			
 			return true;
