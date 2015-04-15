@@ -254,25 +254,36 @@ class page_xMarketingCampaign_page_owner_campaigns extends page_xMarketingCampai
 		$page = $this->api->layout?$this->api->layout: $this;
 
 		$cols = $page->add('Columns');
-		$emails_col = $cols->addColumn(4);
-		$calendar_col = $cols->addColumn(4);
-		$social_col = $cols->addColumn(4);
+		$emails_col = $cols->addColumn(3);
+		$calendar_col = $cols->addColumn(6);
+		$sub_col = $cols->addColumn(3);
 
-
-		// Subscriber Categories
 		$emails_col_cols = $emails_col->add('Columns');
 
-		$category_col = $emails_col_cols->addColumn(6);
-		$newsletter_col = $emails_col_cols->addColumn(6);
+		$sub_col_col = $sub_col->add('Columns');
+			$subcat=$sub_col_col->addColumn(12);
+			$socialuser=$sub_col_col->addColumn(12);
 
-		$category_col->add('H4')->set('Subscription Categories')->addClass('text-center');
-		$form=$category_col->add('Form');
+		// Subscriber Categories
+		$category_col = $emails_col_cols->addColumn(12);
+		$newsletter_col = $emails_col_cols->addColumn(12);
+		
+		// Social Section
+		$social_posts_col = $emails_col_cols->addColumn(12);
+		$social_users_col = $emails_col_cols->addColumn(12);
+
+		$category_view = $subcat->add('View_Accordion');
+			$sub_accordion=$category_view->addSection('Subscription Categories');
+
+
+		// $category_col->add('H4')->set('Subscription Categories')->addClass('text-center');
+		$form=$sub_accordion->add('Form');
 		$selected = $campaign->ref('xMarketingCampaign/CampaignSubscriptionCategory')->_dsql()->del('fields')->field('category_id')->getAll();
 		$form->addField('hidden','campaign_id')->set($_GET['xmarketingcampaign_campaigns_id']);
 		$campaign_category_select_field=$form->addField('hidden','categories')->set(json_encode(iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator($selected)),false)));
 		$campaign_category_select_reset_field=$form->addField('hidden','reset')->set(json_encode(iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator($selected)),false)));
 		
-		$category_grid = $category_col->add('Grid');
+		$category_grid = $sub_accordion->add('Grid');
 		$category_grid->setModel('xEnquiryNSubscription/Model_SubscriptionCategories',array('name'));
 		$category_grid->template->tryDel('Pannel');
 
@@ -305,14 +316,18 @@ class page_xMarketingCampaign_page_owner_campaigns extends page_xMarketingCampai
 		}
 
 		// News letters
-		$newsletter_col->add('H4')->set('News Letters')->addClass('text-center');
 
-		$form = $newsletter_col->add('Form');
+		$newsletter_view = $newsletter_col->add('View_Accordion');
+			$news_accordion=$newsletter_view->addSection('NewsLetters');
+		
+		// $newsletter_col->add('H4')->set('News Letters')->addClass('text-center');
+
+		$form = $news_accordion->add('Form');
 		$news_cat_field = $form->addField('DropDown','category','')->setEmptyText('All Categories');
 		$news_cat_field->setModel('xEnquiryNSubscription/NewsLetterCategory');
 		$news_cat_field->afterField()->add('Button')->set(array('','icon'=>'user'))->js('click',$form->js()->submit());
 
-		$newsletter_grid = $newsletter_col->add('xMarketingCampaign/View_DroppableNewsLetters',array('preview_vp'=>$preview_newsletetr_vp));
+		$newsletter_grid = $news_accordion->add('xMarketingCampaign/View_DroppableNewsLetters',array('preview_vp'=>$preview_newsletetr_vp));
 
 		$newsletter_model =$this->add('xEnquiryNSubscription/Model_NewsLetter');
 		if($_GET['newsletter_category_filter_id']){
@@ -327,22 +342,23 @@ class page_xMarketingCampaign_page_owner_campaigns extends page_xMarketingCampai
 
 
 		// calander
-		$calendar_col->add('View')->set($campaign['name'])->addClass('atk-size-peta text-center');
-		$range = $calendar_col->add('View');
-		$range->add('View')->set($campaign['starting_date'])->addClass('atk-size-milli atk-move-left');
-		$range->add('View')->set($campaign['ending_date'])->addClass('atk-size-milli atk-move-right');
-		$calendar_col->add('HR');
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> '.$campaign['name']. '<small>'."   ".$campaign['starting_date']."   To  "."    ".$campaign['ending_date']. '</small>');
+		// $calendar_col->add('View')->set($campaign['name'])->addClass('atk-size-peta text-center');
+		// $range = $calendar_col->add('View');
+		// $range->add('View')->set($campaign['starting_date'])->addClass('atk-size-milli atk-move-left');
+		// $range->add('View')->set($campaign['ending_date'])->addClass('atk-size-milli atk-move-right');
+		// $calendar_col->add('HR');
+		
 		$CALANDER = $calendar_col->add('xMarketingCampaign/View_CampaignScheduler');
 		$CALANDER->setModel($campaign);
 
-		// Social Section
-		$social_col_cols = $social_col->add('Columns');
-		$social_posts_col = $social_col_cols->addColumn(6);
-		$social_users_col = $social_col_cols->addColumn(6);
-
 		// social posts
-		$social_posts_col->add('H4')->set('Social Posts')->addClass('text-center');
-		$form = $social_posts_col->add('Form');
+		
+		$social_view = $social_posts_col->add('View_Accordion');
+			$social_accordion=$social_view->addSection('Social Posts');
+			
+		// $social_posts_col->add('H4')->set('Social Posts')->addClass('text-center');
+		$form = $social_accordion->add('Form');
 		$social_post_cat_field = $form->addField('DropDown','category','')->setEmptyText('All Categories');
 		$social_post_cat_field->setModel('xMarketingCampaign/SocialPostCategory');
 		$social_post_cat_field->afterField()->add('Button')->set(array('','icon'=>'user'))->js('click',$form->js()->submit());
@@ -352,7 +368,7 @@ class page_xMarketingCampaign_page_owner_campaigns extends page_xMarketingCampai
 			$social_post_model->addCondition('category_id',$_GET['social_category_filter_id']);
 		}
 
-		$social_posts_grid = $social_posts_col->add('xMarketingCampaign/View_DroppableSocialPosts',array('preview_vp'=>$preview_social_vp));
+		$social_posts_grid = $social_accordion->add('xMarketingCampaign/View_DroppableSocialPosts',array('preview_vp'=>$preview_social_vp));
 		$social_posts_grid->setModel($social_post_model,array('name'));
 		$social_posts_grid->template->tryDel('Pannel');
 
@@ -361,14 +377,18 @@ class page_xMarketingCampaign_page_owner_campaigns extends page_xMarketingCampai
 		}
 
 		// social users
-		$social_users_col->add('H4')->set('Social Users')->addClass('text-center');
-		$form=$social_users_col->add('Form');
+
+		$socialuser_view = $socialuser->add('View_Accordion');
+			$social_user_accordion=$socialuser_view->addSection('Social Users');
+
+		// $social_users_col->add('H4')->set('Social Users')->addClass('text-center');
+		$form=$social_user_accordion->add('Form');
 		$selected = $campaign->ref('xMarketingCampaign/CampaignSocialUser')->_dsql()->del('fields')->field('socialuser_id')->getAll();
 		$form->addField('hidden','campaign_id')->set($_GET['xmarketingcampaign_campaigns_id']);
 		$campaign_social_user_select_field=$form->addField('hidden','socialusers')->set(json_encode(iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator($selected)),false)));
 		$campaign_social_user_select_reset_field=$form->addField('hidden','reset')->set(json_encode(iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator($selected)),false)));
 
-		$social_user_grid = $social_users_col->add('Grid');
+		$social_user_grid = $social_user_accordion->add('Grid');
 		$social_user_grid->setModel('xMarketingCampaign/SocialUsers',array('name'));
 		$social_user_grid->template->tryDel('Pannel');
 
