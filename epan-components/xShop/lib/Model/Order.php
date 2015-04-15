@@ -393,11 +393,11 @@ class Model_Order extends \Model_Document{
 						$oi['narration'],
 						$oi['custom_fields']
 					);					
-				
+				$invoice->updateAmounts();
 				$oi->invoice($invoice);	
 			}
 
-			if($status !== 'draft' and $status !== 'submitted'){
+			if($status !== 'draft' and $status !== 'submitted'){				
 				$invoice->createVoucher($salesLedger);
 			}
 
@@ -405,7 +405,7 @@ class Model_Order extends \Model_Document{
 			return $invoice;
 		}catch(\Exception $e){
 			echo $e->getmessage();
-			// $this->api->db->rollback();
+			$this->api->db->rollback();
 			if($this->api->getConfig('developer_mode',false))
 				throw $e;
 		}

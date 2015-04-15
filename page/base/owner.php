@@ -223,6 +223,7 @@ class page_base_owner extends Page {
 			$accounts_m->addItem(array('Cash Book','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_cashbook',array('department_id'=>$dept_model->id)));
 			$accounts_m->addItem(array('Day Book','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_daybook',array('department_id'=>$dept_model->id)));
 			$accounts_m->addItem(array('Ledgers','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_ledgers',array('department_id'=>$dept_model->id)));
+			$accounts_m->addItem(array('Debit/Credit Note','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_debitcreditnote',array('department_id'=>$dept_model->id)));
 			$accounts_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 			$accounts_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
@@ -238,6 +239,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Accounts Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Accounts Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Accounts Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Account Debit/Credit Note","url"=>$this->api->url('xAccount_page_owner_debitcreditnote',array('department_id'=>$dept_model->id)));
 		}
 			
 		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xPurchase')->tryLoadAny()->get('id'))){
