@@ -79,6 +79,7 @@ jQuery.widget("ui.xnotifier",{
 
 				if(shake){
 					$(self.element).effect('shake');
+					self.render()
 				}
 
 				self.options.activities = activities;
@@ -99,8 +100,9 @@ jQuery.widget("ui.xnotifier",{
 			activity_box = $('<div class="atk-box"></div>').appendTo(self.options.activity_area);
 			$('<i>'+element.subject+'</i>').appendTo(activity_box);
 			$(activity_box).click(function(event){
-				$.univ().frameURL(element.subject,'index.php?page=owner_activitydocument')
+				$.univ().frameURL(element.subject,'index.php?page=owner_activitydocument&activity_id='+element.id)
 			});
+			console.log(element.id);
 		});
 	}
 
