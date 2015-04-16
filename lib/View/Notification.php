@@ -36,7 +36,7 @@ class View_Notification extends View {
 	}
 
 	function render(){
-		$this->js(true)->_load()->xnotifier();
+		$this->js(true)->_load('xnotifier')->xnotifier();
 		parent::render();
 	}
 }
