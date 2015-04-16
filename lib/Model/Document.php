@@ -246,7 +246,9 @@ class Model_Document extends SQL_Model{
 		}
 
 		$crud->setModel($activities,array('created_at','action_from','action','subject','message'));
-
+		$activity = $page->add('View_Activity');
+		$activity->setModel($activities);
+		
 		if(!$crud->isEditing()){
 			$crud->grid->controller->importField('created_at');
 		}

@@ -1,0 +1,49 @@
+<div class="panel-group" id="{$_name}"  class="{$class}" style="{$style}">
+<style type="text/css">   
+.img-box{
+    background: none repeat scroll 0 0 #ffffff;
+    border-bottom: 1px solid #eaeaea;
+    box-shadow: 0 1px 1px #e6e6e6;
+    display: block;
+    width:50%;
+    height:60px;
+    width:60px;
+}
+.box{
+    background: none repeat scroll 0 0 #f8f8f8;
+    min-height: 20px;
+    padding: 19px;
+}
+/*//fcf9f1;*/
+</style>
+
+    {rows}
+        {row}
+            <div class="row box" style="margin:0">
+                <div class="col-md-2 horizontal-line">
+                    <img class="img-box img-circle" src="logo.svg">
+                    {$actor_img}
+                    <span class="horizontal-line"></span>
+                </div>
+
+                <div class="col-md-2">
+                    <i class="glyphicon glyphicon-thumbs-up atk-swatch-green" style="font-size:40px;margin-top:8px;"></i>
+                </div>
+                <div clas="col-md-6">
+                    <div class="atk-size-micro pull-right" style="color:#555">
+                        {$activity_date}
+                    </div>
+                    <div class="">
+                        {$subject}
+                    </div>
+                    <div>
+                        {$message}
+                    </div>
+                    <div class="pull-right">
+                        <i class="">+</i>
+                    </div>
+                </div>
+            </div>
+        {/row}
+    {/rows}
+</div>

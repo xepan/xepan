@@ -30,13 +30,13 @@ class Grid_JobCard extends \Grid{
 	}
 
 	function format_orderview($field){
-		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Order '. $this->model['order_no'], $this->api->url($this->vp_order->getURL(),array('sales_order_no_clicked'=>$this->model['order_no']))).'">'. $this->current_row[$field] ."</a>";
+		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Order '. $this->model['order_no'], $this->api->url($this->vp_order->getURL(),array('sales_order_no_clicked'=>$this->model['order_no']))).'">'. $this->current_row[$field] ."</a>".'<br/><small style="color:gray;">'.$this->model->order()->get('member').'</small>';
 	}
 
 
 	function setModel($job_card_model){
 		$m=parent::setModel($job_card_model,array('order_no','name','created_at','orderitem','from_department','forwarded_to','outsource_party'));
-		// $this->addFormatter('order_no','orderview');
+		$this->addFormatter('order_no','orderview');
 		$this->addFormatter('name','view');
 		$this->removeColumn('outsource_party');
 		return $m;

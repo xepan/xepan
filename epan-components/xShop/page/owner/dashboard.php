@@ -149,7 +149,24 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 			$dept_jobcard_v = $dept_col->add('View_Tile')->addClasS('atk-swatch-gray');
 			$dept_jobcard_v->setTitle($str);
 		}
- 
+ 		
+
+		$this->add('View')->setElement('br');
+		$outsource_jobcards = $this->add('xProduction/Model_JobCard')->outsource();
+
+		$col1 = $this->add('Columns')->addClass('atk-box atk-swatch-gray');
+		$col_outsource_tile = $col1->addColumn(3);
+		$col_outsource_grid = $col1->addColumn(9);
+
+		$outsource_tile_v = $col_outsource_tile->add('View_Tile')->addClass('atk-swatch-gray');
+		$outsource_tile_v->setTitle('Outsource Jobcards');
+		$outsource_tile_v->setContent($outsource_jobcards->count()->getOne());
+	
+		$crud= $col_outsource_grid->add('CRUD',array('grid_class'=>'xProduction/Grid_JobCard'));
+		$crud->grid->ipp=5;
+		$crud->setModel($outsource_jobcards);
+		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>"All",'allow_edit'=>'No','can_forceDelete'=>'No')));
+
 		// //Colors
 		// //#e3c800(yellow),#004050(darkteal),#825a2c(brown),#003e00(DarkEmerald)
 		// //#a4c400(lime),#6d8764(olive),#128023(drakGreen),#647687(steel),

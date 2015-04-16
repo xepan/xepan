@@ -465,4 +465,17 @@ class Model_JobCard extends \Model_Document{
 		parent::setStatus($status,$message,$subject);
 	}
 
+
+	function outsource(){
+		$this->addCondition('outsource_party','<>',null);
+		$this->addCondition('status','<>',array('completed','cancelled','draft','submitted'));
+		$this->tryLoadAny();
+		return $this;
+	}
+
+	function order(){
+		return $this->orderItem()->order();
+	}
+
+
 }	
