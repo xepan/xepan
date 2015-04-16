@@ -83,7 +83,7 @@ class Model_SalesInvoice extends Model_Invoice{
 		$form = $p->add('Form');
 		$form->addField('text','reason');
 
-		if($tr=$transaction->whoseRelatedDocIs($this)){
+		if($tr=$transaction->loadWhoseRelatedDocIs($this)){
 			$form->addField('CheckBox','remove_related_transaction');
 		}
 

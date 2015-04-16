@@ -179,7 +179,7 @@ class Model_Document extends SQL_Model{
 		return $rt;
 	}
 
-	function whoseRelatedDocIs($document,$specific=false){
+	function loadWhoseRelatedDocIs($document,$specific=false){
 		$this->addCondition('related_root_document_name',$document->root_document_name);
 		$this->addCondition('related_document_id',$document->id);
 		if($specific)
@@ -207,7 +207,12 @@ class Model_Document extends SQL_Model{
 			}
 			$class=$class[0].'/Model_'.$class[1];
 			$m=$this->add($class);
-			$m->load($this['related_document_id']);
+			$m->tryLoad($this['related_document_id']);
+			if(!$m->loaded()){
+				// Remove related document information 
+				// May be related document is removed
+				return new \Dummy();
+			}
 			return $m;
 		}
 	}
