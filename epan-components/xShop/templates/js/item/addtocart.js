@@ -18,7 +18,7 @@ jQuery.widget("ui.xepan_xshop_addtocart",{
 
 	_create: function(){
 		var self = this;
-		console.log(self.options);
+		// console.log(self.options);
 
 		if(this.options.show_custom_fields){
 			this.populateCustomFields();

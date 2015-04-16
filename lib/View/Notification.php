@@ -7,36 +7,42 @@ class View_Notification extends View {
 
 		if($_GET[$this->name]=='true'){
 
-			$acls = $this->api->current_employee->post()->documentAcls();
-			$acls->addExpression('department_id')->set(function($m,$q){
-				return $m->refSQL('document_id')->fieldQuery('department_id');
-			})->sortable(true);
+			$lookup_array=array(
+					"xShop\\\\Order_Draft"=>array('xshop_orders','draft','xShop\Model_Order'),
+					"xShop\\\\Order_Submitted"=>array('xshop_orders','submitted','xShop\Model_Order'),
+					"xShop\\\\Order_Approved"=>array('xshop_orders','approved','xShop\Model_Order'),
+				);
 
-			$acls->addCondition('document','<>',array('xCRM\Activity'));
-			$acls->addCondition('can_view','<>','No');
-			$acls->addCondition('document',array('xShop\Order_Submitted','xShop\Order_Approved','xShop\Order_Completed','xProduction\Jobcard_ToReceive','xShop\Invoice_Submitted','xShop\Quotation_Submitted','xProduction\Task_Assigned','xProduction\TaskCompleted'));
+			$current_lastseen = $this->add('xCRM\Model_Activity');
 
-			foreach ($acls as $acl) {
+			$current_lastseen->addExpression('count')->set(function($m,$q){
+				return $m->add('Model_MyLastSeen')
+					->addCondition('related_root_document_name',$q->getField('related_root_document_name'))
+					->addCondition('seen_till','<=',$q->getField('created_at'))
+					->count();
 
-				$name = $acl['document'];
-				$name = explode("\\", $name);
-				$name = $name[0].'\\Model_'.$name[1];
-				$model = $this->add($name);
+				// $query = "(";
+				// $query .="CASE ". $q->getField('related_document_name');
+				// foreach ($lookup_array as $doc_name => $table_n_status_n_model) {
+				// 	$query .= " WHEN '$doc_name' THEN (SELECT count(*) from ". $table_n_status_n_model[0] ."  WHERE `status` ='".$table_n_status_n_model[1]."' AND updated_at > ".$q->getField('seen_till').")"; 
+				// }
+				// $query .= " END )";
+				// return $query;
 
-				if($model instanceof \xProduction\Model_JobCard){
-					$model->addCondition('to_department_id',$acl['department_id']);
-				}
-				$no=$model->addCondition('updated_at','>',$acl['seen_till']);
-				// echo $acl['department']. ' ' .$name .'<br/>';
-				$no = $model->count()->getOne();
-				if($no)
-					$this->add('View')->setHTML( $acl['department']. ' :: ' .$acl['document'] .' == ' . $no);
-			}
+			});
+
+			$current_lastseen->_dsql()->group('related_document_name');
+			$current_lastseen->_dsql()->having('count','>',0);
+
+			echo json_encode($current_lastseen->getRows());
+			exit;
 		}
 	}
 
 	function render(){
-		// $this->js(true)->_load()->xnotifier();
+		if($_GET[$this->name]!='true'){
+			$this->js(true)->_load('xnotifier')->xnotifier(array('url'=>$this->api->url(null)));
+		}
 		parent::render();
 	}
 }
