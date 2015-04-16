@@ -117,21 +117,22 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 		$grid->removeColumn('custom_fields');
 		$grid->removeColumn('item');
-			
+		$p->add('View')->setElement('br');
 		$form = $p->add('Form_Stacked');
-		$form->addField('line','delivery_via')->validateNotNull(true);
-		$form->addField('line','delivery_docket_no','Docket No / Person name / Other Reference')->validateNotNull(true);
+		$c = $form->add('Columns');
+		$c->addColumn(6)->addField('line','delivery_via')->validateNotNull(true);
+		$c->addColumn(6)->addField('line','delivery_docket_no','Docket No / Person name / Other Reference')->validateNotNull(true);
 		// $form->addField('text','billing_address')->set($customer['billing_address']);
-		$form->addField('text','shipping_address')->set($customer['shipping_address']);
-		$form->addField('text','delivery_narration');
+		$c->addColumn(6)->addField('text','shipping_address')->set($customer['shipping_address']);
+		$c->addColumn(6)->addField('text','delivery_narration');
+		$c->addColumn(6)->addField('Checkbox','generate_invoice');
+		$c->addColumn(12)->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'))->setEmptyText('Select Items Included in Invoice');
+		$c->addColumn(12)->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
+		$c->addColumn(12)->addField('Money','amount');
+		$c->addColumn(4)->addField('line','bank_account_detail');
+		$c->addColumn(4)->addField('line','cheque_no');
+		$c->addColumn(4)->addField('DatePicker','cheque_date');
 		$form->addField('Checkbox','complete_on_receive');
-		$form->addField('Checkbox','generate_invoice');
-		$form->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'))->setEmptyText('Select Items Included in Invoice');
-		$form->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
-		$form->addField('Money','amount');
-		$form->addField('line','bank_account_detail');
-		$form->addField('line','cheque_no');
-		$form->addField('DatePicker','cheque_date');
 		$form->addField('Checkbox','send_invoice_via_email');
 		$form->addField('line','email_to')->set($customer['customer_email']);
 
@@ -139,7 +140,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$include_field = $form->addField('hidden','selected_items');
 
 		$grid->addSelectable($include_field);
-		
+		$form->add('View')->setElement('br');
 		//Get the Order of DispatchRequest
 		$form->addSubmit('Dispatch the Order');
 
@@ -190,11 +191,6 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 					}
 				}
 				
-				if($form['send_invoice_via_email']){
-					if(trim($form['email_to'] == ""))
-						$form->displayError('email_to','Not Specified');
-
-				}
 				//GENERATE INVOICE FOR SELECTED / ALL ITEMS
 				if($form['include_items']=='All'){
 					$items_selected=array();
@@ -222,10 +218,11 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 				if(!$inv->isApproved())
 					$form->displayError('send_invoice_via_email','Invoice Not Approved. '. $inv['name']);
 
-				if(!$form['email_to'])
-					$form->displayError('email_to','Email Not Proper. ');
+				if(!filter_var($form->get('email_to'), FILTER_VALIDATE_EMAIL))
+					$form->displayError('email_to','Email Not Proper');
 
 				$inv->send_via_email_page($this);
+				throw new \Exception("Error Processing Request", 1);	
 
 			}
 			

@@ -21,7 +21,12 @@ class Grid_JobCard extends \Grid{
 	}
 	
 	function format_view($field){
-		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Job Card '. $this->model['name'], $this->api->url($this->vp->getURL(),array('jobcard_clicked'=>$this->model->id))).'">'. $this->current_row[$field] ."</a>";
+		if($this->model['outsource_party'])
+			$this->setTDParam($field, 'class', ' atk-swatch-blue ');
+		else
+			$this->setTDParam($field, 'class', '');
+
+		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Job Card '. $this->model['name'], $this->api->url($this->vp->getURL(),array('jobcard_clicked'=>$this->model->id))).'">'. $this->current_row[$field] ."</a>"."<br><span>".$this->model['outsource_party']."</span>";
 	}
 
 	function format_orderview($field){
@@ -30,10 +35,10 @@ class Grid_JobCard extends \Grid{
 
 
 	function setModel($job_card_model){
-		$m=parent::setModel($job_card_model,array('order_no','name','created_at','orderitem','from_department','forwarded_to'));
+		$m=parent::setModel($job_card_model,array('order_no','name','created_at','orderitem','from_department','forwarded_to','outsource_party'));
 		// $this->addFormatter('order_no','orderview');
 		$this->addFormatter('name','view');
-
+		$this->removeColumn('outsource_party');
 		return $m;
 	}
 }

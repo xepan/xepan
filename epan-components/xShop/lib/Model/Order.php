@@ -393,11 +393,11 @@ class Model_Order extends \Model_Document{
 						$oi['narration'],
 						$oi['custom_fields']
 					);					
-				
+				$invoice->updateAmounts();
 				$oi->invoice($invoice);	
 			}
 
-			if($status !== 'draft' and $status !== 'submitted'){
+			if($status !== 'draft' and $status !== 'submitted'){				
 				$invoice->createVoucher($salesLedger);
 			}
 
@@ -405,7 +405,7 @@ class Model_Order extends \Model_Document{
 			return $invoice;
 		}catch(\Exception $e){
 			echo $e->getmessage();
-			// $this->api->db->rollback();
+			$this->api->db->rollback();
 			if($this->api->getConfig('developer_mode',false))
 				throw $e;
 		}
@@ -540,9 +540,9 @@ class Model_Order extends \Model_Document{
 		
 		$transaction->addCreditAccount($this->customer()->account(),$cash_amount);
 		$transaction->addDebitAccount($cash_account ,$cash_amount);
-		
 
 		$transaction->execute();
+		return $transaction;
 	}
 
 	function bankAdvance($amount, $cheque_no,$cheque_date,$bank_account_detail, $self_bank_account=null){
@@ -555,6 +555,7 @@ class Model_Order extends \Model_Document{
 		$transaction->addDebitAccount($self_bank_account ,$amount);
 		
 		$transaction->execute();
+		return $transaction;
 	}
 
 	function attachments(){
@@ -569,5 +570,6 @@ class Model_Order extends \Model_Document{
 			return $atts;
 		return false;
 		// return $this->ref('Attachements')->tryLoadAny();
-	}
+	}	
+
 }

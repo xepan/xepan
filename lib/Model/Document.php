@@ -339,4 +339,10 @@ class Model_Document extends SQL_Model{
 			throw $e;
 		}
 	}
+
+
+	function amountInWords($amount){
+		
+	}
+
 }

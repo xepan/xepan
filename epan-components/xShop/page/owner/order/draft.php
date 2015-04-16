@@ -1,5 +1,6 @@
 <?php
 class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
+	Public $transaction;
 	function init(){
 		parent::init();
 
@@ -30,15 +31,22 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 							$form->displayError('amount','Amount Cannot be Null');						
 					break;
 				}
-				
-				if($form['payment'] == "cash"){
-					$form->model->addHook('afterSave',function($m)use($form){
-						$m->cashAdvance($form['amount']);
+				$self= $this;
+					$form->model->addHook('afterSave',function($m)use($form,$self){
+						if($form['payment'] == "cash"){
+							$tra=$m->cashAdvance($form['amount']);
+						}
+						if($form['payment'] == "cheque"){
+							$tra=$m->bankAdvance($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_detail'],$self_bank_account=null);
+						}
+						$tra->sendReceiptViaEmail($form['email_to']);
 					});
-				}
 				
-				if($form['payment'] == "cheque")
-					$order->bankAdvance($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_detail'],$self_bank_account=null);
+
+				if($form['send_receipt_via_email']){
+					if(!filter_var($form->get('email_to'), FILTER_VALIDATE_EMAIL))
+						$form->displayError('email_to','Not a Valid Email Address');					
+				}			
 			}
 			
 			return true;
@@ -52,7 +60,8 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 
 		if($crud->isEditing('add') OR $crud->isEditing('edit')){
 			$form = $crud->form;
-			$form->addField('Readonly','advance_payment_section')->set('');
+			$c = $form->add('Columns');
+			$form->addField('Readonly','advance_payment_section');
 			$form->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
 			$form->addField('Money','amount');
 			$form->addField('line','bank_account_detail');

@@ -268,7 +268,10 @@ class Model_OrderDetails extends \Model_Document{
 					$m->addCondition('orderitem_id',$this->id);
 					$m->addCondition('department_id',$dept_id);
 					$m->tryLoadAny();
-					$return_array[] = array('department_id'=>$dept_id,'department'=>$this->add('xHR/Model_Department')->load($dept_id)->get('name'),'status'=>$m['status']);
+					$name = "";
+					if($m['outsource_party_id'])
+						$name = $m->ref('outsource_party_id')->get('name');
+					$return_array[] = array('department_id'=>$dept_id,'department'=>$this->add('xHR/Model_Department')->load($dept_id)->get('name'),'status'=>$m['status'],'outsource_party_id'=>$m['outsource_party_id'],'outsource_party'=>$name);
 				}
 			}
 			return $return_array;
@@ -342,16 +345,19 @@ class Model_OrderDetails extends \Model_Document{
 			//Hightlight the PassDepartment mostly used in Jobcard
 			if($department_hightlight and $department_hightlight instanceof \xHR\Model_Department){
 				if($department_hightlight['id'] == $department_asso['department_id'])
-					$str .= "<b class='atk-swatch-green'>".$department_asso['department']."</b>";
+					$str .= "&nbsp;<b class='atk-swatch-green'>".$department_asso['department']."&nbsp;</b>";
 				else
 					$str .= '<b>' .$department_asso['department']."</b>";
+
 			}else{
 				if($department_asso['department'] == 'stockeffectcustomfield')
 					$str .= '<b class="label label-primary">' .$department_asso['department']."</b>";
 				else		
 					$str .= '<b>' .$department_asso['department']."</b>";
+
 			}
 			
+
 			if($show_status and $department_asso['department'] != 'stockeffectcustomfield'){//Show Department Status and check for the department is stockeffect
 				$str .=" ( ".($department_asso['status']?:'Waiting')." )";
 				if($with_jobcard){
@@ -359,6 +365,9 @@ class Model_OrderDetails extends \Model_Document{
 					$str.= "[ Jobcard : ".$jobcard_no." ]";
 				}
 			}
+			
+			if($department_asso['outsource_party'])
+				$str .= '&nbsp;<span class="atk-swatch-blue"> Out Source ( '.$department_asso['outsource_party'].' )&nbsp;</span>';
 
 			if($with_custom_fields){
 				$array = json_decode($this['custom_fields'],true);
