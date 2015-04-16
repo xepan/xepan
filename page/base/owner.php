@@ -365,8 +365,16 @@ class page_base_owner extends Page {
 
 		}
 
-		$this->add('View_Notification');
 
+	}
+
+	function recursiveRender(){
+		if($_GET['xnotifier'] or !$_GET['cut_page']){
+			$this->add('View_Notification');
+			$this->add('clippy/Agent');
+		}
+
+		parent::recursiveRender();
 	}
 
 	function render(){

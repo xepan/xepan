@@ -4,7 +4,8 @@ class View_Notification extends View {
 
 	function init(){
 		parent::init();
-
+		
+		
 		if($_GET[$this->name]=='true'){
 
 			$lookup_array=array(
