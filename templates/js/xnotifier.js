@@ -42,17 +42,18 @@ jQuery.widget("ui.xnotifier",{
 		self.footer = $('<div class="text-center atk-swatch-ink"><span class="badge">0</span></div>').appendTo(this.element);
 
 		$(toggle_btn).click(function(){
-			self.render();
-			$(self.options.activity_area).slideToggle();
 			if($(this).hasClass('icon-down-dir')){
 				$(this).removeClass('icon-down-dir atk-swatch-red');
 				$(this).addClass('icon-up-dir atk-swatch-green');
-				self.options.status='closed';
+				self.options.status='open';
+				self.render();
 			}else{
 				$(this).removeClass('icon-up-dir atk-swatch-green');
 				$(this).addClass('icon-down-dir atk-swatch-red');
-				self.options.status='open';
+				self.options.status='closed';
+				$(self.options.activity_area).empty();
 			}
+			$(self.options.activity_area).slideToggle();
 		});
 
 		$.univ().setInterval(function(){
@@ -93,9 +94,10 @@ jQuery.widget("ui.xnotifier",{
 		var self = this;
 		$(this.footer).empty();
 		$('<span class="badge">'+$(self.options.activity_area).length+'</span>').appendTo(self.footer);
-		
+		console.log(self.options.activities);
+
+		$(self.options.activity_area).empty();
 		$(self.options.activities).each(function(index,element){
-			$(self.options.activity_area).empty();
 			activity_box = $('<div class="atk-box"></div>').appendTo(self.options.activity_area);
 			$('<i>'+element.subject+'</i>').appendTo(activity_box);
 			$(activity_box).click(function(event){

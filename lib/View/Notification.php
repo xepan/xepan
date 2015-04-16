@@ -32,7 +32,7 @@ class View_Notification extends View {
 
 			});
 
-			$current_lastseen->_dsql()->group('related_document_name');
+			// $current_lastseen->_dsql()->group('related_document_name');
 			$current_lastseen->_dsql()->having('count','>',0);
 
 			echo json_encode($current_lastseen->getRows());

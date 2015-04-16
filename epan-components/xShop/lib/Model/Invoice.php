@@ -191,4 +191,14 @@ class Model_Invoice extends \Model_Document{
 		}
 		
 	}
+
+	function reject_page($page){
+		$form= $page->add('Form_Stacked');
+		$form->addField('text','reason');
+		$form->addSubmit('Reject & Send to Re Design');
+		if($form->isSubmitted()){
+			$this->setStatus('redesign',$form['reason']);
+			return true;
+		}
+	}
 }
