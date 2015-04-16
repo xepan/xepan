@@ -131,7 +131,6 @@ class page_base_owner extends Page {
 			$sales_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Opportunity','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_opportunity',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Quotation','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_quotation',array('department_id'=>$dept_model->id)));
-			$sales_m->addItem(array('Configurations','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_shopsnblogs',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Category','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_category',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Item','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_item',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Affiliate','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
@@ -144,11 +143,11 @@ class page_base_owner extends Page {
 			$sales_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Terms & Conditions','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_termsandcondition',array('department_id'=>$dept_model->id)));
+			$sales_m->addItem(array('Configurations','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_shopsnblogs',array('department_id'=>$dept_model->id)));
 
 			$this->shorcut_menus[]=array('keys'=>'sales dashboard, mainpage department summery',"page"=>"Sales Dashboard","url"=>$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array('keys'=>'opportunity hot leads',"page"=>"Opportunity","url"=>$this->api->url('xShop_page_owner_opportunity',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Quotation","url"=>$this->api->url('xShop_page_owner_quotation',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Shops & Blogs","url"=>$this->api->url('xShop_page_owner_shopsnblogs',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Category","url"=>$this->api->url('xShop_page_owner_category',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Item","url"=>$this->api->url('xShop_page_owner_item',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Affiliate","url"=>$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
@@ -162,6 +161,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Sales Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Sales Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Terms and Conditions","url"=>$this->api->url('xShop_page_owner_termsandcondition',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Configurations","url"=>$this->api->url('xShop_page_owner_shopsnblogs',array('department_id'=>$dept_model->id)));
 
 		}
 

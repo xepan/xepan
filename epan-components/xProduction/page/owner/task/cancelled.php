@@ -5,10 +5,23 @@ class page_xProduction_page_owner_task_cancelled extends page_xProduction_page_o
 	function init(){
 		parent::init();
 		
-		$task = $this->add('xProduction/Model_Task_Cancelled');
+		$col=$this->add('Columns');
+		$left_col=$col->addColumn(6);
+		$right_col=$col->addColumn(6);
+		$left_col->add('View_Info')->set('Cancelled By Me');
+		$mytask = $left_col->add('xProduction/Model_Task_Cancelled');
+		$mytask->addCondition('employee_id',$this->api->current_employee->id);
 		
-		$crud=$this->add('CRUD');
-		$crud->setModel($task);
+		$crud=$left_col->add('CRUD');
+		$crud->setModel($mytask);
+
+		$crud->add('xHR/Controller_Acl');
+
+		$right_col->add('View_Info')->set('Cancelled By Employee');
+		$emptask = $right_col->add('xProduction/Model_Task_Cancelled');
+		$emptask->addCondition('created_by_id',$this->api->current_employee->id);
+		$crud=$right_col->add('CRUD');
+		$crud->setModel($emptask);
 
 		$crud->add('xHR/Controller_Acl');
 		

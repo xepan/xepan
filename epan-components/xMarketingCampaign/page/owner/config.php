@@ -6,7 +6,7 @@ class page_xMarketingCampaign_page_owner_config extends page_xMarketingCampaign_
 		parent::init();
 		$this->app->title=$this->api->current_department['name'] .': Configuration';
 		$tab = $this->app->layout->add('Tabs');
-		$email_tab = $tab->addTabURL('./emailconfig','<i class="fa fa-envelope"></i> <i class="fa fa-cog"></i> Email Config');
+		$email_tab = $tab->addTabURL('./emailconfig','<i class="fa fa-envelope"></i> <i class="fa fa-cog"></i> Mass Email Config');
 		$api_tab = $tab->addTabURL('./social','<i class="fa fa-share-alt-square"></i> <i class="fa fa-cog"></i> Social Config');
 	}	
 		//Email Tab

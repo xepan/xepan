@@ -18,7 +18,7 @@ class page_xAccount_page_owner_voucherprint extends page_xAccount_page_owner_mai
 				$m_class = explode("\\", $related_root_document_name);
 				$m_class=$m_class[0].'/Model_'.$m_class[1];
 				$m=$p->add($m_class);
-				$m->load($p->api->stickyGET('document_id'));
+				$m->tryLoad($p->api->stickyGET('document_id'));
 
 				$v_class = explode("\\", $related_root_document_name);
 				$v_class=$v_class[0].'/View_'.$v_class[1];
