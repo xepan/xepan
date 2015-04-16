@@ -14,7 +14,7 @@ jQuery.widget("ui.xnotifier",{
 		*/
 		],
 		status: 'closed',
-		activity_area=undefined
+		activity_area:undefined
 	},
 
 	_create: function(){
@@ -27,16 +27,33 @@ jQuery.widget("ui.xnotifier",{
 		$(this.element).css('position','fixed');
 		$(this.element).css('bottom','10px');
 		$(this.element).css('left','10px');
-		$(this.element).css('width','200px');
-		$(this.element).css('height','20px');
-		$(this.element).css('border','2px solid red');
-
-		this.top_bar = $('<div class="row" style="position:relative;"></div>');
-		this.top_bar.prependTo(this.element);
-
-		$('<div class="col-md-2"></div>').appendTo(this.top_bar);
-		$('<div class="col-md-8">11</div>').appendTo(this.top_bar);
+		$(this.element).css('width','300px');
+		$(this.element).css('min-height','50px');
+		// $(this.element).css('border','2px solid');
+		$(this.element).css('z-index','2000');
 		
+		this.top_bar = $('<div class="row" style="position:relative;margin:0 auto 0 auto;"></div>');
+		this.top_bar.appendTo(this.element);
+		toggle_btn = $('<div class="atk-swatch-red icon-down-dir" style="background-color:gray;"></div>').appendTo(this.top_bar);
+		
+		self.options.activity_area = $('<div class="well">No Result Found</div>').appendTo(this.top_bar);
+		self.options.activity_area.css('min-height','300px');
+		$(self.options.activity_area).slideUp();
+		self.footer = $('<div class="text-center atk-swatch-ink"><span class="badge">0</span></div>').appendTo(this.element);
+
+		$(toggle_btn).click(function(){
+			self.render();
+			$(self.options.activity_area).slideToggle();
+			if($(this).hasClass('icon-down-dir')){
+				$(this).removeClass('icon-down-dir atk-swatch-red');
+				$(this).addClass('icon-up-dir atk-swatch-green');
+			}else{
+				$(this).removeClass('icon-up-dir atk-swatch-green');
+				$(this).addClass('icon-down-dir atk-swatch-red');
+				
+			}
+		});
+
 		$.univ().setInterval(function(){
 			$(self.element).xnotifier('reload');
 		},5000);
@@ -75,6 +92,14 @@ jQuery.widget("ui.xnotifier",{
 
 	render: function (){
 		var self = this;
+		$(this.footer).empty();
+		$('<span class="badge">'+$(self.options.activity_area).length+'</span>').appendTo(self.footer);
+		
+		$(self.options.activities).each(function(index,element){
+			$(self.options.activity_area).empty();
+			activity_box = $('<div class="atk-box"></div>').appendTo(self.options.activity_area);
+			$('<i>'+element.subject+'</i>').appendTo(activity_box);
+		});
 	}
 
 });
