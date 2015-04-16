@@ -47,10 +47,11 @@ jQuery.widget("ui.xnotifier",{
 			if($(this).hasClass('icon-down-dir')){
 				$(this).removeClass('icon-down-dir atk-swatch-red');
 				$(this).addClass('icon-up-dir atk-swatch-green');
+				self.options.status='closed';
 			}else{
 				$(this).removeClass('icon-up-dir atk-swatch-green');
 				$(this).addClass('icon-down-dir atk-swatch-red');
-				
+				self.options.status='open';
 			}
 		});
 
@@ -64,7 +65,7 @@ jQuery.widget("ui.xnotifier",{
 		var self=this;
 
 		$.ajax({
-				url: self.options.url + '&cut_object='+ $(this.element).attr('id') + '&cut_page=1&'+ $(this.element).attr('id') + '=true',
+				url: self.options.url + '&cut_object='+ $(this.element).attr('id') + '&cut_page=1&'+ $(this.element).attr('id') + '=true&xnotifier=1',
 				type: 'GET',
 				datatype: "json",
 				data: {},
@@ -86,8 +87,6 @@ jQuery.widget("ui.xnotifier",{
 					self.render();
 				}
 			});
-
-		$.univ().successMessage('running');
 	},
 
 	render: function (){
@@ -99,6 +98,9 @@ jQuery.widget("ui.xnotifier",{
 			$(self.options.activity_area).empty();
 			activity_box = $('<div class="atk-box"></div>').appendTo(self.options.activity_area);
 			$('<i>'+element.subject+'</i>').appendTo(activity_box);
+			$(activity_box).click(function(event){
+				$.univ().frameURL(element.subject,'index.php?page=owner_activitydocument')
+			});
 		});
 	}
 
