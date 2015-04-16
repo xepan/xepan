@@ -6,14 +6,13 @@ class Model_Task extends \Model_Document{
 	public $table = "xproduction_tasks";
 	public $status=array('assigned','processing','processed','completed','cancelled');
 	public $root_document_name = "xProduction\Task";
-
+	public $actions=array(
+			'can_assign'=>array()
+		);
 	function init(){
 		parent::init();
 
-		$this->addField('root_document_name');
-		$this->addField('document_name');
-		$this->addField('document_id');
-
+		
 		$this->hasOne('xProduction/Team','team_id');
 		$this->hasOne('xHR/Employee','employee_id');
 
@@ -74,9 +73,21 @@ class Model_Task extends \Model_Document{
 		$this['status']='processed';
 		$this->saveAndUnload();
 	}
+	function assign_page($page){
+		$cols=$page->add('Columns');
+		$col=$cols->addColumn(6);
+		$form = $col->add('Form_Stacked');
+		$form->addField('dropdown','Assign to Employee')->setModel('xHR/Model_Employee');
+		$form->addField('dropdown','Assign to Team')->setModel('xProduction/Model_Team');
+		$form->addSubmit('Assign');
+		
+		if($form->isSubmitted()){
+			
+		}
+		
 
-	function createTask(){
-	
 	}
+
+	
 
 }
