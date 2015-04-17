@@ -27,7 +27,7 @@ jQuery.widget("ui.xnotifier",{
 
 		$(this.element).css('position','fixed');
 		$(this.element).css('bottom','10px');
-		$(this.element).css('left','10px');
+		$(this.element).css('right','10px');
 		$(this.element).css('width','300px');
 		$(this.element).css('min-height','50px');
 		$(this.element).addClass('atk-box');

@@ -12,6 +12,8 @@ class Model_SalesInvoice extends Model_Invoice{
 	function init(){
 		parent::init();
 		$this->addCondition('type','salesInvoice');
+
+		$this->addExpression('invoiceitem_count')->set($this->refSql('xShop/InvoiceItem')->count());
 	}
 
 	function customer(){

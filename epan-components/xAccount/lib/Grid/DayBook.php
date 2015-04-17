@@ -9,7 +9,6 @@ class Grid_DayBook extends Grid_AccountsBase{
 		parent::setModel($model,$fields);
 		$this->addFormatter('voucher_no','Wrap');
 		$this->addFormatter('account','Wrap');
-		$this->addFormatter('forceDelete','Wrap');
 	}
 
 	function format_voucherNo($field){
@@ -23,8 +22,5 @@ class Grid_DayBook extends Grid_AccountsBase{
 		parent::format_voucherNo($field);
 	}
 
-	function format_forceDelete($field){
-		$this->current_row[$field]=" ";
-		// parent::format_forceDelete($field);
-	}
+
 }

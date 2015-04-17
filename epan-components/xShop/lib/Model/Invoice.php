@@ -33,12 +33,12 @@ class Model_Invoice extends \Model_Document{
 		$this->addField('billing_address')->type('text');
 		$this->addField('transaction_reference')->type('text');
 		$this->addField('transaction_response_data')->type('text');
-		$this->hasMany('xShop/InvoiceItem','invoice_id');
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
-
-		$this->add('dynamic_model/Controller_AutoCreator');
+		
+		$this->hasMany('xShop/InvoiceItem','invoice_id');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
 	function afterSave(){
