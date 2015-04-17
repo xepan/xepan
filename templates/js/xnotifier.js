@@ -101,10 +101,24 @@ jQuery.widget("ui.xnotifier",{
 
 		$(self.options.activity_area).empty();
 		$(self.options.activities).each(function(index,element){
-			activity_box = $('<div class="atk-box"></div>').appendTo(self.options.activity_area);
-			str = '<small class="atk-swatch-gray pull-right"> '+element.created_at+' </small>';
-			str = str+'</br><p>'+element.subject+'</p>';
-			str = str+'<small class="icon-user pull-right">'+element.action_from+'</small>';
+			activity_box = $('<div class="atk-box atk-row atk-size-micro atk-padding-small" style="cursor:pointer;"></div>').appendTo(self.options.activity_area);
+			
+			//Action
+			str = '<div class="atk-col-6 atk-swatch-red icon-flash" style="text-transform:capitalize;">'+element.action+'</div>';
+			//Date
+			str = str+'<div class="atk-col-6 icon-calendar"> '+element.created_date+'</div>';
+			//Activity No LIKE xShop\Order::000067
+			str = str+'<small class="atk-col-12 atk-hr-small text-center">'+element.related_root_document_name+' :: '+element.related_document_id+'</small>';
+			//subject
+			str = str+'<div class="atk-col-12 atk-effect-info atk-label atk-size-reset">'+element.subject+'</div><div class="atk-hr-large"></div>';
+			//Action
+			// str = str+'<div class="atk-col-12 text-center">Action</div>';
+			//Action from
+			str = str+'<div class="atk-col-5 icon-user">'+element.action_from+'</div>';
+			str = str+'<div class="atk-col-2 glyphicon glyphicon-arrow-right"></div>';
+			//Action To
+			str = str+'<div class="atk-col-5 icon-user">'+element.to+'</div>';
+			
 			$(str).appendTo(activity_box);
 
 			$(activity_box).click(function(event){
