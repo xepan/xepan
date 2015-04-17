@@ -24,12 +24,12 @@ class Grid_JobCard extends \Grid{
 		$outsource = "";
 		if($this->model['outsource_party']){
 			$this->setTDParam($field, 'class', ' atk-swatch-blue ');
-			$outsource = "<br><span>Outsource:".$this->model['outsource_party']."</span>";
+			$outsource = "<br><span>Outsource: ".$this->model['outsource_party']."</span>";
 		}
 		else
 			$this->setTDParam($field, 'class', '');
 
-		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Job Card '. $this->model['name'], $this->api->url($this->vp->getURL(),array('jobcard_clicked'=>$this->model->id))).'">'. $this->current_row[$field] ."</a>"."<br><small>Dept:".$this->model->ref('to_department_id')->get('name')."</small>".$outsource;
+		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Job Card '. $this->model['name'], $this->api->url($this->vp->getURL(),array('jobcard_clicked'=>$this->model->id))).'">'. $this->current_row[$field] ."</a>"."<br><small>Dept: ".$this->model->ref('to_department_id')->get('name')."</small>".$outsource;
 	}
 
 	function format_orderview($field){
