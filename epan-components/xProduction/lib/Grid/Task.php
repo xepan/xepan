@@ -25,39 +25,34 @@ class Grid_Task extends \Grid{
 	}
 
 	function formatRow(){
-		$this->current_row_html['name']="<div class='panel-heading '>".$this->model['name'].
-											"<h3 class='text-center well'>". $this->model['subject']."</h3>".
-											"<div class='row'>".
-													"<div class='col-md-6'>".
-														"Created By.:- "."<b>".$this->model['created_by']."</b>".	
-													"</div>". " ".
-													"<div class='col-md-6'>".
-														"Created At.:- ".$this->model['created_at'].	
-													"</div>"."<br>".
+		$this->current_row_html['name']=
+		"<div class='panel panel-success atk-size-micro '>".
+			"<div class='atk-row '>".
+					"<div class='atk-col-4 atk-effect-danger '>"
+							."Task No.: ".$this->model['name'].'&nbsp;&nbsp'."<b class='btn btn-success btn-xs'>".$this->model['Priority']."</b><br>"
+							.date('d M Y',strtotime($this->model['created_at'])).
+					"</div>".
+					"<div id='opener' class='atk-col-4 text-center atk-button'>
+					<b>". $this->model['subject']."</b>
+					</div>".
+			"</div>".
+			"<div class='atk-row'>".
+				"<div class='atk-col-6'>".
+					"Created By.:- "."<b>".$this->model['created_by']."</b>".	
+				"</div>". " ".
+				"<div class='atk-col-6 text-right'>".
+					"Assign to.:- <b>".$this->model['employee']."</b>".	
+				"</div>"."<br>".
+				"<div class='atk-col-6'>".
+					"Starting Date.:- ".$this->model['expected_start_date'].	
+				"</div>".
+				"<div class='atk-col-6 text-right'>".
+					"Ending Date.:- ".$this->model['expected_end_date'].	
+				"</div>".
+			"</div>".
+										
+		"</div>".		
 
-													"<div class='col-md-6'>".
-														"Starting Date.:- ".$this->model['expected_start_date'].	
-													"</div>".
-													"<div class='col-md-6'>".
-														"Ending  Date.:- ".$this->model['expected_end_date'].	
-													"</div>".
-											"</div>".
-											"<div>".
-												
-											"<div>".
-												"<div class='col-md-12 well text-center'>".
-												$this->model['content'].
-												"</div>".
-											"</div>".
-											"<div class='row'>".
-												"<div class='col-md-6'>".
-												"Priority - "."<b class='btn btn-success btn-xs'>".$this->model['Priority']."</b>".
-												"</div>".
-												"<div class='col-md-6'>".
-												"Assigned To.: - "."<b>".$this->model['employee']."</b>".
-												"</div>".
-											"</div>".
-										"</div>";
 
 		parent::formatRow();									
 	}
