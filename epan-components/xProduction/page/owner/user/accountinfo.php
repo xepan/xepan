@@ -1,9 +1,9 @@
 <?php
 
 class page_xProduction_page_owner_user_accountinfo extends page_xProduction_page_owner_main{
+
+
 	function page_index(){
-
-
 		$member = $this->add('xShop/Model_MemberDetails');
 		if(!$member->loadLoggedIn()){
 			$this->add('View_Error')->set('Not Authorized');

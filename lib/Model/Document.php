@@ -262,7 +262,7 @@ class Model_Document extends SQL_Model{
 			),'div.atk-form-row');
 		}
 
-		$crud->add('xHR/Controller_Acl');
+		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>'All','allow_add'=>true,'allow_edit'=>'Self Only','allow_del'=>'No')));
 
 	}
 
