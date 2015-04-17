@@ -10,8 +10,8 @@ $.each({
 }, $.univ._import);
 
 $.atk4(function(){
-	shortcut.add("Ctrl+up", function(event) {
 
+	shortcut.add("Ctrl+up", function(event) {
 		var fuse = new Fuse(shortcut_menu_pages, {
 			caseSensitive: false,
 			shouldSort: true,
@@ -122,6 +122,31 @@ $.atk4(function(){
                     .append("<a>" + item['name'] + "</a>")
                     .appendTo(ul);
                 }
+
+		event.stopPropagation();
+	});
+
+	shortcut.add("Ctrl+right", function(event) {
+
+		var inp = $('<input type="text"/>');
+
+		var outer = $('<div>');
+		$(outer)
+			.append($('<div><i class="glyphicon glyphicon-leaf"> xEpan </i> TO DO / Note </div>').addClass('label label-warning'))
+			.append(inp)
+			.addClass('text-center');
+
+
+		var dd = $(outer).dialog({
+			modal: true,
+			open: function (event,ui){
+				$(inp).focus();
+			}
+		});
+
+		$(inp).css({
+			width: '100%'
+		});
 
 		event.stopPropagation();
 	});

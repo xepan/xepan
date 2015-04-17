@@ -3,12 +3,14 @@
 namespace xProduction;
 
 class Model_Task extends \Model_Document{
+
 	public $table = "xproduction_tasks";
 	public $status=array('assigned','processing','processed','completed','cancelled');
 	public $root_document_name = "xProduction\Task";
 	public $actions=array(
 			'can_assign'=>array()
 		);
+	
 	function init(){
 		parent::init();
 
@@ -18,13 +20,13 @@ class Model_Task extends \Model_Document{
 
 		$this->addField('name');
 		$this->addField('subject');
-		$this->addField('content')->type('text');
+		$this->addField('content')->type('text')->display(array('form'=>'RichText'));
 		$this->addField('Priority')->enum(array('low','Medium','High','Urgent'));
 
 		$this->addField('is_default_jobcard_task')->type('boolean')->defaultValue(false)->system(true);
 
 		$this->addField('expected_start_date')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
-		$this->addField('expected_end_date')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
+		$this->addField('expected_end_date')->type('datetime')->defaultValue(null);
 
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
@@ -42,22 +44,13 @@ class Model_Task extends \Model_Document{
 		return $my_team->getAssociatedEmployees( $team_leader = true );
 	}
 
-	function relatedDocument(){
-		$class=$this['root_document_name'];
-		$class =explode("\\", $class);
-		$class[1] = "\\Model_".$class[1];
-		$class = implode("", $class);
-
-		return $this->add($class)->load($this['document_id']);
-	}
-
 	function start_processing(){
 		$this->relatedDocument()->set('status','processing')->save();
 		$this['status']='processing';
 		$this->saveAndUnload();
 	}
 
-	function mark_processed_page($p){
+	function can_mark_processed_page($p){
 		$form = $p->add('Form');
 		$form->addField('line','num1');
 		$form->addField('line','num2');
@@ -68,12 +61,16 @@ class Model_Task extends \Model_Document{
 		}
 	}
 
-	function mark_processed(){
-		$this->relatedDocument()->set('status','processed')->save();
+	function can_mark_processed(){
+		if($rd = $this->relatedDocument()){
+			$rd->setStatus('processed');
+		}
+
 		$this['status']='processed';
 		$this->saveAndUnload();
 	}
-	function assign_page($page){
+
+	function can_assign_page($page){
 		$cols=$page->add('Columns');
 		$col=$cols->addColumn(6);
 		$form = $col->add('Form_Stacked');
@@ -84,10 +81,6 @@ class Model_Task extends \Model_Document{
 		if($form->isSubmitted()){
 			
 		}
-		
-
 	}
-
-	
 
 }
