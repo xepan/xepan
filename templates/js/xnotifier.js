@@ -35,7 +35,7 @@ jQuery.widget("ui.xnotifier",{
 		
 		this.top_bar = $('<div class="row" style="position:relative;margin:0 auto 0 auto;"></div>');
 		this.top_bar.appendTo(this.element);
-		toggle_btn = $('<div class="atk-swatch-green icon-up-dir atk-size-peta" style="border-radius: 10px 10px 0px 0px; background-color: #ffffb9";>Notifications</div>').appendTo(this.top_bar);
+		toggle_btn = $('<div class="atk-swatch-green icon-up-dir atk-size-peta" style="border-radius: 10px 10px 0px 0px; background-color: #ffffb9";>Activities</div>').appendTo(this.top_bar);
 		
 		self.options.activity_area = $('<div class="well">No Result Found</div>').appendTo(this.top_bar);
 		self.options.activity_area.css('max-height','300px');
