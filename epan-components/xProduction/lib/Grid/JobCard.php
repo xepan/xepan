@@ -2,7 +2,7 @@
 namespace xProduction;
 
 class Grid_JobCard extends \Grid{
-
+	public $ipp=100;
 	function init(){
 		parent::init();
 		$self= $this;
@@ -39,6 +39,8 @@ class Grid_JobCard extends \Grid{
 		$this->addFormatter('order_no','orderview');
 		$this->addFormatter('name','view');
 		$this->removeColumn('outsource_party');
+
+		$this->addPaginator($this->ipp);
 		return $m;
 	}
 }
