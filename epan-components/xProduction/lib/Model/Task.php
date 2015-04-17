@@ -5,7 +5,7 @@ namespace xProduction;
 class Model_Task extends \Model_Document{
 
 	public $table = "xproduction_tasks";
-	public $status=array('assigned','processing','processed','completed','cancelled');
+	public $status=array('assigned','processing','processed','completed','cancelled','rejected');
 	public $root_document_name = "xProduction\Task";
 	public $actions=array(
 			'can_assign'=>array()
@@ -101,7 +101,15 @@ class Model_Task extends \Model_Document{
 			}
 			// $form->js(null,$form->js()->univ()->closeDialog())->univ()->successMessage('Assigned Successfully')->reload()->execute();
 
+	function reject_page($page){
+		$form= $page->add('Form_Stacked');
+		$form->addField('text','reason');
+		$form->addSubmit('Reject & Send to Re Design');
+		if($form->isSubmitted()){
+			$this->setStatus('rejected',$form['reason']);
+			return true;
 		}
 	}
+
 
 }

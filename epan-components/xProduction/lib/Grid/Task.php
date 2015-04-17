@@ -2,7 +2,7 @@
 namespace xProduction;
 
 class Grid_Task extends \Grid{
-
+	public $ipp=10;
 	function init(){
 		parent::init();
 	}
@@ -21,6 +21,8 @@ class Grid_Task extends \Grid{
 		$this->removeColumn('Priority');
 
 		$this->addFormatter('name','wrap');
+		$this->addPaginator($this->ipp);
+
 		return $m;
 	}
 
