@@ -14,7 +14,7 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 // 		Prospected Sales
 // EOF;
 
-		$this->add('View')->setHTML(nl2br($x));
+		// $this->add('View')->setHTML(nl2br($x));
 
 
 		$is_superuser_login = false;
