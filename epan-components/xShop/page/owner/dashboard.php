@@ -8,6 +8,23 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		$this->app->title=$this->api->current_department['name'] .': Dashboard';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-dashboard icon-gauge"></i> Sales Department Dashboard');
 
+
+				$x = <<<EOF
+		Todays Approved Order => Todays Sales
+		Todays Delived/Completed ORders
+		Todays ORder Canceled
+
+		Sales Executive Performances (Distinct employee_id)
+		Online Vs Offline Orders (Day Wise Graph)
+		Hot Oppertunities (By Age)
+		Prospected Sales
+		
+
+EOF;
+
+		$this->add('View')->setHTML(nl2br($x));
+
+
 		$is_superuser_login = false;
 		if($this->api->auth->model->id == $this->api->auth->model->isDefaultSuperUser()){
 			$is_superuser_login =true;
