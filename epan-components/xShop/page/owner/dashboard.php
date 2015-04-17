@@ -7,14 +7,12 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 
 		$this->app->title=$this->api->current_department['name'] .': Dashboard';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-dashboard icon-gauge"></i> Sales Department Dashboard');
-
-
-		$x = <<<EOF
-		Sales Executive Performances (Distinct employee_id)
-		Online Vs Offline Orders (Day Wise Graph)
-		Hot Oppertunities (By Age)
-		Prospected Sales
-EOF;
+// TTODDOOOO
+// 		$x = <<<EOF
+// 		Sales Executive Performances (Distinct employee_id)
+// 		Online Vs Offline Orders (Day Wise Graph)
+// 		Prospected Sales
+// EOF;
 
 		$this->add('View')->setHTML(nl2br($x));
 
