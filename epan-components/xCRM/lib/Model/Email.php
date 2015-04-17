@@ -16,10 +16,50 @@ class Model_Email extends \Model_Document{
 		$this->addField('to');
 		$this->addField('to_id');
 
+		$this->addField('send_to_emails')->type('text');
+		$this->addField('cc')->type('text');
+		$this->addField('bcc')->type('text');
+
 		$this->addField('subject');
 		$this->addField('message')->type('text');
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id');
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function send(){
+
+	}
+
+	function createActivity(){
+
+	}
+
+	function fetch(){
+		// IMAP must be enabled in Google Mail Settings
+		// define('GMAIL_EMAIL', 'developer@xavoc.com');
+		// define('GMAIL_PASSWORD', 'Developer@67');
+		// define('ATTACHMENTS_DIR', getcwd().'/upload');
+
+		// $mailbox = new ImapMailbox('{sun.rightdns.com:993/imap/ssl/novalidate-cert}INBOX', GMAIL_EMAIL, GMAIL_PASSWORD, ATTACHMENTS_DIR, 'utf-8');
+		// $mails = array();
+
+		// // Get some mail
+		// try{
+		// 	$mailsIds = $mailbox->searchMailBox('SINCE "16-4-2015"');
+		// 	if(!$mailsIds) {
+		// 		$mailbox->disconnect();
+		// 	}else{
+		// 		$mailId = reset($mailsIds);
+		// 		$mail = $mailbox->getMail($mailId);
+
+		// 		var_dump($mail);
+		// 		var_dump($mail->getAttachments());
+		// 	}
+
+		// }catch(\Exception $e){
+		// 	$mailbox->disconnect();
+		// }
+
 	}
 }

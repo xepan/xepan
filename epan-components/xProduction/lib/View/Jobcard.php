@@ -43,14 +43,18 @@ class View_Jobcard extends \View{
 		
 		
 		$o_attachments = "";
-		foreach ($order->attachments() as $attachment) {
-			$o_attachments .= '<a target="_blank" href="'.$attachment['attachment_url'].'">'.$attachment['name'].'</a>, ';
+		if($att=$order->attachments()){
+			foreach ($att as $attachment) {
+				$o_attachments .= '<a target="_blank" href="'.$attachment['attachment_url'].'">'.$attachment['name'].'</a>, ';
+			}
 		}
 		$this->template->trySetHtml('order_attachments',$o_attachments);
 		
 		$oi_attachments = "";
-		foreach ($oi->attachments() as $attachment) {
-			$oi_attachments .= '<a target="_blank" href="'.$attachment['attachment_url'].'">'.$attachment['name'].'</a>, ';
+		if($att=$oi->attachments()){
+			foreach ($att as $attachment) {
+				$oi_attachments .= '<a target="_blank" href="'.$attachment['attachment_url'].'">'.$attachment['name'].'</a>, ';
+			}
 		}
 
 		$this->template->trySetHtml('order_item_attachments',$oi_attachments);
