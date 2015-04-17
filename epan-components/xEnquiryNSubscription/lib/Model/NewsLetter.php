@@ -7,6 +7,13 @@ class Model_NewsLetter extends \Model_Document {
 	public $table ='xenquirynsubscription_newsletter';
 	public $status = array();
 	public $root_document_name = 'xEnquiryNSubscription\NewsLetter';
+	public $actions=array(
+			'can_view'=>array(),
+			'allow_edit'=>array(),
+			'allow_add'=>array(),
+			'allow_del'=>array(),
+			
+		);
 
 
 	function init(){
