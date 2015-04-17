@@ -50,19 +50,20 @@ jQuery.widget("ui.xnotifier",{
 				$(this).addClass('icon-up-dir atk-swatch-green');
 				self.options.status='closed';
 				self.options.see_activity = 1;
-				$(self.options.activity_area).empty();
+				// $(self.options.activity_area).empty();
 			}else{
 				$(this).removeClass('icon-up-dir atk-swatch-green');
 				$(this).addClass('icon-down-dir atk-swatch-red');
-				self.render();
+				// self.render();
 				self.options.status='open';
 			}
 			$(self.options.activity_area).slideToggle();
 		});
-
+		
+		self.reload();
 		$.univ().setInterval(function(){
 			$(self.element).xnotifier('reload');
-		},5000);
+		},300000);
 
 	},
 

@@ -74,13 +74,31 @@ class Model_Task extends \Model_Document{
 		$cols=$page->add('Columns');
 		$col=$cols->addColumn(6);
 		$form = $col->add('Form_Stacked');
-		$form->addField('dropdown','assign_to_employee')->setModel('xHR/Model_Employee');
-		$form->addField('dropdown','assign_to_team')->setModel('xProduction/Model_Team');
+		$form->addField('dropdown','assign_to_employee')->setEmptyText("Select Employee")->setModel('xHR/Model_Employee');
+		$form->addField('dropdown','assign_to_team')->setEmptyText("Select Team")->setModel('xProduction/Model_Team');
 		$form->addSubmit('Assign');
 			
 		if($form->isSubmitted()){
-			$this['employee_id']=$form['assign_to_employee'];
-			$this->setStatus('assigned');
+
+			if($form['assign_to_employee'] AND $form['assign_to_team']){
+				$form->displayError('assign_to_team','Select either team or employee, not both');
+			}
+
+			if(!$form['assign_to_employee'] AND !$form['assign_to_team']){
+				$form->displayError('assign_to_employee','Select either team or employee (not both)');
+			}			
+
+			if($form['assign_to_employee']){
+				$this['employee_id']=$form['assign_to_employee'];
+				$this->setStatus('assigned',null,null,null,null,'Employee',$this['employee_id']);
+				return true;
+			}
+
+			if($form['assign_to_team']){
+				$this['team_id']=$form['assign_to_team'];
+				$this->setStatus('assigned',null,null,null,null,'Team',$this['team_id']);
+				return true;
+			}
 			// $form->js(null,$form->js()->univ()->closeDialog())->univ()->successMessage('Assigned Successfully')->reload()->execute();
 
 		}
