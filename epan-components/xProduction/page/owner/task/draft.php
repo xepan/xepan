@@ -23,8 +23,10 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 
 				
 		$crud->setModel($draft,array('employee','team','subject','content','Priority','expected_start_date','expected_end_date'));
-		$crud->add('xHR/Controller_Acl',array('override'=>array('allow_add'=>true,'allow_edit'=>'Self Only','allow_del'=>'Self Only')));
+		// $crud->grid->ipp=2;
 		
+		$crud->add('xHR/Controller_Acl',array('override'=>array('allow_add'=>true,'allow_edit'=>'Self Only','allow_del'=>'Self Only')));
+
 		$right_col->add('View_Info')->set('Assign To Me');
 		$assign_to_me_task = $right_col->add('xProduction/Model_Task_Assigned');
 		$assign_to_me_task->addCondition('employee_id',$this->api->current_employee->id);

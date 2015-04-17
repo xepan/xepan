@@ -148,7 +148,7 @@ class Controller_Acl extends \AbstractController {
 	function doCRUD(){
 		// echo "i m here 2 <br>";
 		if($this->show_acl_btn AND !$this->owner->isEditing()){
-			if($this->api->auth->model->isDefaultSuperUser()){
+			if($this->api->getConfig('open_acl_for_all',false) OR $this->api->auth->model->isDefaultSuperUser()){
 				$btn = $this->owner->grid->buttonset->addButton()->set('ACL APPLIED');
 				$self= $this;
 				$vp = $this->owner->add('VirtualPage')->set(function($p)use($self){

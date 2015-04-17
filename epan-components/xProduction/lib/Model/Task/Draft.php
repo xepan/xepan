@@ -6,6 +6,7 @@ class Model_Task_Draft extends Model_Task{
 			'can_view'=>array(),
 			'can_start_processing'=>array(),
 			'can_mark_processed'=>array(),
+			'can_reject'=>array(),
 			'can_assign'=>array()
 		);
 	function init(){

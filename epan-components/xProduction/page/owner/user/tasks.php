@@ -15,6 +15,7 @@ class page_xProduction_page_owner_user_tasks extends page_xProduction_page_owner
 		$tabs->addTabURL('xProduction/page/owner/task_processed','Processed '.$this->add('xProduction/Model_Task_Processed')->myCounts(true,false));
 		$tabs->addTabURL('xProduction/page/owner/task_completed','Completed By Me '.$this->add('xProduction/Model_Task_Completed')->myCounts(true,false));
 		$tabs->addTabURL('xProduction/page/owner/task_cancelled','Cancelled '.$this->add('xProduction/Model_Task_Cancelled')->myCounts(true,false));
+		$tabs->addTabURL('xProduction/page/owner/task_rejected','Rejected '.$this->add('xProduction/Model_Task_Rejected')->myCounts(true,false));
 
 		
 	}
