@@ -14,7 +14,8 @@ jQuery.widget("ui.xnotifier",{
 		*/
 		],
 		status: 'closed',
-		activity_area:undefined
+		activity_area:undefined,
+		see_activity:0
 	},
 
 	_create: function(){
@@ -48,6 +49,7 @@ jQuery.widget("ui.xnotifier",{
 				$(this).removeClass('icon-down-dir atk-swatch-red');
 				$(this).addClass('icon-up-dir atk-swatch-green');
 				self.options.status='closed';
+				self.options.see_activity = 1;
 				$(self.options.activity_area).empty();
 			}else{
 				$(this).removeClass('icon-up-dir atk-swatch-green');
@@ -68,7 +70,7 @@ jQuery.widget("ui.xnotifier",{
 		var self=this;
 
 		$.ajax({
-				url: self.options.url + '&cut_object='+ $(this.element).attr('id') + '&cut_page=1&'+ $(this.element).attr('id') + '=true&xnotifier=1',
+				url: self.options.url + '&cut_object='+ $(this.element).attr('id') + '&cut_page=1&'+ $(this.element).attr('id') + '=true&xnotifier=1&see=1',
 				type: 'GET',
 				datatype: "json",
 				data: {},

@@ -12,7 +12,7 @@ class page_xProduction_page_owner_task_processed extends page_xProduction_page_o
 		$mytask = $left_col->add('xProduction/Model_Task_Processed');
 		$mytask->addCondition('employee_id',$this->api->current_employee->id);
 		
-		$crud=$left_col->add('CRUD');
+		$crud=$left_col->add('CRUD',array('grid_class'=>'xProduction/Grid_Task'));
 		$crud->setModel($mytask);
 
 		$crud->add('xHR/Controller_Acl');
@@ -20,7 +20,7 @@ class page_xProduction_page_owner_task_processed extends page_xProduction_page_o
 		$right_col->add('View_Info')->set('Processed By Employee');
 		$emptask = $right_col->add('xProduction/Model_Task_Processed');
 		$emptask->addCondition('created_by_id',$this->api->current_employee->id);
-		$crud=$right_col->add('CRUD');
+		$crud=$right_col->add('CRUD',array('grid_class'=>'xProduction/Grid_Task'));
 		$crud->setModel($emptask);
 
 		$crud->add('xHR/Controller_Acl');

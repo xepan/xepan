@@ -39,8 +39,7 @@ class Model_Employee extends \Model_Table{
 		$this->addField('contract_end_date')->type('date')->group('b~3');
 		$this->addField('date_of_retirement')->type('date')->group('b~3');
 		$this->addField('resignation_letter_date')->type('date')->group('b~3');
-		
-		// $this->addField('relieving_date')->type('date')->group('b~3');
+		$this->addField('seen_till');
 		// $this->addField('salary_mode')->enum(array('cheque','cash','bank'))->group('b~3');
 		// $this->addField('reason_of_resignation')->type('text')->group('b~3');
 		// $this->addField('feedback')->type('text')->group('b~3');

@@ -70,16 +70,19 @@ class Model_Task extends \Model_Document{
 		$this->saveAndUnload();
 	}
 
-	function can_assign_page($page){
+	function assign_page($page){
 		$cols=$page->add('Columns');
 		$col=$cols->addColumn(6);
 		$form = $col->add('Form_Stacked');
-		$form->addField('dropdown','Assign to Employee')->setModel('xHR/Model_Employee');
-		$form->addField('dropdown','Assign to Team')->setModel('xProduction/Model_Team');
+		$form->addField('dropdown','assign_to_employee')->setModel('xHR/Model_Employee');
+		$form->addField('dropdown','assign_to_team')->setModel('xProduction/Model_Team');
 		$form->addSubmit('Assign');
-		
-		if($form->isSubmitted()){
 			
+		if($form->isSubmitted()){
+			$this['employee_id']=$form['assign_to_employee'];
+			$this->setStatus('assigned');
+			// $form->js(null,$form->js()->univ()->closeDialog())->univ()->successMessage('Assigned Successfully')->reload()->execute();
+
 		}
 	}
 

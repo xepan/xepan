@@ -5,15 +5,15 @@ class page_xProduction_page_owner_task_assigned extends page_xProduction_page_ow
 	function init(){
 		parent::init();
 		$col=$this->add('Columns');
-		$left_col=$col->addColumn(6);
-		$right_col=$col->addColumn(6);
+		// $left_col=$col->addColumn(6);
+		$right_col=$col->addColumn(12);
 		
-		$left_col->add('View_Info')->set('Assign To Me');
-		$assign_to_me_task = $left_col->add('xProduction/Model_Task_Assigned');
-		$assign_to_me_task->addCondition('employee_id',$this->api->current_employee->id);
-		$left_crud=$left_col->add('CRUD');
-		$left_crud->setModel($assign_to_me_task);
-		$left_crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>'All')));
+		// $left_col->add('View_Info')->set('Assign To Me');
+		// $assign_to_me_task = $left_col->add('xProduction/Model_Task_Assigned');
+		// $assign_to_me_task->addCondition('employee_id',$this->api->current_employee->id);
+		// $left_crud=$left_col->add('CRUD',array('grid_class'=>'xProduction/Grid_Task'));
+		// $left_crud->setModel($assign_to_me_task);
+		// $left_crud->add('xHR/Controller_Acl');
 
 		$right_col->add('View_Info')->set('Assign By Me');
 		$assign_by_me_task = $right_col->add('xProduction/Model_Task_Assigned');

@@ -12,7 +12,7 @@ class page_xProduction_page_owner_task_processing extends page_xProduction_page_
 		$mytask = $left_col->add('xProduction/Model_Task_Processing');
 		$mytask->addCondition('employee_id',$this->api->current_employee->id);
 		
-		$crud=$left_col->add('CRUD');
+		$crud=$left_col->add('CRUD',array('grid_class'=>'xProduction/Grid_Task'));
 		$crud->setModel($mytask);
 
 		$crud->add('xHR/Controller_Acl');

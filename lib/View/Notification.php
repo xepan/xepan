@@ -1,11 +1,16 @@
 <?php
 
 class View_Notification extends View {
-
+	public $update_seen_till=false;
 	function init(){
 		parent::init();
 		
-		
+		//Update Employee SeenTill
+		if($this->update_seen_till == '1'){
+			$this->api->current_employee['seen_till'] = $this->add('xCRM\Model_Activity')->setOrder('id desc')->tryLoadAny()->get('id');
+			$this->api->current_employee->save();
+		}
+
 		if($_GET[$this->name]=='true'){
 
 			$lookup_array=array(
@@ -23,8 +28,10 @@ class View_Notification extends View {
 					->count();
 			});
 
-			$current_lastseen->_dsql()->group('related_document_name');
-			$current_lastseen->_dsql()->having('count','>',0);
+			// $current_lastseen->_dsql()->group('related_document_name');
+			// $current_lastseen->_dsql()->having('count','>',0);
+
+			$current_lastseen->setLimit(20);
 
 			echo json_encode($current_lastseen->getRows());
 			exit;
