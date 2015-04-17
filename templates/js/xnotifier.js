@@ -29,29 +29,31 @@ jQuery.widget("ui.xnotifier",{
 		$(this.element).css('left','10px');
 		$(this.element).css('width','300px');
 		$(this.element).css('min-height','50px');
+		$(this.element).addClass('atk-box');
 		// $(this.element).css('border','2px solid');
 		$(this.element).css('z-index','2000');
 		
 		this.top_bar = $('<div class="row" style="position:relative;margin:0 auto 0 auto;"></div>');
 		this.top_bar.appendTo(this.element);
-		toggle_btn = $('<div class="atk-swatch-red icon-down-dir" style="background-color:gray;"></div>').appendTo(this.top_bar);
+		toggle_btn = $('<div class="atk-swatch-green icon-up-dir atk-size-peta" style="border-radius: 10px 10px 0px 0px; background-color: #ffffb9";>Notifications</div>').appendTo(this.top_bar);
 		
 		self.options.activity_area = $('<div class="well">No Result Found</div>').appendTo(this.top_bar);
-		self.options.activity_area.css('min-height','300px');
+		self.options.activity_area.css('max-height','300px');
+		self.options.activity_area.css('overflow','auto');
 		$(self.options.activity_area).slideUp();
-		self.footer = $('<div class="text-center atk-swatch-ink"><span class="badge">0</span></div>').appendTo(this.element);
+		self.footer = $('<div class="text-center atk-swatch-ink atk-padding-small" style="border-radius:0px 0px 10px 10px"><span class="badge ">0</span></div>').appendTo(this.element);
 
 		$(toggle_btn).click(function(){
 			if($(this).hasClass('icon-down-dir')){
 				$(this).removeClass('icon-down-dir atk-swatch-red');
 				$(this).addClass('icon-up-dir atk-swatch-green');
-				self.options.status='open';
-				self.render();
+				self.options.status='closed';
+				$(self.options.activity_area).empty();
 			}else{
 				$(this).removeClass('icon-up-dir atk-swatch-green');
 				$(this).addClass('icon-down-dir atk-swatch-red');
-				self.options.status='closed';
-				$(self.options.activity_area).empty();
+				self.render();
+				self.options.status='open';
 			}
 			$(self.options.activity_area).slideToggle();
 		});
@@ -78,12 +80,13 @@ jQuery.widget("ui.xnotifier",{
 					shake=true;
 				}
 
+				self.options.activities = activities;
+				
 				if(shake){
 					$(self.element).effect('shake');
 					self.render()
 				}
 
-				self.options.activities = activities;
 
 				if(self.options.status=='open'){
 					self.render();
@@ -94,17 +97,19 @@ jQuery.widget("ui.xnotifier",{
 	render: function (){
 		var self = this;
 		$(this.footer).empty();
-		$('<span class="badge">'+$(self.options.activity_area).length+'</span>').appendTo(self.footer);
-		console.log(self.options.activities);
+		$('<span class="badge atk-swatch-red">'+$(self.options.activities).length+'</span>').appendTo(self.footer);
 
 		$(self.options.activity_area).empty();
 		$(self.options.activities).each(function(index,element){
 			activity_box = $('<div class="atk-box"></div>').appendTo(self.options.activity_area);
-			$('<i>'+element.subject+'</i>').appendTo(activity_box);
+			str = '<small class="atk-swatch-gray pull-right"> '+element.created_at+' </small>';
+			str = str+'</br><p>'+element.subject+'</p>';
+			str = str+'<small class="icon-user pull-right">'+element.action_from+'</small>';
+			$(str).appendTo(activity_box);
+
 			$(activity_box).click(function(event){
 				$.univ().frameURL(element.subject,'index.php?page=owner_activitydocument&activity_id='+element.id)
 			});
-			console.log(element.id);
 		});
 	}
 
