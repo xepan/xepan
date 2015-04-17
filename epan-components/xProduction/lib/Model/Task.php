@@ -5,7 +5,7 @@ namespace xProduction;
 class Model_Task extends \Model_Document{
 
 	public $table = "xproduction_tasks";
-	public $status=array('assigned','processing','processed','completed','cancelled');
+	public $status=array('assigned','processing','processed','completed','cancelled','rejected');
 	public $root_document_name = "xProduction\Task";
 	public $actions=array(
 			'can_assign'=>array()
@@ -70,17 +70,30 @@ class Model_Task extends \Model_Document{
 		$this->saveAndUnload();
 	}
 
-	function can_assign_page($page){
+	function assign_page($page){
 		$cols=$page->add('Columns');
 		$col=$cols->addColumn(6);
 		$form = $col->add('Form_Stacked');
-		$form->addField('dropdown','Assign to Employee')->setModel('xHR/Model_Employee');
-		$form->addField('dropdown','Assign to Team')->setModel('xProduction/Model_Team');
+		$form->addField('dropdown','assign_to_employee')->setModel('xHR/Model_Employee');
+		$form->addField('dropdown','assign_to_team')->setModel('xProduction/Model_Team');
 		$form->addSubmit('Assign');
-		
-		if($form->isSubmitted()){
 			
+		if($form->isSubmitted()){
+			$this['employee_id']=$form['assign_to_employee'];
+			$this->setStatus('assigned');
+			return true;
 		}
 	}
+
+	function reject_page($page){
+		$form= $page->add('Form_Stacked');
+		$form->addField('text','reason');
+		$form->addSubmit('Reject & Send to Re Design');
+		if($form->isSubmitted()){
+			$this->setStatus('rejected',$form['reason']);
+			return true;
+		}
+	}
+
 
 }

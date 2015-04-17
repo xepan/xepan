@@ -2,7 +2,7 @@
 
 namespace xMarketingCampaign;
 
-
+// Association Of NewsLetter and Campaign
 class Model_CampaignNewsLetter extends \Model_Table {
 	public $table ='xmarketingcampaign_campaignnewsletter';
 	public $actions=array(
