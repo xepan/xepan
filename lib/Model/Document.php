@@ -70,6 +70,34 @@ class Model_Document extends SQL_Model{
 		$this->hasMany('xProduction/Task','document_id');
 		$this->hasMany('Attachment','document_id');
 
+		$this->addExpression('related_document')->set(function($m,$q){
+			
+			$doc_array = array(
+						'xPurchase\\\\PurchaseOrder'=>'xpurchase_purchase_order',
+						'xShop\\\\Order'=>'xshop_orders',
+						'xProduction\\\\JobCard'=>'xproduction_jobcard',
+						'xStore\\\\StockMovement'=>'xstore_stock_movement_master',
+						'xDispatch\\\\DispatchRequest'=>'xdispatch_dispatch_request',
+						'xShop\\\\SalesInvoice'=>'xshop_invoices',
+						'xPurchase\\\\PurchaseInvoice'=>'xshop_invoices'
+					);
+
+
+			$str="(CASE ".$q->getField('related_root_document_name') . " ";
+				foreach ($doc_array as $root_doc_name => $table) {
+				$nq=$m->api->db->dsql();
+				$q1 = $nq->table($table);
+				$q1->where('id',$q->getField('related_document_id'));
+				$q1->del('fields');
+
+				$str .="WHEN '".$root_doc_name."' THEN (".$q1->field('name')->render().")";
+					
+				}
+			$str .="END)";
+
+			return $str;
+		});
+
 		$this->addHook('beforeSave',array($this,'defaultBeforeSave'));
 		$this->addHook('afterInsert',array($this,'defaultAfterInsert'));
 		$this->addHook('afterLoad',array($this,'defaultAfterLoad'));

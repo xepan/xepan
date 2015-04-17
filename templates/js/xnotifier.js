@@ -108,7 +108,7 @@ jQuery.widget("ui.xnotifier",{
 			//Date
 			str = str+'<div class="atk-col-6 icon-calendar"> '+element.created_date+'</div>';
 			//Activity No LIKE xShop\Order::000067
-			str = str+'<small class="atk-col-12 atk-hr-small text-center">'+element.related_root_document_name+' :: '+element.related_document_id+'</small>';
+			str = str+'<small class="atk-col-12 atk-hr-small text-center">'+element.related_root_document_name+' :: '+element.related_document+'</small>';
 			//subject
 			str = str+'<div class="atk-col-12 atk-effect-info atk-label atk-size-reset">'+element.subject+'</div><div class="atk-hr-large"></div>';
 			//Action
@@ -117,7 +117,7 @@ jQuery.widget("ui.xnotifier",{
 			str = str+'<div class="atk-col-5 icon-user">'+element.action_from+'</div>';
 			str = str+'<div class="atk-col-2 glyphicon glyphicon-arrow-right"></div>';
 			//Action To
-			str = str+'<div class="atk-col-5 icon-user">'+element.to+'</div>';
+			str = str+'<div class="atk-col-5 icon-user">'+element.action_to+'</div>';
 			
 			$(str).appendTo(activity_box);
 

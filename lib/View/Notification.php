@@ -21,18 +21,9 @@ class View_Notification extends View {
 					->addCondition('related_root_document_name',$q->getField('related_root_document_name'))
 					->addCondition('seen_till','<=',$q->getField('created_at'))
 					->count();
-
-				// $query = "(";
-				// $query .="CASE ". $q->getField('related_document_name');
-				// foreach ($lookup_array as $doc_name => $table_n_status_n_model) {
-				// 	$query .= " WHEN '$doc_name' THEN (SELECT count(*) from ". $table_n_status_n_model[0] ."  WHERE `status` ='".$table_n_status_n_model[1]."' AND updated_at > ".$q->getField('seen_till').")"; 
-				// }
-				// $query .= " END )";
-				// return $query;
-
 			});
 
-			// $current_lastseen->_dsql()->group('related_document_name');
+			$current_lastseen->_dsql()->group('related_document_name');
 			$current_lastseen->_dsql()->having('count','>',0);
 
 			echo json_encode($current_lastseen->getRows());
