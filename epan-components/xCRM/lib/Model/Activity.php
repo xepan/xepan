@@ -50,11 +50,37 @@ class Model_Activity extends \Model_Document{
 			return $str;
 		});
 
+		$this->addExpression('action_to')->set(function($m,$q){
+
+			$nq=$m->api->db->dsql();
+
+			$emp_q = $nq->table('xhr_employees');
+			$emp_q->where('id',$q->getField('to_id'));
+			$emp_q->del('fields');
+
+			$nq1=$m->api->db->dsql();
+			$users = $nq1->table('users');
+			$cust_j = $users->join('xshop_memberdetails.users_id');
+			$users->where('users_id',$q->getField('to_id'));
+			$users->del('fields');
+
+
+
+			$str="(
+					CASE ".$q->getField('to')."
+						WHEN 'Employee' THEN (".$emp_q->field('name')->render().")
+						WHEN 'Customer' THEN (". $users->field('name')->render() ." )
+					END
+				)";
+
+			return $str;
+		});
+
 		$this->addField('subject');
 		$this->addField('message')->type('text');
 		
 		$this->addField('action')->enum(array('created','comment','email','call','sms','personal','submitted','approved','rejected','redesign','canceled','forwarded','reply','received','processed','active','completed'))->mandatory(true);
-
+		
 		$this->setOrder('created_at','desc');
 
 		$this->addHook('beforeSave,beforeDelete',function($obj){

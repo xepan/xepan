@@ -31,13 +31,13 @@ class page_owner_activitydocument extends page_base_owner{
 							'model'=>'xDispatch\Model_DispatchRequest',
 							'model_variable'=>'dispatchrequest'
 							),
-						'xShop\Invoice'=>array(
-							'view'=>'View_SalesInvoice',
+						'xShop\SalesInvoice'=>array(
+							'view'=>'xShop\View_SalesInvoice',
 							'model'=>'xShop\Model_SalesInvoice',
 							'model_variable'=>'invoice'
 							),
 						'xPurchase\PurchaseInvoice'=>array(
-							'view'=>'View_PurchaseInvoice',
+							'view'=>'xPurchase\View_PurchaseInvoice',
 							'model'=>'xPurchase\Model_PurchaseInvoice',
 							'model_variable'=>'invoice'
 							)
