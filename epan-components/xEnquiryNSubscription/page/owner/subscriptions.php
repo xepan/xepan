@@ -340,6 +340,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 		$cat_crud=$cat_col->add('CRUD');
 
 		$cat_crud->setModel($newsletter_category_model,array('name','posts'));
+		$cat_crud->add('xHR/Controller_Acl');
 
 		if(!$cat_crud->isEditing()){
 			$g=$cat_crud->grid;
@@ -381,6 +382,8 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 		$newsletter_crud = $news_col->add('CRUD');
 		$newsletter_crud->setModel($newsletter_model,null,array('category','is_active','name','email_subject','unsend_emails','created_by'));
 		// $newsletter_crud->add('Controller_FormBeautifier');
+		$newsletter_crud->add('xHR/Controller_Acl');
+
 
 		if(!$newsletter_crud->isEditing()){
 			$g=$newsletter_crud->grid;

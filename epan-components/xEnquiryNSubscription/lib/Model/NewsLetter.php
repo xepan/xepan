@@ -3,8 +3,11 @@
 namespace xEnquiryNSubscription;
 
 
-class Model_NewsLetter extends \Model_Table {
+class Model_NewsLetter extends \Model_Document {
 	public $table ='xenquirynsubscription_newsletter';
+	public $status = array();
+	public $root_document_name = 'xEnquiryNSubscription\NewsLetter';
+
 
 	function init(){
 		parent::init();
@@ -25,13 +28,13 @@ class Model_NewsLetter extends \Model_Table {
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
 
-		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'))->system(true);
-		$this->addField('updated_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'))->system(true);
-		$this->addField('created_by')->system(true)->defaultValue('xEnquiryNSubscription')->sortable(true);
+		//$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'))->system(true);
+		//$this->addField('updated_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'))->system(true);
+		$this->addField('created_by_app')->system(true)->defaultValue('xEnquiryNSubscription')->sortable(true);
 
 		$this->setOrder('created_at','desc');
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){
