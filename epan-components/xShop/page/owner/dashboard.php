@@ -171,5 +171,24 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		// //#e3c800(yellow),#004050(darkteal),#825a2c(brown),#003e00(DarkEmerald)
 		// //#a4c400(lime),#6d8764(olive),#128023(drakGreen),#647687(steel),
 		// //#bf5a15(dark-orange),#1b6eae(darkblue)
+		
+		//Running Jobcards
+		$this->add('View')->setElement('br');
+		$jobcards = $this->add('xProduction/Model_JobCard')
+					->addCondition('outsource_party',null)
+					->addCondition('status','<>',array('completed','cancelled','draft','submitted'));
+		$jobcards->setOrder('created_at','desc');
+		$col1 = $this->add('Columns')->addClass('atk-box atk-swatch-gray');
+		$col_jobcard_tile = $col1->addColumn(3);
+		$col_jobcard_grid = $col1->addColumn(9);
+
+		$jobcrad_tile_v = $col_jobcard_tile->add('View_Tile')->addClass('atk-swatch-gray');
+		$jobcrad_tile_v->setTitle('Running Jobcards');
+		$jobcrad_tile_v->setContent($jobcards->count()->getOne());
+	
+		$crud= $col_jobcard_grid->add('CRUD',array('grid_class'=>'xProduction/Grid_JobCard'));
+		$crud->grid->ipp=5;
+		$crud->setModel($jobcards);
+		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>"All",'allow_edit'=>'No','can_forceDelete'=>'No')));
 	}
 }		

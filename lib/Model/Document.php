@@ -63,7 +63,7 @@ class Model_Document extends SQL_Model{
 		$this->addField('related_root_document_name')->system(true);
 		$this->addField('related_document_name')->system(true);
 		
-		$this->addField('created_at')->type('datetime')->system(true)->defaultValue(date('Y-m-d H:i:s'));
+		$this->addField('created_at')->type('datetime')->system(true)->defaultValue(date('Y-m-d H:i:s'))->sortable(true);
 		$this->addField('updated_at')->type('datetime')->system(true)->defaultValue(date('Y-m-d H:i:s'));
 		
 		$this->hasOne('xHR/Employee','created_by_id')->defaultValue($this->api->current_employee->id)->system(true);
