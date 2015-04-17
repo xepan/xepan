@@ -91,4 +91,21 @@ class Model_Activity extends \Model_Document{
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
+	function getTo(){
+		if($this['to']=='Customer'){
+			return $this->add('xShop/Model_Customer')->load($this['to_id']);
+		}
+
+		if($this['to']=='Employee'){
+			return $this->add('xHR/Model_Employee')->load($this['to_id']);
+		}
+
+		if($this['to']=='Supplier'){
+			return $this->add('xPurchase/Model_Supplier')->load($this['to_id']);
+		}
+
+		return new \Dummy();
+
+	}
+
 }
