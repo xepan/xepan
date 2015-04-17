@@ -15,7 +15,8 @@ class page_xAccount_page_owner_daybook extends page_xAccount_page_owner_main{
 		$transaction_row->addField('amountDr');
 		$transaction_row->addField('amountCr');
 		
-		$daybook_lister_grid = $this->add('xAccount/Grid_DayBook');
+		
+		$daybook_lister_crud = $this->add('CRUD',array('grid_class'=>'xAccount/Grid_DayBook'));
 
 		if($_GET['date_selected']){
 			$day_transaction_model->addCondition('created_at','>=',$_GET['date_selected']);
@@ -26,14 +27,14 @@ class page_xAccount_page_owner_daybook extends page_xAccount_page_owner_main{
 
 		}
  
-		$daybook_lister_grid->setModel($day_transaction_model,array('voucher_no','transaction_type','Narration','account','amountDr','amountCr'));
-		$daybook_lister_grid->removeColumn('Narration');
-		$daybook_lister_grid->removeColumn('transaction_type');
+		$daybook_lister_crud->setModel($day_transaction_model,array('voucher_no','transaction_type','Narration','account','amountDr','amountCr'));
+		$daybook_lister_crud->grid->removeColumn('Narration');
+		$daybook_lister_crud->grid->removeColumn('transaction_type');
 
 		if($form->isSubmitted()){
-			$daybook_lister_grid->js()->reload(array('date_selected'=>$form['date']?:0))->execute();
+			$daybook_lister_crud->js()->reload(array('date_selected'=>$form['date']?:0))->execute();
 		}
 
-
+		$daybook_lister_crud->add('xHR/Controller_Acl');
 	}
 }
