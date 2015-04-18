@@ -20,6 +20,9 @@ jQuery.widget("ui.xnotifier",{
 
 	_create: function(){
 		this.setupLayout();
+		// $(this.element).draggable({
+		// 	containment: 'parent'
+		// });
 	},
 	
 	setupLayout: function(){

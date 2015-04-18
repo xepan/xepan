@@ -99,6 +99,8 @@ class Model_Task extends \Model_Document{
 				$this->setStatus('assigned',null,null,null,null,'Team',$this['team_id']);
 				return true;
 			}
+		}
+	}
 			// $form->js(null,$form->js()->univ()->closeDialog())->univ()->successMessage('Assigned Successfully')->reload()->execute();
 
 	function reject_page($page){
