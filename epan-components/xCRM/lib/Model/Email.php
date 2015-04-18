@@ -47,19 +47,21 @@ class Model_Email extends \Model_Document{
 		$this['subject'] = $activity['subject'];
 		$this['message'] = $activity['message'];
 		
-		$emails = explode(',', $activity['to_email']);
+		$emails = explode(',', $activity['email_to']);
 		$this['to_email'] = $emails[0];
-		unset($emails[0]);
+
+		if(count($emails)>1)
+			unset($emails[0]);
 		$this['cc'] = implode(",",$emails);
 
 		$this->relatedDocument($activity);
 		$this->save();
 
-		if($activity['send_email'])
-			$this->send();
+		// if($activity['send_email'])
+		// 	$this->send();
 		
-		if($activity['send_sms'])
-			$this->sendSms();
+		// if($activity['send_sms'])
+		// 	$this->sendSms();
 
 		return $this;
 	}
@@ -75,31 +77,48 @@ class Model_Email extends \Model_Document{
 
 	}
 
-	function fetch(){
-		// IMAP must be enabled in Google Mail Settings
-		// define('GMAIL_EMAIL', 'developer@xavoc.com');
-		// define('GMAIL_PASSWORD', 'Developer@67');
-		// define('ATTACHMENTS_DIR', getcwd().'/upload');
+	function fetchDepartment($department,$conditions=null){
+		foreach ($department->officialEmails() as $officialEmail) {
+			$this->fetch(
+				$officialEmail['imap_email_host'],
+				$officialEmail['imap_email_port'],
+				$officialEmail['imap_encryption'],
+				$officialEmail['imap_email_username'],
+				$officialEmail['imap_email_password'],
+				'INBOX',
+				// $officialEmail['mailbox'],
+				$conditions
+				);
+		}
+	}
 
-		// $mailbox = new ImapMailbox('{sun.rightdns.com:993/imap/ssl/novalidate-cert}INBOX', GMAIL_EMAIL, GMAIL_PASSWORD, ATTACHMENTS_DIR, 'utf-8');
-		// $mails = array();
+	function fetch($imap_email_host,$imap_email_port,$imap_encryption,$imap_email_username,$imap_email_password,$mailbox, $conditions=null){
+		$mailbox = new \ImapMailbox('{'.$imap_email_host.':'.$imap_email_port.'/imap/'.$imap_encryption.'/novalidate-cert}'.$mailbox, $imap_email_username, $imap_email_password, "upload", 'utf-8');
+		$mails = array();
+		var_dump($mailbox->statusMailbox());
+		return;
+		// Get some mail
+		try{
+			$mailsIds = $mailbox->searchMailBox('SINCE "16-4-2015"');
+			if(!$mailsIds) {
+				$mailbox->disconnect();
+			}else{
+				$mail_m = $this->add('xCRM/Model_Email');
+				foreach ($mailsIds as $mailId) {
+					$mail = $mailbox->getMail($mailId);
+					// var_dump($mail);
+					// var_dump($mail->getAttachments());
+					$mail_m['created_at']= $mail->date;
+					$mail_m['from_email'] = $mail->fromAddress;
+					$mail_m['subject'] = $mail->subject;
+					$mail_m->saveAndUnload();
+				}
+			}
 
-		// // Get some mail
-		// try{
-		// 	$mailsIds = $mailbox->searchMailBox('SINCE "16-4-2015"');
-		// 	if(!$mailsIds) {
-		// 		$mailbox->disconnect();
-		// 	}else{
-		// 		$mailId = reset($mailsIds);
-		// 		$mail = $mailbox->getMail($mailId);
-
-		// 		var_dump($mail);
-		// 		var_dump($mail->getAttachments());
-		// 	}
-
-		// }catch(\Exception $e){
-		// 	$mailbox->disconnect();
-		// }
+		}catch(\Exception $e){
+			throw $e;
+			// $mailbox->disconnect();
+		}
 
 	}
 }

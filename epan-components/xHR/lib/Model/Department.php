@@ -169,6 +169,10 @@ class Model_Department extends \Model_Table{
 
 	}
 
+	function officialEmails(){
+		return $this->add('xHR/Model_OfficialEmail')->addCondition('department_id',$this->id);
+	}
+
 
 	function loadHR(){
 		if($this->loaded())
