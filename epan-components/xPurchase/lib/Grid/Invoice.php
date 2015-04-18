@@ -21,7 +21,12 @@ class Grid_Invoice extends \Grid{
 	}
 	
 	function format_view($field){
-		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Invoice', $this->api->url($this->vp->getURL(),array('invoice_clicked'=>$this->model->id))).'">'. $this->current_row[$field] ."</a>";
+		if($this->model['invoiceitem_count']==0){
+			$this->setTDParam($field, 'class', ' atk-swatch-yellow ');
+		}else{
+			$this->setTDParam($field, 'class', '');
+		}
+		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Invoice', $this->api->url($this->vp->getURL(),array('invoice_clicked'=>$this->model->id))).'">'. $this->current_row[$field] ."</a>".'<br><small style="color:gray;">'.$this->model['supplier'].'</small>';
 	}
 
 	function format_orderview($field){
@@ -30,13 +35,15 @@ class Grid_Invoice extends \Grid{
 	
 	function setModel($invoice_model,$field=array()){
 		if(!$field)
-			$field = array('name','invoice_no','po','supplier','total_amount','discount','tax','net_amount');
+			$field = array('name','invoice_no','po','supplier','total_amount','discount','tax','net_amount','custom_fields');
 
 		$m=parent::setModel($invoice_model,$field);
 		 $this->addFormatter('name','view');
 		$this->addFormatter('po','orderview');
 		$this->addColumn('expander','items',array('page'=>'xShop_page_owner_invoice_items','descr'=>'Items'));
 
+		$this->removeColumn('supplier');
+		$this->removeColumn('invoiceitem_count');
 		return $m;
 	}
 	

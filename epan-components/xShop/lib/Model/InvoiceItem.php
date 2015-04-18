@@ -19,17 +19,19 @@ class Model_InvoiceItem extends \Model_Document{
 		
 		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'xShop/Item'));
 		
-		$this->addField('rate')->type('money');
-		$this->addField('qty');
-		$this->addField('unit');
+		$this->addField('rate')->type('money')->group('b~3');
+		$this->addField('qty')->group('b~3~Order Details')->mandatory(true);
+		// $this->addField('unit');
 		$this->addField('amount')->type('money')->group('b~3');
-		$this->addField('narration')->type('text');
-		$this->addField('custom_fields')->type('text');
+		$this->addField('narration')->type('text')->system(false);
+		$this->addField('custom_fields')->type('text')->system(false);
+		$this->addField('apply_tax')->type('boolean')->defaultValue(true);
 
 		$this->addExpression('tax_per_sum')->set(function($m,$q){
 			$tax_assos = $m->add('xShop/Model_ItemTaxAssociation');
 			$tax_assos->addCondition('item_id',$q->getField('item_id'));
-			return $tax_assos->sum('name'); // tax in percentage save in name ;)
+			$tax = $tax_assos->sum('name');
+				return "IF(".$q->getField('apply_tax').">0,(".$tax->render()."),'0')";
 		})->type('money')->caption('Total Tax %');
 
 		$this->addExpression('tax_amount')->set(function($m,$q){
@@ -48,7 +50,7 @@ class Model_InvoiceItem extends \Model_Document{
 
 		$this->addHook('afterSave',$this);
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

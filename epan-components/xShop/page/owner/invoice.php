@@ -5,7 +5,8 @@ class page_xShop_page_owner_invoice extends page_xShop_page_owner_main{
 	function init(){
 		parent::init();
 
-		$this->app->title=$this->api->current_department['name'] .': Invoices';
+		$this->app->title=$this->api->current_department['name'] .': Sale Invoice';
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-dashboard icon-money"></i> Sales Invoice');
 
 		$tab=$this->add('Tabs');
 		$tab->addTabURL('xShop/page/owner/invoice_draft','Draft '.$this->add('xShop/Model_Invoice_Draft')->myCounts(true,false));

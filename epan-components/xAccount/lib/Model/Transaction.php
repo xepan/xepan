@@ -19,7 +19,10 @@ class Model_Transaction extends \Model_Document{
 	public $other_branches_involved = array();
 
 	public $executed=false;
-
+	public $actions=array(
+			'can_forcedelete'=>array(),
+		);
+	
 	function init(){
 		parent::init();
 		$this->hasOne('xAccount/TransactionType','transaction_type_id');
@@ -45,7 +48,7 @@ class Model_Transaction extends \Model_Document{
 			throw $this->exception('TRansaction Contains Rows, Cannot Delete','Growl');
 	}
 
-	function forceDelete(){
+	function forcedelete(){
 		foreach ($this->ref('xAccount/TransactionRow') as $trrow) {
 			$trrow->delete();
 		}

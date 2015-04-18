@@ -12,8 +12,9 @@ class Grid_DayBook extends Grid_AccountsBase{
 	}
 
 	function format_voucherNo($field){
-		if($this->voucher_no==$this->model->get('voucher_no'))
+		if($this->voucher_no==$this->model->get('voucher_no')){
 			$this->current_row[$field]=$this->model->get('Narration');
+		}
 		else{
 			$this->voucher_no=$this->model->get('voucher_no');
 			$this->current_row[$field] = $this->voucher_no . ' [ '. $this->model['transaction_type'] .' ]';
