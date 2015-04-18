@@ -92,8 +92,9 @@ class Model_Activity extends \Model_Document{
 				throw $this->exception('You are not authorized for action','Growl');
 		});
 
+		$this->hasMany('Attachment','activity_id');
 		$this->addHook('afterSave',$this);
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function afterSave(){

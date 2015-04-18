@@ -301,6 +301,15 @@ class Model_Document extends SQL_Model{
 				''=>'',
 				'*'=>array('sms_to')
 			),'div.atk-form-row');
+
+
+			//File Type for Attachment
+			$upl=$form->addField('Upload','attachment')
+  						// ->setModel('filestore/File');
+     					// ->allowMultiple(false)
+       					;
+ 			// $upl->template->set('after_field','Max size: 500k');
+
 		}
 
 		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>'All','allow_add'=>true,'allow_edit'=>'Self Only','allow_del'=>'No')));
