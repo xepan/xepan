@@ -70,7 +70,7 @@ class Model_Task extends \Model_Document{
 		$this->saveAndUnload();
 	}
 
-	function can_assign_page($page){
+	function assign_page($page){
 		$cols=$page->add('Columns');
 		$col=$cols->addColumn(6);
 		$form = $col->add('Form_Stacked');

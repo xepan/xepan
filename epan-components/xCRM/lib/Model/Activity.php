@@ -80,6 +80,10 @@ class Model_Activity extends \Model_Document{
 		$this->addField('message')->type('text');
 		
 		$this->addField('action')->enum(array('created','comment','email','call','sms','personal','submitted','approved','rejected','redesign','canceled','forwarded','reply','received','processed','active','completed'))->mandatory(true);
+		$this->addField('send_email')->type('boolean')->defaultValue(true);
+		$this->addField('email_to');
+		$this->addField('send_sms')->type('boolean')->defaultValue(true);
+		$this->addField('sms_to');
 		
 		$this->setOrder('created_at','desc');
 
@@ -88,7 +92,7 @@ class Model_Activity extends \Model_Document{
 				throw $this->exception('You are not authorized for action','Growl');
 		});
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function getTo(){

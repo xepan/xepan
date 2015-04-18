@@ -278,4 +278,17 @@ class Model_Employee extends \Model_Table{
 
 	
 	}
+
+
+	function email(){
+		if(!$this->loaded())
+			return false;
+		return $this['personal_email'];
+	}
+
+	function mobileno(){
+		if(!$this->loaded())
+			return false;
+		return $this['mobile_no'];	
+	}
 }

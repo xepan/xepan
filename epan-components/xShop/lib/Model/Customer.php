@@ -69,4 +69,16 @@ class Model_Customer extends Model_MemberDetails{
 
 		return $acc;
 	}
+
+	function email(){
+		if(!$this->loaded())
+			return false;
+		return $this['customer_email'];
+	}
+
+	function mobileno(){
+		if(!$this->loaded())
+			return false;
+		return $this['mobile_number'];	
+	}
 }
