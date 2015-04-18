@@ -46,6 +46,7 @@ class Model_DocumentAcl extends \Model_Table{
 		$this->addField('task_types')->setValueList(array("job_card_tasks"=>"Root Docuement","job_card_current_status_tasks"=>"Specific Document","job_card_all_status_tasks"=>'Root Document With Status'));
 
 		$this->addField('can_send_via_email')->setValueList($acl)->defaultValue('No');
+		$this->addField('can_forcedelete')->setValueList($acl)->defaultValue('No');
 		
 		$this->addField('can_see_activities')->setValueList(array('No'=>'No','All'=>'All','Deep'=>'Deep'))->defaultValue('No');
 		

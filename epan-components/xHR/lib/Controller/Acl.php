@@ -266,8 +266,8 @@ class Controller_Acl extends \AbstractController {
 			$this->manageAction('manage_attachments','can_manage_attachments');
 		}
 
-		if($this->permissions['can_forceDelete'] !='No'){
-			$this->manageAction('forceDelete','can_forceDelete','do-delete');
+		if($this->permissions['can_forcedelete'] !='No'){
+			$this->manageAction('forcedelete','can_forcedelete');
 		}
 		
 		
@@ -509,53 +509,53 @@ class Controller_Acl extends \AbstractController {
 		}
 	}
 
-	function addAssignPage(){
-		$p= $this->owner->addFrame("Assign");
+	// function addAssignPage(){
+	// 	$p= $this->owner->addFrame("Assign");
 		
-		if($p){
-			$document = $this->owner->model->load($this->owner->id);
-			$assigned_to = $document->assignedTo();
-			$set_existing_assigned_to = false;
-			switch ($this->permissions['can_assign_to']) {
-				case 'Dept. Teams':
-					$model = $p->api->current_employee->department()->teams();
-					$field_caption = "Teams";
-					$set_existing_assigned_to = $assigned_to instanceof \xProduction\Model_Team ? $assigned_to->id: false;
-				break;
+	// 	if($p){
+	// 		$document = $this->owner->model->load($this->owner->id);
+	// 		$assigned_to = $document->assignedTo();
+	// 		$set_existing_assigned_to = false;
+	// 		switch ($this->permissions['can_assign_to']) {
+	// 			case 'Dept. Teams':
+	// 				$model = $p->api->current_employee->department()->teams();
+	// 				$field_caption = "Teams";
+	// 				$set_existing_assigned_to = $assigned_to instanceof \xProduction\Model_Team ? $assigned_to->id: false;
+	// 			break;
 
-				case 'Dept. Employee':
-					$model = $p->api->current_employee->department()->employees();
-					$field_caption = "Employees";
-					$set_existing_assigned_to = $assigned_to instanceof \xHR\Model_Employee ? $assigned_to->id: false;
-				break;
+	// 			case 'Dept. Employee':
+	// 				$model = $p->api->current_employee->department()->employees();
+	// 				$field_caption = "Employees";
+	// 				$set_existing_assigned_to = $assigned_to instanceof \xHR\Model_Employee ? $assigned_to->id: false;
+	// 			break;
 
-				case 'Self Team Members':
-					// $model = $p->api->current_employee->department()->teams();
-					// $field_caption = "Teams";
-				break;
-			}
+	// 			case 'Self Team Members':
+	// 				// $model = $p->api->current_employee->department()->teams();
+	// 				// $field_caption = "Teams";
+	// 			break;
+	// 		}
 
-			$form = $p->add('Form');
-			$field= $form->addField('DropDown','selected',$field_caption)->setEmptyText('Please Select Team')->validateNotNull(true);
-			$form->addField('line','subject');
-			$form->addField('text','message');
-			$field->setModel($model);
+	// 		$form = $p->add('Form');
+	// 		$field= $form->addField('DropDown','selected',$field_caption)->setEmptyText('Please Select Team')->validateNotNull(true);
+	// 		$form->addField('line','subject');
+	// 		$form->addField('text','message');
+	// 		$field->setModel($model);
 			
-			if($set_existing_assigned_to){
-				$field->set($set_existing_assigned_to);
-			}
+	// 		if($set_existing_assigned_to){
+	// 			$field->set($set_existing_assigned_to);
+	// 		}
 
-			$form->addSubmit('Update');
+	// 		$form->addSubmit('Update');
 
-			if($form->isSubmitted()){
-				$model->load($form['selected']);
-				$document->assignTo($model,$form['subject'],$form['message']);
+	// 		if($form->isSubmitted()){
+	// 			$model->load($form['selected']);
+	// 			$document->assignTo($model,$form['subject'],$form['message']);
 
-				$form->js()->univ()->successMessage("sdfsd")->execute();
-			}
-		}
-		return 'fr_'.$this->api->normalizeName("assign");
-	}
+	// 			$form->js()->univ()->successMessage("sdfsd")->execute();
+	// 		}
+	// 	}
+	// 	return 'fr_'.$this->api->normalizeName("assign");
+	// }
 
 	function addOutSourcePartiesPage(){
 		$p= $this->owner->addFrame("Select Outsource",array('label'=>'OutSrc Parties','icon'=>'plus'));
