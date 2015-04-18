@@ -28,9 +28,9 @@ class Model_Configuration extends \Model_Table {
 		$f->icon = "fa fa-link~blue";
 
 		//Sales Order Email Subject & Body	
-		$f = $this->addField('order_detail_email_subject')->group('c~12~<i class="fa fa-envelope"></i> Order Detail ( Bill ) Email');
+		$f = $this->addField('order_detail_email_subject')->group('c~12~<i class="fa fa-envelope"></i> Order Detail ( Bill ) Email')->hint('Sale Order/Perfoma Email Subject: {{order_no}}');
 		$f->icon = "glyphicon glyphicon-send~blue";  
-		$f = $this->addField('order_detail_email_body')->type('text')->caption('Order Detail Email Body')->hint('Order Bill Email Body : this Bill send to member who placed order, {{customer_name}},{{mobile_number}},{{order_billing_address}},{{customer_email}},{{order_shipping_address}},{{customer_tin_no}},{{customer_pan_no}},{{order_no}},{{order_date}},{{sale_order_details}},{{terms_and_conditions}}',)->group('c~11')->display(array('form'=>'RichText'));
+		$f = $this->addField('order_detail_email_body')->type('text')->caption('Order Detail Email Body')->hint('Sale Order/Perfoma Invoice Bill Email Body : this Bill send to member who placed order, {{customer_name}},{{mobile_number}},{{order_billing_address}},{{customer_email}},{{order_shipping_address}},{{customer_tin_no}},{{customer_pan_no}},{{order_no}},{{order_date}},{{sale_order_details}},{{terms_and_conditions}}',)->group('c~11')->display(array('form'=>'RichText'));
 		$f->icon = "glyphicon glyphicon-send~blue";
 
 		// Purchase Order Email Subject & Body
