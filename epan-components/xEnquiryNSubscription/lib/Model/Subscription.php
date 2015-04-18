@@ -18,6 +18,7 @@ class Model_Subscription extends \Model_Document {
 
 		$this->hasOne('Epan','epan_id')->system(true);
 		$this->addCondition('epan_id',$this->api->current_website->id);
+		$this->hasOne('xMarketingCampaign/LeadCategory','leadcategory_id')->caption('Category');
 		// $this->hasOne('xEnquiryNSubscription/SubscriptionCategories','category_id');
 		$this->addField('lead_type')->group('a~2~Basic Information')->defaultValue('sales');
 		$this->addField('name')->sortable(true)->group('a~3');
