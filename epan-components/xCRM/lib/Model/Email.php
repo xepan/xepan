@@ -6,6 +6,14 @@ class Model_Email extends \Model_Document{
 	public $table = 'xcrm_emails';
 	public $status = array();
 	public $root_document_name='xCRM\Email';
+	public $actions=array(
+			'can_view'=>array(),
+			'allow_add'=>array(),
+			'allow_edit'=>array(),
+			'allow_del'=>array(),
+			'can_create_activity'=>array(),
+			'can_create_ticket'=>array(),
+		);	
 
 	function init(){
 		parent::init();
@@ -57,10 +65,13 @@ class Model_Email extends \Model_Document{
 	}
 
 	function send(){
-		$this->sendEmail($this['to_email'],$this['subject'],$this['message'],explode(","$this['cc']),$this['bcc']?explode(",",$this['bcc']):array());
+		$this->sendEmail($this['to_email'],$this['subject'],$this['message'],explode(",",$this['cc']),$this['bcc']?explode(",",$this['bcc']):array());
 	}
 
-	function createActivity(){
+	function create_Activity(){
+
+	}
+	function create_Ticket(){
 
 	}
 

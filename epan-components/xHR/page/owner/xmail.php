@@ -66,8 +66,9 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		
 		$right_col=$col->addColumn(9);
 
-		$mail_crud=$right_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false,'allow_del'=>false));
+		$mail_crud=$right_col->add('CRUD');
 		$mail_crud->setModel('xCRM/Email',array(),array('subject'));
+		$mail_crud->add('xHR/Controller_Acl');
 
 
 	}
