@@ -38,13 +38,28 @@ class Model_Email extends \Model_Document{
 		$this['subject'] = $activity['subject'];
 		$this['message'] = $activity['message'];
 		
+		$emails = explode(',', $activity['to_email']);
+		$this['to_email'] = $emails[0];
+		unset($emails[0]);
+		$this['cc'] = $emails;
+
 		$this->relatedDocument($activity);
 		$this->save();
+
+		if($activity['send_email'])
+			$this->send();
+		
+		if($activity['send_sms'])
+			$this->sendSms();
 
 		return $this;
 	}
 
 	function send(){
+		$this->sendEmail($this['to_email'],$this['subject'],$this['message'],$this['cc'],$this['bcc']?:array());
+	}
+
+	function sendSms(){
 
 	}
 
