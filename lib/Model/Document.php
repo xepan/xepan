@@ -273,7 +273,7 @@ class Model_Document extends SQL_Model{
 			$activities->getElement('action')->display(array('form'=>'Readonly'));
 		}
 
-		$crud->setModel($activities,array('created_at','action_from','action','subject','message','send_email','email_to','send_sms','sms_to'));
+		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to'));
 		$activity = $page->add('View_Activity');
 		$activity->setModel($activities);
 		
@@ -284,8 +284,8 @@ class Model_Document extends SQL_Model{
 		if($crud->isEditing('add')){
 			$form = $crud->form;
 			$action_field = $crud->form->getElement('action');
-			$send_email_field = $crud->form->getElement('send_email');
-			$send_sms_field = $crud->form->getElement('send_sms');
+			$send_email_field = $crud->form->getElement('notify_via_email');
+			$send_sms_field = $crud->form->getElement('notify_via_sms');
 
 			$email_to_field = $crud->form->getElement('email_to')->set($this->getTo()->email());
 			$sms_to_field = $crud->form->getElement('sms_to')->set($this->getTo()->mobileno());
