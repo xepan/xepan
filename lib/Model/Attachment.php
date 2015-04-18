@@ -1,6 +1,6 @@
 <?php
 
-class Model_Attachment extends Model_Document{
+class Model_Attachment extends \Model_Document{
 	
 	public $table="attachments";
 	public $status = array();
@@ -10,11 +10,21 @@ class Model_Attachment extends Model_Document{
 	function init(){
 		parent::init();
 
-		// $this->hasOne('xCRM/Activity','activity_id');
+		$this->hasOne('xCRM/Activity','activity_id');
 		$this->addField('name');
 		$this->add('filestore/Field_File','attachment_url_id')->mandatory(true);
 
+		$this->addHook('beforeSave',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+
+	}
+
+	function beforeSave(){
+		if(!$this['name']){
+			$file_model = $this->add('filestore/Model_File')->tryLoad($this['attachment_url_id']);
+			if($file_model->loaded())
+				$this['name'] = $file_model['original_filename'];
+		}
 
 	}
 

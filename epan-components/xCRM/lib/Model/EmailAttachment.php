@@ -10,4 +10,6 @@ class Model_EmailAttachment extends \Model_Attachment{
 		
 		$this->addCondition('related_root_document_name','xCRM\Email');
 	}
+
+	
 }
