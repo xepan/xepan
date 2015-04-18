@@ -266,7 +266,7 @@ class Model_Document extends SQL_Model{
 		$crud = $page->add('CRUD');
 
 		if($crud->isEditing('add')){
-			$activities->getElement('action')->enum(array('comment','email','call','sms','personal'));
+			$activities->getElement('action')->setValueList(array('comment'=>'Comment','email'=>'E-mail','call'=>'Call','sms'=>'SMS','personal'=>'Personal'));
 		}
 
 		if($crud->isEditing('edit')){
