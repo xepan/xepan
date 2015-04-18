@@ -5,6 +5,7 @@ class Grid_Task extends \Grid{
 	public $ipp=10;
 	function init(){
 		parent::init();
+
 	}
 
 	function setModel($task_model){
@@ -22,6 +23,17 @@ class Grid_Task extends \Grid{
 
 		$this->addFormatter('name','wrap');
 		$this->addPaginator($this->ipp);
+		
+		// $task_vp = $this->add('VirtualPage');
+		// $task_vp->set(function($p){
+		// 	$m=$p->add('xProduction/Model_Task')->tryLoad($_GET['task_id']);
+		// 	$p->add('View')->setHTML($m['content'])->addCLass('well');
+		// });
+
+		// $this->addMethod('format_subject',function($g,$f)use($task_vp){
+		// 	$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('Task Content',$g->api->url($task_vp->getURL(),array('task_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a>';
+		// });
+		// $this->addFormatter('subject','subject');
 
 		return $m;
 	}
