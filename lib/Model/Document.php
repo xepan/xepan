@@ -266,14 +266,14 @@ class Model_Document extends SQL_Model{
 		$crud = $page->add('CRUD');
 
 		if($crud->isEditing('add')){
-			$activities->getElement('action')->enum(array('comment','email','call','sms','personal'));
+			$activities->getElement('action')->setValueList(array('comment'=>'Comment','email'=>'E-mail','call'=>'Call','sms'=>'SMS','personal'=>'Personal'))->display(array('form'=>'Form_Field_DropDownNormal'));
 		}
 
 		if($crud->isEditing('edit')){
 			$activities->getElement('action')->display(array('form'=>'Readonly'));
 		}
 
-		$crud->setModel($activities,array('created_at','action_from','action','subject','message'));
+		$crud->setModel($activities,array('created_at','action_from','action','subject','message','send_email','email_to','send_sms','sms_to'));
 		$activity = $page->add('View_Activity');
 		$activity->setModel($activities);
 		
@@ -282,11 +282,24 @@ class Model_Document extends SQL_Model{
 		}
 
 		if($crud->isEditing('add')){
+			$form = $crud->form;
 			$action_field = $crud->form->getElement('action');
-			$crud->form->addField('email_to');
+			$send_email_field = $crud->form->getElement('send_email');
+			$send_sms_field = $crud->form->getElement('send_sms');
 
-			$action_field->js(true)->univ()->bindConditionalShow(array(
-				'action'=>array('email_to')
+			$email_to_field = $crud->form->getElement('email_to')->set($this->getTo()->email());
+			$sms_to_field = $crud->form->getElement('sms_to')->set($this->getTo()->mobileno());
+
+			//Send Email
+			$send_email_field->js('change')->univ()->bindConditionalShow(array(
+				''=>'',
+				'*'=>array('email_to')
+			),'div.atk-form-row');
+
+			//Send SMS
+			$send_sms_field->js('change')->univ()->bindConditionalShow(array(
+				''=>'',
+				'*'=>array('sms_to')
 			),'div.atk-form-row');
 		}
 
@@ -326,10 +339,6 @@ class Model_Document extends SQL_Model{
 		$new_activity['message']= $message;
 
 		$new_activity->save();
-
-		if($action=='email'){
-			$this->add('xCRM/Model_Email')->createFromActivity($new_activity);
-		}
 	}
 
 	function searchActivity($action,$from_on_date=null, $to_date=null, $from=null,$from_id=null,$to=null,$to_id=null){
@@ -382,6 +391,28 @@ class Model_Document extends SQL_Model{
 
 	function amountInWords($amount){
 		
+	}
+
+	function getTo(){
+
+		if($this instanceof \xShop\Model_Order){
+			return $this->customer();
+		
+		}elseif($this instanceof \xShop\Model_Quotation){
+			return $this->customer();
+		
+		}elseif($this instanceof \xShop\Model_SalesInvoice){
+			return $this->customer();
+		
+		}elseif($this instanceof \xPurchase\Model_PurchaseOrder){
+			return $this->supplier();
+
+		}elseif($this instanceof \xPurchase\Model_PurchaseInvoice){
+			return $this->supplier();
+		}
+
+		return new \Dummy();
+
 	}
 
 }

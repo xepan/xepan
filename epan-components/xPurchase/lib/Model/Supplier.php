@@ -85,4 +85,15 @@ class Model_Supplier extends \Model_Document{
 		return $acc;
 	}
 
+	function email(){
+		if(!$this->loaded())
+			return false;
+		return $this['personal_email'];
+	}
+
+	function mobileno(){
+		if(!$this->loaded())
+			return false;
+		return $this['contact_no'];
+	}
 }		
