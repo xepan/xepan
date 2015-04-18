@@ -381,10 +381,10 @@ class Model_Document extends SQL_Model{
 		$current_lastseen->save();
 	}
 
-	function sendEmail($email,$subject,$email_body,$cc=array(),$bcc=array()){
+	function sendEmail($email,$subject,$email_body,$cc=array(),$bcc=array(),$attachements=array()){
 		$tm=$this->add( 'TMail_Transport_PHPMailer' );	
 		try{
-			$tm->send($email, $email,$subject, $email_body ,false,$cc,$bcc);
+			$tm->send($email, $email,$subject, $email_body ,false,$cc,$bcc,false,'',$attachements);
 		}catch( phpmailerException $e ) {
 			$this->api->js(null,'$("#form-'.$_REQUEST['form_id'].'")[0].reset()')->univ()->errorMessage( $e->errorMessage() . " " . $email )->execute();
 		}catch( Exception $e ) {

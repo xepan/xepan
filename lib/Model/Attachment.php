@@ -10,12 +10,12 @@ class Model_Attachment extends \Model_Document{
 	function init(){
 		parent::init();
 
-		$this->hasOne('xCRM/Activity','activity_id');
+		// $this->hasOne('xCRM/Activity','activity_id');
 		$this->addField('name');
 		$this->add('filestore/Field_File','attachment_url_id')->mandatory(true);
 
 		$this->addHook('beforeSave',$this);
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

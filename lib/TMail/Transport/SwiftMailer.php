@@ -33,7 +33,8 @@ class TMail_Transport_SwiftMailer extends AbstractObject {
     function send($to, $from, $subject, $body, $headers="",$ccs=array(), $bcc=array(),  $skip_inlining_images=false, $read_confirmation_to='',$attachments=array()){
 		$email_settings = $this->api->current_website;
     	
-    	
+    	// throw new \Exception(var_dump($attachments), 1);
+        
 		// $logger = new Swift_Plugins_Loggers_EchoLogger();
 		// $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
 
