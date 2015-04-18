@@ -38,13 +38,13 @@ class Model_Email extends \Model_Document{
 		$this['subject'] = $activity['subject'];
 		$this['message'] = $activity['message'];
 		
-		$emails = explode(',', $activity['to_email']);
+		$emails = explode(',', $activity['email_to']);
 		$this['to_email'] = $emails[0];
 		unset($emails[0]);
 		$this['cc'] = implode(",",$emails);
 
-		$this->relatedDocument($activity);
 		$this->save();
+		$this->relatedDocument($activity);
 
 		if($activity['send_email'])
 			$this->send();
@@ -56,7 +56,7 @@ class Model_Email extends \Model_Document{
 	}
 
 	function send(){
-		$this->sendEmail($this['to_email'],$this['subject'],$this['message'],explode(","$this['cc']),$this['bcc']?explode(",",$this['bcc']):array());
+		$this->sendEmail($this['to_email'],$this['subject'],$this['message'],$this['cc']?explode(",",$this['cc']):array(),$this['bcc']?explode(",",$this['bcc']):array());
 	}
 
 	function createActivity(){
