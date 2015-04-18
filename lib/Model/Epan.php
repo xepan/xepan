@@ -85,13 +85,13 @@ class Model_Epan extends Model_Table {
 
 		//sms form field
 		$this->addField('gateway_url')->caption('GateWay Url')->group('sms~4~<i class="fa fa-info "></i> Gate Way Info');
-		$this->addField('user_name')->caption('Gateway User Name')->group('sms~4');
+		$this->addField('sms_username')->caption('Gateway User Name')->group('sms~4');
 		$this->addField('sms_password')->type('password')->caption('Gateway Password')->group('sms~4');
 		
-		$this->addField('user_name_qs_parameter')->caption('Gateway User Name Query String Variable')->group('qs~3~<i class="fa fa-info "></i> Query String Info');
-		$this->addField('password_qs_parameter')->caption('Gateway Password Query String Variable')->group('qs~3');
-		$this->addField('number')->caption('Number Query String Variable')->group('qs~3');
-		$this->addField('message')->caption('Messesge Query String Variable')->group('qs~3');
+		$this->addField('sms_user_name_qs_param')->caption('Gateway User Name Query String Variable')->group('qs~3~<i class="fa fa-info "></i> Query String Info');
+		$this->addField('sms_password_qs_param')->caption('Gateway Password Query String Variable')->group('qs~3');
+		$this->addField('sms_number_qs_param')->caption('Number Query String Variable')->group('qs~3');
+		$this->addField('sm_message_qs_param')->caption('Messesge Query String Variable')->group('qs~3');
 
 		$this->hasMany('Aliases','epan_id'); 
 		$this->hasMany('EpanPage','epan_id');
@@ -110,7 +110,7 @@ class Model_Epan extends Model_Table {
 		$this->setOrder('created_at','desc');
 		$this->add('Controller_EpanCMSApp')->epanModel();
 		
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){

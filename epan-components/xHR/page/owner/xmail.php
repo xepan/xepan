@@ -70,6 +70,12 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$mail_crud->setModel('xCRM/Email',array(),array('subject'));
 		$mail_crud->add('xHR/Controller_Acl');
 
+		$fetch_btn = $mail_crud->addButton('Reload');
+		if($fetch_btn->isClicked()){
+			$this->add('xCRM/Model_Email')->fetchDepartment($this->api->current_department);
+			$this->js()->univ()->successMessage('Hello')->execute();
+		}
+
 
 	}
 }

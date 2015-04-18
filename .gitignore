@@ -15,3 +15,4 @@ vendor/*
 *.sublime-workspace
 todo
 /*.sql
+*.orig
