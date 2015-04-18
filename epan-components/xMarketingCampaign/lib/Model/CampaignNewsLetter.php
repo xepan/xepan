@@ -5,6 +5,12 @@ namespace xMarketingCampaign;
 // Association Of NewsLetter and Campaign
 class Model_CampaignNewsLetter extends \Model_Table {
 	public $table ='xmarketingcampaign_campaignnewsletter';
+	public $actions=array(
+			'can_view'=>array(),
+			'allow_edit'=>array(),
+			'allow_add'=>array(),
+			'allow_del'=>array()
+		);
 
 	function init(){
 		parent::init();

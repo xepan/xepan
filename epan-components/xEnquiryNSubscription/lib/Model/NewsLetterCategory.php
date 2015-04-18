@@ -3,8 +3,19 @@
 namespace xEnquiryNSubscription;
 
 
-class Model_NewsLetterCategory extends \Model_Table {
+class Model_NewsLetterCategory extends \Model_Document{
 	public $table ='xenquirynsubscription_newslettercategory';
+	public $status = array();
+	public $root_document_name = 'xEnquiryNSubscription\NewsLetterCategory';
+	public $actions=array(
+			'can_view'=>array(),
+			'allow_edit'=>array(),
+			'allow_add'=>array(),
+			'allow_del'=>array()
+			
+		);
+
+
 
 	function init(){
 		parent::init();
@@ -23,7 +34,7 @@ class Model_NewsLetterCategory extends \Model_Table {
 
 		$this->addHook('beforeDelete',$this);
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
