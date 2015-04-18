@@ -19,6 +19,7 @@ class Model_Email extends \Model_Document{
 		parent::init();
 		$this->hasOne('xHR/Employee','read_by_employee_id');
 
+		$this->addField('uid');
 		$this->addField('from'); // Customer, Employee, Supplier ... string
 		$this->addField('from_id');
 
@@ -34,7 +35,7 @@ class Model_Email extends \Model_Document{
 		$this->addField('message')->type('text');
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id');
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function createFromActivity($activity){
@@ -82,9 +83,9 @@ class Model_Email extends \Model_Document{
 			$this->fetch(
 				$officialEmail['imap_email_host'],
 				$officialEmail['imap_email_port'],
-				$officialEmail['imap_encryption'],
 				$officialEmail['imap_email_username'],
 				$officialEmail['imap_email_password'],
+				$officialEmail['imap_flags'],
 				'INBOX',
 				// $officialEmail['mailbox'],
 				$conditions
@@ -92,32 +93,62 @@ class Model_Email extends \Model_Document{
 		}
 	}
 
-	function fetch($imap_email_host,$imap_email_port,$imap_encryption,$imap_email_username,$imap_email_password,$mailbox, $conditions=null){
-		$mailbox = new \ImapMailbox('{'.$imap_email_host.':'.$imap_email_port.'/imap/'.$imap_encryption.'/novalidate-cert}'.$mailbox, $imap_email_username, $imap_email_password, "upload", 'utf-8');
+	function fetch($imap_email_host,$imap_email_port,$imap_email_username,$imap_email_password,$imap_flags,$mailbox, $conditions=null){
+		$mailbox = new \ImapMailbox('{'.$imap_email_host.':'.$imap_email_port.$imap_flags.'}'.$mailbox, $imap_email_username, $imap_email_password, "upload", 'utf-8');
 		$mails = array();
-		var_dump($mailbox->statusMailbox());
-		return;
+		// var_dump($mailbox->getMailboxInfo());
+		// return;
 		// Get some mail
 		try{
-			$mailsIds = $mailbox->searchMailBox('SINCE "16-4-2015"');
+			$mailsIds = $mailbox->searchMailBox('SINCE '.date('d-M-Y',strtotime('-1 month')));
 			if(!$mailsIds) {
+				echo "oops";
 				$mailbox->disconnect();
 			}else{
 				$mail_m = $this->add('xCRM/Model_Email');
+				$i=1;
 				foreach ($mailsIds as $mailId) {
 					$mail = $mailbox->getMail($mailId);
 					// var_dump($mail);
 					// var_dump($mail->getAttachments());
+					$mail_m['uid']= $mail->id;
+					$fetched = $this->add('xCRM/Model_Email')
+							->addCondition('uid',$mail->id)
+							->addCondition('from_email',$mail->fromAddress)
+							->addCondition('to_email',is_array($mail->to)?implode(",", $mail->to):$mail->to)
+							->addCondition('created_at',$mail->date)
+							->tryLoadAny();
+							;
+					if($fetched->loaded()) continue;
+
 					$mail_m['created_at']= $mail->date;
 					$mail_m['from_email'] = $mail->fromAddress;
 					$mail_m['subject'] = $mail->subject;
+					$mail_m['to_email'] = is_array($mail->to)?implode(",", $mail->to):$mail->to;
+					$mail_m['cc'] = is_array($mail->cc)?implode(",", $mail->cc):$mail->cc;
+					$mail_m['message'] = $mail->textHtml;
 					$mail_m->saveAndUnload();
+					$i++;
 				}
 			}
 
 		}catch(\Exception $e){
 			throw $e;
-			// $mailbox->disconnect();
+			$mailbox->disconnect();
+		}
+
+		function populateFromAndToIds(){
+			if(!$this['from_id']){
+				// from email search in customers first
+				$cust = $this->add('xShop/Model_Customer')->addCondition('customer_email','like','%'.$this['from_email'].'%');
+				if($cust->loaded()){
+					$this['from']='Customer';
+					$this['from_id'] = $cust->id;
+				}else{
+				// then in suppliers
+				// then in employees
+				}
+			}
 		}
 
 	}

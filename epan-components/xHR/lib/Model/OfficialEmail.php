@@ -23,11 +23,11 @@ class Model_OfficialEmail extends \Model_Document{
 		$this->addField('email_username')->group('ecs~3');
 		$this->addField('email_password')->type('password')->group('ecs~3');
 
-		$this->addField('imap_encryption')->enum(array('none','ssl','tls'))->mandatory(true)->group('pop~1~<i class="glyphicon glyphicon-link "></i>IMAP/POP3 Settings')->caption('Encryption');
-		$this->addField('imap_email_host')->group('pop~4')->caption('Host');
+		$this->addField('imap_email_host')->group('pop~3~<i class="glyphicon glyphicon-link "></i>IMAP/POP3 Settings')->caption('Host');
 		$this->addField('imap_email_port')->group('pop~1')->caption('Port');
-		$this->addField('imap_email_username')->group('pop~3')->caption('Username');
-		$this->addField('imap_email_password')->type('password')->group('pop~3')->caption('Password');
+		$this->addField('imap_email_username')->group('pop~1')->caption('Username');
+		$this->addField('imap_email_password')->type('password')->group('pop~1')->caption('Password');
+		$this->addField('imap_flags')->mandatory(true)->defaultValue('/imap/ssl/novalidate-cert')->group('pop~6')->caption('Flags');
 
 		$this->add('dynamic_model/Controller_AutoCreator');
 
