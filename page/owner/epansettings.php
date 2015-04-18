@@ -28,7 +28,13 @@ class page_owner_epansettings extends page_base_owner {
 		$email_tab = $tabs->addTab('Default Email Settings');
 		$email_form = $email_tab->add('Form_Stacked');
 		$email_form->setModel($this->api->current_website,array('email_transport','encryption','email_host','email_port','email_username','email_password','email_reply_to','email_reply_to_name','from_email','from_name','sender_email','sender_name','smtp_auto_reconnect','email_threshold','return_path'));
-		$email_form->addSubmit('Update');
+
+		//SMS Setting
+		$sms_tab = $tabs->addTab('SMS Settings');
+		$sms_form = $sms_tab->add('Form_Stacked');
+		$sms_form->setModel($this->api->current_website,array('gateway_url','user_name_qs_parameter','user_name','password_qs_parameter','sms_password','number','message'));
+		$sms_form->addSubmit('Update');
+		$sms_form->add('Controller_FormBeautifier');	
 
 		// Add Placeholder values
 		
@@ -46,7 +52,7 @@ class page_owner_epansettings extends page_base_owner {
 		$email_form->getElement('sender_name')->setAttr('placeholder','Sender Name');
 		$email_form->getElement('return_path')->setAttr('placeholder','Return Path');
 		$email_form->getElement('smtp_auto_reconnect')->setAttr('placeholder','SMTP Auto Reconnect');
-		$email_form->getElement('email_threshold')->setAttr('placeholder','Maximum Emails allowed to send per hour for Mass Emaling');
+		$email_form->getElement('email_threshold')->setAttr('placeholder','Maximum Emails allowed to send per hour for Mass Emailing');
 		$email_form->add('Controller_FormBeautifier');
 
 		if($email_form->isSubmitted()){
