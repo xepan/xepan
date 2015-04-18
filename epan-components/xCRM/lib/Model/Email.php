@@ -41,7 +41,7 @@ class Model_Email extends \Model_Document{
 		$emails = explode(',', $activity['to_email']);
 		$this['to_email'] = $emails[0];
 		unset($emails[0]);
-		$this['cc'] = $emails;
+		$this['cc'] = implode(",",$emails);
 
 		$this->relatedDocument($activity);
 		$this->save();
@@ -56,11 +56,7 @@ class Model_Email extends \Model_Document{
 	}
 
 	function send(){
-		$this->sendEmail($this['to_email'],$this['subject'],$this['message'],$this['cc'],$this['bcc']?:array());
-	}
-
-	function sendSms(){
-
+		$this->sendEmail($this['to_email'],$this['subject'],$this['message'],explode(","$this['cc']),$this['bcc']?explode(",",$this['bcc']):array());
 	}
 
 	function createActivity(){

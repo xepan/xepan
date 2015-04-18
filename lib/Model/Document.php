@@ -339,10 +339,6 @@ class Model_Document extends SQL_Model{
 		$new_activity['message']= $message;
 
 		$new_activity->save();
-
-		if($action=='email'){
-			$this->add('xCRM/Model_Email')->createFromActivity($new_activity);
-		}
 	}
 
 	function searchActivity($action,$from_on_date=null, $to_date=null, $from=null,$from_id=null,$to=null,$to_id=null){

@@ -112,4 +112,13 @@ class Model_Activity extends \Model_Document{
 
 	}
 
+	function notifyViaEmail(){
+		$email_created = $this->add('xCRM/Model_Email')->createFromActivity($this);
+		$email_created->send();
+	}
+
+	function notifyViaSMS(){
+
+	}
+
 }
