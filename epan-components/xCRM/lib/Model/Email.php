@@ -10,7 +10,7 @@ class Model_Email extends \Model_Document{
 	function init(){
 		parent::init();
 
-		$this->addField('from');
+		$this->addField('from'); // Customer, Employee, Supplier ... string
 		$this->addField('from_id');
 
 		$this->addField('to');
@@ -38,14 +38,25 @@ class Model_Email extends \Model_Document{
 		$this['subject'] = $activity['subject'];
 		$this['message'] = $activity['message'];
 		
+		$emails = explode(',', $activity['to_email']);
+		$this['to_email'] = $emails[0];
+		unset($emails[0]);
+		$this['cc'] = implode(",",$emails);
+
 		$this->relatedDocument($activity);
 		$this->save();
+
+		if($activity['send_email'])
+			$this->send();
+		
+		if($activity['send_sms'])
+			$this->sendSms();
 
 		return $this;
 	}
 
 	function send(){
-
+		$this->sendEmail($this['to_email'],$this['subject'],$this['message'],explode(","$this['cc']),$this['bcc']?explode(",",$this['bcc']):array());
 	}
 
 	function createActivity(){
