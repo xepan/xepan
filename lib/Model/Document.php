@@ -328,7 +328,7 @@ class Model_Document extends SQL_Model{
 		$new_activity->save();
 
 		if($action=='email'){
-			$email->add('xCRM/Model_Email')->createFromActivity($new_activity);
+			$this->add('xCRM/Model_Email')->createFromActivity($new_activity);
 		}
 	}
 

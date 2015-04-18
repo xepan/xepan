@@ -281,7 +281,7 @@ class Model_Order extends \Model_Document{
 
 		$subject = $config_model['order_detail_email_subject']?:$this['name']." "."::"." "."ORDER";
 		$email_body=$config_model['order_detail_email_body']?:"Order Layout Is Empty";
-				
+		
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name']?"<b>".$customer['customer_name']."</b><br>":" ", $email_body);
 		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address']?$customer['billing_address']:" ", $email_body);
@@ -317,7 +317,7 @@ class Model_Order extends \Model_Document{
 			if($form['bcc'])
 				$bccs = explode(',',$form['bcc']);
 
-			$email_body .= $form['custom_message']."<br>".$email_body;
+			$email_body = $form['custom_message']."<br>".$email_body;
 			$this->sendEmail($form['to'],$form['subject'],$email_body,$ccs,$bccs);
 			$this->createActivity('email',$form['subject'],$form['custom_message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
