@@ -87,6 +87,10 @@ class Model_Order extends \Model_Document{
 		$this->updateAmounts();
 	}
 
+	function termAndCondition(){
+		return $this->ref('termsandcondition_id');
+	}
+
 	function relatedActivity(){
 		$activities = $this->add('xCRM/Model_Activity');
 		$activities->addCondition('related_root_document_name',$this->root_document_name);
