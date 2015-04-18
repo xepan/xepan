@@ -7,15 +7,6 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 
 		$this->app->title=$this->api->current_department['name'] .': Dashboard';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-dashboard icon-gauge"></i> Sales Department Dashboard');
-// TTODDOOOO
-// 		$x = <<<EOF
-// 		Sales Executive Performances (Distinct employee_id)
-// 		Online Vs Offline Orders (Day Wise Graph)
-// 		Prospected Sales
-// EOF;
-
-		// $this->add('View')->setHTML(nl2br($x));
-
 
 		$is_superuser_login = false;
 		if($this->api->auth->model->id == $this->api->auth->model->isDefaultSuperUser()){
@@ -29,15 +20,6 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		$col_3 = $col->addColumn(3);
 		$col_4 = $col->addColumn(3);
 
-		// TOTAL WORKING PROJECTS
-		$running_orders = $this->add('xShop/Model_Order')->addCondition('status',array('approved','processing','processed'))->addCondition('order_from','online');
-		$running_tile = $col_4->add('View_Tile')->addClass('atk-swatch-blue')->setStyle('box-shadow','');
-		$running_tile->setTitle('Today Online Orders');
-		$running_tile->setContent($running_orders->count()->getOne());
-
-		if($is_superuser_login)
-			$running_tile->setFooter(money_format('%!i', $running_orders->sum('net_amount')->getOne()),'icon-money');
-		
 		//TODAY APPROVE ORDERS WITH AMOUNTS
 		$approved_order = $this->add('xShop/Model_Order');
 		$approved_order->addExpression('approved_on')->set(function($m,$q){
@@ -53,13 +35,13 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		$approved_order->addCondition('approved_on','>',$this->api->today);
 		$approved_order->addCondition('approved_on','<=',$this->api->nextDate($this->api->today));
 
-		$approve_tile = $col_2->add('View_Tile')->addClass('atk-swatch-green');
+		$approve_tile = $col_1->add('View_Tile')->addClass('atk-swatch-green');
 		$approve_tile->setTitle('Today Sales');
 		$approve_tile->setContent($approved_order->count()->getOne());
 		if($is_superuser_login)
 			$approve_tile->setFooter(money_format('%!i', $approved_order->sum('net_amount')->getOne()),'icon-money');
-
-		// //TODAY Complete ORDERS WITH AMOUNTS
+		
+		//TODAY Complete ORDERS WITH AMOUNTS
 		$complete_order = $this->add('xShop/Model_Order');
 		$complete_order->addExpression('complete_on')->set(function($m,$q){
 			$act = $m->add('xCRM/Model_Activity')
@@ -74,19 +56,31 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		$complete_order->addCondition('complete_on','>',$this->api->today);
 		$complete_order->addCondition('complete_on','<=',$this->api->nextDate($this->api->today));
 		
-		$complete_tile = $col_3->add('View_Tile')->addClass('atk-swatch-yellow');
+		$complete_tile = $col_2->add('View_Tile')->addClass('atk-swatch-yellow');
 		$complete_tile->setTitle('Today Delivered/Completed Orders');
 		$complete_tile->setContent($complete_order->count()->getOne());
 		if($is_superuser_login)
 			$complete_tile->setFooter(money_format('%!i', $complete_order->sum('net_amount')->getOne()),'icon-money');
+		
+
+		// TOTAL Online Projects
+		$running_orders = $this->add('xShop/Model_Order')->addCondition('status',array('approved','processing','processed'))->addCondition('order_from','online');
+		$running_tile = $col_3->add('View_Tile')->addClass('atk-swatch-blue')->setStyle('box-shadow','');
+		$running_tile->setTitle('Today Online Orders');
+		$running_tile->setContent($running_orders->count()->getOne());
+
+		if($is_superuser_login)
+			$running_tile->setFooter(money_format('%!i', $running_orders->sum('net_amount')->getOne()),'icon-money');
+		
+
 
 		// //TODAY CANCEL ORDERS WITH AMOUNTS
 		$cancel_order = $this->add('xShop/Model_Order_Cancelled')->addCondition('updated_date',$this->api->today);
-		$complete_tile = $col_1->add('View_Tile')->addClass('atk-swatch-ink');
-		$complete_tile->setTitle('Today Canceled Orders');
-		$complete_tile->setContent($cancel_order->count()->getOne());
+		$cancel_tile = $col_4->add('View_Tile')->addClass('atk-swatch-ink');
+		$cancel_tile->setTitle('Today Canceled Orders');
+		$cancel_tile->setContent($cancel_order->count()->getOne());
 		if($is_superuser_login)	
-			$complete_tile->setFooter(money_format('%!i', $cancel_order->sum('net_amount')->getOne()),'icon-money');
+			$cancel_tile->setFooter(money_format('%!i', $cancel_order->sum('net_amount')->getOne()),'icon-money');
 
 
 		//Commitment Orders
@@ -164,6 +158,34 @@ class page_xShop_page_owner_dashboard extends page_xShop_page_owner_main{
 		// //#e3c800(yellow),#004050(darkteal),#825a2c(brown),#003e00(DarkEmerald)
 		// //#a4c400(lime),#6d8764(olive),#128023(drakGreen),#647687(steel),
 		// //#bf5a15(dark-orange),#1b6eae(darkblue)
-				
+
+		// TTODDOOOO
+// 		$x = <<<EOF
+// 		Sales Executive Performances (Distinct employee_id)
+// 		Online Vs Offline Orders (Day Wise Graph)
+// 		Prospected Sales
+// EOF;
+
+		// $this->add('View')->setHTML(nl2br($x));
+		$this->add('View')->setElement('br');
+		$col = $this->add('Columns');
+		$col1 = $col->addColumn(3);
+		$col2 = $col->addColumn(3);
+		$col3 = $col->addColumn(3);
+
+		//SALES EXECUTIVE PERFORMACE DISTINCT EMPLOYEE ID WISE
+		$sales_executive_performanc_tile = $col1->add('View_Tile')->addClass('atk-swatch-red img-rounded');
+		$sales_executive_performanc_tile->setTitle('Sales Executive Performances GRAPTH Distinct employee id wise');
+		$sales_executive_performanc_tile->setContent('TODO ');
+
+		//ONLINE VS OFFLINE ORDERS (dAY wISE GRAPH)
+		$on_vs_off_tile = $col2->add('View_Tile')->addClass('atk-swatch-green img-rounded');
+		$on_vs_off_tile->setTitle('Online Vs Offline Orders Day Wise Graph');
+		$on_vs_off_tile->setContent('TODO ');
+
+		//PROSPECTED SALES
+		$prospeted_tile = $col3->add('View_Tile')->addClass('atk-swatch-yellow img-rounded');
+		$prospeted_tile->setTitle('Prospected Sales');
+		$prospeted_tile->setContent('TODO ');		
 	}
 }		
