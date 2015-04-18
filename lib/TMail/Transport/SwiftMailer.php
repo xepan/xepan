@@ -84,11 +84,16 @@ class TMail_Transport_SwiftMailer extends AbstractObject {
         }
 
         // array('file_name'=>array('type'=>'application/pdf','data'=>'string_data'))
+        // array('file_name'=>'path')
         if(count($attachments)){
         	foreach ($attachments as $file_name => $info) {
-        		$att = Swift_Attachment::newInstance($infor['data'], $file_name, $info['type']);
-				// Attach it to the message
-				$message->attach($att);
+        		if(is_array($info)){
+	        		$att = Swift_Attachment::newInstance($infor['data'], $file_name, $info['type']);
+					// Attach it to the message
+        		}else{
+        			$att = Swift_Attachment::fromPath($info)->setFilename($file_name);
+        		}
+					$message->attach($att);
         	}
         }
 
