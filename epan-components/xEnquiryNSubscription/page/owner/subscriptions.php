@@ -340,6 +340,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 		$cat_crud=$cat_col->add('CRUD');
 
 		$cat_crud->setModel($newsletter_category_model,array('name','posts'));
+		$cat_crud->add('xHR/Controller_Acl');
 
 		if(!$cat_crud->isEditing()){
 			$g=$cat_crud->grid;
@@ -381,6 +382,8 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 		$newsletter_crud = $news_col->add('CRUD');
 		$newsletter_crud->setModel($newsletter_model,null,array('category','is_active','name','email_subject','unsend_emails','created_by'));
 		// $newsletter_crud->add('Controller_FormBeautifier');
+		$newsletter_crud->add('xHR/Controller_Acl');
+
 
 		if(!$newsletter_crud->isEditing()){
 			$g=$newsletter_crud->grid;
@@ -452,58 +455,58 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 	}
 
 
-	function page_newsletter_send(){
-		$this->api->stickyGET('xenquirynsubscription_newsletter_id');
+	// function page_newsletter_send(){
+	// 	$this->api->stickyGET('xenquirynsubscription_newsletter_id');
 
-		$v= $this->add('View');
-		$v->addClass('panel panel-default');
-		// $v->addStyle('padding','20px');
+	// 	$v= $this->add('View');
+	// 	$v->addClass('panel panel-default');
+	// 	// $v->addStyle('padding','20px');
 
-		$tabs = $v->add('Tabs');
-		$mass_email_tab = $tabs->addTab('Mass Emails');
-		// $mass_email_tab->add('View_Error')->set("This will add Emails to Queue to be processed by xMarketingCampain Application");
+	// 	$tabs = $v->add('Tabs');
+	// 	$mass_email_tab = $tabs->addTab('Mass Emails');
+	// 	// $mass_email_tab->add('View_Error')->set("This will add Emails to Queue to be processed by xMarketingCampain Application");
 
-		$form = $mass_email_tab->add('Form');
+	// 	$form = $mass_email_tab->add('Form');
 		
-		$mass_email_tab->add('H4')->set('Existing Queue');
+	// 	$mass_email_tab->add('H4')->set('Existing Queue');
 
-		$crud= $mass_email_tab->add('CRUD',array('allow_edit'=>false));
-		$crud->addClass('panel panel-default');
-		$crud->addStyle('margin-top','10px');
+	// 	$crud= $mass_email_tab->add('CRUD',array('allow_edit'=>false));
+	// 	$crud->addClass('panel panel-default');
+	// 	$crud->addStyle('margin-top','10px');
 
-		$subscription_field = $form->addField('DropDown','subscriptions');
-		$subscription_field->setModel('xEnquiryNSubscription/SubscriptionCategories');
-		$subscription_field->setEmptyText('Please select a category')->validateNotNull();
-		$form->addField('CheckBox','include_unsubscribed_members_too');
-		$form->addSubmit('Add To job');
+	// 	$subscription_field = $form->addField('DropDown','subscriptions');
+	// 	$subscription_field->setModel('xEnquiryNSubscription/SubscriptionCategories');
+	// 	$subscription_field->setEmptyText('Please select a category')->validateNotNull();
+	// 	$form->addField('CheckBox','include_unsubscribed_members_too');
+	// 	$form->addSubmit('Add To job');
 
-		// $form->add('Controller_FormBeautifier');
+	// 	// $form->add('Controller_FormBeautifier');
 		
-		if($form->isSubmitted()){
-			$subscribers = $this->add('xEnquiryNSubscription/Model_Subscription');
-			$asso_j = $subscribers->join('xenquirynsubscription_subscatass.subscriber_id');
-			$asso_j->addField('category_id');
-			$asso_j->addField('send_news_letters');
+	// 	if($form->isSubmitted()){
+	// 		$subscribers = $this->add('xEnquiryNSubscription/Model_Subscription');
+	// 		$asso_j = $subscribers->join('xenquirynsubscription_subscatass.subscriber_id');
+	// 		$asso_j->addField('category_id');
+	// 		$asso_j->addField('send_news_letters');
 
-			$subscribers->addCondition('category_id',$form['subscriptions']);
-			if(!$form['include_unsubscribed_members_too'])
-				$subscribers->addCondition('send_news_letters',true);
+	// 		$subscribers->addCondition('category_id',$form['subscriptions']);
+	// 		if(!$form['include_unsubscribed_members_too'])
+	// 			$subscribers->addCondition('send_news_letters',true);
 			
-			$new_job = $this->add('xEnquiryNSubscription/Model_EmailJobs');
-			$new_job['newsletter_id'] = $_GET['xenquirynsubscription_newsletter_id'];
-			$new_job['process_via']='xEnquiryNSubscription';
-			$new_job->save();
+	// 		$new_job = $this->add('xEnquiryNSubscription/Model_EmailJobs');
+	// 		$new_job['newsletter_id'] = $_GET['xenquirynsubscription_newsletter_id'];
+	// 		$new_job['process_via']='xEnquiryNSubscription';
+	// 		$new_job->save();
 
-			$q= $this->add('xEnquiryNSubscription/Model_EmailQueue');
-			foreach ($subscribers as $junk) {
-				$q['emailjobs_id'] = $new_job->id;
-				$q['subscriber_id'] = $subscribers->id;
-				$q->saveAndUnload();
-			}
-			if(!$crud->isEditing()) {
-				$crud->grid->js(null,$this->js()->_selector('.processing_btn')->trigger('reload'))->reload()->execute();
-			}
-		}
+	// 		$q= $this->add('xEnquiryNSubscription/Model_EmailQueue');
+	// 		foreach ($subscribers as $junk) {
+	// 			$q['emailjobs_id'] = $new_job->id;
+	// 			$q['subscriber_id'] = $subscribers->id;
+	// 			$q->saveAndUnload();
+	// 		}
+	// 		if(!$crud->isEditing()) {
+	// 			$crud->grid->js(null,$this->js()->_selector('.processing_btn')->trigger('reload'))->reload()->execute();
+	// 		}
+	// 	}
 
 		$existing_jobs = $this->add('xEnquiryNSubscription/Model_EmailQueue');
 		$job_j = $existing_jobs->join('xenquirynsubscription_emailjobs','emailjobs_id');

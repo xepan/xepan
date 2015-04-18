@@ -20,7 +20,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 		$data=$this->add('xEnquiryNSubscription/Model_NewsLetter')->count()->getOne();
 		$v=$bg->add('View_Badge')->set('Total NewsLetters')->setCount($data)->setCountSwatch('ink');
 
-		$data=$this->add('xEnquiryNSubscription/Model_NewsLetter')->addCondition('created_by','xMarketingCampaign')->count()->getOne();
+		$data=$this->add('xEnquiryNSubscription/Model_NewsLetter')->addCondition('created_by_app','xMarketingCampaign')->count()->getOne();
 		$v=$bg->add('View_Badge')->set('By This App')->setCount($data)->setCountSwatch('ink');
 
 		$cols = $this->add('Columns');
@@ -32,6 +32,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 		$cat_crud=$cat_col->add('CRUD');
 
 		$cat_crud->setModel($newsletter_category_model,array('name','posts'));
+		$cat_crud->add('xHR/Controller_Acl');
 
 		if(!$cat_crud->isEditing()){
 			$g=$cat_crud->grid;
@@ -52,7 +53,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 		})->sortable(true);
 
 		if(!$config_model['show_all_newsletters']){
-			$newsletter_model->addCondition('created_by','xMarketingCampaign');
+			$newsletter_model->addCondition('created_by_app','xMarketingCampaign');
 		}
 		
 		// filter news letter as per selected category
@@ -72,11 +73,12 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 			$newsletter_model->addCondition('category_id',$_GET['category_id']);
 		}
 
-		$newsletter_model->getElement('created_by')->defaultValue('xMarketingCampaign');
+		$newsletter_model->getElement('created_by_app')->defaultValue('xMarketingCampaign');
 		
 		$newsletter_crud = $news_col->add('CRUD');
-		$newsletter_crud->setModel($newsletter_model,null,array('category','is_active','name','email_subject','unsend_emails','created_by'));
+		$newsletter_crud->setModel($newsletter_model,null,array('category','is_active','name','email_subject','unsend_emails','created_by_app'));
 		// $newsletter_crud->add('Controller_FormBeautifier');
+		$newsletter_crud->add('xHR/Controller_Acl');
 		if(!$newsletter_crud->isEditing()){
 			$g=$newsletter_crud->grid;
 			$g->add_sno();
@@ -87,7 +89,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 			$g->js('reload')->reload();
 
 			if(!$config_model['show_all_newsletters']){
-				$g->removeColumn('created_by');
+				$g->removeColumn('created_by_app');
 			}
 
 			$g->addMethod('format_preview',function($g,$f)use($preview_vp){
