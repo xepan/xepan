@@ -85,6 +85,7 @@ class Model_Activity extends \Model_Document{
 		$this->addField('notify_via_sms')->type('boolean')->defaultValue(true);
 		$this->addField('sms_to');
 		
+		$this->add('filestore/Field_File','attachment_id');
 		$this->setOrder('created_at','desc');
 
 		$this->addHook('beforeSave,beforeDelete',function($obj){
@@ -92,8 +93,9 @@ class Model_Activity extends \Model_Document{
 				throw $this->exception('You are not authorized for action','Growl');
 		});
 
+		// $this->hasMany('Attachment','activity_id');
 		$this->addHook('afterSave',$this);
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function afterSave(){

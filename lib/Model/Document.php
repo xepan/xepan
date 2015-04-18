@@ -273,7 +273,7 @@ class Model_Document extends SQL_Model{
 			$activities->getElement('action')->display(array('form'=>'Readonly'));
 		}
 
-		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to'));
+		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to','attachment_id'));
 		$activity = $page->add('View_Activity');
 		$activity->setModel($activities);
 		
@@ -301,6 +301,10 @@ class Model_Document extends SQL_Model{
 				''=>'',
 				'*'=>array('sms_to')
 			),'div.atk-form-row');
+
+
+			//File Type for Attachment
+
 		}
 
 		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>'All','allow_add'=>true,'allow_edit'=>'Self Only','allow_del'=>'No')));

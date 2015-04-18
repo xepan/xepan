@@ -266,8 +266,8 @@ class Model_Order extends \Model_Document{
 	function send_via_email_page($p){
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
-		
-		$tnc=$this->termAndCondition()->tryload($this['termsandcondition_id']);
+						
+		$tnc=$this->termAndCondition();
 
 		$print_order = $this->add('xShop/View_OrderDetail',array('show_department'=>false,'show_price'=>true,'show_customfield'=>true));
 		$print_order->setModel($this->itemrows());

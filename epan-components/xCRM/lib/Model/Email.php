@@ -58,8 +58,10 @@ class Model_Email extends \Model_Document{
 		$this->relatedDocument($activity);
 		$this->save();
 
-		// if($activity['send_email'])
-		// 	$this->send();
+		if($activity['attachment_id']){
+			$this->addAttachment($activity['attachment_id']);
+		}
+			
 		
 		// if($activity['send_sms'])
 		// 	$this->sendSms();
@@ -67,13 +69,36 @@ class Model_Email extends \Model_Document{
 		return $this;
 	}
 
-	function send(){
-		$this->sendEmail($this['to_email'],$this['subject'],$this['message'],explode(",",$this['cc']),$this['bcc']?explode(",",$this['bcc']):array());
+	function addAttachment($attach_id){
+		if(!$attach_id) return;
+		$attach = $this->add('xCRM/Model_EmailAttachment');
+		$attach['attachment_url_id'] = $attach_id;
+		$attach['related_document_id'] = $this->id;
+		$attach->save();
+	}
+
+	function send(){		
+		$attachments_array = array();
+		foreach ($this->attachment() as $attach) {
+			$file_model = $this->add('filestore/Model_File')->tryLoad($attach['attachment_url_id']);
+			$attachments_array[$file_model['filename']] = $file_model['url'];
+		}
+		
+		$this->sendEmail($this['to_email'],$this['subject'],$this['message'],explode(",",$this['cc']),$this['bcc']?explode(",",$this['bcc']):array(),$attachments_array);
+	}	
+
+	function attachment(){
+		if(!$this->loaded())
+			return new \Dummy();
+		
+		return $this->add('xCRM/Model_EmailAttachment')->addCondition('related_document_id',$this->id);
+
 	}
 
 	function create_Activity(){
 
 	}
+
 	function create_Ticket(){
 
 	}
