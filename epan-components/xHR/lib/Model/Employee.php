@@ -99,6 +99,7 @@ class Model_Employee extends \Model_Table{
 		$this->hasMany('xProduction/EmployeeTeamAssociation','employee_id');
 		$this->hasMany('LastSeen','employee_id');
 		$this->hasMany('xHR/OfficialEmail','employee_id');
+		$this->hasMany('xCRM/Email','read_by_employee_id');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);

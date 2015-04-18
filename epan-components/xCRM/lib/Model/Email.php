@@ -9,6 +9,7 @@ class Model_Email extends \Model_Document{
 
 	function init(){
 		parent::init();
+		$this->hasOne('xHR/Employee','read_by_employee_id');
 
 		$this->addField('from');
 		$this->addField('from_id');
