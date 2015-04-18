@@ -10,7 +10,7 @@ class Model_Email extends \Model_Document{
 	function init(){
 		parent::init();
 
-		$this->addField('from');
+		$this->addField('from'); // Customer, Employee, Supplier ... string
 		$this->addField('from_id');
 
 		$this->addField('to');
