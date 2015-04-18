@@ -49,6 +49,8 @@ class Model_DocumentAcl extends \Model_Table{
 		$this->addField('can_forcedelete')->setValueList($acl)->defaultValue('No');
 		
 		$this->addField('can_see_activities')->setValueList(array('No'=>'No','All'=>'All','Deep'=>'Deep'))->defaultValue('No');
+		$this->addField('can_create_activity')->type('boolean')->defaultValue('No');
+		$this->addField('can_create_ticket')->type('boolean')->defaultValue('No');
 		
 		$this->addHook('beforeSave',$this);
 

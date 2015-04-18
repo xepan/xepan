@@ -6,9 +6,18 @@ class Model_Email extends \Model_Document{
 	public $table = 'xcrm_emails';
 	public $status = array();
 	public $root_document_name='xCRM\Email';
+	public $actions=array(
+			'can_view'=>array(),
+			'allow_add'=>array(),
+			'allow_edit'=>array(),
+			'allow_del'=>array(),
+			'can_create_activity'=>array(),
+			'can_create_ticket'=>array(),
+		);	
 
 	function init(){
 		parent::init();
+		$this->hasOne('xHR/Employee','read_by_employee_id');
 
 		$this->addField('from'); // Customer, Employee, Supplier ... string
 		$this->addField('from_id');
@@ -38,13 +47,13 @@ class Model_Email extends \Model_Document{
 		$this['subject'] = $activity['subject'];
 		$this['message'] = $activity['message'];
 		
-		$emails = explode(',', $activity['email_to']);
+		$emails = explode(',', $activity['to_email']);
 		$this['to_email'] = $emails[0];
 		unset($emails[0]);
 		$this['cc'] = implode(",",$emails);
 
-		$this->save();
 		$this->relatedDocument($activity);
+		$this->save();
 
 		if($activity['send_email'])
 			$this->send();
@@ -56,10 +65,13 @@ class Model_Email extends \Model_Document{
 	}
 
 	function send(){
-		$this->sendEmail($this['to_email'],$this['subject'],$this['message'],$this['cc']?explode(",",$this['cc']):array(),$this['bcc']?explode(",",$this['bcc']):array());
+		$this->sendEmail($this['to_email'],$this['subject'],$this['message'],explode(",",$this['cc']),$this['bcc']?explode(",",$this['bcc']):array());
 	}
 
-	function createActivity(){
+	function create_Activity(){
+
+	}
+	function create_Ticket(){
 
 	}
 

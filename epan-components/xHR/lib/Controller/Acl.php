@@ -39,6 +39,9 @@ class Controller_Acl extends \AbstractController {
 		'can_see_activities'=>'No',
 		'can_forceDelete'=>'No',
 
+		'can_create_activity'=>'No',
+		'can_create_ticket'=>'No',
+
 		);
 
 	public $self_only_ids=array();
@@ -298,6 +301,12 @@ class Controller_Acl extends \AbstractController {
 
 		if($this->permissions['can_send_via_email'] !='No'){
 			$this->manageAction('send_via_email','can_send_via_email');
+		}
+		if($this->permissions['can_create_activity'] !='No'){
+			$this->manageAction('create_activity','can_create_activity');
+		}
+		if($this->permissions['can_create_ticket'] !='No'){
+			$this->manageAction('create_ticket','can_create_ticket');
 		}
 
 		// if($this->permissions['can_send_via_email'] !='No' AND $this->owner->model->hasMethod('send_via_email')){

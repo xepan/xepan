@@ -33,6 +33,7 @@ class Model_Department extends \Model_Table{
 		$this->hasMany('xShop/ItemDepartmentAssociation','department_id');
 		$this->hasMany('xHR/Document','department_id');
 		$this->hasMany('xProduction/Team','department_id');
+		$this->hasMany('xHR/OfficialEmail','department_id');
 		// $this->hasMany('xProduction/OutSourceParty','department_id');
 		$this->hasMany('xProduction/OutSourcePartyDeptAssociation','department_id');
 		$this->add('Controller_Validator');

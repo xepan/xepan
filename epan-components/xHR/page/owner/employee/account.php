@@ -12,7 +12,7 @@ class page_xHR_page_owner_employee_account extends Page{
 		$emp = $this->add('xHR/Model_Employee')->load($_GET['employee_id']);
 
 		$form = $this->add('Form_Stacked');
-		$active_user = $this->add('Model_USers')->addCondition('is_active', true);
+		$active_user = $this->add('Model_Users')->addCondition('is_active', true);
 		
 		$form_field=$form->addField('autocomplete/Basic','user');
 		$form_field->setModel($active_user);

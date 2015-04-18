@@ -77,7 +77,7 @@ class Model_Activity extends \Model_Document{
 		});
 
 		$this->addField('subject');
-		$this->addField('message')->type('text');
+		$this->addField('message')->type('text')->display(array('form'=>'RichText'));
 		
 		$this->addField('action')->enum(array('created','comment','email','call','sms','personal','submitted','approved','rejected','redesign','canceled','forwarded','reply','received','processed','active','completed'))->mandatory(true);
 		$this->addField('notify_via_email')->type('boolean')->defaultValue(true);

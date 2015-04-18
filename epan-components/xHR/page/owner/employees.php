@@ -61,8 +61,8 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 			$tab->addTabURL('xHR_page_owner_employee_media','Media',array('employee_id'));
 			$tab->addTabURL('xHR_page_owner_employee_workexperience','Work Experience',array('employee_id'));
 			$tab->addTabURL('xHR_page_owner_employee_department','Department',array('employee_id'));
-			// $tab->addTabURL('xHR_page_owner_employee_post','Post',array('employee_id'));
 			$tab->addTabURL('xHR_page_owner_employee_account','User Account',array('employee_id'));
+			$tab->addTabURL('xHR_page_owner_employee_employeeemail','Employee Email',array('employee_id'));
 		}else{
 			$emp_col->add('View_Warning')->set('Select any one Employees');
 		}	

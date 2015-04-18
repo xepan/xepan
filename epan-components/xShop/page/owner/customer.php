@@ -63,10 +63,11 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
         $crud->add('xHR/Controller_Acl');
         
         	if(!$crud->isEditing()){
+        	$self = $this;
 			$g=$crud->grid;	
 			$g->addColumn('total_sales_order');
-			$g->addMethod('format_total_sales_order',function($g,$f){
-				$g->current_row_html[$f] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Sales Order List ', $this->api->url($this->vp->getURL(),array('customer_id'=>$g->model['id']))).'">'. $g->model->ref('xShop/Order')->count()->getOne()."</a>";
+			$g->addMethod('format_total_sales_order',function($g,$f)use($self){
+				$g->current_row_html[$f] = '<a href="#na" onclick="javascript:'.$g->js()->univ()->frameURL('Sales Order List ', $self->api->url($self->vp->getURL(),array('customer_id'=>$g->model['id']))).'">'. $g->model->ref('xShop/Order')->count()->getOne()."</a>";
 			});
 			$g->addFormatter('total_sales_order','total_sales_order');
 		}
