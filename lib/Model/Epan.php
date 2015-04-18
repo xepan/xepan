@@ -83,9 +83,17 @@ class Model_Epan extends Model_Table {
 		$f=$this->addField('user_registration_email_message_body')->type('text')->display(array('form'=>'RichText'))->defaultValue("Name:{{name}}Email:{{email}}User Name :{{user_name}}Password:{{password}}Activation code :{{activation_code}}Click here to activate:     {{click_here_to_activate}}")->hint("{{name}}, {{email}}, {{user_name}}, {{password}}, {{activation_code}}, {{click_here_to_activate}}")->group('ue~12~bl');
 		$f->icon = "fa fa-quote-left~red";
 
+		//sms form field
+		$this->addField('gateway_url')->caption('GateWay Url')->group('sms~4~<i class="fa fa-info "></i> Gate Way Info');
+		$this->addField('user_name')->caption('Gateway User Name')->group('sms~4');
+		$this->addField('sms_password')->type('password')->caption('Gateway Password')->group('sms~4');
+		
+		$this->addField('user_name_qs_parameter')->caption('Gateway User Name Query String Variable')->group('qs~3~<i class="fa fa-info "></i> Query String Info');
+		$this->addField('password_qs_parameter')->caption('Gateway Password Query String Variable')->group('qs~3');
+		$this->addField('number')->caption('Number Query String Variable')->group('qs~3');
+		$this->addField('message')->caption('Messesge Query String Variable')->group('qs~3');
+
 		$this->hasMany('Aliases','epan_id'); 
-
-
 		$this->hasMany('EpanPage','epan_id');
 		$this->hasMany('EpanTemplates','epan_id');
 		$this->hasMany('InstalledComponents','epan_id');
@@ -102,7 +110,7 @@ class Model_Epan extends Model_Table {
 		$this->setOrder('created_at','desc');
 		$this->add('Controller_EpanCMSApp')->epanModel();
 		
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
