@@ -273,7 +273,7 @@ class Model_Document extends SQL_Model{
 			$activities->getElement('action')->display(array('form'=>'Readonly'));
 		}
 
-		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to'));
+		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to','attachment_id'));
 		$activity = $page->add('View_Activity');
 		$activity->setModel($activities);
 		
@@ -304,11 +304,6 @@ class Model_Document extends SQL_Model{
 
 
 			//File Type for Attachment
-			$upl=$form->addField('Upload','attachment')
-  						// ->setModel('filestore/File');
-     					// ->allowMultiple(false)
-       					;
- 			// $upl->template->set('after_field','Max size: 500k');
 
 		}
 
