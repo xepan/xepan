@@ -30,7 +30,7 @@ class TMail_Transport_SwiftMailer extends AbstractObject {
 		$this->mailer = Swift_Mailer::newInstance($transport);
 	}
 	    
-    function send($to, $from, $subject, $body, $headers="",$ccs=array(), $bcc=array(),  $skip_inlining_images=false, $read_confirmation_to=''){
+    function send($to, $from, $subject, $body, $headers="",$ccs=array(), $bcc=array(),  $skip_inlining_images=false, $read_confirmation_to='',$attachments=array()){
 		$email_settings = $this->api->current_website;
     	
     	
@@ -81,6 +81,15 @@ class TMail_Transport_SwiftMailer extends AbstractObject {
             }else{
                 $message->addBcc($bcc);
             }
+        }
+
+        // array('file_name'=>array('type'=>'application/pdf','data'=>'string_data'))
+        if(count($attachments)){
+        	foreach ($attachments as $file_name => $info) {
+        		$att = Swift_Attachment::newInstance($infor['data'], $file_name, $info['type']);
+				// Attach it to the message
+				$message->attach($att);
+        	}
         }
 
 		$failed=array();
