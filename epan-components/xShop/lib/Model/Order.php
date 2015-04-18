@@ -263,6 +263,8 @@ class Model_Order extends \Model_Document{
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
+		$tnc=$this->termAndCondition()->tryload($this['termsandcondition_id']);
+
 		$print_order = $this->add('xShop/View_OrderDetail',array('show_department'=>false,'show_price'=>true,'show_customfield'=>true));
 		$print_order->setModel($this->itemrows());
 		$order_detail_html = $print_order->getHTML(false);
@@ -278,18 +280,17 @@ class Model_Order extends \Model_Document{
 				
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name']?"<b> Mr./Mrs.  ".$customer['customer_name']."</b><br>":" ", $email_body);
+		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address']?"Billing Addess.:".$customer['billing_address']:" ", $email_body);
 		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number']?"Contact No.:".$customer['mobile_number']:" ", $email_body);
 		$email_body = str_replace("{{customer_email}}", $customer['customer_email']?"E-mail id:".$customer['customer_email']:" ", $email_body);
-		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address']?"Billing Addess.:".$customer['billing_address']:" ", $email_body);
 		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address']?"Shipping Addess.:".$customer['shipping_address']:" ", $email_body);
 		$email_body = str_replace("{{customer_tin_no}}", $customer['tin_no'], $email_body);
 		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no'], $email_body);
 		$email_body = str_replace("{{order_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{order_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{order_date}}", $this['created_date'], $email_body);
 		$email_body = str_replace("{{sale_order_details}}", $order_detail_html, $email_body);
-		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
-		// echo $email_body;
-		// return;
+		$email_body = str_replace("{{terms_and_conditions}}", $tnc['terms_and_condition']?"<b>Terms & Condition.:</b><br>".$tnc['terms_and_condition']:" ", $email_body);
+
 		$emails = explode(',', $customer['customer_email']);
 		
 		$form = $p->add('Form_Stacked');
