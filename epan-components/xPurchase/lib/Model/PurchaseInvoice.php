@@ -8,6 +8,7 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		parent::init();
 
 		$this->addCondition('type','purchaseInvoice');
+		$this->addExpression('invoiceitem_count')->set($this->refSql('xShop/InvoiceItem')->count());
 	}
 
 	function supplier(){

@@ -27,6 +27,22 @@ class Model_Email extends \Model_Document{
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
+	function createFromActivity($activity){
+		$this['from'] = $activity['from'];
+		$this['from_id'] = $activity['from_id'];
+
+		$this['to'] = $activity['to'];
+		$this['to_id'] = $activity['to_id'];
+
+		$this['subject'] = $activity['subject'];
+		$this['message'] = $activity['message'];
+		
+		$this->relatedDocument($activity);
+		$this->save();
+
+		return $this;
+	}
+
 	function send(){
 
 	}

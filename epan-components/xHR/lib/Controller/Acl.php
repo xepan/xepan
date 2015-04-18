@@ -266,8 +266,8 @@ class Controller_Acl extends \AbstractController {
 			$this->manageAction('manage_attachments','can_manage_attachments');
 		}
 
-		if($this->permissions['can_forceDelete'] !='No'){
-			$this->manageAction('forceDelete','can_forceDelete','do-delete');
+		if($this->permissions['can_forcedelete'] !='No'){
+			$this->manageAction('forcedelete','can_forcedelete');
 		}
 		
 		

@@ -87,6 +87,10 @@ class Model_Order extends \Model_Document{
 		$this->updateAmounts();
 	}
 
+	function termAndCondition(){
+		return $this->ref('termsandcondition_id');
+	}
+
 	function relatedActivity(){
 		$activities = $this->add('xCRM/Model_Activity');
 		$activities->addCondition('related_root_document_name',$this->root_document_name);
@@ -263,6 +267,8 @@ class Model_Order extends \Model_Document{
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
+		$tnc=$this->termAndCondition()->tryload($this['termsandcondition_id']);
+
 		$print_order = $this->add('xShop/View_OrderDetail',array('show_department'=>false,'show_price'=>true,'show_customfield'=>true));
 		$print_order->setModel($this->itemrows());
 		$order_detail_html = $print_order->getHTML(false);
@@ -275,21 +281,20 @@ class Model_Order extends \Model_Document{
 
 		$subject = $config_model['order_detail_email_subject']?:$this['name']." "."::"." "."ORDER";
 		$email_body=$config_model['order_detail_email_body']?:"Order Layout Is Empty";
-				
+		
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
-		$email_body = str_replace("{{customer_name}}", $customer['customer_name']?"<b> Mr./Mrs.  ".$customer['customer_name']."</b><br>":" ", $email_body);
-		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number']?"Contact No.:".$customer['mobile_number']:" ", $email_body);
-		$email_body = str_replace("{{customer_email}}", $customer['customer_email']?"E-mail id:".$customer['customer_email']:" ", $email_body);
-		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address']?"Billing Addess.:".$customer['billing_address']:" ", $email_body);
-		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address']?"Shipping Addess.:".$customer['shipping_address']:" ", $email_body);
+		$email_body = str_replace("{{customer_name}}", $customer['customer_name']?"<b>".$customer['customer_name']."</b><br>":" ", $email_body);
+		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address']?$customer['billing_address']:" ", $email_body);
+		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number']?$customer['mobile_number']:" ", $email_body);
+		$email_body = str_replace("{{customer_email}}", $customer['customer_email']?$customer['customer_email']:" ", $email_body);
+		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address']?$customer['shipping_address']:" ", $email_body);
 		$email_body = str_replace("{{customer_tin_no}}", $customer['tin_no'], $email_body);
 		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no'], $email_body);
 		$email_body = str_replace("{{order_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{order_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{order_date}}", $this['created_date'], $email_body);
 		$email_body = str_replace("{{sale_order_details}}", $order_detail_html, $email_body);
-		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
-		// echo $email_body;
-		// return;
+		$email_body = str_replace("{{terms_and_conditions}}", $tnc['terms_and_condition']?$tnc['terms_and_condition']:" ", $email_body);
+
 		$emails = explode(',', $customer['customer_email']);
 		
 		$form = $p->add('Form_Stacked');
@@ -312,7 +317,7 @@ class Model_Order extends \Model_Document{
 			if($form['bcc'])
 				$bccs = explode(',',$form['bcc']);
 
-			$email_body .= $form['custom_message']."<br>".$email_body;
+			$email_body = $form['custom_message']."<br>".$email_body;
 			$this->sendEmail($form['to'],$form['subject'],$email_body,$ccs,$bccs);
 			$this->createActivity('email',$form['subject'],$form['custom_message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();

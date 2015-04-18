@@ -20,6 +20,9 @@ jQuery.widget("ui.xnotifier",{
 
 	_create: function(){
 		this.setupLayout();
+		// $(this.element).draggable({
+		// 	containment: 'parent'
+		// });
 	},
 	
 	setupLayout: function(){
@@ -27,16 +30,16 @@ jQuery.widget("ui.xnotifier",{
 
 		$(this.element).css('position','fixed');
 		$(this.element).css('bottom','10px');
-		$(this.element).css('left','10px');
-		$(this.element).css('width','300px');
+		$(this.element).css('right','10px');
+		// $(this.element).css('width','300px');
 		$(this.element).css('min-height','50px');
-		$(this.element).addClass('atk-box');
+		$(this.element).addClass('atk-box atk-padding-small');
 		// $(this.element).css('border','2px solid');
 		$(this.element).css('z-index','2000');
 		
 		this.top_bar = $('<div class="row" style="position:relative;margin:0 auto 0 auto;"></div>');
 		this.top_bar.appendTo(this.element);
-		toggle_btn = $('<div class="atk-swatch-green icon-up-dir atk-size-peta" style="border-radius: 10px 10px 0px 0px; background-color: #ffffb9";>Activities</div>').appendTo(this.top_bar);
+		toggle_btn = $('<div class="atk-swatch-green icon-up-dir atk-size-peta" style="border-radius: 10px 10px 0px 0px; background-color: #ffffb9";></div>').appendTo(this.top_bar);
 		
 		self.options.activity_area = $('<div class="well">No Result Found</div>').appendTo(this.top_bar);
 		self.options.activity_area.css('max-height','300px');
@@ -50,19 +53,20 @@ jQuery.widget("ui.xnotifier",{
 				$(this).addClass('icon-up-dir atk-swatch-green');
 				self.options.status='closed';
 				self.options.see_activity = 1;
-				$(self.options.activity_area).empty();
+				// $(self.options.activity_area).empty();
 			}else{
 				$(this).removeClass('icon-up-dir atk-swatch-green');
 				$(this).addClass('icon-down-dir atk-swatch-red');
-				self.render();
+				// self.render();
 				self.options.status='open';
 			}
 			$(self.options.activity_area).slideToggle();
 		});
-
+		
+		self.reload();
 		$.univ().setInterval(function(){
 			$(self.element).xnotifier('reload');
-		},5000);
+		},300000);
 
 	},
 
