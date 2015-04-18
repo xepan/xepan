@@ -115,5 +115,5 @@ class Model_NewsLetter extends \Model_Document {
 			}
 		}
 
-
+}
 }
