@@ -16,7 +16,8 @@ class Model_Email extends \Model_Document{
 		$this->addField('to');
 		$this->addField('to_id');
 
-		$this->addField('send_to_emails')->type('text');
+		$this->addField('from_email');
+		$this->addField('to_email');
 		$this->addField('cc')->type('text');
 		$this->addField('bcc')->type('text');
 

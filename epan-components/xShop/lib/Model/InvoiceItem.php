@@ -50,7 +50,7 @@ class Model_InvoiceItem extends \Model_Document{
 
 		$this->addHook('afterSave',$this);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 

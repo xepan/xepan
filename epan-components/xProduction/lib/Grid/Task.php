@@ -5,6 +5,7 @@ class Grid_Task extends \Grid{
 	public $ipp=10;
 	function init(){
 		parent::init();
+
 	}
 
 	function setModel($task_model){
@@ -22,6 +23,17 @@ class Grid_Task extends \Grid{
 
 		$this->addFormatter('name','wrap');
 		$this->addPaginator($this->ipp);
+		
+		// $task_vp = $this->add('VirtualPage');
+		// $task_vp->set(function($p){
+		// 	$m=$p->add('xProduction/Model_Task')->tryLoad($_GET['task_id']);
+		// 	$p->add('View')->setHTML($m['content'])->addCLass('well');
+		// });
+
+		// $this->addMethod('format_subject',function($g,$f)use($task_vp){
+		// 	$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('Task Content',$g->api->url($task_vp->getURL(),array('task_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a>';
+		// });
+		// $this->addFormatter('subject','subject');
 
 		return $m;
 	}
@@ -33,10 +45,21 @@ class Grid_Task extends \Grid{
 					"<div class='atk-col-4 atk-effect-danger '>"
 							."Task No.: ".$this->model['name'].'&nbsp;&nbsp'."<b class='btn btn-success btn-xs'>".$this->model['Priority']."</b><br>"
 							.date('d M Y',strtotime($this->model['created_at'])).
-					"</div>".
-					"<div id='opener' class='atk-col-4 text-center atk-button'>
+					"</div>".					
+					// "<div class='btn btn-primary' data-toggle='modal' data-target='.bs-example-modal-sm'>"
+					// .Small modal"</button>".
+					"<div class='atk-col-4  text-center atk-button'data-toggle='modal' data-target='#".$this->model->id."'>
 					<b>". $this->model['subject']."</b>
 					</div>".
+
+					"<div class='modal fade bs-example-modal-sm' tabindex='-1' role='dialog' id='".$this->model->id."' aria-hidden='false'>".
+						"<div class='modal-dialog modal-sm'>".
+    						"<div class='modal-content'>".
+      							$this->model['content'].
+    						"</div>".
+  						"</div>".
+					"</div>".
+
 			"</div>".
 			"<div class='atk-row'>".
 				"<div class='atk-col-6'>".
