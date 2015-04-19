@@ -384,6 +384,8 @@ class page_base_owner extends Page {
 			$menu->addItem('Logout','logout');
 
 		}
+		$menu=array($this->api->top_menu);
+		$this->api->event('menu-created',$menu);
 
 
 	}
