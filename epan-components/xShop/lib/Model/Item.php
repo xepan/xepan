@@ -10,7 +10,6 @@ class Model_Item extends \Model_Table{
 		
 		$this->hasOne('xShop/Application','application_id');
 		$this->hasOne('xShop/MemberDetails','designer_id')->sortable(true);
-		$this->hasOne('xShop/Quotation','quotation_id')->sortable(true);
 
 		//for Mutiple Epan website
 		$this->hasOne('Epan','epan_id');
@@ -114,6 +113,7 @@ class Model_Item extends \Model_Table{
 		// $this->hasMany('xShop/Attachments','item_id');
 		$this->hasMany('xShop/ItemEnquiry','item_id');
 		$this->hasMany('xShop/OrderDetails','item_id');
+		$this->hasOne('xShop/QuotationItem','quotation_id');
 		$this->hasMany('xShop/ItemSpecificationAssociation','item_id');
 		$this->hasMany('xShop/CustomFieldValueFilterAssociation','item_id');
 		$this->hasMany('xShop/ItemCustomFieldAssos','item_id');
@@ -427,6 +427,17 @@ class Model_Item extends \Model_Table{
 			if($specs_assos->loaded()) return $specs_assos['value'];
 			return false;
 		}
+
+		return $specs_assos;
+	}
+
+	function addSpecification($specification){
+		$specs_assos = $this->add('xShop/Model_ItemSpecificationAssociation')->addCondition('item_id',$this->id);
+		$specs_assos->addCondition('specification_id',$specification->id);
+
+		$specs_assos->tryLoadAny();
+		if(!$specs_assos->loaded())
+			$specs_assos->save();
 
 		return $specs_assos;
 	}
