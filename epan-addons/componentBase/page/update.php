@@ -5,6 +5,7 @@ class page_componentBase_page_update extends page_base_owner{
 	public $git_path=null;
 
 	function update($dynamic_model_update=true,$update_git=true){
+		
 		$class = get_class( $this );
 		preg_match( '/page_(.*)_page_(.*)/', $class, $match );
 
@@ -55,8 +56,11 @@ class page_componentBase_page_update extends page_base_owner{
 		}
 
 		if($dynamic_model_update){
+			$current_autocreator_value= $this->api->getConfig('autocreator');
+			$this->api->setConfig('autocreator',true);
 			$model_array=array();
 			$dir = $component_path.DS.'lib'.DS.'Model';
+			
 			if(file_exists($dir)){
 				$lst = scandir($dir);
 	                array_shift($lst);
@@ -68,11 +72,12 @@ class page_componentBase_page_update extends page_base_owner{
 	            	$model_array[] = $this->component_namespace .'/'.'Model_'.$item;
 	            }
 	            foreach ($model_array as $md_name) {
-            		$md= $this->add($md_name);
+            		$md = $this->add($md_name);
 	            	if(!$md instanceof SQL_Model) {
 	            		continue;
 	            	}
 					$model = $this->add($md);
+					
 					foreach ($model->elements as $elm) {
 						if(!$elm instanceof AbstractObject) continue;
 						if($elm instanceof Field_Expression or $elm instanceof SQL_Many)
@@ -88,6 +93,7 @@ class page_componentBase_page_update extends page_base_owner{
 					$model->tryLoadAny();
 				}	
 			}
+			$this->api->setConfig('autocreator',$current_autocreator_value);
 		}
 
 		// Re process Config file
