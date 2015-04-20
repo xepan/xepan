@@ -4,29 +4,78 @@ class page_xMarketingCampaign_page_owner_dashboard extends page_xMarketingCampai
 
 	function init(){
 		parent::init();	
-
 		$this->app->title=$this->api->current_department['name'] .': Dashboard';
 
-		$sub_model = $this->add('xEnquiryNSubscription/Model_Subscription');
-		$this->app->layout->add('View')->setHTML('Total Grabbed Emails = '.$sub_model->addCondition('from_app','DataGrabberPhrase')->count()->getOne());
+		$is_superuser_login = false;
+		if($this->api->auth->model->id == $this->api->auth->model->isDefaultSuperUser()){
+			$is_superuser_login =true;
+		}
+		
 
+		$col = $this->add('Columns');
+		$col_1 = $col->addColumn(3);
+		$col_2 = $col->addColumn(3);
+		$col_3 = $col->addColumn(3);
+		$col_4 = $col->addColumn(3);
+		
+
+		// Total Grabbed Emails
 		$sub_model = $this->add('xEnquiryNSubscription/Model_Subscription');
-		$this->app->layout->add('View')->setHTML('Total Emails = '.$sub_model->addCondition('from_app','xMarketingCampaign')->count()->getOne());
+		$total_grabbed_email_tile = $col_1->add('View_Tile')->addClass('atk-swatch-blue')->setStyle('box-shadow','');
+		$total_grabbed_email_tile->setTitle('Total Grabbed Emails');
+		$total_grabbed_email_tile->setContent($sub_model->addCondition('from_app','DataGrabberPhrase')->count()->getOne());
 		
+
+		//total Emails
+		$sub_model = $this->add('xEnquiryNSubscription/Model_Subscription');
+		$total_email_tile = $col_2->add('View_Tile')->addClass('atk-swatch-yellow')->setStyle('box-shadow','');
+		$total_email_tile->setTitle('Total Grabbed Emails');
+		$total_email_tile->setContent($sub_model->addCondition('from_app','xMarketingCampaign')->count()->getOne());
+		
+		//Total NewsLetter
 		$newsletter_model = $this->add('xEnquiryNSubscription/Model_NewsLetter');
-		$this->app->layout->add('View')->setHTML('Total Newsletters = '.$newsletter_model->count()->getOne());
-		$this->app->layout->add('View')->setHTML('Total Active Newsletters = '.$newsletter_model->addCondition('is_active',true)->count()->getOne());
-		$newsletter_unactive_model = $this->add('xEnquiryNSubscription/Model_NewsLetter');
-		$this->app->layout->add('View')->setHTML('Total Unactive Newsletters = '.$newsletter_unactive_model->addCondition('is_active',false)->count()->getOne());
+		$total_newsletter_tile = $col_3->add('View_Tile')->addClass('atk-swatch-ink')->setStyle('box-shadow','');
+		$total_newsletter_tile->setTitle('Total Newsletter');
+		$total_newsletter_tile->setContent($newsletter_model->count()->getOne());
+
 		
+		//Active Newsletter
+		$newsletter_model = $this->add('xEnquiryNSubscription/Model_NewsLetter');
+		$total_active_newsletter_tile = $col_4->add('View_Tile')->addClass('atk-swatch-green')->setStyle('box-shadow','');
+		$total_active_newsletter_tile->setTitle('Total Active Newsletter');
+		$total_active_newsletter_tile->setContent($newsletter_model->addCondition('is_active',true)->count()->getOne());
+
+		//DeActive newsletter
+		$col_1->add('View')->setElement('br');
+		$newsletter_deactive_model = $this->add('xEnquiryNSubscription/Model_NewsLetter');
+		$total_deactive_newsletter_tile = $col_1->add('View_Tile')->addClass('atk-swatch-red')->setStyle('box-shadow','');
+		$col_1->add('View')->setElement('br');
+		$total_deactive_newsletter_tile->setTitle('Total De-Active Newsletter');
+		$total_deactive_newsletter_tile->setContent($newsletter_deactive_model->addCondition('is_active',true)->count()->getOne());
+
+		//Total Email Jobs
+		$col_2->add('View')->setElement('br');
 		$email_jobs = $this->add('xEnquiryNSubscription/Model_EmailJobs');
-		$this->app->layout->add('View')->setHTML("Total Email Jobs = ".$email_jobs->count()->getOne());
+		$total_email_jobs_tile = $col_2->add('View_Tile')->addClass('atk-swatch-blue')->setStyle('box-shadow','');
+		$total_email_jobs_tile->setTitle('Total Email Jobs');
+		$total_email_jobs_tile->setContent($email_jobs->count()->getOne());
+
+		//Total  pending Email Jobs
+		$col_3->add('View')->setElement('br');
+		$email_jobs = $this->add('xEnquiryNSubscription/Model_EmailJobs');
+		$total_pending_email_jobs_tile = $col_3->add('View_Tile')->addClass('atk-swatch-yellow')->setStyle('box-shadow','');
+		$total_pending_email_jobs_tile->setTitle('Total  pending Email Jobs');
 		$email_jobs->addExpression('pending_emails')->set(function($m,$q){
 			return $m->refSQL('xEnquiryNSubscription/EmailQueue')->addCondition('is_sent',false)->count();
 		});
-		$this->app->layout->add('View')->setHTML("Pending Email Jobs = ".$email_jobs->addCondition('pending_emails','>','0')->count()->getOne());
-		
+		$total_pending_email_jobs_tile->setContent($email_jobs->addCondition('pending_emails','>','0')->count()->getOne());
+
+
 		//kab konsa newsletter send kara
+		$col = $this->add('Columns');
+		$col1 = $col->addColumn(3);
+		$col2 = $col->addColumn(9);
+
 		$email_queue = $this->add('xEnquiryNSubscription/Model_EmailQueue');
 		$queue_job_j = $email_queue->join('xenquirynsubscription_emailjobs','emailjobs_id');
 		$queue_job_j->addField('newsletter_id')->system(true);
@@ -38,9 +87,11 @@ class page_xMarketingCampaign_page_owner_dashboard extends page_xMarketingCampai
 		$email_queue->setOrder('sent_at','desc');	
 		$email_queue->tryLoadAny();
 		$email_queue->setLimit(5);
-		$v = $this->app->layout->add('View');
-		$v->add('View')->set('Kab Konsa NewsLetter kisko send kara')->addClass('label label-info');
-		$grid = $v->add('Grid');
+		$v = $col1->add('View_Tile')->addClass('atk-swatch-blue');
+		$col1->add('View')->setElement('br');
+		$v->setTitle('Kab Konsa NewsLetter kisko send kara');
+		$col1->add('View')->setElement('br');
+		$grid = $col2->add('Grid');
 		if($email_queue->loaded()){
 			$grid->addMethod('format_sentto',function($g,$f){
 				$subscription_model = $g->add('xEnquiryNSubscription/Model_Subscription');
@@ -56,49 +107,19 @@ class page_xMarketingCampaign_page_owner_dashboard extends page_xMarketingCampai
 		}
 		$grid->setModel($email_queue,array('sent_to','name','sent_at'));
 
-		//Recent Email Jobs Via xMarketingCampaign
-		$email_jobs_model = $this->add('xEnquiryNSubscription/Model_EmailJobs');
-		$email_jobs_model->addExpression('pending_emails')->set(function($m,$q){
-			return $m->refSQL('xEnquiryNSubscription/EmailQueue')->addCondition('is_sent',false)->count();
-		});
-		$email_jobs_model->addCondition('pending_emails',0);			
-		$email_jobs_model->addCondition('process_via','xMarketingCampaign');
-		$email_jobs_model->setOrder('processed_on','desc');	
-		$email_jobs_model->tryLoadAny();
-		$email_jobs_model->setLimit(5);
-		$v = $this->app->layout->add('View');
-		$v->add('View')->set('Recent Emails Jobs Completed - Process Set Via Xmarketing Campaign')->addClass('label label-success');
-		if($email_jobs_model->loaded()){
-			$v->add('Grid')->setModel($email_jobs_model,array('name','job_posted_at','processed_on'));
-		}
-		
-		//Recent Email Jobs via others
-		$email_jobs_model = $this->add('xEnquiryNSubscription/Model_EmailJobs');
-		$email_jobs_model->addExpression('pending_emails')->set(function($m,$q){
-			return $m->refSQL('xEnquiryNSubscription/EmailQueue')->addCondition('is_sent',false)->count();
-		});
-		$p_email = $email_jobs_model->addCondition('pending_emails',0);
-		$email_jobs_model->addCondition($p_email->dsql()->orExpr()
-			->where('process_via','<>','xMarketingCampaign')
-			->where('process_via',null)
-			);
-		$email_jobs_model->setOrder('processed_on','desc');	
-		$email_jobs_model->setLimit(5);
-		$email_jobs_model->tryLoadAny();
-		$v = $this->app->layout->add('View');
-		$v->add('View')->set('Recent Emails Jobs Completed - Process Set Via Others')->addClass('label label-warning');
-		if($email_jobs_model->loaded()){
-			$v->add('Grid')->setModel($email_jobs_model,array('name','job_posted_at','processed_on'));
-		}
-		
+
 		//Recent Social Post
-		$v = $this->app->layout->add('View');
-		$v->add('View')->set('Recent Social Posts')->addClass('label label-danger');
+		$col = $this->add('Columns');
+		$col1 = $col->addColumn(3);
+		$col2 = $col->addColumn(9);
 		$csp_model = $this->add('xMarketingCampaign/Model_CampaignSocialPost');
 		$csp_model->addCondition('is_posted',true);
 		$csp_model->setOrder('post_on','desc');
 		$csp_model->setLimit(5);
-		$grid = $v->add('Grid');
+		$v = $col1->add('View_Tile')->addClass('atk-swatch-yellow');
+		$col1->add('View')->setElement('br');
+		$v->setTitle('Recent Social Posts');
+		$grid = $col2->add('Grid');
 
 		$grid->setModel($csp_model,array('socialpost','post_on_datetime'));
 		if($grid->model){
@@ -124,28 +145,35 @@ class page_xMarketingCampaign_page_owner_dashboard extends page_xMarketingCampai
 			$g->current_row_html[$f]=$social_icon; 
 		});
 
-		$grid->addColumn('social','Post on');
-
 		
-		$this->app->layout->add('View')->set('Recent Social Posts Activities')->addClass('label label-default');
+
 
 		//Next Scheduled Email Job
-		$v = $this->app->layout->add('View');
-		$v->add('View')->set('Next Scheduled Email Job')->addClass('label label-info');
+		$col = $this->add('Columns');
+		$col1 = $col->addColumn(3);
+		$col2 = $col->addColumn(9);
 		$cnl_model = $this->add('xMarketingCampaign/Model_CampaignNewsLetter');
 		$cnl_model->_dsql()->having('posting_date','>',date('Y-m-d H:i:s'));
 		$cnl_model->setOrder('posting_date','desc');
 		$cnl_model->setLimit(5);
-		$v->add('Grid')->setModel($cnl_model,array('posting_date','newsletter'));
+		$v = $col1->add('View_Tile')->addClass('atk-swatch-blue');
+		$v->setTitle('Next Scheduled Email Job');
+		$col1->add('View')->setElement('br');
+		$grid = $col2->add('Grid');
+		$grid->setModel($cnl_model,array('posting_date','newsletter'));
 		
 		//Next Scheduled Social Job
-		$v = $this->app->layout->add('View');
-		$v->add('View')->set('Next Scheduled Social Job')->addClass('label label-success');
+		$col = $this->add('Columns');
+		$col1 = $col->addColumn(3);
+		$col2 = $col->addColumn(9);
 		$csp_model = $this->add('xMarketingCampaign/Model_CampaignSocialPost');	
 		$csp_model->_dsql()->having('post_on_datetime','>',date('Y-m-d H:i:s'));
 		$csp_model->setOrder('post_on_datetime','desc');
 		$csp_model->setLimit(5);
-		$grid = $v->add('Grid');
+		$v = $col1->add('View_Tile')->addClass('atk-swatch-yellow');
+		$col1->add('View')->setElement('br');
+		$v->setTitle('Next Scheduled Social Job');
+		$grid = $col2->add('Grid');
 		$grid->setModel($csp_model,array('socialpost','post_on_datetime'));
 		if($grid->model){
 			$grid->model->getElement('Facebook')->system(true);
