@@ -99,7 +99,7 @@ class Model_Activity extends \Model_Document{
 	}
 
 	function afterSave(){
-		if($this->action == 'email') $this['notify_via_email'] = false;
+		if($this['action'] == 'email') $this['notify_via_email'] = false;
 		
 		if($this['notify_via_email'])
 			$this->notifyViaEmail();
