@@ -227,7 +227,7 @@ class Model_Order extends \Model_Document{
 			// $this['discount_voucher_amount']=$discount_voucher_amount;
 			$this['net_amount'] = $total_amount;
 			$this->save();
-			echo "placeOrderFromCart";
+			// echo "placeOrderFromCart";
 			
 			// $discountvoucher->processDiscountVoucherUsed($this['discount_voucher']);
 			return $this;
@@ -248,7 +248,7 @@ class Model_Order extends \Model_Document{
 		// throw new \Exception($member['']);
 	}
 
-	function updateAmounts(){
+	function updateAmounts(){		
 		$this['total_amount']=0;
 		$this['gross_amount']=0;
 		$this['tax']=0;
