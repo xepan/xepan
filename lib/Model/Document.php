@@ -261,7 +261,7 @@ class Model_Document extends SQL_Model{
 		$activities = $page->add('xCRM/Model_Activity');
 		$activities->addCondition('related_root_document_name',$this->root_document_name);
 		$activities->addCondition('related_document_id',$this->id);
-		$activities->setORder('created_at','desc');
+		$activities->setOrder('created_at','desc');
 
 		$crud = $page->add('CRUD');
 
@@ -290,6 +290,14 @@ class Model_Document extends SQL_Model{
 			$email_to_field = $crud->form->getElement('email_to')->set($this->getTo()->email());
 			$sms_to_field = $crud->form->getElement('sms_to')->set($this->getTo()->mobileno());
 
+			//Actions if Email
+			$action_field->js('change')->univ()->bindConditionalShow(array(
+				'comment'=>array('email_to','notify_via_email'),
+				'call'=>array('email_to','notify_via_email'),
+				'sms'=>array('email_to','notify_via_email'),
+				'personal'=>array('email_to','notify_via_email')
+				));
+
 			//Send Email
 			$send_email_field->js('change')->univ()->bindConditionalShow(array(
 				''=>'',
@@ -302,7 +310,7 @@ class Model_Document extends SQL_Model{
 				'*'=>array('sms_to')
 			),'div.atk-form-row');
 
-
+			
 			//File Type for Attachment
 
 		}
