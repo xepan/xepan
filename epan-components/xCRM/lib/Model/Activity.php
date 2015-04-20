@@ -80,9 +80,9 @@ class Model_Activity extends \Model_Document{
 		$this->addField('message')->type('text')->display(array('form'=>'RichText'));
 		
 		$this->addField('action')->enum(array('created','comment','email','call','sms','personal','submitted','approved','rejected','redesign','canceled','forwarded','reply','received','processed','active','completed'))->mandatory(true);
-		$this->addField('notify_via_email')->type('boolean')->defaultValue(true);
+		$this->addField('notify_via_email')->type('boolean')->defaultValue(false);
 		$this->addField('email_to');
-		$this->addField('notify_via_sms')->type('boolean')->defaultValue(true);
+		$this->addField('notify_via_sms')->type('boolean')->defaultValue(false);
 		$this->addField('sms_to');
 		
 		$this->add('filestore/Field_File','attachment_id');

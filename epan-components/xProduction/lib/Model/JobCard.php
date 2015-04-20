@@ -351,6 +351,7 @@ class Model_JobCard extends \Model_Document{
 
 	function forward(){
 		if($next = $this->orderItem()->nextDeptStatus()){
+			$dis_req_of_jobcard=$next->createJobCardFromOrder();
 			if($next->department()->isDispatch()){
 				$oi=$this->orderItem();
 				$items_array=array(array('id'=>$oi->item()->get('id'),'qty'=>$oi['qty'],'unit'=>$oi['unit'],'custom_fields'=>$oi['custom_fields']));
@@ -359,7 +360,7 @@ class Model_JobCard extends \Model_Document{
 					->create(
 						$from_department=$this->add('xHR/Model_Department')->loadDispatch(),
 						$to_department=$this->department(), 
-						$related_document=$this, 
+						$related_document=$dis_req_of_jobcard, 
 						$order_item=$this->orderItem(), 
 						$items_array, 
 						$dispatch_to_warehouse=false,
@@ -367,7 +368,6 @@ class Model_JobCard extends \Model_Document{
 						);
 
 			}
-			$next->createJobCardFromOrder();
 			$this->setStatus('forwarded');
 		}else{
 			$this->complete();
