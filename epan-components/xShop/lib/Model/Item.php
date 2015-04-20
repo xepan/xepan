@@ -601,7 +601,7 @@ class Model_Item extends \Model_Table{
 	function getBasicCartOptions(){
 				//Get All Item Associated Custom Field
 		$custom_filed_array = array();
-		$custom_fields = $this->getAssociatedCustomFields();
+		$custom_fields = $this->getStockEffectCustomFields();
 		foreach ($custom_fields as $custom_field_id){
 			$cf_model = $this->add('xShop/Model_CustomFields')->load($custom_field_id);
 			$cf_value_array = $cf_model->getCustomValue($this->id);
@@ -866,6 +866,19 @@ class Model_Item extends \Model_Table{
 				->addCondition('department_phase_id',null)->tryLoadAny();
 	}
 
+	function getStockEffectCustomFields($department_ids=null){
+		if(!$this->loaded())
+			return array();
+
+		$stock_effect_custom_field =  $this->ref('xShop/ItemCustomFieldAssos')
+				->addCondition('can_effect_stock',true)
+				->addCondition('department_phase_id',null)->tryLoadAny();
+
+		$stock_effect_custom_field = $stock_effect_custom_field->_dsql()->del('fields')->field('customfield_id')->getAll();
+		
+		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($stock_effect_custom_field)),false);
+		// return $associate_customfields;
+	}
 
 }	
 
