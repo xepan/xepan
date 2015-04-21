@@ -59,8 +59,10 @@ class Model_DispatchRequestItem extends \Model_Document{
 		$form->addSubmit('receive');
 		if($form->isSubmitted()){
 			if($form['receive_material_request']){
-				$doc = $page->add('Model_MaterialRequest');
-				$doc->loadWhoseRelatedDocIs($this);
+				$doc = $page->add('xStore/Model_MaterialRequest');
+				if($doc_loaded=$doc->loadWhoseRelatedDocIs($this)){
+					$doc_loaded->receive();
+				}
 			}			
 			$this->receive();
 		}

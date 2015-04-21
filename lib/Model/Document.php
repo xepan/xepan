@@ -266,7 +266,7 @@ class Model_Document extends SQL_Model{
 		$crud = $page->add('CRUD');
 
 		if($crud->isEditing('add')){
-			$activities->getElement('action')->setValueList(array('comment'=>'Comment','email'=>'E-mail','call'=>'Call','sms'=>'SMS','personal'=>'Personal'))->display(array('form'=>'Form_Field_DropDownNormal'));
+			$activities->getElement('action')->setValueList(array('comment'=>'Comment','email'=>'E-mail','call'=>'Call','sms'=>'SMS','personal'=>'Personal','action'=>'Action Taken'))->display(array('form'=>'Form_Field_DropDownNormal'));
 		}
 
 		if($crud->isEditing('edit')){
@@ -313,6 +313,7 @@ class Model_Document extends SQL_Model{
 				'comment'=>array('email_to','notify_via_email'),
 				'call'=>array('email_to','notify_via_email'),
 				'sms'=>array('email_to','notify_via_email'),
+				'action'=>array('email_to','notify_via_email'),
 				'personal'=>array('email_to','notify_via_email')
 				));
 
@@ -333,7 +334,7 @@ class Model_Document extends SQL_Model{
 
 		}
 
-		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>'All','allow_add'=>true,'allow_edit'=>'Self Only','allow_del'=>'No')));
+		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>'All','allow_add'=>true,'allow_edit'=>'Self Only','allow_del'=>'Self Only')));
 
 	}
 

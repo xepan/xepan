@@ -204,7 +204,7 @@ class page_base_owner extends Page {
 			$dept_model->loadCRM();
 			
 			$crm_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));
-			$crm_m->addItem(array('Support Tickets','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_tickit',array('department_id'=>$dept_model->id)));
+			$crm_m->addItem(array('Support Tickets','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_ticket',array('department_id'=>$dept_model->id)));
 			$crm_m->addItem(array('General Emails','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 
 

@@ -46,7 +46,7 @@ class Model_MemberDetails extends \Model_Document{
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
