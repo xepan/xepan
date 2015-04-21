@@ -50,7 +50,7 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 		$crud->setModel($members,array(
 										'username','password',
 										'customer_name','customer_email',
-										'type','email','mobile_number',
+										'type','email','other_emails','mobile_number',
 										'landmark','city','state','pan_no','tin_no',
 										'country','address',
 										'pincode','billing_address',
