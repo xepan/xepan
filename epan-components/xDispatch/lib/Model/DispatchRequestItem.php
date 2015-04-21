@@ -55,7 +55,7 @@ class Model_DispatchRequestItem extends \Model_Document{
 
 	function receive_page($page){
 		$form = $page->add('Form_Stacked');	
-		$form->addField('line','model')->set($this->model->id)
+		$form->addField('line','model')->set($this->model->id);
 		$form->addField('checkbox','receive_material_request');
 		$form->addSubmit('receive');
 		if($form->isSubmitted()){
