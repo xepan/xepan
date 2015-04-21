@@ -2,7 +2,7 @@
 
 class page_xCRM_page_owner_main extends page_componentBase_page_owner_main {
 	function initMainPage(){
-		$this->add('H1')->set('Component Owner Main Page');
+		//$this->add('H1')->set('Component Owner Main Page');
 	}
 
 
