@@ -261,7 +261,7 @@ class Model_Document extends SQL_Model{
 		$activities = $page->add('xCRM/Model_Activity');
 		$activities->addCondition('related_root_document_name',$this->root_document_name);
 		$activities->addCondition('related_document_id',$this->id);
-		$activities->setORder('created_at','desc');
+		$activities->setOrder('created_at','desc');
 
 		$crud = $page->add('CRUD');
 
@@ -274,21 +274,47 @@ class Model_Document extends SQL_Model{
 		}
 
 		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to','attachment_id'));
-		$activity = $page->add('View_Activity');
-		$activity->setModel($activities);
-		
+
 		if(!$crud->isEditing()){
 			$crud->grid->controller->importField('created_at');
+			$g = $crud->grid;
+			$g->addMethod('format_activity',function($g,$f)use($activities){
+					$v = $g->api->add('View_Activity');
+					$v->setModel($g->model);
+					$g->current_row_html[$f]= $v->getHTML();
+				});
+			$g->addFormatter('action','activity');
+
+			$g->removeColumn('created_at');
+			$g->removeColumn('action_from');
+			$g->removeColumn('subject');
+			$g->removeColumn('message');
+			$g->removeColumn('notify_via_email');
+			$g->removeColumn('email_to');
+			$g->removeColumn('notify_via_sms');
+			$g->removeColumn('sms_to');
+			$g->removeColumn('attachment_id');
+
 		}
+
 
 		if($crud->isEditing('add')){
 			$form = $crud->form;
 			$action_field = $crud->form->getElement('action');
 			$send_email_field = $crud->form->getElement('notify_via_email');
 			$send_sms_field = $crud->form->getElement('notify_via_sms');
+			
 
 			$email_to_field = $crud->form->getElement('email_to')->set($this->getTo()->email());
 			$sms_to_field = $crud->form->getElement('sms_to')->set($this->getTo()->mobileno());
+
+			//Actions if Email
+			$action_field->js('change')->univ()->bindConditionalShow(array(
+				'comment'=>array('email_to','notify_via_email'),
+				'call'=>array('email_to','notify_via_email'),
+				'sms'=>array('email_to','notify_via_email'),
+				'personal'=>array('email_to','notify_via_email')
+				));
 
 			//Send Email
 			$send_email_field->js('change')->univ()->bindConditionalShow(array(
@@ -302,7 +328,7 @@ class Model_Document extends SQL_Model{
 				'*'=>array('sms_to')
 			),'div.atk-form-row');
 
-
+			
 			//File Type for Attachment
 
 		}

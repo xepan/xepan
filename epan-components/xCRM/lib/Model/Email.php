@@ -45,9 +45,11 @@ class Model_Email extends \Model_Document{
 		$this['to'] = $activity['to'];
 		$this['to_id'] = $activity['to_id'];
 
-		$this['subject'] = $activity['subject'];
+		//GET ACTIVITY AGAINATS MODEL/name
+		$rdoc = $activity->relatedDocument();
+		$this['subject'] = "Activity Notification @ ".$rdoc['related_document_name']." [ ".$rdoc['name']." ] ".$activity['subject'];
 		$this['message'] = $activity['message'];
-		
+			
 		$emails = explode(',', $activity['email_to']);
 		$this['to_email'] = $emails[0];
 
@@ -62,7 +64,6 @@ class Model_Email extends \Model_Document{
 			$this->addAttachment($activity['attachment_id']);
 		}
 			
-		
 		// if($activity['send_sms'])
 		// 	$this->sendSms();
 

@@ -53,8 +53,21 @@ class Model_DispatchRequestItem extends \Model_Document{
 		return $this->ref('orderitem_id');
 	}
 
+	function receive_page($page){
+		$form = $page->add('Form_Stacked');
+		$form->addField('checkbox','receive_material_request');
+		$form->addSubmit('receive');
+		if($form->isSubmitted()){
+			if($form['receive_material_request']){
+				$doc = $page->add('Model_MaterialRequest');
+				$doc->loadWhoseRelatedDocIs($this);
+			}			
+			$this->receive();
+		}
+	}
+
 	function receive(){		
-		$this->ref('dispatch_request_id')->receive();
+		$this->ref('dispatch_request_id')->receive() ;
 		parent::setStatus('received');
 	}
 

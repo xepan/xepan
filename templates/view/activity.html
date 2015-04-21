@@ -1,5 +1,5 @@
 <div class="panel-group" id="{$_name}"  class="{$class}" style="{$style}">
-<style type="text/css">   
+<style type="text/css">
 .img-box{
     background: none repeat scroll 0 0 #ffffff;
     border-bottom: 1px solid #eaeaea;
@@ -14,36 +14,39 @@
     min-height: 20px;
     padding: 19px;
 }
+.text-box{
+ box-shadow:0 1px 0 rgba(0, 0, 0, 0.05);
+}
 /*//fcf9f1;*/
 </style>
-
-    {rows}
-        {row}
-            <div class="row box" style="margin:0">
-                <div class="col-md-2 horizontal-line">
-                    <img class="img-box img-circle" src="logo.svg">
-                    {$actor_img}
-                    <span class="horizontal-line"></span>
-                </div>
-
-                <div class="col-md-2">
-                    <i class="glyphicon glyphicon-thumbs-up atk-swatch-green" style="font-size:40px;margin-top:8px;"></i>
-                </div>
-                <div clas="col-md-6">
-                    <div class="atk-size-micro pull-right" style="color:#555">
-                        {$activity_date}
+        <!-- {$panel_html} -->
+        <div class="panel">
+            <div class="panel-heading">
+                    <p class="panel-title">{$action_icon} {$action_name} By {$action_from}
+                    {$activity_date}
+                    </p> 
+            </div>
+            <div class="panel-body">
+                <div class="atk-row">
+                    <div class="atk-col-2">
+                      <img class="img-box atk-shape-rounded" src="logo.svg">
+                        {$actor_img}
                     </div>
-                    <div class="">
-                        {$subject}
-                    </div>
-                    <div>
-                        {$message}
-                    </div>
-                    <div class="pull-right">
-                        <i class="">+</i>
+                    <div class="atk-col-10">
+                        <p class="text-box">
+                            <small class="atk-swatch-gray">Subject</small> {$subject}
+                        </p>
+                        <p class="">
+                            {$message}
+                        </p>
                     </div>
                 </div>
             </div>
-        {/row}
-    {/rows}
+            <div class="pull-right">
+                {notify_via_email}{/notify_via_email}
+                {attachments}{/attachments}
+                {notify_via_sms}{/notify_via_sms}
+            </div>
+        </div>
+
 </div>
