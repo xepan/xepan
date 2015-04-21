@@ -95,7 +95,14 @@ class Model_Activity extends \Model_Document{
 
 		// $this->hasMany('Attachment','activity_id');
 		$this->addHook('afterSave',$this);
+		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeDelete(){
+		if($this->ref('attachment_id')->loaded()){
+			$this->ref('attachment_id')->delete();
+		}
 	}
 
 	function afterSave(){
