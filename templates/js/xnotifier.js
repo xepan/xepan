@@ -110,13 +110,13 @@ jQuery.widget("ui.xnotifier",{
 			activity_box = $('<div class="atk-box atk-row atk-size-micro atk-padding-small" style="cursor:pointer;"></div>').appendTo(self.options.activity_area);
 			
 			//Action
-			str = '<div class="atk-col-6 atk-swatch-red icon-flash" style="text-transform:capitalize;">'+element.action+'</div>';
+			action = $('<div class="atk-col-6 atk-swatch-red icon-flash" style="text-transform:capitalize;">'+element.action+'</div>').appendTo(activity_box);
 			//Date
-			str = str+'<div class="atk-col-6 icon-calendar"> '+element.created_date+'</div>';
+			date = $('<div class="atk-col-6 icon-calendar"> '+element.created_date+'</div>').appendTo(self.options.activity_box);
 			//Activity No LIKE xShop\Order::000067
-			str = str+'<small class="atk-col-12 atk-hr-small text-center">'+element.related_root_document_name+' :: '+element.related_document+'</small>';
+			document_root = $('<small class="atk-col-12 atk-hr-small text-center">'+element.related_root_document_name+' :: '+element.related_document+'</small>').appendTo(activity_box);
 			//subject
-			str = str+'<div class="atk-col-12 atk-effect-info atk-label atk-size-reset">'+element.subject+'</div><div class="atk-hr-large"></div>';
+			str = '<div class="atk-col-12 atk-effect-info atk-label atk-size-reset">'+element.subject+'</div><div class="atk-hr-large"></div>';
 			//Action
 			// str = str+'<div class="atk-col-12 text-center">Action</div>';
 			//Action from
@@ -127,9 +127,16 @@ jQuery.widget("ui.xnotifier",{
 			
 			$(str).appendTo(activity_box);
 
-			$(activity_box).click(function(event){
+			$(document_root).click(function(event){
 				$.univ().frameURL(element.subject,'index.php?page=owner_activitydocument&activity_id='+element.id)
+				event.stopPropagation();
 			});
+
+			$(activity_box).click(function(event){
+				$.univ().frameURL(element.subject,'index.php?page=owner_activitydocument&show_activity_view_id='+element.id);
+				event.stopPropagation();
+			});
+
 		});
 	}
 

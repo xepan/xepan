@@ -65,6 +65,7 @@ class Model_DispatchRequestItem extends \Model_Document{
 				}
 			}			
 			$this->receive();
+			return true;
 		}
 	}
 
