@@ -19,14 +19,12 @@
 }
 /*//fcf9f1;*/
 </style>
-    {rows}
-        {row}
         <!-- {$panel_html} -->
-        <div class="panel">    
+        <div class="panel">
             <div class="panel-heading">
-                <p class="panel-title">{$icon}{$action} By {$action_from}
-                    <span class="atk-size-micro pull-right">{$activity_date}</span>                
-                </p> 
+                    <p class="panel-title">{$action_icon} {$action_name} By {$action_from}
+                    {$activity_date}
+                    </p> 
             </div>
             <div class="panel-body">
                 <div class="atk-row">
@@ -38,8 +36,8 @@
                         <p class="text-box">
                             <small class="atk-swatch-gray">Subject</small> {$subject}
                         </p>
-                        <p>
-                            <i class="glyphicon glyphicon-envelope"></i>&nbsp;{$message}
+                        <p class="">
+                            {$message}
                         </p>
                     </div>
                 </div>
@@ -50,6 +48,5 @@
                 {notify_via_sms}{/notify_via_sms}
             </div>
         </div>
-        {/row}
-    {/rows}
+
 </div>
