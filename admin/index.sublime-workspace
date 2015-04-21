@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"addC",
+				"addClass"
+			],
+			[
+				"col",
+				"col1"
+			],
+			[
 				"terms",
 				"termsandcondition_id"
 			],
@@ -34,10 +42,6 @@
 			[
 				"do",
 				"document"
-			],
-			[
-				"col",
-				"col_name"
 			],
 			[
 				"array_un",
@@ -424,10 +428,6 @@
 				"tabs"
 			],
 			[
-				"addC",
-				"addCondition"
-			],
-			[
 				"tr",
 				"transaction"
 			],
@@ -507,11 +507,19 @@
 		"selected_items":
 		[
 			[
-				"git stat",
+				"git st",
 				"Git: Status"
 			],
 			[
 				"gitsta",
+				"Git: Status"
+			],
+			[
+				"git sta",
+				"Git: Status"
+			],
+			[
+				"git stat",
 				"Git: Status"
 			],
 			[
@@ -535,19 +543,11 @@
 				"Git: Status"
 			],
 			[
-				"git st",
-				"Git: Status"
-			],
-			[
 				"git stat	",
 				"Git: Status"
 			],
 			[
 				"git sat",
-				"Git: Status"
-			],
-			[
-				"git sta",
 				"Git: Status"
 			],
 			[
@@ -662,8 +662,91 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
+	"expanded_folders":
+	[
+		"/var/www/xavoc_erp/epan-components",
+		"/var/www/xavoc_erp/epan-components/xDispatch",
+		"/var/www/xavoc_erp/epan-components/xDispatch/lib",
+		"/var/www/xavoc_erp/epan-components/xDispatch/lib/Model",
+		"/var/www/xavoc_erp/epan-components/xDispatch/lib/Model/DeliveryNote",
+		"/var/www/xavoc_erp/epan-components/xPurchase/lib",
+		"/var/www/xavoc_erp/epan-components/xPurchase/page",
+		"/var/www/xavoc_erp/epan-components/xPurchase/page/owner",
+		"/var/www/xavoc_erp/epan-components/xShop/page",
+		"/var/www/xavoc_erp/epan-components/xShop/page/owner"
+	],
 	"file_history":
 	[
+		"/var/www/xavoc_erp/epan-components/xCRM/lib/Model/Email.php",
+		"/var/www/xavoc_erp/epan-components/xCRM/lib/Model/Activity.php",
+		"/var/www/xavoc_erp/epan-components/xCRM/lib/Model/EmailAttachment.php",
+		"/var/www/xavoc_erp/atk4-addons/misc/templates/view/model_core.html",
+		"/var/www/xavoc_erp/atk4-addons/mvc/ModelException.php",
+		"/var/www/xavoc_erp/epan-components/xShop/lib/Model/OrderDetails.php",
+		"/var/www/xavoc_erp/epan-components/xShop/lib/Model/OrderItemDepartmentalStatus.php",
+		"/var/www/xavoc_erp/epan-components/xShop/lib/View/MemberOrder.php",
+		"/var/www/xavoc_erp/atk4/lib/MVCForm.php",
+		"/var/www/xavoc_erp/epan-components/xPurchase/page/owner/dashboard.php",
+		"/var/www/xavoc_erp/epan-components/xDispatch/lib/Model/DispatchRequest/PartialComplete.php",
+		"/var/www/xavoc_erp/epan-components/xDispatch/page/owner/dispatchrequest.php",
+		"/var/www/xavoc_erp/epan-components/xDispatch/page/owner/dashboard.php",
+		"/var/www/xavoc_erp/lib/Model/Document.php",
+		"/var/www/xavoc_erp/atk4-addons/billing/lib/billing/Model/Realex/Transaction/rebate.php",
+		"/var/www/xavoc_erp/atk4-addons/dynamic_model/lib/Controller/AutoCreator.php",
+		"/var/www/xavoc_erp/epan-components/xShop/lib/Model/Category.php",
+		"/var/www/xavoc_erp/epan-components/xShop/lib/Model/ActiveCategory.php",
+		"/var/www/xavoc_erp/lib/Model/User/Active.php",
+		"/var/www/xavoc_erp/lib/Swift/MimePart.php",
+		"/var/www/xavoc_erp/epan-components/xShop/lib/Model/DiscountVoucher.php",
+		"/var/www/xavoc_erp/vendor/autoload.php",
+		"/var/www/xavoc_erp/epan-components/xDispatch/lib/Model/DispatchRequestItem.php",
+		"/var/www/xavoc_erp/epan-components/xDispatch/lib/Model/DispatchRequest.php",
+		"/var/www/xavoc_erp/atk4/lib/View/ModelDetails.php",
+		"/var/www/xavoc_erp/epan-components/developerZone/page/owner/editor.php",
+		"/var/www/xavoc_erp/atk4/templates/page.jade",
+		"/var/www/xavoc_erp/templates/page.html",
+		"/var/www/xavoc_erp/templates/guide/purchase_approve.json",
+		"/var/www/xavoc_erp/atk4/lib/P.php",
+		"/var/www/xavoc_erp/templates/guide/purchase_draft.json",
+		"/var/www/xavoc_erp/templates/guide/purchase.json",
+		"/var/www/xavoc_erp/epan-components/xPurchase/lib/Model/PurchaseOrderItem.php",
+		"/var/www/xavoc_erp/templates/guide/purchase_redesign.json",
+		"/var/www/xavoc_erp/epan-components/xShop/lib/Model/Priority.php",
+		"/var/www/xavoc_erp/epan-components/xShop/lib/Model/Item/Purchasable.php",
+		"/var/www/xavoc_erp/epan-components/xShop/lib/Model/Order.php",
+		"/var/www/xavoc_erp/epan-components/xShop/page/owner/dashboard.php",
+		"/var/www/xavoc_erp/epan-components/xProduction/lib/Model/JobCard.php",
+		"/var/www/xavoc_erp/epan-components/xStore/lib/Model/MaterialRequest.php",
+		"/var/www/xavoc_erp/epan-components/xStore/lib/Model/Stock.php",
+		"/var/www/xavoc_erp/epan-components/xStore/lib/Model/MaterialRequestItem.php",
+		"/var/www/xavoc_erp/epan-components/xShop/lib/Model/Item/Stockable.php",
+		"/var/www/xavoc_erp/atk4/tools/atk4-model.sublime-snippet",
+		"/var/www/xavoc_erp/epan-components/xShop/page/owner/configuration.php",
+		"/var/www/xavoc_erp/epan-components/xMarketingCampaign/page/owner/dashboard.php",
+		"/var/www/xavoc_erp/epan-components/xStore/page/owner/dashboard.php",
+		"/var/www/xavoc_erp/epan-components/xShop/templates/view/xShop-AddBlock-options.html",
+		"/var/www/xavoc_erp/epan-components/xShop/templates/view/xShop-AddBlock.html",
+		"/var/www/xavoc_erp/epan-components/xShop/templates/view/xShop-Designer-options.html",
+		"/var/www/xavoc_erp/epan-components/xShop/templates/css/xShop.css",
+		"/var/www/xavoc_erp/lib/xDate.php",
+		"/var/www/xavoc_erp/epan-components/xShop/lib/Model/SalesOrderDetailAttachment.php",
+		"/var/www/xavoc_erp/epan-components/xShop/templates/css/xshop-product-detail.css",
+		"/var/www/xavoc_erp/epan-components/xHR/page/owner/update.php",
+		"/var/www/xavoc_erp/epan-components/xAi/page/owner/hr.php",
+		"/var/www/xavoc_erp/epan-components/xShop/page/owner/shopsnblogs.php",
+		"/var/www/xavoc_erp/epan-components/xAi/templates/view/xAi-DiduNotice-options.html",
+		"/var/www/xavoc_erp/epan-components/xAccount/templates/view/xAccount-about.html",
+		"/var/www/xavoc_erp/lib/Snoopy.php",
+		"/var/www/xavoc_erp/lib/Swift/Transport/SmtpAgent.php",
+		"/var/www/xavoc_erp/epan-components/xHR/lib/Model/Salary.php",
+		"/var/www/xavoc_erp/epan-components/xAi/lib/Model/SalesExecutive.php",
+		"/var/www/xavoc_erp/epan-components/xShop/lib/View/SalesInvoiceDetail.php",
+		"/var/www/xavoc_erp/vendor/omnipay/netbanx/tests/Mock/StoredDataAuthorizeSuccess.txt",
+		"/var/www/xavoc_erp/vendor/omnipay/netbanx/tests/Mock/StoredDataAuthorizeFailure.txt",
+		"/var/www/xavoc_erp/epan-components/xStore/lib/Model/MaterialRequestReceived/ToReceive.php",
+		"/var/www/xavoc_erp/epan-components/slideShows/templates/view/slideShows-ThumbnailSlider-options.html",
+		"/var/www/xavoc_erp/lib/Swift/SmtpTransport.php",
+		"/var/www/xavoc_erp/lib/Model/Epan.php",
 		"/var/www/xbank2/lib/Model/TransactionType.php",
 		"/var/www/xbank2/atk4-addons/billing/lib/billing/Model/Realex/Transaction/generic.php",
 		"/var/www/xbank2/lib/Model/MemberOk.php",
@@ -721,81 +804,11 @@
 		"/var/www/xavoc_demo/epan-components/xShop/templates/view/xShop-Category-Vertical.html",
 		"/var/www/xavoc_demo/epan-components/xAi/page/owner/blockActions.php",
 		"/var/www/xavoc_demo/epan-components/xAccount/lib/Model/Group.php",
-		"/var/www/xavoc_demo/epan-components/xAccount/page/owner/group.php",
-		"/var/www/xavoc_demo/epan-components/xAccount/page/owner/account.php",
-		"/var/www/xbank2/page/transactions/bankwithdrawl.php",
-		"/var/www/xavoc_demo/epan-components/xProduction/lib/Model/OutSourceParty.php",
-		"/var/www/xavoc_demo/atk4/lib/ModelIO.php",
-		"/var/www/xbank2/lib/xPage.php",
-		"/var/www/xavoc_demo/epan-components/xProduction/templates/view/xProduction-about.html",
-		"/var/www/xavoc_demo/epan-components/xProduction/lib/Model/OutSourcePartyDeptAssociation.php",
-		"/var/www/xavoc_demo/epan-components/xPurchase/lib/Model/Supplier.php",
-		"/var/www/xbank2/lib/Model/Stock/Supplier.php",
-		"/var/www/xavoc_demo/vendor/omnipay/paypal/src/Message/ExpressCompletePurchaseRequest.php",
-		"/var/www/xavoc_demo/vendor/omnipay/paypal/tests/Mock/ExpressPurchaseFailure.txt",
-		"/var/www/xavoc_demo/vendor/omnipay/paypal/tests/Mock/ExpressPurchaseSuccess.txt",
-		"/var/www/xbank2/templates/css/less/modals.less",
-		"/var/www/xbank2/page/mos.php",
-		"/var/www/xavoc_demo/epan-components/xAccount/page/owner/balancesheet.php",
-		"/var/www/xavoc_demo/templates/page.html",
-		"/var/www/xavoc_demo/templates/guide/purchase_approve.json",
-		"/var/www/xavoc_demo/atk4/lib/P.php",
-		"/var/www/xbank2/page/balancesheet.php",
-		"/var/www/xavoc_demo/atk4/tools/atk4-page.sublime-snippet",
-		"/var/www/xbank2/templates/css/jquery.mCustomScrollbar.css",
-		"/var/www/xbank2/templates/shared.html",
-		"/var/www/xavoc_demo/lib/View/BackEndView.php",
-		"/var/www/xavoc_demo/atk4-addons/dynamic_model/lib/Controller/AutoCreator/Abstract.php",
-		"/var/www/xavoc_demo/epan-components/xAccount/page/owner/main.php",
-		"/var/www/xavoc_demo/templates/owner.html",
-		"/var/www/xavoc_demo/epan-components/extendedImages/templates/svgEditor/editor/extensions/ext-overview_window.js",
-		"/var/www/xavoc_demo/atk4/templates/page_error.html",
-		"/var/www/xbank2/atk4/tools/atk4-model.sublime-snippet",
-		"/var/www/xavoc_demo/epan-components/xAi/version",
-		"/var/www/real/epan-components/mBinaryApp/page/owner/distributors.php",
-		"/var/www/real/epan-components/mBinaryApp/page/owner/activedistributor.php",
-		"/var/www/real/epan-components/mBinaryApp/lib/Model/Distributor.php",
-		"/var/www/real/epan-components/mBinaryApp/page/owner/deactivedistributor.php",
-		"/var/www/xavoc_demo/epan-components/xDispatch/lib/Model/DispatchRequest.php",
-		"/var/www/xavoc_demo/epan-components/xShop/lib/View/MemberOrder.php",
-		"/var/www/xavoc_demo/atk4/lib/MVCForm.php",
-		"/var/www/xavoc_demo/epan-components/xStore/lib/Grid/MaterialRequest.php",
-		"/var/www/xavoc_demo/lib/Grid.php",
-		"/var/www/xavoc_demo/templates/css/fonts/glyphicons-halflings-regular.svg",
-		"/var/www/xavoc_demo/lib/Git.php",
-		"/var/www/xavoc_demo/epan-components/xStore/templates/view/xStore-materialrequest.html",
-		"/var/www/xavoc_demo/epan-components/xStore/lib/View/MaterialRequest.php",
-		"/var/www/xavoc_demo/epan-components/xShop/lib/View/Order.php",
-		"/var/www/xavoc_demo/epan-components/xShop/lib/View/OrderDetail.php",
-		"/var/www/xavoc_demo/atk4/lib/View.php",
-		"/var/www/xavoc_demo/epan-components/xShop/page/designer/sRGB_v4_ICC_preference.icc",
-		"/var/www/xavoc_demo/version",
-		"/var/www/xavoc_demo/epan-components/xProduction/lib/View/Jobcard.php",
-		"/var/www/xavoc_demo/epan-components/extendedImages/lib/View/Tools/ImageWithDescription1.php",
-		"/var/www/xavoc_demo/epan-components/slideShows/templates/view/slideShows-about.html",
-		"/var/www/xavoc_demo/epan-components/xMarketingCampaign/templates/view/subscriptioncalendar.html",
-		"/var/www/xavoc_demo/epan-components/slideShows/templates/view/slideShows-AwesomeSlider-options.html",
-		"/var/www/xavoc_demo/epan-components/slideShows/templates/view/slideShows-AwesomeSlider1.html",
-		"/var/www/xavoc_demo/epan-components/xStore/lib/Model/MaterialRequest.php",
-		"/var/www/xavoc_demo/epan-components/xProduction/templates/view/jobcard.html",
-		"/var/www/xavoc_demo/epan-components/xProduction/lib/Grid/JobCard.php",
-		"/var/www/xavoc_demo/atk4/lib/jQuery.php",
-		"/var/www/xavoc_demo/epan-components/xShop/lib/Model/OrderItemDepartmentalStatus.php",
-		"/var/www/xavoc_demo/epan-components/xShop/lib/Model/OrderDetails.php",
-		"/var/www/xavoc_demo/epan-components/xShop/lib/Model/Order.php",
-		"/var/www/xavoc_demo/epan-components/xPurchase/lib/Model/PurchaseOrderItem.php",
-		"/var/www/xavoc_demo/epan-components/xProduction/lib/Model/JobCard.php",
-		"/var/www/xavoc_demo/lib/Model/Document.php",
-		"/var/www/xavoc_demo/epan-components/xMenus/templates/view/xMenus-BootstrapMenus-options.html",
-		"/var/www/xavoc_demo/templates/guide/materialrequest.json",
-		"/var/www/xavoc_demo/lib/Swift/MailTransport.php",
-		"/var/www/xavoc_demo/epan-addons/chart/js/adapters/mootools-adapter.js",
-		"/var/www/xavoc_demo/config-default.php",
-		"/var/www/xavoc_demo/epan-components/xStore/lib/Model/MaterialRequestItem.php"
+		"/var/www/xavoc_demo/epan-components/xAccount/page/owner/group.php"
 	],
 	"find":
 	{
-		"height": 39.0
+		"height": 38.0
 	},
 	"find_in_files":
 	{
@@ -815,6 +828,8 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"red",
+			"activites",
 			"destroy",
 			"this->vp",
 			"sent to",
@@ -940,9 +955,7 @@
 			"$form",
 			"form",
 			"setSource",
-			"sendMessage",
-			"message",
-			"mobile_no"
+			"sendMessage"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1001,6 +1014,10 @@
 	{
 		"height": 0.0
 	},
+	"output.git-commit":
+	{
+		"height": 142.0
+	},
 	"project": "index.sublime-project",
 	"replace":
 	{
@@ -1012,6 +1029,70 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"modelemail",
+				"epan-components/xCRM/lib/Model/Email.php"
+			],
+			[
+				"modelactivi",
+				"epan-components/xCRM/lib/Model/Activity.php"
+			],
+			[
+				"modelacti",
+				"epan-components/xCRM/lib/Model/Activity.php"
+			],
+			[
+				"modeldoc",
+				"lib/Model/Document.php"
+			],
+			[
+				"modeldispa",
+				"epan-components/xDispatch/lib/Model/DispatchRequest/PartialComplete.php"
+			],
+			[
+				"pagedispatch",
+				"epan-components/xDispatch/page/owner/dispatchrequest.php"
+			],
+			[
+				"purchasedash",
+				"epan-components/xPurchase/page/owner/dashboard.php"
+			],
+			[
+				"modeldocument",
+				"lib/Model/Document.php"
+			],
+			[
+				"modeljobcard",
+				"epan-components/xProduction/lib/Model/JobCard.php"
+			],
+			[
+				"modelmaterialrequ",
+				"epan-components/xStore/lib/Model/MaterialRequest.php"
+			],
+			[
+				"modelstoc",
+				"epan-components/xStore/lib/Model/Stock.php"
+			],
+			[
+				"modelstock",
+				"epan-components/xShop/lib/Model/Item/Stockable.php"
+			],
+			[
+				"modelmateril",
+				"epan-components/xStore/lib/Model/MaterialRequest.php"
+			],
+			[
+				"modelorder",
+				"epan-components/xShop/lib/Model/Order.php"
+			],
+			[
+				"xshopdash",
+				"epan-components/xShop/page/owner/dashboard.php"
+			],
+			[
+				"storedashboard",
+				"epan-components/xStore/page/owner/dashboard.php"
+			],
 			[
 				"modeltran",
 				"lib/Model/TransactionRow.php"
@@ -1133,10 +1214,6 @@
 				"lib/Model/Document.php"
 			],
 			[
-				"modeljobcard",
-				"epan-components/xProduction/lib/Model/JobCard.php"
-			],
-			[
 				"modelmaterial",
 				"epan-components/xStore/lib/Model/MaterialRequest.php"
 			],
@@ -1221,10 +1298,6 @@
 				"epan-components/xProduction/lib/Grid/JobCard.php"
 			],
 			[
-				"modelorder",
-				"epan-components/xShop/lib/Model/Order.php"
-			],
-			[
 				"modeldepa",
 				"epan-components/xShop/lib/Model/OrderItemDepartmentalStatus.php"
 			],
@@ -1283,10 +1356,6 @@
 			[
 				"",
 				"composer.json"
-			],
-			[
-				"modeldoc",
-				"lib/Model/Document.php"
 			],
 			[
 				"modeljobca",
@@ -1471,58 +1540,6 @@
 			[
 				"modelactiv",
 				"epan-components/xCRM/lib/Model/Activity.php"
-			],
-			[
-				"formfielditem",
-				"epan-components/xShop/lib/Form/Field/Item.php"
-			],
-			[
-				"modelorder.",
-				"epan-components/xShop/lib/Model/Order.php"
-			],
-			[
-				"pageterms",
-				"epan-components/xShop/page/owner/termsandcondition.php"
-			],
-			[
-				"pageownerorder",
-				"epan-components/xShop/page/owner/order.php"
-			],
-			[
-				"pageorderdra",
-				"epan-components/xShop/page/owner/order/draft.php"
-			],
-			[
-				"pageorderdr",
-				"epan-components/xShop/page/owner/order/draft.php"
-			],
-			[
-				"modelorderdraf",
-				"epan-components/xShop/lib/Model/Order/Draft.php"
-			],
-			[
-				"modeldocume",
-				"lib/Model/Document.php"
-			],
-			[
-				"pageordersubmit",
-				"epan-components/xShop/page/owner/order/submitted.php"
-			],
-			[
-				"viewxshop",
-				"epan-components/xShop/templates/view/xShop-Order.html"
-			],
-			[
-				"modeldoum",
-				"lib/Model/Document.php"
-			],
-			[
-				"modelepan",
-				"lib/Model/Epan.php"
-			],
-			[
-				"modelter",
-				"epan-components/xShop/lib/Model/TermsAndCondition.php"
 			]
 		],
 		"width": 0.0
@@ -1575,7 +1592,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 267.0,
+	"side_bar_width": 240.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

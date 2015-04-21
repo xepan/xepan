@@ -51,7 +51,7 @@ class page_xMarketingCampaign_page_owner_dashboard extends page_xMarketingCampai
 		$total_deactive_newsletter_tile = $col_1->add('View_Tile')->addClass('atk-swatch-red')->setStyle('box-shadow','');
 		$col_1->add('View')->setElement('br');
 		$total_deactive_newsletter_tile->setTitle('Total De-Active Newsletter');
-		$total_deactive_newsletter_tile->setContent($newsletter_deactive_model->addCondition('is_active',true)->count()->getOne());
+		$total_deactive_newsletter_tile->setContent($newsletter_deactive_model->addCondition('is_active',false)->count()->getOne());
 
 		//Total Email Jobs
 		$col_2->add('View')->setElement('br');
