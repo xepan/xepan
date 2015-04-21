@@ -23,7 +23,7 @@ class Model_SMS extends \Model_Document {
 		$return="";
 		foreach($nos as $no){
 			if($no=$this->senitizeNos($no)){
-				$return .= $this->add('Controller_Sms')->sendMessage($no,$this['message']);
+				$return .= $this->add('Controller_Sms')->sendMessage($no,$this['subject']);
 			}
 		}
 		if($return != "")
