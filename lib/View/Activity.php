@@ -1,7 +1,6 @@
 <?php
 
-class View_Activity extends CompleteLister {
-
+class View_Activity extends View {
 
 	function formatRow(){
 		$this->current_row['activity_date'] = $this->add('xDate')->diff(Carbon::now(),$this->model['created_at']);
@@ -95,7 +94,7 @@ class View_Activity extends CompleteLister {
 		}
 
 		//PANEL COLOR  AND ICON CHANGED ACCORDING TO ACTION LIKE GREEN FOR APPROVED AND ICON LOCK
-		$this->current_row_html['panel_html'] = $panel_html;
+		// $this->current_row_html['panel_html'] = $panel_html;
 		$this->current_row_html['icon'] = $icon_html;
 
 		//DISPLAY NOTIFY VIA EMAIL  
@@ -118,6 +117,10 @@ class View_Activity extends CompleteLister {
 			$attachment_html = '<a target="_blank" href="'.$this->model['attachment'].'"></a>';
 		
 		$this->current_row_html['attachments'] = $attachment_html;
+
+		//Subject 
+		$this->current_row_html['subject'] = $this->model['subject'];
+		$this->current_row_html['message'] = $this->model['message'];
 	}
 
 	function defaultTemplate(){

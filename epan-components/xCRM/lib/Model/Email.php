@@ -47,9 +47,9 @@ class Model_Email extends \Model_Document{
 
 		//GET ACTIVITY AGAINATS MODEL/name
 		$rdoc = $activity->relatedDocument();
-		$this['subject'] = "Notification @[ ".$rdoc['name']." ] ".$activity['subject'];
+		$this['subject'] = "Activity Notification @ ".$rdoc['related_document_name']." [ ".$rdoc['name']." ] ".$activity['subject'];
 		$this['message'] = $activity['message'];
-		
+			
 		$emails = explode(',', $activity['email_to']);
 		$this['to_email'] = $emails[0];
 

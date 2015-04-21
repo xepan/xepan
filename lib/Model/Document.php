@@ -274,18 +274,36 @@ class Model_Document extends SQL_Model{
 		}
 
 		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to','attachment_id'));
-		$activity = $page->add('View_Activity');
-		$activity->setModel($activities);
-		
+
 		if(!$crud->isEditing()){
 			$crud->grid->controller->importField('created_at');
+			$g = $crud->grid;
+			$g->addMethod('format_activity',function($g,$f)use($activities){
+					$v = $g->api->add('View_Activity');
+					$v->setModel($g->model);
+					$g->current_row_html[$f]= $v->getHTML();
+				});
+			$g->addFormatter('action','activity');
+
+			$g->removeColumn('created_at');
+			$g->removeColumn('action_from');
+			$g->removeColumn('subject');
+			$g->removeColumn('message');
+			$g->removeColumn('notify_via_email');
+			$g->removeColumn('email_to');
+			$g->removeColumn('notify_via_sms');
+			$g->removeColumn('sms_to');
+			$g->removeColumn('attachment_id');
+
 		}
+
 
 		if($crud->isEditing('add')){
 			$form = $crud->form;
 			$action_field = $crud->form->getElement('action');
 			$send_email_field = $crud->form->getElement('notify_via_email');
 			$send_sms_field = $crud->form->getElement('notify_via_sms');
+			
 
 			$email_to_field = $crud->form->getElement('email_to')->set($this->getTo()->email());
 			$sms_to_field = $crud->form->getElement('sms_to')->set($this->getTo()->mobileno());

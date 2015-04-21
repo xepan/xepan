@@ -142,7 +142,7 @@ class Model_Activity extends \Model_Document{
 
 		$sms_m = $this->add('xCRM/Model_SMS');
 		$sms_m['name']=$this['sms_to'];
-		$sms_m['message'] = $this['message'];
+		$sms_m['message'] = $this['subject'];
 		$sms_m->relatedDocument($this);
 		$sms_m->save();
 		$sms_m->send();

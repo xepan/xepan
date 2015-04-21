@@ -12,7 +12,7 @@ class Model_MemberDetails extends \Model_Document{
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		
 		$this->addField('mobile_number')->sortable(true)->group('a~6');
-		// $this->addField('is_verify')->type('boolean')->defaultValue(false);
+		$this->addField('other_emails')->defaultValue(false)->group('a~6');
 		// $this->addField('join_on')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		// $this->addField('verified_on')->type('datetime')->defaultValue(null);
 		$this->addField('landmark')->sortable(true)->group('a~6');
@@ -46,7 +46,7 @@ class Model_MemberDetails extends \Model_Document{
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
