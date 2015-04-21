@@ -2,12 +2,18 @@
 
 class View_Activity extends View {
 
-	function formatRow(){
-		$this->current_row['activity_date'] = $this->add('xDate')->diff(Carbon::now(),$this->model['created_at']);
-		
+	function init(){
+		parent::init();
+
+	}
+
+	function setModel($model){
+		//Set Date 
+		$this->template->trySetHtml('activity_date',$this->add('xDate')->diff(Carbon::now(),$model['created_at']));
+
 		$panel_html = "";
 		$icon_html = "";
-		switch ($this->model['action']) {
+		switch ($model['action']) {
 			case 'created':
 				$panel_html = '<div class="panel">';
 				$icon_html = '<i class="icon-lock-open"></i>';
@@ -79,48 +85,52 @@ class View_Activity extends View {
 
 			case 'call':
 				$panel_html = '<div class="panel">';
-				$panel_html = '<div class="icon-phone atk-swatch-blue">';
+				$icon_html = '<i class="icon-phone atk-swatch-blue"></i>';
 				break;
 
 			case 'sms':
 				$panel_html = '<div class="panel ">';
-				$panel_html = '<div class="icon-mobile atk-swatch-blue">';
+				$icon_html = '<i class="icon-mobile atk-swatch-blue"></i>';
 				break;
 
 			case 'personal':	
 				$panel_html = '<div class="panel">';
-				$panel_html = '<div class="icon-user atk-swatch-blue">';
+				$icon_html = '<div class="icon-user atk-swatch-blue">';
 				break;
 		}
 
 		//PANEL COLOR  AND ICON CHANGED ACCORDING TO ACTION LIKE GREEN FOR APPROVED AND ICON LOCK
 		// $this->current_row_html['panel_html'] = $panel_html;
-		$this->current_row_html['icon'] = $icon_html;
+		$this->template->trySetHtml('action_icon',$icon_html);
+		$this->template->trySetHtml('action_name',$model['action']);
+		$this->template->trySetHtml('action_name',$model['action']);
+		$this->template->trySetHtml('action_from',$model['action_from']);
 
 		//DISPLAY NOTIFY VIA EMAIL  
 		$notify_via_email_html = "";
-		if($this->model['notify_via_email'])
-			$notify_via_email_html = "Notify Via Email ".$this->model['email_to'];
+		if($model['notify_via_email'])
+			$notify_via_email_html = "Notify Via Email ".$model['email_to'];
 
-		$this->current_row_html['notify_via_email'] = $notify_via_email_html;
+		$this->template->trySetHtml('notify_via_email', $notify_via_email_html);
 		
 		//DISPLAY NOTIFY VIA SMS  
 		$notify_via_sms_html = "";
-		if($this->model['notify_via_sms'])
-			$notify_via_sms_html = "Notify Via SMS ".$this->model['sms_to'];
+		if($model['notify_via_sms'])
+			$notify_via_sms_html = "Notify Via SMS ".$model['sms_to'];
 
-		$this->current_row_html['notify_via_sms'] = $notify_via_sms_html;
+		$this->template->trySetHtml('notify_via_sms',$notify_via_sms_html);
 
 		//DISPLAY ATTACHMENT IF SEND VIA EMAIL
 		$attachment_html = " ";
 		if($this->model['attachment_id'])
-			$attachment_html = '<a target="_blank" href="'.$this->model['attachment'].'"></a>';
+			$attachment_html = '<a target="_blank" href="'.$model['attachment'].'"></a>';
 		
-		$this->current_row_html['attachments'] = $attachment_html;
+		$this->template->trySetHtml('attachments',$attachment_html);
 
 		//Subject 
-		$this->current_row_html['subject'] = $this->model['subject'];
-		$this->current_row_html['message'] = $this->model['message'];
+		$this->template->trySetHtml('subject',$model['subject']);
+		$this->template->trySetHtml('message',$model['message']);
+	
 	}
 
 	function defaultTemplate(){
