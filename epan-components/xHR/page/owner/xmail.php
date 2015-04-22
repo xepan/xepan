@@ -3,6 +3,12 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 	function init(){
 		parent::init();
 
+		$message_vp = $this->add('VirtualPage')->set(function($p){
+			$email_id=$p->api->stickyGET('xcrm_email_id');
+			$m=$p->add('xCRM/Model_Email')->tryLoad($email_id);
+			$email_view=$p->add('xHR/View_Email');
+			$email_view->setModel($m);
+		});
 
 		$dept_id= $this->api->stickyGET('department_id');
 
@@ -64,6 +70,15 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 
 		$mail_crud=$right_col->add('CRUD');
 		$mail_crud->setModel('xCRM/Email',array(),array('subject'));
+		$mg=$mail_crud->grid;
+		
+		$mg->addMethod('format_subject',function($g,$f)use($message_vp){
+			$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('E-mail',$g->api->url($message_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a>';
+		});
+		$mg->addFormatter('subject','subject');
+
+
+
 		$mail_crud->add('xHR/Controller_Acl');
 
 		$fetch_btn = $mail_crud->addButton('Reload');
