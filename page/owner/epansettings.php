@@ -32,7 +32,7 @@ class page_owner_epansettings extends page_base_owner {
 		//SMS Setting
 		$sms_tab = $tabs->addTab('SMS Settings');
 		$sms_form = $sms_tab->add('Form_Stacked');
-		$sms_form->setModel($this->api->current_website,array('gateway_url','sms_user_name_qs_param','sms_username','sms_password_qs_param','sms_password','sms_number_qs_param','sm_message_qs_param'));
+		$sms_form->setModel($this->api->current_website,array('gateway_url','sms_user_name_qs_param','sms_username','sms_password_qs_param','sms_password','sms_number_qs_param','sm_message_qs_param','sms_prefix','sms_postfix'));
 		$sms_form->addSubmit('Update');
 		$sms_form->add('Controller_FormBeautifier');
 

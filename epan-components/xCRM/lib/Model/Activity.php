@@ -145,10 +145,10 @@ class Model_Activity extends \Model_Document{
 	}
 
 	function notifyViaSMS(){
-
+		$epan = $this->add('Model_Epan')->tryLoadAny();
 		$sms_m = $this->add('xCRM/Model_SMS');
 		$sms_m['name']=$this['sms_to'];
-		$sms_m['message'] = $this['subject'];
+		$sms_m['message'] = $epan['sms_prefix']." ".$this['subject']." ".$epan['sms_postfix'];
 		$sms_m->relatedDocument($this);
 		$sms_m->save();
 		$sms_m->send();
