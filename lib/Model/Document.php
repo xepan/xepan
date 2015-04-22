@@ -79,7 +79,8 @@ class Model_Document extends SQL_Model{
 						'xStore\\\\StockMovement'=>'xstore_stock_movement_master',
 						'xDispatch\\\\DispatchRequest'=>'xdispatch_dispatch_request',
 						'xShop\\\\SalesInvoice'=>'xshop_invoices',
-						'xPurchase\\\\PurchaseInvoice'=>'xshop_invoices'
+						'xPurchase\\\\PurchaseInvoice'=>'xshop_invoices',
+						'xProduction\\\\Task'=>'xproduction_tasks'
 					);
 
 
