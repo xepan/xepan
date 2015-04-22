@@ -92,6 +92,9 @@ class Model_Epan extends Model_Table {
 		$this->addField('sms_password_qs_param')->caption('Gateway Password Query String Variable')->group('qs~3');
 		$this->addField('sms_number_qs_param')->caption('Number Query String Variable')->group('qs~3');
 		$this->addField('sm_message_qs_param')->caption('Messesge Query String Variable')->group('qs~3');
+		$this->addField('sms_prefix')->caption('Message Prefix')->group('qs~3');
+		$this->addField('sms_postfix')->caption('Message Postfix')->group('qs~3');
+
 
 		$this->hasMany('Aliases','epan_id'); 
 		$this->hasMany('EpanPage','epan_id');
