@@ -4,18 +4,14 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		parent::init();
 
 
-		$id= $this->api->stickyGET('department_id');
+		$dept_id= $this->api->stickyGET('department_id');
 
 		$model = $this->add('xHR/Model_OfficialEmail');
-		$model->addCondition('department_id',$id);
-		$this->add('View_Success')->set($id);
-		$crud=$this->add('Grid');
-		$crud->setModel($model,array('email_username'));
-
-
+		$model->addCondition('department_id',$dept_id);
+		$this->add('View_Success')->set($dept_id);
 
 		$col=$this->add('Columns');
-			$left_col=$col->addColumn(3);
+		$left_col=$col->addColumn(3);
 
 		$customer=$this->add('xShop/Model_Customer');
 		$customer->addExpression('unread')->set(function($m,$q){

@@ -106,7 +106,12 @@ class Model_Activity extends \Model_Document{
 	}
 
 	function afterSave(){
-		if($this['action'] == 'email') $this['notify_via_email'] = false;
+		if($this['action'] == 'email'){
+			$this['notify_via_email'] = false;
+			$email_created = $this->add('xCRM/Model_Email')->createFromActivity($this);
+			$email_created->send();
+		} 
+			
 		
 		if($this['notify_via_email'])
 			$this->notifyViaEmail();
