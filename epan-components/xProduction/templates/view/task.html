@@ -1,0 +1,35 @@
+<div class='panel panel-success atk-size-micro '>
+			<div class='atk-row '>
+					<div class='atk-col-5  '>
+							Task No.: {$name}&nbsp;&nbsp;<b class=''>{$priority}</b><br>
+							{$created_at}&nbsp;{$task_created_att}
+					</div>					
+					<div class='atk-col-7   atk-button'data-toggle='modal' data-target='{$name}'>
+						{$task_subject}
+					</div>
+
+					<div class='modal fade bs-example-modal-sm' tabindex='-1'role='dialog' id='{$name}' aria-hidden='false'>
+						<div class='modal-dialog modal-sm'>
+    						<div class='modal-content'>
+      							{$content}
+    						</div>
+  						</div>
+					</div>
+
+			</div>
+			<div class='atk-row'>
+				<div class='atk-col-6'>
+					Created By.:- <b>{$created_by}</b>	
+				</div>
+				<div class='atk-col-6 text-right'>
+					Assign to.:- <b>{$employee}</b>	
+				</div><br>
+				<div class='atk-col-6'>
+					Starting Date.:- {$expected_start_date}	
+				</div>
+				<div class='atk-col-6 text-right'>
+					Ending Date.:- {$expected_end_date}	
+				</div>
+			</div>
+										
+		</div>		
