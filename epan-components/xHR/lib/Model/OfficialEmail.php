@@ -29,7 +29,7 @@ class Model_OfficialEmail extends \Model_Document{
 		$this->addField('imap_email_password')->type('password')->group('pop~1')->caption('Password');
 		$this->addField('imap_flags')->mandatory(true)->defaultValue('/imap/ssl/novalidate-cert')->group('pop~6')->caption('Flags');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 }

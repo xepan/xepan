@@ -35,7 +35,7 @@ class Model_Email extends \Model_Document{
 		$this->addField('message')->type('text');
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id');
-		$this->add('dynamic_model/Controller_AutoCreator');
+	//	$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function createFromActivity($activity){
@@ -45,9 +45,15 @@ class Model_Email extends \Model_Document{
 		$this['to'] = $activity['to'];
 		$this['to_id'] = $activity['to_id'];
 
+		$notification_prefix="";
+		if($activity['action']!='email'){
+			$notification_prefix="Activity Notification @ ";
+			$this['notify_via_email']=false;
+		}
+
 		//GET ACTIVITY AGAINATS MODEL/name
 		$rdoc = $activity->relatedDocument();
-		$this['subject'] = "Activity Notification @ ".$rdoc['related_document_name']." [ ".$rdoc['name']." ] ".$activity['subject'];
+		$this['subject'] = $notification_prefix."[".$rdoc->root_document_name." ".$rdoc['name']."] ".$activity['subject'];
 		$this['message'] = $activity['message'];
 			
 		$emails = explode(',', $activity['email_to']);
@@ -96,6 +102,18 @@ class Model_Email extends \Model_Document{
 		return $this->add('xCRM/Model_EmailAttachment')->addCondition('related_document_id',$this->id);
 
 	}
+
+	function create_Activity_page($page){
+		$form= $page->add('Form_Stacked');
+
+		$form->addSubmit('Create Activity');
+		if($form->isSubmitted()){
+			
+			return true;
+		}
+		
+	}
+
 
 	function create_Activity(){
 		if(!$this->loaded()) return false;

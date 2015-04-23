@@ -8,15 +8,6 @@ class View_Task extends \View{
 
 	function init(){
 		parent::init();
-
-		$this->task_vp = $this->add('VirtualPage');
-		$this->task_vp->set(function($p){
-		$task_id=$this->api->stickyGET('task_id');
-		echo $task_id;
-			
-			$m=$p->add('xProduction/Model_Task')->load($task_id);
-			$p->add('View')->setHTML($m['content'])->addCLass('well');
-		});
 	}
 	function setModel($model){
 		$this->template->trySetHtml('created_at',$this->add('xDate')->diff(\Carbon::now(),$model['created_at']));
