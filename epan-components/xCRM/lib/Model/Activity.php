@@ -43,7 +43,7 @@ class Model_Activity extends \Model_Document{
 			$str="(
 					CASE ".$q->getField('from')."
 						WHEN 'Employee' THEN (".$emp_q->field('name')->render().")
-						WHEN 'Customer' THEN (". $users->field('name')->render() ." )
+					WHEN 'Customer' THEN (". $users->field('name')->render() ." )
 					END
 				)";
 
@@ -103,6 +103,22 @@ class Model_Activity extends \Model_Document{
 		if($this->ref('attachment_id')->loaded()){
 			$this->ref('attachment_id')->delete();
 		}
+	}
+
+	function addAttachment($model){
+		if($model) return;
+
+		$attach_send = $this->add('Model_Attachment')->addCondition('related_document_id',$model->id);
+		foreach ($attach_send as $attach) {
+			$activity_attach = $this->add('xCRM/Model_ActivityAttachment');
+			$activity_attach['related_document_id'] = $this->id;
+			$activity_attach['related_document_name'] ='xCRM\ActivityAttachment';
+			$activity_attach['created_by_id'] = $this->api->current_employee->id;
+			$activity_attach['attachment_url_id'] = $attach['attachment_url_id'];
+			$activity_attach['name'] = $attach['name'];
+			$activity_attach->save();
+		}
+
 	}
 
 	function afterSave(){

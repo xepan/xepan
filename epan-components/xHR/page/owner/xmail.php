@@ -78,13 +78,12 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$mg->addFormatter('subject','subject');
 
 
-
 		$mail_crud->add('xHR/Controller_Acl');
 
-		$fetch_btn = $mail_crud->addButton('Reload');
-		if($fetch_btn->isClicked()){
+		$reload_btn = $mail_crud->addButton('Reload');
+		if( !($reload_btn instanceof \Dummy) and $reload_btn->isClicked()){
 			$this->add('xCRM/Model_Email')->fetchDepartment($this->api->current_department);
-			$this->js()->univ()->successMessage('Hello')->execute();
+			$this->js()->univ()->successMessage('Fetch Successfully')->execute();
 		}
 
 

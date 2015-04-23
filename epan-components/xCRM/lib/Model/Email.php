@@ -74,6 +74,7 @@ class Model_Email extends \Model_Document{
 		// 	$this->sendSms();
 
 		return $this;
+
 	}
 
 	function addAttachment($attach_id){
@@ -103,8 +104,34 @@ class Model_Email extends \Model_Document{
 	}
 
 	function create_Activity(){
+		if(!$this->loaded()) return false;
 
+		$activity = $this->add('xCRM/Model_Activity');
+		$activity['from'] = $this['from'];
+		$activity['from_id'] = $this['from_id'];
+
+		$activity['to'] = $this['to'];
+		$activity['to_id'] = $this['to_id'];
+
+		//GET ACTIVITY AGAINATS MODEL/name
+		$rdoc = $this->relatedDocument();
+		$activity['subject'] = $rdoc['related_document_name']." [ ".$rdoc['name']." ] ".$this['subject'];
+		$activity['message'] = $this['message'];
+			
+		$emails = explode(',', $this['email_to']);
+		$activity['to_email'] = $emails[0];
+
+		if(count($emails)>1)
+			unset($emails[0]);
+		$activity['cc'] = implode(",",$emails);
+
+		$activity->relatedDocument($this);
+		$activity->save();
+		$activity->addAttachment($this);
+
+		return $activity;
 	}
+
 
 	function create_Ticket(){
 
