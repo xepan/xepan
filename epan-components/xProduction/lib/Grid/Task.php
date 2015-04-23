@@ -6,6 +6,12 @@ class Grid_Task extends \Grid{
 	function init(){
 		parent::init();
 
+		$this->task_vp = $this->add('VirtualPage');
+		$this->task_vp->set(function($p){
+			$task_id=$this->api->stickyGET('task_id');
+			$m=$p->add('xProduction/Model_Task')->load($task_id);
+			$p->add('View')->setHTML($m['content'])->addCLass('well');
+		});
 	}
 
 	function setModel($task_model){
@@ -39,7 +45,7 @@ class Grid_Task extends \Grid{
 	}
 
 	function formatRow(){
-		$task_v=$this->api->add('xProduction/View_Task');
+		$task_v=$this->api->add('xProduction/View_Task',array('task_vp'=>$this->task_vp));
 		$task_v->setModel($this->model);
 		$this->current_row_html['name']=$task_v->getHtml();
 		parent::formatRow();		

@@ -14,8 +14,14 @@ class page_index extends Page {
 			$this->api->add('editingToolbar/View_FrontToolBar',null,'editor');
 		}
 		
-		if(!$this->api->edit_template)
-			$this->setModel($this->api->current_page);
+		if(!$this->api->edit_template){
+			if($this->api->current_page['access_level']=="0" OR ($this->api->auth->isLoggedIn() AND $this->api->auth->model['type']>=$this->api->current_page['access_level']))
+				$this->setModel($this->api->current_page);
+			else{
+				$this->add('View_Error')->set('This Page is accessed to registered users only, Login First');
+				$this->add('baseElements\View_Tools_UserPanel');
+			}
+		}
 			
 	}
 	function setModel($page_model){

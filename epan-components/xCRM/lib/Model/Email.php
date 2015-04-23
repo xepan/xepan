@@ -45,9 +45,15 @@ class Model_Email extends \Model_Document{
 		$this['to'] = $activity['to'];
 		$this['to_id'] = $activity['to_id'];
 
+		$notification_prefix="";
+		if($activity['action']!='email'){
+			$notification_prefix="Activity Notification @ ";
+			$this['notify_via_email']=false;
+		}
+
 		//GET ACTIVITY AGAINATS MODEL/name
 		$rdoc = $activity->relatedDocument();
-		$this['subject'] = "Activity Notification @ ".$rdoc['related_document_name']." [ ".$rdoc['name']." ] ".$activity['subject'];
+		$this['subject'] = $notification_prefix."[".$rdoc->root_document_name." ".$rdoc['name']."] ".$activity['subject'];
 		$this['message'] = $activity['message'];
 			
 		$emails = explode(',', $activity['email_to']);
