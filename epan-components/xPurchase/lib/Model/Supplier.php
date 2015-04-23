@@ -58,7 +58,7 @@ class Model_Supplier extends \Model_Document{
 							'code|unique'
 						)
 				);
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){

@@ -42,7 +42,7 @@ class Model_NewsLetter extends \Model_Document {
 
 		$this->setOrder('created_at','desc');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+//		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave(){
