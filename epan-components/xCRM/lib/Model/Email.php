@@ -45,9 +45,15 @@ class Model_Email extends \Model_Document{
 		$this['to'] = $activity['to'];
 		$this['to_id'] = $activity['to_id'];
 
+		$notification_prefix="";
+		if($activity['action']!='email'){
+			$notification_prefix="Activity Notification @ ";
+			$this['notify_via_email']=false;
+		}
+
 		//GET ACTIVITY AGAINATS MODEL/name
 		$rdoc = $activity->relatedDocument();
-		$this['subject'] = "Activity Notification @ ".$rdoc['related_document_name']." [ ".$rdoc['name']." ] ".$activity['subject'];
+		$this['subject'] = $notification_prefix."[".$rdoc->root_document_name." ".$rdoc['name']."] ".$activity['subject'];
 		$this['message'] = $activity['message'];
 			
 		$emails = explode(',', $activity['email_to']);
@@ -68,6 +74,7 @@ class Model_Email extends \Model_Document{
 		// 	$this->sendSms();
 
 		return $this;
+
 	}
 
 	function addAttachment($attach_id){
@@ -96,9 +103,47 @@ class Model_Email extends \Model_Document{
 
 	}
 
-	function create_Activity(){
+	function create_Activity_page($page){
+		$form= $page->add('Form_Stacked');
 
+		$form->addSubmit('Create Activity');
+		if($form->isSubmitted()){
+			
+			return true;
+		}
+		
 	}
+
+
+	function create_Activity(){
+		if(!$this->loaded()) return false;
+
+		$activity = $this->add('xCRM/Model_Activity');
+		$activity['from'] = $this['from'];
+		$activity['from_id'] = $this['from_id'];
+
+		$activity['to'] = $this['to'];
+		$activity['to_id'] = $this['to_id'];
+
+		//GET ACTIVITY AGAINATS MODEL/name
+		$rdoc = $this->relatedDocument();
+		$activity['subject'] = $rdoc['related_document_name']." [ ".$rdoc['name']." ] ".$this['subject'];
+		$activity['message'] = $this['message'];
+			
+		$emails = explode(',', $this['email_to']);
+		$activity['to_email'] = $emails[0];
+
+		if(count($emails)>1)
+			unset($emails[0]);
+		$activity['cc'] = implode(",",$emails);
+
+		$activity->relatedDocument($this);
+		$activity->save();
+		$activity->addAttachment($this);
+
+		return $activity;
+	}
+
 
 	function create_Ticket(){
 

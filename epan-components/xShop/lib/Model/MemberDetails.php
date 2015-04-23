@@ -12,7 +12,7 @@ class Model_MemberDetails extends \Model_Document{
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		
 		$this->addField('mobile_number')->sortable(true)->group('a~6');
-		$this->addField('other_emails')->defaultValue(false)->group('a~6');
+		$this->addField('other_emails')->group('a~6');
 		// $this->addField('join_on')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		// $this->addField('verified_on')->type('datetime')->defaultValue(null);
 		$this->addField('landmark')->sortable(true)->group('a~6');

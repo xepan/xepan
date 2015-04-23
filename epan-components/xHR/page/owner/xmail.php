@@ -3,19 +3,21 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 	function init(){
 		parent::init();
 
+		$message_vp = $this->add('VirtualPage')->set(function($p){
+			$email_id=$p->api->stickyGET('xcrm_email_id');
+			$m=$p->add('xCRM/Model_Email')->tryLoad($email_id);
+			$email_view=$p->add('xHR/View_Email');
+			$email_view->setModel($m);
+		});
 
-		$id= $this->api->stickyGET('department_id');
+		$dept_id= $this->api->stickyGET('department_id');
 
 		$model = $this->add('xHR/Model_OfficialEmail');
-		$model->addCondition('department_id',$id);
-		$this->add('View_Success')->set($id);
-		$crud=$this->add('Grid');
-		$crud->setModel($model,array('email_username'));
-
-
+		$model->addCondition('department_id',$dept_id);
+		$this->add('View_Success')->set($dept_id);
 
 		$col=$this->add('Columns');
-			$left_col=$col->addColumn(3);
+		$left_col=$col->addColumn(3);
 
 		$customer=$this->add('xShop/Model_Customer');
 		$customer->addExpression('unread')->set(function($m,$q){
@@ -68,12 +70,20 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 
 		$mail_crud=$right_col->add('CRUD');
 		$mail_crud->setModel('xCRM/Email',array(),array('subject'));
+		$mg=$mail_crud->grid;
+		
+		$mg->addMethod('format_subject',function($g,$f)use($message_vp){
+			$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('E-mail',$g->api->url($message_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a>';
+		});
+		$mg->addFormatter('subject','subject');
+
+
 		$mail_crud->add('xHR/Controller_Acl');
 
-		$fetch_btn = $mail_crud->addButton('Reload');
-		if($fetch_btn->isClicked()){
+		$reload_btn = $mail_crud->addButton('Reload');
+		if( !($reload_btn instanceof \Dummy) and $reload_btn->isClicked()){
 			$this->add('xCRM/Model_Email')->fetchDepartment($this->api->current_department);
-			$this->js()->univ()->successMessage('Hello')->execute();
+			$this->js()->univ()->successMessage('Fetch Successfully')->execute();
 		}
 
 

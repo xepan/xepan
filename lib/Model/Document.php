@@ -79,7 +79,8 @@ class Model_Document extends SQL_Model{
 						'xStore\\\\StockMovement'=>'xstore_stock_movement_master',
 						'xDispatch\\\\DispatchRequest'=>'xdispatch_dispatch_request',
 						'xShop\\\\SalesInvoice'=>'xshop_invoices',
-						'xPurchase\\\\PurchaseInvoice'=>'xshop_invoices'
+						'xPurchase\\\\PurchaseInvoice'=>'xshop_invoices',
+						'xProduction\\\\Task'=>'xproduction_tasks'
 					);
 
 
@@ -304,17 +305,16 @@ class Model_Document extends SQL_Model{
 			$send_email_field = $crud->form->getElement('notify_via_email');
 			$send_sms_field = $crud->form->getElement('notify_via_sms');
 			
-
 			$email_to_field = $crud->form->getElement('email_to')->set($this->getTo()->email());
 			$sms_to_field = $crud->form->getElement('sms_to')->set($this->getTo()->mobileno());
-
 			//Actions if Email
 			$action_field->js('change')->univ()->bindConditionalShow(array(
 				'comment'=>array('email_to','notify_via_email'),
 				'call'=>array('email_to','notify_via_email'),
 				'sms'=>array('email_to','notify_via_email'),
 				'action'=>array('email_to','notify_via_email'),
-				'personal'=>array('email_to','notify_via_email')
+				'personal'=>array('email_to','notify_via_email'),
+				'email'=>array('email_to')
 				));
 
 			//Send Email

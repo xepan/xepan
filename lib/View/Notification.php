@@ -13,12 +13,6 @@ class View_Notification extends View {
 
 		if($_GET[$this->name]=='true'){
 
-			$lookup_array=array(
-					"xShop\\\\Order_Draft"=>array('xshop_orders','draft','xShop\Model_Order'),
-					"xShop\\\\Order_Submitted"=>array('xshop_orders','submitted','xShop\Model_Order'),
-					"xShop\\\\Order_Approved"=>array('xshop_orders','approved','xShop\Model_Order'),
-				);
-
 			$current_lastseen = $this->add('xCRM\Model_Activity');
 
 			$current_lastseen->addExpression('count')->set(function($m,$q){

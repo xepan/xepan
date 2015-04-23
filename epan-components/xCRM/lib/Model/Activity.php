@@ -43,7 +43,7 @@ class Model_Activity extends \Model_Document{
 			$str="(
 					CASE ".$q->getField('from')."
 						WHEN 'Employee' THEN (".$emp_q->field('name')->render().")
-						WHEN 'Customer' THEN (". $users->field('name')->render() ." )
+					WHEN 'Customer' THEN (". $users->field('name')->render() ." )
 					END
 				)";
 
@@ -105,11 +105,26 @@ class Model_Activity extends \Model_Document{
 		}
 	}
 
+	function addAttachment($model){
+		if($model) return;
+
+		$attach_send = $this->add('Model_Attachment')->addCondition('related_document_id',$model->id);
+		foreach ($attach_send as $attach) {
+			$activity_attach = $this->add('xCRM/Model_ActivityAttachment');
+			$activity_attach['related_document_id'] = $this->id;
+			$activity_attach['related_document_name'] ='xCRM\ActivityAttachment';
+			$activity_attach['created_by_id'] = $this->api->current_employee->id;
+			$activity_attach['attachment_url_id'] = $attach['attachment_url_id'];
+			$activity_attach['name'] = $attach['name'];
+			$activity_attach->save();
+		}
+
+	}
+
 	function afterSave(){
-		if($this['action'] == 'email') $this['notify_via_email'] = false;
-		
-		if($this['notify_via_email'])
+		if($this['notify_via_email'] OR $this['action']=='email'){
 			$this->notifyViaEmail();
+		}
 
 		if($this['notify_via_sms'])
 			$this->notifyViaSMS();
@@ -139,10 +154,10 @@ class Model_Activity extends \Model_Document{
 	}
 
 	function notifyViaSMS(){
-
+		$epan = $this->add('Model_Epan')->tryLoadAny();
 		$sms_m = $this->add('xCRM/Model_SMS');
 		$sms_m['name']=$this['sms_to'];
-		$sms_m['message'] = $this['subject'];
+		$sms_m['message'] = $epan['sms_prefix']." ".$this['subject']." ".$epan['sms_postfix'];
 		$sms_m->relatedDocument($this);
 		$sms_m->save();
 		$sms_m->send();

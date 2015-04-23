@@ -4,6 +4,7 @@ class page_xProduction_page_owner_task_assigned extends page_xProduction_page_ow
 	
 	function init(){
 		parent::init();
+		
 		$col=$this->add('Columns');
 		// $left_col=$col->addColumn(6);
 		$right_col=$col->addColumn(12);

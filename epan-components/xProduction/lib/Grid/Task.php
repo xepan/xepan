@@ -6,6 +6,12 @@ class Grid_Task extends \Grid{
 	function init(){
 		parent::init();
 
+		$this->task_vp = $this->add('VirtualPage');
+		$this->task_vp->set(function($p){
+			$task_id=$this->api->stickyGET('task_id');
+			$m=$p->add('xProduction/Model_Task')->load($task_id);
+			$p->add('View')->setHTML($m['content'])->addCLass('well');
+		});
 	}
 
 	function setModel($task_model){
@@ -39,46 +45,9 @@ class Grid_Task extends \Grid{
 	}
 
 	function formatRow(){
-		$this->current_row_html['name']=
-		"<div class='panel panel-success atk-size-micro '>".
-			"<div class='atk-row '>".
-					"<div class='atk-col-4 atk-effect-danger '>"
-							."Task No.: ".$this->model['name'].'&nbsp;&nbsp'."<b class='btn btn-success btn-xs'>".$this->model['Priority']."</b><br>"
-							.date('d M Y',strtotime($this->model['created_at'])).
-					"</div>".					
-					// "<div class='btn btn-primary' data-toggle='modal' data-target='.bs-example-modal-sm'>"
-					// .Small modal"</button>".
-					"<div class='atk-col-4  text-center atk-button'data-toggle='modal' data-target='#".$this->model->id."'>
-					<b>". $this->model['subject']."</b>
-					</div>".
-
-					"<div class='modal fade bs-example-modal-sm' tabindex='-1' role='dialog' id='".$this->model->id."' aria-hidden='false'>".
-						"<div class='modal-dialog modal-sm'>".
-    						"<div class='modal-content'>".
-      							$this->model['content'].
-    						"</div>".
-  						"</div>".
-					"</div>".
-
-			"</div>".
-			"<div class='atk-row'>".
-				"<div class='atk-col-6'>".
-					"Created By.:- "."<b>".$this->model['created_by']."</b>".	
-				"</div>". " ".
-				"<div class='atk-col-6 text-right'>".
-					"Assign to.:- <b>".$this->model['employee']."</b>".	
-				"</div>"."<br>".
-				"<div class='atk-col-6'>".
-					"Starting Date.:- ".$this->model['expected_start_date'].	
-				"</div>".
-				"<div class='atk-col-6 text-right'>".
-					"Ending Date.:- ".$this->model['expected_end_date'].	
-				"</div>".
-			"</div>".
-										
-		"</div>".		
-
-
-		parent::formatRow();									
+		$task_v=$this->api->add('xProduction/View_Task',array('task_vp'=>$this->task_vp));
+		$task_v->setModel($this->model);
+		$this->current_row_html['name']=$task_v->getHtml();
+		parent::formatRow();		
 	}
 }

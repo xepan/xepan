@@ -60,6 +60,12 @@ class page_owner_activitydocument extends page_base_owner{
 
 		}
 
+		if($_GET['show_activity_view_id']){
+			$activity = $this->add('xCRM/Model_Activity')->tryLoad($_GET['show_activity_view_id']);
+			if($activity->loaded()){
+				$this->add('View_Activity')->setModel($activity);
+			}			
+		}
 		
 	}
 }
