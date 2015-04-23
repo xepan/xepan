@@ -97,6 +97,18 @@ class Model_Email extends \Model_Document{
 
 	}
 
+	function create_Activity_page($page){
+		$form= $page->add('Form_Stacked');
+
+		$form->addSubmit('Create Activity');
+		if($form->isSubmitted()){
+			
+			return true;
+		}
+		
+	}
+
+
 	function create_Activity(){
 		if(!$this->loaded()) return false;
 
