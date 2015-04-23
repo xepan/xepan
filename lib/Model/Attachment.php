@@ -15,7 +15,7 @@ class Model_Attachment extends \Model_Document{
 		$this->add('filestore/Field_File','attachment_url_id')->mandatory(true);
 
 		$this->addHook('beforeSave',$this);
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 
 	}
 
