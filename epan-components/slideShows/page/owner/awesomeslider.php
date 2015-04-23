@@ -5,9 +5,9 @@ class page_slideShows_page_owner_awesomeslider extends page_slideShows_page_owne
 	function init(){
 		parent::init();
 
-		$gallery_model = $this->app->layout->add('slideShows/Model_AwesomeGallery');
+		$gallery_model = $this->add('slideShows/Model_AwesomeGallery');
 		
-		$crud=$this->app->layout->add('CRUD');
+		$crud=$this->add('CRUD');
 		$crud->setModel($gallery_model);
 		// $crud->add('Controller_FormBeautifier');
 		$ref = $crud->addRef('slideShows/AwesomeImages',array('label'=>'Images'));	
