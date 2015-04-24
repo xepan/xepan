@@ -11,6 +11,11 @@ class Grid_Quotation extends \Grid{
 			$p->api->stickyGET('quotation_clicked');
 			$p->add('xShop/View_Quotation',array('quotation'=>$p->add('xShop/Model_Quotation')->load($_GET['quotation_clicked'])));
 		});
+
+		$print = $this->addColumn('Button','print');
+		if($_GET['print']){
+			$this->js()->univ()->newWindow($this->api->url('xShop_page_owner_printquotation',array('quotation_id'=>$_GET['print'],'cut_page'=>0)))->execute();
+		}
 	}
 	
 	function format_view($field){
