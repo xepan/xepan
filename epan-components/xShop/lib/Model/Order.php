@@ -321,7 +321,7 @@ class Model_Order extends \Model_Document{
 			$this->sendEmail($form['to'],$form['subject'],$email_body,$ccs,$bccs);
 			$this->createActivity('email',$form['subject'],$form['custom_message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
-		}			
+		}	
 	}
 
 	function isFromOnline(){
@@ -518,6 +518,7 @@ class Model_Order extends \Model_Document{
 		$page->add('HtmlElement')->setElement('H3')->setHTML('<small>Approving Job Card will move this order to approved status and create JobCards to receive in respective FIRST Departments for EACH Item</small>');
 		if($form->isSubmitted()){
 			$this->approve($form['comments']);
+			// $this->send_via_email_page($this);
 			return true;
 		}
 		return false;
