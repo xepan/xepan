@@ -10,13 +10,11 @@ class Controller_Validator extends Controller_Validator_Advanced {
             throw $this->exception('Use with Model only');
          */
 
-        $table = $this->owner->table;
+        $q = clone $this->owner->dsql();
 
-        $q = $this->api->db->dsql();
-
-        $result = $q->table($table)
+        $result = $q
                 ->where($field, $a)
-                ->where('id','<>', $this->owner->id)
+                ->where($q->getField('id'),'<>', $this->owner->id)
                 ->field($field)
                 ->getOne();
 
