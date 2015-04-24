@@ -18,6 +18,10 @@ class Grid_JobCard extends \Grid{
 			$order->setModel($o);
 		});
 
+		$print  = $this->addColumn('Button','print');
+		if($_GET['print']){
+			$this->js()->univ()->newWindow($this->api->url('xProduction_page_owner_printjobcard',array('jobcard_id'=>$_GET['print'],'cut_page'=>0)))->execute();
+		}
 	}
 	
 	function format_view($field){
