@@ -10,8 +10,14 @@ class Grid_PurchaseOrder extends \Grid {
 		$this->addSno();
 
 		$this->vp=$this->add('VirtualPage')->set(function($p)use($self){
-			$p->add('xPurchase/View_PurchaseOrder',array('purchaseorder'=>$p->add('xPurchase/Model_PurchaseOrder')->load($p->api->stickyGET('purchaseorder_clicked'))));
+			$po_id = $self->api->stickyGET('purchaseorder_clicked');
+			$p->add('xPurchase/View_PurchaseOrder',array('purchaseorder'=>$p->add('xPurchase/Model_PurchaseOrder')->load($po_id)));
 		});
+
+		$purchase_order_print = $this->addColumn('Button','print');
+		if($_GET['print']){
+			$this->js()->univ()->newWindow($this->api->url('xPurchase_page_owner_printpurchaseorder',array('purchaseorder_id'=>$_GET['print'],'cut_page'=>0)))->execute();
+		}
 	}
 	
 	function format_purchaseorder($field){

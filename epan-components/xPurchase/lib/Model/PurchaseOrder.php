@@ -441,14 +441,14 @@ class Model_PurchaseOrder extends \Model_Document{
 		// $email_body = $print_order->getHTML(false);
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{purchase_order_details}}", $view->getHtml(), $email_body);
-		$email_body = str_replace("{{company_name}}", $supplier['name']?"<b>To,<br>".$supplier['name']."</b>":" ", $email_body);
-		$email_body = str_replace("{{owner_name}}", $supplier['owner_name']?"Contact Person.:<small>Mr/Mrs.</small><b>".$supplier['owner_name']."</b><br>":" ", $email_body);
-		$email_body = str_replace("{{supplier_code}}", $supplier['code']?"Code.: ".$supplier['code']:" ", $email_body);
-		$email_body = str_replace("{{mobile_number}}", $supplier['contact_no']?"Contact No.:".$supplier['contact_no']:" ", $email_body);
-		$email_body = str_replace("{{supplier_email}}", $supplier['email']?"Email.:".$supplier['email']:" ", $email_body);
-		$email_body = str_replace("{{purchase_order_address}}",$supplier['address']?"Addess.:".$supplier['address']:" ", $email_body);
-		$email_body = str_replace("{{supplier_tin_no}}", $supplier['tin_no'], $email_body);
-		$email_body = str_replace("{{supplier_pan_no}}", $supplier['pan_no'], $email_body);
+		$email_body = str_replace("{{company_name}}", $supplier['name']?$supplier['name']:" ", $email_body);
+		$email_body = str_replace("{{owner_name}}", $supplier['owner_name']?$supplier['owner_name']:" ", $email_body);
+		$email_body = str_replace("{{supplier_code}}", $supplier['code']?$supplier['code']:" ", $email_body);
+		$email_body = str_replace("{{mobile_number}}", $supplier['contact_no']?$supplier['contact_no']:" ", $email_body);
+		$email_body = str_replace("{{supplier_email}}", $supplier['email']?$supplier['email']:" ", $email_body);
+		$email_body = str_replace("{{purchase_order_address}}",$supplier['address']?$supplier['address']:" ", $email_body);
+		$email_body = str_replace("{{supplier_tin_no}}", $supplier['tin_no']?$supplier['tin_no']:" - ", $email_body);
+		$email_body = str_replace("{{supplier_pan_no}}", $supplier['pan_no']?$supplier['pan_no']:" - ", $email_body);
 		$email_body = str_replace("{{purchase_Order_no}}", $this['name'], $email_body);
 		$email_body = str_replace("{{purchase_Order_date}}", $this['created_at'], $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY

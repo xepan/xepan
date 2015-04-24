@@ -18,6 +18,11 @@ class Grid_Invoice extends \Grid{
 			$order = $p->add('xPurchase/View_PurchaseOrder',array('purchaseorder'=>$o));
 			// $order->setModel($o);
 		});
+
+		$pi_print = $this->addColumn('Button','print');
+		if($_GET['print']){
+			$this->js()->univ()->newWindow($this->api->url('xPurchase_page_owner_printpurchaseinvoice',array('purchaseinvoice_id'=>$_GET['print'],'cut_page'=>0)))->execute();
+		}
 	}
 	
 	function format_view($field){

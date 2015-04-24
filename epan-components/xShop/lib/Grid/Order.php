@@ -17,6 +17,11 @@ class Grid_Order extends \Grid {
 			$order = $p->add('xShop/View_Order');
 			$order->setModel($o);
 		});
+		
+		$print = $this->addColumn('Button','print');
+		if($_GET['print']){
+			$this->js()->univ()->newWindow($this->api->url('xShop_page_owner_printsaleorder',array('saleorder_id'=>$_GET['print'],'cut_page'=>0)))->execute();
+		}
 	}
 
 	function format_view($field){

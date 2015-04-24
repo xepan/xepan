@@ -41,7 +41,7 @@ class Model_Configuration extends \Model_Table {
 		// Quotation Email Subject & Body
 
 		$f = $this->addField('quotation_email_subject')->group('e~12~<i class="fa fa-envelope"></i>Quotation Order Detail ( Bill ) Email');
-		$f = $this->addField('quotation_email_body')->type('text')->caption('Quotation Detail Email Body')->hint('Quotation Order Email Body : this Bill send to Customer who placed Quotation , {{customer_name}},{{mobile_number}},{{address}},{{order_billing_address}},{{order_shipping_address}},{{customer_email}},{{quotation_no}},{{quotation_date}}')->group('e~11')->display(array('form'=>'RichText'));
+		$f = $this->addField('quotation_email_body')->type('text')->caption('Quotation Detail Email Body')->hint('Quotation Order Email Body : this Bill send to Customer who placed Quotation , {{customer_name}},{{mobile_number}},{{address}},{{billing_address}},{{shipping_address}},{{customer_email}},{{quotation_no}},{{quotation_date}}')->group('e~11')->display(array('form'=>'RichText'));
 
 		// Sales Invoice Email Subject & Body
 		$f = $this->addField('invoice_email_subject')->group('e~12~<i class="fa fa-envelope"></i>Invoice Email Mail Subject ( Bill ) Email');
