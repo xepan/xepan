@@ -19,6 +19,7 @@ class page_index extends Page {
 				$this->setModel($this->api->current_page);
 			else{
 				$this->add('View_Error')->set('This Page is accessed to registered users only, Login First');
+				$this->api->memorize('next_url',array('subpage'=>$this->api->page_requested));
 				$this->add('baseElements\View_Tools_UserPanel');
 			}
 		}
