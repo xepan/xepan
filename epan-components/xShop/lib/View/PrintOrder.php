@@ -9,32 +9,36 @@ class View_PrintOrder extends \View{
 	}  
 
 	function setModel($model){
-		$application_id=$this->api->recall('xshop_application_id');
 		
 		$user_model = $this->add('xShop/Model_MemberDetails');
 		$user_model->getAllDetail($model['member_id']);
 		
-		$config_model = $this->add('xShop/Model_Configuration')->addCondition('application_id',$application_id);
+		$config_model = $this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
-		$order_template = $config_model['order_detail_email_body'];
+		$order_template=$config_model['order_detail_email_body'];
 		
-		// REPLACING VALUE INTO ORDER DETAIL TEMPLATES
-		$order_template = str_replace("{{user_name}}", $this->api->auth->model['name'], $order_template);
-		$order_template = str_replace("{{mobile_number}}", $user_model['mobile_number'], $order_template);
-		$order_template = str_replace("{{billing_address}}",$model['billing_address'], $order_template);
-		$order_template = str_replace("{{shipping_address}}", $model['shipping_address'], $order_template);
-		$order_template = str_replace("{{email}}", $this->api->auth->model['email'], $order_template);
+		$tnc=$model->termAndCondition();
 
-		$order_detail = $this->add('xShop/Model_OrderDetails')->addCondition('order_id',$model->id);
-		$view=$this->add('xShop/View_OrderDetail',null,'order_detail');
-		$view->setModel($order_detail);
+		$print_order = $model->add('xShop/View_OrderDetail',array('show_department'=>false,'show_price'=>true,'show_customfield'=>true));
+		$print_order->setModel($model->itemrows());
+		$order_detail_html = $print_order->getHTML(false);
 
-		$order_template = str_replace("{{order_number}}", $model->id, $order_template);
-		$order_template = str_replace("{{order_date}}", $model['order_date'], $order_template);
-		$order_template = str_replace("{{order_mode}}", $model['payment_status'], $order_template);
-		$order_template = str_replace("{{order_destination}}", $model['shipping_address'], $order_template);
-		$order_template = str_replace("{{order_detail}}", $view->getHtml(true), $order_template);
+		$customer = $model->customer();
+		$customer_email=$customer->get('customer_email');
 		
+		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
+		$order_template = str_replace("{{customer_name}}", $customer['customer_name']?"<b>".$customer['customer_name']."</b><br>":" ", $order_template);
+		$order_template = str_replace("{{order_billing_address}}",$customer['billing_address']?$customer['billing_address']:" ", $order_template);
+		$order_template = str_replace("{{mobile_number}}", $customer['mobile_number']?$customer['mobile_number']:" ", $order_template);
+		$order_template = str_replace("{{customer_email}}", $customer['customer_email']?$customer['customer_email']:" ", $order_template);
+		$order_template = str_replace("{{order_shipping_address}}",$customer['shipping_address']?$customer['shipping_address']:" ", $order_template);
+		$order_template = str_replace("{{customer_tin_no}}", $customer['tin_no'], $order_template);
+		$order_template = str_replace("{{customer_pan_no}}", $customer['pan_no'], $order_template);
+		$order_template = str_replace("{{order_no}}", $model['name'], $order_template);
+		$order_template = str_replace("{{order_date}}", $model['created_date'], $order_template);
+		$order_template = str_replace("{{sale_order_details}}", $order_detail_html, $order_template);
+		$order_template = str_replace("{{terms_and_conditions}}", $tnc['terms_and_condition']?$tnc['terms_and_condition']:" ", $order_template);
+
 		$this->template->SetHtml('order_address',$order_template);
 		parent::setModel($model);
 
