@@ -8,7 +8,7 @@ class View_PurchaseOrder extends \CompleteLister{
 	
 	function init(){
 		parent::init();
-
+		
 		$supplier  = $this->add('xPurchase/Model_Supplier')->tryLoad($this->purchaseorder['supplier_id']);
 		// throw new \Exception("Error Processing Request");
 		$this->template->set('name',$this->purchaseorder['name']);

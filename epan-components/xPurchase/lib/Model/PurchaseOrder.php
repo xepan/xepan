@@ -441,8 +441,8 @@ class Model_PurchaseOrder extends \Model_Document{
 		// $email_body = $print_order->getHTML(false);
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{purchase_order_details}}", $view->getHtml(), $email_body);
-		$email_body = str_replace("{{company_name}}", $supplier['name']?"<b>To,<br>".$supplier['name']."</b>":" ", $email_body);
-		$email_body = str_replace("{{owner_name}}", $supplier['owner_name']?"Contact Person.:<small>Mr/Mrs.</small><b>".$supplier['owner_name']."</b><br>":" ", $email_body);
+		$email_body = str_replace("{{company_name}}", $supplier['name']?$supplier['name']:" ", $email_body);
+		$email_body = str_replace("{{owner_name}}", $supplier['owner_name']?"Contact Person.:<b>".$supplier['owner_name']."</b><br>":" ", $email_body);
 		$email_body = str_replace("{{supplier_code}}", $supplier['code']?"Code.: ".$supplier['code']:" ", $email_body);
 		$email_body = str_replace("{{mobile_number}}", $supplier['contact_no']?"Contact No.:".$supplier['contact_no']:" ", $email_body);
 		$email_body = str_replace("{{supplier_email}}", $supplier['email']?"Email.:".$supplier['email']:" ", $email_body);
