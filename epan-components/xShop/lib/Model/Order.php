@@ -53,7 +53,7 @@ class Model_Order extends \Model_Document{
 
 		// Last OrderItem Status
 		$dept_status = $this->add('xShop/Model_OrderItemDepartmentalStatus',array('table_alias'=>'ds'));
-		$oi_j = $dept_status->join('xshop_orderDetails','orderitem_id');
+		$oi_j = $dept_status->join('xshop_orderdetails','orderitem_id');
 		$oi_j->addField('order_id');
 		$dept_status->addCondition($dept_status->getELement('order_id'),$this->getElement('id'));
 		$dept_status->_dsql()->limit(1)->order($dept_status->getElement('id'),'desc')->where('status','<>','Waiting');

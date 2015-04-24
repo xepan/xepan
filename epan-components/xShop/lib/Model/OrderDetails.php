@@ -3,7 +3,7 @@
 namespace xShop;
 
 class Model_OrderDetails extends \Model_Document{
-	public $table='xshop_orderDetails';
+	public $table='xshop_orderdetails';
 
 	public $status=array();
 	public $root_document_name = 'xShop\OrderDetails';
