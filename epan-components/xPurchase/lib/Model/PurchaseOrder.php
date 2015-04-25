@@ -18,6 +18,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->addField('total_amount')->type('money');
 		$this->addField('tax')->type('money');
 		$this->addField('net_amount')->type('money');
+		$this->addField('delivery_to')->type('text');
 
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
 		$this->hasMany('xPurchase/PurchaseInvoice','po_id');
@@ -26,7 +27,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->addHook('beforeDelete',$this);
 
 		$this->addExpression('orderitem_count')->set($this->refSQL('xPurchase/PurchaseOrderItem')->count());
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
@@ -449,8 +450,9 @@ class Model_PurchaseOrder extends \Model_Document{
 		$email_body = str_replace("{{purchase_order_address}}",$supplier['address']?$supplier['address']:" ", $email_body);
 		$email_body = str_replace("{{supplier_tin_no}}", $supplier['tin_no']?$supplier['tin_no']:" - ", $email_body);
 		$email_body = str_replace("{{supplier_pan_no}}", $supplier['pan_no']?$supplier['pan_no']:" - ", $email_body);
-		$email_body = str_replace("{{purchase_Order_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{purchase_Order_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{purchase_order_no}}", $this['name'], $email_body);
+		$email_body = str_replace("{{purchase_order_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{delivery_to}}", $this['delivery_to'], $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
 
 		$emails = explode(',', $supplier['email']);

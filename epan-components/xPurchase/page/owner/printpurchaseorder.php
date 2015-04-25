@@ -34,8 +34,9 @@ class page_xPurchase_page_owner_printpurchaseorder extends Page {
 		$email_body = str_replace("{{purchase_order_address}}",$supplier['address']?$supplier['address']:" ", $email_body);
 		$email_body = str_replace("{{supplier_tin_no}}", $supplier['tin_no']?$supplier['tin_no']:" - ", $email_body);
 		$email_body = str_replace("{{supplier_pan_no}}", $supplier['pan_no']?$supplier['pan_no']:" - ", $email_body);
-		$email_body = str_replace("{{purchase_Order_no}}", $po['name'], $email_body);
-		$email_body = str_replace("{{purchase_Order_date}}", $po['created_at'], $email_body);
+		$email_body = str_replace("{{purchase_order_no}}", $po['name'], $email_body);
+		$email_body = str_replace("{{purchase_order_date}}", $po['created_at'], $email_body);
+		$email_body = str_replace("{{delivery_to}}", $po['delivery_to'], $email_body);
 
 		echo $email_body;
 		exit;

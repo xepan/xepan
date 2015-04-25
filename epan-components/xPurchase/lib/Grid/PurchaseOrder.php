@@ -33,7 +33,7 @@ class Grid_PurchaseOrder extends \Grid {
 	function setModel($purchase_order_model,$fields=null){
 		if($fields==null){
 			$fields = array(
-						'supplier_id','priority_id','name','order_summary','order_date'
+						'supplier_id','priority_id','name','order_summary','order_date','delivery_to'
 						);
 		}
 

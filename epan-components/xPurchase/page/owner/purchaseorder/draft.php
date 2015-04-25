@@ -10,7 +10,7 @@ class page_xPurchase_page_owner_purchaseorder_draft extends page_xPurchase_page_
 
 		$crud=$this->add('CRUD',array('grid_class'=>'xPurchase/Grid_PurchaseOrder','add_form_beautifier'=>false));
 
-		$crud->setModel($draft_purchase_order_model,array('supplier_id','priority','order_date','order_summary','orderitem_count'),array('name','supplier','order_date','orderitem_count'));
+		$crud->setModel($draft_purchase_order_model,array('supplier_id','priority','order_date','order_summary','orderitem_count','delivery_to'),array('name','supplier','order_date','orderitem_count'));
 		
 		if(!$crud->isEditing()){
 			$crud->grid->addColumn('expander','purchase_order_item');
