@@ -10,7 +10,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 	}
 
 	function page_index(){
-		$tabs= $this->app->layout->add('Tabs');
+		$tabs= $this->add('Tabs');
 
 		$subscription_cat_tab = $tabs->addTabURL("./total_categories",'Categories');
 		$subscriptions_tab = $tabs->addTabUrl("./total_subscriptions",'Total Subscriptions');
