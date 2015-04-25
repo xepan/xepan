@@ -38,7 +38,7 @@ class page_xShop_page_owner_printsaleinvoice extends Page{
 		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no']?"PAN No.:".$customer['pan_no']:" ", $email_body);
 		$email_body = str_replace("{{invoice_details}}", $sale_invoice_detail->getHtml(), $email_body);
 		$email_body = str_replace("{{invoice_order_no}}", $invoice['name'], $email_body);
-		$email_body = str_replace("{{invoice_date}}", $invoice['created_at'], $email_body);
+		$email_body = str_replace("{{invoice_date}}", $invoice['created_date'], $email_body);
 		$email_body = str_replace("{{dispatch_challan_no}}", "", $email_body);
 		$email_body = str_replace("{{dispatch_challan_date}}", "", $email_body);
 		$email_body = str_replace("{{terms_an_conditions}}", $tnc['terms_and_condition']?"<b>Terms & Condition.:</b><br>".$tnc['terms_and_condition']:" ", $email_body);
