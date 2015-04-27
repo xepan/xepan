@@ -427,8 +427,6 @@ class Model_PurchaseOrder extends \Model_Document{
 		$view=$this->add('xPurchase/View_PurchaseOrderDetail');
 		$view->setModel($this->itemrows());		
 		
-		$subject ="Thanku for Purchase Order";
-
 		$supplier = $this->supplier();
 		$supplier_email=$supplier->get('email');
 
@@ -451,7 +449,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$email_body = str_replace("{{supplier_tin_no}}", $supplier['tin_no']?$supplier['tin_no']:" - ", $email_body);
 		$email_body = str_replace("{{supplier_pan_no}}", $supplier['pan_no']?$supplier['pan_no']:" - ", $email_body);
 		$email_body = str_replace("{{purchase_order_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{purchase_order_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{purchase_order_date}}", $this['created_date'], $email_body);
 		$email_body = str_replace("{{delivery_to}}", $this['delivery_to'], $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
 
