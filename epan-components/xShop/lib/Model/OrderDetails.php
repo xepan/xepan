@@ -85,9 +85,9 @@ class Model_OrderDetails extends \Model_Document{
 		$order = $this->order();
 		$order->updateAmounts();
 
-		if(!in_array($order['status'],array('draft','submitted','redesign'))){
-			throw new \Exception($order['status']);	
-		}
+		// if(!in_array($order['status'],array('draft','submitted','redesign'))){
+		//	throw new \Exception($order['status']);
+		// }
 
 	}
 
