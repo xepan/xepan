@@ -12,6 +12,7 @@ class Model_OrderDetails extends \Model_Document{
 			'allow_edit'=>array('caption'=>'Whose created Quotation this post can edit'),
 			'allow_add'=>array('caption'=>'Can this post create new Quotation'),
 			'allow_del'=>array('caption'=>'Whose Created Quotation this post can delete'),
+			'forceDelete'=>array(),
 		);
 
 	function init(){
@@ -77,11 +78,17 @@ class Model_OrderDetails extends \Model_Document{
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function beforeSave(){		
+	function beforeSave(){
 	}
 
 	function afterSave(){
-		$this->order()->updateAmounts();
+		$order = $this->order();
+		$order->updateAmounts();
+
+		// if(!in_array($order['status'],array('draft','submitted','redesign'))){
+		//	throw new \Exception($order['status']);
+		// }
+
 	}
 
 	function beforeDelete(){
@@ -400,6 +407,23 @@ class Model_OrderDetails extends \Model_Document{
 		if($atts->loaded())
 			return $atts;
 		return false;
+	}
+
+	function forceDelete_page($page){
+		$page->add('View_Warning')->set('All Jobcrads will be delete');
+		$str = "";
+		$jcs = $this->jobCards();
+		foreach ($jcs as $jc) {
+			$str.= "JobCard No. ".$jc['name']." Department ".$jc['to_department']." :: ". $jc['status']."<br>";
+		}
+
+		$form = $page->add('Form_Stacked');
+		$form->addField('Readonly','Jobcards')->set($str);
+		$form->addSubmit();
+		if($form->isSubmitted()){
+			$this->delete();
+			return true;
+		}
 	}
 
 }
