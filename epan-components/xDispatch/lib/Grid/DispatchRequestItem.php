@@ -27,7 +27,7 @@ class Grid_DispatchRequestItem extends \Grid{
 	}
 
 	function format_order($field){	
-		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Order '. $this->model->orderItem()->order()->get('name'), $this->api->url($this->vp_order->getURL(),array('sales_order_no_clicked'=>$this->model->orderItem()->order()->id))).'">'. $this->model->orderItem()->order()->get('name') ."</a>";
+		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Order '. $this->model->orderItem()->order()->get('name'), $this->api->url($this->vp_order->getURL(),array('sales_order_no_clicked'=>$this->model->orderItem()->order()->id))).'">'. $this->model->orderItem()->order()->get('name') ."</a>".'<br><small style="color:gray;">'.$this->model->orderItem()->order()->get('member').'</small>';
 	}
 
 	function format_dispatchrequest($field){
