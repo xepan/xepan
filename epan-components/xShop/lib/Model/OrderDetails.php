@@ -69,7 +69,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->hasMany('xShop/SalesOrderDetailAttachment','related_document_id',null,'Attachements');
 		$this->hasMany('xShop/Jobcard','orderitem_id');
 
-		// $this->addHook('beforeSave',$this);
+		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
 		$this->addHook('afterInsert',$this);
 		$this->addHook('beforeDelete',$this);
@@ -79,16 +79,107 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function beforeSave(){
+		//CHECK FOR THE ORDER IS UNDER PROCESSING/COMPLETE
+		if(in_array($this->order()->get('status'), array('draft','submitted','redesign')))
+			return ;
+		//CHECK FOR NEW/UPDATE DEPARTMENT YES
+			if(count($new_department = $this->getNewDepartment())){
+				//$ND = GET NEW DEPARTMENT ID AND LEVEL
+				//$LC_J = GET LAST JOBCARD COMPLETED IN DEPARTMENT LEVEL
+				$jbs = $this->jobCards();
+				foreach ($jbs as $jb) {
+					if($jb['status']=="completed" or $jb['status'] == "forwarded"){
+						$dept_jobcard_complete = $this->add('xHR/Model_Department')->tryLoad($jb['to_department_id']);
+						if($dept_jobcard_complete->loaded()){
+							foreach ($new_department as $dept) {
+								if($dept_jobcard_complete['production_level'] > $dept[1])
+									throw new \Exception("Cannot Add New Previous Department, First Delete it's JobCard");
+							}
+						}
+
+					}
+				}
+			}
+			
+			//remove not completed jobcard
+			$this->removeUncompletedJobcard();
+			$this->reDepartmentAssociation();
+			// $this->reApprove();
+			// throw new \Exception("zdscx");	
+
+			// if($this->isDepartmentCustomValueUpdate()){
+			// 	//CHECK FOR DEPARTMENT JOBCARD IS WAITING THEN
+			// 		//CONTINUE
+			// 	// ELSE THROW FIRST CANCLE THE JOBCARDS FROM DEPARTMENTS
+			// }
+
+		//NO DO NOTHING
+	}
+
+	function removeUncompletedJobcard(){
+		$dept_status_all = $this->deptartmentalStatus();
+
+		foreach ($dept_status_all as $dept_status) {
+			$dept_status_dept=$dept_status->department();
+			$jc = $this->add($dept_status_dept['related_application_namespace'].'/Model_'.$dept_status_dept['jobcard_document']);
+			$jc->addCondition('orderitem_id',$this['id']);
+			$jc->addCondition('to_department_id',$dept_status_dept->id);
+			$jc->tryLoadAny();
+			if($jc->loaded() and !in_array($jc['status'], array("completed","forwarded")) ){
+				$jc->delete();
+			}
+		}
+	}
+
+	function isDepartmentCustomValueUpdate(){
+		if($this->dirty['custom_fields']){
+
+			return true;
+		}
+		
+		return false;
+	}
+	
+	function isDepartmentJobcardComplete($department_id){
+		if(!$department_id) return false;
+
+	}
+
+	function getNewDepartment(){//RETURN NEW DEPARTMENT ARRAY
+		$old_model = $this->add('xShop/Model_OrderDetails')->load($this->id);
+		$old_cfs = json_decode($old_model['custom_fields'],true);
+		$old_department = "";
+		foreach ($old_cfs as $department_id=>$cfs) {
+			if($department_id != "stockeffectcustomfield")
+				$old_department[$department_id] =$department_id;
+		}
+
+		
+		$new_departments = array();
+		if($this->dirty['custom_fields']){
+			$dirty_cfs = json_decode($this['custom_fields'],true);
+			foreach ($dirty_cfs as $department=>$dcfs) {
+				if($department != "stockeffectcustomfield" and !in_array($department, $old_department)){
+					$dept_model = $this->add('xHR/Model_Department')->load($department);
+					$new_departments[] = array($department,$dept_model['production_level']);
+				}
+			}
+			return $new_departments;
+		}
+
+		return $new_departments;
+	}
+	
+	function reDepartmentAssociation(){
+		$this->createDepartmentalAssociations();
+		if($department_association = $this->nextDeptStatus()){
+			$department_association->createJobCardFromOrder();
+		}
 	}
 
 	function afterSave(){
 		$order = $this->order();
 		$order->updateAmounts();
-
-		// if(!in_array($order['status'],array('draft','submitted','redesign'))){
-		//	throw new \Exception($order['status']);
-		// }
-
 	}
 
 	function beforeDelete(){
