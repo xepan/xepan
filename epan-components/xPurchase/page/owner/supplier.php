@@ -25,11 +25,12 @@ class page_xPurchase_page_owner_supplier extends page_xPurchase_page_owner_main 
 		$crud->add('xHR/Controller_Acl');
 		$crud->grid->add_sno();
 		// $purchase_order = $this->add('xPurchase/Model_PurchaseOrder');
+		$self=$this;
 		if(!$crud->isEditing()){
 			$g=$crud->grid;	
 			$g->addColumn('total_purchase_order');
-			$g->addMethod('format_total_purchase_order',function($g,$f){
-				$g->current_row_html[$f] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Purchase Order List ', $this->api->url($this->vp->getURL(),array('supplier_id'=>$g->model['id']))).'">'. $g->model->ref('xPurchase/PurchaseOrder')->count()->getOne()."</a>";
+			$g->addMethod('format_total_purchase_order',function($g,$f)use($self){
+				$g->current_row_html[$f] = '<a href="#na" onclick="javascript:'.$g->js()->univ()->frameURL('Purchase Order List ', $g->api->url($self->vp->getURL(),array('supplier_id'=>$g->model['id']))).'">'. $g->model->ref('xPurchase/PurchaseOrder')->count()->getOne()."</a>";
 			});
 			$g->addFormatter('total_purchase_order','total_purchase_order');
 		}
