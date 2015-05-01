@@ -148,10 +148,6 @@ class Model_SalesInvoice extends Model_Invoice{
 				}
 			}
 
-			return true;
-
-		}
-		
 		if($form['send_invoice_via_email']){
 			$inv = $this->order()->invoice();
 			
@@ -168,6 +164,11 @@ class Model_SalesInvoice extends Model_Invoice{
 			$inv->send_via_email();
 
 		}
+			$this->setStatus('completed');
+			return true;
+
+		}
+		
 	}
 
 
