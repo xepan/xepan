@@ -218,7 +218,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$form->addField('line','delivery_docket_no','Docket No / Person name / Other Reference');
 		$form->addField('text','received_narration');
 		$form->addField('Checkbox','generate_purchase_invoice');
-		$form->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'))->setEmptyText('Select Items Included in Invoice');
+		$form->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'))->setEmptyText('Please Select');
 		$form->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
 		$form->addField('Money','amount');
 		$form->addField('line','bank_account_detail');
@@ -298,7 +298,9 @@ class Model_PurchaseOrder extends \Model_Document{
 					}
 				}
 				
+				
 				$purchase_invoice = $this->createInvoice($status='approved',$purchaseLedger=null, $items_selected);
+				// throw new \Exception("Error Processing Request", 1);
 				
 				if($form['payment'] == "cash")
 					$purchase_invoice->payViaCash($form['amount']);
@@ -343,8 +345,9 @@ class Model_PurchaseOrder extends \Model_Document{
 	}
 
 	function createInvoice($status='draft',$purchaseLedger=null, $items_array=array()){
-		try{
-			$this->api->db->beginTransaction();
+		
+		// try{
+			// $this->api->db->beginTransaction();
 			$invoice = $this->add('xPurchase/Model_PurchaseInvoice')->addCondition('status', $status)->tryLoadAny();
 
 			$invoice['po_id'] = $this['id'];
@@ -354,8 +357,8 @@ class Model_PurchaseOrder extends \Model_Document{
 			
 			$invoice->relatedDocument($this);
 
-			$invoice->save();
 			$invoice['net_amount'] = $this['net_amount'];
+			$invoice->save();
 			
 
 			$ois = $this->purchaseOrderItems();
@@ -382,14 +385,14 @@ class Model_PurchaseOrder extends \Model_Document{
 				$invoice->createVoucher($purchaseLedger);
 			}
 			
-			$this->api->db->commit();
+			// $this->api->db->commit();
 			return $invoice;
-		}catch(\Exception $e){
-			echo $e->getmessage();
-			$this->api->db->rollback();
-			// if($this->api->getConfig('developer_mode',false))
-			// 	throw $e;
-		}
+		// }catch(\Exception $e){
+		// 	echo $e->getmessage();
+		// 	$this->api->db->rollback();
+		// 	// if($this->api->getConfig('developer_mode',false))
+		// 	// 	throw $e;
+		// }
 	}
 	
 
