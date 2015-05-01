@@ -27,7 +27,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 		$this->addExpression('item_under_process')->set(function($m,$q){
 			$depstat = $m->add('xShop/Model_OrderItemDepartmentalStatus');
-			$depstat->join('xshop_orderDetails','orderitem_id')
+			$depstat->join('xshop_orderdetails','orderitem_id')
 			->addField('dsorder_id','order_id');
 
 			$depstat->addCondition('department_id',$m->add('xHR/Model_Department')->loadDispatch()->get('id'));

@@ -8,7 +8,7 @@ class View_PurchaseOrder extends \CompleteLister{
 	
 	function init(){
 		parent::init();
-
+		
 		$supplier  = $this->add('xPurchase/Model_Supplier')->tryLoad($this->purchaseorder['supplier_id']);
 		// throw new \Exception("Error Processing Request");
 		$this->template->set('name',$this->purchaseorder['name']);
@@ -17,6 +17,7 @@ class View_PurchaseOrder extends \CompleteLister{
 		$this->template->set('priority',ucwords($this->purchaseorder['priority']));
 		$this->template->set('total_amount',ucwords($this->purchaseorder['total_amount']));
 		$this->template->set('order_summary',$this->purchaseorder['order_summary']);
+		$this->template->set('delivery_to',$this->purchaseorder['delivery_to']);
 		
 		$supplier_info = $this->purchaseorder['supplier']."<br>".$supplier['address']."<br>".$supplier['city'].",".$supplier['state'];
 		$this->template->trySetHtml('supplier_info',$supplier_info);

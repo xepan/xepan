@@ -53,7 +53,7 @@ class Model_Order extends \Model_Document{
 
 		// Last OrderItem Status
 		$dept_status = $this->add('xShop/Model_OrderItemDepartmentalStatus',array('table_alias'=>'ds'));
-		$oi_j = $dept_status->join('xshop_orderDetails','orderitem_id');
+		$oi_j = $dept_status->join('xshop_orderdetails','orderitem_id');
 		$oi_j->addField('order_id');
 		$dept_status->addCondition($dept_status->getELement('order_id'),$this->getElement('id'));
 		$dept_status->_dsql()->limit(1)->order($dept_status->getElement('id'),'desc')->where('status','<>','Waiting');
@@ -321,7 +321,7 @@ class Model_Order extends \Model_Document{
 			$this->sendEmail($form['to'],$form['subject'],$email_body,$ccs,$bccs);
 			$this->createActivity('email',$form['subject'],$form['custom_message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
-		}			
+		}	
 	}
 
 	function isFromOnline(){
@@ -518,6 +518,7 @@ class Model_Order extends \Model_Document{
 		$page->add('HtmlElement')->setElement('H3')->setHTML('<small>Approving Job Card will move this order to approved status and create JobCards to receive in respective FIRST Departments for EACH Item</small>');
 		if($form->isSubmitted()){
 			$this->approve($form['comments']);
+			// $this->send_via_email_page($this);
 			return true;
 		}
 		return false;

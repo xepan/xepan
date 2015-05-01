@@ -2,7 +2,7 @@
 namespace xEnquiryNSubscription;
 
 class Model_CustomFields extends \Model_Table{
-	public $table="xenquirynsubscription_custome_customFields";
+	public $table="xenquirynsubscription_custome_customfields";
 	
 	function init(){
 		parent::init();

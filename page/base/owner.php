@@ -17,7 +17,7 @@ class page_base_owner extends Page {
 			$this->api->template->tryDel('admin_template');
 		}
 
-		$user_model = $this->add('Model_User_FrontEnd');
+		$user_model = $this->add('Model_User_BackEnd');
 		$this->api->auth->setModel($user_model,'username','password');
 		$this->api->auth->addHook('updateForm',function($auth){
 			$auth->form->addClass('stacked');

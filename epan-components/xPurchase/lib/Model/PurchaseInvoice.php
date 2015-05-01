@@ -165,16 +165,16 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{purchase_invoice_details}}", $view->getHtml(), $email_body);
 		$email_body = str_replace("{{company_name}}", $supplier['name'], $email_body);
-		$email_body = str_replace("{{owner_name}}", $supplier['owner_name']?"Owner Name.:".$supplier['owner_name'].",":" ", $email_body);
-		$email_body = str_replace("{{supplier_code}}", $supplier['code']?"Code.:".$supplier['code'].",":" ", $email_body);
-		$email_body = str_replace("{{mobile_number}}", $supplier['contact_no']?"Contact No.:".$supplier['contact_no'].",":" ", $email_body);
-		$email_body = str_replace("{{purchase_order_address}}",$supplier['address']?"Address.:".$supplier['address'].",":" ", $email_body);
+		$email_body = str_replace("{{owner_name}}", $supplier['owner_name']?$supplier['owner_name']:" ", $email_body);
+		$email_body = str_replace("{{supplier_code}}", $supplier['code']?$supplier['code']:" ", $email_body);
+		$email_body = str_replace("{{mobile_number}}", $supplier['contact_no']?$supplier['contact_no']:" ", $email_body);
+		$email_body = str_replace("{{purchase_order_address}}",$supplier['address']?$supplier['address']:" ", $email_body);
 		$email_body = str_replace("{{supplier_email}}", $supplier['email'], $email_body);
-		$email_body = str_replace("{{supplier_tin_no}}", $supplier['tin_no']?"TIN No.:".$supplier['tin_no'].",":" ", $email_body);
-		$email_body = str_replace("{{supplier_pan_no}}", $supplier['pan_no']?"PAN No.:".$supplier['pan_no'].",":" ", $email_body);
+		$email_body = str_replace("{{supplier_tin_no}}", $supplier['tin_no']?$supplier['tin_no']:" - ", $email_body);
+		$email_body = str_replace("{{supplier_pan_no}}", $supplier['pan_no']?$supplier['pan_no']:" - ", $email_body);
 		$email_body = str_replace("{{purchase_Order_no}}", $this['name'], $email_body);
 		$email_body = str_replace("{{purchase_Order_date}}", $this['created_at'], $email_body);
-		$email_body = str_replace("{{terms_an_conditions}}", $tnc['terms_and_condition']?"<b>Terms & Condition.:</b><br>".$tnc['terms_and_condition']:" ", $email_body);
+		$email_body = str_replace("{{terms_an_conditions}}", $tnc['terms_and_condition']?$tnc['terms_and_condition']:" ", $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
 		// echo $email_body;
 		// return;

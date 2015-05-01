@@ -15,7 +15,7 @@ class Model_SMS extends \Model_Document {
 
 		$this->addField('return')->type('text');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function send(){

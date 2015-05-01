@@ -18,6 +18,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->addField('total_amount')->type('money');
 		$this->addField('tax')->type('money');
 		$this->addField('net_amount')->type('money');
+		$this->addField('delivery_to')->type('text');
 
 		$this->hasMany('xPurchase/PurchaseOrderItem','po_id');
 		$this->hasMany('xPurchase/PurchaseInvoice','po_id');
@@ -26,7 +27,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->addHook('beforeDelete',$this);
 
 		$this->addExpression('orderitem_count')->set($this->refSQL('xPurchase/PurchaseOrderItem')->count());
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
@@ -426,8 +427,6 @@ class Model_PurchaseOrder extends \Model_Document{
 		$view=$this->add('xPurchase/View_PurchaseOrderDetail');
 		$view->setModel($this->itemrows());		
 		
-		$subject ="Thanku for Purchase Order";
-
 		$supplier = $this->supplier();
 		$supplier_email=$supplier->get('email');
 
@@ -441,16 +440,17 @@ class Model_PurchaseOrder extends \Model_Document{
 		// $email_body = $print_order->getHTML(false);
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{purchase_order_details}}", $view->getHtml(), $email_body);
-		$email_body = str_replace("{{company_name}}", $supplier['name']?"<b>To,<br>".$supplier['name']."</b>":" ", $email_body);
-		$email_body = str_replace("{{owner_name}}", $supplier['owner_name']?"Contact Person.:<small>Mr/Mrs.</small><b>".$supplier['owner_name']."</b><br>":" ", $email_body);
-		$email_body = str_replace("{{supplier_code}}", $supplier['code']?"Code.: ".$supplier['code']:" ", $email_body);
-		$email_body = str_replace("{{mobile_number}}", $supplier['contact_no']?"Contact No.:".$supplier['contact_no']:" ", $email_body);
-		$email_body = str_replace("{{supplier_email}}", $supplier['email']?"Email.:".$supplier['email']:" ", $email_body);
-		$email_body = str_replace("{{purchase_order_address}}",$supplier['address']?"Addess.:".$supplier['address']:" ", $email_body);
-		$email_body = str_replace("{{supplier_tin_no}}", $supplier['tin_no'], $email_body);
-		$email_body = str_replace("{{supplier_pan_no}}", $supplier['pan_no'], $email_body);
-		$email_body = str_replace("{{purchase_Order_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{purchase_Order_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{company_name}}", $supplier['name']?$supplier['name']:" ", $email_body);
+		$email_body = str_replace("{{owner_name}}", $supplier['owner_name']?$supplier['owner_name']:" ", $email_body);
+		$email_body = str_replace("{{supplier_code}}", $supplier['code']?$supplier['code']:" ", $email_body);
+		$email_body = str_replace("{{mobile_number}}", $supplier['contact_no']?$supplier['contact_no']:" ", $email_body);
+		$email_body = str_replace("{{supplier_email}}", $supplier['email']?$supplier['email']:" ", $email_body);
+		$email_body = str_replace("{{purchase_order_address}}",$supplier['address']?$supplier['address']:" ", $email_body);
+		$email_body = str_replace("{{supplier_tin_no}}", $supplier['tin_no']?$supplier['tin_no']:" - ", $email_body);
+		$email_body = str_replace("{{supplier_pan_no}}", $supplier['pan_no']?$supplier['pan_no']:" - ", $email_body);
+		$email_body = str_replace("{{purchase_order_no}}", $this['name'], $email_body);
+		$email_body = str_replace("{{purchase_order_date}}", $this['created_date'], $email_body);
+		$email_body = str_replace("{{delivery_to}}", $this['delivery_to'], $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
 
 		$emails = explode(',', $supplier['email']);
