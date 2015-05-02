@@ -193,7 +193,7 @@ class Model_Email extends \Model_Document{
 					$fetched = $this->add('xCRM/Model_Email')
 							->addCondition('uid',$mail->id)
 							->addCondition('from_email',$mail->fromAddress)
-							->addCondition('to_email',is_array($mail->to)?implode(",", $mail->to):$mail->to)
+							->addCondition('to_email',is_array($mail->to)?implode(",", array_keys($mail->to)):$mail->to)
 							->addCondition('created_at',$mail->date)
 							->tryLoadAny();
 							;
@@ -202,7 +202,7 @@ class Model_Email extends \Model_Document{
 					$mail_m['created_at']= $mail->date;
 					$mail_m['from_email'] = $mail->fromAddress;
 					$mail_m['subject'] = $mail->subject;
-					$mail_m['to_email'] = is_array($mail->to)?implode(",", $mail->to):$mail->to;
+					$mail_m['to_email'] = is_array($mail->to)?implode(",", array_keys($mail->to)):$mail->to;
 					$mail_m['cc'] = is_array($mail->cc)?implode(",", $mail->cc):$mail->cc;
 					$mail_m['message'] = $mail->textHtml;
 					$mail_m->saveAndUnload();
@@ -259,16 +259,19 @@ class Model_Email extends \Model_Document{
 			return false;
 
 		//get ticket no from subject
-		preg_match_all("\[[a-zA-Z]*\\\\[a-zA-Z]*\\\\[0-9]*]",$this['subject'],$preg_match_array);
+		preg_match_all('/([a-zA-Z]+[\\\\][a-zA-Z]+[ ]+[0-9]+)/',$this['subject'],$preg_match_array);
+		// throw new \Exception($this['subject'].  var_dump($preg_match_array[1][0]), 1);
+		if(!count($preg_match_array[1])) return;
+		
 
 		//Guess Ticket
-		$relatedDocument = $preg_match_array[0];
-		$document_array = explode("\\", $relatedDocument);
+		$relatedDocument = $preg_match_array[1][0];
+		$document_array_all = explode(" ", $relatedDocument);
+		$document_array = explode("\\", $document_array_all[0]);
 
 		$document = $this->add($document_array[0].'\Model_'.$document_array[1]);
-		$document->load($document_array[2]);
+		$document->tryLoadBy('name',$document_array_all[1]);
 
-		$document->tryLoadAny();
 		if($document->loaded()){
 			$document->createActivity('Email',$this['subject'],$this['message'],$this['from'],$this['from_id'], $this['to'], $this['to_id']);
 			$document->relatedDocument($this);
