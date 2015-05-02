@@ -50,18 +50,18 @@ class Model_Task extends \Model_Document{
 		$this->saveAndUnload();
 	}
 
-	function can_mark_processed_page($p){
-		$form = $p->add('Form');
-		$form->addField('line','num1');
-		$form->addField('line','num2');
-		$form->addSubmit();
+	function mark_processed_page($p){
+		$form = $p->add('Form_Stacked');
+		$form->addField('line','remark');
+		$form->addSubmit('Processed');
 
 		if($form->isSubmitted()){
-			$form->displayError('num1','oops');
+			$this->setStatus('processed',$form['remark']);
+			return true;
 		}
 	}
 
-	function can_mark_processed(){
+	function mark_processed(){
 		if($rd = $this->relatedDocument()){
 			$rd->setStatus('processed');
 		}
