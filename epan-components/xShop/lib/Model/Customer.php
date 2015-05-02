@@ -81,4 +81,6 @@ class Model_Customer extends Model_MemberDetails{
 			return false;
 		return $this['mobile_number'];	
 	}
+
+	
 }

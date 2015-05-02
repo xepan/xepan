@@ -33,10 +33,18 @@ class Model_Email extends \Model_Document{
 
 		$this->addField('subject');
 		$this->addField('message')->type('text');
+		
+		$this->addHook('afterSave',$this);
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id');
 	//	$this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+	function afterSave(){
+		$this->guessFrom();
+		$this->guessDocument();
+	}
+
 
 	function createFromActivity($activity){
 		$this['from'] = $activity['from'];
@@ -171,9 +179,8 @@ class Model_Email extends \Model_Document{
 		// return;
 		// Get some mail
 		try{
-			$mailsIds = $mailbox->searchMailBox('SINCE '.date('d-M-Y',strtotime('-1 month')));
+			$mailsIds = $mailbox->searchMailBox('SINCE '.date('d-M-Y',strtotime('-1 day')));
 			if(!$mailsIds) {
-				echo "oops";
 				$mailbox->disconnect();
 			}else{
 				$mail_m = $this->add('xCRM/Model_Email');
@@ -204,8 +211,8 @@ class Model_Email extends \Model_Document{
 			}
 
 		}catch(\Exception $e){
-			throw $e;
 			$mailbox->disconnect();
+			throw $e;
 		}
 
 		function populateFromAndToIds(){
@@ -223,4 +230,119 @@ class Model_Email extends \Model_Document{
 		}
 
 	}
+
+	function guessFrom(){
+		if(!$this->loaded())
+			return false;
+
+		if(!$this['from_email'])
+			return false;
+
+		//GUESS CUSTOMER
+		if($customer = $this->customer()){
+			$this['from'] = "Customer";
+			$this['from_id'] = $customer['id'];
+		}elseif($supplier = $this->supplier()){
+			//guess Supplier
+			$this['from'] = "Supplier";
+			$this['from_id'] = $supplier['id'];
+		}elseif($emp = $this->employee()){
+			$this['from'] = "Employee";
+			$this['from_id'] = $emp['id'];
+		}
+		
+		$this->save();
+	}
+
+	function guessDocument(){
+		if(!$this['subject'])
+			return false;
+
+		//get ticket no from subject
+		preg_match_all("\[[a-zA-Z]*\\\\[a-zA-Z]*\\\\[0-9]*]",$this['subject'],$preg_match_array);
+
+		//Guess Ticket
+		$relatedDocument = $preg_match_array[0];
+		$document_array = explode("\\", $relatedDocument);
+
+		$document = $this->add($document_array[0].'\Model_'.$document_array[1]);
+		$document->load($document_array[2]);
+
+		$document->tryLoadAny();
+		if($document->loaded()){
+			$document->createActivity('Email',$this['subject'],$this['message'],$this['from'],$this['from_id'], $this['to'], $this['to_id']);
+			$document->relatedDocument($this);
+		}
+
+	}
+
+	function customer(){
+		$cstmr = $this->add('xShop/Model_Customer');
+		$cstmr->addCondition('customer_email','like','%'.$this['from_email'].'%');
+		
+		if($cstmr->count()->getOne() > 1)
+			return false;
+
+		$cstmr->tryLoadAny();
+		if($cstmr->loaded())
+			return $cstmr;
+
+		return false;
+	}
+
+	function supplier(){
+		$supplr = $this->add('xPurchase/Model_Supplier'); 
+		$supplr->addCondition('email','like','%'.$this['from_email'].'%');
+
+		if($supplr->count()->getOne() > 1)
+			return false;
+
+		$supplr->tryLoadAny();
+		if($supplr->loaded())
+			return $supplr;
+
+		return false;
+	}
+
+	function employee(){
+		$emp = $this->add('xHR/Model_Employee');
+		$emp->addCondition('personal_email','like','%'.$this['from_email'].'%');
+		
+		if($emp->count()->getOne() > 1)
+			return false;
+
+		$emp->tryLoadAny();
+		if($emp->loaded())
+			return $emp;
+
+		return false;
+	}
+
+
+	function loadDepartmentEmails($dept_id=null){
+		if(!$dept_id)
+			$dept_id = $this->api->stickyGET('department_id');
+		
+		$official_emails = $this->add('xHR/Model_OfficialEmail');
+		$official_emails->addCondition('department_id',$dept_id);
+		
+		if(!$official_emails->count()->getOne())
+			return false;
+		
+		$official_email_array = array();
+		foreach ($official_emails as $official_email) {
+			$official_email_array[] = $official_email['email_username'];
+			$official_email_array[] = $official_email['imap_email_username'];
+		}
+
+		$this->addCondition(
+					$this->dsql()->orExpr()
+						->where('from_email','in',$official_email_array)
+						->where('to_email','in',$official_email_array)
+					);
+
+		$this->tryLoadAny();
+		return $this;
+	}
+
 }
