@@ -56,22 +56,22 @@ class Model_Task extends \Model_Document{
 		$form->addSubmit('Processed');
 
 		if($form->isSubmitted()){
-			$this->setStatus('processed',$form['remark']);
+			$this->mark_processed($form['remark']);
 			return true;
 		}
 	}
 
-	function approve(){
-		$this['status']='completed';
-		$this->saveAndUnload();
-	}
 
-	function mark_processed(){
+	function mark_processed($remark){
 		if($rd = $this->relatedDocument()){
 			$rd->setStatus('processed');
 		}
 
-		$this['status']='processed';
+		$this->setStatus('processed',$remark);
+	}
+
+	function approve(){
+		$this['status']='completed';
 		$this->saveAndUnload();
 	}
 
