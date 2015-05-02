@@ -61,6 +61,11 @@ class Model_Task extends \Model_Document{
 		}
 	}
 
+	function approve(){
+		$this['status']='completed';
+		$this->saveAndUnload();
+	}
+
 	function mark_processed(){
 		if($rd = $this->relatedDocument()){
 			$rd->setStatus('processed');
