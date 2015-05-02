@@ -11,9 +11,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		});
 
 		$dept_id= $this->api->stickyGET('department_id');
-
-		$model = $this->add('xHR/Model_OfficialEmail');
-		$model->addCondition('department_id',$dept_id);
+		
 		$this->add('View_Success')->set($dept_id);
 
 		$col=$this->add('Columns');
@@ -68,8 +66,17 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		
 		$right_col=$col->addColumn(9);
 
+		$email = $this->add('xCRM/Model_Email');
+		$emails = $email->loadDepartmentEmails();
+		if(!$emails){
+			$emails = $email->addCondition('id',-1);
+		}
+		// $official_email = $this->add('xHR/Model_OfficialEmail');
+		// $official_email->addCondition('department_id',$dept_id);
+
+
 		$mail_crud=$right_col->add('CRUD');
-		$mail_crud->setModel('xCRM/Email',array(),array('subject'));
+		$mail_crud->setModel($emails,array(),array('subject'));
 		$mg=$mail_crud->grid;
 		
 		$mg->addMethod('format_subject',function($g,$f)use($message_vp){

@@ -32,4 +32,6 @@ class Model_OfficialEmail extends \Model_Document{
 		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
+
+	
 }
