@@ -70,12 +70,16 @@ class Model_Activity extends \Model_Document{
 			$users->where('users_id',$q->getField('to_id'));
 			$users->del('fields');
 
-
+			$nq2=$m->api->db->dsql();
+			$suppliers = $nq2->table('xpurchase_supplier');
+			$suppliers->where('id',$q->getField('from_id'));
+			$suppliers->del('fields');
 
 			$str="(
 					CASE ".$q->getField('to')."
 						WHEN 'Employee' THEN (".$emp_q->field('name')->render().")
 						WHEN 'Customer' THEN (". $users->field('name')->render() ." )
+						WHEN 'Supplier' THEN (". $suppliers->field('name')->render() ." )
 					END
 				)";
 
