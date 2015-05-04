@@ -15,7 +15,7 @@ class page_xProduction_page_owner_task_processing extends page_xProduction_page_
 		$crud=$left_col->add('CRUD',array('grid_class'=>'xProduction/Grid_Task'));
 		$crud->setModel($mytask);
 
-		$crud->add('xHR/Controller_Acl');
+		// $crud->add('xHR/Controller_Acl');
 
 		$right_col->add('View_Info')->set('Processing By Employee');
 		$emptask = $right_col->add('xProduction/Model_Task_Processing');
@@ -23,6 +23,6 @@ class page_xProduction_page_owner_task_processing extends page_xProduction_page_
 		$crud=$right_col->add('CRUD',array('grid_class'=>'xProduction/Grid_Task'));
 		$crud->setModel($emptask);
 
-		$crud->add('xHR/Controller_Acl');
+		// $crud->add('xHR/Controller_Acl');
 	}
 }

@@ -39,7 +39,7 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 			$assign_to_me_task->addCondition('employee_id',$this->api->current_employee->id);
 			$left_crud=$right_col->add('CRUD',array('grid_class'=>'xProduction/Grid_Task'));
 			$left_crud->setModel($assign_to_me_task);
-			$left_crud->add('xHR/Controller_Acl');
+			// $left_crud->add('xHR/Controller_Acl');
 
 	}
 

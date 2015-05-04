@@ -13,7 +13,7 @@ class page_xProduction_page_owner_task_rejected extends page_xProduction_page_ow
 
 		$crud=$this->add('CRUD',array('grid_class'=>'xProduction/Grid_Task'));
 		$crud->setModel($task_model);
-		$crud->add('xHR/Controller_Acl');
+		// $crud->add('xHR/Controller_Acl');
 
 		
 	}
