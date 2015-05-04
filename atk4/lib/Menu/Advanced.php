@@ -64,16 +64,15 @@ abstract class Menu_Advanced extends View
         }
 
         if (is_array($title)) {
-
-            /*
-            // Allow to set custom classes on a element
-            if ($title['a']) {
-                $this->setComponents($title['a'],'a');
-                unset($title['a']);
+            if ($title['badge']) {
+                $i->add('View')
+                    ->setElement('span')
+                    ->addClass('atk-label')
+                    ->set($title['badge']);
+                unset($title['badge']);
             }
-             */
-
         }
+
         $i->set($title);
 
         $m = $i->add($class,array(
