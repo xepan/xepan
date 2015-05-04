@@ -192,7 +192,7 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		$form->add('View')->setHTML($email_body);
 		$form->addSubmit('Send');
 		if($form->isSubmitted()){
-			$email_body .= $form['custom_message']."<br>".$email_body;
+			$email_body = $form['custom_message']."<br>".$email_body;
 			$this->sendEmail($form['to'],$form['subject'],$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));
 			$this->createActivity('email',$form['subject'],$form['custom_message'],$from=null,$from_id=null, $to='supplier', $to_id=$supplier->id);
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
