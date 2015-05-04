@@ -71,6 +71,7 @@ abstract class Menu_Advanced extends View
                     ->set($title['badge']);
                 unset($title['badge']);
             }
+
         }
 
         $i->set($title);
