@@ -348,4 +348,38 @@ class Model_Email extends \Model_Document{
 		return $this;
 	}
 
+	function isReceive(){
+
+		$dept = $this->add('xHR/Model_Department')->load($this->api->stickyGET('department_id'));
+		$official_emails = $dept->officialEmails();
+
+		// if(!$official_emails->count()->getOne())
+		// 	return false;		
+		foreach ($official_emails as $official_email) {
+			if($this['to_email'] == $official_email['imap_email_username'])
+				return true;
+		}
+
+		
+		return false;
+
+	}
+
+	function isSent(){
+		$dept = $this->add('xHR/Model_Department')->load($this->api->stickyGET('department_id'));
+		$official_emails = $dept->officialEmails();
+
+		// if(!$official_emails->count()->getOne())
+		// 	return false;
+
+		foreach ($official_emails as $official_email) {
+			if($this['from_email'] == $official_email['email_username']){
+				return true;
+			}
+		}
+
+		return false;		
+	}
+
+
 }
