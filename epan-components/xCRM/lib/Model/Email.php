@@ -185,6 +185,7 @@ class Model_Email extends \Model_Document{
 			}else{
 				$mail_m = $this->add('xCRM/Model_Email');
 				$i=1;
+				$fetch_email_array = array();
 				foreach ($mailsIds as $mailId) {
 					$mail = $mailbox->getMail($mailId);
 					// var_dump($mail);
@@ -205,9 +206,24 @@ class Model_Email extends \Model_Document{
 					$mail_m['to_email'] = is_array($mail->to)?implode(",", array_keys($mail->to)):$mail->to;
 					$mail_m['cc'] = is_array($mail->cc)?implode(",", $mail->cc):$mail->cc;
 					$mail_m['message'] = $mail->textHtml;
-					$mail_m->saveAndUnload();
+					$mail_m->save();
+					$fetch_email_array[] = $mail_m->id;
+					$mail_m->unload();
+
 					$i++;
 				}
+
+				//FOR EMAIL FROM AND DOCUMENT GUESS
+				if(count($fetch_email_array) > 0){
+					$email = $this->add('xCRM\Model_Email');
+					foreach ($fetch_email_array as $email_id) {
+						$email->load($email_id);
+						$email->guessFrom();
+						$email->guessDocument();
+						$email->unload();
+					}
+				}
+
 			}
 
 		}catch(\Exception $e){
