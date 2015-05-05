@@ -111,6 +111,9 @@ class Model_Activity extends \Model_Document{
 	}
 
 	function beforeSave(){
+		if($this['to'])
+			return;
+		
 		$to = $this->relatedDocument()->getTo();
 		if($to instanceof \xShop\Model_Customer){
 			$this['to'] = 'Customer';
