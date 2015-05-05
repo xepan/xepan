@@ -97,7 +97,6 @@ class Model_Quotation extends \Model_Document{
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
-		$subject ="Thank You for Enquiry";
 		$customer = $this->customer();
 		$customer_email=$customer->get('customer_email');
 
@@ -134,7 +133,7 @@ class Model_Quotation extends \Model_Document{
 		$form->add('View')->setHTML($email_body);
 		$form->addSubmit('Send');
 		if($form->isSubmitted()){
-			$email_body .= $form['custom_message']."<br>".$email_body;
+			$email_body = $form['custom_message']."<br>".$email_body;
 			$this->sendEmail($form['to'],$form['subject'],$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));
 			$this->createActivity('email',$form['subject'],$form['message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();

@@ -34,16 +34,16 @@ class Model_Email extends \Model_Document{
 		$this->addField('subject');
 		$this->addField('message')->type('text');
 		
-		$this->addHook('afterSave',$this);
+		// $this->addHook('afterSave',$this);
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id');
 	//	$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function afterSave(){
-		$this->guessFrom();
-		$this->guessDocument();
-	}
+	// function afterSave(){
+	// 	$this->guessFrom();
+	// 	$this->guessDocument();
+	// }
 
 
 	function createFromActivity($activity){
@@ -56,7 +56,7 @@ class Model_Email extends \Model_Document{
 		$notification_prefix="";
 		if($activity['action']!='email'){
 			$notification_prefix="Activity Notification @ ";
-			$this['notify_via_email']=false;
+			$activity['notify_via_email']=false;
 		}
 
 		//GET ACTIVITY AGAINATS MODEL/name
@@ -185,6 +185,7 @@ class Model_Email extends \Model_Document{
 			}else{
 				$mail_m = $this->add('xCRM/Model_Email');
 				$i=1;
+				$fetch_email_array = array();
 				foreach ($mailsIds as $mailId) {
 					$mail = $mailbox->getMail($mailId);
 					// var_dump($mail);
@@ -205,9 +206,24 @@ class Model_Email extends \Model_Document{
 					$mail_m['to_email'] = is_array($mail->to)?implode(",", array_keys($mail->to)):$mail->to;
 					$mail_m['cc'] = is_array($mail->cc)?implode(",", $mail->cc):$mail->cc;
 					$mail_m['message'] = $mail->textHtml;
-					$mail_m->saveAndUnload();
+					$mail_m->save();
+					$fetch_email_array[] = $mail_m->id;
+					$mail_m->unload();
+
 					$i++;
 				}
+
+				//FOR EMAIL FROM AND DOCUMENT GUESS
+				if(count($fetch_email_array) > 0){
+					$email = $this->add('xCRM\Model_Email');
+					foreach ($fetch_email_array as $email_id) {
+						$email->load($email_id);
+						$email->guessFrom();
+						$email->guessDocument();
+						$email->unload();
+					}
+				}
+
 			}
 
 		}catch(\Exception $e){
@@ -272,7 +288,7 @@ class Model_Email extends \Model_Document{
 		$document = $this->add($document_array[0].'\Model_'.$document_array[1]);
 		$document->tryLoadBy('name',$document_array_all[1]);
 
-		if($document->loaded()){
+		if($document->loaded()){	
 			$document->createActivity('Email',$this['subject'],$this['message'],$this['from'],$this['from_id'], $this['to'], $this['to_id']);
 			$document->relatedDocument($this);
 		}
@@ -347,5 +363,39 @@ class Model_Email extends \Model_Document{
 		$this->tryLoadAny();
 		return $this;
 	}
+
+	function isReceive(){
+
+		$dept = $this->add('xHR/Model_Department')->load($this->api->stickyGET('department_id'));
+		$official_emails = $dept->officialEmails();
+
+		// if(!$official_emails->count()->getOne())
+		// 	return false;		
+		foreach ($official_emails as $official_email) {
+			if($this['to_email'] == $official_email['imap_email_username'])
+				return true;
+		}
+
+		
+		return false;
+
+	}
+
+	function isSent(){
+		$dept = $this->add('xHR/Model_Department')->load($this->api->stickyGET('department_id'));
+		$official_emails = $dept->officialEmails();
+
+		// if(!$official_emails->count()->getOne())
+		// 	return false;
+
+		foreach ($official_emails as $official_email) {
+			if($this['from_email'] == $official_email['email_username']){
+				return true;
+			}
+		}
+
+		return false;		
+	}
+
 
 }
