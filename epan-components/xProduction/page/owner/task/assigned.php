@@ -19,8 +19,9 @@ class page_xProduction_page_owner_task_assigned extends page_xProduction_page_ow
 		$right_col->add('View_Info')->set('Assign By Me');
 		$assign_by_me_task = $right_col->add('xProduction/Model_Task_Assigned');
 		$assign_by_me_task->addCondition('created_by_id',$this->api->current_employee->id);
-		$crud=$right_col->add('CRUD',array('grid_class'=>'xProduction/Grid_Task'));
+		$crud=$right_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false,'allow_del'=>false,'grid_class'=>'xProduction/Grid_Task'));
 		$crud->setModel($assign_by_me_task);
+
 		// $crud->add('xHR/Controller_Acl');
 
 		
