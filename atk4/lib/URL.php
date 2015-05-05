@@ -77,6 +77,21 @@ http://mysite:123/install/dir/my/page.html
         $this->absolute=true;
         return $this;
     }
+
+    private $_current=false;
+    private $_current_sub=false;
+
+    /**
+     * Detects if the URL matches current page. If
+     * $include_sub is set to true, then it will also
+     * detect to match sub-pages too.
+     */
+    function isCurrent($include_sub = false){
+        if($include_sub)return $this->_current_sub;
+        return $this->_current;
+    }
+
+
     /** [private] automatically called with 1st argument of api->url() */
     function setPage($page=null){
         // The following argument formats are supported:
@@ -126,6 +141,8 @@ http://mysite:123/install/dir/my/page.html
         if($destination==='')$destination=@$this->api->index_page;
 
         $this->page=$destination;
+        $this->_current = $this->page == $this->app->page;
+        $this->_current_sub = $this->page == substr($this->app->page,0,strlen($this->page));
         return $this;
     }
     /** Set additional arguments */

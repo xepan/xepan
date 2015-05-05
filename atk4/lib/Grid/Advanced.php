@@ -400,8 +400,13 @@ class Grid_Advanced extends Grid_Basic
         $totals_columns = array_keys($this->totals) ?: array();
         foreach ($this->columns as $field=>$column) {
 
-            // process formatters (additional to default formatters)
-            $this->executeFormatters($field, $column, 'format_totals_', true);
+            if (in_array($field, $totals_columns)) {
+                // process formatters (additional to default formatters)
+                $this->executeFormatters($field, $column, 'format_totals_', true);
+            } else {
+                // show empty cell if totals are not calculated for this column
+                @$this->current_row_html[$field] = '';
+            }
 
             // totals title displaying
             if ($field == $this->totals_title_field) {
@@ -1347,7 +1352,7 @@ class Grid_Advanced extends Grid_Basic
         $this->current_row['_link'] =
             $this->api->url($page, array($attr =>
                 $this->columns[$field]['id_value']
-                ? $this->model[$this->columns[$field]['id_value']]
+                ? $this->current_row[$this->columns[$field]['id_value'].'_original']
                 : $this->current_id));
 
         if (!$this->current_row[$field]) {
