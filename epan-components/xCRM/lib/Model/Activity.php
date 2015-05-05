@@ -148,14 +148,17 @@ class Model_Activity extends \Model_Document{
 
 	}
 
-	function afterSave(){
-		if($this['notify_via_email'] OR $this['action']=='email'){
-			$this->notifyViaEmail();
-		}
+	function afterSave($obj){
+		if(!isset($this->notified)){
+			if($this['notify_via_email'] OR $this['action']=='email'){
+				$this->notifyViaEmail();
+			}
 
-		if($this['notify_via_sms'])
-			$this->notifyViaSMS();
-		
+			if($this['notify_via_sms']){
+				$this->notifyViaSMS();
+			}
+		}
+		$this->notified = true;
 	}
 
 	function getAssociateTo(){
