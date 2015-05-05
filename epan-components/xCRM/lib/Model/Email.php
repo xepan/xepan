@@ -34,16 +34,16 @@ class Model_Email extends \Model_Document{
 		$this->addField('subject');
 		$this->addField('message')->type('text');
 		
-		$this->addHook('afterSave',$this);
+		// $this->addHook('afterSave',$this);
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id');
 	//	$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function afterSave(){
-		$this->guessFrom();
-		$this->guessDocument();
-	}
+	// function afterSave(){
+	// 	$this->guessFrom();
+	// 	$this->guessDocument();
+	// }
 
 
 	function createFromActivity($activity){
@@ -56,7 +56,7 @@ class Model_Email extends \Model_Document{
 		$notification_prefix="";
 		if($activity['action']!='email'){
 			$notification_prefix="Activity Notification @ ";
-			$this['notify_via_email']=false;
+			$activity['notify_via_email']=false;
 		}
 
 		//GET ACTIVITY AGAINATS MODEL/name
@@ -272,7 +272,7 @@ class Model_Email extends \Model_Document{
 		$document = $this->add($document_array[0].'\Model_'.$document_array[1]);
 		$document->tryLoadBy('name',$document_array_all[1]);
 
-		if($document->loaded()){
+		if($document->loaded()){	
 			$document->createActivity('Email',$this['subject'],$this['message'],$this['from'],$this['from_id'], $this['to'], $this['to_id']);
 			$document->relatedDocument($this);
 		}
