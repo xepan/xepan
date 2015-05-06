@@ -140,7 +140,7 @@ class page_tests_00reset extends Page_Tester {
                 'user_type'=>100,
                 'user_active'=>1,
                 'user_permissions'=>array('user_management'=>1,'general_settings'=>1,'application_management'=>1,'website_designing'=>1),
-                'user_app_access'=>17,
+                'user_app_access'=>$this->add('Model_MarketPlace')->count()->getOne() - 1, //  leaving baseElements
             );
 
     }
