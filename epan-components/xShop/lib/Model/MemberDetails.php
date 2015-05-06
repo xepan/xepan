@@ -137,6 +137,13 @@ class Model_MemberDetails extends \Model_Document{
 			}
 	}
 
+	function user($return_dummy=false){
+		$user = $this->add('Model_Users')->addCondition('id',$this['users_id'])->tryLoadAny();
+		if($user->loaded()) return $user;
+		if($return_dummy) return new \Dummy();
+		return false;
+	}
+
 	function is_current_user(){
 		if($this['users_id'] == $this->api->auth->model->id)
 			return true;

@@ -6,34 +6,97 @@ class page_tests_05user extends Page_Tester {
 
 
     function prepare_Add(){
-    	$user = $this->add('Model_Users');
-    	// $user->addCondition('email','');
-    	// $user->tryLoadAny();
+        // $user->addCondition('email','');
+        // $user->tryLoadAny();
 
+        $last_user = $this->add('Model_Users')->setOrder('id','desc')->tryLoadAny();
+
+    	$user = $this->add('Model_Users');
     	$user['name']="xepan";
-    	$user['email']="email@example.com";
-    	$user['username']="xepan";
+    	$user['email']= "test". ($last_user->id + 1 )."@example.com";
+    	$user['username']= "xepan".($last_user->id + 1 );
     	$user['password']="xepan";
-    	$user['type'] =100;
+    	$user['type'] = 100;
+        $user->allow_re_adding_user = true;
     	$user->save();
 
-    	$this->api->memorize('new_user',$user->id);
+        $last_member = $this->add('xShop/Model_MemberDetails')->setLimit(1)->setOrder('id','desc')->tryLoadAny();
 
     	$this->proper_responses['Test_Add']=array(
         		'user_id'=>$user['id'],
-        		'member_detail_id'=>$user->member()->tryLoadAny()->id
+                'member_detail_id'=>$last_member->id,
+        		'member_user_id'=>$user->id
         	);
+
+        return array($user);
 
     }
 
-    function Test_Add(){
-    	$new_user = $this->api->recall('new_user');
-    	$new_user_model = $this->add('Model_Users')->load($new_user);
-    	$new_member = $new_user_model->member()->tryLoadAny();
+    function Test_Add($new_user){
+    	$new_member = $new_user->member()->tryLoadAny();
     	return array(
-        		'user_id'=>$new_user,
-        		'member_detail_id'=>$new_member->id
+        		'user_id'=>$new_user->id,
+                'member_detail_id'=>$new_member->id,
+        		'member_user_id'=>$new_member->user(true)->get('id'),
         	);
+    }
+
+    function prepare_repeatedEmailCheck(){
+        $this->proper_responses['Test_repeatedEmailCheck']=array(
+                'repeated_email_exception'=>'Value "repeated@example.com" already exists',
+                'empty_email_exception'=>'Must be a valid email address',
+            );
+    }
+
+    function test_repeatedEmailCheck(){
+        $is_exception_orrcured = 0;
+        $is_emptyemail_exception_orrcured=0;
+
+        try{
+            
+            $user = $this->add('Model_Users');
+            $user['name']="xepan";
+            $user['email']= "repeated@example.com";
+            $user['username']="xepan";
+            $user['password']="xepan";
+            $user['type'] =100;
+            $user->allow_re_adding_user = true;
+            $user->save();
+
+            $user = $this->add('Model_Users');
+            $user['name']="xepan";
+            $user['email']= "repeated@example.com";
+            $user['username']="xepan";
+            $user['password']="xepan";
+            $user['type'] =100;
+            $user->allow_re_adding_user = true;
+            $user->save();
+
+
+        }catch(Exception $e){
+            $is_exception_orrcured = $e->getMessage();
+        }
+
+        try{
+            
+            $user = $this->add('Model_Users');
+            $user['name']="xepan";
+            // $user['email']= "";
+            $user['username']="xepan";
+            $user['password']="xepan";
+            $user['type'] =100;
+            $user->save();
+
+        }catch(Exception $e){
+            $is_emptyemail_exception_orrcured = $e->getMessage();
+        }
+
+
+        return array(
+            'repeated_email_exception'=> $is_exception_orrcured,
+            'empty_email_exception'=> $is_emptyemail_exception_orrcured,
+
+            );
     }
 
     function prepare_Edit(){
