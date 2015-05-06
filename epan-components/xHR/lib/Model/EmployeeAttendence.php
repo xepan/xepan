@@ -6,6 +6,7 @@ class Model_EmployeeAttendence extends \Model_Table{
 	function init(){
 		parent::init();
 
+		
 		$this->hasOne('xHR/Employee','employee_id');
 		$this->addField('date')->type('date');
 		$this->addField('status')->enum(array('present','absent','half_day'));

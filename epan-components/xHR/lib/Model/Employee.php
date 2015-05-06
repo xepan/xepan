@@ -7,6 +7,9 @@ class Model_Employee extends \Model_Table{
 	function init(){
 		parent::init();
 
+		// $this->hasOne('Epan','epan_id');
+		// $this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xHR/Post','post_id')->group('a~3~Basic Inf0');
 		$this->hasOne('Users','user_id');
 		$this->hasOne('xHR/Department','department_id');
@@ -29,7 +32,7 @@ class Model_Employee extends \Model_Table{
 			)
 		);
 
-		//Employmet Detail
+		//Employment Detail
 		
 		$this->addField('status')->enum(array('active','left'))->group('b~3~Employment Details');
 		$this->addField('doj')->type('date')->Caption('Date Of Joining')->group('b~3~bl');

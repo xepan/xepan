@@ -165,7 +165,7 @@ class Model_Epan extends Model_Table {
 		}
 		$this->api->current_website = $saved_current_website;
 
-
+		$this->api->event('epan_before_delete',$this);
 
 
 	}
