@@ -217,6 +217,8 @@ class Page_Tester extends Page {
                     if($e instanceof BaseException){
                         $this->add('View_Error')->set($e->getMessage());
                     }
+
+                    throw $e;
                     
                 }
 
