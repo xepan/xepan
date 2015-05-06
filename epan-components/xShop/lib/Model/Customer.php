@@ -19,6 +19,7 @@ class Model_Customer extends Model_MemberDetails{
 		$this->getElement('email')->destroy();
 
 		$user_j = $this->join('users','users_id');
+		$user_j->addField('user_epan_id','epan_id');
 		$user_j->addField('username')->sortable(true)->group('b~6~Customer Loign');
 		$user_j->addField('password')->type('password')->group('b~6');
 		$user_j->addField('customer_name','name')->group('a~6~Basic Info')->mandatory(true);
@@ -26,6 +27,7 @@ class Model_Customer extends Model_MemberDetails{
 		$user_j->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(50)->group('a~6')->sortable(true)->mandatory(false);
 
 		$this->addCondition('type',50);
+		$this->addCondition('user_epan_id',$this->api->current_website->id);
 
 		$this->addExpression('customer_search_phrase')->set($this->dsql()->concat(
 				$this->getElement('customer_name'),
