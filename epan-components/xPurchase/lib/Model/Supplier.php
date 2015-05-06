@@ -9,7 +9,7 @@ class Model_Supplier extends \Model_Document{
 				'allow_edit'=>array(),
 				'allow_add'=>array()
 				);
-	public $title_field ='customer_search_phrase';
+	public $title_field ='supplier_search_phrase';
 	public $root_document_name = 'xPurchase\Supplier';
 
 
@@ -42,7 +42,7 @@ class Model_Supplier extends \Model_Document{
 
 		
 
-		$this->addExpression('customer_search_phrase')->set($this->dsql()->concat(
+		$this->addExpression('supplier_search_phrase')->set($this->dsql()->concat(
 				$this->getElement('name'),
 				' :: ',
 				$this->getElement('owner_name'),

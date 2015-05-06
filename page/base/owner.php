@@ -120,7 +120,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Marketing Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 
 
-			$exec_m = $marketing_m->addMenu('Executors');
+			$exec_m = $marketing_m->addMenu('Executors',null,array('SubMenu'));
 			$exec_m->addItem(array('Start Grabbing Data','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_exec',array('department_id'=>$dept_model->id)));
 			$exec_m->addItem(array('Start Sending Mass Email','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_emailexec',array('department_id'=>$dept_model->id)));
 			$exec_m->addItem(array('Update Social Activities','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_updatesocialactivityexec',array('department_id'=>$dept_model->id)));
@@ -325,7 +325,33 @@ class page_base_owner extends Page {
 			$dept_namespace = $employee->department()->get('related_application_namespace');
 			$dept_namespace;
 			// if($dept_namespace){
-				$my_menu = $m->addMenu('My',$dept_namespace.'/Menu_User');
+
+				$task = $this->add('xProduction/Model_Task');
+				$unread_task= $task->addCondition(
+			        				$task->_dsql()->orExpr()
+			            					->where(
+			            							$task->dsql()->andExpr()
+				            							->where('employee_id',$this->api->current_employee->id)
+						            					->where('status','assigned')
+						            		)
+						            		->where(
+			            							$task->dsql()->andExpr()
+				            							->where('created_by_id',$this->api->current_employee->id)
+						            					->where('status','draft')
+						            		)
+			   		 				)->count()->getOne();
+
+				$processing_task=$task->newInstance()->addCondition(
+			        				$task->_dsql()->orExpr()
+	            							->where('employee_id',$this->api->current_employee->id)
+	            							->where('created_by_id',$this->api->current_employee->id)
+						            		)
+									->addCondition('status','processing')
+			   		 				->count()->getOne();
+
+					$task_badge=$unread_task + $processing_task;
+
+				$my_menu = $m->addMenu(array('My'. "   ",'badge'=>array($unread_task." / ".$task_badge,'swatch'=>'red'),'icon'=>'gauge-1'),$dept_namespace.'/Menu_User');
 				// if user ->post->can_create_teams
 					$my_menu->addItem("Teams",$this->api->url('xProduction_page_owner_teammanager',array('department_id'=>$this->api->current_employee['department_id'])));
 					$my_menu->addItem("My Material Requests",$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$this->api->current_employee['department_id'])));

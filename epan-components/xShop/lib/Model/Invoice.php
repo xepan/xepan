@@ -184,7 +184,7 @@ class Model_Invoice extends \Model_Document{
 			if($form['bcc'])
 				$bccs = explode(',',$form['bcc']);
 
-			$email_body .= $form['custom_message']."<br>".$email_body;
+			$email_body = $form['custom_message']."<br>".$email_body;
 			$this->sendEmail($form['to'],$form['subject'],$email_body,$ccs,$bccs);
 			$this->createActivity('email',$form['subject'],$form['message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
 			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();

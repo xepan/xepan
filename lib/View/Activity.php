@@ -130,7 +130,11 @@ class View_Activity extends View {
 		//Subject 
 		$this->template->trySetHtml('subject',$model['subject']);
 		$this->template->trySetHtml('message',$model['message']);
-	
+		
+		//Load Actor Image
+		//<img class="img-box atk-shape-rounded"></img>
+		$img = '<span class="img-box glyphicon glyphicon-user atk-size-yotta text-center"></span>';
+		$this->template->trySetHtml('actor_img',$img);
 	}
 
 	function defaultTemplate(){

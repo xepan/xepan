@@ -5,6 +5,7 @@ class Grid extends Grid_Advanced{
 	public $sno=1;
 
     public $show_epan=false;
+    public $load_footable=false;
 
 	function init(){
 		parent::init();
@@ -91,6 +92,13 @@ class Grid extends Grid_Advanced{
 		parent::recursiveRender();
 	}
 
+    function render(){
+        if($this->load_footable){
+            $this->js(true)->find('table')->_load('footable/footable.all.min')->_css('footable/footable.standalone.min')->footable();
+        }
+        parent::render();
+    }
+
 	// Overrided function from GridBasic.. to strip html tags from headers
 
 	function addColumn($formatters, $name = null, $descr = null)
@@ -154,6 +162,22 @@ class Grid extends Grid_Advanced{
         }
 
         return $this;
+    }
+
+    function fooHidePhone($column){
+        $this->setTDParam($column,'data-hide','phone');
+        if(!$this->load_footable) $this->load_footable=true;
+    }
+
+    function fooHideTablet($column){
+        $this->setTDParam($column,'data-hide','tablet');
+        if(!$this->load_footable) $this->load_footable=true;
+    }
+
+    function fooHideBoth($field){
+        $this->columns[$field]['thparam'] .= ' data-hide="phone,tablet"';
+        // var_dump($this->columns[$field]);
+        if(!$this->load_footable) $this->load_footable=true;
     }
 
 }

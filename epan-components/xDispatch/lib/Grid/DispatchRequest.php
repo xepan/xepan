@@ -21,7 +21,7 @@ class Grid_DispatchRequest extends \Grid{
 				);
 		});
 
-		$this->addQuickSearch(array('status','order'));
+		$this->addQuickSearch(array('order_no','name','order_no'));
 		$this->addPaginator($ipp=50);
 	}
 

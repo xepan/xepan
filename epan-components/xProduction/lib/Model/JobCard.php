@@ -50,7 +50,7 @@ class Model_JobCard extends \Model_Document{
 							// 'name|to_trim|required',
 							)
 					);
-		$this->addHook('beforeDelete',$this);
+		// $this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
