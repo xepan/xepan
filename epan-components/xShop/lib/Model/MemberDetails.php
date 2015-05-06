@@ -63,7 +63,7 @@ class Model_MemberDetails extends \Model_Document{
 		$existing_check->addCondition('users_id',$this['users_id']);
 		$existing_check->addCondition('id','<>',$this->id);
 		$existing_check->tryLoadAny();
-		if($existing_check->loaded())
+		if(!isset($this->allow_re_adding_user) AND $existing_check->loaded())
 			throw $this->exception('User is already member','ValidityCheck')->setField('users_id');
 	}
 

@@ -136,7 +136,10 @@ class Model_Epan extends Model_Table {
 		}
 		
 		// Delete All users 
-		$this->ref('Users')->deleteAll();
+		$this->ref('Users')->each(function($user){
+			$user->force_delete=true;
+			$user->delete();
+		});
 
 		// Remove Epan Pages
 		foreach ($ep=$this->ref('EpanPage') as $junk) {
@@ -161,6 +164,8 @@ class Model_Epan extends Model_Table {
 			$comp->uninstall(); // actually deleting
 		}
 		$this->api->current_website = $saved_current_website;
+
+
 
 
 	}
@@ -291,6 +296,11 @@ class Model_Epan extends Model_Table {
 		$user['password']=$this['password'];
 		$user['type']='100';
 		$user['is_active']=true;
+		$user['user_management']=true;
+		$user['general_settings']=true;
+		$user['application_management']=true;
+		$user['website_designing']=true;
+		$user->allow_re_adding_user = true;
 		$user->save();
 
 		// Default Components Auto Installation
@@ -304,6 +314,7 @@ class Model_Epan extends Model_Table {
 			$ep['enabled']=true;
 			$ep['params'] = "";//$this->add($default_component['namespace'].'/'.$default_component['name'])->getDefaultParams($obj);
 			$ep->save();
+			$user->allowApp($ep->id);
 		}
 		
 		// TODO call-plugin AfterNewEPANCreated

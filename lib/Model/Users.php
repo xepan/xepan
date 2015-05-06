@@ -56,6 +56,8 @@ class Model_Users extends Model_Table {
 
 	function afterInsert($obj,$new_id){
 		$user_model=$this->add('Model_Users')->load($new_id);
+		if(isset($this->allow_re_adding_user))
+			$user_model->allow_re_adding_user = $this->allow_re_adding_user;
 		$user_model_value = array($user_model);
 		$this->api->event('new_user_registered',$user_model_value);
 	}
@@ -83,11 +85,14 @@ class Model_Users extends Model_Table {
 	}
 
 	function beforeDelete(){
-		if($this['username'] == $this->ref('epan_id')->get('name')) // Userd for multisite epan
+		if(!isset($this->force_delete) AND $this['username'] == $this->ref('epan_id')->get('name')) // Userd for multisite epan
 			throw $this->exception("You Can't delete it, it is default username");
 
+		$this->ref('UserAppAccess')->each(function($uapacc){
+			$uapacc->delete();
+		});
+		
 		$this->api->event('user_before_delete',$this);
-		$this->ref('UserAppAccess')->deleteAll();
 	}
 
 	function updatePassword($new_password){
