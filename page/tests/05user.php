@@ -20,6 +20,8 @@ class page_tests_05user extends Page_Tester {
         $user->allow_re_adding_user = true;
     	$user->save();
 
+        $this->api->memorize('new_user',$user->id);
+
         $last_member = $this->add('xShop/Model_MemberDetails')->setLimit(1)->setOrder('id','desc')->tryLoadAny();
 
     	$this->proper_responses['Test_Add']=array(
@@ -101,12 +103,49 @@ class page_tests_05user extends Page_Tester {
             );
     }
 
-    function prepare_Edit(){
-    	
+    function prepare_userCustomFields(){
+        $this->proper_responses['Test_userCustomFields']=array(
+                'userCustomFields'=>'ToCheck'
+                ); 
+
     }
 
-    function Test_Edit(){
+    function Test_userCustomFields(){
+        return array(
+                'userCustomFields'=>'ToCheck'
+                );
+    }
 
+    function prepare_EditToFrontEnd(){
+        $new_user_id = $this->api->recall('new_user');
+        $user = $this->add('Model_Users')->load($new_user_id);
+        $user['type'] = 50;
+        $user->save();
+
+        $this->proper_responses['Test_EditToFrontEnd']=array(
+            'access_value'=>array('user_management'=>0,
+                                'general_settings'=>0,
+                                'application_management'=>0,
+                                'website_designing'=>0,
+                                'app_access_count'=>0
+                                )
+            );
+
+        return null;
+    }
+
+    function Test_EditToFrontEnd(){
+        $new_user_id = $this->api->recall('new_user');
+        $user = $this->add('Model_Users')->load($new_user_id);
+
+        return array(
+            'access_value'=>array('user_management'=>$user->isUserManagementAllowed(),
+                                'general_settings'=>$user->isGeneralSettingsAllowed(),
+                                'application_management'=>$user->isApplicationManagementAllowed(),
+                                'website_designing'=>$user->isWebDesigningAllowed(),
+                                'app_access_count'=>count($user->getAllowedApp())
+                                )
+            );
     }
     
 }

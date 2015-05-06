@@ -54,7 +54,7 @@ class Model_Users extends Model_Table {
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function afterInsert($obj,$new_id){
+	function afterInsert($obj,$new_id){		
 		$user_model=$this->add('Model_Users')->load($new_id);
 		if(isset($this->allow_re_adding_user))
 			$user_model->allow_re_adding_user = $this->allow_re_adding_user;
@@ -68,7 +68,6 @@ class Model_Users extends Model_Table {
 		if($this->dirty['type'] and $this['type'] == ""){
 			throw $this->exception('User Type Must be Defined','ValidityCheck')->setField('type');
 		}
-
 		// Check username for THIS EPAN
 		$old_user = $this->add('Model_Users');
 		$old_user->addCondition('username',$this['username']);
@@ -82,6 +81,15 @@ class Model_Users extends Model_Table {
 		if($old_user->loaded()){
 			// throw $this->exception("This username is allready taken, Chose Another");
 			$this->api->js()->univ()->errorMessage('This username is already taken, Chose Another')->execute();
+		}
+
+		if($this->isFrontEndUser()){
+			$this['user_management']=false;
+			$this['general_settings']=false;
+			$this['application_management']=false;
+			$this['website_designing']=false;
+
+			$this->ref('UserAppAccess')->addCondition('is_allowed',true)->deleteAll();
 		}
 	}
 
@@ -235,6 +243,5 @@ class Model_Users extends Model_Table {
 
 		return $this->add('xShop/Model_MemberDetails')->addCondition('users_id',$this->id);
 	}
-
 
 }
