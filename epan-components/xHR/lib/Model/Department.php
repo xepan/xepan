@@ -90,6 +90,12 @@ class Model_Department extends \Model_Table{
 		$this->ref('xHR/Post')->each(function($p){
 			$p->forceDelete();
 		});
+
+		$this->ref('xHR/Employees')->each(function($emp){
+			$emp->forceDelete();
+		});
+
+		$this->delete();
 	}
 
 	function createAssociationWithItem($item_id){

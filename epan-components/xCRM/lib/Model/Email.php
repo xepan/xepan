@@ -421,4 +421,10 @@ class Model_Email extends \Model_Document{
 		}
 
 	}
+
+	function setReadByEmployeeNull(){
+		$this['read_by_employee_id'] = null;
+		$this->save();
+	}
+
 }

@@ -163,10 +163,10 @@ class Model_Epan extends Model_Table {
 		foreach ($comp=$this->ref('InstalledComponents') as $junk) {
 			$comp->uninstall(); // actually deleting
 		}
-		$this->api->current_website = $saved_current_website;
 
 		$this->api->event('epan_before_delete',$this);
 
+		$this->api->current_website = $saved_current_website;
 
 	}
 

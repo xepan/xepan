@@ -7,6 +7,10 @@ class page_base_owner extends Page {
 	function init(){
 		parent::init();
 
+		$this->shorcut_menus = array();
+		// Looks like you are called from update page
+		if(isset($this->git_path)) return;
+
 		$this->api->current_department = new Dummy();
 		if($_GET['department_id']){
 			$id = $this->api->stickyGET('department_id');
@@ -39,7 +43,6 @@ class page_base_owner extends Page {
 		// $l=$this->app->add('Layout_Fluid'); // Usermanu is added in here
 
 		$this->app->top_menu =  $m=$this->app->layout->add('Menu_Horizontal',null,'Top_Menu');
-		$this->shorcut_menus = array();
 
         $admin_m = $m->addMenu('Admin');
         

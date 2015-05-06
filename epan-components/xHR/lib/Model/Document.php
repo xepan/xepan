@@ -3,7 +3,7 @@
 
 namespace xHR;
 
-class Model_Document extends \SQL_Model {
+class Model_Document extends \Model_Table {
 	public $table= "xhr_documents";
 
 	function init(){
@@ -11,6 +11,7 @@ class Model_Document extends \SQL_Model {
 			
 			$this->hasOne('Epan','epan_id');
 			$this->addCondition('epan_id',$this->api->current_website->id);
+
 			$this->hasOne('xHR/Department','department_id');
 			$this->addField('name');
 
@@ -27,6 +28,14 @@ class Model_Document extends \SQL_Model {
 
 	function department(){
 		return $this->ref('department_id');
+	}
+
+	function forceDelete(){
+		$this->ref('xHR/DepartmentAcl')->each(function($dacl){
+			$dacl->forceDelete();
+		});
+
+		$this->delete();
 	}
 
 }
