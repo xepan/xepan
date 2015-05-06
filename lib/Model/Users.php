@@ -58,6 +58,7 @@ class Model_Users extends Model_Table {
 		$user_model=$this->add('Model_Users')->load($new_id);
 		if(isset($this->allow_re_adding_user))
 			$user_model->allow_re_adding_user = $this->allow_re_adding_user;
+		
 		$user_model_value = array($user_model);
 		$this->api->event('new_user_registered',$user_model_value);
 	}

@@ -23,7 +23,8 @@ class page_tests_05user extends Page_Tester {
         $last_member = $this->add('xShop/Model_MemberDetails')->setLimit(1)->setOrder('id','desc')->tryLoadAny();
 
     	$this->proper_responses['Test_Add']=array(
-        		'user_id'=>$user['id'],
+                'user_id'=>$user['id'],
+        		'user_epan_id'=>$this->api->current_website->id,
                 'member_detail_id'=>$last_member->id,
         		'member_user_id'=>$user->id
         	);
@@ -35,7 +36,8 @@ class page_tests_05user extends Page_Tester {
     function Test_Add($new_user){
     	$new_member = $new_user->member()->tryLoadAny();
     	return array(
-        		'user_id'=>$new_user->id,
+                'user_id'=>$new_user->id,
+        		'user_epan_id'=>$new_user['epan_id'],
                 'member_detail_id'=>$new_member->id,
         		'member_user_id'=>$new_member->user(true)->get('id'),
         	);
