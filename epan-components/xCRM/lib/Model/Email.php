@@ -234,12 +234,13 @@ class Model_Email extends \Model_Document{
 			$mailbox->disconnect();
 			throw $e;
 		}
+	}
 
-		function populateFromAndToIds(){
-			$this->guessFrom();
-			$doc = $this->guessDocumentAndCreateActivityOrTicket();
-			$this->guessTo($doc);
-		}
+	function populateFromAndToIds(){
+		$this->guessFrom();
+		$doc = $this->guessDocumentAndCreateActivityOrTicket();
+		$this->guessTo($doc);
+	}
 
 	function guessFrom(){
 		if(!$this->loaded())
@@ -416,10 +417,8 @@ class Model_Email extends \Model_Document{
 			if(in_array($official_email['email_username'], explode(",", $this['from_email']))){
 				return true;
 			}
+		return false;		
 		}
 
-		return false;		
 	}
-
-
 }
