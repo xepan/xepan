@@ -120,8 +120,8 @@ class Model_Epan extends Model_Table {
 		
 		// throw new Exception($new_dir_name, 1);
 		
-		if($this->ref('Aliases')->count()->getOne() > 0)
-			$this->api->js()->univ()->errorMessage('Delete Non Default Aliases first')->execute();
+		if($this->ref('Aliases')->count()->getOne() > 1)
+			throw $this->exception('Delete Non Default Aliases first','Growl');
 
 		$new_dir_name=getcwd(). "/epans/".$this['name'];
 		if(is_dir($new_dir_name)){
@@ -158,7 +158,7 @@ class Model_Epan extends Model_Table {
 		$this->api->current_website = $this;
 		//  unistall components
 		foreach ($comp=$this->ref('InstalledComponents') as $junk) {
-			$comp->uninstall();
+			$comp->uninstall(); // actually deleting
 		}
 		$this->api->current_website = $saved_current_website;
 
@@ -257,6 +257,7 @@ class Model_Epan extends Model_Table {
 	function afterInsert($obj,$new_id){
 		// Default Template add
 		$template = $this->add('Model_EpanTemplates');
+		$template['name'] = 'default';
 		$template['epan_id'] = $new_id;
 		$template['is_current'] = 1;
 		$template->save();
@@ -280,15 +281,15 @@ class Model_Epan extends Model_Table {
 		$default_alias['epan_id'] = $new_id;
 		$default_alias['name'] = $obj['name'];
 		$default_alias->save();
-		//Add default users
 			
+		//Add default users
 		$user=$this->add('Model_Users');
 		$user->addCondition('epan_id',$new_id);
 		$user['name']=$this['name'];
 		$user['email']=$this['email_id'];
 		$user['username']=$this['name'];
 		$user['password']=$this['password'];
-		$user['type']='BackEndUser';
+		$user['type']='100';
 		$user['is_active']=true;
 		$user->save();
 
@@ -306,7 +307,7 @@ class Model_Epan extends Model_Table {
 		}
 		
 		// TODO call-plugin AfterNewEPANCreated
-		$this->add('Model_Epan')->load($new_id)->sendEmailToAgency();
+		// $this->add('Model_Epan')->load($new_id)->sendEmailToAgency();
 	}
 
 	function beforeInsert(){
@@ -330,6 +331,14 @@ class Model_Epan extends Model_Table {
 		// 	$this['branch_id']=1;
 		// 	$this['staff_id']=1;
 		// }
+	}
+
+	function pages(){
+		return $this->add('Model_EpanPage')->addCondition('epan_id',$this->id);
+	}
+
+	function templates(){
+		return $this->add('Model_EpanTemplates')->addCondition('epan_id',$this->id);
 	}
 
 	function sendEmailToAgency(){

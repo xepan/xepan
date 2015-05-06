@@ -5,8 +5,8 @@ class Model_Users extends Model_Table {
 		parent::init();
 		
 		$this->hasOne('Epan','epan_id')->mandatory(true);
-		//$this->addCondition('epan_id',$this->api->current_website->id);
-		
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$f=$this->addField('name')->group('a~6~<i class="fa fa-user"></i> User Info')->mandatory(true)->sortable(true);
 		$f->icon='fa fa-user~red';
 
@@ -78,7 +78,7 @@ class Model_Users extends Model_Table {
 		$old_user->tryLoadAny();
 		if($old_user->loaded()){
 			// throw $this->exception("This username is allready taken, Chose Another");
-			$this->api->js()->univ()->errorMessage('This username is allready taken, Chose Another')->execute();
+			$this->api->js()->univ()->errorMessage('This username is already taken, Chose Another')->execute();
 		}
 	}
 
@@ -86,10 +86,8 @@ class Model_Users extends Model_Table {
 		if($this['username'] == $this->ref('epan_id')->get('name')) // Userd for multisite epan
 			throw $this->exception("You Can't delete it, it is default username");
 
-		$this->api->event('user-before-delete',$this);
-
+		$this->api->event('user_before_delete',$this);
 		$this->ref('UserAppAccess')->deleteAll();
-			
 	}
 
 	function updatePassword($new_password){
@@ -223,7 +221,7 @@ class Model_Users extends Model_Table {
 	}
 
 	function isWebDesigningAllowed(){
-		return $this['website_desinging'];
+		return $this['website_designing'];
 	}
 
 }
