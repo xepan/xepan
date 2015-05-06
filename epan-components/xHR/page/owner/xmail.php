@@ -159,10 +159,16 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$mail_crud->add('xHR/Controller_Acl');
 
 		$reload_btn = $mail_crud->addButton('FETCH');
+		$guess_btn = $mail_crud->addButton('Guess');
 		if( !($reload_btn instanceof \Dummy) and $reload_btn->isClicked()){
 			$this->add('xCRM/Model_Email')->fetchDepartment($this->api->current_department);
 			$this->js()->univ()->successMessage('Fetch Successfully')->execute();
 		}
+
+		if($guess_btn->isClicked()){
+			$this->add('xCRM/Model_ReceivedEmail');
+		}
+
 
 	}
 }

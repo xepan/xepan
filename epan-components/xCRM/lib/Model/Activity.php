@@ -112,20 +112,20 @@ class Model_Activity extends \Model_Document{
 
 	function beforeSave(){
 		
-		$to = $this->relatedDocument()->getTo();
-		if($to instanceof \xShop\Model_Customer){
-			$this['to'] = 'Customer';
-			$this['to_id'] = $to->id;
+		// $to = $this->relatedDocument()->getTo();
+		// if($to instanceof \xShop\Model_Customer){
+		// 	$this['to'] = 'Customer';
+		// 	$this['to_id'] = $to->id;
 		
-		}elseif($to instanceof \xHR\Model_Employee){
-			$this['to'] = 'Employee';
-			$this['to_id'] = $to->id;
+		// }elseif($to instanceof \xHR\Model_Employee){
+		// 	$this['to'] = 'Employee';
+		// 	$this['to_id'] = $to->id;
 		
-		}elseif($to instanceof \xPurchase\Model_Supplier) {
-			$this['to'] = 'Supplier';
-			$this['to_id'] = $to->id;
+		// }elseif($to instanceof \xPurchase\Model_Supplier) {
+		// 	$this['to'] = 'Supplier';
+		// 	$this['to_id'] = $to->id;
 	
-		}
+		// }
 		
 	}
 

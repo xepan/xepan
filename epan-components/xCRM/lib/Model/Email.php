@@ -33,7 +33,10 @@ class Model_Email extends \Model_Document{
 
 		$this->addField('subject');
 		$this->addField('message')->type('text');
+		$this->addField('attachments')->type('text');
 		
+		$this->addField('direction')->enum(array('sent','received'))->defaultValue('sent');
+
 		// $this->addHook('afterSave',$this);
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id');
@@ -179,7 +182,7 @@ class Model_Email extends \Model_Document{
 		// return;
 		// Get some mail
 		try{
-			$mailsIds = $mailbox->searchMailBox('SINCE '.date('d-M-Y',strtotime('-1 day')));
+			$mailsIds = $mailbox->searchMailBox('SINCE '.date('d-M-Y',strtotime('-5 day')));
 			if(!$mailsIds) {
 				$mailbox->disconnect();
 			}else{
@@ -202,10 +205,12 @@ class Model_Email extends \Model_Document{
 
 					$mail_m['created_at']= $mail->date;
 					$mail_m['from_email'] = $mail->fromAddress;
-					$mail_m['subject'] = $mail->subject;
 					$mail_m['to_email'] = is_array($mail->to)?implode(",", array_keys($mail->to)):$mail->to;
 					$mail_m['cc'] = is_array($mail->cc)?implode(",", $mail->cc):$mail->cc;
+					$mail_m['subject'] = $mail->subject;
 					$mail_m['message'] = $mail->textHtml;
+					$mail_m['uid'] = $mail->id;
+					$mail_m['direction'] = 'received';
 					$mail_m->save();
 					$fetch_email_array[] = $mail_m->id;
 					$mail_m->unload();
@@ -218,8 +223,7 @@ class Model_Email extends \Model_Document{
 					$email = $this->add('xCRM\Model_Email');
 					foreach ($fetch_email_array as $email_id) {
 						$email->load($email_id);
-						$email->guessFrom();
-						$email->guessDocument();
+						$email->populateFromAndToIds();
 						$email->unload();
 					}
 				}
@@ -232,20 +236,10 @@ class Model_Email extends \Model_Document{
 		}
 
 		function populateFromAndToIds(){
-			if(!$this['from_id']){
-				// from email search in customers first
-				$cust = $this->add('xShop/Model_Customer')->addCondition('customer_email','like','%'.$this['from_email'].'%');
-				if($cust->loaded()){
-					$this['from']='Customer';
-					$this['from_id'] = $cust->id;
-				}else{
-				// then in suppliers
-				// then in employees
-				}
-			}
+			$this->guessFrom();
+			$doc = $this->guessDocumentAndCreateActivityOrTicket();
+			$this->guessTo($doc);
 		}
-
-	}
 
 	function guessFrom(){
 		if(!$this->loaded())
@@ -270,7 +264,29 @@ class Model_Email extends \Model_Document{
 		$this->save();
 	}
 
-	function guessDocument(){
+	function guessTo($doc=false){
+		if($doc){
+			$to = $doc->getTo();
+			if($to instanceof \xShop\Model_Customer){
+				$this['to'] = 'Customer';
+				$this['to_id'] = $to->id;
+			
+			}elseif($to instanceof \xHR\Model_Employee){
+				$this['to'] = 'Employee';
+				$this['to_id'] = $to->id;
+			
+			}elseif($to instanceof \xPurchase\Model_Supplier) {
+				$this['to'] = 'Supplier';
+				$this['to_id'] = $to->id;
+			}
+		}else{
+
+		}
+
+		$this->save();
+	}
+
+	function guessDocumentAndCreateActivityOrTicket(){
 		if(!$this['subject'])
 			return false;
 
@@ -288,10 +304,18 @@ class Model_Email extends \Model_Document{
 		$document = $this->add($document_array[0].'\Model_'.$document_array[1]);
 		$document->tryLoadBy('name',$document_array_all[1]);
 
-		if($document->loaded()){	
+		if($document->loaded()){
 			$document->createActivity('Email',$this['subject'],$this['message'],$this['from'],$this['from_id'], $this['to'], $this['to_id']);
 			$document->relatedDocument($this);
+			return $document;
 		}
+
+		// if(i m sent to one of support emails and FROM is known){
+			// Create a new ticket send autoreply (set in config ???)
+
+		// }
+
+		return false;
 
 	}
 
@@ -366,13 +390,13 @@ class Model_Email extends \Model_Document{
 
 	function isReceive(){
 
-		$dept = $this->add('xHR/Model_Department')->load($this->api->stickyGET('department_id'));
+		$dept = $this->api->current_department;
 		$official_emails = $dept->officialEmails();
 
 		// if(!$official_emails->count()->getOne())
 		// 	return false;		
 		foreach ($official_emails as $official_email) {
-			if($this['to_email'] == $official_email['imap_email_username'])
+			if(in_array($official_email['imap_email_username'], explode(",", $this['to_email'])))
 				return true;
 		}
 
@@ -382,14 +406,14 @@ class Model_Email extends \Model_Document{
 	}
 
 	function isSent(){
-		$dept = $this->add('xHR/Model_Department')->load($this->api->stickyGET('department_id'));
+		$dept = $this->api->current_department;
 		$official_emails = $dept->officialEmails();
 
 		// if(!$official_emails->count()->getOne())
 		// 	return false;
 
 		foreach ($official_emails as $official_email) {
-			if($this['from_email'] == $official_email['email_username']){
+			if(in_array($official_email['email_username'], explode(",", $this['from_email']))){
 				return true;
 			}
 		}
