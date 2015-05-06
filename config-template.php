@@ -42,7 +42,7 @@ if(!defined('DIRECTORY_SEPERATOR'))
 if(!defined('DS'))
 	define('DS',DIRECTORY_SEPERATOR);
 
-$config['xepan']['events']=array('register-event','beforeTemplateInit','content-fetched','website-model-loaded','website-page-model-loaded','webpage-page-loaded','epan-page-before-save','epan-page-after-save','goal','menu-created');
+$config['xepan']['events']=array('register-event','beforeTemplateInit','content-fetched','website-model-loaded','website-page-model-loaded','webpage-page-loaded','epan-page-before-save','epan-page-after-save','goal','menu-created','user_before_delete');
 
 if(!defined('FPDF_FONTPATH'))
 	define('FPDF_FONTPATH','lib/FPDF/font');
