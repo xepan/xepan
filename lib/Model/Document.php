@@ -257,12 +257,17 @@ class Model_Document extends SQL_Model{
 		$crud->add('xHR/Controller_Acl');
 	}
 
-	function see_activities_page($page){
-
+	function activities(){
 		$activities = $page->add('xCRM/Model_Activity');
 		$activities->addCondition('related_root_document_name',$this->root_document_name);
 		$activities->addCondition('related_document_id',$this->id);
 		$activities->setOrder('created_at','desc');
+		return $activities;
+	}
+
+	function see_activities_page($page){
+
+		$activities = $this->activities();
 
 		$crud = $page->add('CRUD');
 
