@@ -430,18 +430,16 @@ class Model_Document extends SQL_Model{
 	function getTo(){		
 		if($this instanceof \xShop\Model_Order){		
 			return $this->customer();
-		
 		}elseif($this instanceof \xShop\Model_Quotation){
 			return $this->customer();
-		
 		}elseif($this instanceof \xShop\Model_SalesInvoice){
 			return $this->customer();
-		
 		}elseif($this instanceof \xPurchase\Model_PurchaseOrder){
 			return $this->supplier();
-
 		}elseif($this instanceof \xPurchase\Model_PurchaseInvoice){
 			return $this->supplier();
+		}elseif($this instanceof \xCRM\Model_Ticket){
+			return $this->customer();
 		}
 
 		return new \Dummy();
