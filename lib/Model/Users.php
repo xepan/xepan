@@ -229,4 +229,11 @@ class Model_Users extends Model_Table {
 		return $this['website_designing'];
 	}
 
+	function member(){
+		if(!$this->loaded()) return false;
+
+		return $this->add('xShop/Model_MemberDetails')->addCondition('users_id',$this->id);
+	}
+
+
 }
