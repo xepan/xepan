@@ -6,6 +6,9 @@ class Model_BlockImages extends \Model_Table {
 	var $table= "xshop_blockimages";
 	function init(){
 		parent::init();
+	
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
 		
 		$this->hasOne('xShop/AddBlock','block_id');
 		$f = $this->addField('image_url')->mandatory(true)->display(array('form'=>'ElImage'))->mandatory(true)->group('a~8');

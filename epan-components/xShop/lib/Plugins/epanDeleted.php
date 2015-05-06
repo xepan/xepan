@@ -11,6 +11,12 @@ class Plugins_epanDeleted extends \componentBase\Plugin {
 	}
 
 	function Plugins_epanDeleted($obj, $epan){
+		$models=array('Model_Opportunity','Model_Customer','Model_Application');
+		foreach ($models as $m) {
+			$this->add("xShop\\".$m)->each(function($model){
+				$model->forceDelete();
+			});
+		}
 
 	}
 }

@@ -10,6 +10,9 @@ class Model_Quotation extends \Model_Document{
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xMarketingCampaign/Lead','lead_id')->sortable(true)->display(array('form'=>'autocomplete/Plus'));
 		$this->hasOne('xShop/Opportunity','opportunity_id')->sortable(true)->display(array('form'=>'autocomplete/Basic'));
 		$this->hasOne('xShop/Customer','customer_id')->sortable(true)->display(array('form'=>'autocomplete/Basic'));
@@ -41,7 +44,20 @@ class Model_Quotation extends \Model_Document{
 	}
 
 	function beforeDelete(){
-		$this->ref('xShop/QuotationItem')->deleteAll();
+		// $this->ref('xShop/QuotationItem')->count()->getOne();
+
+	}
+
+	function forceDelete(){
+		$this->ref('xShop/QuotationItem')->each(function($qi){
+			$qi->forceDelete();
+		});
+
+		$this->attachments()->each(function($attach){
+			$attach->forceDelete();
+		});
+		
+		$this->delete();
 	}
 
 	function beforeSave(){
@@ -141,5 +157,18 @@ class Model_Quotation extends \Model_Document{
 		
 	}
 
+	function attachments(){
+		if(!$this->loaded())
+			return false;
+
+		$atts = $this->add('xShop/Model_SalesQuotationAttachment');
+		$atts->addCondition('related_root_document_name','xShop\Quotation');
+		$atts->addCondition('related_document_id',$this->id);
+		$atts->tryLoadAny();
+		if($atts->loaded())
+			return $atts;
+		return false;
+		// return $this->ref('Attachements')->tryLoadAny();
+	}
 }
 

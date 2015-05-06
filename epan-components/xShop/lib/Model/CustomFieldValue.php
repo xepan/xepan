@@ -10,7 +10,8 @@ class Model_CustomFieldValue extends \Model_Table{
 		parent::init();
 		
 		//TODO for Mutiple Epan website
-		// $this->addCondition('epan_id',$this->api->current_website->id);
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
 			
 		$this->hasOne('xShop/ItemCustomFieldAssos','itemcustomfiledasso_id');
 		$this->hasOne('xShop/CustomFields','customfield_id');

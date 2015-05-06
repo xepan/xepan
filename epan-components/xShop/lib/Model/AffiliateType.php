@@ -22,10 +22,19 @@ class Model_AffiliateType extends \Model_Table {
 
 	function beforeDelete(){
 		if($this->ref('xShop/Affiliate')->count()->getOne() > 0){
-			throw $this->exception("Affiliate Contains of Affiliate Type Please Delete First",'Growl');
-		}
+			throw $this->exception("Cannot Delete, First Delete it's Affiliate",'Growl');
+		}	
+	}
+
+
+	function forceDelete(){
+		$this->ref('xShop/Affiliate')->each(function($affiliate){
+			$affiliate->forceDelete();
+		});
 
 		$this->ref('xShop/ItemAffiliateAssociation')->deleteAll();
-			
+
+		$this->delete();
 	}
+
 }
