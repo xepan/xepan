@@ -88,9 +88,12 @@ class page_componentBase_page_update extends page_base_owner{
 							$model->addField($temp,$temp)->type('int');
 						}
 					}
-
-					$model->add('dynamic_model/Controller_AutoCreator');
-					$model->tryLoadAny();
+					try{
+						$model->add('dynamic_model/Controller_AutoCreator');
+						$model->tryLoadAny();
+					}catch(Exception $e){
+						$this->add('View_Error')->set("in $md_name: ". $e->getMessage());
+					}
 				}	
 			}
 			$this->api->setConfig('autocreator',$current_autocreator_value);
