@@ -16,16 +16,16 @@ class Grid_Task extends \Grid{
 
 	function setModel($task_model){
 		$m=parent::setModel($task_model,array('created_by','employee_id','employee','subject','content','created_at','name','Priority','expected_start_date','expected_end_date'));
-		$this->removeColumn('employee_id');
-		$this->removeColumn('team_id');
-		$this->removeColumn('subject');
-		$this->removeColumn('content');
-		$this->removeColumn('created_by');
-		$this->removeColumn('employee');
-		$this->removeColumn('created_at');
-		$this->removeColumn('expected_end_date');
-		$this->removeColumn('expected_start_date');
-		$this->removeColumn('Priority');
+		if($this->hasColumn('employee_id')) $this->removeColumn('employee_id');
+		if($this->hasColumn('team_id'))  $this->removeColumn('team_id');
+		if($this->hasColumn('subject'))  $this->removeColumn('subject');
+		if($this->hasColumn('content'))  $this->removeColumn('content');
+		if($this->hasColumn('created_by'))  $this->removeColumn('created_by');
+		if($this->hasColumn('employee'))  $this->removeColumn('employee');
+		if($this->hasColumn('created_at'))  $this->removeColumn('created_at');
+		if($this->hasColumn('expected_start_date'))  $this->removeColumn('expected_start_date');
+		if($this->hasColumn('expected_end_date'))  $this->removeColumn('expected_end_date');
+		if($this->hasColumn('Priority'))  $this->removeColumn('Priority');
 
 		$this->addFormatter('name','wrap');
 		$this->addPaginator($this->ipp);
