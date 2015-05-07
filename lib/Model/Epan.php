@@ -316,6 +316,12 @@ class Model_Epan extends Model_Table {
 			$ep->save();
 			$user->allowApp($ep->id);
 		}
+
+		$saved_current_website = $this->api->current_website;
+
+		$this->api->event('epan_after_created',$this);
+
+		$this->api->current_website = $saved_current_website;
 		
 		// TODO call-plugin AfterNewEPANCreated
 		// $this->add('Model_Epan')->load($new_id)->sendEmailToAgency();
