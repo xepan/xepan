@@ -6,7 +6,9 @@ class Model_TransformGalleryImages extends \Model_Table{
 	var $table="slideshows_transformgalleryimages";
 	function init(){
 		parent::init();
-
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+		
 		$this->hasOne('slideShows/TransformGallery','gallery_id');
 
 		$f = $this->addField('image')->display(array('form'=>'ElImage'))->group('a~12~<i class="fa fa-picture-o"></i> Transform Gallery Images')->mandatory(true);

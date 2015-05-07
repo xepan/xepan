@@ -6,6 +6,9 @@ class Model_ThumbnailSliderImages extends \Model_Table {
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+		
 		$this->hasOne('slideShows/Model_ThumbnailSliderGallery','gallery_id');
 
 		$f = $this->addField('image')->display(array('form'=>'ElImage'))->mandatory(true)->group('a~8~<i class="fa fa-picture-o"></i> Thumbanil Slider Images');
