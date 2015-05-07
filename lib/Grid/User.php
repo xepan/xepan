@@ -7,7 +7,7 @@ class Grid_User extends Grid{
 
 	function setModel($model){
 		
-		$m=parent::setModel($model,array('name','username','is_active','user_management','general_settings','application_management','website_designing','last_login_date'));
+		$m=parent::setModel($model,array('name','username','type','is_active','user_management','general_settings','application_management','website_designing','last_login_date'));
 
 		$this->removeColumn('is_active');
 		$this->removeColumn('user_management');
