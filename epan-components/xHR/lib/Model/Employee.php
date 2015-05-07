@@ -7,6 +7,9 @@ class Model_Employee extends \Model_Table{
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xHR/Post','post_id')->group('a~3~Basic Inf0');
 		$this->hasOne('Users','user_id');
 		$this->hasOne('xHR/Department','department_id');
@@ -29,7 +32,7 @@ class Model_Employee extends \Model_Table{
 			)
 		);
 
-		//Employmet Detail
+		//Employment Detail
 		
 		$this->addField('status')->enum(array('active','left'))->group('b~3~Employment Details');
 		$this->addField('doj')->type('date')->Caption('Date Of Joining')->group('b~3~bl');
@@ -100,6 +103,8 @@ class Model_Employee extends \Model_Table{
 		$this->hasMany('LastSeen','employee_id');
 		$this->hasMany('xHR/OfficialEmail','employee_id');
 		$this->hasMany('xCRM/Email','read_by_employee_id');
+		$this->hasMany('xHR/EmployeeAttendence','employee_id');
+		$this->hasMany('xHR/EmployeeLeave','employee_id');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
@@ -122,11 +127,49 @@ class Model_Employee extends \Model_Table{
 	}
 
 	function beforeDelete($m){
-		// $job_count = $m->ref('xProduction/JobCardEmployeeAssociation')->count()->getOne();
+		$salary = $m->ref('xHR/Salary')->count()->getOne();
+		$team_asso = $m->ref('xProduction/EmployeeTeamAssociation')->count()->getOne();
+		// $last_seen = $m->ref('LastSeen')->count()->getOne();
+		$official_email = $m->ref('xHR/OfficialEmail')->count()->getOne();
+		$email = $m->ref('xHR/Email')->count()->getOne();
 		
-		// if($job_count ){
-		// 	$this->api->js(true)->univ()->errorMessage('Cannot Delete,first delete Job card')->execute();	
-		// }
+		if($salary or $team_asso or $official_email or $email){
+			throw $this->exception('Cannot Delete,first delete Salary, Team Association, OfficialEmail or Email','Growl');	
+		}
+	}
+
+	function forceDelete(){
+		$this->ref('xHR/Salary')->each(function($p){
+			$p->forceDelete();
+		});
+
+		$this->ref('xHR/OfficialEmail')->each(function($official_email){
+			$official_email->forceDelete();
+		});
+
+		$this->ref('LastSeen')->each(function($last_seen){
+			$last_seen->forceDelete();
+		});
+
+		$this->ref('xHR/EmployeeTeamAssociation')->each(function($team_asso){
+			$team_asso->forceDelete();
+		});
+
+		$this->ref('xHR/Email')->each(function($email){
+			$email->setReadByEmployeeNull();
+		});
+
+		$this->ref('xHR/EmployeeAttendence')->each(function($attendance){
+			$attendance->forceDelete();
+		});
+
+		$this->ref('xHR/EmployeeLeave')->each(function($leave){
+			$leave->forceDelete();
+		});
+
+
+
+		$this->delete();
 	}
 
 	function totalPresent(){

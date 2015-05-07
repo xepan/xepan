@@ -152,6 +152,7 @@ class PathFinder extends AbstractController
         $this->base_location=$this->addLocation(array(
             'php'=>'lib',
             'page'=>'page',
+            'tests'=>'tests',
             'template'=>$templates_folder,
             'mail'=>'mail',
             'logs'=>'logs',
@@ -201,6 +202,7 @@ class PathFinder extends AbstractController
         $this->atk_location=$this->addLocation(array(
             'php'=>'lib',
             'template'=>$templates_folder,
+            'tests'=>'tests',
             'mail'=>'mail',
         ))
             ->setBasePath($atk_base_path)
@@ -352,7 +354,7 @@ class PathFinder extends AbstractController
 
             if (is_string($path)) {
                 // file found!
-                $matches[]=$location->base_path.'/'.$path;
+                $matches[]=$path;
             }
         }
 

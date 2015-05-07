@@ -132,7 +132,7 @@ class Model_Document extends SQL_Model{
 	}
 
 	function defaultAfterInsert($newobj,$id){
-		$x=$this->newInstance();
+		$x=$this;//->newInstance();
 		$x->load($id);
 		if($x['name']==''){
 			$x['name'] = /* $this->getSeries() .' ' .*/ sprintf("%05d", $x->id);
@@ -257,12 +257,17 @@ class Model_Document extends SQL_Model{
 		$crud->add('xHR/Controller_Acl');
 	}
 
-	function see_activities_page($page){
-
+	function activities(){
 		$activities = $page->add('xCRM/Model_Activity');
 		$activities->addCondition('related_root_document_name',$this->root_document_name);
 		$activities->addCondition('related_document_id',$this->id);
 		$activities->setOrder('created_at','desc');
+		return $activities;
+	}
+
+	function see_activities_page($page){
+
+		$activities = $this->activities();
 
 		$crud = $page->add('CRUD');
 
@@ -345,12 +350,10 @@ class Model_Document extends SQL_Model{
 	}
 
 	function createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null){
-		
 		if(!$from){
 			$from = 'Employee';
 			$from_id = $this->api->current_employee->id;
 		}
-
 
 		$new_activity = $this->add('xCRM/Model_Activity');
 		$new_activity['related_root_document_name'] = $this->root_document_name;
@@ -424,22 +427,19 @@ class Model_Document extends SQL_Model{
 		
 	}
 
-	function getTo(){
-
-		if($this instanceof \xShop\Model_Order){
+	function getTo(){		
+		if($this instanceof \xShop\Model_Order){		
 			return $this->customer();
-		
 		}elseif($this instanceof \xShop\Model_Quotation){
 			return $this->customer();
-		
 		}elseif($this instanceof \xShop\Model_SalesInvoice){
 			return $this->customer();
-		
 		}elseif($this instanceof \xPurchase\Model_PurchaseOrder){
 			return $this->supplier();
-
 		}elseif($this instanceof \xPurchase\Model_PurchaseInvoice){
 			return $this->supplier();
+		}elseif($this instanceof \xCRM\Model_Ticket){
+			return $this->customer();
 		}
 
 		return new \Dummy();

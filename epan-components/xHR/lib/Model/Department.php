@@ -6,6 +6,8 @@ class Model_Department extends \Model_Table{
 	function init(){
 		parent::init();
 		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
 
 		$this->hasOne('Branch','branch_id');
 		//$this->hasOne('xHR/Department','previous_department_id')->defaultValue('0');
@@ -80,8 +82,20 @@ class Model_Department extends \Model_Table{
 		$emp_count = $m->ref('xHR/Employee')->count()->getOne();
 		
 		if($post_count or $emp_count){
-			$this->api->js(true)->univ()->errorMessage('Cannot Delete,first delete Post or Employees')->execute();	
+			throw $this->exception('Cannot Delete,first delete Post or Employees','Growl');	
 		}
+	}
+
+	function forceDelete(){
+		$this->ref('xHR/Post')->each(function($p){
+			$p->forceDelete();
+		});
+
+		$this->ref('xHR/Employees')->each(function($emp){
+			$emp->forceDelete();
+		});
+
+		$this->delete();
 	}
 
 	function createAssociationWithItem($item_id){

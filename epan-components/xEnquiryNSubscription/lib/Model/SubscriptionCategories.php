@@ -8,13 +8,16 @@ class Model_SubscriptionCategories extends \Model_Table {
 		parent::init();
 
 		$this->hasOne('Epan','epan_id')->system(true);
+		$this->addCondition('epan_id',$this->api->current_website->id);
+		
 		$f=$this->addField('name')->mandatory(true)->group('a~8')->sortable(true);
 		$f->icon='fa fa-folder~red';
 		$f=$this->addField('is_active')->type('boolean')->defaultValue(true)->group('a~4')->sortable(true);
 		$f->icon='fa fa-exclamation~blue';
 
 		$this->hasMany('xEnquiryNSubscription/HostsTouched','category_id');
-		$this->hasMany('xEnquiryNSubscription/Model_SubscriptionCategoryAssociation','category_id');
+		$this->hasMany('xEnquiryNSubscription/SubscriptionCategoryAssociation','category_id');
+		$this->hasMany('xEnquiryNSubscription/SubscriptionConfig','category_id');
 
 		$this->addExpression('total_emails')->set(function($m,$q){
 			$mq=$m->add('xEnquiryNSubscription/Model_Subscription',array('table_alias'=>'tmq'));
@@ -33,7 +36,6 @@ class Model_SubscriptionCategories extends \Model_Table {
 		$this->addHook('afterInsert',$this);
 		$this->addHook('beforeDelete',$this);
 
-		$this->addCondition('epan_id',$this->api->current_website->id);
 
 	 	// //$this->add('dynamic_model/Controller_AutoCreator');
 
@@ -92,6 +94,7 @@ class Model_SubscriptionCategories extends \Model_Table {
 	}
 	
 	function beforeDelete(){
-	 	$this->ref('xEnquiryNSubscription/Model_SubscriptionCategoryAssociation')->deleteAll();
+	 	$this->ref('xEnquiryNSubscription/SubscriptionConfig')->deleteAll();
+	 	$this->ref('xEnquiryNSubscription/SubscriptionCategoryAssociation')->deleteAll();
 	}
 }

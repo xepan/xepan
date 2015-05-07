@@ -10,6 +10,9 @@ class Model_EmailJobs extends \Model_Table {
 	function init(){
 		parent::init();
 		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+		
 		$this->hasOne('xEnquiryNSubscription/NewsLetter','newsletter_id');
 
 		$this->addField('job_posted_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
@@ -28,7 +31,7 @@ class Model_EmailJobs extends \Model_Table {
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
 
-		// //$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	
 	}
 

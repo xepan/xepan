@@ -5,8 +5,8 @@ class Model_Users extends Model_Table {
 		parent::init();
 		
 		$this->hasOne('Epan','epan_id')->mandatory(true);
-		//$this->addCondition('epan_id',$this->api->current_website->id);
-		
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$f=$this->addField('name')->group('a~6~<i class="fa fa-user"></i> User Info')->mandatory(true)->sortable(true);
 		$f->icon='fa fa-user~red';
 
@@ -54,8 +54,11 @@ class Model_Users extends Model_Table {
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function afterInsert($obj,$new_id){
+	function afterInsert($obj,$new_id){		
 		$user_model=$this->add('Model_Users')->load($new_id);
+		if(isset($this->allow_re_adding_user))
+			$user_model->allow_re_adding_user = $this->allow_re_adding_user;
+		
 		$user_model_value = array($user_model);
 		$this->api->event('new_user_registered',$user_model_value);
 	}
@@ -65,7 +68,6 @@ class Model_Users extends Model_Table {
 		if($this->dirty['type'] and $this['type'] == ""){
 			throw $this->exception('User Type Must be Defined','ValidityCheck')->setField('type');
 		}
-
 		// Check username for THIS EPAN
 		$old_user = $this->add('Model_Users');
 		$old_user->addCondition('username',$this['username']);
@@ -78,18 +80,28 @@ class Model_Users extends Model_Table {
 		$old_user->tryLoadAny();
 		if($old_user->loaded()){
 			// throw $this->exception("This username is allready taken, Chose Another");
-			$this->api->js()->univ()->errorMessage('This username is allready taken, Chose Another')->execute();
+			$this->api->js()->univ()->errorMessage('This username is already taken, Chose Another')->execute();
+		}
+
+		if($this->isFrontEndUser()){
+			$this['user_management']=false;
+			$this['general_settings']=false;
+			$this['application_management']=false;
+			$this['website_designing']=false;
+
+			$this->ref('UserAppAccess')->addCondition('is_allowed',true)->deleteAll();
 		}
 	}
 
 	function beforeDelete(){
-		if($this['username'] == $this->ref('epan_id')->get('name')) // Userd for multisite epan
+		if(!isset($this->force_delete) AND $this['username'] == $this->ref('epan_id')->get('name')) // Userd for multisite epan
 			throw $this->exception("You Can't delete it, it is default username");
 
-		$this->api->event('user-before-delete',$this);
-
-		$this->ref('UserAppAccess')->deleteAll();
-			
+		$this->ref('UserAppAccess')->each(function($uapacc){
+			$uapacc->delete();
+		});
+		
+		$this->api->event('user_before_delete',$this);
 	}
 
 	function updatePassword($new_password){
@@ -223,7 +235,13 @@ class Model_Users extends Model_Table {
 	}
 
 	function isWebDesigningAllowed(){
-		return $this['website_desinging'];
+		return $this['website_designing'];
+	}
+
+	function member(){
+		if(!$this->loaded()) return false;
+
+		return $this->add('xShop/Model_MemberDetails')->addCondition('users_id',$this->id);
 	}
 
 }

@@ -12,7 +12,7 @@ class Model_MemberDetails extends \Model_Document{
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		
 		$this->addField('mobile_number')->sortable(true)->group('a~6');
-		$this->addField('other_emails')->group('a~6');
+		$this->addField('other_emails')->type('text')->group('a~6');
 		// $this->addField('join_on')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		// $this->addField('verified_on')->type('datetime')->defaultValue(null);
 		$this->addField('landmark')->sortable(true)->group('a~6');
@@ -63,7 +63,7 @@ class Model_MemberDetails extends \Model_Document{
 		$existing_check->addCondition('users_id',$this['users_id']);
 		$existing_check->addCondition('id','<>',$this->id);
 		$existing_check->tryLoadAny();
-		if($existing_check->loaded())
+		if(!isset($this->allow_re_adding_user) AND $existing_check->loaded())
 			throw $this->exception('User is already member','ValidityCheck')->setField('users_id');
 	}
 
@@ -135,6 +135,13 @@ class Model_MemberDetails extends \Model_Document{
 			}catch( Exception $e ) {
 				throw $e;
 			}
+	}
+
+	function user($return_dummy=false){
+		$user = $this->add('Model_Users')->addCondition('id',$this['users_id'])->tryLoadAny();
+		if($user->loaded()) return $user;
+		if($return_dummy) return new \Dummy();
+		return false;
 	}
 
 	function is_current_user(){

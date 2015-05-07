@@ -13,7 +13,16 @@ class Model_LastSeen extends SQL_Model {
 		$this->addField('related_document_name');
 
 		$this->addField('seen_till')->type('datetime')->defaultValue('1970-01-01');
+		$this->addHook('beforeDelete',$this);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+
+	function beforeDelete(){}
+	
+	function forceDelete(){
+		$this->delete();
+	}
+	
 }

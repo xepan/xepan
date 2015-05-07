@@ -4,6 +4,10 @@ class Model_TemplateSalary extends \Model_Table{
 	public $table="xhr_template_salary";
 	function init(){
 		parent::init();
+
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xHR/SalaryTemplate','salary_template_id')->sortable(true); //kiski
 		$this->hasOne('xHR/SalaryType','salary_type_id')->sortable(true)->display(array('form'=>'autocomplete/Plus')); //kiski
 		$this->addField('amount')->sortable(true); // 2000 basic, 1500HR ... like this
@@ -25,4 +29,5 @@ class Model_TemplateSalary extends \Model_Table{
 		if($this->ref('salary_type_id')->count()->getOne() > 0)
 			throw $this->exception('Salary  contains of salary Type Please Delete Salary Type First ','Growl');
 	}
+
 }

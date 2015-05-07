@@ -213,6 +213,13 @@ class Page_Tester extends Page {
                         $this->add('View_Error')->set('Skipping all tests: '.$e->getMessage());
                         return;
                     }
+
+                    if($e instanceof BaseException){
+                        $this->add('View_Error')->set($e->getMessage());
+                    }
+
+                    throw $e;
+                    
                 }
 
                 $this->input=$input;
@@ -267,9 +274,9 @@ class Page_Tester extends Page {
 
                 $k=$key.'_'.$row['name'];
                 if($this->proper_responses[$k]==$result && isset($this->proper_responses[$k])){
-                    $row[$key.'_res']='<font color="green">PASS</font><br/>'.htmlspecialchars($result);
+                    $row[$key.'_res']='<font color="green">PASS</font><br/>'.htmlspecialchars(is_array($result)?print_r($result,true):$result);
                 }elseif($this->proper_responses[$k]){
-                    $row[$key.'_res']='<font color="red">'.htmlspecialchars($result).'</font><br/>'.
+                    $row[$key.'_res']='<font color="red">'.htmlspecialchars(is_array($result)?print_r($result,true):$result).'</font><br/>'.
                         var_export($this->proper_responses[$k],true);
                 }
 
@@ -283,7 +290,7 @@ class Page_Tester extends Page {
     }
     function formatResult(&$row,$key,$result){
         $row[$key.'_res']=$result;
-        return (string)$result;
+        return $result;
     }
     function expect($value,$expectation){
         return $value==$expectation?'OK':'ERR';

@@ -38,12 +38,18 @@ class Model_Activity extends \Model_Document{
 			$users->where('users_id',$q->getField('from_id'));
 			$users->del('fields');
 
+			$nq2=$m->api->db->dsql();
+			$suppliers = $nq2->table('xpurchase_supplier');
+			$suppliers->where('id',$q->getField('from_id'));
+			$suppliers->del('fields');
+
 
 
 			$str="(
 					CASE ".$q->getField('from')."
 						WHEN 'Employee' THEN (".$emp_q->field('name')->render().")
-					WHEN 'Customer' THEN (". $users->field('name')->render() ." )
+						WHEN 'Customer' THEN (". $users->field('name')->render() ." )
+						WHEN 'Supplier' THEN (". $suppliers->field('name')->render() ." )
 					END
 				)";
 
@@ -64,12 +70,16 @@ class Model_Activity extends \Model_Document{
 			$users->where('users_id',$q->getField('to_id'));
 			$users->del('fields');
 
-
+			$nq2=$m->api->db->dsql();
+			$suppliers = $nq2->table('xpurchase_supplier');
+			$suppliers->where('id',$q->getField('from_id'));
+			$suppliers->del('fields');
 
 			$str="(
 					CASE ".$q->getField('to')."
 						WHEN 'Employee' THEN (".$emp_q->field('name')->render().")
 						WHEN 'Customer' THEN (". $users->field('name')->render() ." )
+						WHEN 'Supplier' THEN (". $suppliers->field('name')->render() ." )
 					END
 				)";
 
@@ -94,9 +104,29 @@ class Model_Activity extends \Model_Document{
 		});
 
 		// $this->hasMany('Attachment','activity_id');
+		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
 		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeSave(){
+		
+		// $to = $this->relatedDocument()->getTo();
+		// if($to instanceof \xShop\Model_Customer){
+		// 	$this['to'] = 'Customer';
+		// 	$this['to_id'] = $to->id;
+		
+		// }elseif($to instanceof \xHR\Model_Employee){
+		// 	$this['to'] = 'Employee';
+		// 	$this['to_id'] = $to->id;
+		
+		// }elseif($to instanceof \xPurchase\Model_Supplier) {
+		// 	$this['to'] = 'Supplier';
+		// 	$this['to_id'] = $to->id;
+	
+		// }
+		
 	}
 
 	function beforeDelete(){
@@ -121,17 +151,20 @@ class Model_Activity extends \Model_Document{
 
 	}
 
-	function afterSave(){
-		if($this['notify_via_email'] OR $this['action']=='email'){
-			$this->notifyViaEmail();
-		}
+	function afterSave($obj){
+		if(!isset($this->notified)){
+			if($this['notify_via_email'] OR $this['action']=='email'){
+				$this->notifyViaEmail();
+			}
 
-		if($this['notify_via_sms'])
-			$this->notifyViaSMS();
-		
+			if($this['notify_via_sms']){
+				$this->notifyViaSMS();
+			}
+		}
+		$this->notified = true;
 	}
 
-	function getTo(){
+	function getAssociateTo(){
 		if($this['to']=='Customer'){
 			return $this->add('xShop/Model_Customer')->load($this['to_id']);
 		}

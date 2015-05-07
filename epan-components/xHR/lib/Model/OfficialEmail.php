@@ -13,6 +13,10 @@ class Model_OfficialEmail extends \Model_Document{
 		);	
 	function init(){
 		parent::init();
+		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xHR/Department','department_id')->sortable(true)->display(array('form'=>'autocomplete/Basic'));
 		$this->hasOne('xHR/Employee','employee_id')->sortable(true)->display(array('form'=>'autocomplete/Basic'));
 
@@ -29,8 +33,14 @@ class Model_OfficialEmail extends \Model_Document{
 		$this->addField('imap_email_password')->type('password')->group('pop~1')->caption('Password');
 		$this->addField('imap_flags')->mandatory(true)->defaultValue('/imap/ssl/novalidate-cert')->group('pop~6')->caption('Flags');
 
+		$this->addHook('beforeDelete',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');
+	}
 
+	function beforeDelete(){}
+	
+	function forceDelete(){
+		$this->delete();
 	}
 
 	
