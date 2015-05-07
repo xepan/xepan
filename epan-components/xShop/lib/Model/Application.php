@@ -32,11 +32,11 @@ class Model_Application extends \Model_Document{
 
 	function beforeDelete($m){
 		$cats = $m->ref('xShop/Category')->count()->getOne();
-		$items = $m->ref('xShop/Item'->count()->getOne());
-		$cfs = $m->ref('xShop/CustomFields'->count()->getOne());
-		$specs = $m->ref('xShop/Specification'->count()->getOne());
-		$config = $m->ref('xShop/Configuration'->count()->getOne());
-		$offers = $m->ref('xShop/ItemOffer'->count()->getOne());
+		$items = $m->ref('xShop/Item')->count()->getOne();
+		$cfs = $m->ref('xShop/CustomFields')->count()->getOne();
+		$specs = $m->ref('xShop/Specification')->count()->getOne();
+		$config = $m->ref('xShop/Configuration')->count()->getOne();
+		$offers = $m->ref('xShop/ItemOffer')->count()->getOne();
 
 		if($cats or $items or $cfs or $specs or $config or $offers){
 			throw $this->exception("Shop/Blog (".$m['name'].") cannot deleted, first delete its category",'Growl');

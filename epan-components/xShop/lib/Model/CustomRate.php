@@ -25,4 +25,9 @@ class Model_CustomRate extends \Model_Table {
 
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+	function beforeDelete(){
+		$this->ref('xShop/CustomRateCustomeValueCondition')->deleteAll();
+	}
+
 }

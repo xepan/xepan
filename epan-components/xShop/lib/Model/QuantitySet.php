@@ -21,6 +21,7 @@ class Model_QuantitySet extends \Model_Table{
 		});//->sortable(true);
 
 		$this->addHook('beforeSave',$this);
+		$this->addHook('beforeDelete',$this);
 		$this->addHook('afterInsert',$this);
 
 		$this->hasMany('xShop/QuantitySetCondition','quantityset_id');
@@ -37,4 +38,9 @@ class Model_QuantitySet extends \Model_Table{
 		// foreach ($cf_array as $junk) {			
 		// }
 	}
+
+	function beforeDelete(){
+		$this->ref('xShop/QuantitySetCondition')->deleteAll();
+	}
+
 }

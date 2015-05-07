@@ -82,4 +82,11 @@ class Model_PurchaseOrderItem extends \Model_Document{
 		// }
 		
 	}
+
+	function setItemEmpty(){
+		if(!$this->loaded()) return;
+
+		$this['item_id'] = null;
+		$this->save();
+	}
 }	

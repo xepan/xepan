@@ -37,6 +37,7 @@ class Model_CustomFieldValue extends \Model_Table{
 		$this->hasMany('xShop/CustomFieldValueFilterAssociation','customefieldvalue_id');
 
 		$this->addHook('beforeSave',$this);
+		$this->addHook('beforeDelete',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
@@ -54,6 +55,16 @@ class Model_CustomFieldValue extends \Model_Table{
 		// $temp = $this->add('xShop/Model_ItemCustomFieldAssos')->load($this['itemcustomfiledasso_id']);
 		$this['customfield_id'] = $this->ref('itemcustomfiledasso_id')->get('customfield_id');
 		$this['item_id'] = $this->ref('itemcustomfiledasso_id')->get('item_id');
+	}
+
+	function beforeDelete(){
+		$this->ref('xShop/ItemImages')->each(function($item_img){
+			$item_img->forceDelete();
+		});
+
+		$this->ref('xShop/CustomFieldValueFilterAssociation')->each(function($cf_value_filter_asso){
+			$cf_value_filter_asso->forceDelete();
+		});
 	}
 
 	function duplicate($asso_id,$item_id=null){

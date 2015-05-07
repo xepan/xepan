@@ -44,11 +44,6 @@ class Model_Quotation extends \Model_Document{
 	}
 
 	function beforeDelete(){
-		// $this->ref('xShop/QuotationItem')->count()->getOne();
-
-	}
-
-	function forceDelete(){
 		$this->ref('xShop/QuotationItem')->each(function($qi){
 			$qi->forceDelete();
 		});
@@ -56,7 +51,9 @@ class Model_Quotation extends \Model_Document{
 		$this->attachments()->each(function($attach){
 			$attach->forceDelete();
 		});
-		
+	}
+
+	function forceDelete(){
 		$this->delete();
 	}
 
@@ -170,5 +167,13 @@ class Model_Quotation extends \Model_Document{
 		return false;
 		// return $this->ref('Attachements')->tryLoadAny();
 	}
+
+	function setTermAndConditionEmpty(){
+		if(!$this->loaded()) return;
+
+		$this['termsandcondition_id'] = null;
+		$this->save();
+	}
+
 }
 

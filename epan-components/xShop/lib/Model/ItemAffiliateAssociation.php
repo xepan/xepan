@@ -7,6 +7,9 @@ class Model_ItemAffiliateAssociation extends \SQL_Model{
 	
 	function init(){
 		parent::init();
+		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
 
 		$this->hasOne('xShop/Item','item_id');
 		$this->hasOne('xShop/AffiliateType','affiliatetype_id');

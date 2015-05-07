@@ -82,6 +82,11 @@ class Model_Category extends \Model_Document{
 			$item->forceDelete();
 		});
 
+		if($subCategory = $this->subCategory()){
+			foreach ($subCategory as $cat) {
+				$cat->forceDelete();
+			}
+		}
 		//Todo Parent Id set To Null 
 		
 		$this->delete();

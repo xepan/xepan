@@ -37,7 +37,21 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 		// hasMany JobCards
 		$this->hasMany('xProduction/JobCard','orderitem_departmental_status_id');
 
+		$this->addHook('beforeDelete', $this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeDelete(){
+		if($this->ref('xProduction/JobCard')->count()->getOne())
+			throw $this->exception('Cannot Delete, First Delete Jobcrads');
+	}
+
+	function forceDelete(){
+		$this->ref('xProduction/JobCard')->each(function($m){
+			$m->forceDelete();
+		});
+
+		$this->delete();
 	}
 
 	function close(){

@@ -36,8 +36,17 @@ class Model_DiscountVoucher extends \Model_Document{
   	
   	function beforeDelete($m){	
 		if($m->ref('xShop/DiscountVoucherUsed')->count()->getOne())
-			$this->api->js(true)->univ()->errorMessage('Cannot Delete, First Delete its Transaction/Orders')->execute();
+			throw $this->exception('Cannot Delete, First Delete its Transaction/Orders','Growl');
   	}
+
+  	function forceDelete(){
+  		$this->ref('xShop/DiscountVoucherUsed')->each(function($voucher_used){
+  			$voucher_used->forceDelete();
+  		});
+ 		
+ 		$this->delete();
+  	}
+
 
 	function isExpire(){
 

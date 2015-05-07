@@ -30,7 +30,7 @@ class Model_MemberDetails extends \Model_Document{
 		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true)->group('a~6');
 
 						
-		$this->hasMany('xShop/Order','member_id');
+		// $this->hasMany('xShop/Order','member_id');
 		$this->hasMany('xShop/DiscountVoucherUsed','member_id');
 		$this->hasMany('xShop/ItemMemberDesign','member_id');
 		$this->hasMany('xShop/MemberImages','member_id');
@@ -50,13 +50,31 @@ class Model_MemberDetails extends \Model_Document{
 	}
 
 	function beforeDelete(){
-		$order_count=$this->ref('xShop/Order')->count()->getOne();
+		$voucher_used = $this->ref('xShop/DiscountVoucherUsed')->count()->getOne();
+		// $order_count=$this->ref('xShop/Order')->count()->getOne();
 		$member_count=$this->ref('xShop/MemberImages')->count()->getOne();
 		$item_member_count=$this->ref('xShop/ItemMemberDesign')->count()->getOne();
-			$str = 'Order Count'.$order_count . ' ' .'Member Images Count'.$member_count .' ' .'Item Design'.$item_member_count;
-			if($order_count or $member_count or $item_member_count)
-			throw $this->exception($str,'Growl');
+		$str = 'Member Images ( '.$member_count .' ) ' .'Member Item Design ('.$item_member_count." ) ";
+		if($order_count or $member_count or $item_member_count or $voucher_used)
+			throw $this->exception("Cannot Delete, First Delete ".$str,'Growl');
 	}
+
+	function forceDelete(){
+		$this->ref('xShop/DiscountVoucherUsed')->each(function($m){
+			$m->setMemberEmpty();
+		});
+
+		$this->ref('xShop/ItemMemberDesign')->each(function($m){
+			$m->forceDelete();
+		});
+
+		$this->ref('xShop/MemberImages')->each(function($m){
+			$m->forceDelete();
+		});
+
+		$this->delete();
+	}
+
 
 	function beforeSave(){
 		$existing_check = $this->add('xShop/Model_MemberDetails');

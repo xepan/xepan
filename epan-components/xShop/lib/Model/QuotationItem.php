@@ -75,4 +75,11 @@ class Model_QuotationItem extends \Model_Document{
 	function quotation(){
 		return $this->ref('quotation_id');	
 	}
+
+	function setItemEmpty(){
+		if(!$this->loaded()) return;
+
+		$this['item_id'] = null;
+		$this->save();
+	}
 }

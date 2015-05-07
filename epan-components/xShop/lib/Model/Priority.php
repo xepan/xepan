@@ -13,8 +13,11 @@ class Model_Priority extends \Model_Document{
 		);
 	function init(){
 		parent::init();
-		$this->addField('name');
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
+		$this->addField('name');
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 		}	
