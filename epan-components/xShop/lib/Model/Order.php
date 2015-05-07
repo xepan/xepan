@@ -143,35 +143,41 @@ class Model_Order extends \Model_Document{
 		$form->addSubmit('ForceDelete');
 
 		if($form->isSubmitted()){
-			foreach ($ois as $oi) {
+			$this->forceDelete($form['delete_invoice_also']);
+			return true;
+		}
+
+	}
+
+	function forceDelete($delete_invoice_also = true){
+		$ois = $this->orderItems();
+
+		foreach ($ois as $oi) {
 				//ORDER DETAIL (ITEMS) DELETE
 				//Create Log
-				$oi->delete();
+				$oi->forceDelete();
 			}
 			$invs = $this->invoice();
-			if($form['delete_invoice_also'] and $invs){
+			if($delete_invoice_also and $invs){
 				foreach ($invs as $inv) {
 					//Create Log
-					$invs->delete();
+					$invs->forceDelete();
 				}
 			}elseif($invs){
 				foreach ($invs as $inv) {
 					$inv['sales_order_id'] = null;
 					$inv->saveAndUnload();
 				}
-				// if($invs->count()->getOne()){
-				// 	$form->displayError('delete_invoice_also','First Delete it\'s Invoice ( '.$invs->count()->getOne()." )" );
-				// }
 			}
 			//ORDER DELETE
 			//create Log
 			$this->delete();
-			return true;
-		}
-
 	}
 
 	function beforeDelete($m){
+
+		if($m->ref('xShop/SalesInvoice')->count()->getOne())
+			throw $this->exception('Cannot Delete, First Delete It\'s Invoice');
 
 		if($m['discount_voucher'] != null and $m['discount_voucher'] != 0 ){
 			$discountvoucher = $this->add('xShop/Model_DiscountVoucher');		
@@ -185,6 +191,9 @@ class Model_Order extends \Model_Document{
 			}
 		}
 
+		$m->ref('Attachements')->each(function($attach){
+			$attach->forceDelete();
+		});
 	}
 
 	function placeOrderFromCart(){
@@ -577,5 +586,12 @@ class Model_Order extends \Model_Document{
 		return false;
 		// return $this->ref('Attachements')->tryLoadAny();
 	}	
+
+	function setTermAndConditionEmpty(){
+		if(!$this->loaded()) return;
+
+		$this['termsandcondition_id'] = null;
+		$this->save();
+	}
 
 }

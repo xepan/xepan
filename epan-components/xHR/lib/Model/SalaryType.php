@@ -33,4 +33,10 @@ class Model_SalaryType extends \Model_Table{
 		if($tem_salary OR $salary)
 			throw $this->exception("Salary Type is Used in Salary Templates($tem_salary) or Salaries($salary). Please Remove its use first",'Growl');
 	}
+
+	function forceDelete(){
+		$this->ref('xHR/TemplateSalary')->each(function($TemplateSalary){
+			$TemplateSalary->forceDelete();
+		});
+	}
 }

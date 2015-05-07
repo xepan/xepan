@@ -17,7 +17,24 @@ class Model_Specification extends \Model_Table{
 			
 		$this->hasMany('xShop/ItemSpecificationAssociation','specification_id');
 
+		$this->addHook('beforeDelete',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+	function beforeDelete($m){
+		if($m->ref('xShop/ItemSpecificationAssociation')->count()->getOne())
+			throw $this->exception('Cannot Delete, First Delete Item Specification Value');
+
+	}
+
+	function forceDelete(){
+		$this->ref('xShop/ItemSpecificationAssociation')->each(function($m){
+			$m->forceDelete();
+		});
+
+		$this->delete();
+	}
+
+
 }
 

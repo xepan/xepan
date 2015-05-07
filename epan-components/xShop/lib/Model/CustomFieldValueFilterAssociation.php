@@ -2,12 +2,15 @@
 
 namespace xShop;
 
-class Model_CustomFieldValueFilterAssociation extends \SQL_Model{
+class Model_CustomFieldValueFilterAssociation extends \Model_Table{
 	public $table='xshop_customfiledvalue_filter_ass';
 	
 	function init(){
 		parent::init();
-				
+		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+		
 		$this->hasOne('xShop/Item','item_id');
 		$this->hasOne('xShop/CustomFields','customfield_id');
 		$this->hasOne('xShop/CustomFieldValue','customefieldvalue_id');

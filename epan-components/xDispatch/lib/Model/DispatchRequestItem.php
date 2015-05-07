@@ -13,6 +13,9 @@ class Model_DispatchRequestItem extends \Model_Document{
 
 	function init(){
 		parent::init();
+		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
 
 		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
 		$this->hasOne('xDispatch/DeliveryNote','deliverynote_id'); // to know if this item is already dilivered
@@ -74,4 +77,10 @@ class Model_DispatchRequestItem extends \Model_Document{
 		parent::setStatus('received');
 	}
 
+	function setItemEmpty(){
+		if(!$this->loaded()) return;
+
+		$this['item_id'] = null;
+		$this->save();
+	}
 }

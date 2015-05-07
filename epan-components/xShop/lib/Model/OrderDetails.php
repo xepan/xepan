@@ -183,23 +183,13 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function beforeDelete(){
-
-		$dnis = $this->deliveryNoteItems();
-		foreach ($dnis as $dni) {
-			$dni->delete();
-		}
-
-		$dris = $this->dispatchRequestItems();
-		foreach ($dris as $dri) {
-			$dri->delete();
-		}
-
-		$jcs = $this->Jobcards();
-		foreach ($jcs as $jc) {
-			//ALL JOBCARD DELETE
-			$jc->delete();
-		}
-
+		$jc = $this->ref('xShop/Jobcard')->count()->getOne();
+		if($jc)
+			throw $this->exception('Cannot Delete, First Delete Jobcrads');
+		
+		$this->ref('xShop/OrderItemDepartmentalStatus')->each(function($m){
+			$m->forceDelete();
+		});
 	}
 
 	function deliveryNoteItems(){
@@ -512,9 +502,37 @@ class Model_OrderDetails extends \Model_Document{
 		$form->addField('Readonly','Jobcards')->set($str);
 		$form->addSubmit();
 		if($form->isSubmitted()){
-			$this->delete();
+			$this->forceDelete();
 			return true;
 		}
 	}
+
+	function forceDelete(){
+		$dnis = $this->deliveryNoteItems();
+		foreach ($dnis as $dni) {
+			$dni->forceDelete();
+		}
+
+		$dris = $this->dispatchRequestItems();
+		foreach ($dris as $dri) {
+			$dri->forceDelete();
+		}
+
+		$jcs = $this->Jobcards();
+		foreach ($jcs as $jc) {
+			//ALL JOBCARD DELETE
+			$jc->forceDelete();
+		}
+
+		$this->delete();
+	}
+
+	function setItemEmpty(){
+		if(!$this->loaded()) return;
+
+		$this['item_id'] = null;
+		$this->save();
+	}
+
 
 }

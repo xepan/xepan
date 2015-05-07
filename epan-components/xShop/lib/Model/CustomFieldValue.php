@@ -10,7 +10,8 @@ class Model_CustomFieldValue extends \Model_Table{
 		parent::init();
 		
 		//TODO for Mutiple Epan website
-		// $this->addCondition('epan_id',$this->api->current_website->id);
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
 			
 		$this->hasOne('xShop/ItemCustomFieldAssos','itemcustomfiledasso_id');
 		$this->hasOne('xShop/CustomFields','customfield_id');
@@ -36,6 +37,7 @@ class Model_CustomFieldValue extends \Model_Table{
 		$this->hasMany('xShop/CustomFieldValueFilterAssociation','customefieldvalue_id');
 
 		$this->addHook('beforeSave',$this);
+		$this->addHook('beforeDelete',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
@@ -53,6 +55,16 @@ class Model_CustomFieldValue extends \Model_Table{
 		// $temp = $this->add('xShop/Model_ItemCustomFieldAssos')->load($this['itemcustomfiledasso_id']);
 		$this['customfield_id'] = $this->ref('itemcustomfiledasso_id')->get('customfield_id');
 		$this['item_id'] = $this->ref('itemcustomfiledasso_id')->get('item_id');
+	}
+
+	function beforeDelete(){
+		$this->ref('xShop/ItemImages')->each(function($item_img){
+			$item_img->forceDelete();
+		});
+
+		$this->ref('xShop/CustomFieldValueFilterAssociation')->each(function($cf_value_filter_asso){
+			$cf_value_filter_asso->forceDelete();
+		});
 	}
 
 	function duplicate($asso_id,$item_id=null){

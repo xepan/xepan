@@ -11,7 +11,7 @@ class Plugins_epanDeleted extends \componentBase\Plugin {
 	}
 
 	function Plugins_epanDeleted($obj, $epan){
-		$models=array('Model_Department','Model_Employee');
+		$models=array('Model_Department','Model_Employee','Model_Document','Model_HolidayBlock','Model_LeaveType','Model_Post','Model_SalaryTemplate','Model_SalaryType','Model_TemplateSalary');
 		foreach ($models as $m) {
 			$this->add("xHR\\".$m)->each(function($model){
 				$model->forceDelete();
