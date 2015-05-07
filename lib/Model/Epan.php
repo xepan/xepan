@@ -19,7 +19,7 @@ class Model_Epan extends Model_Table {
 		$f=$this->addField('company_name')->group('b~3~<i class="fa fa-info "></i> Company General Information')->mandatory(true);
 		$f->icon='fa fa-info~red';
 
-		$f=$this->addField('contact_person_name')->group('b~3');
+		$f=$this->addField('contact_person_name')->Caption('Owner Name')->group('b~3');
 		$f->icon='fa fa-user~red';
 		$f=$this->addField('mobile_no')->group('b~3');
 		$f->icon='fa fa-phone~red';
@@ -28,6 +28,7 @@ class Model_Epan extends Model_Table {
 		$f=$this->addField('address')->type('text')->group('c~6~<i class="fa fa-map-marker "></i> Company Contact Information');
 		$f->icon='fa fa-map-marker~red';
 		$this->addField('city')->group('c~6');
+		$this->addField('pin_code')->group('c~6');
 		$this->addField('state')->group('c~6~bl');
 		$this->addField('country')->group('c~6~bl');
 		$this->addField('website');
@@ -92,8 +93,8 @@ class Model_Epan extends Model_Table {
 		$this->addField('sms_password_qs_param')->caption('Gateway Password Query String Variable')->group('qs~3');
 		$this->addField('sms_number_qs_param')->caption('Number Query String Variable')->group('qs~3');
 		$this->addField('sm_message_qs_param')->caption('Messesge Query String Variable')->group('qs~3');
-		$this->addField('sms_prefix')->caption('Message Prefix')->group('qs~3');
-		$this->addField('sms_postfix')->caption('Message Postfix')->group('qs~3');
+		$this->addField('sms_prefix')->caption('Message Prefix')->group('qt~3~SMS Prefix And Postfix');
+		$this->addField('sms_postfix')->caption('Message Postfix')->group('qt~3');
 
 
 		$this->hasMany('Aliases','epan_id'); 

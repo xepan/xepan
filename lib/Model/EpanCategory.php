@@ -6,7 +6,7 @@ class Model_EpanCategory extends Model_Table {
 		parent::init();
 
 		$this->hasOne('EpanCategory','parent_category_id');
-		$this->addField('name');
+		$this->addField('name')->defaultValue('default');
 		$this->addField('description');
 		$this->hasMany('Epan','category_id');
 		$this->hasMany('EpanAdds','category_id');

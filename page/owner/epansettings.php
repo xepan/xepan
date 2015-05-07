@@ -16,7 +16,7 @@ class page_owner_epansettings extends page_base_owner {
 		$epan_info = $tabs->addTab('Company Information');
 		
 		$epan_info_form = $epan_info->add('Form_Stacked');
-		$epan_info_form->setModel($this->api->current_website,array('category_id','company_name','contact_person_name','mobile_no','email_id','address','city','state','country','keywords','description'));
+		$epan_info_form->setModel($this->api->current_website,array('company_name','contact_person_name','mobile_no','email_id','address','pin_code','city','state','country','keywords','description'));
 		$epan_info_form->addSubmit('Update');
 		$epan_info_form->add('Controller_FormBeautifier');
 		
@@ -65,7 +65,7 @@ class page_owner_epansettings extends page_base_owner {
 			$email_form->js()->univ()->successMessage('Information Updated')->execute();
 		}
 
-		$company_settings= $tabs->addTabURL('./comp_settings','Company Settings');
+		// $company_settings= $tabs->addTabURL('./comp_settings','Company Settings');
 	}
 
 	function page_comp_settings(){

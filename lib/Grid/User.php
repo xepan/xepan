@@ -9,11 +9,11 @@ class Grid_User extends Grid{
 		
 		$m=parent::setModel($model,array('name','username','type','is_active','user_management','general_settings','application_management','website_designing','last_login_date'));
 
-		$this->removeColumn('is_active');
-		$this->removeColumn('user_management');
-		$this->removeColumn('general_settings');
-		$this->removeColumn('application_management');
-		$this->removeColumn('website_designing');
+		if($this->hasColumn('is_active')) $this->removeColumn('is_active');
+		if($this->hasColumn('user_management')) $this->removeColumn('user_management');
+		if($this->hasColumn('general_settings')) $this->removeColumn('general_settings');
+		if($this->hasColumn('application_management'))$this->removeColumn('application_management');
+		if($this->hasColumn('website_designing'))$this->removeColumn('website_designing');
 		
 		$this->addFormatter('username','wrap');
 
