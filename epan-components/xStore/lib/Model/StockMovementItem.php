@@ -4,6 +4,9 @@ class Model_StockMovementItem extends \Model_Table{
 	public $table="xstore_stock_movement_items";
 	function init(){
 		parent::init();
+		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
 
 		$this->hasOne('xStore/StockMovement','stock_movement_id')->sortable(true);
 		$this->hasOne('xShop/Item','item_id')->sortable(true)->display(array('form'=>'xShop/Item'));

@@ -9,6 +9,9 @@ class Model_MaterialRequestItem extends \Model_Document{
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xStore/MaterialRequest','material_request_jobcard_id');
 		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'xShop/Item'));
 		$this->addField('qty')->sortable(true);

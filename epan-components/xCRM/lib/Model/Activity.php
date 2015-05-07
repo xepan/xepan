@@ -17,6 +17,9 @@ class Model_Activity extends \Model_Document{
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$from_to = array('Lead','Opportunity','Customer','Employee','Supplier','OutSource Party');
 
 		$this->addField('from')->enum($from_to)->defaultValue('Employee');

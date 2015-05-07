@@ -12,6 +12,9 @@ class Model_JobCard extends \Model_Document{
 	function init(){
 		parent::init();
 		// hasOne OrderItemDepartment Association id
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
 		$this->hasOne('xHR/Department','to_department_id')->sortable(true);
 		$this->hasOne('xHR/Department','from_department_id')->sortable(true);
@@ -40,7 +43,6 @@ class Model_JobCard extends \Model_Document{
 				->fieldQuery('name')
 			)->sortable(true);
 
-		$this->hasMany('xProduction/JobCardEmployeeTeamAssociation','jobcard_id');
 		$this->hasMany('xStore/Model_StockMovement','jobcard_id');
 		$this->hasMany('xProduction/JobCardAttachment','related_document_id',null,'Attachements');
 
@@ -55,7 +57,20 @@ class Model_JobCard extends \Model_Document{
 	}
 
 	function beforeDelete(){
+		$stock_movement = $this->ref('xStore/StockMovement')->count()->getOne();
+		if($stock_movement)
+			throw $this->exception('Cannot Delete First Delete it\'s Stock Movement');
+		
+		$this->ref('Attachements')->deleteAll();
 	}	
+
+	function forceDelete(){
+		$this->ref('xStore/StockMovement')->each(function($m){
+			$m->forceDelete();
+		});
+
+		$this->delete();
+	}
 
 	function createFromOrder($order_item, $order_dept_status ){
 		$new_job_card = $this;

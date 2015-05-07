@@ -28,6 +28,12 @@ class Model_ThumbnailSliderGallery extends \Model_Table {
 
 		$this->hasMany('slideShows/Model_ThumbnailSliderImages','gallery_id');
 
+		$this->addHook('beforeDelete',$this);
 		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+	function beforeDelete(){
+		$this->ref('slideShows/ThumbnailSliderImages')->deleteAll();
+	}
+
 }

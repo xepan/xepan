@@ -42,8 +42,20 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 
 
 		$this->addHook('beforeInsert',$this);
+		$this->addHook('beforeDelete',$this);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeDelete(){
+		$this->ref('xDispatch/DispatchRequestItem')->each(function($m){
+			$m->delete();
+		});
+
+		$this->ref('xStore/StockMovement')->each(function($m){
+			$m->delete();
+		});
+
 	}
 
 	function beforeInsert($obj){

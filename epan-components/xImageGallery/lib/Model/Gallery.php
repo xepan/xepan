@@ -17,5 +17,10 @@ class Model_Gallery extends \Model_Table {
 		$this->hasMany('xImageGallery/Images','gallery_id');
 			
 		// //$this->add('dynamic_model/Controller_AutoCreator');
+		$this->addHook('beforeDelete',$this);
+	}
+
+	function beforeDelete(){
+		$this->ref('xImageGallery/Images')->deleteAll();
 	}
 }

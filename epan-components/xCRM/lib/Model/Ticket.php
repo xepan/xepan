@@ -11,9 +11,11 @@ class Model_Ticket extends \Model_Document{
 		parent::init();
 		
  		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
  		$this->hasOne('xShop/Model_Customer','customer_id');
  		$this->hasOne('xShop/Model_Order','order_id');
-		$this->addCondition('epan_id',$this->api->current_website->id);
+		
 		//$this->add('dynamic_model/Controller_AutoCreator');	
 		
 	}

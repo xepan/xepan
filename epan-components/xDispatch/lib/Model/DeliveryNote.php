@@ -22,7 +22,14 @@ class Model_DeliveryNote extends \xProduction\Model_JobCard {
 		$this->addField('narration')->type('text');
 		$this->hasMany('xDispatch/DeliveryNoteItem','delivery_note_id');
 
+		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeDelete(){
+		$this->ref('xDispatch/DeliveryNoteItem')->each(function($m){
+			$m->delete();
+		});
 	}
 
 	function create($order,$from_warehouse,$shipping_address,$shipping_via,$docket_no,$narration,$items_array=array(),$status=null){

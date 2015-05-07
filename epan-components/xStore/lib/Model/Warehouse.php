@@ -6,6 +6,9 @@ class Model_Warehouse extends \Model_Table{
 	function init(){
 		parent::init();
 
+			$this->hasOne('Epan','epan_id');
+			$this->addCondition('epan_id',$this->api->current_website->id);
+
 			$this->hasOne('xHR/Department','department_id')->sortable(true);
 			$this->hasOne('xProduction/OutSourceParty','out_source_party_id')->sortable(true);
 			
@@ -18,8 +21,15 @@ class Model_Warehouse extends \Model_Table{
 	}
 	function beforeDelete(){
 		if($this->ref('xStore/Stock')->count()->getOne() > 0)
-			throw $this->exception('Stock Contains of WareHouse.. Please Delete First Warehouse','Growl');
-			
+			throw $this->exception('Stock Contains WareHouse.. Please Delete First Warehouse','Growl');
+	}
+
+	function forceDelete(){
+		$this->ref('xStore/Stock')->each(function($m){
+			$m->forceDelete();
+		});
+
+		$this->delete();
 	}
 
 	function getStock($item){

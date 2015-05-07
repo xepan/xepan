@@ -17,8 +17,13 @@ class Model_TransformGallery extends \Model_Table{
 		$f = $this->addField('autoplay')->Caption('Auto Play')->type('boolean')->defaultValue(true)->group('a~2');
 		$f->icon = "fa fa-exclamation~blue";
 		
-		$this->hasMany('slideShows/TransformGalleryImages','gallery_id');
-
+		$this->hasMany('slideShows/Model_TransformGalleryImages','gallery_id');
+		$this->addHook('beforeDelete',$this);
 		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+	function beforeDelete(){
+		$this->ref('slideShows/TransformGalleryImages');
+	}
+
 }

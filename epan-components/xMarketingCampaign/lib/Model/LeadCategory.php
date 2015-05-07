@@ -34,4 +34,9 @@ class Model_LeadCategory extends \Model_Document {
 			throw $this->exception('Category contains Leads','Growl');
 	}
 
+	function forceDelete(){
+		$this->ref('xMarketingCampaign/Lead')->each(function($m){
+			$m->delete();
+		});
+	}
 }

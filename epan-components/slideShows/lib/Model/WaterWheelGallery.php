@@ -31,5 +31,11 @@ class Model_WaterWheelGallery extends \Model_Table {
 
 		$this->hasMany('slideShows/Model_WaterWheelImages','gallery_id');
 		// //$this->add('dynamic_model/Controller_AutoCreator');
+		$this->addHook('beforeDelete',$this);
 	}
+
+	function beforeDelete(){
+		$this->ref('slideShows/WaterWheelImages')->deleteAll();
+	}
+
 }

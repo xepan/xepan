@@ -7,6 +7,9 @@ class Model_TransactionType extends \Model_Table{
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->addField('name');
 		$this->addField('FromAC');
 		$this->addField('ToAC');

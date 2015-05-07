@@ -59,9 +59,16 @@ class Model_DataGrabber extends \Model_Table{
 
 	function beforeDelete($m){
 		$phase_count = $m->ref('xMarketingCampaign/DataSearchPhrase')->count()->getOne();
-		
 		if($phase_count ){
-			$this->api->js(true)->univ()->errorMessage('Cannot Delete,first delete Phrases')->execute();	
+			throw $this->exception('Cannot Delete,first delete Phrases','Growl');
 		}
+	}
+
+	function forceDelete(){
+		$this->ref('xMarketingCampaign/DataSearchPhrase')->each(function($m){
+			$m->delete();
+		});
+
+		$this->delete();
 	}
 }
