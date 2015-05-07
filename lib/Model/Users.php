@@ -89,7 +89,8 @@ class Model_Users extends Model_Table {
 			$this['application_management']=false;
 			$this['website_designing']=false;
 
-			$this->ref('UserAppAccess')->addCondition('is_allowed',true)->deleteAll();
+			if($this->loaded())
+				$this->ref('UserAppAccess')->addCondition('is_allowed',true)->deleteAll();
 		}
 	}
 
