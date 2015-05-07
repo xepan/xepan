@@ -17,6 +17,10 @@ class Model_Email extends \Model_Document{
 
 	function init(){
 		parent::init();
+		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xHR/Employee','read_by_employee_id');
 
 		$this->addField('uid');
@@ -47,7 +51,11 @@ class Model_Email extends \Model_Document{
 	// 	$this->guessFrom();
 	// 	$this->guessDocument();
 	// }
-
+	function beforeDelete(){
+		$this->ref('xCRM/EmailAttachment')->each(function($m){
+			$m->forceDelete();
+		});
+	}
 
 	function createFromActivity($activity){
 		$this['from'] = $activity['from'];
