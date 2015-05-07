@@ -1,6 +1,8 @@
 <?php
+
 class Model_Users extends Model_Table {
 	var $table= "users";
+
 	function init(){
 		parent::init();
 		
@@ -51,7 +53,13 @@ class Model_Users extends Model_Table {
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterInsert',$this);
+		$this->addHook('afterLoad',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function afterLoad(){
+		if(!$this['username']) $this['username'] = 'user_'. $this->id;
+		if(!$this['password']) $this['password'] = 'pass_'. rand(100000,999999);
 	}
 
 	function afterInsert($obj,$new_id){		
@@ -103,6 +111,10 @@ class Model_Users extends Model_Table {
 		});
 		
 		$this->api->event('user_before_delete',$this);
+	}
+
+	function validateUser(){
+
 	}
 
 	function updatePassword($new_password){
