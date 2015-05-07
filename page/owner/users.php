@@ -35,12 +35,12 @@ class page_owner_users extends page_base_owner {
 
 		//end of Badges
 
-		$crud=$this->add('CRUD_User',array('option_page'=>$this->api->url('./options'),'config_page'=>$this->api->url('./customfieldconfig'),'app_page'=>$this->api->url('./xyz')));
+		$crud=$this->add('CRUD_User',array('grid_class'=>'Grid_User','option_page'=>$this->api->url('./options'),'config_page'=>$this->api->url('./customfieldconfig'),'app_page'=>$this->api->url('./xyz')));
 
 		$usr=$this->add('Model_Users');
 		$usr->addCondition('epan_id',$this->api->current_website->id);
 		$usr->getElement('epan')->destroy();
-		$crud->setModel($usr,array('name','type','username','password','email','is_active','user_management','general_settings','application_management','website_designing','last_login_date'),array('name','username','is_active','user_management','general_settings','application_management','website_designing','last_login_date'));
+		$crud->setModel($usr,array('name','type','username','password','email','is_active','user_management','general_settings','application_management','website_designing','last_login_date'),array());
 
 		if(!$crud->isEditing()){
 			$crud->grid->js('reload',$bg->js()->reload());
@@ -49,14 +49,16 @@ class page_owner_users extends page_base_owner {
 	}
 
 	function page_xyz(){
+		$container = $this->add('View');
+        $container->addClass('atk-section atk-box atk-padding-large atk-shapre-rounded');
 		$this->api->stickyGET('users_id');
 		$user = $this->add('Model_Users')->load($_GET['users_id']);
 
 		$install_app = $this->add('Model_InstalledComponents');
-		$grid = $this->add('Grid');
+		$grid = $container->add('Grid');
 		$grid->setModel($install_app,array('component'));
 		
-		$form = $this->add('Form');
+		$form = $container->add('Form');
 		$allowed_app = $form->addField('hidden','allowedapp')->set(json_encode($user->getAllowedApp()));
 		$form->addSubmit('Update');
 
@@ -70,7 +72,7 @@ class page_owner_users extends page_base_owner {
 			foreach ($selected_apps as $app_id) {
 				$user->allowApp($app_id);
 			}
-			$form->js()->univ()->successMessage('Updated')->execute();
+			$form->js(null,$this->js()->univ()->closeDialog())->univ()->successMessage('Updated')->execute();
 		}
 	}
 
