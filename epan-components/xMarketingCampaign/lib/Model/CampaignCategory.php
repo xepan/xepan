@@ -24,7 +24,15 @@ class Model_CampaignCategory extends \Model_Table {
 
 	function beforeDelete(){
 		if($this->ref('xMarketingCampaign/Campaign')->count()->getOne() > 0)
-			throw $this->exception('Category contains Campaigns','Growl');
+			throw $this->exception('Cannot Delete, First Delete it\'s Campaigns','Growl');
+	}
+
+	function forceDelete(){
+		$this->ref('xMarketingCampaign/Campaign')->each(function($m){
+			$m->forceDelete();
+		});
+
+		$this->delete();
 	}
 
 }

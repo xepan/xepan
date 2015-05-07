@@ -27,7 +27,13 @@ class Model_SocialPostCategory extends \Model_Table {
 
 	function beforeDelete(){
 		if($this->ref('xMarketingCampaign/SocialPost')->count()->getOne() > 0)
-			throw $this->exception('Category contains SocialPosts','Growl');
+			throw $this->exception('Cannot Delete, First Delete it\'s Social Post ','Growl');
+	}
+
+	function forceDelete(){
+		$this->ref('xMarketingCampaign/SocialPost')->each(function($m){
+			$m->delete();
+		});
 	}
 
 }

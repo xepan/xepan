@@ -11,7 +11,7 @@ class Plugins_epanDelete extends \componentBase\Plugin {
 	}
 
 	function Plugins_epanDelete($obj, $epan){
-		$models=array('Model_Activity'
+		$models=array('Model_Activity',
 					'Model_Email',
 					'Model_SMS',
 					'Model_Ticket'

@@ -34,4 +34,15 @@ class Model_Campaign extends \Model_Table {
 
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+	function beforeDelete(){
+		$this->ref('xMarketingCampaign/CampaignSubscriptionCategory')->deleteAll();
+		$this->ref('xMarketingCampaign/CampaignNewsLetter')->deleteAll();
+		$this->ref('xMarketingCampaign/CampaignSocialUser')->deleteAll();
+		$this->ref('xMarketingCampaign/CampaignSocialPost')->each(function($m){
+			$m->delete();	
+		});
+
+	}
+
 }
