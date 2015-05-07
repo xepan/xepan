@@ -17,7 +17,8 @@ class Grid_User extends Grid{
 		
 		$this->addFormatter('username','wrap');
 
-		$this->fooHideAll('s_no');
+		$this->fooHideAlways('username');
+		$this->fooToggler('s_no');
 
 		return $m;
 

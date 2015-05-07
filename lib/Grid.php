@@ -93,9 +93,8 @@ class Grid extends Grid_Advanced{
 
     function render(){
         if($this->load_footable){
-            $this->js(true)->find('table')->_load('footable/footable.all.min')->_css('footable/footable.standalone.min')->footable();
+            $this->js(true)->find('table')->_load('footable/footable.min')->footable();
         }
-        echo $this->columns['s_no']['thparam'];
         parent::render();
     }
 
@@ -164,52 +163,31 @@ class Grid extends Grid_Advanced{
         return $this;
     }
 
-    function init_foo($field){        
-        echo ($this->columns[$field]['thparam'] .= " data-hide='". $this->fooHiddenFrom($field) ."'");
-
-        // @$this->columns[$field]['thparam'] .= ' style="text-align: center"';
-    }
-    function format_foo($field){
-        // @$this->columns[$field]['thparam'] .= ' style="text-align: center"';
-
-    }
-
     // =========== Foo table section ==========
     public $load_footable=false;
-    public $foo_columns=array();
-    public $phone_remove_columns=array();
 
     function fooHidePhone($column){
-        $this->phone_remove_columns[] = $column;
-        if(!in_array($column, $this->foo_columns)) $this->foo_columns[] = $column;
+        $this->columns[$column]['thparam'] .= " data-hide='phone'";
         if(!$this->load_footable) $this->load_footable=true;
     }
 
-    public $tablet_remove_columns=array();
     function fooHideTablet($column){
-        $this->tablet_remove_columns[] = $column;
-        if(!in_array($column, $this->foo_columns)) $this->foo_columns[] = $column;
+        $this->columns[$column]['thparam'] .= " data-hide='tablet'";
         if(!$this->load_footable) $this->load_footable=true;
     }
 
-    function fooHideAll($column){
-        $this->fooHidePhone($column);
-        $this->fooHideTablet($column);
-        $this->addFormatter($column,'foo');
+    function fooHideBoth($column){
+        $this->columns[$column]['thparam'] .= " data-hide='phone,tablet'";
         if(!$this->load_footable) $this->load_footable=true;
     }
 
-    function fooHiddenFrom($column){
-        if(!in_array($column, $this->foo_columns)) return false;
+    function fooHideAlways($column){
+        $this->columns[$column]['thparam'] .= " data-hide='all'";
+        if(!$this->load_footable) $this->load_footable=true;
+    }
 
-        $from=array();
-        if(in_array($column, $this->phone_remove_columns))
-            $from[] = 'phone';
-        if(in_array($column, $this->tablet_remove_columns))
-            $from[] = 'tablet';
-
-        if(!count($from)) return false;
-        return implode(",", $from);
+    function fooToggler($column){
+        $this->columns[$column]['thparam'] .= " data-toggle='true'";
     }
 
 }
