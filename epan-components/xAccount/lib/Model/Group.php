@@ -6,8 +6,11 @@ class Model_Group extends \Model_Table{
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xAccount/BalanceSheet','balance_sheet_id');
-		
+
 		$this->addField('name')->caption('Group Name')->mandatory(true);
 		$this->addField('created_at')->type('date')->defaultValue(date('Y-m-d'));
 
@@ -19,10 +22,16 @@ class Model_Group extends \Model_Table{
 							'name!|to_trim|unique'
 						)
 				);
-
+		
+		$this->addHook('beforeDelete',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
+	function beforeDelete(){
+		$this->ref('xAccount/Account')->each(function($m){
+			$m->forceDelete();
+		});
+	}
 
 	function createNewGroup($name,$balance_sheet_id,$other_values=array()){
 		

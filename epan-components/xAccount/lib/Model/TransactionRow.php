@@ -5,6 +5,9 @@ class Model_TransactionRow extends \Model_Table{
 	public $table="xaccount_transaction_row";
 	function init(){
 		parent::init();
+		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
 
 		$this->hasOne('xAccount/Transaction','transaction_id');
 		$this->hasOne('xAccount/Account','account_id');

@@ -12,7 +12,7 @@ class page_xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb extends page_xMarketin
 		$data =$this->add('xMarketingCampaign/Model_DataSearchPhrase')->addCondition('is_grabbed',false)->count()->getOne();
 		$v=$bg->add('View_Badge')->set('Un Grabbed Phrases')->setCount($data)->setCountSwatch('red');
 				
-		$crud = $this->app->layout->add('CRUD');
+		$crud = $this->app->layout->add('CRUD',array('grid_class'=>'xMarketingCampaign/Grid_DataGrabber'));
 		$m = $this->add('xMarketingCampaign/Model_DataGrabber');
 		$m->addExpression('total_phrases')->set(function($m,$q){
 			return $m->refSQL('xMarketingCampaign/DataSearchPhrase')->count();
@@ -22,7 +22,7 @@ class page_xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb extends page_xMarketin
 			return $m->refSQL('xMarketingCampaign/DataSearchPhrase')->addCondition('is_grabbed',false)->count();
 		});
 
-		$crud->setModel($m,null,array('name','site_url','is_active','last_run_time','total_phrases','ungrabbed_phrases'));
+		$crud->setModel($m,null);
 
 		if(!$crud->isEditing()){
 			$g = $crud->grid;
@@ -41,7 +41,7 @@ class page_xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb extends page_xMarketin
 		$data_grabber_model = $this->add('xMarketingCampaign/Model_DataGrabber');
 		$data_grabber_model->load($_GET['xmarketingcampaign_data_grabber_id']);
 
-		$crud = $this->add('CRUD');
+		$crud = $this->add('CRUD',array('grid_class'=>'xMarketingCampaign/Grid_Phrases'));
 
 		$phrases = $data_grabber_model->ref('xMarketingCampaign/DataSearchPhrase');
 		$phrases->addExpression('emails_count')->set(function($m,$q){
@@ -54,10 +54,9 @@ class page_xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb extends page_xMarketin
 
 		$phrases->setOrder('id','desc');
 
-		$crud->setModel($phrases ,null,array('subscription_category','name','is_grabbed','last_page_checked_at','emails_count'));
+		$crud->setModel($phrases ,null);
 
 		if(!$crud->isEditing()){
-			$crud->grid->addPaginator(10);
 			$crud->add_button->setIcon('ui-icon-plusthick');
 		}
 

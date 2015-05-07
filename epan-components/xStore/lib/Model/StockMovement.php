@@ -8,6 +8,9 @@ class Model_StockMovement extends \Model_Document{
 
 	function init(){
 		parent::init();
+		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
 
 		$this->hasOne('xStore/Warehouse','from_warehouse_id');
 		$this->hasOne('xStore/Warehouse','to_warehouse_id');
@@ -31,8 +34,16 @@ class Model_StockMovement extends \Model_Document{
 
 		$this->hasMany('xStore/StockMovementItem','stock_movement_id');
 
+		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');	
 	}
+
+	function beforeDelete(){
+		$this->ref('xStore/StockMovementItem')->each(function($m){
+			$m->delete();
+		});
+	}
+
 
 	function fromWarehouse($warehouse=false){
 		if($warehouse)

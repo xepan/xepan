@@ -6,31 +6,14 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 		$this->app->title=$this->api->current_department['name'] .': Employee';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Employee Management <small> Manage companies employees </small>');
 
-		$l=$this->add('splitter/LayoutContainer');
-		$emp_col = $l->getPane('center');
-		$cat_col = $l->addPane('west',
-			array(
-				'size'=>					250
-		,	'spacing_closed'=>			21			// wider space when closed
-		,	'togglerLength_closed'=>	21			// make toggler 'square' - 21x21
-		,	'togglerAlign_closed'=>	"top"		// align to top of resizer
-		,	'togglerLength_open'=>		10			// NONE - using custom togglers INSIDE west-pane
-		,	'togglerTip_open'=>		"Close West Pane"
-		,	'togglerTip_closed'=>		"Open West Pane"
-		,	'resizerTip_open'=>		"Resize West Pane"
-		,	'slideTrigger_open'=>		"click" 	// default
-		,	'initClosed'=>				false
-		//	add 'bounce' option to default 'slide' effect
-		,	'fxSettings_open'=>		array('easing'=> "easeOutBounce" )
-
-
-			)
-			);
-
+		$l=$this->add('Columns');
+		$cat_col = $l->addColumn(3);
+		$emp_col = $l->addColumn(9);
+			
 		//Department
 		$emp_model=$this->add('xHR/Model_Employee');
-		$emp_crud = $cat_col->add('CRUD');
-		$emp_crud->setModel($emp_model,array('name'));
+		$emp_crud = $cat_col->add('CRUD',array('grid_class'=>'xHR/Grid_Employee'));
+		$emp_crud->setModel($emp_model);
 
 		if(!$emp_crud->isEditing()){
 			$emp_crud->grid->addMethod('format_name',function($g,$f)use($emp_col){

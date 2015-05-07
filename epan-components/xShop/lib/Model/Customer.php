@@ -14,9 +14,10 @@ class Model_Customer extends Model_MemberDetails{
 	function init(){
 		parent::init();
 
-		$this->getElement('users_id')->destroy(); //hasOne in member
-		$this->getElement('name')->destroy(); // Expression member
-		$this->getElement('email')->destroy(); // Expression in member
+		
+		$this->getElement('users_id')->destroy();
+		$this->getElement('name')->destroy();
+		$this->getElement('email')->destroy();
 
 		$user_j = $this->join('users','users_id');
 		$user_j->addField('user_epan_id','epan_id');

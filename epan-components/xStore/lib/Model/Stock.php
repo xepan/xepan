@@ -5,6 +5,9 @@ class Model_Stock extends \Model_Table{
 	public $table="xstore_stock";
 	function init(){
 		parent::init();
+			
+			$this->hasOne('Epan','epan_id');
+			$this->addCondition('epan_id',$this->api->current_website->id);
 
 			$this->hasOne('xStore/Warehouse','warehouse_id')->display(array('form'=>'autocomplete/Plus'))->sortable(true);	
 			$this->hasOne('xShop/Item_Stockable','item_id')->display(array('form'=>'xShop/Item'))->sortable(true);
@@ -12,7 +15,6 @@ class Model_Stock extends \Model_Table{
 			$this->addField('qty')->sortable(true);
 			$this->addField('custom_fields')->type('text')->hint('1(custom_field_id):11(custom_field_value_id) ~ 12(custom_field_id):21(custom_field_value_id)');
 			
-
 			$this->addHook('afterLoad',$this);
 			// $this->add('dynamic_model/Controller_AutoCreator');
 	}

@@ -9,31 +9,16 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Company Departments <small> Departments, Post, ACL, Salary Templates etc</small>');
 		
 
-		$l=$this->add('splitter/LayoutContainer');
-		$dept_col = $l->getPane('center');
-		$cat_col = $l->addPane('west',
-			array(
-				'size'=>					250
-			,	'spacing_closed'=>			21			// wider space when closed
-			,	'togglerLength_closed'=>	21			// make toggler 'square' - 21x21
-			,	'togglerAlign_closed'=>	"top"		// align to top of resizer
-			,	'togglerLength_open'=>		10			// NONE - using custom togglers INSIDE west-pane
-			,	'togglerTip_open'=>		"Close West Pane"
-			,	'togglerTip_closed'=>		"Open West Pane"
-			,	'resizerTip_open'=>		"Resize West Pane"
-			,	'slideTrigger_open'=>		"click" 	// default
-			,	'initClosed'=>				false
-			//	add 'bounce' option to default 'slide' effect
-			,	'fxSettings_open'=>		array('easing'=> "easeOutBounce" )
-			)
-			);
-
+		$l=$this->add('Columns');
+		$cat_col = $l->addColumn(3);
+		$dept_col = $l->addColumn(9);
+		
 		//Department
 		$dept_model=$this->add('xHR/Model_Department');
 		$dept_model->getElement('production_level')->caption('Level');
 
-		$dept_crud = $cat_col->add('CRUD',array('allow_edit'=>false));
-		$dept_crud->setModel($dept_model,array('name','production_level'),array('production_level','name','is_production_department','is_system'));
+		$dept_crud = $cat_col->add('CRUD',array('allow_edit'=>false,'grid_class'=>'xHR/Grid_Department'));
+		$dept_crud->setModel($dept_model,array('name','production_level'),array());
 
 		if(!$dept_crud->isEditing()){
 			$dept_crud->grid->addMethod('format_name',function($g,$f)use($dept_col){
@@ -54,8 +39,7 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 
 			$dept_crud->grid->addFormatter('delete','mydelete');
 			$dept_crud->grid->addFormatter('production_level','pl');
-			$dept_crud->grid->removeColumn('is_production_department');
-			$dept_crud->grid->removeColumn('is_system');
+			
 		}
 
 		$dept_crud->grid->addQuickSearch(array('name','production_level'));

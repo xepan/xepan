@@ -69,7 +69,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
                 $filter_box->api->stickyForget('category_id');
                 return $filter_box->js(null,$news_col->js()->reload())->hide()->execute();
             });
-
+            if($_GET['category_id'])
 			$newsletter_model->addCondition('category_id',$_GET['category_id']);
 		}
 

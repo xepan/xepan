@@ -19,7 +19,26 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 		$this->hasMany('xStore/MaterialRequestItem','material_request_jobcard_id');
 		$this->hasMany('xStore/StockMovement','material_request_jobcard_id');
 
+		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeDelete(){
+		$sm = $this->ref('xStore/StockMovement')->count()->getOne();
+		if($sm)
+			throw $this->exception('Cannot Delete, First Delete Stock Movement');
+
+		$this->ref('xStore/MaterialRequestItem')->each(function($m){
+			$m->delete();
+		});
+	}
+
+	function forceDelete(){
+		$this->ref('xStore/StockMovement')->each(function($m){
+			$m->delete();
+		});
+
+		$this->delete();
 	}
 
 	function itemrows(){

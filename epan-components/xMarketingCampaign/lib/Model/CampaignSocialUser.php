@@ -14,7 +14,6 @@ class Model_CampaignSocialUser extends \Model_Table{
 		$this->hasOne('xMarketingCampaign/SocialUsers','socialuser_id');
 
 
-
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
