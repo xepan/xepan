@@ -14,7 +14,9 @@ class Model_Task extends \Model_Document{
 	function init(){
 		parent::init();
 
-		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xProduction/Team','team_id');
 		$this->hasOne('xHR/Employee','employee_id');
 
@@ -28,7 +30,7 @@ class Model_Task extends \Model_Document{
 		$this->addField('expected_start_date')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		$this->addField('expected_end_date')->type('datetime')->defaultValue(null);
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function getTeamMembers(){

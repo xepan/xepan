@@ -6,6 +6,10 @@ class Model_Team extends \Model_Table{
 
 	function init(){
 		parent::init();
+
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xHR/Department','department_id')->sortable(true);
 		$this->addField('name')->sortable(true);
 		$this->hasMany('xProduction/EmployeeTeamAssociation','team_id');
@@ -14,7 +18,9 @@ class Model_Team extends \Model_Table{
 	}
 
 	function beforeDelete(){
-		$this->ref('xProduction/EmployeeTeamAssociation')->deleteAll();
+		$this->ref('xProduction/EmployeeTeamAssociation')->each(function($m){
+			$m->forceDelete();
+		});
 	}
 
 	function getAssociatedEmployees($team_leader=false){

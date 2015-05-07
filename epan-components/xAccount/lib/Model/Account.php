@@ -9,6 +9,9 @@ class Model_Account extends \Model_Document{
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+		
 		$this->hasOne('xPurchase/Supplier','supplier_id');
 		$this->hasOne('xProduction/OutSourceParty','out_source_party_id');
 		$this->hasOne('xShop/Customer','customer_id');

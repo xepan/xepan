@@ -2,8 +2,13 @@
 namespace xProduction;
 class Model_OutSourceParty extends \Model_Table{
 	public $table="xproduction_out_source_parties";
+
 	function init(){
 		parent::init();
+		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->addField('name')->Caption('Party')->sortable(true)->group('a~5~Basic Info');
 		$this->addField('contact_person')->sortable(true)->group('a~5');
 		$this->addField('code')->Caption('Party Code')->sortable(true)->group('a~2');
@@ -35,10 +40,46 @@ class Model_OutSourceParty extends \Model_Table{
 	}
 
 	function beforeDelete(){
+		$warehouse = $this->ref('xProduction/Warehouse')->count()->getOne();
+		$account = $this->ref('xAccount/Account')->count()->getOne();
 		
-		// throw $this->exception('Delete Warehouse');
+		if($warehouse or $account)
+			throw $this->exception('Cannot Delete, First Delete OutSourceParty Warehouse or Account');
+		
+		$this->ref('xProduction/OutSourcePartyDeptAssociation')->each(function($m){
+			$m->forceDelete();
+		});
+	}
+	
+	function forceDelete_page($page){
+		$form = $page->add('Form_Stacked');
+		$form->add('View_Warning')->set('All Department Association, Warehouse and Account will be deleted');
+
+		$str = "";
+		$this->account()->each(function($m){
+			$str = $m['name']." ".$m['account_type']." Opening Balance Dr = ".$m['OpeningBalanceDr']." Opening Balance Cr = ".$m['OpeningBalanceCr']." Current Balance Dr =".$m['CurrentBalanceDr']." Current Balance Cr".$m['CurrentBalanceCr'];
+		});
+
+		$form->addSubmit('Force Delete');
+		
+		if($form->isSubmitted()){
+			$this->forceDelete();
+		}
+
 	}
 
+	function forceDelete(){
+		$this->ref('xProduction/Warehouse')->each(function($m){
+			$m->forceDelete();
+		});
+
+		$this->ref('xAccount/Account')->each(function($m){
+			$m->forceDelete();
+		});
+
+		$this->delete();
+	}
+	
 	function beforeSave(){
 		if($this->loaded()){
 			$account = $this->account();
