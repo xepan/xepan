@@ -16,6 +16,9 @@ class Grid_User extends Grid{
 		$this->removeColumn('website_designing');
 		
 		$this->addFormatter('username','wrap');
+
+		$this->fooHideAll('s_no');
+
 		return $m;
 
 	}
@@ -42,4 +45,5 @@ class Grid_User extends Grid{
 								'</div>';
 		parent::formatRow();		
 	}
+
 }
