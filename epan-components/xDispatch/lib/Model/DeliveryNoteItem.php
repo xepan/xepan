@@ -10,6 +10,9 @@ class Model_DeliveryNoteItem extends \Model_Document{
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
 		$this->hasOne('xDispatch/DeliveryNote','delivery_note_id');
 		$this->addField('qty');
