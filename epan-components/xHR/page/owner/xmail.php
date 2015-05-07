@@ -2,7 +2,8 @@
 class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 	function init(){
 		parent::init();
-
+		$this->app->title='x-Mail';
+			$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-envelope"></i> Mail Managment <small> Manage companies Mail  </small>');
 		$message_vp = $this->add('VirtualPage')->set(function($p){
 			$email_id=$p->api->stickyGET('xcrm_email_id');
 			$m=$p->add('xCRM/Model_Email')->tryLoad($email_id);
