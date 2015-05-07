@@ -16,6 +16,9 @@ class Model_Opportunity extends \Model_Document {
 	
 	function init(){
 		parent::init();
+		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
 
 		$this->hasOne('xMarketingCampaign/Lead','lead_id')->sortable(true);
 		$this->hasOne('xShop/Customer','customer_id')->sortable(true);
@@ -40,7 +43,20 @@ class Model_Opportunity extends \Model_Document {
 		$obj->setStatus('active');
 		
 	}
-	function beforeDelete(){}
+
+	function beforeDelete(){
+		$quotation = $this->ref('xShop/Quotation')->count()->getOne();
+		if($quotation)
+			throw $this->exception('Cannot Delete, First Delete it\'s Quotation','Growl');
+	}
+
+	function forceDelete(){
+		$this->ref('xShop/Quotation')->each(function($q){
+			$q->forceDelete();
+		});
+
+		$this->delete();
+	}
 
 	function mark_dead($reason){
 		return "Quotation";

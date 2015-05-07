@@ -5,6 +5,9 @@ class Model_ItemComposition extends \Model_Table{
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+		
 		$this->hasOne('xShop/Item','item_id');
 		$this->hasOne('xHR/Department','department_id');
 		$this->hasOne('xShop/Item','composition_item_id')->display(array('form'=>'xShop/Item'));
@@ -13,7 +16,7 @@ class Model_ItemComposition extends \Model_Table{
 		$this->addField('unit');
 		$this->addField('custom_fields')->type('text');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function item(){

@@ -8,6 +8,7 @@ class Model_Affiliate extends \Model_Table {
 
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xShop/Application','application_id');
 		$f = $this->hasOne('xShop/AffiliateType','affiliatetype_id')->mandatory(true)->sortable(true);
 		
@@ -53,4 +54,9 @@ class Model_Affiliate extends \Model_Table {
 		//$this->add('dynamic_model/Controller_AutoCreator');
 
 	}
+
+	function beforeDelete(){
+		$this->ref('xShop/ItemAffiliateAssociation')->deleteAll();
+	}
+
 }

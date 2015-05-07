@@ -31,10 +31,46 @@ class Model_Application extends \Model_Document{
 	}
 
 	function beforeDelete($m){
-		if($m->ref('xShop/Category')->count()->getOne()){
+		$cats = $m->ref('xShop/Category')->count()->getOne();
+		$items = $m->ref('xShop/Item')->count()->getOne();
+		$cfs = $m->ref('xShop/CustomFields')->count()->getOne();
+		$specs = $m->ref('xShop/Specification')->count()->getOne();
+		$config = $m->ref('xShop/Configuration')->count()->getOne();
+		$offers = $m->ref('xShop/ItemOffer')->count()->getOne();
+
+		if($cats or $items or $cfs or $specs or $config or $offers){
 			throw $this->exception("Shop/Blog (".$m['name'].") cannot deleted, first delete its category",'Growl');
 		}	
 
 	}
+
+	function forceDelete(){
+		$this->ref('xShop/Category')->each(function($cat){
+			$cat->forceDelete();
+		});
+
+		$this->ref('xShop/Item')->each(function($item){
+			$item->forceDelete();
+		});
+
+		$this->ref('xShop/CustomFields')->each(function($cf){
+			$cf->forceDelete();
+		});
+
+		$this->ref('xShop/Specification')->each(function($spe){
+			$spe->forceDelete();
+		});
+
+		$this->ref('xShop/Configuration')->each(function($config){
+			$config->forceDelete();
+		});
+
+		$this->ref('ItemOffer')->each(function($offer){
+			$offer->forceDelete();
+		});
+		
+		$this->delete();
+	}
+
 
 }		

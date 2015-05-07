@@ -16,6 +16,9 @@ class Model_Tax extends \Model_Document{
 	function init(){
 		parent::init();
 		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xAccount/Account','tax_account_id')->system(true);
 
 		$this->addField('name')->mandatory(true);
@@ -58,5 +61,11 @@ class Model_Tax extends \Model_Document{
 			throw $this->exception('Cannot Delete, First delete Item Tax Included','Growl');		
 	}
 
+	function forceDelete(){
+		$this->ref('xShop/ItemTaxAssociation')->each(function($m){
+			$m->forceDelete();
+		});
+		$this->delete();
+	}
 	
 }

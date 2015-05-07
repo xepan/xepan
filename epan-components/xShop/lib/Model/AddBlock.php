@@ -19,7 +19,7 @@ class Model_AddBlock extends \Model_Table{
 	}
 
 	function beforeDelete($m){
-		$m->ref('xShop/BlockImages')->deleteAll();	
+		$m->ref('xShop/BlockImages')->deleteAll();
 	}
 
 }

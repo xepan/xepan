@@ -69,10 +69,27 @@ class Model_Category extends \Model_Document{
 		$category_parent->addCondition('parent_id',$m->id);
 		$category_parent->tryLoadAny();
 		if($category_parent->loaded()){
-			$category_parent->api->js(true)->univ()->errorMessage('first delete its all child category')->execute();
+			throw $this->exception('Cannot Delete, First Delete Sub Categories','Growl');
 		}
 
-		$this->ref('xShop/CategoryItem')->deleteAll();
+		if($this->ref('xShop/CategoryItem')->count()->getOne()){
+			throw $this->exception('Cannot Delete, First Delete Category Items','Growl');
+		}
+	}
+
+	function forceDelete(){
+		$this->ref('xShop/CategoryItem')->each(function($item){
+			$item->forceDelete();
+		});
+
+		if($subCategory = $this->subCategory()){
+			foreach ($subCategory as $cat) {
+				$cat->forceDelete();
+			}
+		}
+		//Todo Parent Id set To Null 
+		
+		$this->delete();
 	}
 
 	function nameExistInParent(){ //Check Duplicasy on Name Exist in Parent Category
@@ -92,6 +109,19 @@ class Model_Category extends \Model_Document{
 			$cat_array[] = $id;
 		}
 		return $cat_array;
+	}
+
+	function subCategory(){
+		if(!$this->loaded())
+			return false;
+
+		$cat_model = $this->add('xShop/Model_Category');
+		$cat_model->addCondition('parent_id',$this['id']);
+		$cat_model->tryLoadAny();
+		if($cat_model->loaded())
+			return $cat_model;
+
+		return false;	
 	}
 
 }

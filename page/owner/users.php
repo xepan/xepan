@@ -51,14 +51,16 @@ class page_owner_users extends page_base_owner {
 	}
 
 	function page_xyz(){
+		$container = $this->add('View');
+        $container->addClass('atk-section atk-box atk-padding-large atk-shapre-rounded');
 		$this->api->stickyGET('users_id');
 		$user = $this->add('Model_Users')->load($_GET['users_id']);
 
 		$install_app = $this->add('Model_InstalledComponents');
-		$grid = $this->add('Grid');
+		$grid = $container->add('Grid');
 		$grid->setModel($install_app,array('component'));
 		
-		$form = $this->add('Form');
+		$form = $container->add('Form');
 		$allowed_app = $form->addField('hidden','allowedapp')->set(json_encode($user->getAllowedApp()));
 		$form->addSubmit('Update');
 
@@ -72,7 +74,7 @@ class page_owner_users extends page_base_owner {
 			foreach ($selected_apps as $app_id) {
 				$user->allowApp($app_id);
 			}
-			$form->js()->univ()->successMessage('Updated')->execute();
+			$form->js(null,$this->js()->univ()->closeDialog())->univ()->successMessage('Updated')->execute();
 		}
 	}
 

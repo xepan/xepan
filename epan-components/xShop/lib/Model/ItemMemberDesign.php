@@ -21,4 +21,11 @@ class Model_ItemMemberDesign extends \Model_Table {
 
 		}
 
+	function setItemEmpty(){
+		if(!$this->loaded()) return;
+
+		$this['item_id'] = null;
+		$this->save();
+	}
+
 }

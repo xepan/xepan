@@ -8,6 +8,9 @@ class Model_Item extends \Model_Table{
 	function init(){
 		parent::init();
 		
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xShop/Application','application_id');
 		$this->hasOne('xShop/MemberDetails','designer_id')->sortable(true);
 
@@ -113,7 +116,7 @@ class Model_Item extends \Model_Table{
 		// $this->hasMany('xShop/Attachments','item_id');
 		$this->hasMany('xShop/ItemEnquiry','item_id');
 		$this->hasMany('xShop/OrderDetails','item_id');
-		$this->hasOne('xShop/QuotationItem','quotation_id');
+		$this->hasMany('xShop/QuotationItem','quotation_id');
 		$this->hasMany('xShop/ItemSpecificationAssociation','item_id');
 		$this->hasMany('xShop/CustomFieldValueFilterAssociation','item_id');
 		$this->hasMany('xShop/ItemCustomFieldAssos','item_id');
@@ -129,6 +132,8 @@ class Model_Item extends \Model_Table{
 		$this->hasMany('xShop/QuantitySet','item_id');
 		$this->hasMany('xShop/CustomRate','item_id');
 		$this->hasMany('xPurchase/PurchaseOrderItem','item_id');
+		$this->hasMany('xShop/Model_InvoiceItem','item_id');
+		$this->hasMany('xShop/Model_DispatchRequestItem','item_id');
 
 		$this->addExpression('theme_code_group_expression')->set('(IF(ISNULL('.$this->table_alias.'.theme_code),'.$this->table_alias.'.id,'.$this->table_alias.'.theme_code))');
 			
@@ -216,36 +221,71 @@ class Model_Item extends \Model_Table{
 	}
 
 	function beforeDelete($m){
-		
 		$order_count = $m->ref('xShop/OrderDetails')->count()->getOne();
 		$item_enquiry_count = $m->ref('xShop/ItemEnquiry')->count()->getOne();
 		$design_count = $m->ref('xShop/ItemMemberDesign')->count()->getOne();
 		$material_request = $m->ref('xStore/MaterialRequestItem')->count()->getOne();
 		$po_item = $m->ref('xPurchase/PurchaseOrderItem')->count()->getOne();
+		$invoice_item = $m->ref('xShop/InvoiceItem')->count()->getOne();
+		$quotation_item = $m->ref('xShop/QuotationItem')->count()->getOne();
+		$dispatch_item = $m->ref('xShop/DispatchRequestItem')->count()->getOne();
 		
-		if($this->api->auth->model['type'] and ($order_count or $item_enquiry_count or $design_count or $material_request or $po_item)){
-			$this->api->js(true)->univ()->errorMessage('Cannot Delete,first delete Orders or Enquiry')->execute();	
+		if($this->api->auth->model['type'] and ($order_count or $item_enquiry_count or $design_count or $material_request or $po_item or $quotation_item or $invoice_item or $dispatch_item)){
+			throw $this->exception('Cannot Delete,first delete Orders or Enquiry or MemberDesign or MaterialRequest or quotation_item or QuantitySet','Growl');
 		}
 
 		$m->ref('xShop/CategoryItem')->deleteAll();
 		$m->ref('xShop/ItemImages')->deleteAll();
-		// $m->ref('xShop/Attachments')->deleteAll();	 
 		$m->ref('xShop/ItemCustomFieldAssos')->deleteAll();
 		$m->ref('xShop/ItemAffiliateAssociation')->deleteAll();
-		// $m->ref('xShop/Attachments')->deleteAll();
 		$m->ref('xShop/ItemEnquiry')->deleteAll();
 		$m->ref('xShop/ItemSpecificationAssociation')->deleteAll();
-		$m->ref('xShop/ItemReview');
+		$m->ref('xShop/ItemReview')->deleteAll();
 		$m->ref('xShop/ItemDepartmentAssociation')->deleteAll();
-		// $m->ref('xShop/ItemComposition,composition_item_id')->deleteAll();
 		$m->ref('xShop/ItemTaxAssociation')->deleteAll();
 		$m->ref('xShop/CustomFieldValueFilterAssociation')->deleteAll();
-		$m->ref('xShop/QuantitySet')->deleteAll();
-		$m->ref('xShop/CustomRate')->deleteAll();
+		
+		$m->ref('xShop/QuantitySet')->each(function($qty_set){
+			$qty_set->forceDelete();
+		});
 
-		//TOOOODOOOOOOOO   Log Entry Item Deleted by User
+		$m->ref('xShop/CustomRate')->each(function($custom_rate){
+			$custom_rate->forceDelete();
+		});
+
 	}
 
+	function forceDelete(){
+		$this->ref('xShop/OrderDetails')->each(function($order_detail){
+			$order_detail->setItemEmpty();
+		});
+
+		$this->ref('xShop/QuotationItem')->each(function($quotation_item){
+			$quotation_item->setItemEmpty();
+		});
+		
+		$this->ref('xShop/ItemMemberDesign')->each(function($member_design){
+			$member_design->setItemEmpty();
+		});
+		
+		$this->ref('xShop/MaterialRequestItem')->each(function($material_request_item){
+			$material_request_item->setItemEmpty();
+		});
+		
+		$this->ref('xPurchase/PurchaseOrderItem')->each(function($po_item){
+			$po_item->setItemEmpty();
+		});
+		
+		$this->ref('xShop/DispatchRequestItem')->each(function($dispatch_item){
+			$dispatch_item->setItemEmpty();
+		});
+
+		$this->ref('CompositionItems')->deleteAll();
+		$this->ref('UsedInComposition')->deleteAll();
+
+		$this->delete();
+	}
+	
 	function updateSearchString($item_id=null){
 		if($this->loaded()){
 			if(!$item_id) $item_id =$this->id;
