@@ -8,6 +8,9 @@ class Model_BalanceSheet extends \Model_Document{
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+		
 		$this->addField('name')->mandatory(true);
 		$this->addField('positive_side')->enum(array('LT','RT'))->mandatory(true);
 		$this->addField('is_pandl')->type('boolean')->mandatory(true);

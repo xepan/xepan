@@ -25,6 +25,10 @@ class Model_Transaction extends \Model_Document{
 	
 	function init(){
 		parent::init();
+
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->hasOne('xAccount/TransactionType','transaction_type_id');
 		$this->addField('name')->caption('Voucher No');
 		$this->addExpression('voucher_no')->set(function ($m,$q){
@@ -48,6 +52,7 @@ class Model_Transaction extends \Model_Document{
 			throw $this->exception('TRansaction Contains Rows, Cannot Delete','Growl');
 	}
 
+	
 	function forcedelete(){
 		foreach ($this->ref('xAccount/TransactionRow') as $trrow) {
 			$trrow->delete();
