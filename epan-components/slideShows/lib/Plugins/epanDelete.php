@@ -19,7 +19,7 @@ class Plugins_epanDelete extends \componentBase\Plugin {
 				);
 
 		foreach ($models as $m) {
-			$this->add("xCRM\\".$m)->each(function($model){
+			$this->add("slideShows\\".$m)->each(function($model){
 				$model->forceDelete();
 			});
 		}
