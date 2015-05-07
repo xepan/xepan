@@ -14,9 +14,7 @@ class Model_Customer extends Model_MemberDetails{
 	function init(){
 		parent::init();
 
-		$this->hasOne('Epan','epan_id');
-		$this->addCondition('epan_id',$this->api->current_website->id);
-
+		
 		$this->getElement('users_id')->destroy();
 		$this->getElement('name')->destroy();
 		$this->getElement('email')->destroy();
