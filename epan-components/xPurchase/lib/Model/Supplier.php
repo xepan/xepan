@@ -16,6 +16,9 @@ class Model_Supplier extends \Model_Document{
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->addField('name')->caption('Company name')->mandatory(true)->sortable(true)->group('a~3~Basic Detail');
 		$this->addField('owner_name')->sortable(true)->group('a~3');
 		$this->addField('accounts_person_name')->sortable(true)->group('a~3');
@@ -62,10 +65,24 @@ class Model_Supplier extends \Model_Document{
 	}
 
 	function beforeDelete(){
-		if($this->ref('xPurchase/PurchaseOrder')->count()->getOne())
-			throw new \Exception("Supplier cannot be delete");
-			
+		$po = $this->ref('xPurchase/PurchaseOrder')->count()->getOne();
+		$pi = $this->ref('xPurchase/PurchaseInvoice')->count()->getOne();
+		if($po or $pi)
+			throw $this->exception('Canot Delete, First Delete PurchaseOrder or PurchaseInvoice');
 	}
+
+	function forceDelete(){
+		$this->ref('xPurchase/PurchaseOrder')->each(function($po){
+			$po->forceDelete();
+		});
+		
+		$this->ref('xPurchase/PurchaseInvoice')->each(function($pi){
+			$pi->forceDelete();
+		});
+
+		$this->delete();
+	}
+
 	function afterInsert($obj,$new_id){		
 		$supplier_model=$this->add('xPurchase/Model_Supplier')->load($new_id);
 		$supplier_model_value = array($supplier_model);

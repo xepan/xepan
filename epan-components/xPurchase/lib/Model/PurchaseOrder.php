@@ -8,6 +8,8 @@ class Model_PurchaseOrder extends \Model_Document{
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
 
 		$this->hasOne('xPurchase/Supplier','supplier_id')->sortable(true)->display(array('form'=>'autocomplete/Plus'));
 		$this->hasOne('xShop/Priority','priority_id')->group('z~6')->mandatory(true)->defaultValue($this->add('xShop/Model_Priority')->addCondition('name','Medium')->tryLoadAny()->get('id'));
@@ -27,11 +29,30 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->addHook('beforeDelete',$this);
 
 		$this->addExpression('orderitem_count')->set($this->refSQL('xPurchase/PurchaseOrderItem')->count());
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
+		$p_in = $this->ref('xPurchase/PurchaseInvoice')->count()->getOne();
+		if($p->in)
+			throw $this->exception('Cannot Delete, First Delete PurchaseInvoice');
+
+		$this->ref('xPurchase/PurchaseOrderItem')->each(function($item){
+			$item->forceDelete();
+		});
+
+		$this->ref('Attachements')->each(function($attach){
+			$attach->forceDelete();
+		});
+
+	}
+
+	function forceDelete(){
+		$this->ref('xPurchase/PurchaseInvoice')->each(function($pi){
+			$pi->delete();
+		});
 		
+		$this->delete();
 	}
 
 	function itemRows(){
