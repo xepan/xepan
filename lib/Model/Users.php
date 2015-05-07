@@ -34,7 +34,7 @@ class Model_Users extends Model_Table {
 
 		$f=$this->addField('activation_code')->group('d~3')->display(array('form'=>'Readonly'))->sortable(true);
 		$f->icon = 'fa fa-unlock-alt~blue';
-		$f=$this->addField('last_login_date')->type('date')->group('d~9')->display(array('form'=>'Readonly'))->sortable(true);
+		$f=$this->addField('last_login_date')->type('datetime')->group('d~9')->display(array('form'=>'Readonly'))->sortable(true);
 		$f->icon='fa fa-calendar~blue';
 
 		$this->hasMany('UserAppAccess','user_id');

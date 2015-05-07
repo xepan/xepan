@@ -156,6 +156,10 @@ class Frontend extends ApiFrontend{
 
 			$auth=$this->add( 'BasicAuth' );
 			$auth->setModel( 'Users', 'username', 'password' );
+			$auth->addHook('loggedIn',function($auth,$user,$pass){
+				$auth->model['last_login_date'] = $auth->api->now;
+				$auth->model->save();
+			});
 
 			if($this->api->auth->isLoggedIn() AND $this->api->auth->model->ref('epan_id')->get('name')==$this->api->website_requested AND $this->api->auth->model['type'] >= 80){
 				$this->edit_mode = true;
