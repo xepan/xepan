@@ -6,15 +6,6 @@ class CRUD_User extends CRUD{
 	public $option_page=null;
 	public $config_page=null;
 
-	function init(){
-		parent::init();
-
-		if(!$this->isEditing()){
-			$this->grid->addQuickSearch(array('name','username'));
-			$this->grid->addPaginator(100);
-			$this->grid->add_sno();
-		}
-	}
 
 	function recursiveRender(){
 
@@ -79,7 +70,7 @@ class CRUD_User extends CRUD{
 	function addAppAccessOptions(){
 		if(!$this->isEditing()){
 			$this->grid->addMethod('format_app_permission',function($g,$f){
-				if($g->model->isFrontEndUser() or $g->model->isDefaultSuperUser()){
+				if($g->model->isFrontEndUser() or $g->model->isDefaultSuperUser() or !$g->api->auth->model->isApplicationManagementAllowed()){
 					$g->current_row_html['application_permissions']="";
 				}
 			});
@@ -87,10 +78,10 @@ class CRUD_User extends CRUD{
 			$this->grid->addColumn('Expander,app_permission','application_permissions',array('page'=>$this->app_page,'descr'=>'App'));
 		}else{
 			if($this->isEditing('edit') AND $this->model->isFrontEndUser()){
-				$this->form->getElement('user_management')->destroy();
-				$this->form->getElement('general_settings')->destroy();
-				$this->form->getElement('application_management')->destroy();
-				$this->form->getElement('website_designing')->destroy();
+				$this->form->getElement('user_management')->system(true);
+				$this->form->getElement('general_settings')->system(true);
+				$this->form->getElement('application_management')->system(true);
+				$this->form->getElement('website_designing')->system(true);
 			}
 		}
 	}

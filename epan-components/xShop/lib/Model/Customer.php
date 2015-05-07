@@ -14,12 +14,9 @@ class Model_Customer extends Model_MemberDetails{
 	function init(){
 		parent::init();
 
-		$this->hasOne('Epan','epan_id');
-		$this->addCondition('epan_id',$this->api->current_website->id);
-
-		$this->getElement('users_id')->destroy();
-		$this->getElement('name')->destroy();
-		$this->getElement('email')->destroy();
+		$this->getElement('users_id')->destroy(); //hasOne in member
+		$this->getElement('name')->destroy(); // Expression member
+		$this->getElement('email')->destroy(); // Expression in member
 
 		$user_j = $this->join('users','users_id');
 		$user_j->addField('user_epan_id','epan_id');
@@ -28,6 +25,7 @@ class Model_Customer extends Model_MemberDetails{
 		$user_j->addField('customer_name','name')->group('a~6~Basic Info')->mandatory(true);
 		$user_j->addField('customer_email','email')->sortable(true)->group('a~6');
 		$user_j->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(50)->group('a~6')->sortable(true)->mandatory(false);
+		$user_j->addField('user_account_activation','is_active')->type('boolean')->defaultValue(true)->group('a~6')->sortable(true)->mandatory(false);
 
 		$this->addCondition('type',50);
 		$this->addCondition('user_epan_id',$this->api->current_website->id);
@@ -43,14 +41,11 @@ class Model_Customer extends Model_MemberDetails{
 
 		$this->hasMany('xShop/Opportunity','customer_id');
 		$this->hasMany('xShop/Quotation','customer_id');
-		$this->hasMany('xShop/Order','customer_id');
+		$this->hasMany('xShop/Order','member_id');
 
 		$this->addHook('beforeDelete',$this);
 
-		$this->arrangeFields();
-
-
-
+		$this->arrangeFields();		
 	}
 
 	function beforeDelete(){

@@ -7,7 +7,7 @@ class Grid_User extends Grid{
 
 	function setModel($model){
 		
-		$m=parent::setModel($model,array('name','username','is_active','user_management','general_settings','application_management','website_designing','last_login_date'));
+		$m=parent::setModel($model,array('name','username','email','is_active','user_management','general_settings','application_management','website_designing','last_login_date','type'));
 
 		$this->removeColumn('is_active');
 		$this->removeColumn('user_management');
@@ -17,8 +17,13 @@ class Grid_User extends Grid{
 		
 		$this->addFormatter('username','wrap');
 
-		$this->fooHideAlways('username');
-		$this->fooToggler('s_no');
+		// $this->fooHideAlways('username');
+		// $this->fooToggler('s_no');
+
+		$this->addQuickSearch(array('name','username'),null,'Filter_User');
+		$this->addPaginator(100);
+		$this->add('misc/Export');
+		$this->add_sno();
 
 		return $m;
 
@@ -32,10 +37,10 @@ class Grid_User extends Grid{
 			$this->setTDParam('name','style/color','');
 		}
 		
-		$user_color= $this->model['user_management']?'success':'danger';
-		$setting_color= $this->model['general_settings']?'success':'danger';
-		$app_color= $this->model['application_management']?'success':'danger';
-		$web_color= $this->model['website_designing']?'success':'danger';
+		$user_color= $this->model['user_management']?'success':'';
+		$setting_color= $this->model['general_settings']?'success':'';
+		$app_color= $this->model['application_management']?'success':'';
+		$web_color= $this->model['website_designing']?'success':'';
 		
 		$this->current_row_html['username']=$this->model['username'].'<div class="pull-right">'.
 								
