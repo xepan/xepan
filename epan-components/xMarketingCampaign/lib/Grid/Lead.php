@@ -6,7 +6,8 @@ class Grid_Lead extends \Grid{
 		parent::init();
 
 		$this->addPaginator(100);
-			$this->addQuickSearch(array('email'));
+		$this->addQuickSearch(array('email'));
+		$this->add_sno();
 	}
 	function format_weblink($field){
 		preg_match_all("/@(.*)$/", $this->current_row[$field],$weblink);

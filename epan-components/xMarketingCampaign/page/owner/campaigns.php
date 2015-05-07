@@ -29,9 +29,9 @@ class page_xMarketingCampaign_page_owner_campaigns extends page_xMarketingCampai
 		$hide_cat_btn->js('click',array($cat_col->js()->hide(),$camp_col->js()->addClass('atk-col-12')));
 		$show_cat_btn->js('click',array($cat_col->js()->show(),$camp_col->js()->removeClass('atk-col-12')));
 
-		$cat_crud = $cat_col->add('CRUD');
+		$cat_crud = $cat_col->add('CRUD',array('grid_class'=>'xMarketingCampaign/Grid_CampaignCategory'));
 		$cat_model = $this->add('xMarketingCampaign/Model_CampaignCategory');
-		$cat_crud->setModel($cat_model,array('name','campaigns'));
+		$cat_crud->setModel($cat_model);
 		
 		if(!$cat_crud->isEditing()){
 			$g=$cat_crud->grid;
@@ -39,14 +39,9 @@ class page_xMarketingCampaign_page_owner_campaigns extends page_xMarketingCampai
 				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'. $camp_col->js()->reload(array('category_id'=>$g->model->id)) .'">'.$g->current_row[$f].'</a>';
 			});
 			$g->addFormatter('name','filtercampaign');
-			$g->add_sno();
 		}
 
 		$campaign_model = $this->add('xMarketingCampaign/Model_Campaign');
-		
-		$cat_crud->grid->addQuickSearch(array('name'));
-		$cat_crud->grid->addPaginator($ipp=50);
-
 		//filter Campaigns as per selected category
 		if($_GET['category_id']){
 			$this->api->stickyGET('category_id');
@@ -72,12 +67,11 @@ class page_xMarketingCampaign_page_owner_campaigns extends page_xMarketingCampai
 				$this->api->redirect($this->api->url('./subscriptionDate_based_schedule',array('xmarketingcampaign_campaigns_id'=>$_GET['schedule'])));
 		}
 
-		$campaign_crud = $camp_col->add('CRUD');
-		$campaign_crud->setModel($campaign_model,null,array('category','name','starting_date','ending_date','effective_start_date','is_active'));
+		$campaign_crud = $camp_col->add('CRUD',array('grid_class'=>'xMarketingCampaign/Grid_Campaign'));
+		$campaign_crud->setModel($campaign_model,null);
 		
 		if(!$campaign_crud->isEditing()){
 			$campaign_crud->grid->addColumn('Button','schedule');
-
 			// $campaign_crud->grid->addColumn('expander','AddEmails','Add Subscription Category');
 			// $campaign_crud->grid->addColumn('expander','NewsLetterSubCampaign','News Letters To send');
 			// $campaign_crud->grid->addColumn('expander','social_campaigns','Social Posts To Include');
@@ -88,8 +82,6 @@ class page_xMarketingCampaign_page_owner_campaigns extends page_xMarketingCampai
 			$campaign_crud->add_button->setIcon('ui-icon-plusthick');
 			// $Campaign_crud->grid->addColumn('expander','BlogSubCampaign');
 		}
-		$campaign_crud->grid->addQuickSearch(array('name','category','starting_date','ending_date'));
-		$campaign_crud->grid->addPaginator($ipp=50);
 		// $Campaign_crud->add('Controller_FormBeautifier');
 
 	}

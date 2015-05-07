@@ -1,7 +1,6 @@
 <?php
-
 namespace xMarketingCampaign;
-class Grid_LeadCategory extends \Grid{
+class Grid_CampaignCategory extends \Grid{
 	function init(){
 		parent::init();
 		$this->addQuickSearch(array('name'));
@@ -9,7 +8,7 @@ class Grid_LeadCategory extends \Grid{
 		$this->add_sno();
 	}
 	function setModel($model){
-		$m = parent::setModel($model,array('name'));
+		$m = parent::setModel($model,array('name','campaigns'));
 		return $m;
 	}
 	function formatRow(){

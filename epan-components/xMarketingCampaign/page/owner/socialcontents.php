@@ -92,9 +92,9 @@ class page_xMarketingCampaign_page_owner_socialcontents extends page_xMarketingC
 
 		$social_category_model = $this->add('xMarketingCampaign/Model_SocialPostCategory');
 
-		$cat_crud=$cat_col->add('CRUD');
+		$cat_crud=$cat_col->add('CRUD',array('grid_class'=>'xMarketingCampaign/Grid_SocialPostCategory'));
 
-		$cat_crud->setModel($social_category_model,array('name','posts'));
+		$cat_crud->setModel($social_category_model);
 
 		if(!$cat_crud->isEditing()){
 			$g=$cat_crud->grid;
@@ -102,10 +102,8 @@ class page_xMarketingCampaign_page_owner_socialcontents extends page_xMarketingC
 				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'. $social_col->js()->reload(array('category_id'=>$g->model->id)) .'">'.$g->current_row[$f].'</a>';
 			});
 			$g->addFormatter('name','filtersocial');
-			$g->add_sno();
 		}
-		$cat_crud->grid->addQuickSearch(array('name'));
-		$cat_crud->grid->addPaginator($ipp=50);
+			
 		$social_model = $this->add('xMarketingCampaign/Model_SocialPost');
 
 		// filter social letter as per selected category
@@ -125,7 +123,7 @@ class page_xMarketingCampaign_page_owner_socialcontents extends page_xMarketingC
 			$social_model->addCondition('category_id',$_GET['category_id']);
 		}
 
-		$social_crud = $social_col->add('CRUD');
+		$social_crud = $social_col->add('CRUD',array('grid_class'=>'xMarketingCampaign/Grid_SocialPost'));
 		
 		$cols_array = array('category','name','is_active','total_posts','total_likes','total_share','total_comments','unread_comment');
 
@@ -172,7 +170,7 @@ class page_xMarketingCampaign_page_owner_socialcontents extends page_xMarketingC
 		// $social_crud->add('Controller_FormBeautifier');
 		if(!$social_crud->isEditing()){
 			$g=$social_crud->grid;
-			$g->add_sno();
+			
 
 			$sort_form = $g->buttonset->add('Form');
 			$sort_form->addClass('atk-form atk-move-right');
@@ -185,7 +183,7 @@ class page_xMarketingCampaign_page_owner_socialcontents extends page_xMarketingC
 			$btn->js('click',$g->js()->reload(array('sort_by'=>$sort_form_field->js()->val(),'order'=>'desc')));
 
 
-			$g->addQuickSearch(array('name','category'));
+			
 			$g->addClass('social_grid');
 			$g->js('reload')->reload();
 

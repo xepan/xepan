@@ -26,7 +26,7 @@ class page_xMarketingCampaign_page_owner_leads extends page_xMarketingCampaign_p
 				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'. $lead_col->js()->reload(array('leadcategory_id'=>$g->model->id)) .'">'.$g->current_row[$f].'</a>';
 			});
 			$g->addFormatter('name','filterleads');
-			$g->add_sno();
+			
 		}
 		
 		if($_GET['leadcategory_id']){
@@ -45,9 +45,6 @@ class page_xMarketingCampaign_page_owner_leads extends page_xMarketingCampaign_p
             });
 
         }    
-
-		$lead_cat_crud->grid->addQuickSearch(array('name'));
-		$lead_cat_crud->grid->addPaginator($ipp=50);
 		
 		$lead_cat_id= $this->api->stickyGET('leadcategory_id');
 		// $cat_id=$this->add('xMarketingCampaign/Model_LeadCategory')->load($lead_cat_id);

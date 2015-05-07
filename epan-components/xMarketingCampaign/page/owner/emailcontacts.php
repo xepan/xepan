@@ -82,14 +82,12 @@ class page_xMarketingCampaign_page_owner_emailcontacts extends page_xMarketingCa
 
 		});
 
-		$crud = $this->add('CRUD');
-		$crud->setModel($email_category_model,array('name','is_active','total_phrases','un_grabbed_phrases','total_emails','grabbed_emails','emails_by_other_apps','bounced_emails'));
+		$crud = $this->add('CRUD',array('grid_class'=>'xMarketingCampaign/Grid_SubscriptionCategory'));
+		$crud->setModel($email_category_model);
 
 		if(!$crud->isEditing()){
 			$g=$crud->grid;	
-			$g->addButton('Jump to Data Grabber ...')->js('click')->redirect($this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb'));
-			$crud->add_button->setIcon('ui-icon-plusthick');
-
+			
 			$g->addMethod('format_total_phrases',function($g,$f)use($total_phrases_vp){
 				$g->current_row_html[$f]= '<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('Phrases For "'.$g->model['name'].'"',$g->api->url($total_phrases_vp->getURL(),array('category_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a>';
 			});
@@ -122,8 +120,7 @@ class page_xMarketingCampaign_page_owner_emailcontacts extends page_xMarketingCa
 
 
 		}
-		$crud->grid->addQuickSearch(array('name','is_active'));
-		$crud->grid->addPaginator($ipp=50);
+		
 		// $crud->add('Controller_FormBeautifier');
 		
 	}
