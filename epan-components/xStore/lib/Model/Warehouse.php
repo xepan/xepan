@@ -21,8 +21,15 @@ class Model_Warehouse extends \Model_Table{
 	}
 	function beforeDelete(){
 		if($this->ref('xStore/Stock')->count()->getOne() > 0)
-			throw $this->exception('Stock Contains of WareHouse.. Please Delete First Warehouse','Growl');
-			
+			throw $this->exception('Stock Contains WareHouse.. Please Delete First Warehouse','Growl');
+	}
+
+	function forceDelete(){
+		$this->ref('xStore/Stock')->each(function($m){
+			$m->forceDelete();
+		});
+
+		$this->delete();
 	}
 
 	function getStock($item){
