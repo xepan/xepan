@@ -32,7 +32,7 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 				$crud->grid->addFormatter('subject','subject');
 
 			// $crud->grid->ipp=2;
-			$crud->add('xHR/Controller_Acl',array('override'=>array('allow_add'=>true,'allow_edit'=>'Self Only','allow_del'=>'Self Only')));
+			// $crud->add('xHR/Controller_Acl',array('override'=>array('allow_add'=>true,'allow_edit'=>'Self Only','allow_del'=>'Self Only')));
 
 			$right_col->add('View_Info')->set('Assign To Me');
 			$assign_to_me_task = $right_col->add('xProduction/Model_Task_Assigned');
