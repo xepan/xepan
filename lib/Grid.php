@@ -5,7 +5,6 @@ class Grid extends Grid_Advanced{
 	public $sno=1;
 
     public $show_epan=false;
-    public $load_footable=false;
 
 	function init(){
 		parent::init();
@@ -94,7 +93,7 @@ class Grid extends Grid_Advanced{
 
     function render(){
         if($this->load_footable){
-            $this->js(true)->find('table')->_load('footable/footable.all.min')->_css('footable/footable.standalone.min')->footable();
+            $this->js(true)->find('table')->_load('footable/footable.min')->footable();
         }
         parent::render();
     }
@@ -164,20 +163,31 @@ class Grid extends Grid_Advanced{
         return $this;
     }
 
+    // =========== Foo table section ==========
+    public $load_footable=false;
+
     function fooHidePhone($column){
-        $this->setTDParam($column,'data-hide','phone');
+        $this->columns[$column]['thparam'] .= " data-hide='phone'";
         if(!$this->load_footable) $this->load_footable=true;
     }
 
     function fooHideTablet($column){
-        $this->setTDParam($column,'data-hide','tablet');
+        $this->columns[$column]['thparam'] .= " data-hide='tablet'";
         if(!$this->load_footable) $this->load_footable=true;
     }
 
-    function fooHideBoth($field){
-        $this->columns[$field]['thparam'] .= ' data-hide="phone,tablet"';
-        // var_dump($this->columns[$field]);
+    function fooHideBoth($column){
+        $this->columns[$column]['thparam'] .= " data-hide='phone,tablet'";
         if(!$this->load_footable) $this->load_footable=true;
+    }
+
+    function fooHideAlways($column){
+        $this->columns[$column]['thparam'] .= " data-hide='all'";
+        if(!$this->load_footable) $this->load_footable=true;
+    }
+
+    function fooToggler($column){
+        $this->columns[$column]['thparam'] .= " data-toggle='true'";
     }
 
 }

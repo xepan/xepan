@@ -46,6 +46,8 @@ class page_owner_users extends page_base_owner {
 			$crud->grid->js('reload',$bg->js()->reload());
 		}
 
+		$crud->js('reload',$bg->js()->reload());
+
 	}
 
 	function page_xyz(){
