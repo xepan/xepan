@@ -12,7 +12,7 @@ class page_xMarketingCampaign_page_owner_config extends page_xMarketingCampaign_
 		//Email Tab
 	function page_emailconfig(){
 		$config_model = $this->add('xMarketingCampaign/Model_Config');
-		$crud = $this->add('CRUD');
+		$crud = $this->add('CRUD',array('grid_class'=>'xMarketingCampaign/Grid_ConfigMassMail'));
 		$crud->setModel($config_model);
 
 		// $crud->add('Controller_FormBeautifier');

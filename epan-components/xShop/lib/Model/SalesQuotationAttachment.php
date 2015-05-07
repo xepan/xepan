@@ -2,7 +2,7 @@
 
 namespace xShop;
 
-class SalesQuotationAttachment extends \Model_Attachment{
+class Model_SalesQuotationAttachment extends \Model_Attachment{
 	public $root_document_name = "xShop\SalesQuotationAttachment";
 
 	public $actions=array(

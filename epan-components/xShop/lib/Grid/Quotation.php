@@ -5,8 +5,10 @@ namespace xShop;
 class Grid_Quotation extends \Grid{
 	function init(){
 		parent::init();
-
+		$this->addQuickSearch(array('name','lead','created_by','status'));
+		$this->addPaginator($ipp=50);
 		$this->addSno();
+		
 		$this->vp=$this->add('VirtualPage')->set(function($p){
 			$p->api->stickyGET('quotation_clicked');
 			$p->add('xShop/View_Quotation',array('quotation'=>$p->add('xShop/Model_Quotation')->load($_GET['quotation_clicked'])));

@@ -8,7 +8,7 @@ class page_xShop_page_owner_opportunity extends page_xShop_page_owner_main{
 		
 		$oppertunity_model = $this->add('xShop/Model_Opportunity');
 
-		$crud=$this->add('CRUD');
+		$crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_Opportunity'));
 		$crud->setModel($oppertunity_model);
 
 
@@ -53,8 +53,6 @@ class page_xShop_page_owner_opportunity extends page_xShop_page_owner_main{
 			}
 			
 			$c->setModel($model_quotation);
-			$c->grid->addQuickSearch(array('name','lead','created_by','status'));
-			$c->grid->addPaginator($ipp=50);
 	
 		}
 	}
