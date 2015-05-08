@@ -17,7 +17,7 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 		});
 
 
-		$crud=$this->add('CRUD');
+		$crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_Customer'));
 		
 
 		$members=$this->add('xShop/Model_Customer');
@@ -47,18 +47,7 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 		}
 		
 		$members->setOrder('id');
-		$crud->setModel($members,array(
-										'username','password',
-										'customer_name','customer_email',
-										'type','email','other_emails','mobile_number',
-										'landmark','city','state','pan_no','tin_no',
-										'country','address',
-										'pincode','billing_address',
-										'shipping_address'
-										)
-								,array('customer_name','customer_email',
-										'mobile_number','city','state',
-										'country','pincode'));
+		$crud->setModel($members);
 
         $crud->add('xHR/Controller_Acl');
         
