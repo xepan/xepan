@@ -4,10 +4,11 @@
 class page_test extends Page {
 
 	function page_index(){
-		$jc = $this->add('xProduction/Model_JobCard');
-		$jc->addCondition('orderitem_id','1');
-		$jc->addCondition('to_department_id','18');
-		$jc->loadAny();
+		$d=$this->add('xAccount/Model_BalanceSheet');
+		$arr = $d->getRows();
+
+		file_put_contents(getcwd().'/epan-components/xAccount/default-heads.xepan', json_encode($arr));
+
 	}
 	
 

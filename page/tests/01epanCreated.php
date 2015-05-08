@@ -209,10 +209,10 @@ class page_tests_01epanCreated extends page_tests_base {
             $this->proper_responses['Test_newEpanCreated_xAccount'] = array(
                   'accounts'=>0,
                   'balance_sheet'=>10,
-                  'group'=>7,
+                  'group'=>0,
                   'transactions'=>0,
                   'ledgers'=>0,
-                  'transaction_type'=>8,
+                  'transaction_type'=>0,
             );
      }
 
@@ -267,7 +267,7 @@ class page_tests_01epanCreated extends page_tests_base {
       
       function prepare_newEpanCreated_xStock(){
             $this->proper_responses['Test_newEpanCreated_xStock'] = array(
-                  'warehouses'=>0,
+                  'warehouses'=>$this->add('xHR/Model_Department')->count()->getOne(),
                   'stocks'=>0,
                   'material_requests'=>0,
                   'material_request_items'=>0,
