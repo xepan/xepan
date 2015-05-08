@@ -4,9 +4,6 @@ class Model_AwesomeImages extends \Model_Table {
 	var $table= "slideshows_awesomeimages";
 	function init(){
 		parent::init();
-		
-		$this->hasOne('Epan','epan_id');
-		$this->addCondition('epan_id',$this->api->current_website->id);
 
 		$this->hasOne('slideShows/AwesomeGallery','gallery_id');
 		$f = $this->addField('image')->display(array('form'=>'ElImage'))->group('a~12~<i class="glyphicon glyphicon-picture"></i> Awesome Gallery Images')->mandatory(true);
@@ -20,7 +17,7 @@ class Model_AwesomeImages extends \Model_Table {
 		$f = $this->addField('is_publish')->type('boolean')->defaultValue(true)->group('a~2~dl');
 		$f->icon = "fa fa-exclamation~blue";
 		$this->addHook('beforeSave',$this);
-		// //$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave($m){

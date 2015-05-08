@@ -53,11 +53,30 @@ class Model_Post extends \Model_Table{
 		$salary_count=$this->ref('xHR/SalaryTemplate')->count()->getOne();
 		
 		if($emp_count or $post_count or $salary_count){
-			$this->api->js(true)->univ()->errorMessage('Cannot Delete,first delete Employees  & Salary Templates / Dependent Posts')->execute();	
+			throw $this->exception('Cannot Delete,first delete Employees  & Salary Templates / Dependent Posts','Growl');	
 		}
 
 		$this->ref('xHR/DocumentAcl')->deleteAll();
 		$this->ref('xHR/SalaryTemplate')->deleteAll();
+	}
+
+	function forceDelete(){
+		$this->ref('xHR/Employee')->each(function($emp){
+			$emp->forceDelete();
+		});
+
+		$this->ref('xHR/Post')->each(function($emp){
+			$emp->forceDelete();
+		});
+
+		$this->ref('xHR/SalaryTemplate')->each(function($emp){
+			$emp->forceDelete();
+		});
+
+		$this->ref('xHR/DocumentAcl')->deleteAll();
+		$this->ref('xHR/SalaryTemplate')->deleteAll();
+
+		$this->delete();
 	}
 	
 	function getSiblings(){

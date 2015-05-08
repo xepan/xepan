@@ -132,8 +132,8 @@ class Model_Item extends \Model_Table{
 		$this->hasMany('xShop/QuantitySet','item_id');
 		$this->hasMany('xShop/CustomRate','item_id');
 		$this->hasMany('xPurchase/PurchaseOrderItem','item_id');
-		$this->hasMany('xShop/Model_InvoiceItem','item_id');
-		$this->hasMany('xShop/Model_DispatchRequestItem','item_id');
+		$this->hasMany('xShop/InvoiceItem','item_id');
+		$this->hasMany('xDispatch/DispatchRequestItem','item_id');
 
 		$this->addExpression('theme_code_group_expression')->set('(IF(ISNULL('.$this->table_alias.'.theme_code),'.$this->table_alias.'.id,'.$this->table_alias.'.theme_code))');
 			
@@ -228,9 +228,9 @@ class Model_Item extends \Model_Table{
 		$po_item = $m->ref('xPurchase/PurchaseOrderItem')->count()->getOne();
 		$invoice_item = $m->ref('xShop/InvoiceItem')->count()->getOne();
 		$quotation_item = $m->ref('xShop/QuotationItem')->count()->getOne();
-		$dispatch_item = $m->ref('xShop/DispatchRequestItem')->count()->getOne();
+		$dispatch_item = $m->ref('xDispatch/DispatchRequestItem')->count()->getOne();
 		
-		if($this->api->auth->model['type'] and ($order_count or $item_enquiry_count or $design_count or $material_request or $po_item or $quotation_item or $invoice_item or $dispatch_item)){
+		if($order_count or $item_enquiry_count or $design_count or $material_request or $po_item or $quotation_item or $invoice_item or $dispatch_item){
 			throw $this->exception('Cannot Delete,first delete Orders or Enquiry or MemberDesign or MaterialRequest or quotation_item or QuantitySet','Growl');
 		}
 
@@ -257,27 +257,31 @@ class Model_Item extends \Model_Table{
 
 	function forceDelete(){
 		$this->ref('xShop/OrderDetails')->each(function($order_detail){
-			$order_detail->setItemEmpty();
+			$order_detail->newInstance()->load($order_detail->id)->setItemEmpty();
 		});
 
 		$this->ref('xShop/QuotationItem')->each(function($quotation_item){
-			$quotation_item->setItemEmpty();
+			$quotation_item->newInstance()->load($quotation_item->id)->setItemEmpty();
 		});
 		
 		$this->ref('xShop/ItemMemberDesign')->each(function($member_design){
-			$member_design->setItemEmpty();
+			$member_design->newInstance()->load($member_design->id)->setItemEmpty();
+		});
+
+		$this->ref('xShop/InvoiceItem')->each(function($invoice_item){
+			$invoice_item->newInstance()->load($invoice_item->id)->setItemEmpty();
 		});
 		
-		$this->ref('xShop/MaterialRequestItem')->each(function($material_request_item){
-			$material_request_item->setItemEmpty();
+		$this->ref('xStore/MaterialRequestItem')->each(function($material_request_item){
+			$material_request_item->newInstance()->load($material_request_item->id)->setItemEmpty();
 		});
 		
 		$this->ref('xPurchase/PurchaseOrderItem')->each(function($po_item){
-			$po_item->setItemEmpty();
+			$po_item->newInstance()->load($po_item->id)->setItemEmpty();
 		});
 		
-		$this->ref('xShop/DispatchRequestItem')->each(function($dispatch_item){
-			$dispatch_item->setItemEmpty();
+		$this->ref('xDispatch/DispatchRequestItem')->each(function($dispatch_item){
+			$dispatch_item->newInstance()->load($dispatch_item->id)->setItemEmpty();
 		});
 
 		$this->ref('CompositionItems')->deleteAll();

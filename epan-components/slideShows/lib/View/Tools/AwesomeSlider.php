@@ -2,7 +2,7 @@
 
 namespace slideShows;
 
-class View_Tools_AwesomeSlider extends \componentBase\View_ServerSideComponent{
+class View_Tools_AwesomeSlider extends \componentBase\View_Component{
 	var $data_options;
 	var $html_attributes;
 

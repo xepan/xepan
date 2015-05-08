@@ -29,13 +29,7 @@ class Model_WaterWheelGallery extends \Model_Table {
 		$f = $this->addField('is_publish')->type('boolean')->defaultValue(true)->group('c~2');
 		$f->icon = "fa fa-exclamation~blue";
 
-		$this->hasMany('slideShows/Model_WaterWheelImages','gallery_id');
-		// //$this->add('dynamic_model/Controller_AutoCreator');
-		$this->addHook('beforeDelete',$this);
+		$this->hasMany('slideShows/WaterWheelImages','gallery_id');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
-
-	function beforeDelete(){
-		$this->ref('slideShows/WaterWheelImages')->deleteAll();
-	}
-
 }

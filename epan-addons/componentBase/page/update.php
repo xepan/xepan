@@ -77,7 +77,7 @@ class page_componentBase_page_update extends page_base_owner{
 	            		continue;
 	            	}
 					$model = $this->add($md);
-					
+					$foriegn_fields=array();
 					foreach ($model->elements as $elm) {
 						if(!$elm instanceof AbstractObject) continue;
 						if($elm instanceof Field_Expression or $elm instanceof SQL_Many)
@@ -86,13 +86,14 @@ class page_componentBase_page_update extends page_base_owner{
 							$temp=$elm->short_name;
 							$elm->destroy();
 							$model->addField($temp,$temp)->type('int');
+							// $this->api->db->dsql()->expr("DROP ")->execute();
 						}
 					}
 					try{
 						$model->add('dynamic_model/Controller_AutoCreator');
 						$model->tryLoadAny();
 					}catch(Exception $e){
-						$this->add('View_Error')->set("in $md_name: ". $e->getMessage());
+						$this->add('View_Error')->setHTML("in $md_name: ". $e->getHTML());
 					}
 				}	
 			}

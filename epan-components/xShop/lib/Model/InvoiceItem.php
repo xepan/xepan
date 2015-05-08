@@ -62,7 +62,10 @@ class Model_InvoiceItem extends \Model_Document{
 	}
 
 	function invoice(){
-		return $this->ref('invoice_id');
+		if($this['invoice_id'])
+			return $this->ref('invoice_id');
+		else
+			return false;
 	}
 
 	function afterSave(){		
@@ -97,6 +100,14 @@ class Model_InvoiceItem extends \Model_Document{
 			
 		return $str;
 	}
+
+		function setItemEmpty(){
+		if(!$this->loaded()) return;
+
+		$this['item_id'] = null;
+		$this->save();
+	}
+
 
 	
 	}

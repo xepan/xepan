@@ -4,6 +4,7 @@ class Model_MemberDetails extends \Model_Document{
 	public $table="xshop_memberdetails";
 	public $status=array();
 	public $root_document_name="xShop\MemberDetails";
+	
 	function init(){
 		parent::init();
 

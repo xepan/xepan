@@ -18,7 +18,7 @@ class Model_CustomFields extends \Model_Table{
 		$f->icon = 'fa fa-circle~red';
 		
 		$this->hasMany('xShop/CustomFieldValue','customfield_id');
-		$this->hasMany('xShop/CustomFieldValueFilterAssociation','customefield_id');
+		$this->hasMany('xShop/CustomFieldValueFilterAssociation','customfield_id');
 		$this->hasMany('xShop/ItemCustomFieldAssos','customfield_id');
 
 		$this->addHook('beforeDelete',$this);

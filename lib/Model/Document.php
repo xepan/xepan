@@ -446,4 +446,9 @@ class Model_Document extends SQL_Model{
 
 	}
 
+	function setEmployeeNull(){
+		$this['created_by_id'] = null;
+		$this->saveAndUnload();
+	}
+
 }

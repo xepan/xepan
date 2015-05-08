@@ -5,43 +5,20 @@ class page_test extends Page {
 	function init(){
 		parent::init();
 
-		$t=$this->add('filestore\Model_File');
-		$t['original_filename']="t.txt";
-		$x=$t->import("hello World",'string');
-		$x->save();
-		var_dump($x->id);
-
-		// $l=$this->add('splitter/LayoutContainer');
-		// $l->getPane('center')->add('View')->set('Center');
-		// $l->addPane('north')->add('View')->set('North');
-		// // $l->addPane('south')->add('View')->set('South');
-		// // $l->addPane('east')->add('View')->set('East');
-		// $l->addPane('west',array(
-		// 		'size'=>					250
-		// ,	'spacing_closed'=>			21			// wider space when closed
-		// ,	'togglerLength_closed'=>	21			// make toggler 'square' - 21x21
-		// ,	'togglerAlign_closed'=>	"top"		// align to top of resizer
-		// ,	'togglerLength_open'=>		0			// NONE - using custom togglers INSIDE west-pane
-		// ,	'togglerTip_open'=>		"Close West Pane"
-		// ,	'togglerTip_closed'=>		"Open West Pane"
-		// ,	'resizerTip_open'=>		"Resize West Pane"
-		// ,	'slideTrigger_open'=>		"click" 	// default
-		// ,	'initClosed'=>				true
-		// //	add 'bounce' option to default 'slide' effect
-		// ,	'fxSettings_open'=>		array('easing'=> "easeOutBounce" )
-
-
-		// 	))->add('View')->set('West');
-
-
-
+		
+		$tables = $this->api->db->dsql()->expr('SHOW TABLES');
+		foreach ($tables as $table) {
+			$fields = $this->api->db->dsql()->describe($table['Tables_in_nebula']);
+			foreach ($fields as $field) {
+				$key = isset($field['name']) ? $field['name'] : $field['Field'];
+				if($key=='epan_id'){
+					// echo "doing in ". $table['Tables_in_nebula'] .'<br/>';
+					$this->api->db->dsql()->table($table['Tables_in_nebula'])->set('epan_id',1)->update();
+					continue;
+				}
+			}
+		}
 	}
 
-	// function defaultTemplate(){
-	// 	return array('test');
-	// }
-
-	function render(){
-		parent::render();
-	}
+	
 }

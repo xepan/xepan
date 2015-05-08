@@ -24,24 +24,15 @@ class View_Lister_ThumbnailSlider extends \CompleteLister{
 	}		
 	
 	function defaultTemplate(){
-		$this->app->pathfinder->base_location->addRelativeLocation(
-		    'epan-components/'.__NAMESPACE__, array(
-		        'php'=>'lib',
-		        'template'=>'templates',
-		        'css'=>'templates/css',
-		        'js'=>'templates/js',
-		    )
-		);
-		
-		// $l=$this->api->locate('addons',__NAMESPACE__, 'location');
-		// $this->api->pathfinder->addLocation(
-		// 	$this->api->locate('addons',__NAMESPACE__),
-		// 	array(
-		//   		'template'=>'templates',
-		//   		'css'=>'templates/css',
-		//   		'js'=>'templates/js'
-		// 		)
-		// 	)->setParent($l);
+		$l=$this->api->locate('addons',__NAMESPACE__, 'location');
+		$this->api->pathfinder->addLocation(
+			$this->api->locate('addons',__NAMESPACE__),
+			array(
+		  		'template'=>'templates',
+		  		'css'=>'templates/css',
+		  		'js'=>'templates/js'
+				)
+			)->setParent($l);
 
 		return array('view/slideShows-ThumbnailSliders');
 	}

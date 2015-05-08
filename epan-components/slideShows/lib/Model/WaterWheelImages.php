@@ -5,9 +5,6 @@ class Model_WaterWheelImages extends \Model_Table {
 	var $table= "slideshows_waterwheelimages";
 	function init(){
 		parent::init();
-		$this->hasOne('Epan','epan_id');
-		$this->addCondition('epan_id',$this->api->current_website->id);
-		
 		$this->hasOne('slideShows/Model_WaterWheelGallery','gallery_id');
 
 		$f = $this->addField('image')->display(array('form'=>'ElImage'))->mandatory(true)->group('a~8~<i class="fa fa-picture-o"></i> Water Weel Images');
@@ -19,7 +16,7 @@ class Model_WaterWheelImages extends \Model_Table {
 		$f = $this->addField('description')->type('text')->group('a~11~dl');
 		$f->icon = "fa fa-pencil~blue"; 
 		// $this->addField('order_no')->type('int');
-		// //$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	// function beforeSave($m){
