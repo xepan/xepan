@@ -71,4 +71,13 @@ class Model_DataGrabber extends \Model_Table{
 
 		$this->delete();
 	}
+
+	function loadDefaults(){
+		$data= file_get_contents(getcwd().'/epan-components/xMarketingCampaign/data-grabbers.xepan');
+		$arr = json_decode($data);
+		foreach ($arr as $dg) {
+			unset($dg['epan_id']);
+			$this->newInstance()->set($dg)->save();
+		}
+	}
 }
