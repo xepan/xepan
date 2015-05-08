@@ -36,6 +36,8 @@ class Model_TransactionRow extends \Model_Table{
 
 		if($this['amountDr'])
 			$this->account()->debitOnly(-1 * $this['amountDr']);
-
+		
 	}
+
+	
 }

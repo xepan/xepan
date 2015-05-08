@@ -30,7 +30,16 @@ class Model_Account extends \Model_Document{
 
 		$this->addField('affectsBalanceSheet')->type('boolean')->defaultValue(true);
 
+		$this->hasMany('xAccount/TransactionRow','account_id');
+
+		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function beforeDelete(){
+		$this->ref('xAccount/TransactionRow')->each(function($tr){
+			$tr->forceDelete();
+		});
 	}
 
 	function createNewAccount($account_for,$group,$name){

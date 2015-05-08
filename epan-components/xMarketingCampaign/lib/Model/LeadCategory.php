@@ -32,12 +32,15 @@ class Model_LeadCategory extends \Model_Document {
 	function beforeDelete(){
 		if($this->ref('xMarketingCampaign/Lead')->count()->getOne() > 0)
 			throw $this->exception('Category contains Leads','Growl');
+				
 	}
 
 	function forceDelete(){
+
 		$this->ref('xMarketingCampaign/Lead')->each(function($m){
 			$m->forceDelete();
 		});
-		$this->delete();
+
+		$this->delete();		
 	}
 }

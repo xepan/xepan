@@ -34,7 +34,7 @@ class Model_PurchaseOrder extends \Model_Document{
 
 	function beforeDelete(){
 		$p_in = $this->ref('xPurchase/PurchaseInvoice')->count()->getOne();
-		if($p->in)
+		if($p_in)
 			throw $this->exception('Cannot Delete, First Delete PurchaseInvoice');
 
 		$this->ref('xPurchase/PurchaseOrderItem')->each(function($item){
