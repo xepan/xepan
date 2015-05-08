@@ -6,8 +6,8 @@ class page_tests_01epanCreated extends page_tests_base {
 
     function prepare_newEpanCreated(){
 
-          $new_epan_name = 'web'.rand(1,99999);
-         $epan = $this->add('Model_Epan')
+        $new_epan_name = 'web'.rand(1,99999);
+        $epan = $this->add('Model_Epan')
             ->set('name',$new_epan_name)
             ->set('email_id','web'.rand(1,99999).'@example.com')
             ->set('password','xepan')
@@ -119,10 +119,16 @@ class page_tests_01epanCreated extends page_tests_base {
                   'specification_association'=>0,
                   'item_offers'=>0,
                   'xshop_configuration'=>1,
+                  'default_salesinvoice_layout'=>1,
+                  'default_purchseinvoice_layout'=>1,
+                  'default_quotation_layout'=>1,
+                  'default_cashvoucher_layout'=>1,
+                  'default_order_layout'=>1,
             );
      }
 
      function Test_newEpanCreated_xShop(){
+            $current_xshopconfig = $this->add('xShop/Model_Configuration')->tryLoadAny();
             return array(
                   'opportunity'=>$this->add('xShop/Model_Opportunity')->count()->getOne(),
                   'quotations'=>$this->add('xShop/Model_Quotation')->count()->getOne(),
@@ -147,6 +153,11 @@ class page_tests_01epanCreated extends page_tests_base {
                   'specification_association'=>$this->add('xShop/Model_ItemSpecificationAssociation')->count()->getOne(),
                   'item_offers'=>$this->add('xShop/Model_ItemOffer')->count()->getOne(),
                   'xshop_configuration'=>$this->add('xShop/Model_Configuration')->count()->getOne(),
+                  'default_salesinvoice_layout'=>$current_xshopconfig['invoice_email_body']?1:0,
+                  'default_purchseinvoice_layout'=>$current_xshopconfig['purchase_invoice_email_body']?1:0,
+                  'default_quotation_layout'=>$current_xshopconfig['quotation_email_body']?1:0,
+                  'default_cashvoucher_layout'=>$current_xshopconfig['cash_voucher_email_body']?1:0,
+                  'default_order_layout'=>$current_xshopconfig['purchase_order_detail_email_body']?1:0,
             );
      }
 
@@ -154,7 +165,7 @@ class page_tests_01epanCreated extends page_tests_base {
             $this->proper_responses['Test_newEpanCreated_xProduction'] = array(
                   'outsource_parties'=>0,
                   'outsource_parties_department_association'=>0,
-                  'production_phases'=>0,
+                  'production_phases'=>3,
                   'job_cards'=>0,
                   'task'=>0,
                   'team'=>0,
@@ -166,7 +177,7 @@ class page_tests_01epanCreated extends page_tests_base {
             return array(
                   'outsource_parties'=>$this->add('xProduction/Model_OutSourceParty')->count()->getOne(),
                   'outsource_parties_department_association'=>$this->add('xProduction/Model_OutSourcePartyDeptAssociation')->count()->getOne(),
-                  'production_phases'=>$this->add('xProduction/Model_Phase')->addCondition('id','>',9)->count()->getOne(),
+                  'production_phases'=>$this->add('xProduction/Model_Phase')->count()->getOne(),
                   'job_cards'=>$this->add('xProduction/Model_JobCard')->count()->getOne(),
                   'task'=>$this->add('xProduction/Model_Task')->count()->getOne(),
                   'team'=>$this->add('xProduction/Model_Team')->count()->getOne(),
