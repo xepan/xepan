@@ -143,4 +143,14 @@ class Model_BalanceSheet extends \Model_Document{
 		return $this['name'] == 'Current Liabilities';
 	}
 
+	function loadDefaults(){
+		$data= file_get_contents(getcwd().'/epan-components/xAccount/default-heads.xepan');
+		$arr = json_decode($data,true);
+		foreach ($arr as $dg) {
+			unset($dg['id']);
+			unset($dg['epan_id']);
+			$this->newInstance()->set($dg)->save();
+		}
+	}
+
 }

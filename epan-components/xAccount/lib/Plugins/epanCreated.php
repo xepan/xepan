@@ -11,6 +11,7 @@ class Plugins_epanCreated extends \componentBase\Plugin {
 	}
 
 	function Plugins_epanCreated($obj, $epan){
-
+		$d=$this->add('xAccount/Model_BalanceSheet');
+		$d->loadDefaults();
 	}
 }
