@@ -22,7 +22,7 @@ class Model_EpanPage extends Model_Table {
 		$f=$this->addField('menu_caption')->caption('Menu')->hint('Leave blank if you don\'t want page in menus')->group('a~4')->sortable(true); // Menu name for this page default is 'Home'
 		$f->icon = 'fa fa-eye~blue';
 
-		$f=$this->addField('access_level')->setValueList(array(0=>'Public',50=>'Registered User',80=>'Back End User',100=>'Super user'))->defaultValue('public')->mandatory(true)->group('a~4')->sortable(true);
+		$f=$this->addField('access_level')->setValueList(array(0=>'Public',50=>'Registered User',80=>'Back End User',100=>'Super user'))->defaultValue('0')->mandatory(true)->group('a~4')->sortable(true);
 		$f->icon= 'fa fa-unlock-alt~red';
 		$this->addField('is_template')->type('boolean')->defaultValue(false);
 

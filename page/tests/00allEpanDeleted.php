@@ -1,7 +1,7 @@
 <?php
 
-class page_tests_00reset extends page_tests_base {
-	public $title = 'BASE ERP Testing';
+class page_tests_00allEpanDeleted extends page_tests_base {
+	public $title = 'All Epans Deleted Testing';
 
     function prepare_allEpansDeleted(){
         $this->add('Model_Epan')->each(function($epan){
