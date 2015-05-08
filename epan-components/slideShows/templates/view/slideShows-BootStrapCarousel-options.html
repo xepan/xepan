@@ -1,11 +1,11 @@
-<div id='<?$_name?>' class='epan-component-options' component_type="<?$component_type?>">
+<div id='{$_name}' class='epan-component-options' component_type="{$component_type}">
 	
 	<div class="panel-group" id="accordion">
 		<div class="xepan-collasp-header component-header">
 		 	<div class="panel-heading">
 		      	<h3 class="panel-title">
 		        	<a data-toggle="collapse" data-parent="#accordion"	 href="#collapse-slideShows-carousel">
-						<?$component_type_name?>
+						{$component_type_name}
 		        	</a> 
 		      	</h3>
 		   	</div>
@@ -75,7 +75,7 @@ $('#epan-slideshow-add-slide-button').click(function(event) {
 						$('<div class="item active"><img src="'+files.url+'" style="width:100%; max-width:100%; height:auto; "/></div>')
 							.appendTo('#'+$(current_selected_component).attr('id')+ ' .carousel-inner');
 						
-						<?$component_type?>_options.show();
+						{$component_type}_options.show();
 						console.log(files);
 					},
 					commandsOptions : {
@@ -95,7 +95,7 @@ $('#epan-slideshow-option-delete-last-slide').click(function(event) {
 	$('#'+$(current_selected_component).attr('id')+ ' .item:last-child').remove();
 	$('#'+$(current_selected_component).attr('id')+ ' .item').removeClass('active');
 	$('#'+$(current_selected_component).attr('id')+ ' .item:last-child').addClass('active');
-	<?$component_type?>_options.show();
+	{$component_type}_options.show();
 });
 
 $('#epan-slideshow-options-slide-list').sortable({
@@ -110,7 +110,7 @@ $('#epan-slideshow-options-slide-list').sortable({
 
 
 
-var <?$component_type?>_options = {
+var {$component_type}_options = {
 	show: function (){
 		$('#epan-slideshow-options-slide-list').children().remove();
 		$(current_selected_component).find('.item').each(function(index, el) {

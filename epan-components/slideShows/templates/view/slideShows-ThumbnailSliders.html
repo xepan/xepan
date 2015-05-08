@@ -1,4 +1,4 @@
-<div id='<?$_name?>' <?$attributes?> class='slide <?$class?> ' style='position:relative; <?$style?>' >
+<div id='{$_name}' {$attributes} class='slide {$class} ' style='position:relative; {$style}' >
 
 	 <script src="epan-components/slideShows/templates/js/tooltip.js" type="text/javascript"></script>
 	<link href="epan-components/slideShows/templates/css/tooltip.css" rel="stylesheet" type="text/css" />
@@ -6,14 +6,14 @@
 
 	 	<div id="dm1">
 	        <div id="dm1Inner" class="thumbnail-slider-container"> 
-				<div id="mcts1_<?$_id?>" class="thumbnailslider-img-outerdiv">
-					<?rows?>
-					<?row?>
+				<div id="mcts1_{$_id}" class="thumbnailslider-img-outerdiv">
+					{rows}
+					{row}
 							
-						 <img class="thumbnailslider-img"  src="<?$image?>"  onmouseover="tooltip.pop (this,'<?$tooltip?>')" />
-						 <?$description?>
-				   	<?/row?>
-				   	<?/rows?>
+						 <img class="thumbnailslider-img"  src="{$image}"  onmouseover="tooltip.pop (this,'{$tooltip}')" />
+						 {$description}
+				   	{/row}
+				   	{/rows}
 				</div>
 			</div>
 		</div>	
@@ -21,13 +21,13 @@
 
 var mct1_Options =
 {
-    sliderId: "mcts1_<?$_id?>",
-    direction: "<?$direction?>",
-    scrollInterval: "<?$scroll_intervarl?>",
-    scrollDuration: "<?$scroll_duration?>",
-    hoverPause: <?$on_hover?>,
-    autoAdvance: <?$autoAdvance?>,
-    scrollByEachThumb: "<?$scroll_by_each_thumb?>",
+    sliderId: "mcts1_{$_id}",
+    direction: "{$direction}",
+    scrollInterval: "{$scroll_intervarl}",
+    scrollDuration: "{$scroll_duration}",
+    hoverPause: {$on_hover},
+    autoAdvance: {$autoAdvance},
+    scrollByEachThumb: "{$scroll_by_each_thumb}",
     circular: true,
     largeImageSlider: null,
     inSyncWithLargeImageSlider: true
