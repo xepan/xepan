@@ -53,9 +53,9 @@ class Model_Transaction extends \Model_Document{
 	}
 
 	
-	function forcedelete(){
+	function forceDelete(){
 		foreach ($this->ref('xAccount/TransactionRow') as $trrow) {
-			$trrow->delete();
+			$trrow->forceDelete();
 		}
 
 		$this->delete();

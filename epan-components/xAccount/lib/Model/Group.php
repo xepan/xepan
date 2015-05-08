@@ -15,7 +15,7 @@ class Model_Group extends \Model_Table{
 		$this->addField('created_at')->type('date')->defaultValue(date('Y-m-d'));
 
 
-		$this->hasMany('Account','group_id');
+		$this->hasMany('xAccount/Account','group_id');
 
 		$this->add('Controller_Validator');
 		$this->is(array(
@@ -28,9 +28,17 @@ class Model_Group extends \Model_Table{
 	}
 
 	function beforeDelete(){
+		$account = $this->ref('xAccount/Account')->count()->getOne();
+		if($account)
+			throw $this->exception('Cannot Delete, First Delete Accounts');
+	}
+
+	function forceDelete(){
 		$this->ref('xAccount/Account')->each(function($m){
 			$m->forceDelete();
 		});
+		
+		$this->delete();
 	}
 
 	function createNewGroup($name,$balance_sheet_id,$other_values=array()){

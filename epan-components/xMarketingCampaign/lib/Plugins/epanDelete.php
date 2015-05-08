@@ -7,10 +7,10 @@ class Plugins_epanDelete extends \componentBase\Plugin {
 
 	function init(){
 		parent::init();
-		$this->addHook('epanDeleted',array($this,'Plugins_epanDelete'));
+		$this->addHook('epan_before_delete',array($this,'Plugins_epanDelete'));
 	}
 
-	function Plugins_epanDelete($obj, $epan){
+	function Plugins_epanDelete($obj, $epan){			
 		$models = array(
 					'Model_LeadCategory',
 					'Model_SocialPostCategory',
