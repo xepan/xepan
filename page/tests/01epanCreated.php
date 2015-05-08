@@ -1,43 +1,44 @@
 <?php
 
 class page_tests_01epanCreated extends page_tests_base {
-	public $title = 'Epans Created Testing';
+  public $title = 'Epans Created Testing';
 
 
     function prepare_newEpanCreated(){
 
+          $new_epan_name = 'web'.rand(1,99999);
          $epan = $this->add('Model_Epan')
-            ->set('name','web')
-            ->set('email_id','email@example.com')
+            ->set('name',$new_epan_name)
+            ->set('email_id','web'.rand(1,99999).'@example.com')
             ->set('password','xepan')
             ->set('branch_id',$this->add('Model_Branch')->tryLoadAny()->get('id'))
             ->save();
+        $this->api->current_website = $epan;
 
         $this->proper_responses['Test_newEpanCreated']=array(
-            'epans_count'=>1,
+            'epans_count'=>$this->api->db->dsql()->expr("select count(*) from epan")->getOne(),
             'general_settings'=>array('TOCHECK'),
-            'epan_pages_count'=>1,
-            'epan_template_count'=>1,
-            'epan_template_values'=>array('name'=>'default','content'=>'<div component_namespace="baseElements" component_type="TemplateContentRegion" class="epan-sortable-component epan-component  ui-sortable" style="" contenteditable="false">~~Content~~</div>','body_attributes'=>'','is_current'=>1,'css'=>''),
-            'epan_values'=>array('name'=>'web','epan_id'=>$epan->id),
-            'epan_defaultpage_values'=>array('name'=>'home','epan_id'=>$epan->id,'content'=>0,'body_attributes'=>'','template_id'=>$this->add('Model_EpanTemplates')->tryLoadANy()->get('id')),
+            'currentepan_pages_count'=>1,
+            'currentepan_template_count'=>1,
+            'currentepan_template_values'=>array('name'=>'default','content'=>'<div component_namespace="baseElements" component_type="TemplateContentRegion" class="epan-sortable-component epan-component  ui-sortable" style="" contenteditable="false">~~Content~~</div>','body_attributes'=>'','is_current'=>1,'css'=>''),
+            'currentepan_values'=>array('name'=>$new_epan_name,'epan_id'=>$epan->id),
+            'currentepan_defaultpage_values'=>array('name'=>'home','epan_id'=>$epan->id,'content'=>0,'body_attributes'=>'','template_id'=>$this->add('Model_EpanTemplates')->tryLoadANy()->get('id')),
             'activities'=>0
             );
     }
 
     function Test_newEpanCreated(){
-        $epan = $this->add('Model_Epan')->tryLoadAny();
+        $epan = $this->api->current_website;
         $template = $epan->templates()->tryLoadAny();
         $page = $epan->pages()->tryLoadAny();
-        
         return array(
             'epans_count' => $this->add('Model_Epan')->count()->getOne(),
             'general_settings' => array('TOCHECK'),
-            'epan_pages_count'=>$epan->pages()->count()->getOne(),
-            'epan_template_count'=>$epan->templates()->count()->getOne(),
-            'epan_template_values'=>array('name'=>$template['name'],'content'=>$template['content'],'body_attributes'=>$template['body_attributes'],'is_current'=>$template['is_current'],'css'=>$template['css']),
-            'epan_values'=>array('name'=>$epan['name'],'epan_id'=>$epan->id),
-            'epan_defaultpage_values'=>array('name'=>$page['name'],'epan_id'=>$page['epan_id'],'content'=>$page['content'],'body_attributes'=>$page['body_attributes'],'template_id'=>$page['template_id']),
+            'currentepan_pages_count'=> $this->add('Model_EpanPage')->count()->getOne(),
+            'currentepan_template_count'=>$this->add('Model_EpanTemplates')->count()->getOne(),
+            'currentepan_template_values'=>array('name'=>$template['name'],'content'=>$template['content'],'body_attributes'=>$template['body_attributes'],'is_current'=>$template['is_current'],'css'=>$template['css']),
+            'currentepan_values'=>array('name'=>$epan['name'],'epan_id'=>$epan->id),
+            'currentepan_defaultpage_values'=>array('name'=>$page['name'],'epan_id'=>$page['epan_id'],'content'=>$page['content'],'body_attributes'=>$page['body_attributes'],'template_id'=>$page['template_id']),
             'activities'=>0
 
             );
@@ -50,7 +51,6 @@ class page_tests_01epanCreated extends page_tests_base {
                   'employee_attandance'=>0,                        
                   'employee_leave'=>0,
                   'employee_setup'=>'ok',
-                  'activities'=>0
             );
      }
 
@@ -70,7 +70,7 @@ class page_tests_01epanCreated extends page_tests_base {
             $this->proper_responses['Test_newEpanCreated_MarketingCampaign'] = array(
                   'leads_category'=>0,
                   'leads'=>0,
-                  'newsletter_category',
+                  'newsletter_category'=>0,
                   'newsletter'=>0,
                   'social_content'=>0,
                   'data_grabber'=>3,
