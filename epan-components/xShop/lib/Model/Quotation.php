@@ -48,9 +48,12 @@ class Model_Quotation extends \Model_Document{
 			$qi->forceDelete();
 		});
 
-		$this->attachments()->each(function($attach){
-			$attach->forceDelete();
-		});
+		$atts=$this->attachments();
+		if($atts){
+			$atts->each(function($attach){
+				$attach->forceDelete();
+			});
+		}
 	}
 
 	function forceDelete(){

@@ -2,10 +2,16 @@
 
 
 class page_test extends Page {
-	function init(){
-		parent::init();
 
-		
+	function page_index(){
+		$jc = $this->add('xProduction/Model_JobCard');
+		$jc->addCondition('orderitem_id','1');
+		$jc->addCondition('to_department_id','18');
+		$jc->loadAny();
+	}
+	
+
+	function page_setepanid(){
 		$tables = $this->api->db->dsql()->expr('SHOW TABLES');
 		foreach ($tables as $table) {
 			$fields = $this->api->db->dsql()->describe($table['Tables_in_nebula']);

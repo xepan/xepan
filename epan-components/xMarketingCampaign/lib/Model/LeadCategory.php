@@ -36,7 +36,8 @@ class Model_LeadCategory extends \Model_Document {
 
 	function forceDelete(){
 		$this->ref('xMarketingCampaign/Lead')->each(function($m){
-			$m->delete();
+			$m->forceDelete();
 		});
+		$this->delete();
 	}
 }

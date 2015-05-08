@@ -39,7 +39,7 @@ class Model_TermsAndCondition extends \Model_Document{
 
 
 	function forceDelete(){
-		$this->ref('xShop/Quotaion')->each(function($m){
+		$this->ref('xShop/Quotation')->each(function($m){
 			$m->setTermAndConditionEmpty();
 		});
 

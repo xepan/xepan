@@ -32,6 +32,8 @@ class Model_Campaign extends \Model_Table {
 		$this->hasMany('xMarketingCampaign/CampaignSocialUser','campaign_id');
 		$this->hasMany('xMarketingCampaign/CampaignSocialPost','campaign_id');
 
+		$this->addHook('beforeDelete',$this);
+
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
@@ -42,7 +44,6 @@ class Model_Campaign extends \Model_Table {
 		$this->ref('xMarketingCampaign/CampaignSocialPost')->each(function($m){
 			$m->delete();	
 		});
-
 	}
 
 }

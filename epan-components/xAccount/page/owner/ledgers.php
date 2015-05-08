@@ -29,5 +29,7 @@ class page_xAccount_page_owner_ledgers extends page_xAccount_page_owner_main{
 			$crud->grid->removeColumn('OpeningBalanceCr');
 			$crud->grid->removeColumn('OpeningBalanceDr');
 		}
+
+		// $crud->add('xHR/Controller_Acl');
 	}
 }

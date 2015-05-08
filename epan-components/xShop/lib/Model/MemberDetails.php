@@ -52,11 +52,11 @@ class Model_MemberDetails extends \Model_Document{
 
 	function beforeDelete(){
 		$voucher_used = $this->ref('xShop/DiscountVoucherUsed')->count()->getOne();
-		// $order_count=$this->ref('xShop/Order')->count()->getOne();
+		// $order_count=$this->ref('xShop/Order')->count()->getOne(); // Checked in Customer
 		$member_count=$this->ref('xShop/MemberImages')->count()->getOne();
 		$item_member_count=$this->ref('xShop/ItemMemberDesign')->count()->getOne();
 		$str = 'Member Images ( '.$member_count .' ) ' .'Member Item Design ('.$item_member_count." ) ";
-		if($order_count or $member_count or $item_member_count or $voucher_used)
+		if(/*$order_count or */ $member_count or $item_member_count or $voucher_used)
 			throw $this->exception("Cannot Delete, First Delete ".$str,'Growl');
 	}
 

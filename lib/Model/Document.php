@@ -1,6 +1,6 @@
 <?php
 
-class Model_Document extends SQL_Model{
+class Model_Document extends Model_Table{
 	
 	public $actions=array();
 	public $acl_added = false;

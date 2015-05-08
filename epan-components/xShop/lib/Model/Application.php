@@ -65,7 +65,7 @@ class Model_Application extends \Model_Document{
 			$config->forceDelete();
 		});
 
-		$this->ref('ItemOffer')->each(function($offer){
+		$this->ref('xShop/ItemOffer')->each(function($offer){
 			$offer->forceDelete();
 		});
 		

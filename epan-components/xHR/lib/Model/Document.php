@@ -15,7 +15,7 @@ class Model_Document extends \Model_Table {
 			$this->hasOne('xHR/Department','department_id');
 			$this->addField('name');
 
-			$this->hasMany('xHR/DepartmentAcl','document_id');
+			$this->hasMany('xHR/DocumentAcl','document_id');
 
 	}
 
@@ -31,7 +31,7 @@ class Model_Document extends \Model_Table {
 	}
 
 	function forceDelete(){
-		$this->ref('xHR/DepartmentAcl')->each(function($dacl){
+		$this->ref('xHR/DocumentAcl')->each(function($dacl){
 			$dacl->forceDelete();
 		});
 

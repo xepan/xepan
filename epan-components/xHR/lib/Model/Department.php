@@ -38,12 +38,14 @@ class Model_Department extends \Model_Table{
 		$this->hasMany('xHR/OfficialEmail','department_id');
 		// $this->hasMany('xProduction/OutSourceParty','department_id');
 		$this->hasMany('xProduction/OutSourcePartyDeptAssociation','department_id');
-		$this->add('Controller_Validator');
-		$this->is(array(
-							'name|to_trim|required?Must be type Department here',
-							'production_level!|int|>=0|<999?Must be a number between 0 and 999'
-							)
-					);
+		if(!isset($this->bypass_validations)){
+			$this->add('Controller_Validator');
+			$this->is(array(
+								'name|to_trim|required?Must be type Department here',
+								'production_level|int|>=0|<999?Must be a number between 0 and 999'
+								)
+						);
+		}
 		
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
@@ -91,7 +93,7 @@ class Model_Department extends \Model_Table{
 			$p->forceDelete();
 		});
 
-		$this->ref('xHR/Employees')->each(function($emp){
+		$this->ref('xHR/Employee')->each(function($emp){
 			$emp->forceDelete();
 		});
 

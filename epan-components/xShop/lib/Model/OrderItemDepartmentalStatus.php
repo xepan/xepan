@@ -113,4 +113,8 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 		$this->save();
 	}
 
+	function jobCardNotCreated(){
+		return $this['status'] == 'Waiting';
+	}
+
 }
