@@ -17,21 +17,25 @@ class page_tests_00allEpanDeleted extends page_tests_base {
             'general_settings'=>array('TOCHECK'),
             'epan_pages_count'=>0,
             'epan_template_count'=>0,
-            'activities'=>0
+            'activities'=>0,
+            'epan_folders'=>0,
+            'users_count'=>0,
+            'snapshots_count'=>0,
         );
     }
 
     function test_allEpansDeleted(){
-        $epan = $this->add('Model_Epan')->tryLoadAny();
-        $template = $epan->templates()->tryLoadAny();
-        $page = $epan->pages()->tryLoadAny();
+        $q=$this->api->db->dsql();
 
         return array(
-                'epans_count' => $this->add('Model_Epan')->count()->getOne(),
+                'epans_count' => $q->table('epan')->field('count(*)')->getOne(),
                 'general_settings' => array('TOCHECK'),
-                'epan_pages_count'=>$epan->pages()->count()->getOne(),
-                'epan_template_count'=>$epan->templates()->count()->getOne(),
-                'activities'=>0
+                'epan_pages_count'=>$q->table('epan_page')->field('count(*)')->getOne(),
+                'epan_template_count'=>$q->table('epan_templates')->field('count(*)')->getOne(),
+                'activities'=>0,
+                'epan_folders'=>count(scandir(getcwd().'/epans'))-3,
+                'users_count'=>$q->table('users')->field('count(*)')->getOne(),
+                'snapshots_count'=>$q->table('epan_page_snapshots')->field('count(*)')->getOne(),
             );
     }
 
