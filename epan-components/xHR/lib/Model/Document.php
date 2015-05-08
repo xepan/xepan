@@ -19,8 +19,9 @@ class Model_Document extends \Model_Table {
 
 	}
 
-	function modelName(){
-		$name = $this['name'];
+	function modelName($str=null){
+		if(!$str) $str= $this['name'];
+		$name = $str;
 		$name = explode("\\", $name);
 		$name = $name[0].'\\Model_'.$name[1];
 		return $name;

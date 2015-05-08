@@ -1,11 +1,14 @@
 <?php
 
 namespace xShop;
+
 class Model_Category extends \Model_Document{
+	
 	var $table="xshop_categories";
 	var $table_alias = 'category';
 	public $status=array();
-	public $root_document_name="Category";
+	public $root_document_name="xShop\Category";
+
 	public $actions=array(
 			//'can_view'=>array('caption'=>'Whose created Quotation(draft) this post can see'),
 			'allow_edit'=>array('caption'=>'Whose created Quotation this post can edit'),

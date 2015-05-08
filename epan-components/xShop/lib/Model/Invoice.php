@@ -6,6 +6,7 @@ class Model_Invoice extends \Model_Document{
 	public $table = 'xshop_invoices';
 	public $status  = array('draft','submitted','approved','canceled','completed','processed');
 	public $root_document_name = 'xShop\Invoice';
+
 	public $actions=array(
 			'allow_edit'=>array(),
 			'allow_add'=>array(),

@@ -2,10 +2,11 @@
 
 namespace xShop;
 class Model_Application extends \Model_Document{
+	
 	var $table="xshop_application";
 	public $status=array();
 	public $document_name=null;
-	public $root_document_name="Application";
+	public $root_document_name="xShop\Application";
 	
 	function init(){
 		parent::init();

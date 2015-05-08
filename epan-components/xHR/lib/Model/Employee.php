@@ -183,9 +183,13 @@ class Model_Employee extends \Model_Table{
 			$model = $this->add($dm);
 			if(!in_array($model->root_document_name,$done_documents)){
 				try{
-					$model->_dsql()->where('created_by_id',$this->id)->set('created_by_id',null)->update();
+					$model = $this->add($docs->modelName($model->root_document_name));
+					if(!isset($model->is_view) OR !$model->is_view){
+						$model->_dsql()->where('created_by_id',$this->id)->set('created_by_id',null)->update();
+						// echo "doing ".$doc_junk['name'].' ' .$dm .' '.$model->root_document_name.' '. $model->table.'<br/>';
+					}
 				}catch(\Exception $e){
-					// echo $model->root_document_name;
+					echo "Model Employee Line 192 Error: ".$model->root_document_name ."<br>";
 				}
 				$done_documents[] = $model->root_document_name;
 			}else{
@@ -193,7 +197,7 @@ class Model_Employee extends \Model_Table{
 			}
 
 		}
-
+		
 		$this->delete();
 	}
 

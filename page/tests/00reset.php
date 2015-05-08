@@ -297,6 +297,7 @@ class page_tests_00reset extends page_tests_base {
     function Test_newEpanCreated(){
         $epan = $this->add('Model_Epan')->tryLoadAny();
         $template = $epan->templates()->tryLoadAny();
+        $page = $epan->pages()->tryLoadAny();
         
         return array(
             'epans_count' => $this->add('Model_Epan')->count()->getOne(),
