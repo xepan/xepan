@@ -18,12 +18,6 @@ class page_tests_00reset extends page_tests_base {
             'epan_pages_count'=>0,
             'epan_template_count'=>0,
 
-            'default_departments'=>0,
-            'employee'=>0,
-            'employee_attandance'=>0,                        
-            'employee_leave'=>0,
-            'employee_setup'=>'ok',
-            
             'leads_category'=>0,
             'leads'=>0,
             'newsletter_category',
@@ -112,12 +106,6 @@ class page_tests_00reset extends page_tests_base {
                 'epan_pages_count'=>$epan->pages()->count()->getOne(),
                 'epan_template_count'=>$epan->templates()->count()->getOne(),
 
-                'default_departments'=>$this->add('xHR/Model_Department')->count()->getOne(),
-                'employee'=>$this->add('xHR/Model_Employee')->count()->getOne(),
-                'employee_attandance'=>$this->add('xHR/Model_EmployeeAttendence')->count()->getOne(),                        
-                'employee_leave'=>$this->add('xHR/Model_EmployeeLeave')->count()->getOne(),
-                'employee_setup'=>'ok',
-                
                 'leads_category'=>$this->add('xMarketingCampaign/Model_LeadCategory')->count()->getOne(),
                 'leads'=>$this->add('xMarketingCampaign/Model_Lead')->count()->getOne(),
                 'newsletter_category'=>$this->add('xEnquiryNSubscription/Model_NewsLetterCategory')->count()->getOne(),
@@ -191,6 +179,26 @@ class page_tests_00reset extends page_tests_base {
                 'material_request_items'=>$this->add('xStore/Model_MaterialRequestItem')->count()->getOne(),
                 
                 'activities'=>0
+            );
+    }
+
+    function prepare_allEpansDeleted_HR(){
+        $this->proper_responses['Test_allEpansDeleted_HR']=array(
+                'default_departments'=>0,
+                'employee'=>0,
+                'employee_attandance'=>0,                        
+                'employee_leave'=>0,
+                'employee_setup'=>'ok',
+            );
+    }
+
+    function Test_allEpansDeleted_HR(){
+        return array(
+                'default_departments'=>$this->add('xHR/Model_Department')->count()->getOne(),
+                'employee'=>$this->add('xHR/Model_Employee')->count()->getOne(),
+                'employee_attandance'=>$this->add('xHR/Model_EmployeeAttendence')->count()->getOne(),                        
+                'employee_leave'=>$this->add('xHR/Model_EmployeeLeave')->count()->getOne(),
+                'employee_setup'=>'ok',
             );
     }
 
