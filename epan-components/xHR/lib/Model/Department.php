@@ -36,6 +36,7 @@ class Model_Department extends \Model_Table{
 		$this->hasMany('xHR/Document','department_id');
 		$this->hasMany('xProduction/Team','department_id');
 		$this->hasMany('xHR/OfficialEmail','department_id');
+		$this->hasMany('xProduction/JobCard','to_department_id');
 		// $this->hasMany('xProduction/OutSourceParty','department_id');
 		$this->hasMany('xProduction/OutSourcePartyDeptAssociation','department_id');
 		if(!isset($this->bypass_validations)){
@@ -82,10 +83,16 @@ class Model_Department extends \Model_Table{
 	function beforeDelete($m){
 		$post_count = $m->ref('xHR/Post')->count()->getOne();
 		$emp_count = $m->ref('xHR/Employee')->count()->getOne();
+		$jobcard_count = $m->ref('xProduction/JobCard')->count()->getOne();
 		
-		if($post_count or $emp_count){
-			throw $this->exception('Cannot Delete,first delete Post or Employees','Growl');	
+		if($post_count or $emp_count OR $jobcard_count){
+			throw $this->exception('Cannot Delete,first delete Post, Employees And Jobcards','Growl');	
 		}
+
+		$this->ref('xHR/OfficialEmail')->each(function($obj){
+			$obj->forceDelete();
+		});
+
 	}
 
 	function forceDelete(){
@@ -95,6 +102,10 @@ class Model_Department extends \Model_Table{
 
 		$this->ref('xHR/Employee')->each(function($emp){
 			$emp->forceDelete();
+		});
+
+		$this->ref('xProduction/JobCard')->each(function($obj){
+			$obj->forceDelete();
 		});
 
 		$this->delete();

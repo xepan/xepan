@@ -72,7 +72,7 @@ class page_tests_00reset extends page_tests_base {
         $transform = $this->add('slideShows/Model_TransformGallery')->count()->getOne();
         $transform_img = $this->add('slideShows/Model_TransformGalleryImages')->count()->getOne();
         $water = $this->add('slideShows/Model_WaterWheelGallery')->count()->getOne();
-        $water_img = $this->add('slideShows/Model_WaterWheelGalleryImages')->count()->getOne();
+        $water_img = $this->add('slideShows/Model_WaterWheelImages')->count()->getOne();
 
         return array(
                 'Awesome'=>array('Gallery'=>$awesome,'Images'=>$awesome_img),
@@ -87,7 +87,7 @@ class page_tests_00reset extends page_tests_base {
             array(
                 'leads_category'=>0,
                 'leads'=>0,
-                'newsletter_category',
+                'newsletter_category'=>0,
                 'newsletter'=>0,
                 'social_content'=>0,
                 'data_grabber'=>0,
@@ -137,7 +137,7 @@ class page_tests_00reset extends page_tests_base {
     function prepare_allEpansDeleted_xCRM(){
         $this->proper_responses['Test_allEpansDeleted_xCRM'] = array(
                 'support_ticket'=>0,
-                'company_emails'=>0,
+                'department_official_emails'=>0,
                 'emails'=>0,
                 'smses'=>0,
                 'document_activities'=>0,
@@ -148,7 +148,7 @@ class page_tests_00reset extends page_tests_base {
     function Test_allEpansDeleted_xCRM(){
         return array(
                 'support_ticket'=>$this->add('xCRM/Model_Ticket')->count()->getOne(),
-                'company_emails'=>$this->add('xHR/Model_OfficialEmail')->count()->getOne(),
+                'department_official_emails'=>$this->add('xHR/Model_OfficialEmail')->count()->getOne(),
                 'emails'=>$this->add('xCRM/Model_Email')->count()->getOne(),
                 'smses'=>$this->add('xCRM/Model_SMS')->count()->getOne(),
                 'document_activities'=>$this->add('xCRM/Model_Activity')->count()->getOne(),

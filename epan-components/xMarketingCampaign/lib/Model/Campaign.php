@@ -14,7 +14,7 @@ class Model_Campaign extends \Model_Table {
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
-		$this->hasOne('xMarketingCampaign/CampaignCategory','category_id')->sortable(true);
+		$this->hasOne('xMarketingCampaign/CampaignCategory','category_id')->sortable(true)->mandatory(true);
 		// $this->addField('Campaign_type')->setValueList(array('email'=>'Email','blog'=>'Blogs','social'=>'Social'));
 		$f=$this->addField('name')->mandatory(true)->group('a~6~<i class="fa fa-slideshare"></i> The Campaign')->sortable(true);
 		$f->icon='fa fa-adn~red';
