@@ -17,5 +17,3 @@ vendor/*
 todo
 /*.sql
 *.orig
-page/alltests.php
-page/tests/*
