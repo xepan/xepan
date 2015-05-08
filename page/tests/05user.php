@@ -1,6 +1,6 @@
 <?php
 
-class page_tests_05user extends Page_Tester {
+class page_tests_05user extends page_tests_base {
 	public $title = 'USER ADD EDIT DELETE';
     public $proper_responses=array();
 
