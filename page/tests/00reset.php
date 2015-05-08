@@ -57,10 +57,10 @@ class page_tests_00reset extends page_tests_base {
 
     function prepare_allEpansDeleted_SlideShows(){
         $this->proper_responses['Test_allEpansDeleted_SlideShows'] = array(
-                'Awesome'=array('Gallery'=>0,'Images'=>0),
-                'ThumbnailSlider'=array('Gallery'=>0,'Images'=>0),
-                'TransformGallery'=array('Gallery'=>0,'Images'=>0),
-                'WaterWheel'=array('Gallery'=>0,'Images'=>0)
+                'Awesome'=>array('Gallery'=>0,'Images'=>0),
+                'ThumbnailSlider'=>array('Gallery'=>0,'Images'=>0),
+                'TransformGallery'=>array('Gallery'=>0,'Images'=>0),
+                'WaterWheel'=>array('Gallery'=>0,'Images'=>0)
             );
     }
 
@@ -75,10 +75,10 @@ class page_tests_00reset extends page_tests_base {
         $water_img = $this->add('slideShows/Model_WaterWheelGalleryImages')->count()->getOne();
 
         return array(
-                'Awesome'=array('Gallery'=>$awesome,'Images'=>$awesome_img),
-                'ThumbnailSlider'=array('Gallery'=>$thumb,'Images'=>$thumb_img),
-                'TransformGallery'=array('Gallery'=>$transform,'Images'=>$transform_img),
-                'WaterWheel'=array('Gallery'=>$water,'Images'=>$water_img)
+                'Awesome'=>array('Gallery'=>$awesome,'Images'=>$awesome_img),
+                'ThumbnailSlider'=>array('Gallery'=>$thumb,'Images'=>$thumb_img),
+                'TransformGallery'=>array('Gallery'=>$transform,'Images'=>$transform_img),
+                'WaterWheel'=>array('Gallery'=>$water,'Images'=>$water_img)
             );
     }
 
@@ -332,7 +332,7 @@ class page_tests_00reset extends page_tests_base {
     }
 
     function prepare_allEpansDeleted_xStore(){
-        $this->proper_responses['Test_allEpansDeleted_xShop'] = array(
+        $this->proper_responses['Test_allEpansDeleted_xStore'] = array(
                 'warehouses'=>0,
                 'stocks'=>0,
 
