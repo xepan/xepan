@@ -20,9 +20,7 @@ class page_tests_01epanCreated extends page_tests_base {
             'epan_template_count'=>1,
             'epan_template_values'=>array('name'=>'default','content'=>'<div component_namespace="baseElements" component_type="TemplateContentRegion" class="epan-sortable-component epan-component  ui-sortable" style="" contenteditable="false">~~Content~~</div>','body_attributes'=>'','is_current'=>1,'css'=>''),
             'epan_values'=>array('name'=>'web','epan_id'=>$epan->id),
-            'epan_defaultpage_values'=>array('name'=>'home','epan_id'=>$epan->id,'content'=>0,'body_attributes'=>'','template_id'=>$this->add('Model_EpanTemplate')->tryLoadANy()->get('id')),
-            
-            
+            'epan_defaultpage_values'=>array('name'=>'home','epan_id'=>$epan->id,'content'=>0,'body_attributes'=>'','template_id'=>$this->add('Model_EpanTemplates')->tryLoadANy()->get('id')),
             'activities'=>0
             );
     }
