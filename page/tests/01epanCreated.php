@@ -7,6 +7,10 @@ class page_tests_01epanCreated extends page_tests_base {
     function prepare_newEpanCreated(){
 
         $new_epan_name = 'web'.rand(1,99999);
+
+        if(!$this->add('Model_Epan')->tryLoadBy('name','web')->loaded())
+          $new_epan_name = 'web';
+
         $epan = $this->add('Model_Epan')
             ->set('name',$new_epan_name)
             ->set('email_id','web'.rand(1,99999).'@example.com')
@@ -44,7 +48,32 @@ class page_tests_01epanCreated extends page_tests_base {
             );
     }
 
-     function prepare_newEpanCreated_HR(){
+    function prepare_newEpanDefaultUser(){
+        $this->proper_responses['Test_newEpanDefaultUser']=array(
+                'total_users'=>1,
+                'total_super_users'=>1,
+                'user_management'=>1,
+                'general_settings'=>1,
+                'application_management'=>1,
+                'website_designing'=>1,
+                'userappaccess'=>$this->add('Model_MarketPlace')->count()->getOne() - 1
+            );
+    }
+
+    function Test_newEpanDefaultUser(){
+        $user = $this->add('Model_Users')->tryLoadAny();
+        return array(
+                'total_users'=>$this->add('Model_Users')->count()->getOne(),
+                'total_super_users'=> $this->add('Model_Users')->addCondition('type',100)->count()->getOne(),
+                'user_management'=>$user['user_management'],
+                'general_settings'=>$user['general_settings'],
+                'application_management'=>$user['application_management'],
+                'website_designing'=>$user['website_designing'],
+                'userappaccess'=>count($user->getAllowedApp())
+            );
+    }
+
+    function prepare_newEpanCreated_HR(){
             $this->proper_responses['Test_newEpanCreated_HR']=array(
                   'default_departments'=>9,
                   'employee'=>0,
@@ -52,6 +81,8 @@ class page_tests_01epanCreated extends page_tests_base {
                   'employee_leave'=>0,
                   'employee_setup'=>'ok',
                   'documents_count'=>'128',
+                  'default_post_count'=>1,
+                  'default_post'=>'Director',
             );
      }
 
@@ -64,6 +95,8 @@ class page_tests_01epanCreated extends page_tests_base {
                   'employee_leave'=>$this->add('xHR/Model_EmployeeLeave')->count()->getOne(),
                   'employee_setup'=>'ok',
                   'documents_count'=>$this->add('xHR/Model_Document')->count()->getOne(),
+                  'default_post_count'=>$this->add('xHR/Model_Post')->count()->getOne(),
+                  'default_post'=>$this->add('xHR/Model_Post')->tryLoadAny()->get('name'),
             );
      }
 

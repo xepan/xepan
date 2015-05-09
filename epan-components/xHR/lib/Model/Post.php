@@ -27,12 +27,14 @@ class Model_Post extends \Model_Table{
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
 		
-		$this->add('Controller_Validator');
-		$this->is(array(
-							'name|to_trim|required',
-							'parent_post_id|to_trim|required',
-							)
-					);
+		if(!isset($this->bypass_validations)){
+			$this->add('Controller_Validator');
+			$this->is(array(
+								'name|to_trim|required',
+								'parent_post_id|to_trim|required',
+								)
+						);
+		}
 		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 

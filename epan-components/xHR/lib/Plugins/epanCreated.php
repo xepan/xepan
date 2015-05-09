@@ -30,5 +30,15 @@ class Plugins_epanCreated extends \componentBase\Plugin {
 		}
 
 		$this->add('xHR/Model_Document')->loadDefaults($new_departments_with_ids);
+
+		$company = $this->add('xHR/Model_Department')->loadCompany();
+
+		$post=$this->add('xHR/Model_Post',array('bypass_validations'=>true));
+		$post->addCondition('department_id',$company->id);
+
+		$post['name']='Director';
+		$post['can_create_team']=true;
+		$post->save();
+
 	}
 }
