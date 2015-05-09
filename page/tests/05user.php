@@ -8,6 +8,9 @@ class page_tests_05user extends page_tests_base {
         // $user->addCondition('email','');
         // $user->tryLoadAny();
 
+        if(!$this->add('Model_Epan')->addCondition('id',$this->api->current_website->id)->tryLoadAny()->loaded())
+            throw $this->exception('Epan Not Loaded','SkipTests');
+
         $last_user = $this->add('Model_Users')->setOrder('id','desc')->tryLoadAny();
 
     	$user = $this->add('Model_Users');

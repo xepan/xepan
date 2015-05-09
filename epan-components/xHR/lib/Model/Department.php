@@ -205,9 +205,21 @@ class Model_Department extends \Model_Table{
 	function officialEmails(){
 		return $this->add('xHR/Model_OfficialEmail')->addCondition('department_id',$this->id);
 	}
-
-	function salaryTemplates(){
+function salaryTemplates(){
 		return $this->add('xHR/Model_SalaryTemplate')->addCondition('department_id',$this->id);
+	}
+	
+	function loadCompany(){
+		if($this->loaded())
+			$this->unload();
+		$temp = $this->add('xHR/Model_Department');
+		$temp->addCondition('name','Company')->loadAny();
+		$this->load($temp->id);
+		return $this;
+	}
+
+	function isCompany(){
+		return $this['name'] == 'Company';
 	}
 
 	function loadHR(){

@@ -27,12 +27,14 @@ class Model_Post extends \Model_Table{
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
 		
-		$this->add('Controller_Validator');
-		$this->is(array(
-							'name|to_trim|required',
-							'parent_post_id|to_trim|required',
-							)
-					);
+		if(!isset($this->bypass_validations)){
+			$this->add('Controller_Validator');
+			$this->is(array(
+								'name|to_trim|required',
+								'parent_post_id|to_trim|required',
+								)
+						);
+		}
 		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
@@ -45,9 +47,17 @@ class Model_Post extends \Model_Table{
 
 		if($post_old['name'] == $this['name'])
 			throw $this->exception('Post is Allready Exist','Growl')->setField('name');
+
+		if($this->loaded() AND $this['parent_post_id']==$this->id)
+			throw $this->exception('Cannot report to self','Growl')->setField('parent_post_id');
+
 	}
 
 	function beforeDelete(){
+
+		if(!isset($this->forceDelete) AND $this['name']=='Director')
+			throw $this->exception('Default Post Cannot be deleted','Growl');
+
 		$emp_count = $this->ref('xHR/Employee')->count()->getOne();
 		$post_count=$this->ref('xHR/Post')->count()->getOne();
 		$salary_count=$this->ref('xHR/SalaryTemplate')->count()->getOne();
@@ -61,6 +71,7 @@ class Model_Post extends \Model_Table{
 	}
 
 	function forceDelete(){
+		$this->forceDelete = true;
 		$this->ref('xHR/Employee')->each(function($emp){
 			$emp->forceDelete();
 		});
