@@ -381,6 +381,6 @@ class Model_FacebookConfig extends Model_SocialConfig {
 	}
 }
 
-class Model_FacebookUsers extends xMarketingCampaign\Model_SocialUsers {}
+class Model_FacebookUsers extends Model_SocialUsers {}
 
-class Model_FacebookPosting extends xMarketingCampaign\Model_SocialPosting {}
+class Model_FacebookPosting extends Model_SocialPosting {}

@@ -488,6 +488,6 @@ class Model_LinkedinConfig extends Model_SocialConfig {
 	}
 }
 
-class Model_LinkedinUsers extends xMarketingCampaign\Model_SocialUsers {}
+class Model_LinkedinUsers extends Model_SocialUsers {}
 
-class Model_LinkedinPosting extends xMarketingCampaign\Model_SocialPosting {}
+class Model_LinkedinPosting extends Model_SocialPosting {}

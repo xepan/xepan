@@ -6,6 +6,8 @@ class View_Tools_PopupTooltip extends \componentBase\View_Component{
 	public $html_attributes=array(); // ONLY Available in server side components
 	function init(){
 		parent::init();
+
+	
 	}
 
 	// defined in parent class

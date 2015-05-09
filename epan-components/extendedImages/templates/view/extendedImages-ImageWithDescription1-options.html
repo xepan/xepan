@@ -1,4 +1,4 @@
-<div id='{$_name}' class='epan-component-options' component_type="{$component_type}">
+<div id='<?$_name?>' class='epan-component-options' component_type="<?$component_type?>">
 
 
 	<div class="panel-group" id="accordion">
@@ -6,7 +6,7 @@
 		    	<div class="panel-heading">
 			      	<h3 class="panel-title">
 			        	<a data-toggle="collapse" data-parent="#accordion" href="#collapse-img-des">
-						{$component_type_name}
+						<?$component_type_name?>
 			        	</a>
 			      	</h3>
 		    	</div>
@@ -88,7 +88,7 @@ $('#extendedImagesImageWithDescription1-edit').click(function(event) {
 	$(current_selected_component).find('.imagepluscontainer').removeClass('imagepluscontainer').addClass('imagepluscontainer-edit');
 });
 
-var {$component_type}_options = {
+var <?$component_type?>_options = {
 	show: function (){
 		// ===== THIS CODE RUNS EVERY TIME YOU DOUBLE CLICK YOUR COMPONENT
 		// TO TAKE VALUES FROM COMPONENT AND FILL OPTIONS

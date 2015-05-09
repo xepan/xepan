@@ -18,14 +18,21 @@ class page_owner_updater extends page_base_owner {
                 $update_btn = $form->addSubmit('Update');
 
                 if($form->isSubmitted()){
-			$this->update(true,$form['git_exec_path'],$form['git_branch']);
-			$this->js(null, $update_btn->js()->text('Updated'))->univ()->successMessage('xEpan CMS Updated')->execute();
+			         $this->page_update(true,$form['git_exec_path'],$form['git_branch']);
+			         $this->js(null, $update_btn->js()->text('Updated'))->univ()->successMessage('xEpan CMS Updated')->execute();
                 }
 
 	}
 
-    function page_update(){
-        $this->update(true,null,'');
+    function page_update($dynamic_model_update=true,$git_exec_path=null, $git_branch=''){
+        $this->update($dynamic_model_update,$git_exec_path,$git_branch);
+
+        $components = $this->add('Model_MarketPlace')->addCondition('type','<>','element');
+        foreach ($components as $comp) {
+            $this->add('View')->set('Updating ' . $comp['namespace']);
+            $this->add('page_'.$comp['namespace'].'_page_owner_update');
+        }
+
     }
 
 	function update($dynamic_model_update=true,$git_exec_path=null, $git_branch=''){
