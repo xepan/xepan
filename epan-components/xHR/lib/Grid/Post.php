@@ -24,18 +24,18 @@ class Grid_Post extends \Grid{
 	}
 
 	function recursiveRender(){
-		$this->addFormatter('edit','edit');
-		$this->addFormatter('delete','delete');
+		$this->addFormatter('edit','edit_new');
+		$this->addFormatter('delete','delete_new');
 
 		parent::recursiveRender();
 	}
 
-	function format_edit(){
+	function format_edit_new(){
 		if($this->current_row['name']=="Director")
 			$this->current_row_html['edit']='';
 	}
 
-	function format_delete(){
+	function format_delete_new(){
 		if($this->current_row['name']=="Director")
 			$this->current_row_html['delete']='';
 
