@@ -37,7 +37,7 @@ class Model_Department extends \Model_Table{
 		$this->hasMany('xProduction/Team','department_id');
 		$this->hasMany('xHR/OfficialEmail','department_id');
 		$this->hasMany('xProduction/JobCard','to_department_id');
-		// $this->hasMany('xProduction/OutSourceParty','department_id');
+		$this->hasMany('xHR/SalaryTemplate','department_id');
 		$this->hasMany('xProduction/OutSourcePartyDeptAssociation','department_id');
 		if(!isset($this->bypass_validations)){
 			$this->add('Controller_Validator');
@@ -206,6 +206,9 @@ class Model_Department extends \Model_Table{
 		return $this->add('xHR/Model_OfficialEmail')->addCondition('department_id',$this->id);
 	}
 
+	function salaryTemplates(){
+		return $this->add('xHR/Model_SalaryTemplate')->addCondition('department_id',$this->id);
+	}
 
 	function loadHR(){
 		if($this->loaded())
@@ -336,5 +339,10 @@ class Model_Department extends \Model_Table{
 
 		return $w;
 	}
+
+	function post(){
+		return $this->ref('xHR/Post');
+	}
+
 
 }
