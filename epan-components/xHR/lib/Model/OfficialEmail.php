@@ -10,7 +10,8 @@ class Model_OfficialEmail extends \Model_Document{
 			'allow_add'=>array(),
 			'allow_edit'=>array(),
 			'allow_del'=>array(),
-		);	
+		);
+	
 	function init(){
 		parent::init();
 		

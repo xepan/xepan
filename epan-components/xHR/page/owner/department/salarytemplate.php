@@ -10,7 +10,7 @@ class page_xHR_page_owner_department_salarytemplate extends page_xHR_page_owner_
 
 
 		$crud=$this->add('CRUD');
-		$crud->setModel($salarytem);
+		$crud->setModel($salarytem,array('post_id','name'),array('post','name'));
 		$tsc = $crud->addref('xHR/TemplateSalary',array('label'=>'Template Salary'));
 
 		if(!$crud->isEditing()){
