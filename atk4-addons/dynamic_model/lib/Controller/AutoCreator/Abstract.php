@@ -136,7 +136,7 @@ abstract class Controller_AutoCreator_Abstract extends \AbstractController
                     $this->alterField($model, $field, true ); // create
                 } else {
                     $this->dbg("MODIFY FIELD: ".$f." (type=".$field->type.")");
-                    $this->alterField($model, $field, false OR $this->force_create_foreignkeys); // modify
+                    $this->alterField($model, $field,false); // modify
                 }
 
                 unset($db_fields[$f]);
