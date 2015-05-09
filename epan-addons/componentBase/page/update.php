@@ -86,11 +86,10 @@ class page_componentBase_page_update extends page_base_owner{
 							$temp=$elm->short_name;
 							$elm->destroy();
 							$model->addField($temp,$temp)->type('int');
-							// $this->api->db->dsql()->expr("DROP ")->execute();
 						}
 					}
 					try{
-						$model->add('dynamic_model/Controller_AutoCreator');
+						$model->add('dynamic_model/Controller_AutoCreator',array('force_create_foreignkeys'=>true));
 						$model->tryLoadAny();
 					}catch(Exception $e){
 						$this->add('View_Error')->setHTML("in $md_name: ". $e->getHTML());
