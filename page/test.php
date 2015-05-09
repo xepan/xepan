@@ -4,10 +4,20 @@
 class page_test extends Page {
 
 	function page_index(){
-		$d=$this->add('xAccount/Model_BalanceSheet');
-		$arr = $d->getRows();
+		$table="xaccount_account";
 
-		file_put_contents(getcwd().'/epan-components/xAccount/default-heads.xepan', json_encode($arr));
+		$q="
+			SELECT * FROM 
+				information_schema.TABLE_CONSTRAINTS 
+				WHERE information_schema.TABLE_CONSTRAINTS.CONSTRAINT_TYPE='FOREIGN KEY' AND information_schema.TABLE_CONSTRAINTS.TABLE_SCHEMA='".$this->api->db->dbname."' AND information_schema.TABLE_CONSTRAINTS.TABLE_NAME='".$table."'
+		";
+
+		$keys = $this->api->db->dsql()->expr($q)->get();
+		
+		foreach ($keys as $key) {
+			$drop_q= "alter table $table drop FOREIGN KEY ". $key['CONSTRAINT_NAME'];
+			echo $drop_q."<br>";
+		}
 
 	}
 	

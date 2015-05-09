@@ -2,8 +2,7 @@
 
 class page_tests_05user extends page_tests_base {
 	public $title = 'USER ADD EDIT DELETE';
-    public $proper_responses=array();
-
+    public $proper_responses=array('Test_empty'=>'');
 
     function prepare_Add(){
         // $user->addCondition('email','');

@@ -51,6 +51,7 @@ class page_tests_01epanCreated extends page_tests_base {
                   'employee_attandance'=>0,                        
                   'employee_leave'=>0,
                   'employee_setup'=>'ok',
+                  'documents_count'=>'156',
             );
      }
 

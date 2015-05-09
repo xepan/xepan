@@ -8,9 +8,9 @@ class page_tests_00allEpanDeleted extends page_tests_base {
             $epan->delete();
         });
 
-        $this->api->db->dsql()->table('epan')->truncate()->execute();
-        $this->api->db->dsql()->table('epan_page')->truncate()->execute();
-        $this->api->db->dsql()->table('epan_templates')->truncate()->execute();
+        // $this->api->db->dsql()->table('epan')->truncate()->execute();
+        // $this->api->db->dsql()->table('epan_page')->truncate()->execute();
+        // $this->api->db->dsql()->table('epan_templates')->truncate()->execute();
 
         $this->proper_responses['Test_allEpansDeleted']=array(
             'epans_count'=>0,
@@ -21,6 +21,7 @@ class page_tests_00allEpanDeleted extends page_tests_base {
             'epan_folders'=>0,
             'users_count'=>0,
             'snapshots_count'=>0,
+            'file_store_entries'=>0,
         );
     }
 
@@ -36,6 +37,7 @@ class page_tests_00allEpanDeleted extends page_tests_base {
                 'epan_folders'=>count(scandir(getcwd().'/epans'))-3,
                 'users_count'=>$q->table('users')->field('count(*)')->getOne(),
                 'snapshots_count'=>$q->table('epan_page_snapshots')->field('count(*)')->getOne(),
+                'file_store_entries'=>$q->table('filestore_file')->field('count(*)')->getOne(),
             );
     }
 
@@ -96,12 +98,14 @@ class page_tests_00allEpanDeleted extends page_tests_base {
                 'social_content'=>0,
                 'data_grabber'=>0,
                 'campaigns'=>0,
+                'mass_emails_config'=>0,
                 'marketing_mail_configuration'=>'ok',
                 'marketing_social_configuration'=>'ok',
             );
     }
 
     function Test_allEpansDeleted_MarketingCampaign(){
+        $q=$this->api->db->dsql();
         return array(
                 'leads_category'=>$this->add('xMarketingCampaign/Model_LeadCategory')->count()->getOne(),
                 'leads'=>$this->add('xMarketingCampaign/Model_Lead')->count()->getOne(),
@@ -110,6 +114,7 @@ class page_tests_00allEpanDeleted extends page_tests_base {
                 'social_content'=>$this->add('xMarketingCampaign/Model_SocialPost')->count()->getOne(),
                 'data_grabber'=>$this->add('xMarketingCampaign/Model_DataGrabber')->count()->getOne(),
                 'campaigns'=>$this->add('xMarketingCampaign/Model_Campaign')->count()->getOne(),
+                'mass_emails_config'=>$q->table('xmarketingcampaign_config')->field('count(*)')->getOne(),
                 'marketing_mail_configuration'=>'ok',
                 'marketing_social_configuration'=>'ok',
             );
@@ -145,17 +150,20 @@ class page_tests_00allEpanDeleted extends page_tests_base {
                 'emails'=>0,
                 'smses'=>0,
                 'document_activities'=>0,
+                'last_seen_record_count'=>0,
             );
 
     }
 
     function Test_allEpansDeleted_xCRM(){
+        $q=$this->api->db->dsql();
         return array(
                 'support_ticket'=>$this->add('xCRM/Model_Ticket')->count()->getOne(),
                 'department_official_emails'=>$this->add('xHR/Model_OfficialEmail')->count()->getOne(),
                 'emails'=>$this->add('xCRM/Model_Email')->count()->getOne(),
                 'smses'=>$this->add('xCRM/Model_SMS')->count()->getOne(),
                 'document_activities'=>$this->add('xCRM/Model_Activity')->count()->getOne(),
+                'last_seen_record_count'=>$q->table('last_seen_updates')->field('count(*)')->getOne(),
             );
     }
 
