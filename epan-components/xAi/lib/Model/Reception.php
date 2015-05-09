@@ -10,6 +10,7 @@ class Model_Reception extends \Model_Table{
 	public $knowledge=null;
 	public $new_session =false;
 	public $fuzzy_mind = false;
+	public $is_view=true;
 
 	function init(){
 		parent::init();
