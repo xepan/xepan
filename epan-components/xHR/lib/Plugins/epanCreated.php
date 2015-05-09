@@ -26,5 +26,7 @@ class Plugins_epanCreated extends \componentBase\Plugin {
 		foreach ($default_departments as $d) {
 			$this->add('xHR/Model_Department',array('bypass_validations'=>true))->set($d)->save();
 		}
+
+		$this->add('xHR/Model_Document')->loadDefaults();
 	}
 }

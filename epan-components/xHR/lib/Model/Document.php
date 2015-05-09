@@ -39,4 +39,15 @@ class Model_Document extends \Model_Table {
 		$this->delete();
 	}
 
+	function loadDefaults(){
+		$filename = getcwd().'/epan-components/xHR/default-documents.xepan';
+		$data= file_get_contents($filename);
+		$arr = json_decode($data,true);
+		foreach ($arr as $dg) {
+			unset($dg['id']);
+			unset($dg['epan_id']);
+			$this->newInstance()->set($dg)->save();
+		}
+	}
+
 }
