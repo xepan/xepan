@@ -25,8 +25,9 @@ class page_owner_updater extends page_base_owner {
 	}
 
     function page_updateall($dynamic_model_update=true,$git_exec_path=null, $git_branch=''){
-        $this->update($dynamic_model_update,$git_exec_path,$git_branch);
 
+        $this->update($dynamic_model_update,$git_exec_path,$git_branch);
+        
         $components = $this->add('Model_MarketPlace')->addCondition('type','<>','element');
         foreach ($components as $comp) {
             $this->add('View')->set('Updating ' . $comp['namespace']);
