@@ -4,7 +4,7 @@ class page_componentBase_page_update extends page_base_owner{
 
 	public $git_path=null;
 
-	function update($dynamic_model_update=true,$update_git=true){
+	function update($dynamic_model_update=true,$update_git=false){
 		
 		$class = get_class( $this );
 		preg_match( '/page_(.*)_page_(.*)/', $class, $match );
