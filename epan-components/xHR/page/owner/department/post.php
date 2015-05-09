@@ -15,10 +15,10 @@ class page_xHR_page_owner_department_post extends page_xHR_page_owner_main {
 
 		$post->addExpression('employees')->set($post->refSQL('xHR/Employee')->count());
 
-		$crud=$this->add('CRUD');
-		$crud->setModel($post,array('parent_post_id','name','is_active','can_create_team','test'),array('name','parent_post','is_active','can_create_team','employees'));
+		$crud=$this->add('CRUD',array('grid_class'=>'xHR/Grid_Post'));
+		$crud->setModel($post,array('parent_post_id','name','is_active','can_create_team'),array('name','parent_post','is_active','can_create_team','employees'));
 
-		if(!$crud->isEditing()){			
+		if(!$crud->isEditing()){
 			$crud->grid->addFormatter('name','grid/inline');
 			$g=$crud->grid;
 			$g->addPaginator(15);
@@ -27,8 +27,7 @@ class page_xHR_page_owner_department_post extends page_xHR_page_owner_main {
 			// Employees Display under current Post
 			$this->add('VirtualPage')->addColumn('Employees','Employees','Emp',$crud->grid)->set(function($p){
 				$p->add('Grid')->addSno()->setModel('xHR/Model_Employee',array('name'))->addCondition('post_id',$p->id);
-			});	
-
+			});
 		}
 
 		if($crud->isEditing()){
