@@ -158,7 +158,7 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 					$user_model['type'] = 50;
 					$user_model['activation_code'] = rand(999,10000);
 					$user_model['epan_id'] = $this->api->current_website->id;
-					
+					$this->app->auth->addEncryptionHook($user_model);
 					if($this->api->current_website['user_activation']=='default_activated'){
 						$user_model['is_active'] = 1;
 						$user_model->save();

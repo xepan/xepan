@@ -156,6 +156,7 @@ class Frontend extends ApiFrontend{
 
 			$auth=$this->add( 'BasicAuth' );
 			$auth->setModel( 'Users', 'username', 'password' );
+			$auth->usePasswordEncryption();
 			$auth->addHook('loggedIn',function($auth,$user,$pass){
 				$auth->model['last_login_date'] = $auth->api->now;
 				$auth->model->save();
