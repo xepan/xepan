@@ -123,23 +123,21 @@ class Model_Employee extends \Model_Table{
 							)
 					);
 		
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave($m){
 	}
 
 	function beforeDelete($m){
-		if($this->ref('CreatedAccounts')->count()->getOne())
-			throw new \Exception("Error Processing Request", 1);
-
+		$accounts = $this->ref('CreatedAccounts')->count()->getOne();
 		$salary = $m->ref('xHR/Salary')->count()->getOne();
 		$team_asso = $m->ref('xProduction/EmployeeTeamAssociation')->count()->getOne();
 		// $last_seen = $m->ref('LastSeen')->count()->getOne();
 		$official_email = $m->ref('xHR/OfficialEmail')->count()->getOne();
 		$email = $m->ref('xCRM/Email')->count()->getOne();
 		
-		if($salary or $team_asso or $official_email or $email){
+		if($accounts or $salary or $team_asso or $official_email or $email){
 			throw $this->exception('Cannot Delete,first delete Salary, Team Association, OfficialEmail or Email','Growl');	
 		}
 
@@ -184,11 +182,11 @@ class Model_Employee extends \Model_Table{
 			if(!in_array($model->root_document_name,$done_documents)){
 				try{
 					$model = $this->add($docs->modelName($model->root_document_name));
-					if(!isset($model->is_view) OR !$model->is_view){
-						$model->_dsql()->where('created_by_id',$this->id)->set('created_by_id',null)->update();
+					if(!(isset($model->is_view) AND $model->is_view)){
+						$model->_dsql()->debug()->where('created_by_id',$this->id)->where('epan_id',$this->api->current_website->id)->set('created_by_id',null)->update();
 					}
 				}catch(\Exception $e){
-					echo "Model Employee Line 192 Error: ".$model->root_document_name ."<br>";
+					echo "Model Employee Line 186 Error: ".$model->root_document_name .'<br/>'.$e->getHTML()."<br>";
 				}
 				$done_documents[] = $model->root_document_name;
 			}else{
@@ -196,6 +194,7 @@ class Model_Employee extends \Model_Table{
 			}
 
 		}
+		$this->api->db->dsql()->table('attachments')->where('created_by_id',$this->id)->where('epan_id',$this->api->current_website->id)->set('created_by_id',null)->update();
 		
 		$this->delete();
 	}

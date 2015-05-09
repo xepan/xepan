@@ -108,6 +108,12 @@ class Model_Department extends \Model_Table{
 			$obj->forceDelete();
 		});
 
+		$this->add('xShop/Model_ItemComposition')
+			->addCondition('department_id',$this->id)
+			->_dsql()
+			->set('department_id',null)
+			->update();
+
 		$this->delete();
 	}
 

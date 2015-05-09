@@ -41,18 +41,14 @@ class Model_Email extends \Model_Document{
 		
 		$this->addField('direction')->enum(array('sent','received'))->defaultValue('sent');
 
-		// $this->addHook('afterSave',$this);
+		$this->addHook('beforeDelete',$this);
 
-		$this->hasMany('xCRM/EmailAttachment','related_document_id');
+		$this->hasMany('xCRM/EmailAttachment','related_document_id',null,'Attachments');
 	//	$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	// function afterSave(){
-	// 	$this->guessFrom();
-	// 	$this->guessDocument();
-	// }
 	function beforeDelete(){
-		$this->ref('xCRM/EmailAttachment')->each(function($m){
+		$this->ref('Attachments')->each(function($m){
 			$m->forceDelete();
 		});
 	}

@@ -12,6 +12,24 @@ class page_xMarketingCampaign_page_owner_update extends page_componentBase_page_
 		
 		$this->update($dynamic_model_update=true, $git_update=false);
 		$this->add('View_Info')->set('Component Updated Successfully');
+
+		$this->add('xMarketingCampaign/Controller_SocialPosters_Facebook');
+		$this->add('xMarketingCampaign/Controller_SocialPosters_GoogleBlogger');
+		$this->add('xMarketingCampaign/Controller_SocialPosters_Linkedin');
+
+		$social_models=array(
+			'xMarketingCampaign/Model_GoogleBloggerConfig',
+			'xMarketingCampaign/Model_SocialConfig',
+			'xMarketingCampaign/Model_SocialUsers',
+			'xMarketingCampaign/Model_SocialPosting',
+			'xMarketingCampaign/Model_Activity',
+			
+			);
+		$this->updateModels($social_models);
+		
+
 		// Code to run after update
 	}
+
+
 }

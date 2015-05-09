@@ -12,7 +12,6 @@ class Plugins_epanDeleted extends \componentBase\Plugin {
 
 	function Plugins_epanDeleted($obj, $epan){		
 		$models=array('Model_Opportunity',
-						'Model_Customer',
 						'Model_Application',
 						'Model_Configuration',
 						'Model_AddBlock',

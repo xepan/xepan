@@ -15,7 +15,8 @@ class Plugins_epanDelete extends \componentBase\Plugin {
 					'Model_LeadCategory',
 					'Model_SocialPostCategory',
 					'Model_DataGrabber',
-					'Model_CampaignCategory'
+					'Model_CampaignCategory',
+					'Model_Config'
 				);
 
 		foreach ($models as $m) {

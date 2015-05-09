@@ -20,13 +20,13 @@ class Model_Document extends Model_Table{
 	function init(){
 		parent::init();
 
-		if($this->status === null)
+		if(!(isset($this->is_view) and $this->is_view) and  $this->status === null)
 			throw $this->exception('Document Status property must be defined as array');
 
 		if(count($this->status))
 			$this->addField('status')->enum($this->status);
 
-		if($this->root_document_name == null)
+		if(!(isset($this->is_view) and $this->is_view) and $this->root_document_name == null)
 			throw $this->exception('Root Document Name Must Be defined');
 
 		if($this->document_name == null){

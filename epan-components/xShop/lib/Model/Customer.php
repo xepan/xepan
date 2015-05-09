@@ -41,38 +41,13 @@ class Model_Customer extends Model_MemberDetails{
 				
 			));
 
-		$this->hasMany('xShop/Opportunity','customer_id');
-		$this->hasMany('xShop/Quotation','customer_id');
-		$this->hasMany('xShop/Order','member_id');
-
 		$this->addHook('beforeDelete',$this);
 
 		$this->arrangeFields();		
 	}
 
 	function beforeDelete(){
-		$opportunity = $this->ref('xShop/Opportunity')->count()->getOne();
-		$quotation = $this->ref('xShop/Quotation')->count()->getOne();
-		$quotation = $this->ref('xShop/Order')->count()->getOne();
 		
-		if($opportunity or $quotation or $order)
-			throw $this->exception('Cannot Delete, Opportunity, Quotation or Order','Growl');
-	}
-
-	function forceDelete(){
-		$this->ref('xShop/Opportunity')->each(function($opportunity){
-			$opportunity->forceDelete();
-		});
-
-		$this->ref('xShop/Quotation')->each(function($quotation){
-			$quotation->forceDelete();
-		});
-
-		$this->ref('xShop/Order')->each(function($order){
-			$order->forceDelete();
-		});
-
-		$this->delete();
 	}
 
 	function arrangeFields(){

@@ -42,6 +42,7 @@ class Model_Invoice extends \Model_Document{
 		$this->addHook('afterSave',$this);
 		
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
+		$this->hasMany('xShop/OrderDetails','invoice_id',null,'UsedInOrderDetails');
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
@@ -79,7 +80,9 @@ class Model_Invoice extends \Model_Document{
 
 
 	function beforeDelete(){
-		$this->ref('xShop/InvoiceItem')->deleteAll();
+		$this->ref('xShop/InvoiceItem')->each(function($obj){$obj->forceDelete();});
+		$this->ref('UsedInOrderDetails')->each(function($obj){$obj->newInstance()->load($obj->id)->set('invoice_id',null)->save();});
+
 	}
 
 	function netAmount(){

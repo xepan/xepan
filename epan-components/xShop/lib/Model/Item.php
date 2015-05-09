@@ -234,16 +234,16 @@ class Model_Item extends \Model_Table{
 			throw $this->exception('Cannot Delete,first delete Orders or Enquiry or MemberDesign or MaterialRequest or quotation_item or QuantitySet','Growl');
 		}
 
-		$m->ref('xShop/CategoryItem')->deleteAll();
-		$m->ref('xShop/ItemImages')->deleteAll();
-		$m->ref('xShop/ItemCustomFieldAssos')->deleteAll();
-		$m->ref('xShop/ItemAffiliateAssociation')->deleteAll();
-		$m->ref('xShop/ItemEnquiry')->deleteAll();
-		$m->ref('xShop/ItemSpecificationAssociation')->deleteAll();
-		$m->ref('xShop/ItemReview')->deleteAll();
-		$m->ref('xShop/ItemDepartmentAssociation')->deleteAll();
-		$m->ref('xShop/ItemTaxAssociation')->deleteAll();
-		$m->ref('xShop/CustomFieldValueFilterAssociation')->deleteAll();
+		$m->ref('xShop/CategoryItem')->each(function($obj){$obj->forceDelete();});
+		$m->ref('xShop/ItemImages')->each(function($obj){$obj->forceDelete();});
+		$m->ref('xShop/ItemCustomFieldAssos')->each(function($obj){$obj->forceDelete();});
+		$m->ref('xShop/ItemAffiliateAssociation')->each(function($obj){$obj->forceDelete();});
+		$m->ref('xShop/ItemEnquiry')->each(function($obj){$obj->forceDelete();});
+		$m->ref('xShop/ItemSpecificationAssociation')->each(function($obj){$obj->forceDelete();});
+		$m->ref('xShop/ItemReview')->each(function($obj){$obj->forceDelete();});
+		$m->ref('xShop/ItemDepartmentAssociation')->each(function($obj){$obj->forceDelete();});
+		$m->ref('xShop/ItemTaxAssociation')->each(function($obj){$obj->forceDelete();});
+		$m->ref('xShop/CustomFieldValueFilterAssociation')->each(function($obj){$obj->forceDelete();});
 		
 		$m->ref('xShop/QuantitySet')->each(function($qty_set){
 			$qty_set->forceDelete();

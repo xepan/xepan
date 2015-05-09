@@ -8,7 +8,8 @@ class Model_MemberDetails extends \Model_Document{
 	function init(){
 		parent::init();
 
-		$this->hasOne('xShop/Users','users_id')->mandatory(true)->sortable(true);
+		$this->hasOne('Users','users_id')->mandatory(true)->sortable(true);
+		
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		
@@ -35,6 +36,10 @@ class Model_MemberDetails extends \Model_Document{
 		$this->hasMany('xShop/DiscountVoucherUsed','member_id');
 		$this->hasMany('xShop/ItemMemberDesign','member_id');
 		$this->hasMany('xShop/MemberImages','member_id');
+
+		$this->hasMany('xShop/Opportunity','customer_id');
+		$this->hasMany('xShop/Quotation','customer_id');
+		$this->hasMany('xShop/Order','member_id');
 		
 		$this->addExpression('name')->set(function($m,$q){
 			return $m->refSQL('users_id')->fieldQuery('name');
@@ -51,6 +56,13 @@ class Model_MemberDetails extends \Model_Document{
 	}
 
 	function beforeDelete(){
+		$opportunity = $this->ref('xShop/Opportunity')->count()->getOne();
+		$quotation = $this->ref('xShop/Quotation')->count()->getOne();
+		$order = $this->ref('xShop/Order')->count()->getOne();
+		
+		if($opportunity or $quotation or $order)
+			throw $this->exception('Cannot Delete, Opportunity, Quotation or Order','Growl');
+
 		$voucher_used = $this->ref('xShop/DiscountVoucherUsed')->count()->getOne();
 		// $order_count=$this->ref('xShop/Order')->count()->getOne(); // Checked in Customer
 		$member_count=$this->ref('xShop/MemberImages')->count()->getOne();
@@ -61,6 +73,19 @@ class Model_MemberDetails extends \Model_Document{
 	}
 
 	function forceDelete(){
+		$this->ref('xShop/Opportunity')->each(function($opportunity){
+			$opportunity->forceDelete();
+		});
+
+		$this->ref('xShop/Quotation')->each(function($quotation){
+			$quotation->forceDelete();
+		});
+
+		$this->ref('xShop/Order')->each(function($order){
+			$order->forceDelete();
+		});
+
+
 		$this->ref('xShop/DiscountVoucherUsed')->each(function($m){
 			$m->setMemberEmpty();
 		});

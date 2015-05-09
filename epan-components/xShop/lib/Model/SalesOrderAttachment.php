@@ -16,7 +16,6 @@ class Model_SalesOrderAttachment extends \Model_Attachment{
 		parent::init();
 
 		$this->addCondition('related_root_document_name','xShop\Order');
-		// //$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function duplicate($item_id){

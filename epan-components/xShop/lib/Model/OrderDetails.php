@@ -525,6 +525,7 @@ class Model_OrderDetails extends \Model_Document{
 			//ALL JOBCARD DELETE
 			$jc->forceDelete();
 		}
+		
 
 		$this->delete();
 	}
