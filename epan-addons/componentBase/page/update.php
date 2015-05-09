@@ -71,30 +71,7 @@ class page_componentBase_page_update extends page_base_owner{
 	            	$item = str_replace(".php", "", $item);
 	            	$model_array[] = $this->component_namespace .'/'.'Model_'.$item;
 	            }
-	            foreach ($model_array as $md_name) {
-            		$md = $this->add($md_name);
-	            	if(!$md instanceof SQL_Model) {
-	            		continue;
-	            	}
-					$model = $this->add($md);
-					$foriegn_fields=array();
-					foreach ($model->elements as $elm) {
-						if(!$elm instanceof AbstractObject) continue;
-						if($elm instanceof Field_Expression or $elm instanceof SQL_Many)
-							$elm->destroy();
-						if($elm instanceof Field_Reference or $elm instanceof filestore\Field_Image ){
-							$temp=$elm->short_name;
-							$elm->destroy();
-							$model->addField($temp,$temp)->type('int');
-						}
-					}
-					try{
-						$model->add('dynamic_model/Controller_AutoCreator',array('force_create_foreignkeys'=>true));
-						$model->tryLoadAny();
-					}catch(Exception $e){
-						$this->add('View_Error')->setHTML("in $md_name: ". $e->getHTML());
-					}
-				}	
+	            $this->updateModels($model_array);
 			}
 			$this->api->setConfig('autocreator',$current_autocreator_value);
 		}
@@ -111,6 +88,50 @@ class page_componentBase_page_update extends page_base_owner{
 		// add dynamic line on object
 		// tryLoanAny
 
+	}
+
+	function updateModels($model_array){
+		foreach ($model_array as $md_name) {
+            		$md = $this->add($md_name);
+	            	if(!$md instanceof SQL_Model) {
+	            		continue;
+	            	}
+					$model = $this->add($md);
+					if(isset($model->is_view) and $model->is_view) continue;
+
+					$this->dropForeignkeys($model->table);
+					foreach ($model->elements as $elm) {
+						if(!$elm instanceof AbstractObject) continue;
+						if($elm instanceof Field_Expression or $elm instanceof SQL_Many)
+							$elm->destroy();
+						if($elm instanceof Field_Reference or $elm instanceof filestore\Field_Image ){
+							// $temp=$elm->short_name;
+							// $elm->destroy();
+							// $model->addField($temp,$temp)->type('int');
+						}
+					}
+					try{
+						$model->add('dynamic_model/Controller_AutoCreator',array('force_create_foreignkeys'=>true));
+						$model->tryLoadAny();
+					}catch(Exception $e){
+						$this->add('View_Error')->setHTML("in $md_name: ". $e->getHTML());
+					}
+				}
+	}
+
+	function dropForeignkeys($table){
+		$q="
+			SELECT * FROM 
+				information_schema.TABLE_CONSTRAINTS 
+				WHERE information_schema.TABLE_CONSTRAINTS.CONSTRAINT_TYPE='FOREIGN KEY' AND information_schema.TABLE_CONSTRAINTS.TABLE_SCHEMA='".$this->api->db->dbname."' AND information_schema.TABLE_CONSTRAINTS.TABLE_NAME='".$table."'
+		";
+
+		$keys = $this->api->db->dsql()->expr($q)->get();
+		
+		foreach ($keys as $key) {
+			$drop_q= "alter table $table drop FOREIGN KEY ". $key['CONSTRAINT_NAME'];
+			$this->api->db->dsql()->expr($drop_q)->execute();
+		}
 	}
 
 }
