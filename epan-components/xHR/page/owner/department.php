@@ -3,7 +3,7 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 	function init(){
 		parent::init();
 		
-		$this->add('PageHelp',array('page'=>array('departments','department_editing_page','department_post','departments_Basic')));
+		// $this->add('PageHelp',array('page'=>array('departments','department_editing_page','department_post','departments_Basic')));
 
 		$this->app->title=$this->api->current_department['name'] .': Departments/Posts/ACL';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Company Departments <small> Departments, Post, ACL, Salary Templates etc</small>');
@@ -13,6 +13,7 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 		$cat_col = $l->addColumn(3);
 		$dept_col = $l->addColumn(9);
 		
+		$cat_col->add('View_Box')->setHTML('Department\Production Phases'); 	
 		//Department
 		$dept_model=$this->add('xHR/Model_Department');
 		$dept_model->getElement('production_level')->caption('Level');
@@ -69,15 +70,15 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
                 return $filter_box->js(null,$dept_col->js()->reload())->hide()->execute();
             });
 		$tab = $dept_col->add('Tabs');
-		if($selected_department->isProductionPhase()){
-			$tab->addTabURL('xHR_page_owner_department_basic','Basic');
-		}
-
+			if($selected_department->isProductionPhase())
+				$tab->addTabURL('xHR_page_owner_department_basic','Basic');
+			
 			$tab->addTabURL('xHR_page_owner_department_post','Posts <span class="badge">'.$selected_department->post()->count()->getOne().'</span>');
 			$tab->addTabURL('xHR_page_owner_department_salarytemplate','Salary Structure <span class="badge">'.$selected_department->salaryTemplates()->count()->getOne().'</span>');
-			$tab->addTabURL('xHR_page_owner_department_departmentemail','Department Emails<span class="badge">'.$selected_department->officialEmails()->count()->getOne().'</span>');
+			$tab->addTabURL('xHR_page_owner_department_departmentemail','Department Emails <span class="badge">'.$selected_department->officialEmails()->count()->getOne().'</span>');
+			
 			if($selected_department->isProductionPhase())
-				$tab->addTabURL('xHR_page_owner_department_outsource','Out Source');
+				$tab->addTabURL('xHR_page_owner_department_outsource','Out Source <span class="badge">'.$selected_department->outSourceParties()->count()->getOne().'</span>');
 		}else{
 			$dept_col->add('View_Warning')->set('Select any one Department');
 		}
