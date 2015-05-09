@@ -51,7 +51,7 @@ class page_tests_01epanCreated extends page_tests_base {
                   'employee_attandance'=>0,                        
                   'employee_leave'=>0,
                   'employee_setup'=>'ok',
-                  'documents_count'=>'156',
+                  'documents_count'=>'128',
             );
      }
 
@@ -63,6 +63,7 @@ class page_tests_01epanCreated extends page_tests_base {
                   'employee_attandance'=>$this->add('xHR/Model_EmployeeAttendence')->count()->getOne(),                        
                   'employee_leave'=>$this->add('xHR/Model_EmployeeLeave')->count()->getOne(),
                   'employee_setup'=>'ok',
+                  'documents_count'=>$this->add('xHR/Model_Document')->count()->getOne(),
             );
      }
 
