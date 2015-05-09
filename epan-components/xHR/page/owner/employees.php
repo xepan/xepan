@@ -29,7 +29,7 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 		if($_GET['employee_id']){
 			$this->api->stickyGET('employee_id');
 			$selected_emp = $this->add('xHR/Model_Employee')->load($_GET['employee_id']);
-			$filter_box = $emp_col->add('View_Box')->setHTML('Employee :: '.$selected_emp['name'] . ' / '. $selected_emp->department()->get('name').' / '.$selected_emp->post()->get('name'). ' / '. ($selected_emp['is_active']?'Active':'InActive'));
+			$filter_box = $emp_col->add('View_Box')->setHTML('Employee :: '.$selected_emp['name'] . ' / '. $selected_emp->department()->get('name').' / '.$selected_emp->post()->get('name'). ' / '. ($selected_emp['is_active']?'Active':'InActive'))->addClass('xemployee_box');
 			$filter_box->add('Icon',null,'Button')
             ->addComponents(array('size'=>'mega'))
             ->set('cancel-1')
@@ -38,6 +38,9 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
                 $filter_box->api->stickyForget('employee_id');
                 return $filter_box->js(null,$emp_col->js()->reload())->hide()->execute();
             });
+            
+            $filter_box->js('reload')->reload();
+
 		$tab = $emp_col->add('Tabs');
 			$tab->addTabURL('xHR_page_owner_employee_basic','Basic',array('employee_id'));
 			$tab->addTabURL('xHR_page_owner_employee_qualification','Qualification',array('employee_id'));
