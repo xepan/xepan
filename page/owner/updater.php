@@ -14,7 +14,7 @@ class page_owner_updater extends page_base_owner {
 
                 $form = $this->add('Form');
                 $form->addField('line','git_exec_path')->set('/usr/bin/git')->validateNotNull();
-                $form->addField('DropDown','git_branch')->setEmptyText("Do not Update Code")->setValueList(array('master'=>'master','develop'=>'develop'))->set('master')->validateNotNull();
+                $form->addField('DropDown','git_branch')->setEmptyText("Do not Update Code")->setValueList(array('master'=>'master','develop'=>'develop'));
                 $update_btn = $form->addSubmit('Update');
 
                 if($form->isSubmitted()){

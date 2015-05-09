@@ -4,20 +4,10 @@
 class page_test extends Page {
 
 	function page_index(){
-		$table="xaccount_account";
-
-		$q="
-			SELECT * FROM 
-				information_schema.TABLE_CONSTRAINTS 
-				WHERE information_schema.TABLE_CONSTRAINTS.CONSTRAINT_TYPE='FOREIGN KEY' AND information_schema.TABLE_CONSTRAINTS.TABLE_SCHEMA='".$this->api->db->dbname."' AND information_schema.TABLE_CONSTRAINTS.TABLE_NAME='".$table."'
-		";
-
-		$keys = $this->api->db->dsql()->expr($q)->get();
-		
-		foreach ($keys as $key) {
-			$drop_q= "alter table $table drop FOREIGN KEY ". $key['CONSTRAINT_NAME'];
-			echo $drop_q."<br>";
-		}
+		$filename = getcwd().'/epan-components/xHR/default-documents.xepan';
+		$d= $this->add('xHR/Model_Document');
+		$arr = $d->getRows();
+		file_put_contents($filename, json_encode($arr));
 
 	}
 	
