@@ -11,7 +11,12 @@ class Plugins_epanCreated extends \componentBase\Plugin {
 	}
 
 	function Plugins_epanCreated($obj, $epan){
+		$app = $this->add('xShop/Model_Application');
+		$app['name']='Default xShop Application';
+		$app['type']='Shop';
+		$app->save();
+
 		$d=$this->add('xShop/Model_Configuration');
-		$d->loadDefaults();
+		$d->loadDefaults($app);
 	}
 }

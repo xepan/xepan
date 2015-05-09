@@ -23,10 +23,12 @@ class Plugins_epanCreated extends \componentBase\Plugin {
 				array('name'=>'Dispatch And Delivery','is_production_department'=>1,'related_application_namespace'=>'xDispatch','is_system'=>1,'jobcard_document'=>'DispatchRequest','production_level'=>100000),
 			);
 
+		$new_departments_with_ids =array();
 		foreach ($default_departments as $d) {
-			$this->add('xHR/Model_Department',array('bypass_validations'=>true))->set($d)->save();
+			$new_dept = $this->add('xHR/Model_Department',array('bypass_validations'=>true))->set($d)->save();
+			$new_departments_with_ids[$d['name']] = $new_dept->id;
 		}
 
-		$this->add('xHR/Model_Document')->loadDefaults();
+		$this->add('xHR/Model_Document')->loadDefaults($new_departments_with_ids);
 	}
 }

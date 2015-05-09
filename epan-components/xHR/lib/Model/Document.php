@@ -39,15 +39,25 @@ class Model_Document extends \Model_Table {
 		$this->delete();
 	}
 
-	function loadDefaults(){
+	function loadDefaults($new_departments_with_ids){
 		$filename = getcwd().'/epan-components/xHR/default-documents.xepan';
 		$data= file_get_contents($filename);
 		$arr = json_decode($data,true);
 		foreach ($arr as $dg) {
 			unset($dg['id']);
 			unset($dg['epan_id']);
+			$dg['department_id'] = $new_departments_with_ids[$dg['department']];
+			if(!$dg['department_id']) continue;
+			
 			$this->newInstance()->set($dg)->save();
 		}
+	}
+
+	function saveDefaults(){
+		$filename = getcwd().'/epan-components/xHR/default-documents.xepan';
+		$d= $this->add('xHR/Model_Document');
+		$arr = $d->getRows();
+		file_put_contents($filename, json_encode($arr));
 	}
 
 }

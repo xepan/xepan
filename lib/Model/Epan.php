@@ -143,8 +143,7 @@ class Model_Epan extends Model_Table {
 		
 		// Delete All users 
 		$this->add('Model_Users')->each(function($user){
-			$user->force_delete=true;
-			$user->delete();
+			$user->forceDelete();
 		});
 
 		// Remove Epan Pages

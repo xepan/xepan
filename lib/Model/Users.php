@@ -113,6 +113,19 @@ class Model_Users extends Model_Table {
 		$this->api->event('user_before_delete',$this);
 	}
 
+	function forceDelete(){
+		$this->force_delete = true;
+		$member= $this->add('xShop/Model_MemberDetails')->addCondition('users_id',$this->id)->tryLoadAny();
+		if($member->loaded()) $member->forceDelete();
+
+		$this->ref('UserAppAccess')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->delete();
+
+	}
+
 	function validateUser(){
 
 	}
