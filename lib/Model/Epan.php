@@ -267,7 +267,7 @@ class Model_Epan extends Model_Table {
 	}
 
 	function afterSave(){
-		if(!($new_id = $this->recall('new_id',false))) continue;
+		if(!($new_id = $this->recall('new_id',false))) return;
 		$this->forget('new_id');
 
 		$saved_current_website = $this->api->current_website;
