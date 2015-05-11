@@ -233,78 +233,77 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 				if($this->html_attributes['login_view']){
 					$this->add('View')->set('Login')->setElement('a')->setAttr('href','index.php?subpage='.$this->html_attributes['user_panel_redirect_page']);
 				}else{
+					$form=$this->add('Form');
+					if($this->html_attributes['form_stacked_on'])
+						$form->addClass('stacked');
+					
+					$username_field = $form->addField('line','username',$user_panel_name)->validateNotNull();
+					$password_field = $form->addField('password','password',$user_panel_pass)->validateNotNull();
 
-				$form=$this->add('Form');
-				if($this->html_attributes['form_stacked_on'])
-					$form->addClass('stacked');
-				
-				$username_field = $form->addField('line','username',$user_panel_name)->validateNotNull();
-				$password_field = $form->addField('password','password',$user_panel_pass)->validateNotNull();
+					if($this->html_attributes['user_panel_username_placeholder'])
+						$username_field->setAttr('placeHolder',$this->html_attributes['user_panel_username_placeholder']);
+					if($this->html_attributes['user_panel_password_placeholder'])
+						$password_field->setAttr('placeHolder',$this->html_attributes['user_panel_password_placeholder']);
+					
+					//add submit form
+					// $submit_field = $form->addSubmit($user_panel_btn_login_name);
+					$submit_field = $form->addButton($user_panel_btn_login_name);
+					$submit_field->addClass($user_panel_login_btn_css);
+					$submit_field->js('click',$form->js()->submit());
+					$cols = $this->add('Columns');
 
-				if($this->html_attributes['user_panel_username_placeholder'])
-					$username_field->setAttr('placeHolder',$this->html_attributes['user_panel_username_placeholder']);
-				if($this->html_attributes['user_panel_password_placeholder'])
-					$password_field->setAttr('placeHolder',$this->html_attributes['user_panel_password_placeholder']);
-				
-				//add submit form
-				// $submit_field = $form->addSubmit($user_panel_btn_login_name);
-				$submit_field = $form->addButton($user_panel_btn_login_name);
-				$submit_field->addClass($user_panel_login_btn_css);
-				$submit_field->js('click',$form->js()->submit());
-				$cols = $this->add('Columns');
+					if($this->html_attributes['show_register_new_user']){
+						$col = $cols->addColumn(4);
+						$sign_up_field = $col->add('View')->setHTML($user_panel_btn_registration_name);
+						//  = $form->add('Button')->set($user_panel_btn_registration_name);
+						// $col->add($sign_up_field);
+						$sign_up_field->js('click',$this->js()->reload(array('new_registration'=>1)));
+					}
+					
+					if($this->html_attributes['show_forgot_password']){
+						$col = $cols->addColumn(4);
+						$forgot_field = $col->add('View')->setHTML($user_panel_forgot_pass);	
+						$this->html_attributes['show_forgot_password'] = 0;										
+						$forgot_field->js('click',$this->js()->reload(array('forgot_password_view'=>1)));
+					}	
+					
+					// if($this->html_attributes['user_panel_activation_code']){
+					// 	$activation_field = $form->add('View')->setHTML($user_panel_activation_code)->setElement('a')->setAttr('href',$this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_activation_code'])));
+					// }	
+					
+					if($this->html_attributes['show_verify_me']){
+						$col = $cols->addColumn(4);
+						$verify_account=$col->add('View')->setHTML($user_panel_btn_Verify_name);
+						$verify_account->js('click',$this->js()->reload(array('verify_account'=>1)));
+					}
+					// $submit_field->js(true)->appendTo($col);//->add($submit_field);
+					// $form->js(true)->find('.atk-buttons')->removeClass('atk-buttons');
+					
+					$redirect_url = array('subpage'=>$this->html_attributes['user_panel_after_login_page']);
+					//Check for the checkout page
+					$redirect_url = $this->api->recall('next_url',$redirect_url);
+						// $this->api->forget('next_url');
+					if($form->isSubmitted()){
+						$user_model = $this->add('Model_Users');
+						$user_model->addCondition('username',$form['username']);
+						$user_model->addCondition('password',$form['password']);
+						$user_model->tryLoadAny();
 
-				if($this->html_attributes['show_register_new_user']){
-					$col = $cols->addColumn(4);
-					$sign_up_field = $col->add('View')->setHTML($user_panel_btn_registration_name);
-					//  = $form->add('Button')->set($user_panel_btn_registration_name);
-					// $col->add($sign_up_field);
-					$sign_up_field->js('click',$this->js()->reload(array('new_registration'=>1)));
-				}
-				
-				if($this->html_attributes['show_forgot_password']){
-					$col = $cols->addColumn(4);
-					$forgot_field = $col->add('View')->setHTML($user_panel_forgot_pass);	
-					$this->html_attributes['show_forgot_password'] = 0;										
-					$forgot_field->js('click',$this->js()->reload(array('forgot_password_view'=>1)));
-				}	
-				
-				// if($this->html_attributes['user_panel_activation_code']){
-				// 	$activation_field = $form->add('View')->setHTML($user_panel_activation_code)->setElement('a')->setAttr('href',$this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_activation_code'])));
-				// }	
-				
-				if($this->html_attributes['show_verify_me']){
-					$col = $cols->addColumn(4);
-					$verify_account=$col->add('View')->setHTML($user_panel_btn_Verify_name);
-					$verify_account->js('click',$this->js()->reload(array('verify_account'=>1)));
-				}
-				// $submit_field->js(true)->appendTo($col);//->add($submit_field);
-				// $form->js(true)->find('.atk-buttons')->removeClass('atk-buttons');
-				
-				$redirect_url = array('subpage'=>$this->html_attributes['user_panel_after_login_page']);
-				//Check for the checkout page
-				$redirect_url = $this->api->recall('next_url',$redirect_url);
-					// $this->api->forget('next_url');
-				if($form->isSubmitted()){
-					$user_model = $this->add('Model_Users');
-					$user_model->addCondition('username',$form['username']);
-					$user_model->addCondition('password',$form['password']);
-					$user_model->tryLoadAny();
+						if(!$user_model->loaded())
+							$form->displayError('username','Wrong Credentials');
 
-					if(!$user_model->loaded())
-						$form->displayError('username','Wrong Credentials');
+						if(!$user_model['is_active'])
+							$form->displayError('username','Please Activate Your Account First');
 
-					if(!$user_model['is_active'])
-						$form->displayError('username','Please Activate Your Account First');
-
-					//save into Cookies
-					//end of saving into cookies
-
-					$this->api->auth->login($user_model);
-					// if reload page
-					$this->api->redirect($this->api->url(null,$redirect_url))->execute();
-					// else
-						$this->js()->reload()->execute();
-				}
+						//save into Cookies
+						//end of saving into cookies
+						$this->app->auth->addEncryptionHook($user_model);
+						$this->api->auth->login($user_model);
+						// if reload page
+						$this->api->redirect($this->api->url(null,$redirect_url))->execute();
+						// else
+							$this->js()->reload()->execute();
+					}
 				}
 			}
 
@@ -319,6 +318,7 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 			}
 
 			if($this->html_attributes['user_panel_after_login_page']){
+				$this->api->redirect($this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_after_login_page'])));
 				// if($this->api->auth->model['is_active'])
 					// $this->js(true)->univ()->redirect($this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_after_login_page'])));
 			}				

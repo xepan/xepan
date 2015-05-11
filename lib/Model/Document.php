@@ -258,7 +258,7 @@ class Model_Document extends Model_Table{
 	}
 
 	function activities(){
-		$activities = $page->add('xCRM/Model_Activity');
+		$activities = $this->add('xCRM/Model_Activity');
 		$activities->addCondition('related_root_document_name',$this->root_document_name);
 		$activities->addCondition('related_document_id',$this->id);
 		$activities->setOrder('created_at','desc');
