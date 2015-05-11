@@ -5,7 +5,7 @@ class page_tests_00allEpanDeleted extends page_tests_base {
 
     function prepare_allEpansDeleted(){
         $this->add('Model_Epan')->each(function($epan){
-            $epan->delete();
+            $epan->forceDelete();
         });
 
         // $this->api->db->dsql()->table('epan')->truncate()->execute();

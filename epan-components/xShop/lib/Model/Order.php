@@ -74,6 +74,7 @@ class Model_Order extends \Model_Document{
 		$this->hasMany('xShop/OrderDetails','order_id');
 		$this->hasMany('xShop/SalesOrderAttachment','related_document_id',null,'Attachements');
 		$this->hasMany('xShop/SalesInvoice','sales_order_id');
+		$this->hasMany('xDispatch/DeliveryNote','order_id');
 		
 		$this->addExpression('orderitem_count')->set($this->refSQL('xShop/OrderDetails')->count());
 		
@@ -169,6 +170,11 @@ class Model_Order extends \Model_Document{
 					$inv->saveAndUnload();
 				}
 			}
+
+			$this->ref('xDispatch/DeliveryNote')->each(function($dn){
+				$dn->forceDelete();
+			});
+
 			//ORDER DELETE
 			//create Log
 			$this->delete();

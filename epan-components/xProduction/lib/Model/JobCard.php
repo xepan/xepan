@@ -43,7 +43,7 @@ class Model_JobCard extends \Model_Document{
 				->fieldQuery('name')
 			)->sortable(true);
 
-		$this->hasMany('xStore/StockMovement','jobcard_id');
+		$this->hasMany('xStore/StockMovement','jobcard_id',null,'StockMovementForJobCard');
 		$this->hasMany('xProduction/JobCardAttachment','related_document_id',null,'Attachements');
 
 
@@ -57,7 +57,7 @@ class Model_JobCard extends \Model_Document{
 	}
 
 	function beforeDelete(){
-		$stock_movement = $this->ref('xStore/StockMovement')->count()->getOne();
+		$stock_movement = $this->ref('StockMovementForJobCard')->count()->getOne();
 		if($stock_movement)
 			throw $this->exception('Cannot Delete First Delete it\'s Stock Movement');
 		
@@ -67,8 +67,12 @@ class Model_JobCard extends \Model_Document{
 	function forceDelete(){
 		if(!$this->loaded()) throw new \Exception("Not Loaded", 1);
 		
-		$this->ref('xStore/StockMovement')->each(function($m){
+		$this->ref('StockMovementForJobCard')->each(function($m){
 			$m->forceDelete();
+		});
+
+		$this->materialRequests()->each(function($m){
+			$m->forceDelete('StockMovementForJobCard');
 		});
 
 		$this->delete();
@@ -136,6 +140,11 @@ class Model_JobCard extends \Model_Document{
 			return false;
 		}
 		return $this->ref('orderitem_id');
+	}
+
+	function materialRequests(){
+		return $this->add('xStore/Model_MaterialRequest')
+					->addCondition('orderitem_id',$this['orderitem_id']);
 	}
 
 	function isCreatedFromOrder(){

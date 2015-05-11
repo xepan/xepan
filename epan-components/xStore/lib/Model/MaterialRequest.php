@@ -17,26 +17,28 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 		$this->getElement('status')->defaultValue('submitted');
 
 		$this->hasMany('xStore/MaterialRequestItem','material_request_jobcard_id');
-		$this->hasMany('xStore/StockMovement','material_request_jobcard_id');
+		$this->hasMany('xStore/StockMovement','material_request_jobcard_id',null,'StockMovementForMaterialRequest');
 
 		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
-		$sm = $this->ref('xStore/StockMovement')->count()->getOne();
+		// print_r($this->ref('StockMovementForMaterialRequest')->getRows());
+
+		$sm = $this->ref('StockMovementForMaterialRequest')->count()->getOne();
 		if($sm)
-			throw $this->exception('Cannot Delete, First Delete Stock Movement');
+			throw $this->exception('Cannot Delete, First Delete Stock Movement','Growl');
 
 		$this->ref('xStore/MaterialRequestItem')->each(function($m){
 			$m->delete();
 		});
 	}
 
-	function forceDelete(){
-		$this->ref('xStore/StockMovement')->each(function($m){
-			$m->delete();
-		});
+	function forceDelete($stock_movement_for='StockMovementForMaterialRequest'){
+		foreach($sm = $this->ref($stock_movement_for) as $junk){
+			$sm->forceDelete();
+		}
 
 		$this->delete();
 	}
@@ -46,7 +48,7 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 	}
 
 	function relatedChallan(){
-		$challan =  $this->ref('xStore/StockMovement')->tryLoadAny();
+		$challan =  $this->ref('StockMovementForMaterialRequest')->tryLoadAny();
 		if($challan->loaded()) return $challan;
 
 		return false;

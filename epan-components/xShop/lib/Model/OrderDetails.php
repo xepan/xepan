@@ -68,6 +68,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');
 		$this->hasMany('xShop/SalesOrderDetailAttachment','related_document_id',null,'Attachements');
 		$this->hasMany('xProduction/Jobcard','orderitem_id');
+		$this->hasMany('xStore/MaterialRequest','orderitem_id');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
@@ -527,6 +528,8 @@ class Model_OrderDetails extends \Model_Document{
 			//ALL JOBCARD DELETE
 			$jc->forceDelete();
 		}
+
+
 		
 
 		$this->delete();

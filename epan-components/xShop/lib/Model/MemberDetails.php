@@ -41,6 +41,7 @@ class Model_MemberDetails extends \Model_Document{
 		$this->hasMany('xShop/Quotation','customer_id');
 		$this->hasMany('xShop/Order','member_id');
 		$this->hasMany('xShop/ItemTemplate','designer_id');
+		$this->hasMany('xAccount/Account','customer_id');
 		
 		$this->addExpression('name')->set(function($m,$q){
 			return $m->refSQL('users_id')->fieldQuery('name');
@@ -94,7 +95,7 @@ class Model_MemberDetails extends \Model_Document{
 		$it = $this->add('xShop/Model_Item')
 		->addCondition('designer_id',$this->id);
 		foreach ($it as $ijunk) {
-			$it->set('designer_id',null)->debug()->saveAndUnload();
+			$it->set('designer_id',null)->saveAndUnload();
 		}
 
 		$this->ref('xShop/ItemMemberDesign')->each(function($m){
@@ -103,6 +104,10 @@ class Model_MemberDetails extends \Model_Document{
 
 		$this->ref('xShop/MemberImages')->each(function($m){
 			$m->forceDelete();
+		});
+
+		$this->ref('xAccount/Account')->each(function($m){
+			$m->set('customer_id',NULL)->saveAndUnload();
 		});
 
 		$this->delete();

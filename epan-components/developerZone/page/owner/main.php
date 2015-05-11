@@ -5,16 +5,16 @@ class page_developerZone_page_owner_main extends page_componentBase_page_owner_m
 	function init(){
 		parent::init();
 
-		$this->h1->setHTML('<i class="fa fa-wrench"></i> '.$this->component_name .'<small> Helper utility to create new applications </small>');
+		// $this->h1->setHTML('<i class="fa fa-wrench"></i> '.$this->component_name .'<small> Helper utility to create new applications </small>');
 
-		if(!$this->api->isAjaxOutput()){
-			$dh_b= $this->toolbar->addButton( 'Developer Home' );
-			$dh_b->setIcon('ui-icon-home');
-			$dh_b->js( 'click', $this->js()->univ()->redirect( $this->api->url('developerZone_page_owner_main') ) );
-			$ds_b= $this->toolbar->addButton( 'Dashboard' );
-			$ds_b->setIcon('ui-icon-home');
-			$ds_b->js( 'click', $this->js()->univ()->redirect( $this->api->url('owner_dashboard') ) );
-		}
+		// if(!$this->api->isAjaxOutput()){
+		// 	$dh_b= $this->toolbar->addButton( 'Developer Home' );
+		// 	$dh_b->setIcon('ui-icon-home');
+		// 	$dh_b->js( 'click', $this->js()->univ()->redirect( $this->api->url('developerZone_page_owner_main') ) );
+		// 	$ds_b= $this->toolbar->addButton( 'Dashboard' );
+		// 	$ds_b->setIcon('ui-icon-home');
+		// 	$ds_b->js( 'click', $this->js()->univ()->redirect( $this->api->url('owner_dashboard') ) );
+		// }
 	}
 
 	function page_index(){

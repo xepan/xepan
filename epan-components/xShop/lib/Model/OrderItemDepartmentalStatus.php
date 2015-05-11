@@ -36,6 +36,7 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 
 		// hasMany JobCards
 		$this->hasMany('xProduction/JobCard','orderitem_departmental_status_id');
+		$this->hasMany('xStore/MaterialRequest','orderitem_departmental_status_id');
 
 		$this->addHook('beforeDelete', $this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
@@ -48,6 +49,10 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 
 	function forceDelete(){
 		$this->ref('xProduction/JobCard')->each(function($m){
+			$m->forceDelete();
+		});
+
+		$this->ref('xStore/MaterialRequest')->each(function($m){
 			$m->forceDelete();
 		});
 

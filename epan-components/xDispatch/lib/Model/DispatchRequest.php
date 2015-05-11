@@ -19,7 +19,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$this->addCondition('type','DispatchRequest');
 
 		$this->hasMany('xDispatch/DispatchRequestItem','dispatch_request_id');
-		$this->hasMany('xStore/StockMovement','dispatch_request_id');
+		$this->hasMany('xStore/StockMovement','dispatch_request_id',null,'StockMovementForDispatchRequest');
 
 		$this->addExpression('recent_items_to_receive')->set(function($m,$q){
 			return $m->refSQL('xDispatch/DispatchRequestItem')->addCondition('status','to_receive')->count();
@@ -48,13 +48,11 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 	}
 
 	function beforeDelete(){
-		throw new \Exception("Wht I m deleting here ???", 1);
-		
 		$this->ref('xDispatch/DispatchRequestItem')->each(function($m){
 			$m->delete();
 		});
 
-		$this->ref('xStore/StockMovement')->each(function($m){
+		$this->ref('StockMovementForDispatchRequest')->each(function($m){
 			$m->delete();
 		});
 
@@ -69,7 +67,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 	}
 
 	function relatedChallan(){
-		$challan =  $this->ref('xStore/StockMovement')->tryLoadAny();
+		$challan =  $this->ref('StockMovementForDispatchRequest')->tryLoadAny();
 		if($challan->loaded()) return $challan;
 
 		return false;
