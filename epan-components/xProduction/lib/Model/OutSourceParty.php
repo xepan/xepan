@@ -40,7 +40,7 @@ class Model_OutSourceParty extends \Model_Table{
 	}
 
 	function beforeDelete(){
-		$warehouse = $this->ref('xProduction/Warehouse')->count()->getOne();
+		$warehouse = $this->ref('xStore/Warehouse')->count()->getOne();
 		$account = $this->ref('xAccount/Account')->count()->getOne();
 		
 		if($warehouse or $account)
@@ -69,7 +69,7 @@ class Model_OutSourceParty extends \Model_Table{
 	}
 
 	function forceDelete(){
-		$this->ref('xProduction/Warehouse')->each(function($m){
+		$this->ref('xStore/Warehouse')->each(function($m){
 			$m->forceDelete();
 		});
 

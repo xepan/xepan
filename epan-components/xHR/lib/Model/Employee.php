@@ -183,7 +183,7 @@ class Model_Employee extends \Model_Table{
 				try{
 					$model = $this->add($docs->modelName($model->root_document_name));
 					if(!(isset($model->is_view) AND $model->is_view)){
-						$model->_dsql()->debug()->where('created_by_id',$this->id)->where('epan_id',$this->api->current_website->id)->set('created_by_id',null)->update();
+						$model->_dsql()->where('created_by_id',$this->id)->where('epan_id',$this->api->current_website->id)->set('created_by_id',null)->update();
 					}
 				}catch(\Exception $e){
 					echo "Model Employee Line 186 Error: ".$model->root_document_name .'<br/>'.$e->getHTML()."<br>";

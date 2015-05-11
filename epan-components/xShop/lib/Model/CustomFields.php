@@ -20,6 +20,7 @@ class Model_CustomFields extends \Model_Table{
 		$this->hasMany('xShop/CustomFieldValue','customfield_id');
 		$this->hasMany('xShop/CustomFieldValueFilterAssociation','customfield_id');
 		$this->hasMany('xShop/ItemCustomFieldAssos','customfield_id');
+		$this->hasMany('xShop/QuantitySetCondition','customfield_id');
 
 		$this->addHook('beforeDelete',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');
@@ -37,6 +38,10 @@ class Model_CustomFields extends \Model_Table{
 
 		$m->ref('xShop/ItemCustomFieldAssos')->each(function($item_cf_asso){
 			$item_cf_asso->forceDelete();
+		});
+
+		$m->ref('xShop/QuantitySetCondition')->each(function($obj){
+			$obj->forceDelete();
 		});
 
 	}

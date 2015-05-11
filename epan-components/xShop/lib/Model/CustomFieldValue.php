@@ -35,6 +35,7 @@ class Model_CustomFieldValue extends \Model_Table{
 
 		$this->hasMany('xShop/ItemImages','customefieldvalue_id');
 		$this->hasMany('xShop/CustomFieldValueFilterAssociation','customefieldvalue_id');
+		$this->hasMany('xShop/QuantitySetCondition','custom_field_value_id');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
@@ -64,6 +65,10 @@ class Model_CustomFieldValue extends \Model_Table{
 
 		$this->ref('xShop/CustomFieldValueFilterAssociation')->each(function($cf_value_filter_asso){
 			$cf_value_filter_asso->forceDelete();
+		});
+
+		$this->ref('xShop/QuantitySetCondition')->each(function($obj){
+			$obj->forceDelete();
 		});
 	}
 

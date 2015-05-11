@@ -39,6 +39,9 @@ class Model_Department extends \Model_Table{
 		$this->hasMany('xProduction/JobCard','to_department_id');
 		$this->hasMany('xHR/SalaryTemplate','department_id');
 		$this->hasMany('xProduction/OutSourcePartyDeptAssociation','department_id');
+		$this->hasMany('xShop/QuantitySetCondition','department_phase_id');
+
+
 		if(!isset($this->bypass_validations)){
 			$this->add('Controller_Validator');
 			$this->is(array(
@@ -93,6 +96,10 @@ class Model_Department extends \Model_Table{
 		}
 
 		$this->ref('xHR/OfficialEmail')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xShop/QuantitySetCondition')->each(function($obj){
 			$obj->forceDelete();
 		});
 

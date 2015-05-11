@@ -134,6 +134,8 @@ class Model_Item extends \Model_Table{
 		$this->hasMany('xPurchase/PurchaseOrderItem','item_id');
 		$this->hasMany('xShop/InvoiceItem','item_id');
 		$this->hasMany('xDispatch/DispatchRequestItem','item_id');
+		$this->hasMany('xStore/Stock','item_id');
+		$this->hasMany('xStore/StockMovementItem','item_id');
 
 		$this->addExpression('theme_code_group_expression')->set('(IF(ISNULL('.$this->table_alias.'.theme_code),'.$this->table_alias.'.id,'.$this->table_alias.'.theme_code))');
 			
@@ -285,6 +287,14 @@ class Model_Item extends \Model_Table{
 		
 		$this->ref('xDispatch/DispatchRequestItem')->each(function($dispatch_item){
 			$dispatch_item->newInstance()->load($dispatch_item->id)->setItemEmpty();
+		});
+
+		$this->ref('xStore/Stock')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xStore/StockMovementItem')->each(function($obj){
+			$obj->newInstance()->load($obj->id)->set('item_id',NULL)->saveAndUnload();
 		});
 
 		$this->ref('CompositionItems')->deleteAll();
@@ -740,14 +750,16 @@ class Model_Item extends \Model_Table{
 			
 			$i = 1;
 			foreach ($department as $cf_id => $cf_value_id) {
-				$cf_model = $this->add('xShop/Model_CustomFields')->load($cf_id);
+				$cf_model = $this->add('xShop/Model_CustomFields')->tryLoad($cf_id);
 				if($cf_model['type']!='line'){
 					$cf_value_model = $this->add('xShop/Model_CustomFieldValue')->tryLoad($cf_value_id);
 					$str .= " ".$cf_model['name']." :: ". ($cf_value_model['name']!=''?$cf_value_model['name']:'not-found-or-deleted');
-				}
-				else{
+				}else{
 					$cf_value_model = $cf_value_id;
-					$str .= " ".$cf_model['name']." :: ". $cf_value_model;
+					if(!$cf_model->loaded())
+						$str .= " cust-field-deleted :: ". $cf_value_model;
+					else
+						$str .= " ".$cf_model['name']." :: ". $cf_value_model;
 				}
 				if($i != count($department))
 					$str.=",";

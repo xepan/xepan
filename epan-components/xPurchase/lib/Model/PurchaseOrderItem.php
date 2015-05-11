@@ -62,6 +62,7 @@ class Model_PurchaseOrderItem extends \Model_Document{
 
 	function beforeSave(){
 		$item_id = $this['item_id'];
+		if(!$item_id) return;
 		// validate custom field entries
 		$phase = $this->add('xHR/Model_Department')->loadStore();
 
