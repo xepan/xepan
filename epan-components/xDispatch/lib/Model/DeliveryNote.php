@@ -21,6 +21,7 @@ class Model_DeliveryNote extends \xProduction\Model_JobCard {
 		$this->addField('docket_no');
 		$this->addField('narration')->type('text');
 		$this->hasMany('xDispatch/DeliveryNoteItem','delivery_note_id');
+		$this->hasMany('xDispatch/DispatchRequestItem','deliverynote_id');
 
 		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
@@ -58,7 +59,7 @@ class Model_DeliveryNote extends \xProduction\Model_JobCard {
 
 		if($dispatch_req_item_model){
 			$dri = $this->add('xDispatch/Model_DispatchRequestItem')->load($dispatch_req_item_model->id);
-			$dri['deliverynote_id'] = $mr_item->id;
+			$dri['deliverynote_id'] = $this->id;
 			$dri->save();
 		}
 	}
