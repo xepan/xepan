@@ -48,6 +48,8 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 	}
 
 	function beforeDelete(){
+		throw new \Exception("Wht I m deleting here ???", 1);
+		
 		$this->ref('xDispatch/DispatchRequestItem')->each(function($m){
 			$m->delete();
 		});

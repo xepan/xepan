@@ -15,6 +15,8 @@ class Model_LeaveType extends \Model_Table{
 		$this->addField('is_lwp')->type('boolean');
 		$this->addField('allow_negative_balance')->type('boolean');
 
+		$this->hasMany('xHR/EmployeeLeave','leave_type_id');
+
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }
