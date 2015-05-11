@@ -60,7 +60,7 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 	}
 
 	function createJobCardFromOrder(){
-		$new_job_card = $this->add($this->department()->getNamespace().'/Model_'.  $this->department()->jobcard_document());
+		$new_job_card = $this->add($this->department()->defaultDocument());
 		$new_job_card->createFromOrder($this->ref('orderitem_id'),$this);
 		$this['status']='Sent To '. $this['department'];
 		$this->save();
@@ -69,7 +69,7 @@ class Model_OrderItemDepartmentalStatus extends \SQL_Model{
 
 	function receive_to_DELETE(){
 		// create job card for this department and this orderitem_id;
-		$jobcard_model=$this->add($this->department()->getNamespace().'/Model_'.  $this->department()->jobcard_document());
+		$jobcard_model=$this->add($this->department()->defaultDocument());
 		$jobcard_model->addCondition('orderitem_departmental_status_id',$this->id);
 		$jobcard_model->addCondition('orderitem_id',$this['orderitem_id']);
 		$jobcard_model->addCondition('department_id',$this['department_id']);

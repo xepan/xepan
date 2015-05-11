@@ -221,6 +221,9 @@ class Model_Item extends \Model_Table{
 	}
 
 	function beforeDelete($m){
+
+		$this->api->event('xshop_item_before_delete',$this);
+
 		$order_count = $m->ref('xShop/OrderDetails')->count()->getOne();
 		$item_enquiry_count = $m->ref('xShop/ItemEnquiry')->count()->getOne();
 		$design_count = $m->ref('xShop/ItemMemberDesign')->count()->getOne();

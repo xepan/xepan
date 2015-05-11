@@ -91,13 +91,25 @@ class Model_EpanPage extends Model_Table {
 	}
 
 	function beforeDelete(){
-		if($this->ref('epan_id')->get('name') == 'demo')
+		if(!isset($this->forceDelete) AND $this->ref('epan_id')->get('name') == 'demo')
 			$this->api->js()->univ()->errorMessage('Not Available in demo')->execute();
 		
-		foreach($snapshots = $this->ref('EpanPageSnapshots') as $junk){
-			$snapshots->delete();
+		
+
+	}
+
+	function forceDelete(){
+		$this->forceDelete = true;
+		
+		foreach($sub_pages = $this->ref('EpanPage') as $junk){
+			$sub_pages->newInstance()->load($sub_pages->id)->set('parent_page_id',NULL)->save();
 		}
 
+		foreach($snapshots = $this->ref('EpanPageSnapshots') as $junk){
+			$snapshots->forceDelete();
+		}
+
+		$this->delete();
 	}
 
 	function generateURI(){

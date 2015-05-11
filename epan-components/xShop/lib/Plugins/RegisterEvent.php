@@ -12,6 +12,7 @@ class Plugins_RegisterEvent extends \componentBase\Plugin {
 
 	function Plugins_RegisterEvent($obj, $events_obj){
 		$events_obj->events[] = "xshop-item-created";
+		$events_obj->events[] = "xshop_item_before_delete";
 		// throw new \Exception('I ma called'. print_r($events_obj->events,true));
 	}
 }

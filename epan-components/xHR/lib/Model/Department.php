@@ -64,6 +64,9 @@ class Model_Department extends \Model_Table{
 	function jobcard_document(){
 		return $this['jobcard_document'];
 	}
+	function defaultDocument(){
+		return $this->jobcard_document();
+	}
 
 	function beforeSave($m){
 		// todo checking SKU value must be unique
@@ -116,7 +119,7 @@ class Model_Department extends \Model_Table{
 
 		$this->delete();
 	}
-
+	
 	function createAssociationWithItem($item_id){
 		if(!$this->loaded() and $item_id > 0)
 			throw new \Exception("Department Model Must be Loaded");
@@ -205,7 +208,8 @@ class Model_Department extends \Model_Table{
 	function officialEmails(){
 		return $this->add('xHR/Model_OfficialEmail')->addCondition('department_id',$this->id);
 	}
-function salaryTemplates(){
+	
+	function salaryTemplates(){
 		return $this->add('xHR/Model_SalaryTemplate')->addCondition('department_id',$this->id);
 	}
 	

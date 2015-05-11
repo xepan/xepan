@@ -40,6 +40,7 @@ class Model_Users extends Model_Table {
 		$f->icon='fa fa-calendar~blue';
 
 		$this->hasMany('UserAppAccess','user_id');
+		$this->hasMany('xHR/Employee','user_id');
 
 		$this->add('Controller_Validator');
 		$this->is(array(
@@ -121,6 +122,12 @@ class Model_Users extends Model_Table {
 		$this->ref('UserAppAccess')->each(function($obj){
 			$obj->forceDelete();
 		});
+
+		$this->add('xHR/Model_Employee')
+			->addCondition('user_id',$this->id)
+			->each(function($obj){
+				$obj->set('user_id',NULL)->saveAndUnload();
+			});
 
 		$this->delete();
 

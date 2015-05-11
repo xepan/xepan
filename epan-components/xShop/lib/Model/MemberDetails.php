@@ -40,6 +40,7 @@ class Model_MemberDetails extends \Model_Document{
 		$this->hasMany('xShop/Opportunity','customer_id');
 		$this->hasMany('xShop/Quotation','customer_id');
 		$this->hasMany('xShop/Order','member_id');
+		$this->hasMany('xShop/ItemTemplate','designer_id');
 		
 		$this->addExpression('name')->set(function($m,$q){
 			return $m->refSQL('users_id')->fieldQuery('name');
@@ -89,6 +90,12 @@ class Model_MemberDetails extends \Model_Document{
 		$this->ref('xShop/DiscountVoucherUsed')->each(function($m){
 			$m->setMemberEmpty();
 		});
+
+		$it = $this->add('xShop/Model_Item')
+		->addCondition('designer_id',$this->id);
+		foreach ($it as $ijunk) {
+			$it->set('designer_id',null)->debug()->saveAndUnload();
+		}
 
 		$this->ref('xShop/ItemMemberDesign')->each(function($m){
 			$m->forceDelete();

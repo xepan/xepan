@@ -149,9 +149,9 @@ class Model_Epan extends Model_Table {
 		// Remove Epan Pages
 		foreach ($ep=$this->add('Model_EpanPage') as $junk) {
 			foreach ($snp=$ep->add('Model_EpanPageSnapshots') as $junk2) {
-				$snp->delete();
+				$snp->forceDelete();
 			}
-			$ep->delete();
+			$ep->forceDelete();
 		}
 
 		// Remove Epan Templates
