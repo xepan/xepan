@@ -1,7 +1,7 @@
 <?php
 namespace xStore;
 
-class Model_MaterialRequest extends \xProduction\Model_JobCard {
+class Model_MaterialRequest extends \Model_Document {
 	
 	public $table = 'xstore_material_request';
 
@@ -12,12 +12,43 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
+		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
+		$this->hasOne('xHR/Department','to_department_id')->sortable(true);
+		$this->hasOne('xHR/Department','from_department_id')->sortable(true);
+		$this->hasOne('xStore/Warehouse','dispatch_to_warehouse_id')->sortable(true);
+		$this->hasOne('xShop/OrderItemDepartmentalStatus','orderitem_departmental_status_id')->sortable(true);
+		
+		$this->addField('type')->enum(array('JobCard','MaterialRequest','DispatchRequest'))->defaultValue('JobCard');
+		$this->addField('name')->caption('Job Number')->sortable(true);
+		$this->getElement('status')->defaultValue('submitted');
+		
+		$this->addExpression('outsource_party')->set(function($m,$q){
+			$p = $m->add('xProduction/Model_OutSourceParty');
+			$j=$p->join('xshop_orderitem_departmental_status.outsource_party_id');
+			$j->addField('order_item_dept_status_id','id');
+			$p->addCondition('order_item_dept_status_id',$q->getField('orderitem_departmental_status_id'));
+			return $p->fieldQuery('name');
+		})->sortable(true);
+
+		$this->addExpression('order_no')->set(
+				$this->add('xShop/Model_Order',array('table_alias'=>'order_no_als'))
+					->addCondition('id',
+						$this->add('xShop/Model_OrderDetails',array('table_alias'=>'od_4_order_no'))
+						->addCondition('id',$this->getElement('orderitem_id'))
+						->fieldQuery('order_id')
+					)
+				->fieldQuery('name')
+			)->sortable(true);
+
 		$this->addCondition('type','MaterialRequest');
 
 		$this->getElement('status')->defaultValue('submitted');
 
 		$this->hasMany('xStore/MaterialRequestItem','material_request_jobcard_id');
-		$this->hasMany('xStore/StockMovement','material_request_jobcard_id',null,'StockMovementForMaterialRequest');
+		$this->hasMany('xStore/StockMovement','material_request_jobcard_id');
 
 		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
@@ -26,7 +57,7 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 	function beforeDelete(){
 		// print_r($this->ref('StockMovementForMaterialRequest')->getRows());
 
-		$sm = $this->ref('StockMovementForMaterialRequest')->count()->getOne();
+		$sm = $this->ref('xStore/StockMovement')->count()->getOne();
 		if($sm)
 			throw $this->exception('Cannot Delete, First Delete Stock Movement','Growl');
 
@@ -35,8 +66,8 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 		});
 	}
 
-	function forceDelete($stock_movement_for='StockMovementForMaterialRequest'){
-		foreach($sm = $this->ref($stock_movement_for) as $junk){
+	function forceDelete(){
+		foreach($sm = $this->ref('xStore/StockMovement') as $junk){
 			$sm->forceDelete();
 		}
 
@@ -48,7 +79,7 @@ class Model_MaterialRequest extends \xProduction\Model_JobCard {
 	}
 
 	function relatedChallan(){
-		$challan =  $this->ref('StockMovementForMaterialRequest')->tryLoadAny();
+		$challan =  $this->ref('xStore/StockMovement')->tryLoadAny();
 		if($challan->loaded()) return $challan;
 
 		return false;
