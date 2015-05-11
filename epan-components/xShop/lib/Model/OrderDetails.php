@@ -79,6 +79,8 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function beforeSave(){
+		if($this->dirty['invoice_id'] and $this['invoice_id'])
+			return;
 		//CHECK FOR THE ORDER IS UNDER PROCESSING/COMPLETE
 		if(in_array($this->order()->get('status'), array('draft','submitted','redesign')))
 			return ;
