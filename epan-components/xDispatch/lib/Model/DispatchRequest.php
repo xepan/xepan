@@ -169,7 +169,6 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 				throw $this->Exception('No Item Selected'.$form['selected_items'],'Growl');
 				
 			$items_selected = json_decode($form['selected_items'],true);
-			// TODO : A LOT OF CHECKINGS REGARDING INVOICE ETC ...
 
 			//CHECK FOR GENERATE INVOICE
 			if($form['generate_invoice']){
@@ -234,7 +233,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 					$form->displayError('email_to','Email Not Proper');
 
 				$inv->send_via_email_page($this);
-				throw new \Exception("Error Processing Request", 1);	
+				// throw new \Exception("Error Processing Request", 1);	
 
 			}
 			
@@ -260,7 +259,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 			
 			foreach ($items_selected as $itm) {
 				$itm_model = $this->add('xDispatch/Model_DispatchRequestItem')->load($itm);
-				$new_delivery_note->addItem($itm_model->orderItem(), $itm_model->item(),$itm_model['qty'],$itm_model['unit'],$itm_model['custom_fields']);
+				$new_delivery_note->addItem($itm_model->orderItem(), $itm_model->item(),$itm_model['qty'],$itm_model['unit'],$itm_model['custom_fields'],$itm_model);
 				$itm_model->orderItem()->associatedWithDepartment($this->department())->setStatus('Delivered via '. $new_delivery_note['name']);
 				$itm_model->setStatus('delivered');
 			}
