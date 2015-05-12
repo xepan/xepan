@@ -43,8 +43,8 @@ class Model_Subscription extends \Model_Document {
 		$this->addField('from_id')->type('int')->system(true)->group('c~3');
 
 
-		$this->hasMany('xShop/Model_Oppertunity','lead_id');
-		$this->hasMany('xShop/Model_Quotation','lead_id');
+		$this->hasMany('xShop/Opportunity','lead_id');
+		$this->hasMany('xShop/Quotation','lead_id');
 		$this->hasMany('xEnquiryNSubscription/SubscriptionCategoryAssociation','subscriber_id');
 
 		$this->add('Controller_Validator');
