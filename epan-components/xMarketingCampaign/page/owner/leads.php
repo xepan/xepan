@@ -60,7 +60,7 @@ class page_xMarketingCampaign_page_owner_leads extends page_xMarketingCampaign_p
 
 
 		$crud=$lead_col->add('CRUD',array('grid_class'=>'xMarketingCampaign/Grid_Lead'));
-		$crud->setModel($leads,array(),array());
+		$crud->setModel($leads);
 		$crud->add('xHR/Controller_Acl');
 
 		
