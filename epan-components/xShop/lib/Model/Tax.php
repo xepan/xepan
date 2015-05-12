@@ -19,8 +19,6 @@ class Model_Tax extends \Model_Document{
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
-		$this->hasOne('xAccount/Account','tax_account_id')->system(true);
-
 		$this->addField('name')->mandatory(true);
 		$this->addField('value')->caption('Tax in %')->mandatory(true);
 

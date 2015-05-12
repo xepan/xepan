@@ -16,6 +16,6 @@ class Model_Lead extends \xEnquiryNSubscription\Model_Subscription{
 	
 	function init(){
 		parent::init();
-		
+		$this->getElement('from_app')->defaultValue('Manual Feed');
 	}
 }
