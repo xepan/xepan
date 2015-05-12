@@ -16,16 +16,26 @@ class Model_Warehouse extends \Model_Table{
 
 			$this->addHook('beforeDelete',$this);
 			$this->hasMany('xStore/Stock','warehouse_id');
+			$this->hasMany('xStore/StockMovement','to_warehouse_id',null,'StockMovementInWards');
+			$this->hasMany('xStore/StockMovement','from_warehouse_id',null,'StockMovementOutWards');
 			
 			//$this->add('dynamic_model/Controller_AutoCreator');
 	}
 	function beforeDelete(){
 		if($this->ref('xStore/Stock')->count()->getOne() > 0)
-			throw $this->exception('Stock Contains WareHouse.. Please Delete First Warehouse','Growl');
+			throw $this->exception('WareHouse Contains Stock.. Please Delete First Stock Entries','Growl');
 	}
 
 	function forceDelete(){
 		$this->ref('xStore/Stock')->each(function($m){
+			$m->forceDelete();
+		});
+
+		$this->ref('StockMovementInWards')->each(function($m){
+			$m->forceDelete();
+		});
+
+		$this->ref('StockMovementOutWards')->each(function($m){
 			$m->forceDelete();
 		});
 
