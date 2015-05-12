@@ -24,7 +24,7 @@ class Grid_Lead extends \Grid{
 
 	function setModel($model,$fields=array()){
 		if(!count($fields))
-			$fields = array('email','name','from_app','is_ok','ip','lead_type','organization_name','website','phone','mobile_no'); 
+			$fields = array('email','name','from_app','is_ok','ip','lead_type','organization_name','website','phone','mobile_no','total_opportunity','total_quotation'); 
 		$m = parent::setModel($model,$fields);
 
 		$this->fooHideAlways('ip');
