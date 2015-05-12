@@ -3,8 +3,8 @@
 class page_xMarketingCampaign_page_owner_leads extends page_xMarketingCampaign_page_owner_main{
 	
 	function page_index(){
-			$this->app->title=$this->api->current_department['name'] .': Leads';
-			$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> xMarketingCampaign Leads <small> Manage Your Leads </small>');
+		$this->app->title=$this->api->current_department['name'] .': Leads';
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> xMarketingCampaign Leads <small> Manage Your Leads </small>');
 		// Add Badges
 
 		// filter line if filter is there
@@ -23,10 +23,11 @@ class page_xMarketingCampaign_page_owner_leads extends page_xMarketingCampaign_p
 		if(!$lead_cat_crud->isEditing()){
 			$g=$lead_cat_crud->grid;
 			$g->addMethod('format_filterleads',function($g,$f)use($lead_col){
-				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'. $lead_col->js()->reload(array('leadcategory_id'=>$g->model->id)) .'">'.$g->current_row[$f].'</a>';
+				$g->setTDParam($f,'title','Total Leads '.$g->model['totalleads']);
+				$g->current_row_html[$f]='<a class="pull-left" href="javascript:void(0)" onclick="'. $lead_col->js()->reload(array('leadcategory_id'=>$g->model->id)) .'">'.$g->current_row[$f].'</a><span class="pull-right" >'.$g->model['totalleads'].'</span>';
 			});
 			$g->addFormatter('name','filterleads');
-			
+			$g->addFormatter('name','Wrap');	
 		}
 		
 		if($_GET['leadcategory_id']){
@@ -34,7 +35,7 @@ class page_xMarketingCampaign_page_owner_leads extends page_xMarketingCampaign_p
 			
 			$selected_cat = $this->add('xMarketingCampaign/Model_LeadCategory')->load($_GET['leadcategory_id']);
 
-			$filter_box = $lead_col->add('View_Box')->setHTML('Lead Category :: '.$this->add('xMarketingCampaign/Model_LeadCategory')->load($_GET['leadcategory_id'])->get('name'));
+			$filter_box = $lead_col->add('View_Box')->setHTML('Lead Category :: <b>'.$this->add('xMarketingCampaign/Model_LeadCategory')->load($_GET['leadcategory_id'])->get('name').'</b>');
 			$filter_box->add('Icon',null,'Button')
             ->addComponents(array('size'=>'mega'))
             ->set('cancel-1')
