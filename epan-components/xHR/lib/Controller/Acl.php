@@ -95,7 +95,11 @@ class Controller_Acl extends \AbstractController {
 		} 
 
 		foreach ($this->permissions as $key => $value) {
-			$this->permissions[$key] = $acl_model[$key];
+			if(isset($this->my_model->actions) && isset($this->my_model->actions[$key]) && $this->my_model->actions[$key] ==false){
+				// This Permission is set as false or null in model so .. just bypass this leaving itsvale as default in public variable
+			}else{
+				$this->permissions[$key] = $acl_model[$key];
+			}
 		}
 
 		foreach ($this->override as $key => $value) {
@@ -150,7 +154,7 @@ class Controller_Acl extends \AbstractController {
 
 	function doCRUD(){
 		// echo "i m here 2 <br>";
-		if($this->show_acl_btn AND !$this->owner->isEditing()){
+		if(!$this->api->auth->model->isDefaultSuperUser() AND $this->show_acl_btn AND !$this->owner->isEditing()){
 			if($this->api->getConfig('open_acl_for_all',false) OR $this->api->auth->model->isDefaultSuperUser()){
 				$btn = $this->owner->grid->buttonset->addButton()->set('ACL APPLIED');
 				$self= $this;
