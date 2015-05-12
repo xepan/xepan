@@ -5,7 +5,7 @@ namespace xMarketingCampaign;
 class Model_LeadCategory extends \Model_Document {
 	public $table ='xmarketingcampaign_lead_categories';
 	public $status=array();
-	public $root_document_name="xEnquiryNSubscription\LeadCategory";
+	public $root_document_name="xMarketingCampaign\LeadCategory";
 	public $actions=array(
 			'can_view'=>array(),
 			'allow_edit'=>array(),
