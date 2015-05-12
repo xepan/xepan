@@ -92,31 +92,26 @@ class page_componentBase_page_update extends page_base_owner{
 
 	function updateModels($model_array){
 		foreach ($model_array as $md_name) {
-            		$md = $this->add($md_name);
-	            	if(!$md instanceof SQL_Model) {
-	            		continue;
-	            	}
-					$model = $this->add($md);
-					if(isset($model->is_view) and $model->is_view) continue;
+    		$md = $this->add($md_name);
+        	if(!$md instanceof SQL_Model) {
+        		continue;
+        	}
+			$model = $this->add($md);
+			if(isset($model->is_view) and $model->is_view) continue;
 
-					$this->dropForeignkeys($model->table);
-					foreach ($model->elements as $elm) {
-						if(!$elm instanceof AbstractObject) continue;
-						if($elm instanceof Field_Expression or $elm instanceof SQL_Many)
-							$elm->destroy();
-						if($elm instanceof Field_Reference or $elm instanceof filestore\Field_Image ){
-							// $temp=$elm->short_name;
-							// $elm->destroy();
-							// $model->addField($temp,$temp)->type('int');
-						}
-					}
-					try{
-						$model->add('dynamic_model/Controller_AutoCreator',array('force_create_foreignkeys'=>true));
-						$model->tryLoadAny();
-					}catch(Exception $e){
-						$this->add('View_Error')->setHTML("in $md_name: ". $e->getHTML());
-					}
-				}
+			$this->dropForeignkeys($model->table);
+			foreach ($model->elements as $elm) {
+				if(!$elm instanceof AbstractObject) continue;
+				if($elm instanceof Field_Expression or $elm instanceof SQL_Many)
+					$elm->destroy();
+			}
+			try{
+				$model->add('dynamic_model/Controller_AutoCreator',array('force_create_foreignkeys'=>true));
+				$model->tryLoadAny();
+			}catch(Exception $e){
+				$this->add('View_Error')->setHTML("in $md_name: ". $e->getHTML());
+			}
+		}
 	}
 
 	function dropForeignkeys($table){

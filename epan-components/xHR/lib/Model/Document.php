@@ -53,6 +53,13 @@ class Model_Document extends \Model_Table {
 		}
 	}
 
+	function getDefaults(){
+		$filename = getcwd().'/epan-components/xHR/default-documents.xepan';
+		$data= file_get_contents($filename);
+		$arr = json_decode($data,true);
+		return $arr;
+	}
+
 	function saveDefaults(){
 		$filename = getcwd().'/epan-components/xHR/default-documents.xepan';
 		$d= $this->add('xHR/Model_Document');

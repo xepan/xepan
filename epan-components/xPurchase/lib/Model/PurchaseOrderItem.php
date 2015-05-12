@@ -4,7 +4,7 @@ namespace xPurchase;
 class Model_PurchaseOrderItem extends \Model_Document{
 	public $table="xpurchase_purchase_order_item";
 	public $status=array('waiting','processing','received','completed');
-	public $root_document_name='xPurchase\PurchaseOrder';
+	public $root_document_name='xPurchase\PurchaseOrderItem';
 	function init(){
 		parent::init();
 
@@ -33,6 +33,7 @@ class Model_PurchaseOrderItem extends \Model_Document{
 		// $this->add('dynamic_model/Controller_AutoCreator');
 
 	}
+	
 
 	function afterSave($obj){
 		if($this->loaded()){

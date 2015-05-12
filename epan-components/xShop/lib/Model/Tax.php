@@ -50,10 +50,6 @@ class Model_Tax extends \Model_Document{
 		$this->save();
 	}
 
-	function account(){
-		return $this->ref('tax_account_id');
-	}
-
 	function beforeDelete($m){
 		if($this->ref('xShop/ItemTaxAssociation')->count()->getOne())
 			throw $this->exception('Cannot Delete, First delete Item Tax Included','Growl');		

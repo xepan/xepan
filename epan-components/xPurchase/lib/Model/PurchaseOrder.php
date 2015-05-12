@@ -49,7 +49,7 @@ class Model_PurchaseOrder extends \Model_Document{
 
 	function forceDelete(){
 		$this->ref('xPurchase/PurchaseInvoice')->each(function($pi){
-			$pi->delete();
+			$pi->forceDelete();
 		});
 		
 		$this->delete();

@@ -40,6 +40,7 @@ class Model_Department extends \Model_Table{
 		$this->hasMany('xHR/SalaryTemplate','department_id');
 		$this->hasMany('xProduction/OutSourcePartyDeptAssociation','department_id');
 		$this->hasMany('xShop/QuantitySetCondition','department_phase_id');
+		$this->hasMany('xStore/Warehouse','department_id');
 
 
 		if(!isset($this->bypass_validations)){
@@ -110,11 +111,47 @@ class Model_Department extends \Model_Table{
 			$p->forceDelete();
 		});
 
+		$this->ref('xHR/SalaryTemplate')->each(function($p){
+			$p->forceDelete();
+		});
+
+		$this->ref('xShop/QuantitySetCondition')->each(function($p){
+			$p->forceDelete();
+		});
+
 		$this->ref('xHR/Employee')->each(function($emp){
 			$emp->forceDelete();
 		});
 
 		$this->ref('xProduction/JobCard')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xHR/Document')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xProduction/OutSourcePartyDeptAssociation')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xHR/HolidayBlock')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xShop/ItemDepartmentAssociation')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xShop/ItemDepartmentAssociation')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xProduction/Team')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xStore/Warehouse')->each(function($obj){
 			$obj->forceDelete();
 		});
 

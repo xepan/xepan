@@ -106,5 +106,10 @@ class Model_SocialPost extends \Model_Table {
 		foreach ($temp as $junk) {
 			$temp->delete();
 		}
+
+		$this->ref('xMarketingCampaign/SocialPosting')->each(function($q){
+			$q->forceDelete();
+		});
+		
 	}
 }

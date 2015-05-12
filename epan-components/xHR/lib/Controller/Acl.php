@@ -351,12 +351,15 @@ class Controller_Acl extends \AbstractController {
 			
 			$title = explode("_", $action_name);
 			for($i=0;$i<count($title);$i++){
-				if(in_array($title[$i],array('manage','see'))){
+				if(in_array($title[$i],array('manage','see','can'))){
 					unset($title[$i]);
 				}
 			}
 
 			$title = implode(" ", $title);
+			
+			if(isset($this->my_model->actions) and isset($this->my_model->actions[$full_acl_key]['caption']))
+				$title = $this->my_model->actions[$full_acl_key]['caption'];
 
 			$p = $this->owner->addFrame(ucwords($title),array('icon'=>$icon));
 			if($p and $this->owner->isEditing('fr_'.$this->api->normalizeName(ucwords($title)))){

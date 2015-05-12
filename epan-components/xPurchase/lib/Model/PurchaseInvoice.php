@@ -17,6 +17,8 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		$this->ref('xPurchase/PurchaseOrderItem')->each(function($obj){
 			$obj->newInstance()->load($obj->id)->set('invoice_id',null)->saveAndUnload();
 		});
+		
+		$this->delete();
 	}
 
 	function supplier(){
