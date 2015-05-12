@@ -11,6 +11,8 @@ class Model_LeadCategory extends \Model_Document {
 			'allow_edit'=>array(),
 			'allow_add'=>array(),
 			'allow_del'=>array(),
+			'can_see_activities'=>false,
+			'can_manage_attachments'=>false,
 		);
 
 	function init(){
