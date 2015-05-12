@@ -24,8 +24,13 @@ class Model_Opportunity extends \Model_Document {
 		$this->hasOne('xShop/Customer','customer_id')->sortable(true);
 		$this->hasOne('xHR/Employee','employee_id')->caption('Handled By')->sortable(true);
 		
+		$this->addField('opportunity')->type('text')->hint('New Sales of Any product');
 
-		$this->addField('name')->caption('Opportunity')->hint('New Sales of X product')->sortable(true);
+		$this->addExpression('name')->set(function($m,$q){
+			$name = "";
+			$name = $q->getField('lead_id');
+			return $name;
+		})->sortable(true);
 
 		$this->getElement('status')->enum($this->status)->defaultValue('active');
 
