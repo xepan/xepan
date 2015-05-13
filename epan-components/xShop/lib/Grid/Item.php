@@ -7,22 +7,33 @@ class Grid_Item extends \Grid{
 		parent::init();
 		
 		$this->add_sno();
-		$this->addQuickSearch(array('name'));
 		$this->addPaginator($ipp=100);
 		$self = $this;
+
+		$this->add('VirtualPage')->addColumn('Details','Details',array('icon'=>'edit'),$this)->set(function($p){
+			$selected_item = $p->add('xShop/Model_Item')->load($p->id);
+		
+			$filter_box = $p->add('View_Box')->setHTML('Item :: <b>'.$selected_item['name'].'</b>');
+
+			$tab = $p->add('Tabs');
+			$tab->addTabURL($p->api->url('xShop/page/owner/item_basic',array('item_id'=>$p->id)),'Basic');
+			$tab->addTabURL($p->api->url('xShop/page/owner/item_attributes',array('item_id'=>$p->id)),'Attributes');
+			$tab->addTabURL($p->api->url('xShop/page/owner/item_qtyandprice',array('item_id'=>$p->id)),'Qty & Price');
+			$tab->addTabURL($p->api->url('xShop/page/owner/item_media',array('item_id'=>$p->id)),'Media');
+			$tab->addTabURL($p->api->url('xShop/page/owner/item_category',array('item_id'=>$p->id)),'Category');
+			$tab->addTabURL($p->api->url('xShop/page/owner/item_affliate',array('item_id'=>$p->id)),'Affiliate');
+			$tab->addTabURL($p->api->url('xShop/page/owner/item_preview',array('item_id'=>$p->id)),'Preview');
+			$tab->addTabURL($p->api->url('xShop/page/owner/item_seo',array('item_id'=>$p->id)),'SEO');
+			$tab->addTabURL($p->api->url('xShop/page/owner/item_stock',array('item_id'=>$p->id)),'Stock');
+			$tab->addTabURL($p->api->url('xShop/page/owner/item_prophases',array('item_id'=>$p->id)),'Production Phases');
+			$tab->addTabURL($p->api->url('xShop/page/owner/item_account',array('item_id'=>$p->id)),'Accounts');
+			// $tab->addTabURL('xShop/page/owner/item_composition','Composition',array('item_id'));
+		});
 	}
 
 
 	function setModel($m,$fields){
 		parent::setModel($m,$fields);
-		//$this->addColumn('expander','details');
-		// $this->addColumn('expander','categories');
-		// $this->addColumn('expander','custom_fields',array("descr"=>"Custom Fields",'icon'=>'cog','icon_only'=>true));
-		// $this->addColumn('expander','specifications',array("descr"=>"Specfications",'icon'=>'cog','icon_only'=>true));
-		// $this->addColumn('expander','images',array("descr"=>"Images",'icon'=>'picture','icon_only'=>true));
-		// $this->addColumn('expander','attachments',array("descr"=>"Docs",'icon'=>'folder','icon_only'=>true));
-		// $this->addColumn('expander','rate_effect',array("descr"=>"Rate Effect",'icon'=>'cog','icon_only'=>true));
-		// $this->addColumn('pics_docs','pics_docs','Pics / Docs');
 		
 		$this->addColumn('Button','duplicate',array("descr"=>"Duplicate",'icon'=>'cog','icon_only'=>true));
 
@@ -40,13 +51,16 @@ class Grid_Item extends \Grid{
 			}
 			$this->js()->reload()->execute();
 		}
+		
+		$this->addQuickSearch($fields,null,'xShop/Filter_Item');
 
 	}
 	function recursiveRender(){
-		// $this->addMethod('format_name',function($g,$f){
-		// 	$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL($g->model['name']." Details",'index.php?page=xShop_page_owner_item_details&cut_page=1&xshop_items_id='.$g->model->id).'">'.$g->current_row[$f].'</a>';
-		// });
-		// $this->addFormatter('name','name');
+		$cat_btn = $this->addButton('Item Category Management');
+		if($cat_btn->isClicked()){
+			$this->js()->univ()->frameURL('Item Category',$this->api->url('xShop_page_owner_category'))->execute();
+		}
+
 		parent::recursiveRender();
 	}
 
@@ -63,6 +77,7 @@ class Grid_Item extends \Grid{
 
 	    $this->on('click','.do-set-default')->univ()->ajaxec(array($do_flag->getURL(), 'id'=>$this->js()->_selectorThis()->closest('tr')->data('id')));
 	}
+
 	function format_pics_docs($field){
 	    $this->current_row_html[$field] = $this->columns[$field]['tpl']->render();
 	}
