@@ -53,20 +53,11 @@ class Filter_Item extends \Filter_Base
         
         $v = trim($this->get('q'));
         $category= $this->get('category');
-        $type = array();
-
-        if($_POST[$this->type_field->name]){   
-            foreach ($_POST[$this->type_field->name] as $x) {
-                $type[$x]=$x;
-            }
-        }
-                                        
-        $status = $this->get('status');        
-        // if($this->api->isAjaxOutput())
-        //     throw new \Exception($type, 1);
         
+        $status = $this->get('status');
+        $type = $this->type_field->get();
 
-        if(!$v AND !$status AND !$category AND !count($type)) {
+        if(!($v OR $status OR $category OR $type)) {
             return;
         }
 
@@ -95,13 +86,13 @@ class Filter_Item extends \Filter_Base
         if($status)
             $and->where('is_publish',$status=='active'?1:0);
         
-        if(count($type) > 0){  
-            foreach ($type as $field) {                
-                $and->where($field,1);
+        if($type){
+            foreach (explode(",",$type) as $types) {
+                $and->where($types,1);
             }
         }
-        
+
         $and->where($or);
-        $q->debug()->having($and);
+        $q->having($and);
     }
 }
