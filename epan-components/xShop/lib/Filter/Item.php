@@ -18,7 +18,25 @@ class Filter_Item extends \Filter_Base
         $this->search_field = $this->addField('Line', 'q', '')->setAttr('placeholder','Search')->setNoSave();
         $this->status_field = $this->addField('Dropdown', 'status', '')->setEmptyText('Any Status')->setValueList(array('active'=>'Active','inactive'=>'InActive'))->setNoSave();
         $this->category_field = $this->addField('Dropdown', 'category', '')->setEmptyText('Any Item Category')->setModel($category_model);
-        $this->type_field = $this->addField('MultiSelect', 'type', '')->setValueList(array('is_saleable'=>'Saleable','is_purchasable'=>'Purchasable'));//->set('is_saleable');
+        $this->type_field = $this->addField('MultiSelect', 'type', '')
+                                    ->setValueList(
+                                            array('is_saleable'=>'Saleable',
+                                                'is_purchasable'=>'Purchasable',
+                                                'mantain_inventory'=>'Mantain Inventory',
+                                                'allow_negative_stock'=>'Negative Stock',
+                                                'is_productionable'=>'Productionable',
+                                                'website_display'=>'Website Display',
+                                                'is_designable'=>'Designable',
+                                                'is_template'=>'Template',
+                                                'enquiry_allow'=>'Allow Enquiry',
+                                                'show_price'=>'Show Price',
+                                                'is_visible_sold'=>'Item Remains Visible After Sold',
+                                                'enquiry_send_to_admin'=>'Enquiry Send To Admin',
+                                                'allow_comments'=>'Allow Comments',
+                                                'qty_from_set_only'=>'Qty From Set Only'
+                                                )
+                                        );
+
         $this->type_field->setAttr('multiple','multiple');
         $this->type_field->selectnemu_options=array('maxWidth'=>200);
 
@@ -35,18 +53,20 @@ class Filter_Item extends \Filter_Base
         
         $v = trim($this->get('q'));
         $category= $this->get('category');
-        
-        foreach ($_POST[$this->type_field->name] as $x) {
-            echo $x ."<br/>";
-        }
-        
-        $status = $this->get('status');
+        $type = array();
 
+        if($_POST[$this->type_field->name]){   
+            foreach ($_POST[$this->type_field->name] as $x) {
+                $type[$x]=$x;
+            }
+        }
+                                        
+        $status = $this->get('status');        
         // if($this->api->isAjaxOutput())
         //     throw new \Exception($type, 1);
         
 
-        if(!$v AND !$status AND !$category) {
+        if(!$v AND !$status AND !$category AND !count($type)) {
             return;
         }
 
@@ -54,7 +74,8 @@ class Filter_Item extends \Filter_Base
             return $this->view->model->addConditionLike($v, $this->fields);
         }
         if($this->view->model) {
-            $this->view->model->join('xshop_category_item.item_id',null,null,'ic');
+            if($category)
+                $this->view->model->join('xshop_category_item.item_id',null,null,'ic');
             $q = $this->view->model->_dsql();
         } else {
             $q = $this->view->dq;
@@ -74,7 +95,13 @@ class Filter_Item extends \Filter_Base
         if($status)
             $and->where('is_publish',$status=='active'?1:0);
         
+        if(count($type) > 0){  
+            foreach ($type as $field) {                
+                $and->where($field,1);
+            }
+        }
+        
         $and->where($or);
-        $q->having($and);
+        $q->debug()->having($and);
     }
 }
