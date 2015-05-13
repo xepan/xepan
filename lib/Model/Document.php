@@ -39,8 +39,8 @@ class Model_Document extends Model_Table{
 			$this->actions = array_merge(array('can_view'=>array('caption'=>'Whose created Document you can see')),$this->actions);
 			
 			if(!$this instanceof \Model_Attachment){
-				$this->actions = array_merge(array('can_manage_attachments' => array('caption'=>'Whose created Documents Attachemnt you can manage')),$this->actions);
-				$this->actions = array_merge(array('can_see_activities' => array('caption'=>'Whose created Documents Communications you can see')),$this->actions);
+				$this->actions = array_merge(array('can_manage_attachments' => array()),$this->actions);
+				$this->actions = array_merge(array('can_see_activities' => array()),$this->actions);
 			}
 			
 		}
