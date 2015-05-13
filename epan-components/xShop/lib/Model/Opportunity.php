@@ -20,11 +20,11 @@ class Model_Opportunity extends \Model_Document {
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
-		$this->hasOne('xMarketingCampaign/Lead','lead_id')->sortable(true);
-		$this->hasOne('xShop/Customer','customer_id')->sortable(true);
+		$this->hasOne('xMarketingCampaign/Lead','lead_id')->sortable(true)->group('a~6~Opportunity From');
+		$this->hasOne('xShop/Customer','customer_id')->sortable(true)->group('a~6');
 		// $this->hasOne('xHR/Employee','employee_id')->caption('Handled By')->sortable(true);
 		
-		$this->addField('opportunity')->type('text')->hint('New Sales of Any product');
+		$this->addField('opportunity')->type('text')->hint('New Sales of Any product')->mandatory(true);
 
 		$this->addExpression('name')->set(function($m,$q){
 				return "
@@ -43,6 +43,7 @@ class Model_Opportunity extends \Model_Document {
 
 		$this->hasMany('xShop/Quotation','opportunity_id');
 
+		$this->addHook('beforeSave',$this);
 		$this->addHook('afterInsert',$this);
 		$this->addHook('beforeDelete',$this);
 
@@ -50,9 +51,13 @@ class Model_Opportunity extends \Model_Document {
 	}
 
 	function afterInsert($obj,$new_id){
-		$obj->load($new_id);
+		// $obj->load($new_id);
 		// $obj->setStatus('active');
-		
+	}
+
+	function beforeSave(){
+		if( !($this['lead_id'] or $this['customer_id']) )
+			throw $this->exception('Lead or Customer Required','ValidityCheck')->setField('lead_id');
 	}
 
 	function beforeDelete(){

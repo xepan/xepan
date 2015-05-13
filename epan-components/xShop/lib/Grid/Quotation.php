@@ -32,6 +32,7 @@ class Grid_Quotation extends \Grid{
 	function setModel($quotation_model,$field=array()){
 		if(empty($field))
 			$field = array('to','quotation_number','name','customer','lead','opportunity','total_amount','tax','gross_amount','discount_voucher_amount','net_amount');
+		
 		$m=parent::setModel($quotation_model,$field);
 		$this->addFormatter('name','view');
 

@@ -22,10 +22,10 @@ class Model_Quotation extends \Model_Document{
 		// $this->addField('quotation_no');
 		$this->getElement('status')->enum($this->status)->defaultValue('draft');
 
-		$this->addField('total_amount')->type('money')->mandatory(true)->sortable(true);
-		$this->addField('gross_amount')->type('money')->mandatory(true)->sortable(true);
+		$this->addField('total_amount')->type('money')->mandatory(true)->sortable(true)->group('b~3');
+		$this->addField('gross_amount')->type('money')->mandatory(true)->sortable(true)->group('b~3');
 		$this->addField('discount_voucher')->group('b~3');
-		$this->addField('discount_voucher_amount')->group('b~3')->defaultValue(0);
+		$this->addField('discount_voucher_amount')->group('b~3')->defaultValue(0)->caption('Discount Amoount');
 		$this->addField('tax')->type('money')->group('b~3');
 		$this->addField('net_amount')->type('money')->mandatory(true)->group('b~3')->sortable(true);
 
