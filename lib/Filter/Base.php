@@ -78,7 +78,7 @@ class Filter_Base extends Filter
     }
 
     function defaultTemplate(){
-        // return array('form/horizontal');
+        return array('view/form/xquicksearch');
         return array('form/quicksearch');
     }
 }
