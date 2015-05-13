@@ -4,9 +4,9 @@ namespace xShop;
 class Grid_Opportunity extends \Grid{
 	function init(){
 		parent::init();
+		
 		$this->addPaginator($ipp=50);
 		$this->add_sno();
-
 	}
 	function setModel($model,$fields=array()){
 		if(!count($fields))
