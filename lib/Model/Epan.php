@@ -169,6 +169,8 @@ class Model_Epan extends Model_Table {
 
 		$this->api->event('epan_before_delete',$this);
 
+		$this->api->db->dsql()->table('last_seen_updates')->where('employee_id',null)->where('epan_id',$this->id)->debug()->delete();
+
 		$this->api->current_website = $saved_current_website;
 
 	}
@@ -328,7 +330,6 @@ class Model_Epan extends Model_Table {
 			$ep->save();
 			$user->allowApp($ep->id);
 		}
-
 
 		$this->api->event('epan_after_created',$this);
 

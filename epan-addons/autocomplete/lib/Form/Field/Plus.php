@@ -21,6 +21,7 @@ class Form_Field_Plus extends Form_Field_Basic
                 ->set(function($page)use($self) {
                     $form = $page->add('Form_Stacked');
                     $form->setModel($self->model);
+                    $form->addSubmit('Add And Select');
                     if ($form->isSubmitted()) {
                         $form->update();
                         $js = array();

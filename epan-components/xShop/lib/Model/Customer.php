@@ -28,7 +28,7 @@ class Model_Customer extends Model_MemberDetails{
 		$user_j->addField('customer_name','name')->group('a~6~Basic Info')->mandatory(true);
 		$user_j->addField('customer_email','email')->sortable(true)->group('a~6');
 		$user_j->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(50)->group('a~6')->sortable(true)->mandatory(false);
-		$user_j->addField('user_account_activation','is_active')->type('boolean')->defaultValue(true)->group('a~6')->sortable(true)->mandatory(false);
+		$user_j->addField('user_account_activation','is_active')->type('boolean')->defaultValue(true)->group('a~6')->sortable(true)->mandatory(false)->caption('Login User Account Activated');
 
 		$this->addCondition('type',50);
 		$this->addCondition('user_epan_id',$this->api->current_website->id);

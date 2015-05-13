@@ -76,11 +76,11 @@ class page_tests_01epanCreated extends page_tests_base {
     function prepare_newEpanCreated_HR(){
             $this->proper_responses['Test_newEpanCreated_HR']=array(
                   'default_departments'=>9,
-                  'employee'=>0,
+                  'employee'=>1,
                   'employee_attandance'=>0,                        
                   'employee_leave'=>0,
                   'employee_setup'=>'ok',
-                  'documents_count'=>'128',
+                  'documents_count'=>'140',
                   'default_post_count'=>1,
                   'default_post'=>'Director',
             );
@@ -159,6 +159,7 @@ class page_tests_01epanCreated extends page_tests_base {
                   'default_quotation_layout'=>1,
                   'default_cashvoucher_layout'=>1,
                   'default_order_layout'=>1,
+                  'default_priorities'=>4,
             );
      }
 
@@ -193,6 +194,7 @@ class page_tests_01epanCreated extends page_tests_base {
                   'default_quotation_layout'=>$current_xshopconfig['quotation_email_body']?1:0,
                   'default_cashvoucher_layout'=>$current_xshopconfig['cash_voucher_email_body']?1:0,
                   'default_order_layout'=>$current_xshopconfig['purchase_order_detail_email_body']?1:0,
+                  'default_priorities'=>$this->add('xShop/Model_Priority')->count()->getOne(),
             );
      }
 
