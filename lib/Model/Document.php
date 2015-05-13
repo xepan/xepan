@@ -47,7 +47,7 @@ class Model_Document extends Model_Table{
 
 		// set icons
 		foreach ($this->actions as $ac_view=>$details) {
-			if(!isset($details['icon']) and isset($this->default_icons[$ac_view]))
+			if(!isset($details['icon']) and isset($this->default_icons[$ac_view]) and $this->actions[$ac_view] != false)
 				$this->actions[$ac_view]['icon'] = $this->default_icons[$ac_view];
 		}
 
