@@ -15,9 +15,9 @@ class page_xShop_page_owner_afflilate extends page_xShop_page_owner_main{
 		$aff_col = $cols->addColumn(9);
 		$afflilate_type_model = $this->add('xShop/Model_AffiliateType');
 		$afflilate_type_model->addCondition('application_id',$application_id);
-		$type_crud=$type_col->add('CRUD');
+		$type_crud=$type_col->add('CRUD',array('grid_class'=>'xShop/Grid_AffiliateType'));
 
-		$type_crud->setModel($afflilate_type_model,array('name'));//,array('name'));
+		$type_crud->setModel($afflilate_type_model);//,array('name'));
 		$afflilate_model = $this->add('xShop/Model_Affiliate');
 		$afflilate_model->addCondition('application_id',$application_id);
 
@@ -27,11 +27,9 @@ class page_xShop_page_owner_afflilate extends page_xShop_page_owner_main{
 				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'. $aff_col->js()->reload(array('afflilatetype_id'=>$g->model->id)) .'">'.$g->current_row[$f].'</a>';
 			});
 			$g->addFormatter('name','filterafflilate');
-			$g->add_sno();
 		}
 
-		$type_crud->grid->addQuickSearch(array('name'));
-		$type_crud->grid->addPaginator($ipp=50);
+		
 
 		if($_GET['afflilatetype_id']){
 			$this->api->stickyGET('afflilatetype_id');
@@ -49,12 +47,11 @@ class page_xShop_page_owner_afflilate extends page_xShop_page_owner_main{
 			$afflilate_model->addCondition('affiliatetype_id',$_GET['afflilatetype_id']);
 		}
 
-		$aff_crud=$aff_col->add('CRUD');
+		$aff_crud=$aff_col->add('CRUD',array('grid_class'=>'xShop/Grid_Affiliate'));
 
-		$aff_crud->setModel($afflilate_model,array('company_name','owner_name','logo_url','is_active','pnhone_no','mobile_no','email_id','website_url','office_address','city','state','country','zip_code','description'));//,array('name'));
+		$aff_crud->setModel($afflilate_model);//,array('name'));
 		
-		$aff_crud->grid->addQuickSearch(array('name','company_name','phone_no','mobile_no','email_id','website_url','state','zip_code'));
-		$aff_crud->grid->addPaginator($ipp=50);
+		
 	}
 }
 

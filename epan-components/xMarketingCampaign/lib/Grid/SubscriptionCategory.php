@@ -19,7 +19,7 @@ class Grid_SubscriptionCategory extends \Grid{
 		$this->fooHideAlways('ending_date');
 		$this->addButton('Jump to Data Grabber ...')->js('click')->redirect($this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb'));
 		
-		$this->addFormatter('total_phrases','total_phrases');	
+		// $this->addFormatter('total_phrases','total_phrases');	
 
 		return $m;
 	}
