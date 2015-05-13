@@ -95,8 +95,10 @@ class Controller_Acl extends \AbstractController {
 		} 
 
 		foreach ($this->permissions as $key => $value) {
-			if(isset($this->my_model->actions) && isset($this->my_model->actions[$key]) && $this->my_model->actions[$key] ==false){
+			if(isset($this->my_model->actions) && isset($this->my_model->actions[$key]) && ($this->my_model->actions[$key] === false || $this->my_model->actions[$key] === null )){
 				// This Permission is set as false or null in model so .. just bypass this leaving itsvale as default in public variable
+				// echo $key;
+				unset($this->permissions[$key]);
 			}else{
 				$this->permissions[$key] = $acl_model[$key];
 			}
@@ -193,7 +195,9 @@ class Controller_Acl extends \AbstractController {
 					$this->owner->js()->univ()->frameURL('ACL Status for '.$self->owner->model->document_name . $dept , $vp->getURL())->execute();
 				}
 			}else{
-				$btn = $this->owner->grid->buttonset->add('View')->set('ACL APPLIED');
+				if(!$this->permissions['can_view'] OR $this->permissions['can_view']=='No'){
+					$this->owner->grid->add('View',null,'subheader')->set(' Records Accessibility Restrictions Applied')->addClass('atk-swatch-red');
+				}
 			}
 		}
 
@@ -339,6 +343,8 @@ class Controller_Acl extends \AbstractController {
 	}
 
 	function manageAction($action_name, $full_acl_key=null , $icon = null){
+
+		if(!isset($this->permissions[$full_acl_key])) return;
 
 		if(!$icon and isset($this->my_model->actions)){
 			$icon = $this->my_model->actions[$full_acl_key]['icon']?:'edit';
