@@ -145,6 +145,10 @@ class Model_Employee extends \Model_Table{
 	}
 
 	function forceDelete(){
+		$this->ref('CreatedAccounts')->each(function($m){
+			$m->set('employee_id',NULL)->saveAndUnload();
+		});
+
 		$this->ref('xHR/Salary')->each(function($p){
 			$p->forceDelete();
 		});
@@ -176,12 +180,16 @@ class Model_Employee extends \Model_Table{
 
 		// Remove created_by_id from all documents
 		$done_documents = array();
-		foreach ($docs=$this->add('xHR/Model_Document') as $doc_junk) {
-			$dm = $docs->modelName();
+
+		$docs_model=$this->add('xHR/Model_Document');
+
+		$docs= $docs_model->getDefaults();
+		foreach ($docs as $doc_junk) {
+			$dm = $docs_model->modelName($doc_junk['name']);
 			$model = $this->add($dm);
 			if(!in_array($model->root_document_name,$done_documents)){
 				try{
-					$model = $this->add($docs->modelName($model->root_document_name));
+					$model = $this->add($docs_model->modelName($model->root_document_name));
 					if(!(isset($model->is_view) AND $model->is_view)){
 						$model->_dsql()->where('created_by_id',$this->id)->where('epan_id',$this->api->current_website->id)->set('created_by_id',null)->update();
 					}

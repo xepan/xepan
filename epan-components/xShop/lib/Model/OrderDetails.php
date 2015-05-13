@@ -213,7 +213,7 @@ class Model_OrderDetails extends \Model_Document{
 		foreach ($dept_status_all as $dept_status) {
 			if($dept_status->jobCardNotCreated()) continue;
 			$dept_status_dept=$dept_status->department();
-			$jc = $this->add($dept_status_dept['related_application_namespace'].'/Model_'.$dept_status_dept['jobcard_document']);
+			$jc = $this->add($dept_status_dept->defaultDocument());
 			$jc->addCondition('orderitem_id',$this['id']);
 			$jc->addCondition('to_department_id',$dept_status_dept->id);
 			$jc->tryLoadAny();

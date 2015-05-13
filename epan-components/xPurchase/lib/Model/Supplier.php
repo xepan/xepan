@@ -40,6 +40,7 @@ class Model_Supplier extends \Model_Document{
 
 		$this->hasMany('xPurchase/PurchaseOrder','supplier_id');
 		$this->hasMany('xPurchase/PurchaseInvoice','supplier_id');
+		$this->hasMany('xAccount/Account','supplier_id');
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('afterInsert',$this);
 
@@ -67,8 +68,9 @@ class Model_Supplier extends \Model_Document{
 	function beforeDelete(){
 		$po = $this->ref('xPurchase/PurchaseOrder')->count()->getOne();
 		$pi = $this->ref('xPurchase/PurchaseInvoice')->count()->getOne();
-		if($po or $pi)
-			throw $this->exception('Canot Delete, First Delete PurchaseOrder or PurchaseInvoice');
+		$supplier = $this->ref('xAccount/Account')->count()->getOne();
+		if($po or $pi or $supplier)
+			throw $this->exception('Canot Delete, First Delete PurchaseOrder or PurchaseInvoice or Account');
 	}
 
 	function forceDelete(){
@@ -78,6 +80,10 @@ class Model_Supplier extends \Model_Document{
 		
 		$this->ref('xPurchase/PurchaseInvoice')->each(function($pi){
 			$pi->forceDelete();
+		});
+
+		$this->ref('xAccount/Account')->each(function($account){
+			$account->forceDelete();
 		});
 
 		$this->delete();

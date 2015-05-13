@@ -24,5 +24,9 @@ class Plugins_epanDelete extends \componentBase\Plugin {
 				$model->forceDelete();
 			});
 		}
+
+		$this->api->db->dsql()->table('xmarketingcampaign_socialconfig')->where('epan_id',$this->api->current_website->id)->delete();
+		$this->api->db->dsql()->table('xmarketingcampaign_googlebloggerconfig')->where('epan_id',$this->api->current_website->id)->delete();
+
 	}
 }
