@@ -26,7 +26,7 @@ class Grid_OutSourceParty extends \Grid{
 		
 		$contact_no="";
 		if($this->model['contact_no'])
-			$contact_no="<i class='glyphicon glyphicon-earphone atk-effect-success'></i>"	;
+			$contact_no="<i class='glyphicon glyphicon-earphone atk-effect-success '></i>"	;
 		$email="";
 		if($this->model['email_id'])
 			$email="<i class ='glyphicon glyphicon-envelope  atk-effect-success'></i>"	;	

@@ -14,17 +14,16 @@ class page_xPurchase_page_owner_supplier extends page_xPurchase_page_owner_main 
 		$this->app->title=$this->api->current_department['name'] .': Supplier';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Supplier Manager <small> Manage your supplier </small>');
 
-		$crud=$this->add('CRUD');
+		$crud=$this->add('CRUD',array('grid_class'=>'xPurchase/Grid_Supplier'));
 		$crud->setModel('xPurchase/Model_Supplier',array('name','owner_name','city','contact_person_name',
 														'accounts_person_name','code','address','state',
 														'pin_code','fax_number','contact_no','email','tin_no','pan_no','is_active'
-														),array('name','owner_name','city','email','contact_no','is_active'));
+														),array());
 		
-		$crud->grid->addQuickSearch(array('name','code','city','state','pin_code','email','contact_no','created_at'));
-		$crud->grid->addPaginator($ipp=50);
+		
 		$crud->add('xHR/Controller_Acl');
-		$crud->grid->add_sno();
-		// $purchase_order = $this->add('xPurchase/Model_PurchaseOrder');
+		$purchase_order = $this->add('xPurchase/Model_PurchaseOrder');
+		
 		$self=$this;
 		if(!$crud->isEditing()){
 			$g=$crud->grid;	
@@ -35,9 +34,5 @@ class page_xPurchase_page_owner_supplier extends page_xPurchase_page_owner_main 
 			$g->addFormatter('total_purchase_order','total_purchase_order');
 		}
   
-  			if($crud->isEditing()){
-   
-    			// $crud->add('Controller_FormBeautifier');
-     		}
 	}
 }
