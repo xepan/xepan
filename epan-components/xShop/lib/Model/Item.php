@@ -44,16 +44,16 @@ class Model_Item extends \Model_Table{
 		$this->addField('is_purchasable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
 		$this->addField('mantain_inventory')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
 		$this->addField('allow_negative_stock')->type('boolean')->group('f~3~<i class=\'fa fa-cog\' > Item Allow Options</i>');
-		$this->addField('is_servicable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('is_servicable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>')->system(true);
 		$this->addField('is_productionable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
 		$this->addField('website_display')->type('boolean')->group('f~2');
-		$this->addField('is_downloadable')->type('boolean')->group('f~2');
-		$this->addField('is_rentable')->type('boolean')->group('f~2');
+		$this->addField('is_downloadable')->type('boolean')->group('f~2')->system(true);
+		$this->addField('is_rentable')->type('boolean')->group('f~2')->system(true);
 		$this->addField('is_designable')->type('boolean')->group('f~2');
 		$this->addField('is_template')->type('boolean')->defaultValue(false)->group('f~2');
 		$this->addField('is_enquiry_allow')->type('boolean')->group('f~2');
 		$this->addField('is_attachment_allow')->type('boolean')->group('f~2');
-		$this->addField('is_fixed_asset')->type('boolean')->group('f~2');
+		$this->addField('is_fixed_asset')->type('boolean')->group('f~2')->system(true);
 		$this->addField('warrenty_days')->type('int')->group('f~2');
 		
 		//Item Display Options
