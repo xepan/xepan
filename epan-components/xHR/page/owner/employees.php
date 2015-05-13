@@ -10,7 +10,7 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 		$cat_col = $l->addColumn(3);
 		$emp_col = $l->addColumn(9);
 			
-		//Department
+		//Employee Lists
 		$emp_model=$this->add('xHR/Model_Employee');
 		$emp_crud = $cat_col->add('CRUD',array('grid_class'=>'xHR/Grid_Employee'));
 		$emp_crud->setModel($emp_model);
@@ -26,8 +26,7 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 		$emp_crud->grid->addPaginator($ipp=50);
 
 		// $emp_col->add('xShop/View_Badges_ItemPage');
-		if($_GET['employee_id']){
-			$this->api->stickyGET('employee_id');
+		if($this->api->stickyGET('employee_id')){
 			$selected_emp = $this->add('xHR/Model_Employee')->load($_GET['employee_id']);
 			$filter_box = $emp_col->add('View_Box')->setHTML('Employee :: '.$selected_emp['name'] . ' / '. $selected_emp->department()->get('name').' / '.$selected_emp->post()->get('name'). ' / '. ($selected_emp['is_active']?'Active':'InActive'))->addClass('xemployee_box');
 			$filter_box->add('Icon',null,'Button')

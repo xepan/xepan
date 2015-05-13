@@ -23,7 +23,7 @@ class Model_Task extends \Model_Document{
 		$this->addField('name');
 		$this->addField('subject');
 		$this->addField('content')->type('text')->display(array('form'=>'RichText'));
-		$this->addField('Priority')->enum(array('low','Medium','High','Urgent'))->defaultValue('Medium');
+		$this->addField('Priority')->enum(array('Low','Medium','High','Urgent'))->defaultValue('Medium');
 
 		$this->addField('is_default_jobcard_task')->type('boolean')->defaultValue(false)->system(true);
 

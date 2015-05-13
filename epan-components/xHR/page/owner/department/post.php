@@ -22,7 +22,11 @@ class page_xHR_page_owner_department_post extends page_xHR_page_owner_main {
 			// $crud->grid->addFormatter('name','grid/inline');
 			// Employees Display under current Post
 			$this->add('VirtualPage')->addColumn('Employees','Employees',array('icon'=>'users'),$crud->grid)->set(function($p){
-				$p->add('Grid')->addSno()->setModel('xHR/Model_Employee',array('name'))->addCondition('post_id',$p->id);
+				$emp_model = $this->add('xHR/Model_Employee')
+					->addCondition('post_id',$p->id)
+					->addCondition('department_id',$_GET['hr_department_id']);
+				$p->add('CRUD')
+				->setModel($emp_model,array(),array('name'));
 			});
 		}
 

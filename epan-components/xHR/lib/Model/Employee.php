@@ -10,14 +10,14 @@ class Model_Employee extends \Model_Table{
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
-		$this->hasOne('xHR/Post','post_id')->group('a~3~Basic Inf0');
-		$this->hasOne('Users','user_id');
-		$this->hasOne('xHR/Department','department_id');
+		$this->hasOne('xHR/Post','post_id')->group('a~3~Basic Info')->display(array('form'=>'autocomplete/Basic'));
+		$this->hasOne('Users','user_id')->display(array('form'=>'autocomplete/Plus'));
+		$this->hasOne('xHR/Department','department_id')->display(array('form'=>'autocomplete/Basic'));
 		
 		//basic Details
-		$this->addField('name')->Caption('Full Name')->group('a~5')->sortable(true);
+		$this->addField('name')->Caption('Full Name')->group('a~5~Basic Info')->sortable(true)->mandatory(true);
 		$this->addField('dob')->type('date')->Caption('Date Of Birth')->group('a~3');
-		$this->addField('gender')->enum(array('male','female'))->group('a~2');
+		$this->addField('gender')->enum(array('male','female'))->group('a~2')->mandatory(true);
 		$this->add('filestore/Field_Image','empolyee_image_id');
 		$this->addField('is_active')->type('boolean')->defaultValue(true)->group('a~2');
 		
@@ -34,7 +34,7 @@ class Model_Employee extends \Model_Table{
 
 		//Employment Detail
 		
-		$this->addField('status')->enum(array('active','left'))->group('b~3~Employment Details');
+		$this->addField('status')->enum(array('active','left'))->group('b~3~Employment Details')->defaultValue('active')->mandatory(true);
 		$this->addField('doj')->type('date')->Caption('Date Of Joining')->group('b~3~bl');
 		$this->addField('company_email_id')->group('b~3~bl');
 		$this->addField('offer_date')->type('date')->group('b~3');
@@ -42,7 +42,7 @@ class Model_Employee extends \Model_Table{
 		$this->addField('contract_end_date')->type('date')->group('b~3');
 		$this->addField('date_of_retirement')->type('date')->group('b~3');
 		$this->addField('resignation_letter_date')->type('date')->group('b~3');
-		$this->addField('seen_till');
+		$this->addField('seen_till')->system(true);
 		// $this->addField('salary_mode')->enum(array('cheque','cash','bank'))->group('b~3');
 		// $this->addField('reason_of_resignation')->type('text')->group('b~3');
 		// $this->addField('feedback')->type('text')->group('b~3');
