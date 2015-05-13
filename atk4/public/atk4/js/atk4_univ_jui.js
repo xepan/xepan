@@ -6,7 +6,7 @@ $.each({
                         * work perfectly with it
                         */
         var dialog=$('<div class="dialog dialog_autosize" title="Untitled"><div style="min-height: 300px"></div>').appendTo('body');
-        if(options.noAutoSizeHack)dialog.removeClass('dialog_autosize');
+        // if(options.noAutoSizeHack)dialog.removeClass('dialog_autosize');
         dialog.dialog(options);
         if(options.customClass){
             dialog.parent().addClass(options.customClass);
@@ -55,8 +55,8 @@ $.each({
         return this.dialogPrepare($.extend({
             bgiframe: true,
             modal: true,
-            width: 1000,
-            position: { my:'top',at:'top+100','of':window },
+            width: $(window).width()-100,
+            position: { my:'top',at:'top+10','of':window },
             autoOpen:false,
             beforeClose: function(){
                 if($(this).is('.atk4_loader')){
@@ -67,7 +67,7 @@ $.each({
             open: function(x){
                 $("body").css({ overflow: 'hidden' })
                 .children('.atk-layout').addClass('visible-dialog');
-                $(x.target).css({'max-height': $(window).height()-180});
+                $(x.target).css({'max-height': $(window).height()-80});
             },
             close: function(){
                 $("body").css({ overflow: 'auto' })
