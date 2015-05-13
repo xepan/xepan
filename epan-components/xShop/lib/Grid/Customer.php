@@ -9,12 +9,13 @@ class Grid_Customer extends \Grid{
 
 		if($this->hasColumn('item_name')) $this->removeColumn('item_name');
 		if($this->hasColumn('password')) $this->removeColumn('password');
+		// if($this->hasColumn('address')) $this->removeColumn('address');
 
 		$this->addFormatter('customer_name','wrap');
-		// $this->addFormatter('address','wrap');
-		// $this->addFormatter('customer_email','wrap');
-		// $this->addFormatter('other_emails','wrap');
-		// $this->addFormatter('mobile_number','wrap');
+		
+		$this->addFormatter('address','wrap');
+		$this->addFormatter('customer_email','wrap');
+		$this->addFormatter('mobile_number','wrap');
 		
 		$this->fooHideAlways('state');
 		$this->fooHideAlways('country');

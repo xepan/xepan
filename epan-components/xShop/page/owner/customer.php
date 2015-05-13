@@ -57,7 +57,7 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 										'shipping_address'
 										),
 								array('customer_name','customer_email',
-										'mobile_number','city','state',
+										'mobile_number','address','city','state',
 										'country','pincode')
 								);
 
