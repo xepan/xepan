@@ -53,10 +53,18 @@ class Filter_Item extends \Filter_Base
         
         $v = trim($this->get('q'));
         $category= $this->get('category');
-        $type = $this->type_field->get();
-        $status = $this->get('status');
         
-        if(!$v AND !$status AND !$category AND !$type) {
+        foreach ($_POST[$this->type_field->name] as $x) {
+            echo $x ."<br/>";
+        }
+        
+        $status = $this->get('status');
+
+        // if($this->api->isAjaxOutput())
+        //     throw new \Exception($type, 1);
+        
+
+        if(!$v AND !$status AND !$category) {
             return;
         }
 

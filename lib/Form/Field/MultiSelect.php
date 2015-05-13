@@ -14,13 +14,13 @@
 
    See LICENSE or LICENSE_COM for more information
  =====================================================ATK4=*/
-class Form_Field_MultiSelect extends Form_Field_DropDown {
+class Form_Field_MultiSelect extends Form_Field_DropDownNormal {
 
     public $selectnemu_options = array();
     public $show_filter = true;
 
     function getInput($attr=array()){
-        $this->js(true)->multiselect($this->selectnemu_options);
+        // $this->js(true)->multiselect($this->selectnemu_options);
         $multi = isset($this->attr['multiple']);
         $output=$this->getTag('select',array_merge(array(
                         'name'=>$this->name . ($multi?'[]':''),
@@ -55,7 +55,7 @@ class Form_Field_MultiSelect extends Form_Field_DropDown {
     }
 
     function render(){
-        $this->js(true)->_load('jquery.multiselect.min')->_css('jquery.multiselect')->multiselect();
+        $this->js(true)->_load('jquery.multiselect.min')->_css('jquery.multiselect')->multiselect($this->selectnemu_options);
         if($this->show_filter){
             $this->js(true)->_load('jquery.multiselect.filter')->_css('jquery.multiselect.filter')->multiselectfilter();
         }
