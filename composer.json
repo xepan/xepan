@@ -1,24 +1,29 @@
 {
-	"name": "xepan/xepan",
-	"type": "project",
-	"version": "1.0.5",
-	"keywords": ["cms","xepan"],
-	"homepage": "http://xepan.org/",
-	"license": "MIT",
-	"dist": {
-		"url": "http://xepan.org/xepan-master-1.0.5.zip",
-		"type": "zip"
-	},
-	"source": {
-		"url": "https://github.com/xepan/xepan.git",
-		"type": "git",
-		"reference": "origin/master"
-	},
-	"autoload": {
-		"psr-0": {"": "lib/"},
-		"files": ["/lib/static.php"]
-	},
-	"require": {
-		"omnipay/omnipay": "~2.0"
-	}
+    "name": "xepan/xepan",
+    "type": "project",
+    "version": "1.0.5",
+    "keywords": ["cms","xepan"],
+    "homepage": "http://xepan.org/",
+    "license": "AGPL",
+    "dist": {
+        "url": "http://xepan.org/xepan-master-1.0.5.zip",
+        "type": "zip"
+    },
+    "source": {
+        "url": "https://github.com/xepan/xepan.git",
+        "type": "git",
+        "reference": "origin/master"
+    },
+    "autoload": {
+        "psr-0": {"": "lib/"},
+        "files": ["/lib/static.php"]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.5.x-dev"
+        }
+    },
+    "require": {
+        "omnipay/omnipay": "~2.0"
+    }
 }

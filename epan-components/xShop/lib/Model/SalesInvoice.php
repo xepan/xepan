@@ -11,10 +11,26 @@ class Model_SalesInvoice extends Model_Invoice{
 
 	function init(){
 		parent::init();
+
+		$this->hasMany('xShop/OrderDetails','invoice_id',null,'UsedInOrderDetails');
+
 		$this->addCondition('type','salesInvoice');
 
 		$this->addExpression('invoiceitem_count')->set($this->refSql('xShop/InvoiceItem')->count());
 	}
+
+	function forceDelete(){
+		$this->ref('UsedInOrderDetails')->each(function($obj){$obj->newInstance()->load($obj->id)->set('invoice_id',null)->save();});
+		$this->delete();
+	}
+
+	function orderItem(){
+		if(!$this['orderitem_id']){
+			return false;
+		}
+		return $this->ref('orderitem_id');
+	}
+
 
 	function customer(){
 		return $this->ref('customer_id');
