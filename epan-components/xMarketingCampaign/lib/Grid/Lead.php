@@ -1,7 +1,9 @@
 <?php
 
 namespace xMarketingCampaign;
+
 class Grid_Lead extends \Grid{
+	
 	function init(){
 		parent::init();
 
@@ -40,6 +42,16 @@ class Grid_Lead extends \Grid{
 		$this->hasColumn('is_ok')?$this->removeColumn('is_ok'):"";
 		return $m;
 	}
+
+	function recursiveRender(){
+		
+		$btn= $this->addButton("Lead Category Management");
+		if($btn->isClicked()){
+			$this->js()->univ()->frameURL('lead_category','Lead Category')->execute();
+		}
+		parent::recursiveRender();
+	}
+
 	function formatRow(){
 		$str = "";
 		if($this->model['phone'])

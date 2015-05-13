@@ -6,50 +6,9 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 		$this->app->title=$this->api->current_department['name'] .': Employee';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Employee Management <small> Manage companies employees </small>');
 
-		$l=$this->add('Columns');
-		$cat_col = $l->addColumn(3);
-		$emp_col = $l->addColumn(9);
-			
-		//Employee Lists
 		$emp_model=$this->add('xHR/Model_Employee');
-		$emp_crud = $cat_col->add('CRUD',array('grid_class'=>'xHR/Grid_Employee'));
+		$emp_crud = $this->add('CRUD',array('grid_class'=>'xHR/Grid_Employee'));
 		$emp_crud->setModel($emp_model);
-
-		if(!$emp_crud->isEditing()){
-			$emp_crud->grid->addMethod('format_name',function($g,$f)use($emp_col){
-				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$emp_col->js()->reload(array('employee_id'=>$g->model->id)).'">'.$g->current_row[$f].'</a>';
-			});
-			$emp_crud->grid->addFormatter('name','name');
-		}
-
-		$emp_crud->grid->addQuickSearch(array('name'));
-		$emp_crud->grid->addPaginator($ipp=50);
-
-		// $emp_col->add('xShop/View_Badges_ItemPage');
-		if($this->api->stickyGET('employee_id')){
-			$selected_emp = $this->add('xHR/Model_Employee')->load($_GET['employee_id']);
-			$filter_box = $emp_col->add('View_Box')->setHTML('Employee :: '.$selected_emp['name'] . ' / '. $selected_emp->department()->get('name').' / '.$selected_emp->post()->get('name'). ' / '. ($selected_emp['is_active']?'Active':'InActive'))->addClass('xemployee_box');
-			$filter_box->add('Icon',null,'Button')
-            ->addComponents(array('size'=>'mega'))
-            ->set('cancel-1')
-            ->addStyle(array('cursor'=>'pointer'))
-            ->on('click',function($js) use($filter_box,$emp_col) {
-                $filter_box->api->stickyForget('employee_id');
-                return $filter_box->js(null,$emp_col->js()->reload())->hide()->execute();
-            });
-            
-            $filter_box->js('reload')->reload();
-
-		$tab = $emp_col->add('Tabs');
-			$tab->addTabURL('xHR_page_owner_employee_basic','Basic',array('employee_id'));
-			$tab->addTabURL('xHR_page_owner_employee_qualification','Qualification',array('employee_id'));
-			$tab->addTabURL('xHR_page_owner_employee_media','Media',array('employee_id'));
-			$tab->addTabURL('xHR_page_owner_employee_workexperience','Work Experience',array('employee_id'));
-			$tab->addTabURL('xHR_page_owner_employee_department','Department',array('employee_id'));
-			$tab->addTabURL('xHR_page_owner_employee_account','User Account',array('employee_id'));
-			$tab->addTabURL('xHR_page_owner_employee_employeeemail','Employee Email',array('employee_id'));
-		}else{
-			$emp_col->add('View_Warning')->set('Select any one Employees');
-		}	
+		
 	}
 }
