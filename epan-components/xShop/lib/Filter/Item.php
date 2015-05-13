@@ -18,6 +18,7 @@ class Filter_Item extends \Filter_Base
         $this->search_field = $this->addField('Line', 'q', '')->setAttr('placeholder','Search')->setNoSave();
         $this->status_field = $this->addField('Dropdown', 'status', '')->setEmptyText('Any Status')->setValueList(array('active'=>'Active','inactive'=>'InActive'))->setNoSave();
         $this->status_field = $this->addField('Dropdown', 'category', '')->setEmptyText('Any Item Category')->setModel($category_model);
+        $this->status_field = $this->addField('Dropdown', 'type', '')->setEmptyText('Any Item Type')->setValueList(array('is_saleable'=>'Saleable','is_purchasable'=>'Purchasable'));
 
     }
 
@@ -63,6 +64,6 @@ class Filter_Item extends \Filter_Base
             $and->where('is_publish',$status=='active'?1:0);
         
         $and->where($or);
-        $q->debug()->having($and);
+        $q->having($and);
     }
 }
