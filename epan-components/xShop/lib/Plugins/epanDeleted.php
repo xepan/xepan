@@ -20,7 +20,7 @@ class Plugins_epanDeleted extends \componentBase\Plugin {
 						'Model_CategoryItem',
 						'Model_CustomRate',
 						'Model_DiscountVoucher',
-						'Model_Invoice',
+						'Model_SalesInvoice',
 						'Model_Item',
 						'Model_ItemComposition',
 						'Model_ItemEnquiry',

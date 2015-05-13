@@ -41,6 +41,7 @@ class Model_Department extends \Model_Table{
 		$this->hasMany('xProduction/OutSourcePartyDeptAssociation','department_id');
 		$this->hasMany('xShop/QuantitySetCondition','department_phase_id');
 		$this->hasMany('xStore/Warehouse','department_id');
+		$this->hasMany('xShop/ItemCustomFieldAssos','department_phase_id');
 
 
 		if(!isset($this->bypass_validations)){
@@ -152,6 +153,10 @@ class Model_Department extends \Model_Table{
 		});
 
 		$this->ref('xStore/Warehouse')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xShop/ItemCustomFieldAssos')->each(function($obj){
 			$obj->forceDelete();
 		});
 
@@ -368,6 +373,16 @@ class Model_Department extends \Model_Table{
 		$temp = $this->add('xHR/Model_Department');
 		$temp->addCondition('name','Store')->loadAny();
 		$this->load($temp->id);
+		return $this;
+	}
+
+	function tryLoadStore(){
+		if($this->loaded())
+			$this->unload();
+		$temp = $this->add('xHR/Model_Department');
+		$temp->addCondition('name','Store')->tryLoadAny();
+		if($temp->loaded())
+			$this->tryLoad($temp->id);
 		return $this;
 	}
 
