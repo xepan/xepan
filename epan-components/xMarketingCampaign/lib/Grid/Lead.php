@@ -37,21 +37,20 @@ class Grid_Lead extends \Grid{
 		$this->fooHideAlways('mobile_no');
 
 		$this->addFormatter('email','weblink');
-		$this->addQuickSearch($fields);
+		// $this->addQuickSearch($fields);
 
 		$this->hasColumn('is_ok')?$this->removeColumn('is_ok'):"";
+		$this->addQuickSearch(array($fields),null,'xMarketingCampaign/Filter_Lead');
 		return $m;
 	}
 
 	function recursiveRender(){
-		
 		$btn= $this->addButton("Lead Category Management");
 		if($btn->isClicked()){
-			$this->js()->univ()->frameURL('lead_category','Lead Category')->execute();
+			$this->js()->univ()->frameURL('Lead Category',$this->api->url('xMarketingCampaign_page_owner_leadcategory'))->execute();
 		}
 		parent::recursiveRender();
 	}
-
 	function formatRow(){
 		$str = "";
 		if($this->model['phone'])

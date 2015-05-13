@@ -4,14 +4,6 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 
 	function page_index(){
 		$this->app->title=$this->api->current_department['name'] .': NewsLetters';
-		$preview_vp = $this->add('VirtualPage');
-		$preview_vp->set(function($p){
-			$m=$p->add('xEnquiryNSubscription/Model_NewsLetter')->load($_GET['newsletter_id']);
-			$p->add('View')->set('Created '. $p->add('xDate')->diff(Carbon::now(),$m['created_at']) .', Last Modified '. $p->add('xDate')->diff(Carbon::now(),$m['updated_at']) )->addClass('atk-size-micro pull-right')->setStyle('color','#555');
-			$p->add('HR');
-			$p->add('View')->setHTML($m['matter']);
-		});
-
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-bullhorn"></i> '.$this->component_name. '<small> NewsLetters </small>');
 
 		$config_model=$this->add('xEnquiryNSubscription/Model_Config')->tryLoadAny();
@@ -23,28 +15,6 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 		$data=$this->add('xEnquiryNSubscription/Model_NewsLetter')->addCondition('created_by_app','xMarketingCampaign')->count()->getOne();
 		$v=$bg->add('View_Badge')->set('By This App')->setCount($data)->setCountSwatch('ink');
 
-		$cols = $this->add('Columns');
-		$cat_col = $cols->addColumn(3);
-		$news_col = $cols->addColumn(9);
-
-		$newsletter_category_model = $this->add('xEnquiryNSubscription/Model_NewsLetterCategory');
-
-		$cat_crud=$cat_col->add('CRUD');
-
-		$cat_crud->setModel($newsletter_category_model,array('name','posts'));
-		$cat_crud->add('xHR/Controller_Acl');
-
-		if(!$cat_crud->isEditing()){
-			$g=$cat_crud->grid;
-			$g->addMethod('format_filternewsletter',function($g,$f)use($news_col){
-				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'. $news_col->js()->reload(array('category_id'=>$g->model->id)) .'">'.$g->current_row[$f].'</a>';
-			});
-			$g->addFormatter('name','filternewsletter');
-			$g->add_sno();
-		}
-		$cat_crud->grid->addQuickSearch(array('name'));
-		$cat_crud->grid->addPaginator($ipp=50);
-
 		$newsletter_model = $this->add('xEnquiryNSubscription/Model_NewsLetter');
 		$newsletter_model->addExpression('unsend_emails')->set(function($m,$q){
 			$mq= $m->add('xEnquiryNSubscription/Model_EmailQueue');
@@ -52,59 +22,12 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 			return $mq->addCondition('newsletter_id',$q->getField('id'))->addCondition('is_sent',false)->count();
 		})->sortable(true);
 
-		if(!$config_model['show_all_newsletters']){
-			$newsletter_model->addCondition('created_by_app','xMarketingCampaign');
-		}
-		
-		// filter news letter as per selected category
-		if($_GET['category_id']){
-			$this->api->stickyGET('category_id');
-			$filter_box = $news_col->add('View_Box')->setHTML('NewsLetters for <b>'. $newsletter_category_model->load($_GET['category_id'])->get('name').'</b>' );
-			
-			$filter_box->add('Icon',null,'Button')
-            ->addComponents(array('size'=>'mega'))
-            ->set('cancel-1')
-            ->addStyle(array('cursor'=>'pointer'))
-            ->on('click',function($js) use($filter_box,$news_col) {
-                $filter_box->api->stickyForget('category_id');
-                return $filter_box->js(null,$news_col->js()->reload())->hide()->execute();
-            });
-            if($_GET['category_id'])
-			$newsletter_model->addCondition('category_id',$_GET['category_id']);
-		}
-
 		$newsletter_model->getElement('created_by_app')->defaultValue('xMarketingCampaign');
-		
-		$newsletter_crud = $news_col->add('CRUD');
+		$newsletter_crud = $this->add('CRUD',array('grid_class'=>'xEnquiryNSubscription/Grid_NewsLetter'));
 		$newsletter_crud->setModel($newsletter_model,null,array('category','is_active','name','email_subject','unsend_emails','created_by_app'));
-		// $newsletter_crud->add('Controller_FormBeautifier');
-		$newsletter_crud->add('xHR/Controller_Acl');
+
 		if(!$newsletter_crud->isEditing()){
-			$g=$newsletter_crud->grid;
-			$g->add_sno();
-
-			$g->removeColumn('email_subject');
-
-			$g->addClass('newsletter_grid');
-			$g->js('reload')->reload();
-
-			if(!$config_model['show_all_newsletters']){
-				$g->removeColumn('created_by_app');
-			}
-
-			$g->addMethod('format_preview',function($g,$f)use($preview_vp){
-				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'. $g->js()->univ()->frameURL($g->model['email_subject'],$g->api->url($preview_vp->getURL(),array('newsletter_id'=>$g->model->id))) .'">'.$g->current_row[$f].'</a>';
-			});
-			$g->addFormatter('name','preview');
-
-			$filter_btn=$g->addButton($config_model['show_all_newsletters']?"All Apps NewsLetters":"This App NewsLetters");
-			if($filter_btn->isClicked()){
-				$config_model['show_all_newsletters'] = $config_model['show_all_newsletters']?0:1;
-				$config_model->save();
-				$news_col->js()->reload()->execute();
-			}
-
-			$g->addColumn('Expander','send');
+		
 			$newsletter_crud->add_button->setIcon('ui-icon-plusthick');
 			
 			$email_to_process = $this->add('xEnquiryNSubscription/Model_EmailQueue');
@@ -117,8 +40,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 			$email_to_process->addCondition('process_via','xMarketingCampaign');
 		}
 
-		$newsletter_crud->grid->addQuickSearch(array('name','category'));
-		$newsletter_crud->grid->addPaginator($ipp=50);
+		
 	}
 
 	function page_send(){
