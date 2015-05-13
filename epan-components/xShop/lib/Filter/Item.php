@@ -18,7 +18,7 @@ class Filter_Item extends \Filter_Base
         $this->search_field = $this->addField('Line', 'q', '')->setAttr('placeholder','Search')->setNoSave();
         $this->status_field = $this->addField('Dropdown', 'status', '')->setEmptyText('Any Status')->setValueList(array('active'=>'Active','inactive'=>'InActive'))->setNoSave();
         $this->category_field = $this->addField('Dropdown', 'category', '')->setEmptyText('Any Item Category')->setModel($category_model);
-        $this->type_field = $this->addField('MultiSelect', 'type', '')->setEmptyText('Any Item Type')->setValueList(array('is_saleable'=>'Saleable','is_purchasable'=>'Purchasable'))->set('is_saleable');
+        $this->type_field = $this->addField('MultiSelect', 'type', '')->setValueList(array('is_saleable'=>'Saleable','is_purchasable'=>'Purchasable'));//->set('is_saleable');
         $this->type_field->setAttr('multiple','multiple');
         $this->type_field->selectnemu_options=array('maxWidth'=>200);
 
@@ -35,9 +35,16 @@ class Filter_Item extends \Filter_Base
         
         $v = trim($this->get('q'));
         $category= $this->get('category');
-        $type= $this->type_field->get();
+        
+        foreach ($_POST[$this->type_field->name] as $x) {
+            echo $x ."<br/>";
+        }
         
         $status = $this->get('status');
+
+        // if($this->api->isAjaxOutput())
+        //     throw new \Exception($type, 1);
+        
 
         if(!$v AND !$status AND !$category) {
             return;
