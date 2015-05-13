@@ -24,7 +24,7 @@ class Grid_Opportunity extends \Grid{
 		if($this->hasColumn('customer')) $this->removeColumn('customer');
 
 
-		$this->addQuickSearch($fields);
+		$this->addQuickSearch($fields,null,'xShop/Filter_Opportunity');
 		return $m;
 	}
 
