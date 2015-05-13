@@ -12,7 +12,8 @@ class Model_Lead extends \xEnquiryNSubscription\Model_Subscription{
 			'allow_edit'=>array(),
 			'allow_add'=>array(),
 			'allow_del'=>array(),
-			'can_start_processing'=>array(),
+			'can_start_processing'=>array('caption'=>'Create Opportunity','icon'=>'users'),
+			'can_manage_attachments'=>false,
 		);
 	
 	function init(){
