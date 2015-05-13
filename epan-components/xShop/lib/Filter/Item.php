@@ -53,18 +53,20 @@ class Filter_Item extends \Filter_Base
         
         $v = trim($this->get('q'));
         $category= $this->get('category');
-        
-        foreach ($_POST[$this->type_field->name] as $x) {
-            echo $x ."<br/>";
-        }
-        
-        $status = $this->get('status');
+        $type = array();
 
+        if($_POST[$this->type_field->name]){   
+            foreach ($_POST[$this->type_field->name] as $x) {
+                $type[$x]=$x;
+            }
+        }
+                                        
+        $status = $this->get('status');        
         // if($this->api->isAjaxOutput())
         //     throw new \Exception($type, 1);
         
 
-        if(!$v AND !$status AND !$category) {
+        if(!$v AND !$status AND !$category AND !count($type)) {
             return;
         }
 
@@ -72,7 +74,8 @@ class Filter_Item extends \Filter_Base
             return $this->view->model->addConditionLike($v, $this->fields);
         }
         if($this->view->model) {
-            $this->view->model->join('xshop_category_item.item_id',null,null,'ic');
+            if($category)
+                $this->view->model->join('xshop_category_item.item_id',null,null,'ic');
             $q = $this->view->model->_dsql();
         } else {
             $q = $this->view->dq;
@@ -91,15 +94,14 @@ class Filter_Item extends \Filter_Base
 
         if($status)
             $and->where('is_publish',$status=='active'?1:0);
-
-        if($type){
-
-            // foreach ($type as $type) {
-            //     // $and->where($type)
-            // }
+        
+        if(count($type) > 0){  
+            foreach ($type as $field) {                
+                $and->where($field,1);
+            }
         }
         
         $and->where($or);
-        $q->having($and);
+        $q->debug()->having($and);
     }
 }
