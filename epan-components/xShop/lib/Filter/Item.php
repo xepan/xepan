@@ -42,6 +42,7 @@ class Filter_Item extends \Filter_Base
             return $this->view->model->addConditionLike($v, $this->fields);
         }
         if($this->view->model) {
+            $this->view->model->join('xshop_category_item.item_id',null,null,'ic');
             $q = $this->view->model->_dsql();
         } else {
             $q = $this->view->dq;
@@ -55,7 +56,6 @@ class Filter_Item extends \Filter_Base
         }
 
         if($category){
-	        $q->join(array('ic'=>'xshop_category_item.item_id'));
             $q->where('ic.category_id',$category);
         }
 

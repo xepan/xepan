@@ -11,7 +11,7 @@ class page_xShop_page_owner_item extends page_xShop_page_owner_main{
 
 		//Item
 		$bg = $this->add('xShop/View_Badges_ItemPage');
-		$item_model = $this->add('xShop/Model_Item',array('table_alias'=>'xi'));
+		$item_model = $this->add('xShop/Model_Item');
 		$item_model = $item_model->applicationItems($application_id);
 		$item_crud = $this->add('CRUD',array('grid_class'=>'xShop/Grid_Item'));
 		$item_crud->setModel($item_model,array('name','sku','is_publish'),array('name'));
