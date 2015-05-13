@@ -49,7 +49,7 @@ abstract class Controller_AutoCreator_Abstract extends \AbstractController
     // array of actions to perform on synchronization phase
     protected $actions = array();
 
-
+    public $force_create_foreignkeys=false;
 
     /**
      * Initialization
@@ -58,6 +58,10 @@ abstract class Controller_AutoCreator_Abstract extends \AbstractController
      */
     function init() {
         parent::init();
+
+        if(!$this->api->getconfig('autocreator',true)){
+        	return;
+        }
 
         // check owner object
         $model = $this->owner;
@@ -84,6 +88,7 @@ abstract class Controller_AutoCreator_Abstract extends \AbstractController
         ) {
             return;
         }
+        $this->api->dynamicModel[$class] = true;
 
         // debug
         $this->dbg('MODEL: ' . $class. "(" . $model->name. ")");
@@ -128,10 +133,10 @@ abstract class Controller_AutoCreator_Abstract extends \AbstractController
                 // create or modify DB table field
                 if (! isset($db_fields[$f]) ) {
                     $this->dbg("ADD FIELD: ".$f);
-                    $this->alterField($model, $field, true); // create
+                    $this->alterField($model, $field, true ); // create
                 } else {
                     $this->dbg("MODIFY FIELD: ".$f." (type=".$field->type.")");
-                    $this->alterField($model, $field, false); // modify
+                    $this->alterField($model, $field,false); // modify
                 }
 
                 unset($db_fields[$f]);

@@ -43,7 +43,7 @@ class Model_JobCard extends \Model_Document{
 				->fieldQuery('name')
 			)->sortable(true);
 
-		$this->hasMany('xStore/Model_StockMovement','jobcard_id');
+		$this->hasMany('xStore/StockMovement','jobcard_id');
 		$this->hasMany('xProduction/JobCardAttachment','related_document_id',null,'Attachements');
 
 
@@ -52,7 +52,7 @@ class Model_JobCard extends \Model_Document{
 							// 'name|to_trim|required',
 							)
 					);
-		// $this->addHook('beforeDelete',$this);
+		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
@@ -65,8 +65,14 @@ class Model_JobCard extends \Model_Document{
 	}	
 
 	function forceDelete(){
+		if(!$this->loaded()) throw new \Exception("Not Loaded", 1);
+		
 		$this->ref('xStore/StockMovement')->each(function($m){
 			$m->forceDelete();
+		});
+
+		$this->materialRequests()->each(function($m){
+			$m->forceDelete('xStore/StockMovement');
 		});
 
 		$this->delete();
@@ -134,6 +140,11 @@ class Model_JobCard extends \Model_Document{
 			return false;
 		}
 		return $this->ref('orderitem_id');
+	}
+
+	function materialRequests(){
+		return $this->add('xStore/Model_MaterialRequest')
+					->addCondition('orderitem_id',$this['orderitem_id']);
 	}
 
 	function isCreatedFromOrder(){

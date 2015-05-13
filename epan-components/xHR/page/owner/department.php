@@ -3,7 +3,7 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 	function init(){
 		parent::init();
 		
-		$this->add('PageHelp',array('page'=>array('departments','department_editing_page','department_post','departments_Basic')));
+		// $this->add('PageHelp',array('page'=>array('departments','department_editing_page','department_post','departments_Basic')));
 
 		$this->app->title=$this->api->current_department['name'] .': Departments/Posts/ACL';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Company Departments <small> Departments, Post, ACL, Salary Templates etc</small>');
@@ -13,33 +13,42 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 		$cat_col = $l->addColumn(3);
 		$dept_col = $l->addColumn(9);
 		
+		$cat_col->add('View_Box')->setHTML('Department\Production Phases'); 	
 		//Department
 		$dept_model=$this->add('xHR/Model_Department');
 		$dept_model->getElement('production_level')->caption('Level');
 
 		$dept_crud = $cat_col->add('CRUD',array('allow_edit'=>false,'grid_class'=>'xHR/Grid_Department'));
-		$dept_crud->setModel($dept_model,array('name','production_level'),array());
+		$dept_crud->setModel($dept_model,array('name','production_level','is_active'),array('name','production_level','is_active'));
 
 		if(!$dept_crud->isEditing()){
-			$dept_crud->grid->addMethod('format_name',function($g,$f)use($dept_col){
-				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$dept_col->js()->reload(array('hr_department_id'=>$g->model->id)).'">'.$g->current_row[$f].'</a>';
-
-			});
-			$dept_crud->grid->addFormatter('name','name');
-			
 			$dept_crud->grid->addMethod('format_mydelete',function($g,$f){
 				if($g->current_row['is_system']!=0)
 					$g->current_row_html[$f]='';
 			});
 
-			$dept_crud->grid->addMethod('format_pl',function($g,$f){
-				if($g->current_row['is_system']==1)
-					$g->current_row_html[$f]='';
-			});
+			// $dept_crud->grid->addMethod('format_pl',function($g,$f){
+			// 	if($g->current_row['is_system']==1)
+			// 		$g->current_row_html[$f]='';
+			// });
+			// $dept_crud->grid->addFormatter('production_level','pl');
 
 			$dept_crud->grid->addFormatter('delete','mydelete');
-			$dept_crud->grid->addFormatter('production_level','pl');
 			
+			$dept_crud->grid->addMethod('format_name',function($g,$f)use($dept_col){
+				$pl = $g->model['production_level'];
+				if($g->model['is_system']==1)
+					$pl='';
+
+				$in_active_class = "";
+				$badge = "badge";
+				if(!$g->model['is_active']) {
+					$in_active_class = "atk-effect-danger";
+					$badge = "badge atk-swatch-red";
+				}
+				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$dept_col->js()->reload(array('hr_department_id'=>$g->model->id)).'" class="'.$in_active_class.'">'.$g->current_row[$f].'</a>'.'<span title="Production Level" class="pull-right '.$badge.'">'.$pl.'</span>';
+			});
+			$dept_crud->grid->addFormatter('name','name');
 		}
 
 		$dept_crud->grid->addQuickSearch(array('name','production_level'));
@@ -51,7 +60,7 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 			
 			$selected_department = $this->add('xHR/Model_Department')->load($_GET['hr_department_id']);
 
-			$filter_box = $dept_col->add('View_Box')->setHTML('Department :: '.$this->add('xHR/Model_Department')->load($_GET['hr_department_id'])->get('name'));
+			$filter_box = $dept_col->add('View_Box')->setHTML('Department :: <b>'.$this->add('xHR/Model_Department')->load($_GET['hr_department_id'])->get('name')."</b>");
 			$filter_box->add('Icon',null,'Button')
             ->addComponents(array('size'=>'mega'))
             ->set('cancel-1')
@@ -61,15 +70,15 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
                 return $filter_box->js(null,$dept_col->js()->reload())->hide()->execute();
             });
 		$tab = $dept_col->add('Tabs');
-		if($selected_department->isProductionPhase()){
-			$tab->addTabURL('xHR_page_owner_department_basic','Basic');
-		}
-
-			$tab->addTabURL('xHR_page_owner_department_post','Posts');
-			$tab->addTabURL('xHR_page_owner_department_salarytemplate','Salary Structure');
-			$tab->addTabURL('xHR_page_owner_department_departmentemail','Department Emails');
 			if($selected_department->isProductionPhase())
-				$tab->addTabURL('xHR_page_owner_department_outsource','Out Source');
+				$tab->addTabURL('xHR_page_owner_department_basic','Basic');
+			
+			$tab->addTabURL('xHR_page_owner_department_post','Posts <span class="badge">'.$selected_department->post()->count()->getOne().'</span>');
+			$tab->addTabURL('xHR_page_owner_department_salarytemplate','Salary Structure <span class="badge">'.$selected_department->salaryTemplates()->count()->getOne().'</span>');
+			$tab->addTabURL('xHR_page_owner_department_departmentemail','Department Emails <span class="badge">'.$selected_department->officialEmails()->count()->getOne().'</span>');
+			
+			if($selected_department->isProductionPhase())
+				$tab->addTabURL('xHR_page_owner_department_outsource','Out Source <span class="badge">'.$selected_department->outSourceParties()->count()->getOne().'</span>');
 		}else{
 			$dept_col->add('View_Warning')->set('Select any one Department');
 		}

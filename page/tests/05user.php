@@ -1,13 +1,15 @@
 <?php
 
-class page_tests_05user extends Page_Tester {
+class page_tests_05user extends page_tests_base {
 	public $title = 'USER ADD EDIT DELETE';
-    public $proper_responses=array();
-
+    public $proper_responses=array('Test_empty'=>'');
 
     function prepare_Add(){
         // $user->addCondition('email','');
         // $user->tryLoadAny();
+
+        if(!$this->add('Model_Epan')->addCondition('id',$this->api->current_website->id)->tryLoadAny()->loaded())
+            throw $this->exception('Epan Not Loaded','SkipTests');
 
         $last_user = $this->add('Model_Users')->setOrder('id','desc')->tryLoadAny();
 

@@ -5,7 +5,7 @@ class Model_Ticket extends \Model_Document{
 	
 	public $status=array('draft','submitted','solved','canceled','assigned');
 	public $table="xcrm_tickets";
-	public $root_document_name= 'xCRM\Tickets';
+	public $root_document_name= 'xCRM\Ticket';
 
 	function init(){
 		parent::init();

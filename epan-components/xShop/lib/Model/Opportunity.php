@@ -22,10 +22,22 @@ class Model_Opportunity extends \Model_Document {
 
 		$this->hasOne('xMarketingCampaign/Lead','lead_id')->sortable(true);
 		$this->hasOne('xShop/Customer','customer_id')->sortable(true);
-		$this->hasOne('xHR/Employee','employee_id')->caption('Handled By')->sortable(true);
+		// $this->hasOne('xHR/Employee','employee_id')->caption('Handled By')->sortable(true);
 		
+		$this->addField('opportunity')->type('text')->hint('New Sales of Any product');
 
-		$this->addField('name')->caption('Opportunity')->hint('New Sales of X product')->sortable(true);
+		$this->addExpression('name')->set(function($m,$q){
+				return "
+						IF(
+							".$q->getField('lead_id')." is not null,
+							CONCAT('(L) ',(".$m->add('xMarketingCampaign/Model_Lead')->addCondition('id',$q->getField('lead_id'))->_dsql()->del('fields')->field('name')->render().")),
+							IF(
+								".$q->getField('customer_id')." is not null,
+								CONCAT('(C) ',(".$m->add('xShop/Model_Customer')->addCondition('id',$q->getField('customer_id'))->_dsql()->del('fields')->field('name')->render().")),
+								'UNKNOWN'
+								)
+						)";
+		});
 
 		$this->getElement('status')->enum($this->status)->defaultValue('active');
 
@@ -39,8 +51,7 @@ class Model_Opportunity extends \Model_Document {
 
 	function afterInsert($obj,$new_id){
 		$obj->load($new_id);
-
-		$obj->setStatus('active');
+		// $obj->setStatus('active');
 		
 	}
 

@@ -4,11 +4,13 @@ namespace xShop;
 
 class Model_Customer extends Model_MemberDetails{
 	public $title_field ='customer_search_phrase';
-
+	public $is_view = true;
+	
 	public $actions=array(
 			'allow_add'=>array(),
 			'allow_edit'=>array(),
 			'allow_del'=>array(),
+			'can_start_processing'=>array(),
 		);
 
 	function init(){
@@ -40,9 +42,13 @@ class Model_Customer extends Model_MemberDetails{
 				
 			));
 
-		$this->hasMany('xShop/Opportunity','customer_id');
-		$this->hasMany('xShop/Quotation','customer_id');
-		$this->hasMany('xShop/Order','member_id');
+		$this->addExpression('total_opportunity')->set(function($m,$q){
+			return $m->refSQL('xShop/Opportunity')->count();
+		})->sortable(true);
+
+		$this->addExpression('total_quotation')->set(function($m,$q){
+			return $m->refSQL('xShop/Quotation')->count();
+		})->sortable(true);
 
 		$this->addHook('beforeDelete',$this);
 
@@ -50,28 +56,7 @@ class Model_Customer extends Model_MemberDetails{
 	}
 
 	function beforeDelete(){
-		$opportunity = $this->ref('xShop/Opportunity')->count()->getOne();
-		$quotation = $this->ref('xShop/Quotation')->count()->getOne();
-		$quotation = $this->ref('xShop/Order')->count()->getOne();
 		
-		if($opportunity or $quotation or $order)
-			throw $this->exception('Cannot Delete, Opportunity, Quotation or Order','Growl');
-	}
-
-	function forceDelete(){
-		$this->ref('xShop/Opportunity')->each(function($opportunity){
-			$opportunity->forceDelete();
-		});
-
-		$this->ref('xShop/Quotation')->each(function($quotation){
-			$quotation->forceDelete();
-		});
-
-		$this->ref('xShop/Order')->each(function($order){
-			$order->forceDelete();
-		});
-
-		$this->delete();
 	}
 
 	function arrangeFields(){
@@ -110,5 +95,25 @@ class Model_Customer extends Model_MemberDetails{
 		return $this['mobile_number'];	
 	}
 
+	function start_processing_page($page){
+		$form = $page->add('Form_Stacked');
+		$form->addField('text','opportunity');
+		$form->addSubmit('Create Opportunity');
+		if($form->isSubmitted()){
+			$this->start_processing($form['opportunity']);
+			return true;
+		}
+
+		return false;
+	}
+
+	//Actual Creating the Opportunity
+	function start_processing($opportunity_text){
+		$opportunity = $this->add('xShop/Model_Opportunity');
+		$opportunity['customer_id'] = $this->id;
+		$opportunity['status']='active';
+		$opportunity['opportunity']=$opportunity_text;
+		$opportunity->save();
+	}
 	
 }

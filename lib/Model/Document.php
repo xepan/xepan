@@ -1,6 +1,6 @@
 <?php
 
-class Model_Document extends SQL_Model{
+class Model_Document extends Model_Table{
 	
 	public $actions=array();
 	public $acl_added = false;
@@ -20,13 +20,13 @@ class Model_Document extends SQL_Model{
 	function init(){
 		parent::init();
 
-		if($this->status === null)
+		if(!(isset($this->is_view) and $this->is_view) and  $this->status === null)
 			throw $this->exception('Document Status property must be defined as array');
 
 		if(count($this->status))
 			$this->addField('status')->enum($this->status);
 
-		if($this->root_document_name == null)
+		if(!(isset($this->is_view) and $this->is_view) and $this->root_document_name == null)
 			throw $this->exception('Root Document Name Must Be defined');
 
 		if($this->document_name == null){
@@ -258,7 +258,7 @@ class Model_Document extends SQL_Model{
 	}
 
 	function activities(){
-		$activities = $page->add('xCRM/Model_Activity');
+		$activities = $this->add('xCRM/Model_Activity');
 		$activities->addCondition('related_root_document_name',$this->root_document_name);
 		$activities->addCondition('related_document_id',$this->id);
 		$activities->setOrder('created_at','desc');
@@ -444,6 +444,11 @@ class Model_Document extends SQL_Model{
 
 		return new \Dummy();
 
+	}
+
+	function setEmployeeNull(){
+		$this['created_by_id'] = null;
+		$this->saveAndUnload();
 	}
 
 }

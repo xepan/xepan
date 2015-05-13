@@ -8,6 +8,9 @@ class Model_GoogleBloggerConfig extends \Model_Table{
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->addField('name');
 		$this->addField('userid');
 		$this->addField('userid_returned');
@@ -20,7 +23,7 @@ class Model_GoogleBloggerConfig extends \Model_Table{
 		$this->addField('is_access_token_valid')->type('boolean')->defaultValue(false)->system(true);
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 }
 

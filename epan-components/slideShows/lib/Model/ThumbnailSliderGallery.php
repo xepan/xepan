@@ -26,14 +26,8 @@ class Model_ThumbnailSliderGallery extends \Model_Table {
 		$f = $this->addField('is_publish')->type('boolean')->defaultValue(true)->group('b~3');
 		$f->icon = "fa fa-exclamation~blue";	
 
-		$this->hasMany('slideShows/Model_ThumbnailSliderImages','gallery_id');
+		$this->hasMany('slideShows/ThumbnailSliderImages','gallery_id');
 
-		$this->addHook('beforeDelete',$this);
-		// //$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
-
-	function beforeDelete(){
-		$this->ref('slideShows/ThumbnailSliderImages')->deleteAll();
-	}
-
 }

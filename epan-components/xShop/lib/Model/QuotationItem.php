@@ -5,7 +5,7 @@ class Model_QuotationItem extends \Model_Document{
 	
 	public $table="xshop_quotation_item";
 	public $status=array();
-	public $root_document_name="QuotationItem";
+	public $root_document_name="xShop\QuotationItem";
 
 	public $actions=array(
 			'allow_edit'=>array('caption'=>'Whose created Jobcard this post can edit'),

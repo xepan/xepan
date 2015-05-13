@@ -1,8 +1,8 @@
-<?$php?>
+{$php}
 
-class page_<?$pmodel?> extends Page {
+class page_{$pmodel} extends Page {
     function init(){
         parent::init();
-        $this->add("CRUD")->setModel("<?$model?>");
+        $this->add("CRUD")->setModel("{$model}");
     }
 }

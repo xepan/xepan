@@ -31,8 +31,8 @@ class Model_AwesomeGallery extends \Model_Table {
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
 		$this->addHook('beforeDelete',$this);
-		$this->hasMany('slideShows/Model_AwesomeImages','gallery_id');
-		// //$this->add('dynamic_model/Controller_AutoCreator');
+		$this->hasMany('slideShows/AwesomeImages','gallery_id');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function afterSave($m){

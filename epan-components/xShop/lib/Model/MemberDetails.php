@@ -4,10 +4,12 @@ class Model_MemberDetails extends \Model_Document{
 	public $table="xshop_memberdetails";
 	public $status=array();
 	public $root_document_name="xShop\MemberDetails";
+	
 	function init(){
 		parent::init();
 
-		$this->hasOne('xShop/Users','users_id')->mandatory(true)->sortable(true);
+		$this->hasOne('Users','users_id')->mandatory(true)->sortable(true);
+		
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		
@@ -34,6 +36,12 @@ class Model_MemberDetails extends \Model_Document{
 		$this->hasMany('xShop/DiscountVoucherUsed','member_id');
 		$this->hasMany('xShop/ItemMemberDesign','member_id');
 		$this->hasMany('xShop/MemberImages','member_id');
+
+		$this->hasMany('xShop/Opportunity','customer_id');
+		$this->hasMany('xShop/Quotation','customer_id');
+		$this->hasMany('xShop/Order','member_id');
+		$this->hasMany('xShop/ItemTemplate','designer_id');
+		$this->hasMany('xAccount/Account','customer_id');
 		
 		$this->addExpression('name')->set(function($m,$q){
 			return $m->refSQL('users_id')->fieldQuery('name');
@@ -50,19 +58,45 @@ class Model_MemberDetails extends \Model_Document{
 	}
 
 	function beforeDelete(){
+		$opportunity = $this->ref('xShop/Opportunity')->count()->getOne();
+		$quotation = $this->ref('xShop/Quotation')->count()->getOne();
+		$order = $this->ref('xShop/Order')->count()->getOne();
+		
+		if($opportunity or $quotation or $order)
+			throw $this->exception('Cannot Delete, Opportunity, Quotation or Order','Growl');
+
 		$voucher_used = $this->ref('xShop/DiscountVoucherUsed')->count()->getOne();
-		// $order_count=$this->ref('xShop/Order')->count()->getOne();
+		// $order_count=$this->ref('xShop/Order')->count()->getOne(); // Checked in Customer
 		$member_count=$this->ref('xShop/MemberImages')->count()->getOne();
 		$item_member_count=$this->ref('xShop/ItemMemberDesign')->count()->getOne();
 		$str = 'Member Images ( '.$member_count .' ) ' .'Member Item Design ('.$item_member_count." ) ";
-		if($order_count or $member_count or $item_member_count or $voucher_used)
+		if(/*$order_count or */ $member_count or $item_member_count or $voucher_used)
 			throw $this->exception("Cannot Delete, First Delete ".$str,'Growl');
 	}
 
 	function forceDelete(){
+		$this->ref('xShop/Opportunity')->each(function($opportunity){
+			$opportunity->forceDelete();
+		});
+
+		$this->ref('xShop/Quotation')->each(function($quotation){
+			$quotation->forceDelete();
+		});
+
+		$this->ref('xShop/Order')->each(function($order){
+			$order->forceDelete();
+		});
+
+
 		$this->ref('xShop/DiscountVoucherUsed')->each(function($m){
 			$m->setMemberEmpty();
 		});
+
+		$it = $this->add('xShop/Model_Item')
+		->addCondition('designer_id',$this->id);
+		foreach ($it as $ijunk) {
+			$it->set('designer_id',null)->saveAndUnload();
+		}
 
 		$this->ref('xShop/ItemMemberDesign')->each(function($m){
 			$m->forceDelete();
@@ -70,6 +104,10 @@ class Model_MemberDetails extends \Model_Document{
 
 		$this->ref('xShop/MemberImages')->each(function($m){
 			$m->forceDelete();
+		});
+
+		$this->ref('xAccount/Account')->each(function($m){
+			$m->set('customer_id',NULL)->saveAndUnload();
 		});
 
 		$this->delete();

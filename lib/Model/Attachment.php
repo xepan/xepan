@@ -6,15 +6,19 @@ class Model_Attachment extends \Model_Document{
 	public $status = array();
 	public $attachment_name=null;
 	public $root_document_name=null;
+	public $is_view=true;
 
 	function init(){
 		parent::init();
 
-		// $this->hasOne('xCRM/Activity','activity_id');
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
 		$this->addField('name');
 		$this->add('filestore/Field_File','attachment_url_id')->mandatory(true);
 
 		$this->addHook('beforeSave',$this);
+		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
 
 	}
@@ -26,6 +30,10 @@ class Model_Attachment extends \Model_Document{
 				$this['name'] = $file_model['original_filename'];
 		}
 
+	}
+
+	function beforeDelete(){
+		$this->ref('attachment_url_id')->tryDelete();
 	}
 
 	function ref($field){

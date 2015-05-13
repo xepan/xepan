@@ -40,6 +40,7 @@ class Model_Users extends Model_Table {
 		$f->icon='fa fa-calendar~blue';
 
 		$this->hasMany('UserAppAccess','user_id');
+		$this->hasMany('xHR/Employee','user_id');
 
 		$this->add('Controller_Validator');
 		$this->is(array(
@@ -111,6 +112,25 @@ class Model_Users extends Model_Table {
 		});
 		
 		$this->api->event('user_before_delete',$this);
+	}
+
+	function forceDelete(){
+		$this->force_delete = true;
+		$member= $this->add('xShop/Model_MemberDetails')->addCondition('users_id',$this->id)->tryLoadAny();
+		if($member->loaded()) $member->forceDelete();
+
+		$this->ref('UserAppAccess')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->add('xHR/Model_Employee')
+			->addCondition('user_id',$this->id)
+			->each(function($obj){
+				$obj->set('user_id',NULL)->saveAndUnload();
+			});
+
+		$this->delete();
+
 	}
 
 	function validateUser(){

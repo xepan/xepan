@@ -8,6 +8,9 @@ class Model_SocialConfig extends \Model_Table{
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+		
 		$this->addField('social_app')->mandatory(true)->system(true); // Must Be Set In Extended class
 
 		$this->addField('name');
@@ -141,7 +144,7 @@ class Model_SocialPosting extends \Model_Table{
 
 
 // Model Post Activity/Comments
-class Model_Activity extends \SQL_Model{
+class Model_Activity extends \Model_Table{
 	public $table = "xmarketingcampaign_socialpostings_activities";
 
 	function init(){

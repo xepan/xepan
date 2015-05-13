@@ -14,7 +14,7 @@ class page_xProduction_page_owner_dept_main extends page_xProduction_page_owner_
 
 		$tabs=$this->add('Tabs');
 
-		$document = $this->add($dept->getNamespace().'/Model_'.  $dept->jobcard_document());
+		$document = $this->add($dept->defaultDocument());
 
 		$counts = $this->add('xProduction/Model_JobCard');
 		$counts->addCondition('to_department_id',$this->api->current_department->id);

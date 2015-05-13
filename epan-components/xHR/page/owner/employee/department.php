@@ -8,8 +8,8 @@ class page_xHR_page_owner_employee_department extends Page{
 		$employee = $this->add('xHR/Model_Employee')->load($employee_id);
 
 		$col=$this->add('Columns');
-		$dept_col=$col->addColumn(6);
-		$post_col=$col->addColumn(6);
+		$dept_col=$col->addColumn(4);
+		$post_col=$col->addColumn(8);
 		
 		$department = $this->add('xHR/Model_Department');
 		$post = $this->add('xHR/Model_Post');
@@ -37,7 +37,7 @@ class page_xHR_page_owner_employee_department extends Page{
 			$employee['department_id'] = $form['department'];
 			$employee['post_id'] = $form['post'];
 			$employee->save();
-			$form->js(null,$form->js()->reload())->univ()->successMessage(' Update Information')->execute();
+			$form->js(null,$form->js()->_selector('.xemployee_box')->trigger('reload'))->reload()->univ()->successMessage(' Update Information')->execute();
 			// $form->js()->univ()->successMessage(' Update Information')->execute();
 		}
 		

@@ -2,7 +2,7 @@
 namespace xShop;
 
 class Model_Invoice_Draft extends Model_SalesInvoice{
-	
+		
 	public $actions=array(
 			'allow_add'=>array(),
 			'allow_edit'=>array(),

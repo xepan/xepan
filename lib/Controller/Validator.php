@@ -21,4 +21,8 @@ class Controller_Validator extends Controller_Validator_Advanced {
         if($result !== null) return $this->fail('Value "{{arg1}}" already exists', $a);
     }
 
+    function mb_str_len($str){
+        return mb_strlen($str);
+    }
+
 }

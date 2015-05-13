@@ -3,7 +3,7 @@ namespace xHR;
 
 class Model_Employee extends \Model_Table{
 	public $table="xhr_employees";
-	
+
 	function init(){
 		parent::init();
 
@@ -105,6 +105,9 @@ class Model_Employee extends \Model_Table{
 		$this->hasMany('xCRM/Email','read_by_employee_id');
 		$this->hasMany('xHR/EmployeeAttendence','employee_id');
 		$this->hasMany('xHR/EmployeeLeave','employee_id');
+		
+		$this->hasMany('xAccount/Account','created_by_id',null,'CreatedAccounts');
+		$this->hasMany('xAccount/Transaction','created_by_id',null,'CreatedTransactions');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
@@ -120,25 +123,32 @@ class Model_Employee extends \Model_Table{
 							)
 					);
 		
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeSave($m){
 	}
 
 	function beforeDelete($m){
+		$accounts = $this->ref('CreatedAccounts')->count()->getOne();
 		$salary = $m->ref('xHR/Salary')->count()->getOne();
 		$team_asso = $m->ref('xProduction/EmployeeTeamAssociation')->count()->getOne();
 		// $last_seen = $m->ref('LastSeen')->count()->getOne();
 		$official_email = $m->ref('xHR/OfficialEmail')->count()->getOne();
-		$email = $m->ref('xHR/Email')->count()->getOne();
+		$email = $m->ref('xCRM/Email')->count()->getOne();
 		
-		if($salary or $team_asso or $official_email or $email){
+		if($accounts or $salary or $team_asso or $official_email or $email){
 			throw $this->exception('Cannot Delete,first delete Salary, Team Association, OfficialEmail or Email','Growl');	
 		}
+
+			
 	}
 
 	function forceDelete(){
+		$this->ref('CreatedAccounts')->each(function($m){
+			$m->set('employee_id',NULL)->saveAndUnload();
+		});
+
 		$this->ref('xHR/Salary')->each(function($p){
 			$p->forceDelete();
 		});
@@ -146,18 +156,19 @@ class Model_Employee extends \Model_Table{
 		$this->ref('xHR/OfficialEmail')->each(function($official_email){
 			$official_email->forceDelete();
 		});
-
+		
+		$this->ref('xCRM/Email')->each(function($email){
+			$email->setReadByEmployeeNull();
+		});
+		
 		$this->ref('LastSeen')->each(function($last_seen){
 			$last_seen->forceDelete();
 		});
 
-		$this->ref('xHR/EmployeeTeamAssociation')->each(function($team_asso){
+		$this->ref('xProduction/EmployeeTeamAssociation')->each(function($team_asso){
 			$team_asso->forceDelete();
 		});
 
-		$this->ref('xHR/Email')->each(function($email){
-			$email->setReadByEmployeeNull();
-		});
 
 		$this->ref('xHR/EmployeeAttendence')->each(function($attendance){
 			$attendance->forceDelete();
@@ -167,8 +178,32 @@ class Model_Employee extends \Model_Table{
 			$leave->forceDelete();
 		});
 
+		// Remove created_by_id from all documents
+		$done_documents = array();
 
+		$docs_model=$this->add('xHR/Model_Document');
 
+		$docs= $docs_model->getDefaults();
+		foreach ($docs as $doc_junk) {
+			$dm = $docs_model->modelName($doc_junk['name']);
+			$model = $this->add($dm);
+			if(!in_array($model->root_document_name,$done_documents)){
+				try{
+					$model = $this->add($docs_model->modelName($model->root_document_name));
+					if(!(isset($model->is_view) AND $model->is_view)){
+						$model->_dsql()->where('created_by_id',$this->id)->where('epan_id',$this->api->current_website->id)->set('created_by_id',null)->update();
+					}
+				}catch(\Exception $e){
+					echo "Model Employee Line 186 Error: ".$model->root_document_name .'<br/>'.$e->getHTML()."<br>";
+				}
+				$done_documents[] = $model->root_document_name;
+			}else{
+				continue;
+			}
+
+		}
+		$this->api->db->dsql()->table('attachments')->where('created_by_id',$this->id)->where('epan_id',$this->api->current_website->id)->set('created_by_id',null)->update();
+		
 		$this->delete();
 	}
 

@@ -5,7 +5,7 @@ class Model_DeliveryNote extends \xProduction\Model_JobCard {
 	
 	public $table = 'xdispatch_delivery_note';
 
-	public $root_document_name='xDispatch\DeliveyNote';
+	public $root_document_name='xDispatch\DeliveryNote';
 	public $status = array('submitted','processed','completed','cancelled','return','received');
 
 	function init(){
@@ -21,6 +21,7 @@ class Model_DeliveryNote extends \xProduction\Model_JobCard {
 		$this->addField('docket_no');
 		$this->addField('narration')->type('text');
 		$this->hasMany('xDispatch/DeliveryNoteItem','delivery_note_id');
+		$this->hasMany('xDispatch/DispatchRequestItem','deliverynote_id');
 
 		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
@@ -47,7 +48,7 @@ class Model_DeliveryNote extends \xProduction\Model_JobCard {
 		}
 	}
 
-	function addItem($orderitem, $item,$qty,$unit,$custom_fields){
+	function addItem($orderitem, $item,$qty,$unit,$custom_fields,$dispatch_req_item_model=null){
 		$mr_item = $this->ref('xDispatch/DeliveryNoteItem');
 		$mr_item['orderitem_id'] = $orderitem->id;
 		$mr_item['item_id'] = $item->id;
@@ -56,8 +57,11 @@ class Model_DeliveryNote extends \xProduction\Model_JobCard {
 		$mr_item['custom_fields'] = $custom_fields;
 		$mr_item->save();
 
-		$orderitem['deliverynote_id'] = $this->id;
-		$orderitem->save();
+		if($dispatch_req_item_model){
+			$dri = $this->add('xDispatch/Model_DispatchRequestItem')->load($dispatch_req_item_model->id);
+			$dri['deliverynote_id'] = $this->id;
+			$dri->save();
+		}
 	}
 
 	function submit(){

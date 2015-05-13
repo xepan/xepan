@@ -53,7 +53,7 @@ class Model_DispatchRequestItem extends \Model_Document{
 	}
 
 	function orderItem(){
-		return $this->ref('orderitem_id');
+		return $this->add('xShop/Model_OrderDetails')->addCondition('id',$this['orderitem_id'])->tryLoadAny();
 	}
 
 	function receive_page($page){

@@ -44,7 +44,6 @@ class Model_StockMovement extends \Model_Document{
 		});
 	}
 
-
 	function fromWarehouse($warehouse=false){
 		if($warehouse)
 			$this['from_warehouse_id'] = $warehouse->id;

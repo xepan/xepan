@@ -57,5 +57,16 @@ class Model_Configuration extends \Model_Table {
 		
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
+
+	function loadDefaults($application){
+		$data= file_get_contents(getcwd().'/epan-components/xShop/default-layouts.xepan');
+		$arr = json_decode($data,true);
+		foreach ($arr as $dg) {
+			unset($dg['id']);
+			unset($dg['epan_id']);
+			$dg['application_id'] = $application->id;
+			$this->newInstance()->set($dg)->save();
+		}
+	}
 	
 }

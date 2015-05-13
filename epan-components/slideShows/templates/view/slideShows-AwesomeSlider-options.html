@@ -58,13 +58,11 @@ $('#AwesomeSlideShowServerSide').click(function(event){
 $('#AwesomeSlider_Gallery').change(function(event) {
 	$(current_selected_component).attr('data-options',$('#AwesomeSlider_Gallery').val());
 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
-	$(current_selected_component).children('div:first').trigger('reload');
 });
 
 $('#AwesomeSlider_Theme').change(function(event) {
 	$(current_selected_component).attr('awesomeslider-theme',$('#AwesomeSlider_Theme').val());
 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
-	$(current_selected_component).children('div:first').trigger('reload');
 });
 
 var {$component_type}_options = {

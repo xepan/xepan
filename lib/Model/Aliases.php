@@ -6,6 +6,8 @@ class Model_Aliases extends Model_Table {
 		parent::init();
 
 		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+		
 		$this->addField('name')->caption('Alias(es) for your Epan');
 
 		$this->addHook('beforeSave',$this);

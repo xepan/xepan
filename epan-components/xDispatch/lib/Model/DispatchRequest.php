@@ -1,7 +1,7 @@
 <?php
 namespace xDispatch;
 
-class Model_DispatchRequest extends \xProduction\Model_JobCard {
+class Model_DispatchRequest extends \Model_Document {
 	
 	public $table = 'xdispatch_dispatch_request';
 
@@ -12,6 +12,38 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 	function init(){
 		parent::init();
 
+		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+
+		$this->hasOne('xShop/OrderDetails','orderitem_id')->sortable(true);
+		$this->hasOne('xHR/Department','to_department_id')->sortable(true);
+		$this->hasOne('xHR/Department','from_department_id')->sortable(true);
+		$this->hasOne('xStore/Warehouse','dispatch_to_warehouse_id')->sortable(true);
+		$this->hasOne('xShop/OrderItemDepartmentalStatus','orderitem_departmental_status_id')->sortable(true);
+		
+		$this->addField('type')->enum(array('JobCard','MaterialRequest','DispatchRequest'))->defaultValue('JobCard');
+		$this->addField('name')->caption('Job Number')->sortable(true);
+		$this->getElement('status')->defaultValue('submitted');
+		
+		$this->addExpression('outsource_party')->set(function($m,$q){
+			$p = $m->add('xProduction/Model_OutSourceParty');
+			$j=$p->join('xshop_orderitem_departmental_status.outsource_party_id');
+			$j->addField('order_item_dept_status_id','id');
+			$p->addCondition('order_item_dept_status_id',$q->getField('orderitem_departmental_status_id'));
+			return $p->fieldQuery('name');
+		})->sortable(true);
+
+		$this->addExpression('order_no')->set(
+				$this->add('xShop/Model_Order',array('table_alias'=>'order_no_als'))
+					->addCondition('id',
+						$this->add('xShop/Model_OrderDetails',array('table_alias'=>'od_4_order_no'))
+						->addCondition('id',$this->getElement('orderitem_id'))
+						->fieldQuery('order_id')
+					)
+				->fieldQuery('name')
+			)->sortable(true);
+
+		
 		$this->addCondition('type','DispatchRequest');
 		$this->hasOne('xShop/Order','order_id')->sortable(true);
 
@@ -19,7 +51,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 		$this->addCondition('type','DispatchRequest');
 
 		$this->hasMany('xDispatch/DispatchRequestItem','dispatch_request_id');
-		$this->hasMany('xStore/StockMovement','dispatch_request_id');
+		$this->hasMany('xStore/StockMovement','dispatch_request_id',null,'StockMovementForDispatchRequest');
 
 		$this->addExpression('recent_items_to_receive')->set(function($m,$q){
 			return $m->refSQL('xDispatch/DispatchRequestItem')->addCondition('status','to_receive')->count();
@@ -40,6 +72,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 			$this->refSQL('xDispatch/DispatchRequestItem')->addCondition('status','received')->count()
 		)->sortable(true);
 
+		$this->hasMany('xStore/StockMovement','dispatch_request_id');
 
 		$this->addHook('beforeInsert',$this);
 		$this->addHook('beforeDelete',$this);
@@ -52,7 +85,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 			$m->delete();
 		});
 
-		$this->ref('xStore/StockMovement')->each(function($m){
+		$this->ref('StockMovementForDispatchRequest')->each(function($m){
 			$m->delete();
 		});
 
@@ -67,7 +100,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 	}
 
 	function relatedChallan(){
-		$challan =  $this->ref('xStore/StockMovement')->tryLoadAny();
+		$challan =  $this->ref('StockMovementForDispatchRequest')->tryLoadAny();
 		if($challan->loaded()) return $challan;
 
 		return false;
@@ -169,7 +202,6 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 				throw $this->Exception('No Item Selected'.$form['selected_items'],'Growl');
 				
 			$items_selected = json_decode($form['selected_items'],true);
-			// TODO : A LOT OF CHECKINGS REGARDING INVOICE ETC ...
 
 			//CHECK FOR GENERATE INVOICE
 			if($form['generate_invoice']){
@@ -234,7 +266,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 					$form->displayError('email_to','Email Not Proper');
 
 				$inv->send_via_email_page($this);
-				throw new \Exception("Error Processing Request", 1);	
+				// throw new \Exception("Error Processing Request", 1);	
 
 			}
 			
@@ -260,7 +292,7 @@ class Model_DispatchRequest extends \xProduction\Model_JobCard {
 			
 			foreach ($items_selected as $itm) {
 				$itm_model = $this->add('xDispatch/Model_DispatchRequestItem')->load($itm);
-				$new_delivery_note->addItem($itm_model->orderItem(), $itm_model->item(),$itm_model['qty'],$itm_model['unit'],$itm_model['custom_fields']);
+				$new_delivery_note->addItem($itm_model->orderItem(), $itm_model->item(),$itm_model['qty'],$itm_model['unit'],$itm_model['custom_fields'],$itm_model);
 				$itm_model->orderItem()->associatedWithDepartment($this->department())->setStatus('Delivered via '. $new_delivery_note['name']);
 				$itm_model->setStatus('delivered');
 			}

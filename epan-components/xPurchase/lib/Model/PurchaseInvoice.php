@@ -9,6 +9,16 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 
 		$this->addCondition('type','purchaseInvoice');
 		$this->addExpression('invoiceitem_count')->set($this->refSql('xShop/InvoiceItem')->count());
+
+		$this->hasMany('xPurchase/PurchaseOrderItem','invoice_id');
+	}
+
+	function forceDelete(){
+		$this->ref('xPurchase/PurchaseOrderItem')->each(function($obj){
+			$obj->newInstance()->load($obj->id)->set('invoice_id',null)->saveAndUnload();
+		});
+		
+		$this->delete();
 	}
 
 	function supplier(){

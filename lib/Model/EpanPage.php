@@ -22,7 +22,7 @@ class Model_EpanPage extends Model_Table {
 		$f=$this->addField('menu_caption')->caption('Menu')->hint('Leave blank if you don\'t want page in menus')->group('a~4')->sortable(true); // Menu name for this page default is 'Home'
 		$f->icon = 'fa fa-eye~blue';
 
-		$f=$this->addField('access_level')->setValueList(array(0=>'Public',50=>'Registered User',80=>'Back End User',100=>'Super user'))->defaultValue('public')->mandatory(true)->group('a~4')->sortable(true);
+		$f=$this->addField('access_level')->setValueList(array(0=>'Public',50=>'Registered User',80=>'Back End User',100=>'Super user'))->defaultValue('0')->mandatory(true)->group('a~4')->sortable(true);
 		$f->icon= 'fa fa-unlock-alt~red';
 		$this->addField('is_template')->type('boolean')->defaultValue(false);
 
@@ -91,13 +91,25 @@ class Model_EpanPage extends Model_Table {
 	}
 
 	function beforeDelete(){
-		if($this->ref('epan_id')->get('name') == 'demo')
+		if(!isset($this->forceDelete) AND $this->ref('epan_id')->get('name') == 'demo')
 			$this->api->js()->univ()->errorMessage('Not Available in demo')->execute();
 		
-		foreach($snapshots = $this->ref('EpanPageSnapshots') as $junk){
-			$snapshots->delete();
+		
+
+	}
+
+	function forceDelete(){
+		$this->forceDelete = true;
+		
+		foreach($sub_pages = $this->ref('EpanPage') as $junk){
+			$sub_pages->newInstance()->load($sub_pages->id)->set('parent_page_id',NULL)->save();
 		}
 
+		foreach($snapshots = $this->ref('EpanPageSnapshots') as $junk){
+			$snapshots->forceDelete();
+		}
+
+		$this->delete();
 	}
 
 	function generateURI(){

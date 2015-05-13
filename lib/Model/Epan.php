@@ -104,24 +104,29 @@ class Model_Epan extends Model_Table {
 		$this->hasMany('Messages','epan_id');
 		$this->hasMany('Alerts','epan_id');
 
-		$this->addHook('afterInsert',$this); // Add Default Page n Add Default Alaises
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeInsert',$this);
-
+		
 		$this->addHook('beforeDelete',$this);
+
+		$this->addHook('afterInsert',$this); // Add Default Page n Add Default Alaises
+		$this->addHook('afterSave',$this); // Add Default Page n Add Default Alaises
 
 		$this->setOrder('created_at','desc');
 		$this->add('Controller_EpanCMSApp')->epanModel();
 		
-		 $this->add('dynamic_model/Controller_AutoCreator');
+		 // $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete(){
 		
 		// throw new Exception($new_dir_name, 1);
 		
-		if($this->ref('Aliases')->count()->getOne() > 1)
+		$saved_current_website = $this->api->current_website;
+		$this->api->current_website = $this;
+
+		if($this->add('Model_Aliases')->count()->getOne() > 1)
 			throw $this->exception('Delete Non Default Aliases first','Growl');
 
 		$new_dir_name=getcwd(). "/epans/".$this['name'];
@@ -131,37 +136,34 @@ class Model_Epan extends Model_Table {
 				throw $this->exception('Couldn\'t delete forlder at '. $new_dir_name. ', exiting process ...');
 		}
 
-		foreach($a=$this->ref('Aliases') as $junk){
+		foreach($a=$this->add('Model_Aliases') as $junk){
 			$a->memorize('force_delete',true);
 			$a->delete();
 		}
 		
 		// Delete All users 
-		$this->ref('Users')->each(function($user){
-			$user->force_delete=true;
-			$user->delete();
+		$this->add('Model_Users')->each(function($user){
+			$user->forceDelete();
 		});
 
 		// Remove Epan Pages
-		foreach ($ep=$this->ref('EpanPage') as $junk) {
-			foreach ($snp=$ep->ref('EpanPageSnapshots') as $junk2) {
-				$snp->delete();
+		foreach ($ep=$this->add('Model_EpanPage') as $junk) {
+			foreach ($snp=$ep->add('Model_EpanPageSnapshots') as $junk2) {
+				$snp->forceDelete();
 			}
-			$ep->delete();
+			$ep->forceDelete();
 		}
 
 		// Remove Epan Templates
-		$this->ref('EpanTemplates')->deleteAll();
+		$this->add('Model_EpanTemplates')->deleteAll();
 
 		// Remove Messages and alerts
-		$this->ref('Messages')->deleteAll();
-		$this->ref('Alerts')->deleteAll();
+		$this->add('Model_Messages')->deleteAll();
+		$this->add('Model_Alerts')->deleteAll();
 
 		// Uninstall Epan installed Components
-		$saved_current_website = $this->api->current_website;
-		$this->api->current_website = $this;
 		//  unistall components
-		foreach ($comp=$this->ref('InstalledComponents') as $junk) {
+		foreach ($comp=$this->add('Model_InstalledComponents') as $junk) {
 			$comp->uninstall(); // actually deleting
 		}
 
@@ -261,6 +263,15 @@ class Model_Epan extends Model_Table {
 	}
 
 	function afterInsert($obj,$new_id){
+		$this->memorize('new_id',$new_id);
+	}
+
+	function afterSave(){
+		if(!($new_id = $this->recall('new_id',false))) return;
+		$this->forget('new_id');
+
+		$saved_current_website = $this->api->current_website;
+		$this->api->current_website = $this;
 		// Default Template add
 		$template = $this->add('Model_EpanTemplates');
 		$template['name'] = 'default';
@@ -274,9 +285,9 @@ class Model_Epan extends Model_Table {
 		$epan_page['epan_id'] = $new_id;
 		$epan_page['template_id'] = $template->id;;
 
-		$epan_page['title'] = $obj['keywords'];
-		$epan_page['description'] = $obj['description'];
-		$epan_page['keywords'] = $obj['keywords'];
+		$epan_page['title'] = $this['keywords'];
+		$epan_page['description'] = $this['description'];
+		$epan_page['keywords'] = $this['keywords'];
 		
 		$epan_page->saveAndUnload();
 
@@ -285,7 +296,7 @@ class Model_Epan extends Model_Table {
 		// Add Default Alias as per name given to this Epan
 		$default_alias = $this->add('Model_Aliases');
 		$default_alias['epan_id'] = $new_id;
-		$default_alias['name'] = $obj['name'];
+		$default_alias['name'] = $this['name'];
 		$default_alias->save();
 			
 		//Add default users
@@ -318,7 +329,6 @@ class Model_Epan extends Model_Table {
 			$user->allowApp($ep->id);
 		}
 
-		$saved_current_website = $this->api->current_website;
 
 		$this->api->event('epan_after_created',$this);
 
@@ -352,11 +362,11 @@ class Model_Epan extends Model_Table {
 	}
 
 	function pages(){
-		return $this->add('Model_EpanPage')->addCondition('epan_id',$this->id);
+		return $this->add('Model_EpanPage');
 	}
 
 	function templates(){
-		return $this->add('Model_EpanTemplates')->addCondition('epan_id',$this->id);
+		return $this->add('Model_EpanTemplates');
 	}
 
 	function sendEmailToAgency(){

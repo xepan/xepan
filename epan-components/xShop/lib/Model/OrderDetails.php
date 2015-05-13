@@ -67,7 +67,8 @@ class Model_OrderDetails extends \Model_Document{
 
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');
 		$this->hasMany('xShop/SalesOrderDetailAttachment','related_document_id',null,'Attachements');
-		$this->hasMany('xShop/Jobcard','orderitem_id');
+		$this->hasMany('xProduction/Jobcard','orderitem_id');
+		$this->hasMany('xStore/MaterialRequest','orderitem_id');
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
@@ -79,6 +80,8 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function beforeSave(){
+		if($this->dirty['invoice_id'] and $this['invoice_id'])
+			return;
 		//CHECK FOR THE ORDER IS UNDER PROCESSING/COMPLETE
 		if(in_array($this->order()->get('status'), array('draft','submitted','redesign')))
 			return ;
@@ -183,7 +186,7 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function beforeDelete(){
-		$jc = $this->ref('xShop/Jobcard')->count()->getOne();
+		$jc = $this->ref('xProduction/Jobcard')->count()->getOne();
 		if($jc)
 			throw $this->exception('Cannot Delete, First Delete Jobcrads');
 		
@@ -208,12 +211,14 @@ class Model_OrderDetails extends \Model_Document{
 			$dept_status_all->addCondition('department_id',$department_id);
 
 		foreach ($dept_status_all as $dept_status) {
+			if($dept_status->jobCardNotCreated()) continue;
 			$dept_status_dept=$dept_status->department();
-			$jc = $this->add($dept_status_dept['related_application_namespace'].'/Model_'.$dept_status_dept['jobcard_document']);
+			$jc = $this->add($dept_status_dept->defaultDocument());
 			$jc->addCondition('orderitem_id',$this['id']);
 			$jc->addCondition('to_department_id',$dept_status_dept->id);
 			$jc->tryLoadAny();
-			$job_cards[] = $jc;
+			if($jc->loaded())
+				$job_cards[] = $jc;
 		}
 
 		if($department_id){
@@ -523,6 +528,9 @@ class Model_OrderDetails extends \Model_Document{
 			//ALL JOBCARD DELETE
 			$jc->forceDelete();
 		}
+
+
+		
 
 		$this->delete();
 	}

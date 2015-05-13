@@ -36,14 +36,21 @@ class Model_Department extends \Model_Table{
 		$this->hasMany('xHR/Document','department_id');
 		$this->hasMany('xProduction/Team','department_id');
 		$this->hasMany('xHR/OfficialEmail','department_id');
-		// $this->hasMany('xProduction/OutSourceParty','department_id');
+		$this->hasMany('xProduction/JobCard','to_department_id');
+		$this->hasMany('xHR/SalaryTemplate','department_id');
 		$this->hasMany('xProduction/OutSourcePartyDeptAssociation','department_id');
-		$this->add('Controller_Validator');
-		$this->is(array(
-							'name|to_trim|required?Must be type Department here',
-							'production_level!|int|>=0|<999?Must be a number between 0 and 999'
-							)
-					);
+		$this->hasMany('xShop/QuantitySetCondition','department_phase_id');
+		$this->hasMany('xStore/Warehouse','department_id');
+
+
+		if(!isset($this->bypass_validations)){
+			$this->add('Controller_Validator');
+			$this->is(array(
+								'name|to_trim|required?Must be type Department here',
+								'production_level|int|>=0|<999?Must be a number between 0 and 999'
+								)
+						);
+		}
 		
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
@@ -60,6 +67,9 @@ class Model_Department extends \Model_Table{
 
 	function jobcard_document(){
 		return $this['jobcard_document'];
+	}
+	function defaultDocument(){
+		return $this->jobcard_document();
 	}
 
 	function beforeSave($m){
@@ -80,10 +90,20 @@ class Model_Department extends \Model_Table{
 	function beforeDelete($m){
 		$post_count = $m->ref('xHR/Post')->count()->getOne();
 		$emp_count = $m->ref('xHR/Employee')->count()->getOne();
+		$jobcard_count = $m->ref('xProduction/JobCard')->count()->getOne();
 		
-		if($post_count or $emp_count){
-			throw $this->exception('Cannot Delete,first delete Post or Employees','Growl');	
+		if($post_count or $emp_count OR $jobcard_count){
+			throw $this->exception('Cannot Delete,first delete Post, Employees And Jobcards','Growl');	
 		}
+
+		$this->ref('xHR/OfficialEmail')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xShop/QuantitySetCondition')->each(function($obj){
+			$obj->forceDelete();
+		});
+
 	}
 
 	function forceDelete(){
@@ -91,13 +111,59 @@ class Model_Department extends \Model_Table{
 			$p->forceDelete();
 		});
 
-		$this->ref('xHR/Employees')->each(function($emp){
+		$this->ref('xHR/SalaryTemplate')->each(function($p){
+			$p->forceDelete();
+		});
+
+		$this->ref('xShop/QuantitySetCondition')->each(function($p){
+			$p->forceDelete();
+		});
+
+		$this->ref('xHR/Employee')->each(function($emp){
 			$emp->forceDelete();
 		});
 
+		$this->ref('xProduction/JobCard')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xHR/Document')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xProduction/OutSourcePartyDeptAssociation')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xHR/HolidayBlock')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xShop/ItemDepartmentAssociation')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xShop/ItemDepartmentAssociation')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xProduction/Team')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->ref('xStore/Warehouse')->each(function($obj){
+			$obj->forceDelete();
+		});
+
+		$this->add('xShop/Model_ItemComposition')
+			->addCondition('department_id',$this->id)
+			->_dsql()
+			->set('department_id',null)
+			->update();
+
 		$this->delete();
 	}
-
+	
 	function createAssociationWithItem($item_id){
 		if(!$this->loaded() and $item_id > 0)
 			throw new \Exception("Department Model Must be Loaded");
@@ -186,7 +252,23 @@ class Model_Department extends \Model_Table{
 	function officialEmails(){
 		return $this->add('xHR/Model_OfficialEmail')->addCondition('department_id',$this->id);
 	}
+	
+	function salaryTemplates(){
+		return $this->add('xHR/Model_SalaryTemplate')->addCondition('department_id',$this->id);
+	}
+	
+	function loadCompany(){
+		if($this->loaded())
+			$this->unload();
+		$temp = $this->add('xHR/Model_Department');
+		$temp->addCondition('name','Company')->loadAny();
+		$this->load($temp->id);
+		return $this;
+	}
 
+	function isCompany(){
+		return $this['name'] == 'Company';
+	}
 
 	function loadHR(){
 		if($this->loaded())
@@ -317,5 +399,10 @@ class Model_Department extends \Model_Table{
 
 		return $w;
 	}
+
+	function post(){
+		return $this->ref('xHR/Post');
+	}
+
 
 }

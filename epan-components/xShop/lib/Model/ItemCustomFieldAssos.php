@@ -27,7 +27,6 @@ class Model_ItemCustomFieldAssos extends \Model_Table{
 
 		$this->addHook('beforeSave',$this);
 		$this->addHook('beforeDelete',$this);
-		// $this->addHook('beforeDelete',$this);
 		
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}

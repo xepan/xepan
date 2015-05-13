@@ -5,8 +5,6 @@ class page_xHR_page_owner_employee_media extends Page{
 		parent::init();
 
 		if(!$_GET['employee_id'])
-			// throw new \Exception($_GET['department_id']);
-			
 			return;
 		
 		$this->api->stickyGET('employee_id');
@@ -17,9 +15,10 @@ class page_xHR_page_owner_employee_media extends Page{
 		$form = $this->add('Form_Stacked');
 		$form->setModel($selected_dept_model,array('empolyee_image_id'));
 		$form->addSubmit('Update');
+		// $this->add('filestore/View_ImageList',null,null)->setModel($selected_dept_model);
 
 		// $form->add('Controller_FormBeautifier');
-		if($form->isSubmitted()){	
+		if($form->isSubmitted()){
 			$form->update();
 			$form->js(null,$form->js()->reload())->univ()->successMessage(' Update Information')->execute();
 			// $form->js()->univ()->successMessage(' Update Information')->execute();

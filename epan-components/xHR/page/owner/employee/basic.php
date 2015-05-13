@@ -5,8 +5,6 @@ class page_xHR_page_owner_employee_basic extends Page{
 		parent::init();
 
 		if(!$_GET['employee_id'])
-			// throw new \Exception($_GET['department_id']);
-			
 			return;
 		
 		$this->api->stickyGET('employee_id');
@@ -25,11 +23,10 @@ class page_xHR_page_owner_employee_basic extends Page{
 
 													));
 		$form->addSubmit()->set('Update');
-
 		$form->add('Controller_FormBeautifier');
-		if($form->isSubmitted()){	
+		if($form->isSubmitted()){
 			$form->update();
-			$form->js(null,$form->js()->reload())->univ()->successMessage(' Update Information')->execute();
+			$form->js(null,$form->js()->_selector('.xemployee_box')->trigger('reload'))->reload()->univ()->successMessage('Update Information')->execute();
 		}
 
 	}

@@ -2,7 +2,7 @@
 
 namespace xShop;
 
-class Model_ItemDepartmentAssociation extends \Sql_Model{
+class Model_ItemDepartmentAssociation extends \Model_Table{
 	public $table='xshop_item_department_asso';
 
 	function init(){

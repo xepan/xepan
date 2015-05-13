@@ -12,7 +12,7 @@ class page_xHR_page_owner_employee_employeeemail extends page_xHR_page_owner_mai
 		$email->addCondition('employee_id',$_GET['employee_id']);
 		$email->getElement('department_id')->system(true);
 
-		$crud=$this->add('CRUD');
+		$crud=$this->add('CRUD',array('grid_class'=>'xHR/Grid_OfficialEmail'));
 		$crud->setModel($email);
 
 		$crud->add('xHR/Controller_Acl');
