@@ -11,16 +11,6 @@ class page_xShop_page_owner_opportunity extends page_xShop_page_owner_main{
 		$crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_Opportunity'));
 		$crud->setModel($oppertunity_model,array('name','lead_id','customer_id','status','created_date','created_by','updated_at','opportunity'),array('name','opportunity','lead','customer','status','created_date','created_by','updated_at'));
 
-
-		if(!$crud->isEditing()){
-			$grid =  $crud->grid;
-			// $grid->addColumn('text','last_contacted');
-		// 	// $grid->removeColumn('lead');
-		// 	// $grid->removeColumn('customer');
-		}
-		// $crud->grid->addQuickSearch(array('name','created_by','status'));
-		// $crud->grid->addPaginator($ipp=50);
-
 		$crud->add('xHR/Controller_Acl');
 		$p=$crud->addFrame('Quotation',array('icon'=>'plus'));
 		
