@@ -8,10 +8,11 @@ class Model_Opportunity extends \Model_Document {
 	public $root_document_name="xShop\Opportunity";
 
 	public $actions=array(
-			'can_view'=>array('caption'=>'Whose created Opportunity this post can see'),
-			'allow_edit'=>array('caption'=>'Whose created Opportunity this post can edit'),
-			'allow_add'=>array('caption'=>'Can this post create new Opportunity'),
-			'allow_del'=>array('caption'=>'Whose Created Opportunity this post can delete'),
+			'can_view'=>array(),
+			'allow_edit'=>array(),
+			'allow_add'=>array(),
+			'allow_del'=>array(),
+			'can_manage_attachments'=>array(),
 		);
 	
 	function init(){

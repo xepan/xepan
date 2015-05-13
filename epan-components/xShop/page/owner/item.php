@@ -9,8 +9,8 @@ class page_xShop_page_owner_item extends page_xShop_page_owner_main{
 		$this->app->title=$this->api->current_department['name'] .': Items';
 
 		$l=$this->add('Columns');
-		$cat_col = $l->addColumn(3);
-		$item_col = $l->addColumn(9);
+		$cat_col = $l->addColumn(4);
+		$item_col = $l->addColumn(8);
 			
 		// $l->addPane('south')->add('View')->set('South');
 		// $l->addPane('east')->add('View')->set('East');
