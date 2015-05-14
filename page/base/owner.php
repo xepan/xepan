@@ -114,6 +114,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Scheduled Jobs","url"=>$this->api->url('xMarketingCampaign_page_owner_scheduledjobs',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Data Grabber","url"=>$this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_dtgrb',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Campaigns","url"=>$this->api->url('xMarketingCampaign_page_owner_campaigns',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Leads Category","url"=>$this->api->url('xMarketingCampaign_page_owner_leadcategory',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Leads","url"=>$this->api->url('xMarketingCampaign_page_owner_leads',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Configurations","url"=>$this->api->url('xMarketingCampaign_page_owner_config',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Marketing Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
