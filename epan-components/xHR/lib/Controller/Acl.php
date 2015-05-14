@@ -95,7 +95,7 @@ class Controller_Acl extends \AbstractController {
 		} 
 
 		foreach ($this->permissions as $key => $value) {
-			if(isset($this->my_model->actions) && isset($this->my_model->actions[$key]) && ($this->my_model->actions[$key] === false || $this->my_model->actions[$key] === null )){
+			if(!$this->isPermissionDefined($key)){
 				// This Permission is set as false or null in model so .. just bypass this leaving itsvale as default in public variable
 				// echo $key;
 				unset($this->permissions[$key]);
@@ -154,6 +154,10 @@ class Controller_Acl extends \AbstractController {
 
 	}
 
+	function isPermissionDefined($key){
+		return isset($this->my_model->actions) && isset($this->my_model->actions[$key]) && $this->my_model->actions[$key] !== false && $this->my_model->actions[$key] !== null;
+	}
+
 	function doCRUD(){
 		// echo "i m here 2 <br>";
 		if(!$this->api->auth->model->isDefaultSuperUser() AND $this->show_acl_btn AND !$this->owner->isEditing()){
@@ -205,13 +209,13 @@ class Controller_Acl extends \AbstractController {
 			$this->filterModel($this->owner->model, isset($this->owner->model->acl_field)?$this->owner->model->acl_field:'created_by_id');
 		}
 
-		if(!$this->api->auth->model->isDefaultSuperUser() AND !$this->permissions['allow_add']){
+		if(!$this->isPermissionDefined('allow_add') OR (!$this->api->auth->model->isDefaultSuperUser() AND !$this->permissions['allow_add'])){
 			$this->owner->allow_add=false;
 			if($this->owner->add_button instanceof \View)
 				$this->owner->add_button->destroy();
 		}
 
-		if(!$this->api->auth->model->isDefaultSuperUser() and $this->permissions['allow_edit'] and $this->permissions['allow_edit'] =='No'){
+		if(!$this->isPermissionDefined('allow_edit') OR (!$this->api->auth->model->isDefaultSuperUser() and $this->permissions['allow_edit'] and $this->permissions['allow_edit'] =='No')){
 			$this->owner->allow_edit=false;
 			$this->owner->grid->removeColumn('edit');
 		}else{
@@ -219,13 +223,14 @@ class Controller_Acl extends \AbstractController {
 				$this->filterGrid('edit','allow_');
 		}
 
-		if(!$this->api->auth->model->isDefaultSuperUser() AND $this->permissions['allow_del'] == 'No'){
+		if(!$this->isPermissionDefined('allow_del') OR (!$this->api->auth->model->isDefaultSuperUser() AND $this->permissions['allow_del'] == 'No')){
 			$this->owner->allow_del=false;
 			$this->owner->grid->removeColumn('delete');
 		}else{
 			if(!$this->api->auth->model->isDefaultSuperUser())
 				$this->filterGrid('delete','allow_','del');
 		}
+
 
 		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_submit'] != 'No'){
 			$this->manageAction('submit','can_submit');
@@ -313,7 +318,7 @@ class Controller_Acl extends \AbstractController {
 			$this->manageAction('send_via_email','can_send_via_email');
 		}
 		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_create_activity'] !='No'){
-			$this->manageAction('create_activity','can_create_activity');
+			$this->manageAction('create_activity','can_create_activity'); // Used in Email
 		}
 		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_create_ticket'] !='No'){
 			$this->manageAction('create_ticket','can_create_ticket');
@@ -344,7 +349,7 @@ class Controller_Acl extends \AbstractController {
 
 	function manageAction($action_name, $full_acl_key=null , $icon = null){
 
-		if(!isset($this->permissions[$full_acl_key])) return;
+		if(!$this->isPermissionDefined($full_acl_key)) return;
 
 		if(!$icon and isset($this->my_model->actions)){
 			$icon = $this->my_model->actions[$full_acl_key]['icon']?:'edit';
