@@ -31,7 +31,7 @@ class Controller_Grid_Format_inline extends \AbstractController {
         $g->current_row_html[$field]='<span class="grid_inline" style="display: block" id="'.($s=$g->name.'_'.$field.'_inline_'.
             $g->current_id).'" >'.
             '<i style="float: left" class="atk-icon atk-icons-red atk-icon-office-pencil"></i>'.
-            $g->current_row[$field].
+            ($g->current_row_html[$field]?:$g->current_row[$field]).
             '&nbsp;</span>';
         $js=$g->js(true)->_selector('#'.$s)->click(
                 $g->js()->_enclose()->_selectorThis()->parent()->atk4_load($this->api->url(null,array($s=>true)))
