@@ -1,9 +1,12 @@
 <?php
 namespace xShop;
 
-class Model_Item extends \Model_Table{
+class Model_Item extends \Model_Document{
 	public $table='xshop_items';
 	public $table_alias='Item';
+
+	public $status=array();
+	public $root_document_name='xShop\Item';
 
 	function init(){
 		parent::init();
@@ -29,7 +32,7 @@ class Model_Item extends \Model_Table{
 		$this->addField('short_description')->type('text')->group('c~12');
 		
 		$this->addField('rank_weight')->defaultValue(0)->hint('Higher Rank Weight Item Display First')->mandatory(true)->group('d~4');
-		$this->addField('created_at')->type('date')->defaultValue(date('Y-m-d'))->group('d~4');
+		// $this->addField('created_at')->type('date')->defaultValue(date('Y-m-d'))->group('d~4');
 		$this->addField('expiry_date')->type('date')->group('d~4');
 		$this->addField('description')->type('text')->display(array('form'=>'RichText'))->group('z~12');
 		
