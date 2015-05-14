@@ -70,7 +70,7 @@ class page_xMarketingCampaign_page_owner_socialcontents extends page_xMarketingC
 
 		$social_crud = $social_col->add('CRUD',array('grid_class'=>'xMarketingCampaign/Grid_SocialPost'));
 		
-		$cols_array = array('category','name','is_active','total_posts','total_likes','total_share','total_comments','unread_comment');
+		$cols_array = array('name','is_active','total_posts','total_likes','total_share','total_comments','unread_comment');
 
 		if($_GET['sort_by']){
 			$this->api->stickyGET('sort_by');
