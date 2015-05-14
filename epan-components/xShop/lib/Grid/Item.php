@@ -28,12 +28,19 @@ class Grid_Item extends \Grid{
 			$tab->addTabURL($p->api->url('xShop/page/owner/item_prophases',array('item_id'=>$p->id)),'Production Phases');
 			$tab->addTabURL($p->api->url('xShop/page/owner/item_account',array('item_id'=>$p->id)),'Accounts');
 			// $tab->addTabURL('xShop/page/owner/item_composition','Composition',array('item_id'));
-		});			
+		});
+
+		$this->addColumn('image');
 	}
 
 	function setModel($m,$fields=null){
 		parent::setModel($m,$fields);
 		
+		//Price 
+		$this->addColumn('price');
+		$this->addFormatter('price','price');
+		
+		//Duplicate Function
 		$this->addColumn('Button','duplicate',array("descr"=>"Duplicate",'icon'=>'cog','icon_only'=>true));
 
 		if($_GET['duplicate']){
@@ -50,10 +57,21 @@ class Grid_Item extends \Grid{
 			}
 			$this->js()->reload()->execute();
 		}
+		
+		//Quick Search
 		if(!$fields)
 			$fields = $this->model->getActualFields();
 		$this->addQuickSearch($fields,null,'xShop/Filter_Item');
 
+	}
+
+	function format_price($field){
+			
+		$price_html = 'Sale Price: '.$this->model['sale_price'].'<br/>';
+		$price_html .= 'Unit: '.$this->model['qty_unit'].'<br>';
+		$price_html .= 'Original Price: <i style="text-decoration:line-through;">'.$this->model['original_price'].'</i>';
+
+		$this->current_row_html[$field] = $price_html;
 	}
 
 	function recursiveRender(){
@@ -92,7 +110,10 @@ class Grid_Item extends \Grid{
 
 	function formatRow(){
 		//Publish
-		$designer = $this->model['designer']?:"No Specified";
+		$designer = "";
+		if($designer = $this->model['designer'])
+			$designer = 'Designer: '.$designer;
+
 		$template_html = "";
 		if($this->model['is_publish'])
 			$this->setTDParam('name','class','atk-effect-success');
@@ -183,9 +204,22 @@ class Grid_Item extends \Grid{
 		// 					'Item_enquiry_auto_reply',
 		//";
 
-		$this->current_row_html['name'] = $template_html.$this->current_row['name'].'</span>'.'<span class="pull-right" title="Code">'.$this->current_row['sku'].'</span><br>'.$options;
 
+		$this->current_row_html['name'] = '<span class="atk-size-mega">'.$template_html.$this->current_row['name'].'</span></span>'.'<span class="pull-right" title="Code">'.$this->current_row['sku'].'</span><br>'.$options.'<br>'.$designer;
+		
+
+		//Item Image Formatter
+		$img_url = "epan-components/xShop/templates/images/item_no_image.png";
+		$item_images=$this->model->images()->setLimit(1)->tryLoadAny();
+		if($item_images->loaded())
+			$img_url = $item_images->ref('item_image_id')->ref('thumb_file_id')->get('url');
+
+
+		$this->current_row_html['image']='<img style="max-width:70px;" alt="'.$item_images['alt_text'].'" title="'.$item_images['title'].'" src="'.$img_url.'"></img>';
+		
 		parent::formatRow();
 	}
+
+
 
 }
