@@ -942,5 +942,11 @@ class Model_Item extends \Model_Document{
 		// return $associate_customfields;
 	}
 
+	function images(){
+		return	$this->add('xShop/Model_ItemImages')->addCondition('item_id',$this->id);
+	}
+
+	
+
 }	
 

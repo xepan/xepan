@@ -106,7 +106,6 @@ class Model_DispatchRequest extends \Model_Document {
 		return false;
 	}
 
-
 	// Called if direct order to store is required
 	function createFromOrder($order_item, $order_dept_status ){
 		$new_request = $this->add('xDispatch/Model_DispatchRequest');
@@ -398,4 +397,74 @@ class Model_DispatchRequest extends \Model_Document {
 		$this->setStatus('cancelled',$reason);
 	}
 
+	function create($from_department, $to_department, $related_document=false, $order_item=false, $items_array=array(), $dispatch_to_warehouse=false, $status=false){
+		$this['from_department_id'] = $from_department->id;
+		$this['to_department_id'] = $to_department->id;
+
+		if($related_document){
+			$this->relatedDocument($related_document);
+		}
+
+		if($order_item){
+			$this['orderitem_id'] = $order_item->id;
+			if($osid = $order_item->deptartmentalStatus($to_department))
+				$this['orderitem_departmental_status_id'] = $osid->id;
+		}
+
+		if($dispatch_to_warehouse){
+			$this['dispatch_to_warehouse_id'] = $dispatch_to_warehouse->id;
+		}else{
+			$this['dispatch_to_warehouse_id'] = $from_department->warehouse()->get('id');
+		}
+
+		if($status)
+			$this['status'] = $status;
+
+		$this->save();
+		
+		foreach ($items_array as $item) {
+			$this->addItem($this->add('xShop/Model_Item')->load($item['id']),$item['qty'],$item['unit'],$item['custom_fields']);
+		}
+		return $this;
+	}
+
+	function previousDeptJobCard(){
+		
+		if($cf = $this->orderItem()->get('custom_fields')){
+			$custom_fields = json_decode($cf,true);
+		}else{
+			$custom_fields = array();
+		}
+
+		$prev_dept_id = null;
+		foreach ($custom_fields as $dept_id => $custom_field_values ) {
+			if($this->department()->get('id') == $dept_id) break;
+			$prev_dept_id = $dept_id;
+		}
+		if($prev_dept_id){
+			$pre_dept_job_card = $this->add('xProduction/Model_JobCard');
+			$pre_dept_job_card->addCondition('orderitem_id',$this['orderitem_id']);
+			$pre_dept_job_card->addCondition('to_department_id',$prev_dept_id);
+			$pre_dept_job_card->tryLoadAny();
+
+			if($pre_dept_job_card->loaded()) return $pre_dept_job_card;
+		}
+		
+		return false;
+	}
+
+	function orderItem(){
+		if(!$this['orderitem_id']){
+			return false;
+		}
+		return $this->ref('orderitem_id');
+	}
+
+	function department(){
+		return $this->toDepartment();
+	}
+
+	function toDepartment(){
+		return $this->ref('to_department_id');
+	}
 }

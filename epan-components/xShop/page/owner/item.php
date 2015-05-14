@@ -64,6 +64,17 @@ class page_xShop_page_owner_item extends page_xShop_page_owner_main{
 							'tags',
 							'terms_condition',
 							'theme_code_group_expression',
+							
+							'original_price',
+							'sale_price',
+							'qty_unit',
+							'designer',
+
+							'item_name',
+							'created_by',
+							'related_document',
+							'updated_date',
+							'created_date',
 							);
 
 		$bg = $this->add('xShop/View_Badges_ItemPage');

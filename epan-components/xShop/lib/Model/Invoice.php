@@ -200,4 +200,8 @@ class Model_Invoice extends \Model_Document{
 			return true;
 		}
 	}
+
+	function order(){
+		return $this->ref('sales_order_id');
+	}
 }
