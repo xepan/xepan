@@ -160,7 +160,7 @@ class Controller_Acl extends \AbstractController {
 
 	function doCRUD(){
 		// echo "i m here 2 <br>";
-		if(!$this->api->auth->model->isDefaultSuperUser() AND $this->show_acl_btn AND !$this->owner->isEditing()){
+		if($this->api->auth->model->isDefaultSuperUser() AND $this->show_acl_btn AND !$this->owner->isEditing()){
 			if($this->api->getConfig('open_acl_for_all',false) OR $this->api->auth->model->isDefaultSuperUser()){
 				$btn = $this->owner->grid->buttonset->addButton()->set('ACL APPLIED');
 				$self= $this;
@@ -184,11 +184,19 @@ class Controller_Acl extends \AbstractController {
 					$c = $p->add('CRUD',array('allow_add'=>false));
 					$fields=null;
 					if(isset($self->owner->model->actions)){
-						$fields = array_merge(array('post_department','post','post_id'),array_keys($self->owner->model->actions));
+						$defined_permissions=array();
+						foreach ($self->my_model->actions as $key => $value) {
+							if($this->isPermissionDefined($key)) $defined_permissions[] = $key;
+						}
+						$fields = array_merge(array('post_department','post','post_id'),$defined_permissions);
 					}
 					$c->setModel($m,$fields);
 					if(!$c->isEditing()){
 						$c->grid->removeColumn('post_id');
+						foreach ($fields as $f) {
+							if(!in_array($f, array('post_department','post','post_id')))
+								$c->grid->addFormatter($f,'grid/inline');
+						}
 					}
 				});
 
