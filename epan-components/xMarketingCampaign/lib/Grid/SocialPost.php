@@ -7,9 +7,6 @@ class Grid_SocialPost extends \Grid{
 	// public $total_posts_vp;
 	function init(){
 		parent::init();
-		$this->addQuickSearch(array('name','category'));
-		$this->addPaginator($ipp=50);
-		$this->add_sno();
 		$self=$this;
 		$this->preview_vp = $this->add('VirtualPage');
 		$this->preview_vp->set(function($p)use($self){
@@ -83,6 +80,11 @@ class Grid_SocialPost extends \Grid{
 			$this->addFormatter('name','preview');
 			$this->addFormatter('unread_comment','unread_comment');
 			$this->addColumn('Expander','post');
+		
+		$this->addQuickSearch(array('name','category'),null,'xMarketingCampaign/Filter_SocialPost');
+		$this->addPaginator($ipp=50);
+		$this->add_sno();
+		
 		return $m;
 	}
 	function formatRow(){
