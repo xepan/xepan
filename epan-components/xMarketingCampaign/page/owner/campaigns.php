@@ -11,53 +11,28 @@ class page_xMarketingCampaign_page_owner_campaigns extends page_xMarketingCampai
 	function page_index(){
 		// parent::init();
 
-		$bg=$this->app->layout->add('View_BadgeGroup');
+		$bg=$this->add('View_BadgeGroup');
 		$data=$this->add('xEnquiryNSubscription/Model_NewsLetter')->count()->getOne();
 		$v=$bg->add('View_Badge')->set('Total NewsLetters')->setCount($data)->setCountSwatch('ink');
 
 		$data=$this->add('xEnquiryNSubscription/Model_NewsLetter')->addCondition('created_by','xMarketingCampaign')->count()->getOne();
 		$v=$bg->add('View_Badge')->set('By This App')->setCount($data)->setCountSwatch('ink');
 
-		$cat_toggle_btnset =$this->app->layout->add('ButtonSet');
-		$hide_cat_btn = $cat_toggle_btnset->addButton('Hide Category');
-		$show_cat_btn = $cat_toggle_btnset->addButton('Show Category');
+		// $cat_toggle_btnset =$this->app->layout->add('ButtonSet');
+		// $hide_cat_btn = $cat_toggle_btnset->addButton('Hide Category');
+		// $show_cat_btn = $cat_toggle_btnset->addButton('Show Category');
 
-		$cols = $this->app->layout->add('Columns');
-		$cat_col = $cols->addColumn(3);
-		$camp_col = $cols->addColumn(9);
+		// $cols = $this->app->layout->add('Columns');
+		// $cat_col = $cols->addColumn(3);
+		// $camp_col = $cols->addColumn(9);
 
-		$hide_cat_btn->js('click',array($cat_col->js()->hide(),$camp_col->js()->addClass('atk-col-12')));
-		$show_cat_btn->js('click',array($cat_col->js()->show(),$camp_col->js()->removeClass('atk-col-12')));
+		// $hide_cat_btn->js('click',array($cat_col->js()->hide(),$camp_col->js()->addClass('atk-col-12')));
+		// $show_cat_btn->js('click',array($cat_col->js()->show(),$camp_col->js()->removeClass('atk-col-12')));
 
-		$cat_crud = $cat_col->add('CRUD',array('grid_class'=>'xMarketingCampaign/Grid_CampaignCategory'));
-		$cat_model = $this->add('xMarketingCampaign/Model_CampaignCategory');
-		$cat_crud->setModel($cat_model);
+		// 
 		
-		if(!$cat_crud->isEditing()){
-			$g=$cat_crud->grid;
-			$g->addMethod('format_filtercampaign',function($g,$f)use($camp_col){
-				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'. $camp_col->js()->reload(array('category_id'=>$g->model->id)) .'">'.$g->current_row[$f].'</a>';
-			});
-			$g->addFormatter('name','filtercampaign');
-		}
 
 		$campaign_model = $this->add('xMarketingCampaign/Model_Campaign');
-		//filter Campaigns as per selected category
-		if($_GET['category_id']){
-			$this->api->stickyGET('category_id');
-			$filter_box = $camp_col->add('View_Box')->setHTML('Campaigns for <b>'. $cat_model->load($_GET['category_id'])->get('name').'</b>' );
-			
-			$filter_box->add('Icon',null,'Button')
-            ->addComponents(array('size'=>'mega'))
-            ->set('cancel-1')
-            ->addStyle(array('cursor'=>'pointer'))
-            ->on('click',function($js) use($filter_box,$camp_col) {
-                $filter_box->api->stickyForget('category_id');
-                return $filter_box->js(null,$camp_col->js()->reload())->hide()->execute();
-            });
-
-			$campaign_model->addCondition('category_id',$_GET['category_id']);
-		}
 
 		if($_GET['schedule']){
 			$test_campaign_model= $this->add('xMarketingCampaign/Model_Campaign')->load($_GET['schedule']);
@@ -67,7 +42,7 @@ class page_xMarketingCampaign_page_owner_campaigns extends page_xMarketingCampai
 				$this->api->redirect($this->api->url('./subscriptionDate_based_schedule',array('xmarketingcampaign_campaigns_id'=>$_GET['schedule'])));
 		}
 
-		$campaign_crud = $camp_col->add('CRUD',array('grid_class'=>'xMarketingCampaign/Grid_Campaign'));
+		$campaign_crud = $this->add('CRUD',array('grid_class'=>'xMarketingCampaign/Grid_Campaign'));
 		$campaign_crud->setModel($campaign_model,null);
 		
 		if(!$campaign_crud->isEditing()){
