@@ -17,9 +17,9 @@ class Model_Item extends \Model_Document{
 		$this->hasOne('xShop/Application','application_id');
 		$this->hasOne('xShop/MemberDetails','designer_id')->sortable(true);
 
-		//for Mutiple Epan website
-		$this->hasOne('Epan','epan_id');
-		$this->addCondition('epan_id',$this->api->current_website->id);
+		// //for Mutiple Epan website
+		// $this->hasOne('Epan','epan_id');
+		// $this->addCondition('epan_id',$this->api->current_website->id);
 
 		// Basic Field
 		$this->addField('name')->mandatory(true)->group('b~5')->sortable(true);
@@ -82,7 +82,7 @@ class Model_Item extends \Model_Document{
 														array('disqus'=>'Disqus')
 														)->group('j~4');
 
-		//Item Other Options	
+		//Item Other Options
 		$this->addField('add_custom_button')->type('boolean')->group('k~3~<i class=\'fa fa-cog\'> Item Other Options</i>');
 		$this->addField('custom_button_label')->group('k~4');
 		$this->addField('custom_button_url')->placeHolder('subpage name like registration etc.')->group('k~5');

@@ -2,7 +2,7 @@
 
 namespace xStore;
 
-class Model_TempItems extends \Model {
+class Model_TempItems extends \Model{
 	
 	function init(){
 		parent::init();

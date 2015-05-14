@@ -76,7 +76,7 @@ class Filter_Item extends \Filter_Base
 
         $or = $q->orExpr();
         foreach($this->fields as $field) {
-            $or->where($field, 'like', '%'.$v.'%');
+               $or->where($field, 'like', '%'.$v.'%');
         }
 
         if($category){
