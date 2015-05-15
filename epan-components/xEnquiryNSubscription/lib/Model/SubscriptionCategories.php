@@ -2,8 +2,13 @@
 namespace xEnquiryNSubscription;
 
 
-class Model_SubscriptionCategories extends \Model_Table {
+class Model_SubscriptionCategories extends \Model_Document {
 	var $table= "xenquirynsubscription_subscription_categories";
+
+	public $status=array();
+	public $root_document_name = 'xEnquiryNSubscription\SubscriptionCategories';
+	
+
 	function init(){
 		parent::init();
 
