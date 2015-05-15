@@ -64,12 +64,15 @@ class Grid_Order extends \Grid {
 		$this->addFormatter('name','view');
 		if($this->hasColumn('last_action'))
 			$this->addFormatter('last_action','lastaction');
-		$this->removeColumn('orderitem_count');
-		$this->removeColumn('order_from');
-		$this->removeColumn('member');
+
+		if($this->hasColumn('orderitem_count'))$this->removeColumn('orderitem_count');
+		if($this->hasColumn('order_from'))$this->removeColumn('order_from');
+		if($this->hasColumn('member'))$this->removeColumn('member');
 
 		$this->addPaginator($this->ipp);
-		$this->addQuickSearch(array('name','net_amount'));
+		if(!$fields)
+			$fields = $this->model->getActualFields();
+		$this->addQuickSearch($fields);
 		return $m;
 	}
 }

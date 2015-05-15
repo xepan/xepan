@@ -233,7 +233,7 @@ class Model_Order extends \Model_Document{
 
 			$this['amount']=$total_amount;
 			
-			//$discount_voucher_amount = 0; 
+			//$discount_voucher_amount = 0;
 			//TODO NET AMOUNT, TAXES, DISCOUNT VOUCHER AMOUNT etc.. CALCULATING AGAIN FOR SECURITY REGION 
 			// $discountvoucher=$this->add('xShop/Model_DiscountVoucher');
 			// if($discountvoucher->isUsable($order_info['discount_voucher'])){
@@ -246,6 +246,7 @@ class Model_Order extends \Model_Document{
 			// echo "placeOrderFromCart";
 			
 			// $discountvoucher->processDiscountVoucherUsed($this['discount_voucher']);
+			$this->createInvoice('approved');
 			return $this;
 	}
 
@@ -392,15 +393,14 @@ class Model_Order extends \Model_Document{
 			$invoice['tax'] = $this['tax'];
 			$invoice['net_amount'] = $this['net_amount'];
 			$invoice['termsandcondition_id'] = $this['termsandcondition_id'];
-			$invoice->relatedDocument($this);
-
 			$invoice->save();
-			
+
+			$invoice->relatedDocument($this);
 
 			$ois = $this->orderItems();
 			foreach ($ois as $oi) {
 
-				if(!count($items_array)) continue;
+				if(count($items_array) AND !in_array($oi->id,$items_array)) continue;
 				
 				if($oi->invoice())
 					throw $this->exception('Order Item already used in Invoice','Growl');
