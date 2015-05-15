@@ -21,7 +21,7 @@ class Model_MemberDetails extends \Model_Document{
 		$this->addField('city')->sortable(true)->group('a~6');
 		$this->addField('state')->sortable(true)->group('a~6');
 		$this->addField('country')->sortable(true)->group('a~6');
-		$this->addField('pincode')->sortable(true)->group('a~6');
+		$this->addField('pincode')->sortable(true)->group('a~6')->type('int');
 		
 		$this->addField('address')->type('text')->group('a~6')->caption('Permanent Address');
 		$this->addField('billing_address')->type('text')->group('a~6');
