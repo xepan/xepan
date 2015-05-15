@@ -102,7 +102,7 @@ class Model_Activity extends \Model_Document{
 		$this->setOrder('created_at','desc');
 
 		$this->addHook('beforeSave,beforeDelete',function($obj){
-			if(!isset($this->forceDelete) AND $obj['created_by_id'] != $obj->api->current_employee->id)
+			if(!isset($obj->forceDelete) AND $obj['created_by_id'] != $obj->api->current_employee->id)
 				throw $this->exception('You are not authorized for action','Growl');
 		});
 

@@ -44,7 +44,7 @@ class Model_JobCard extends \Model_Document{
 			)->sortable(true);
 
 		$this->hasMany('xStore/StockMovement','jobcard_id');
-		$this->hasMany('xProduction/JobCardAttachment','related_document_id',null,'Attachements');
+		$this->hasMany('xProduction/JobCardAttachment','related_document_id',null,'Attachments');
 
 
 		$this->add('Controller_Validator');
