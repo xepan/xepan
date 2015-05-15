@@ -11,8 +11,8 @@ class View_Tools_xCart extends \componentBase\View_Component{
 		$proceed_page  = $this->html_attributes['cart-proceed-page'];
 		$cart_detail_page  = "?subpage=".$this->html_attributes['cart-detail-page']?:'home';
 
-		
-		if($_GET['order_place']=="true"){
+		$this->api->stickyGET('order_place');
+		if($_GET['order_place']==$this->name){
 			$this->api->memorize('next_url',array('subpage'=>$_GET['subpage']));
 			//Check for user logged in
 			$auth = $this->add('xShop/Controller_Auth',array('redirect_subpage'=>$this->html_attributes['show-cart-noauth-subpage-url']));
@@ -21,11 +21,11 @@ class View_Tools_xCart extends \componentBase\View_Component{
 			//Place Order
 			$order = $this->add('xShop/Model_Order');
 			try{
-				// $this->api->db->beginTransaction();
+				$this->api->db->beginTransaction();
 				$new_order = $order->placeOrderFromCart();
-				// $this->api->db->commit();
+				$this->api->db->commit();
 			}catch(Exception $e){
-				// $this->api->db->rollback();
+				$this->api->db->rollback();
 				throw $e;
 			}
 
@@ -35,6 +35,7 @@ class View_Tools_xCart extends \componentBase\View_Component{
 			$this->api->memorize('checkout_order',$new_order);
 			//Redirect to Proceed/checkout Page with New Order Id
 			$this->api->redirect($this->api->url(null,array('subpage'=>$proceed_page)));
+			
 		}
 
 
@@ -91,7 +92,7 @@ class View_Tools_xCart extends \componentBase\View_Component{
 		if($this->html_attributes['show-checkout']){
 			$checkout_btn=$this->add('Button',null,'xshop_cart_checkout_btn')->set('Check out')->addClass('btn xshop-cart-checkout-btn');
 			if($checkout_btn->isClicked()){
-				$this->api->js()->univ()->redirect(null,array('subpage'=>$this->html_attributes['xshop_ipb_checkout_page']))->execute();
+				$this->api->js()->univ()->redirect(null,array('subpage'=>$this->html_attributes['cart-proceed-page']))->execute();
 			}
 		}else{
 			$this->template->tryDel('xshop_cart_checkout_btn');
@@ -150,7 +151,7 @@ class View_Tools_xCart extends \componentBase\View_Component{
 		//Show Proceed Btn or not
 		if($this->html_attributes['show-proceed']){			
 			$place_order_btn = $this->add('View',null,'xshop_cart_proceed')->set('Place order')->addClass('xshop-cart-proceed-btn');
-			$place_order_btn->js('click')->reload(array('order_place'=>'true'));
+			$place_order_btn->js('click')->reload(array('order_place'=>$this->name));
 			// ->setElement('a')->setAttr('href','index.php?subpage='.$proceed_page);
 		}else{
 			$this->template->tryDel('xshop_cart_proceed');

@@ -2,8 +2,8 @@
 
 namespace xMarketingCampaign;
 
-class Model_LeadCategory extends \Model_Document {
-	public $table ='xmarketingcampaign_lead_categories';
+class Model_LeadCategory extends \xEnquiryNSubscription\Model_SubscriptionCategories {
+	// public $table ='xmarketingcampaign_lead_categories';
 	public $status=array();
 	public $root_document_name="xMarketingCampaign\LeadCategory";
 	public $actions=array(
@@ -18,9 +18,9 @@ class Model_LeadCategory extends \Model_Document {
 	function init(){
 		parent::init();
 
-		$this->hasOne('Epan','epan_id');
-		$this->addCondition('epan_id',$this->api->current_website->id);
-		$this->addField('name')->sortable(true);
+		// $this->hasOne('Epan','epan_id');
+		// $this->addCondition('epan_id',$this->api->current_website->id);
+		// $this->addField('name')->sortable(true);
 
 		$this->addExpression('totalleads')->set(function($m,$q){
 			return $m->refSQL('xMarketingCampaign/Lead')->count();

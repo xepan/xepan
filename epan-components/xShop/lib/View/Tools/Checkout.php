@@ -31,7 +31,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		}
 
 		// Check if order is owned by current member ??????
-
+		
 		$order = $this->api->memorize('checkout_order',$this->api->recall('checkout_order',$this->add('xShop/Model_Order')->tryLoad($_GET['order_id']?:0)));
 		if(!$order->loaded()){
 			$this->api->forget('checkout_order');
@@ -49,7 +49,6 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 
 		// ================================= PAYMENT MANAGEMENT =======================
 		if($_GET['pay_now']=='true'){
-
 			// create gateway 
 			$gateway = GatewayFactory::create($order['paymentgateway']);
 			
@@ -95,7 +94,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			    {
 			        throw new \Exception($response->getMessage());
 			    }
-			    $order->payNow($response->getTransactionReference(),$response->getData());
+			    $order->invoice()->PayViaOnline($response->getTransactionReference(),$response->getData());
 			    $this->api->forget('checkout_order');
 			    $this->api->redirect($this->api->url(null,array('subpage'=>'home')));
 			    exit;
@@ -143,7 +142,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 							
 		$discount_field->js('change')->univ()->validateVoucher($discount_field,$form,$discount_amount_field,$total_field,$net_amount_field);
 
-		$total_field->set($order['amount']);
+		$total_field->set($order['total_amount']);
 		$net_amount_field->set($order['net_amount']);	
 		
 		$col=$form->add('Columns');
@@ -194,7 +193,9 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		$pay_gate_field = $form->addField('DropDown','payment_gateway_selected')->setEmptyText('Please Select Your Payment Method')->validateNotNull(true);
 		$pay_gate_field->setModel($this->add('xShop/Model_PaymentGateway')->addCondition('is_active',true));
 
-		$form->addSubmit('PlaceOrder');
+		$btn_label = $this->html_attributes['xshop_checkout_btn_label']?:'Proceed';
+			
+		$form->addSubmit($btn_label);
 		
 		if($form->isSubmitted()){
 			$cart=$this->add('xShop/Model_Cart');
@@ -236,7 +237,8 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		$this->js()->_load('xShop-js');
 		// $this->api->jquery->addStylesheet('xShop-js');
 		// 	$this->api->template->appendHTML('js_include','<script src="epan-components/xShop/templates/js/xShop-js.js"></script>'."\n");
-	}
+		parent::render();	
+}
 
 	// defined in parent class
 	// Template of this tool is view/namespace-ToolName.html

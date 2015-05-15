@@ -188,10 +188,10 @@ class Grid_Item extends \Grid{
 		else
 			$options.= '<i class="glyphicon glyphicon-lock atk-swatch-red atk-padidng-small" title="Select Quantity As User Want"></i>';
 		
-		if($this->model['negative_qty_allowed'])
-			$options.= '<i class="atk-effect-green" title="Negative Qty Allowed">-Qty</i>';
-		else
-			$options.= '<i class="atk-effect-red" title="Negative Qty Denied">-Qty</i>';
+		// if($this->model['negative_qty_allowed'])
+		// 	$options.= '<i class="atk-effect-green" title="Negative Qty Allowed">-Qty</i>';
+		// else
+		// 	$options.= '<i class="atk-effect-red" title="Negative Qty Denied">-Qty</i>';
 		
 		if($this->model['website_display'])
 			$options.= '<i class="glyphicon glyphicon-globe atk-swatch-green atk-padding-small" title="Display on Website"></i>';

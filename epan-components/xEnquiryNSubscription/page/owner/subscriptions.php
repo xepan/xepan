@@ -188,7 +188,7 @@ class page_xEnquiryNSubscription_page_owner_subscriptions extends page_xEnquiryN
 
 
 		// Subscribers of this Category section
-		$cat_ref_subs_crud = $subscriptions_cat_curd->addRef('xEnquiryNSubscription/Model_SubscriptionCategoryAssociation',array('label'=>'Subscribers','grid_fields'=>array('subscriber','send_news_letters','subscribed_on','from_app')));
+		$cat_ref_subs_crud = $subscriptions_cat_curd->addRef('xEnquiryNSubscription/SubscriptionCategoryAssociation',array('label'=>'Subscribers','grid_fields'=>array('subscriber','send_news_letters','subscribed_on','from_app')));
 
 		if($cat_ref_subs_crud){
 			// $cat_ref_subs_crud->add('Controller_FormBeautifier');

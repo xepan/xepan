@@ -8,6 +8,11 @@ class Model_Item extends \Model_Document{
 	public $status=array();
 	public $root_document_name='xShop\Item';
 
+	public $actions=array(
+			'allow_add'=>array(),
+			'allow_edit'=>array(),
+		);
+
 	function init(){
 		parent::init();
 		
@@ -112,7 +117,9 @@ class Model_Item extends \Model_Document{
 		//others
 		$this->addField('terms_condition')->type('text')->display(array('form'=>'RichText'));//->group('c~12');
 		
-		
+		//Blog
+		$this->addField('is_blog')->type('boolean');
+
 		$this->hasMany('xShop/CategoryItem','item_id');
 		$this->hasMany('xShop/ItemAffiliateAssociation','item_id');
 		$this->hasMany('xShop/ItemImages','item_id');
@@ -946,7 +953,9 @@ class Model_Item extends \Model_Document{
 		return	$this->add('xShop/Model_ItemImages')->addCondition('item_id',$this->id);
 	}
 
-	
+	function loadBlogs(){
+		
+	}
 
 }	
 

@@ -16,7 +16,7 @@ class Model_Order extends \Model_Document{
 
 		$this->hasOne('xShop/PaymentGateway','paymentgateway_id');
 		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->display(array('form'=>'autocomplete/Basic'))->caption('Terms & Cond.');
-		$this->hasOne('xShop/Priority','priority_id')->group('z~6')->mandatory(true)->defaultValue($this->add('xShop/Model_Priority')->addCondition('name','Medium')->fieldQuery('id'));
+		$this->hasOne('xShop/Priority','priority_id')->group('z~6')->mandatory(true)->defaultValue($this->add('xShop/Model_Priority')->addCondition('name','Medium')->tryLoadAny()->get('id'));
 
 		$f = $this->hasOne('xShop/Customer','member_id')->group('a~3')->sortable(true)->display(array('form'=>'autocomplete/Plus'))->caption('Customer')->mandatory(true);
 		$f->icon = "fa fa-user~red";
@@ -55,7 +55,7 @@ class Model_Order extends \Model_Document{
 		$dept_status = $this->add('xShop/Model_OrderItemDepartmentalStatus',array('table_alias'=>'ds'));
 		$oi_j = $dept_status->join('xshop_orderdetails','orderitem_id');
 		$oi_j->addField('order_id');
-		$dept_status->addCondition($dept_status->getELement('order_id'),$this->getElement('id'));
+		$dept_status->addCondition($dept_status->getElement('order_id'),$this->getElement('id'));
 		$dept_status->_dsql()->limit(1)->order($dept_status->getElement('id'),'desc')->where('status','<>','Waiting');
 		
 		
@@ -180,8 +180,9 @@ class Model_Order extends \Model_Document{
 			$this->delete();
 	}
 
-	function beforeDelete($m){
-
+	function beforeDelete(){
+		$m = $this;
+		
 		if($m->ref('xShop/SalesInvoice')->count()->getOne())
 			throw $this->exception('Cannot Delete, First Delete It\'s Invoice');
 
@@ -232,7 +233,7 @@ class Model_Order extends \Model_Document{
 
 			$this['amount']=$total_amount;
 			
-			//$discount_voucher_amount = 0; 
+			//$discount_voucher_amount = 0;
 			//TODO NET AMOUNT, TAXES, DISCOUNT VOUCHER AMOUNT etc.. CALCULATING AGAIN FOR SECURITY REGION 
 			// $discountvoucher=$this->add('xShop/Model_DiscountVoucher');
 			// if($discountvoucher->isUsable($order_info['discount_voucher'])){
@@ -245,6 +246,7 @@ class Model_Order extends \Model_Document{
 			// echo "placeOrderFromCart";
 			
 			// $discountvoucher->processDiscountVoucherUsed($this['discount_voucher']);
+			$this->createInvoice('approved');
 			return $this;
 	}
 
@@ -391,15 +393,14 @@ class Model_Order extends \Model_Document{
 			$invoice['tax'] = $this['tax'];
 			$invoice['net_amount'] = $this['net_amount'];
 			$invoice['termsandcondition_id'] = $this['termsandcondition_id'];
-			$invoice->relatedDocument($this);
-
 			$invoice->save();
-			
+
+			$invoice->relatedDocument($this);
 
 			$ois = $this->orderItems();
 			foreach ($ois as $oi) {
 
-				if(!count($items_array)) continue;
+				if(count($items_array) AND !in_array($oi->id,$items_array)) continue;
 				
 				if($oi->invoice())
 					throw $this->exception('Order Item already used in Invoice','Growl');
