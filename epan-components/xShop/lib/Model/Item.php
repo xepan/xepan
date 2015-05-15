@@ -8,6 +8,10 @@ class Model_Item extends \Model_Document{
 	public $status=array();
 	public $root_document_name='xShop\Item';
 
+	public $actions=array(
+			'allow_add'=>array()
+		);
+
 	function init(){
 		parent::init();
 		
