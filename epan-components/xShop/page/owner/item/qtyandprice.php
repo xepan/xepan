@@ -61,7 +61,7 @@ class page_xShop_page_owner_item_qtyandprice extends page_xShop_page_owner_main{
         if($crud->isEditing()){
             $custom_values_model = $crud->form->getElement('custom_field_value_id')->getModel();
 			$custom_values_model->addCondition('item_id',$item_id)
-						->addCondition('is_active',true);           
+						->addCondition('is_active',true);
         }
 	}
 

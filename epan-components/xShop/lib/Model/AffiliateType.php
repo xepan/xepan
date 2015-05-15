@@ -2,8 +2,19 @@
 
 namespace xShop;
 
-class Model_AffiliateType extends \Model_Table {
+class Model_AffiliateType extends \Model_Document {
 	var $table= "xshop_affiliatetype";
+	public $status=array();
+	public $root_document_name="xMarketingCampaign\LeadCategory";
+	public $actions=array(
+			'can_view'=>array(),
+			'allow_edit'=>array(),
+			'allow_add'=>array(),
+			'allow_del'=>array(),
+			'can_see_activities'=>false,
+			'can_manage_attachments'=>false,
+		);
+	
 	function init(){
 		parent::init();
 
