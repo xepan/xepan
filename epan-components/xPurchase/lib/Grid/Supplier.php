@@ -24,11 +24,11 @@ class Grid_Supplier extends \Grid{
 		$this->addColumn('total_purchase_order');
 		$this->addFormatter('total_purchase_order','total_purchase_order');
 		
-		return $m;
 	
 		$this->addQuickSearch(array('name','code','city','state','pin_code','email','contact_no','created_at'));
 		$this->addPaginator($ipp=50);
 		$this->add_sno();
+		return $m;
 		
 
 

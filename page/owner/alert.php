@@ -55,9 +55,9 @@ class page_owner_alert extends page_base_owner{
 				$g->current_row[$f]=$g->add('Model_Alerts')->addCondition('sender_namespace',$g->model['namespace'])->count()->getOne();
 			});
 			$g->addColumn('total','Total');
-
-			$g->addMethod('format_unread', function($g,$f){
-			$alrt_model = $this->add('Model_Alerts');
+			$self=$this;
+			$g->addMethod('format_unread', function($g,$f)use($self){
+			$alrt_model = $self->add('Model_Alerts');
 			$unread_alert= $alrt_model
 									->addCondition('is_read',0)
 	            					->addCondition('sender_namespace',$g->model['namespace'])
