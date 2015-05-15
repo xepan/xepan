@@ -5,23 +5,19 @@ class Grid_AffiliateType extends \Grid{
 		parent::init();
 	}
 
-	function setModel($model){
+	function setModel($model,$fields){
 		
-		$m=parent::setModel($model,array('name'));
+		$m=parent::setModel($model,$fields);
 
+		if(!$fields)
+			$fields = $this->model->getActualFields();
 
-
-		$this->addQuickSearch(array('name'));
+		$this->addQuickSearch($fields,null);
 		$this->addPaginator(50);
 		$this->add_sno();
 
 		return $m;
 
-	}
-
-	function formatRow(){
-
-		parent::formatRow();		
 	}
 
 }
