@@ -2,7 +2,8 @@
 class page_xDispatch_page_owner_dispatchrequest extends page_xDispatch_page_owner_main {
 	function init(){
 		parent::init();
-		
+		$this->app->title=$this->api->current_department['name'] .': Dispatch Request';
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Dispatch Request <small> Manage your Delivery Managment  </small>');		
 		$this->api->stickyGET('department_id');
 
 		$dr_items = $this->add('xDispatch/Model_DispatchRequestItem')
