@@ -67,8 +67,10 @@ class Model_Document extends Model_Table{
 		$this->addField('updated_at')->type('datetime')->system(true)->defaultValue(date('Y-m-d H:i:s'));
 		
 		$this->hasOne('xHR/Employee','created_by_id')->defaultValue($this->api->current_employee->id)->system(true);
-		$this->hasMany('xProduction/Task','document_id');
-		$this->hasMany('Attachment','document_id');
+		$this->hasMany('xProduction/Task','related_document_id');
+		
+		//must be define in child class
+		// Abstract $this->hasMany('Attachment','related_document_id');
 
 		$this->addExpression('related_document')->set(function($m,$q){
 			
@@ -248,7 +250,7 @@ class Model_Document extends Model_Table{
 
 	function manage_attachments_page($page){
 		$crud = $page->add('CRUD');
-		$crud->setModel($this->ref('Attachements'));
+		$crud->setModel($this->ref('Attachments'));
 
 		if(!$crud->isEditing()){
 			$crud->grid->addformatter('attachment_url','image');

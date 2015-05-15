@@ -5,7 +5,7 @@ class page_xProduction_page_owner_dashboard extends page_xProduction_page_owner_
 	function init(){
 		parent::init();
 		
-		$this->app->title=$this->api->current_department['name'] .': Dashboard';
+		$this->app->title="Production" .': Dashboard';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-dashboard icon-gauge"></i> Production Department Dashboard');
 
 		$is_superuser_login = false;

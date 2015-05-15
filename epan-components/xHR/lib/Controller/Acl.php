@@ -186,7 +186,7 @@ class Controller_Acl extends \AbstractController {
 					if(isset($self->owner->model->actions)){
 						$defined_permissions=array();
 						foreach ($self->my_model->actions as $key => $value) {
-							if($this->isPermissionDefined($key)) $defined_permissions[] = $key;
+							if($self->isPermissionDefined($key)) $defined_permissions[] = $key;
 						}
 						$fields = array_merge(array('post_department','post','post_id'),$defined_permissions);
 					}

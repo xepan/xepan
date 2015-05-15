@@ -23,7 +23,6 @@ class Model_CustomFieldValue extends \Model_Table{
 		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true);
 
 		$this->addExpression('field_name_with_value')->set(function($m,$q){
-			
 			return $q->concat(
 				$this->api->db->dsql()->fx('IFNULL',array($m->add('xShop/Model_ItemCustomFieldAssos',array('table_alias'=>'cfdept'))->addCondition('id',$q->getField('itemcustomfiledasso_id'))->fieldQuery('department_phase'),'-')),
 				' :: ',
