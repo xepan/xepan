@@ -285,6 +285,7 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 						// $this->api->forget('next_url');
 					if($form->isSubmitted()){
 						$user_model = $this->add('Model_Users');
+						$this->api->auth->addEncryptionHook($user_model);
 						$user_model->addCondition('username',$form['username']);
 						$user_model->addCondition('password',$form['password']);
 						$user_model->tryLoadAny();
