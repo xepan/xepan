@@ -529,7 +529,7 @@ class Model_Item extends \Model_Document{
 				}
 
 				$cf_array[$dept_id] = $cf_value;
-				$c = $this->genericRedableCustomFieldAndValue(json_encode($cf_array));
+				$c = $this->customFieldsRedableToId(json_encode($cf_array));
 				$arry = explode(",", $c);
 				foreach ($arry as $key => $value) {
 					$temp = explode("::", $value);
