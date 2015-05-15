@@ -232,7 +232,7 @@ class Model_Order extends \Model_Document{
 
 			$this['amount']=$total_amount;
 			
-			//$discount_voucher_amount = 0; 
+			//$discount_voucher_amount = 0;
 			//TODO NET AMOUNT, TAXES, DISCOUNT VOUCHER AMOUNT etc.. CALCULATING AGAIN FOR SECURITY REGION 
 			// $discountvoucher=$this->add('xShop/Model_DiscountVoucher');
 			// if($discountvoucher->isUsable($order_info['discount_voucher'])){
@@ -245,6 +245,7 @@ class Model_Order extends \Model_Document{
 			// echo "placeOrderFromCart";
 			
 			// $discountvoucher->processDiscountVoucherUsed($this['discount_voucher']);
+			$this->createInvoice('approved');
 			return $this;
 	}
 
