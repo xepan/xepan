@@ -392,15 +392,14 @@ class Model_Order extends \Model_Document{
 			$invoice['tax'] = $this['tax'];
 			$invoice['net_amount'] = $this['net_amount'];
 			$invoice['termsandcondition_id'] = $this['termsandcondition_id'];
-			$invoice->relatedDocument($this);
-
 			$invoice->save();
-			
+
+			$invoice->relatedDocument($this);
 
 			$ois = $this->orderItems();
 			foreach ($ois as $oi) {
 
-				if(!count($items_array)) continue;
+				if(count($items_array) AND !in_array($oi->id,$items_array)) continue;
 				
 				if($oi->invoice())
 					throw $this->exception('Order Item already used in Invoice','Growl');
