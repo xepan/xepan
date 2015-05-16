@@ -20,6 +20,45 @@
 									<input type='text' value='' id='xshop_search_result_subpage_{$_id}' placeHolder="epan sub-page name " />
 								</td>
 							</tr>
+
+							<tr>
+								<td>Form Layout</td>
+								<td colspan="2">
+									<select id='xshop-search-form' data-attr="form-type" class="xshop-general-bind" >
+										<option value="horizontal">Horizontal</option>
+										<option value="stacked">Stacked</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>Input PlaceHolder</td>
+								<td colspan="2">
+									<input type="text" id='xshop-search-input-placeholdet' data-attr="input-placeholder" class="xshop-general-bind" style="width:100%;">
+									</input>
+								</td>
+							</tr>
+
+							<tr>
+								<td>Search Label</td>
+								<td colspan="2">
+									<input type="text" id='xshop-search-field-label' data-attr="field-label" class="xshop-general-bind" >
+									</input>
+								</td>
+							</tr>
+
+							<tr>
+								<td>Button</td>
+								<td >
+									<select id='xshop-search-form-btn' data-attr="form-btn" class="xshop-general-bind" >
+										<option value="0">Hide</option>
+										<option value="1">Show</option>
+									</select>
+								</td>
+								<td colspan="2">
+									<input type="text" title="Button Label" placeholder="button Label" id="xshop-search-form-btn-label" data-attr="form-btn-label" class="xshop-general-bind" style="width:100%"/>
+								</td>
+							</tr>
+
 						</table>
 					</div>
 				</div>
@@ -46,6 +85,12 @@ $('#xshop_search_result_subpage_{$_id}').change(function(event) {
 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
 
+$('.xshop-general-bind').change(function(event){
+	$(current_selected_component).attr($(this).attr('data-attr'),$(this).val());
+	$(current_selected_component).children('div:first').trigger('reload');
+});
+
+
 var {$component_type}_options = {
 	show: function (){
 		// ===== THIS CODE RUNS EVERY TIME YOU DOUBLE CLICK YOUR COMPONENT
@@ -53,6 +98,10 @@ var {$component_type}_options = {
 		// 
 		// $(your_option_html_element).text($(current_selected_component).css('border'));
 		$('#xshop_search_result_subpage_{$_id}').val($(current_selected_component).attr('xshop_search_result_subpage'));
+
+		$('.xshop-general-bind').each(function(index,value){
+			$(this).val($(current_selected_component).attr($(this).attr('data-attr')));
+		});
 	}
 }
 </script>
