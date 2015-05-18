@@ -250,7 +250,7 @@ class Model_Document extends Model_Table{
 
 	function manage_attachments_page($page){
 		$crud = $page->add('CRUD');
-		$crud->setModel($this->ref('Attachments'));
+		$crud->setModel($this->ref('Attachments'),array('name','attachment_url','updated_date'));
 
 		if(!$crud->isEditing()){
 			$crud->grid->addformatter('attachment_url','image');
