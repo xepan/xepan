@@ -363,9 +363,7 @@ class Model_JobCard extends \Model_Document{
 			$this->orderItem()->order()->isOrderClose(true);
 		}
 	}
-
 	
-
 	function approve(){
 		$rt = $this->relatedTask();
 		if($rt->loaded())
