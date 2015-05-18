@@ -72,7 +72,7 @@ class Model_Order extends \Model_Document{
 
 
 		$this->hasMany('xShop/OrderDetails','order_id');
-		$this->hasMany('xShop/SalesOrderAttachment','related_document_id',null,'Attachements');
+		$this->hasMany('xShop/SalesOrderAttachment','related_document_id',null,'Attachments');
 		$this->hasMany('xShop/SalesInvoice','sales_order_id');
 		$this->hasMany('xDispatch/DeliveryNote','order_id');
 		
@@ -198,7 +198,7 @@ class Model_Order extends \Model_Document{
 			}
 		}
 
-		$m->ref('Attachements')->each(function($attach){
+		$m->ref('Attachments')->each(function($attach){
 			$attach->forceDelete();
 		});
 	}
@@ -477,6 +477,16 @@ class Model_Order extends \Model_Document{
 		return false;
 	}
 
+	function submit_page($page){
+		if(!$this->orderItems()->count()->getOne()){
+			$page->add('View_Error')->set('Order Detail Cannot be Empty');
+			return false;
+		}
+		
+		return $this->submit();
+		// return true;
+	}
+
 	function submit(){
 		$this->setStatus('submitted');
 		return $this;
@@ -514,6 +524,7 @@ class Model_Order extends \Model_Document{
 		$form->addSubmit('cancel');
 		if($form->isSubmitted()){
 			foreach ($ois as $oi) {
+				// $order_item = $this->add('xShop/Model_OrderDetails')->load($oi);
 				$oi->jobCards()->setStatus('cancelled',$form['reason']);
 			}
 			$this->cancel($form['reason']);
