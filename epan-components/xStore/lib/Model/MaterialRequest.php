@@ -323,6 +323,7 @@ class Model_MaterialRequest extends \Model_Document {
 		$form->addSubmit('Assign');
 			
 		if($form->isSubmitted()){
+			throw $this->exception("Working....",'Growl');
 
 			if($form['assign_to_employee'] AND $form['assign_to_team']){
 				$form->displayError('assign_to_team','Select either team or employee, not both');
@@ -334,7 +335,7 @@ class Model_MaterialRequest extends \Model_Document {
 
 			if($form['assign_to_employee']){
 				$this['employee_id']=$form['assign_to_employee'];
-				$this->setStatus('assigned',null,'Task :'.$this['subject'],null,null,'Employee',$this['employee_id']);
+				$this->setStatus('assigned',null,'Task :'.$this['name'],null,null,'Employee',$this['employee_id']);
 				return true;
 			}
 
@@ -343,6 +344,7 @@ class Model_MaterialRequest extends \Model_Document {
 				$this->setStatus('assigned',null,'Task :'.$this['subject'],null,null,'Team',$this['team_id']);
 				return true;
 			}
+			
 		}
 	}
 
