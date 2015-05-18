@@ -27,6 +27,8 @@ class View_Tools_Item extends \componentBase\View_ServerSideComponent{
 		$item_model=$this->add('xShop/Model_Item');
 		$item_model->addCondition('is_publish',true);
 		$item_model->addCondition('application_id',$application_id);
+		$item_model->addCondition('website_display',true);
+
 		$item_type=$this->html_attributes['xshop_itemtype'];
 		// Selection of item according to options if $item_type is null then default value All
 		if($item_type and $item_type !='all')

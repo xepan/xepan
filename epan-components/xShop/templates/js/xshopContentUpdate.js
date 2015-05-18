@@ -1,11 +1,9 @@
 $.each({
 
     producDetailUpdate:function(container_id,xshop_item_id_in,xshop_item_code_in){
-     	console.log("Html Data : "+$('#'+container_id).html());
      	html_body = $('#'+container_id).html();
      	html_body = encodeURIComponent(html_body);
      	// html_crc = crc32(html_body);
-     	console.log(html_body);
         $.ajax({
 	        url: 'index.php?page=xShop_page_owner_updatecontent',
 	        type: 'POST',
