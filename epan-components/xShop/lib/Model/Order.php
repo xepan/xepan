@@ -198,7 +198,7 @@ class Model_Order extends \Model_Document{
 			}
 		}
 
-		$m->ref('Attachements')->each(function($attach){
+		$m->ref('Attachments')->each(function($attach){
 			$attach->forceDelete();
 		});
 	}
@@ -483,8 +483,8 @@ class Model_Order extends \Model_Document{
 			return false;
 		}
 		
-		$this->submit();
-		return "Order Submitted SuccessFully";
+		return $this->submit();
+		// return true;
 	}
 
 	function submit(){
@@ -524,6 +524,7 @@ class Model_Order extends \Model_Document{
 		$form->addSubmit('cancel');
 		if($form->isSubmitted()){
 			foreach ($ois as $oi) {
+				// $order_item = $this->add('xShop/Model_OrderDetails')->load($oi);
 				$oi->jobCards()->setStatus('cancelled',$form['reason']);
 			}
 			$this->cancel($form['reason']);
