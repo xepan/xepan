@@ -478,12 +478,19 @@ class Model_Order extends \Model_Document{
 	}
 
 	function submit_page($page){
+
 		if(!$this->orderItems()->count()->getOne()){
 			$page->add('View_Error')->set('Order Detail Cannot be Empty');
 			return false;
 		}
+
+		$form=$page->add('Form');
+		$form->addSubmit('Submit');
+		if($form->isSubmitted()){
+			$this->submit();
+			return true;
+		}
 		
-		return $this->submit();
 		// return true;
 	}
 
@@ -494,8 +501,6 @@ class Model_Order extends \Model_Document{
 
 	function reject_page($page){
 		$form= $page->add('Form_Stacked');
-		$form->addField('text','reason');
-		$form->addSubmit('Reject & Send to Re Design');
 		if($form->isSubmitted()){
 			$this->setStatus('redesign',$form['reason']);
 			return true;
