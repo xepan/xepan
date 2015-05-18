@@ -41,6 +41,8 @@ class Grid_Lead extends \Grid{
 
 		$this->hasColumn('is_ok')?$this->removeColumn('is_ok'):"";
 		$this->addQuickSearch(array($fields),null,'xMarketingCampaign/Filter_Lead');
+
+		$this->addColumn('Expander','category');
 		return $m;
 	}
 
