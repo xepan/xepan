@@ -6,9 +6,8 @@ class Grid_Category extends \Grid{
 	function init(){
 		parent::init();
 		
-
 	}
-
+	
 	function setModel($model){
 		$m = parent::setModel($model,array('name','parent','order_no','is_active'));
 		
@@ -22,12 +21,16 @@ class Grid_Category extends \Grid{
 	}
 
 	function formatRow(){
-		
+		$count= $this->model->ref('xShop/CategoryItem')->count()->getOne();
+		$this->current_row_html['name']=$this->model['name']." ".'<span class="pull-right">'.$count.'</span>';
+
 		if(!$this->model['is_active']){
 			$this->setTDParam('name','style/color','red');
 		}else{
 			$this->setTDParam('name','style/color','');
 		}
+
+
 		parent::formatRow();
 
 	}
