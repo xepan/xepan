@@ -10,7 +10,7 @@ class Model_Employee extends \Model_Table{
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
-		$this->hasOne('xHR/Post','post_id')->group('a~3~Basic Info')->display(array('form'=>'autocomplete/Basic'));
+		$this->hasOne('xHR/Post','post_id')->display(array('form'=>'autocomplete/Basic'));
 		$this->hasOne('Users','user_id')->display(array('form'=>'autocomplete/Plus'));
 		$this->hasOne('xHR/Department','department_id')->display(array('form'=>'autocomplete/Basic'));
 		
