@@ -367,11 +367,14 @@ class Model_Item extends \Model_Document{
 	}
 
 	function updateContent($id,$content){
-		if($this->loaded())
-			throw new \Exception("Model_loaded at time of item");
-		$this->load($id);
-		$this['description']=$content;
-		$this->save();
+		if(!$id) return 'false';
+
+		$item = $this->add('xShop/Model_Item');
+		$item->tryLoad($id);
+		if(!$item->loaded()) return 'false';
+			
+		$item['description']=$content=="undefined"?"":$content;
+		$item->save();
 		return 'true';
 	}
 
