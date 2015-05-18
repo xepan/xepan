@@ -22,7 +22,7 @@ class Grid_Category extends \Grid{
 
 	function formatRow(){
 		$count= $this->model->ref('xShop/CategoryItem')->count()->getOne();
-		$this->current_row_html['name']=$this->model['name']." ".'<span class="pull-right">'.$count.'</span>';
+		$this->current_row_html['name']=$this->model['name']." ".'<span class="pull-right" title="Total Item In Category">'.$count.'</span>';
 
 		if(!$this->model['is_active']){
 			$this->setTDParam('name','style/color','red');

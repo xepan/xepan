@@ -870,6 +870,7 @@ class Model_Item extends \Model_Document{
 
 			$cf_value = $cf->ref('xShop/CustomFieldValue')->addCondition('name',$cf_value_name)->tryLoadAny();
 			$array[] = array($cf->id => $cf_value->id);
+			
 		}
 
 		$json_array[$sales_department->id] = $array;
