@@ -544,6 +544,70 @@ class Model_Item extends \Model_Document{
 			}
 		}
 
+		
+		// echo implode("<br/>",$cf);
+
+		$quantitysets = $this->ref('xShop/QuantitySet')->setOrder(array('custom_fields_conditioned desc','qty desc','is_default asc'));
+
+		foreach ($quantitysets as $qsjunk) {
+			// check if all conditioned match AS WELL AS qty
+			$cond = $this->add('xShop/Model_QuantitySetCondition')->addCondition('quantityset_id',$qsjunk->id);
+			foreach ($cond as $condjunk) {				
+				if(!in_array(trim(str_replace("  ", " ", $condjunk['custom_field_value'])),$cf)){
+					continue 2;
+				}
+			}
+
+			if($qty >= $qsjunk['qty']){
+				break;
+			}
+		}
+
+		// throw new \Exception(print_r(array('original_price'=>$quantitysets['old_price']?:$quantitysets['price'],'sale_price'=>$quantitysets['price']),true));
+		return array('original_price'=>$quantitysets['old_price']?:$quantitysets['price'],'sale_price'=>$quantitysets['price']);
+		// return array('original_price'=>rand(1000,9999),'sale_price'=>rand(100,999));
+
+			// return array default_price
+		// 1. Check Custom Rate Charts
+			/*
+				Look $qty >= Qty of rate chart
+				get the most field values matched
+				having lesser selections of type any or say ...
+				when max number of custom fields are having values other than any/%
+			*/
+		// 2. Custom Field Based Rate Change
+
+		// 3. Quanitity Set
+
+		// 4. Default Price * qty
+	}
+
+	function  getPriceBack($custom_field_values_array, $qty, $rate_chart='retailer'){
+		
+		// throw new \Exception(print_r($custom_field_values_array,true));
+
+		$cf_array = array();
+		$cf = array();
+		$dept=array();
+		if($custom_field_values_array != ""){
+			foreach ($custom_field_values_array as $dept_id => $cf_value) {
+				if($dept_id=='stockeffectcustomfield'){
+					$dept['name'] = 'stockeffectcustomfield';
+				}else{
+					$dept = $this->add('xHR/Model_Department')->addCondition('id',$dept_id)->tryLoadAny();
+				}
+
+				$cf_array[$dept_id] = $cf_value;
+				$c = $this->genericRedableCustomFieldAndValue(json_encode($cf_array));
+				$arry = explode(",", $c);
+				foreach ($arry as $key => $value) {
+					$temp = explode("::", $value);
+					$cf[]= trim($dept['name'])." :: ".trim($temp[0]) . ' :: '. trim($temp[1]);
+				}
+			}
+		}
+
+		
 		// echo implode("<br/>",$cf);
 
 		$quantitysets = $this->ref('xShop/QuantitySet')->setOrder(array('custom_fields_conditioned desc','qty desc','is_default asc'));
