@@ -23,7 +23,7 @@ class Grid_Employee extends \Grid{
 
 	function setModel($model,$fields=null){
 		if(!$fields)
-			$fields = $this->model->getActualFields();
+			$fields = $model->getActualFields();
 		$m= parent::setModel($model,$fields);
 		$this->addQuickSearch($fields,null,'xHR/Filter_Employee');
 		

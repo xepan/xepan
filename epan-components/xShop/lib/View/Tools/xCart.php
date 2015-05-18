@@ -56,6 +56,7 @@ class View_Tools_xCart extends \componentBase\View_Component{
 		//Get Total amount and Total Item
 		$total_amount=$cart_model->getTotalAmount();
 		$total_item=$cart_model->getItemCount();
+
 		// Show Total Item added in Cart
 		if($this->html_attributes['show-item-count']){
 			$str = '<div class="xshop-cart-item-count"><span class="xshop-cart-item-count-label">';
@@ -126,7 +127,8 @@ class View_Tools_xCart extends \componentBase\View_Component{
 		//Cart Detail View
 		if($this->html_attributes['show-cart-items']){
 			if($total_item <= 0){
-				$this->add('View_Error')->set('Cart is Empty');
+				$this->add('View_Warning')->set('Cart is Empty');
+				return;
 			}else{
 				foreach ($cart_model as $junk) {
 					$ci_view=$this->add('xShop/View_CartItem',array('new'=>$cart_model['id'],'html_attributes'=>$this->html_attributes),'xshop_cart_detail');
@@ -137,7 +139,7 @@ class View_Tools_xCart extends \componentBase\View_Component{
 			$this->template->tryDel('xshop_cart_detail');
 		}
 
-		//Total and total Deiscount
+		//Total and total Discount
 		if($this->html_attributes['show-cart-total-estimate-bar']){
 
 			$str = '<div class="xshop-cart-detail-estimate-container"><div class="xshop-cart-total-saving-amount">Total Discount <div class="xshop-cart-total-saving-amount-figure">'. $cart_model->getTotalDiscount() .'</div></div>';
