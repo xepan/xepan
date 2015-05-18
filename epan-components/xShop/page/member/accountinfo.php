@@ -20,6 +20,7 @@ class page_xShop_page_member_accountinfo extends Page{
 		
 	//============================Change Password
 		$user = $this->add('Model_Users')->load($this->api->auth->model->id);
+		$this->api->auth->addEncryptionHook($user);
 		$password_tab->add('View_Info')->set('Name :: '.$user['name']." E-mail Id:: ".$user['email']);
 		$change_pass_form = $password_tab->add('Form');
 		$change_pass_form->addField('password','old_password')->validateNotNull();
@@ -31,7 +32,7 @@ class page_xShop_page_member_accountinfo extends Page{
 			if( $change_pass_form['new_password'] != $change_pass_form['retype_password'])
 				$change_pass_form->displayError('new_password','Password not match');
 			
-			if($user['password'] != $change_pass_form['old_password'])
+			if(!$this->api->auth->verifyCredentials($user['username'],$change_pass_form['old_password']))
 				$change_pass_form->displayError('old_password','Password not match');
 
 			if($user->updatePassword($change_pass_form['new_password'])){

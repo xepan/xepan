@@ -180,6 +180,8 @@ class Model_Users extends Model_Table {
 													'verify_account'=>1
 												)))."\">Click Here to Activate Your Account</a>",$email_body);				
 			
+			// throw new \Exception($subject.$email_body);
+			
 			try{
 				$tm->send( $this['email'], $this->api->current_website['email_username'], $subject, $email_body ,false,null);
 				return true;
