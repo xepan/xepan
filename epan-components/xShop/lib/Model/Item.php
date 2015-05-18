@@ -548,17 +548,19 @@ class Model_Item extends \Model_Document{
 		// echo implode("<br/>",$cf);
 
 		$quantitysets = $this->ref('xShop/QuantitySet')->setOrder(array('custom_fields_conditioned desc','qty desc','is_default asc'));
-
+		$i=1;
 		foreach ($quantitysets as $qsjunk) {
 			// check if all conditioned match AS WELL AS qty
 			$cond = $this->add('xShop/Model_QuantitySetCondition')->addCondition('quantityset_id',$qsjunk->id);
+			$all_conditions_matched = true;
 			foreach ($cond as $condjunk) {				
 				if(!in_array(trim(str_replace("  ", " ", $condjunk['custom_field_value'])),$cf)){
-					continue 2;
+					$all_conditions_matched = false;
 				}
 			}
 
-			if($qty >= $qsjunk['qty']){
+			if($all_conditions_matched && $qty >= $qsjunk['qty']){
+				// echo 'breaking at '. $i++. ' '; 
 				break;
 			}
 		}
@@ -708,11 +710,17 @@ class Model_Item extends \Model_Document{
 			}
 		},
 		*/
+		$qty_added=array();
 		$qty_set_array = array();
 		//load Associated Quantity Set
 			$qty_set_model = $this->ref('xShop/QuantitySet');
 			//foreach qtySet get all Condition
 				foreach ($qty_set_model as $junk){
+					if(!in_array($junk['qty'], $qty_added)){
+						$qty_added[]= $junk['qty'];
+					}else{
+						continue;
+					}
 					$qty_set_array[$qty_set_model['id']]['name'] = $qty_set_model['name'];
 					$qty_set_array[$qty_set_model['id']]['qty'] = $qty_set_model['qty'];
 					$qty_set_array[$qty_set_model['id']]['old_price'] = $qty_set_model['old_price'];
