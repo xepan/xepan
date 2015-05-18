@@ -21,11 +21,11 @@
 								</td>
 							</tr>
 							<tr>
-								<td >
+								<td>
 									Select item
 								</td>
 								<td colspan="2">
-									<select id='xShop-itemtype-root'>
+									<select id='xShop-itemtype-root' class="xshop-general-bind" data-attr="xshop_itemtype">
 									</select>
 								</td>
 							</tr>
@@ -35,12 +35,12 @@
 								</td>
 								<td>
 									<div class="btn-group">
-										<button id="xShop-listbtn" type="button" class="btn btn-default glyphicon glyphicon-th-list btn btn-sm" title="List View"> </button>
+										<button id="xShop-listbtn" type="button" class="btn btn-default glyphicon glyphicon-th-list btn btn-sm" title="List View" class="xshop-general-click" data-attr="xshop_itemlayout"> </button>
 										<button id="xShop-gridbtn" type="button" class="btn btn-default glyphicon glyphicon-th btn-sm" title="Grid View"> </button>
 									</div>
 								</td>
 								<td>
-									<select id="xShop-grid-column" type="number" class="" placeholder="item in each Row">
+									<select id="xShop-grid-column" type="number" class="xshop-general-bind" data-attr="xshop-grid-column" placeholder="item in each Row">
 										<option value="0">Item in Each Row</option>
 										<option value="1">1</option>
 										<option value="2">2</option>
@@ -56,7 +56,7 @@
 									Application
 								</td>
 								<td colspan="2">
-									<select id='xshop-item-application'>
+									<select id='xshop-item-application' class="xshop-general-bind" data-attr="xshop_item_application_id">
 									</select>
 								</td>
 							</tr>
@@ -70,7 +70,7 @@
 									
 								</td>
 								<td>
-									item Topbar
+									Item Topbar
 								</td>
 								<td>
 									<input id="xshop_item_topbar" type="checkbox"/>
@@ -358,34 +358,41 @@ $('#xShopitemServerSide').click(function(event){
 	$('#epan-quick-component-options').toggle('slideup');
 	$.univ.frameURL('xShop items','index.php?page=xShop_page_owner_main')
 });
-$('#xShop-itemtype-root').change(function(event) {
-	$(current_selected_component).attr('xshop_itemtype',$(this).val());
+
+// $('#xShop-itemtype-root').change(function(event) {
+// 	$(current_selected_component).attr('xshop_itemtype',$(this).val());
+// 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+// });
+$('#xShop-listbtn').click(function(event) {
+	$(current_selected_component).attr('xshop_itemlayout','xShop-itemlist');
 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
-$('#xshop-item-application').change(function(event) {
-$(current_selected_component).attr('xshop_item_application_id',$(this).val());
-$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
-});
-$('#xShop-listbtn').click(function(event) {
-$(current_selected_component).attr('xshop_itemlayout','xShop-itemlist');
-$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
-});
+
 $('#xShop-gridbtn').click(function(event) {
-$(current_selected_component).attr('xshop_itemlayout','xShop-itemgrid');
-// $('#xShop-grid-column');
-$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+	$(current_selected_component).attr('xshop_itemlayout','xShop-itemgrid');
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
-$('#xShop-grid-column').change(function(event){
-$(current_selected_component).attr('xshop-grid-column',$(this).val());
-$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
-});
+
+// $('#xShop-grid-column').change(function(event){
+// 	$(current_selected_component).attr('xshop-grid-column',$(this).val());
+// 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+// });
+
+// $('#xshop-item-application').change(function(event) {
+// 	$(current_selected_component).attr('xshop_item_application_id',$(this).val());
+// 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+// });
+
+
 $('#xshop_item_topbar').change(function(event) {
 if($('#xshop_item_topbar').is(':checked')?$(current_selected_component).attr('xshop_item_topbar','true'):$(current_selected_component).attr('xshop_item_topbar','false'));
 $(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
+
 $('#xshop-item-editcss').click(function(){
-$(this).univ().frameURL('Edit CSS ( xShop item Display Layout )','index.php?page=xShop_page_itemlayoutcss&cut_page=1&xshop_item_layout='+$(current_selected_component).attr('xshop_itemlayout'));
+	$(this).univ().frameURL('Edit CSS ( xShop item Display Layout )','index.php?page=xShop_page_itemlayoutcss&cut_page=1&xshop_item_layout='+$(current_selected_component).attr('xshop_itemlayout'));
 });
+
 $('#xshop_item_fancy_box').change(function(event) {
 if($('#xshop_item_fancy_box').is(':checked')?$(current_selected_component).attr('xshop_item_fancy_box',1):$(current_selected_component).attr('xshop_item_fancy_box',0));
 
@@ -453,7 +460,7 @@ $('#xshop-item-application').html(data);
 $('#xshop-item-application').val($(current_selected_component).attr('xshop_item_application_id')?$(current_selected_component).attr('xshop_item_application_id'):0);
 }
 });
-$('#xshop-item-application').val($(current_selected_component).attr("xshop-item-application_id"));
+// $('#xshop-item-application').val($(current_selected_component).attr("xshop-item-application_id"));
 //display selected option into checkbox
 
 $('#xshop_item_topbar').attr('checked',$(current_selected_component).attr("xshop_item_topbar")=='true'?true:false);

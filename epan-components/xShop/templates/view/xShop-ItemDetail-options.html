@@ -258,7 +258,8 @@ $('.xshop-general-bind').change(function(event){
 			$('.'+$(this).attr('hide-class')).show();
 	}
 
-	$(current_selected_component).children('div:first').trigger('reload');
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+	// $(current_selected_component).children('div:first').trigger('reload');
 });
 
 
