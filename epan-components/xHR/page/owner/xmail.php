@@ -45,7 +45,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		});
 
 		$customer_crud=$left_col->add('CRUD',array('grid_class'=>'xHR/Grid_MailParty','allow_add'=>false,'allow_edit'=>false,'allow_del'=>false));
-		$customer_crud->setModel($customer);
+		$customer_crud->setModel($customer->setOrder('unread','desc'));
 		
 		if(!$customer_crud->isEditing()){
 			$customer_crud->grid->addMethod('format_anchor',function($g,$f)use($right_col){
@@ -166,6 +166,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 
 		$reload_btn = $mail_crud->addButton('FETCH');
 		$guess_btn = $mail_crud->addButton('Guess');
+		$reset = $mail_crud->addButton('Reset');
 		if( !($reload_btn instanceof \Dummy) and $reload_btn->isClicked()){
 			$this->add('xCRM/Model_Email')->fetchDepartment($this->api->current_department);
 			$this->js()->univ()->successMessage('Fetch Successfully')->execute();
@@ -175,6 +176,9 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			$this->add('xCRM/Model_ReceivedEmail');
 		}
 
+		if($reset->isClicked()){
+			
+		}
 
 	}
 }
