@@ -23,7 +23,7 @@ class Model_Customer extends Model_MemberDetails{
 
 		$user_j = $this->join('users','users_id');
 		$user_j->addField('user_epan_id','epan_id');
-		$user_j->addField('username')->sortable(true)->group('b~6~Customer Loign');
+		$user_j->addField('username')->sortable(true)->group('b~6~Customer Loign')->sortable(true);
 		$user_j->addField('password')->type('password')->group('b~6');
 		$user_j->addField('customer_name','name')->group('a~6~Basic Info')->mandatory(true);
 		$user_j->addField('customer_email','email')->sortable(true)->group('a~6');
