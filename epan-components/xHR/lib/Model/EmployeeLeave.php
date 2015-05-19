@@ -19,8 +19,8 @@ class Model_EmployeeLeave extends \Model_Table{
 		
 		$this->hasOne('xHR/Employee','employee_id');
 		$this->hasOne('xHR/LeaveType','leave_type_id');
-		$this->addField('from_date')->type('date');
-		$this->addField('to_date')->type('date');
+		$this->addField('from_date')->type('datetime');
+		$this->addField('to_date')->type('datetime');
 		$this->addField('reason')->type('text');
 		$this->addField('half_day')->type('boolean');
 
