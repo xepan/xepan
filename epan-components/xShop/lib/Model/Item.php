@@ -527,20 +527,8 @@ class Model_Item extends \Model_Document{
 		$cf = array();
 		$dept=array();
 		if($custom_field_values_array != ""){
-			foreach ($custom_field_values_array as $dept_id => $cf_value) {
-				if($dept_id=='stockeffectcustomfield'){
-					$dept['name'] = 'stockeffectcustomfield';
-				}else{
-					$dept = $this->add('xHR/Model_Department')->addCondition('id',$dept_id)->tryLoadAny();
-				}
-
-				$cf_array[$dept_id] = $cf_value;
-				$c = $this->customFieldsRedableToId(json_encode($cf_array));
-				$arry = explode(",", $c);
-				foreach ($arry as $key => $value) {
-					$temp = explode("::", $value);
-					$cf[]= trim($dept['name'])." :: ".trim($temp[0]) . ' :: '. trim($temp[1]);
-				}
+			foreach ($custom_field_values_array as $cf_key => $cf_value) {
+				$cf[] = "- :: $cf_key :: $cf_value";
 			}
 		}
 
