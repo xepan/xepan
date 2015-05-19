@@ -257,6 +257,18 @@ class Model_Department extends \Model_Table{
 	function officialEmails(){
 		return $this->add('xHR/Model_OfficialEmail')->addCondition('department_id',$this->id);
 	}
+
+	function getOfficialEmails(){
+		$off_emails_array =array();
+		if(!$this->loaded())
+			return $off_emails_array;
+		
+		foreach ($this->officialEmails() as $off_email) {
+			$off_emails_array[]=$off_email['imap_email_username'];	
+		}
+
+		return $off_emails_array;
+	}
 	
 	function salaryTemplates(){
 		return $this->add('xHR/Model_SalaryTemplate')->addCondition('department_id',$this->id);
