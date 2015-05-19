@@ -25,6 +25,8 @@ class Grid_Invoice extends \Grid{
 		if($_GET['print']){
 			$this->js()->univ()->newWindow($this->api->url('xShop_page_owner_printsaleinvoice',array('saleinvoice_id'=>$_GET['print'],'cut_page'=>0)))->execute();
 		}
+
+		$this->addPaginator($ipp=100);
 	}
 	
 	function format_view($field){
@@ -48,7 +50,7 @@ class Grid_Invoice extends \Grid{
 		$m=parent::setModel($invoice_model,$field);
 		$this->addFormatter('name','view');
 		$this->addFormatter('sales_order','orderview');
-		if($invoice_model['status'] == 'draft' or $invoice_model['status'] == 'redesign')
+		// if($invoice_model['status'] == 'draft' or $invoice_model['status'] == 'redesign')
 			$this->addColumn('expander','items',array('page'=>'xShop_page_owner_invoice_items','descr'=>'Items'));
 		
 		$this->removeColumn('customer');
