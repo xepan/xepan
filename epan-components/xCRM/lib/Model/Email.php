@@ -208,7 +208,8 @@ class Model_Email extends \Model_Document{
 		// return;
 		// Get some mail
 		try{
-			$mailsIds = $mailbox->searchMailBox('SINCE '.date('d-M-Y',strtotime('-3 day')));
+			$conditions = $conditions?:'SINCE '.date('d-M-Y',strtotime('-1 day'));
+			$mailsIds = $mailbox->searchMailBox($conditions);
 			if(!$mailsIds) {
 				$mailbox->disconnect();
 			}else{

@@ -5,12 +5,12 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		parent::init();
 		
 		$this->app->title='x-Mail';
-		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-envelope"></i> Mail Managment <small> Manage companies Mail  </small>');
 		$dept_id = $this->api->stickyGET('department_id');
 		
 		$dept = $this->add('xHR/Model_Department')->load($dept_id);
 		$official_email_array = $dept->getOfficialEmails();
 		
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-envelope"></i> '.$dept['name'].' Mails <small> '.implode(", ", $official_email_array).'  </small>');
 
 		$message_vp = $this->add('VirtualPage')->set(function($p){
 			$email_id=$p->api->stickyGET('xcrm_email_id');
