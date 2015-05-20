@@ -8,12 +8,13 @@ class Model_Email extends \Model_Document{
 	public $root_document_name='xCRM\Email';
 	public $actions=array(
 			'can_view'=>array(),
-			'allow_add'=>array(),
-			'allow_edit'=>array(),
-			'allow_del'=>array(),
+			// 'allow_add'=>array(),
+			// 'allow_edit'=>array(),
+			// 'allow_del'=>array(),
 			'can_create_activity'=>array(),
 			'can_create_ticket'=>array(),
-			'can_see_activities'=>false
+			'can_see_activities'=>false,
+			'can_manage_attachments'=>false
 		);	
 
 	function init(){
@@ -32,6 +33,7 @@ class Model_Email extends \Model_Document{
 		$this->addField('to_id');
 
 		$this->addField('from_email');
+		$this->addField('from_name');
 		$this->addField('to_email');
 		$this->addField('cc')->type('text');
 		$this->addField('bcc')->type('text');
@@ -238,6 +240,7 @@ class Model_Email extends \Model_Document{
 					$mail_m['message'] = $mail->textHtml;
 					$mail_m['uid'] = $mail->id;
 					$mail_m['direction'] = 'received';
+					$mail_m['from_name'] = $mail->fromName;
 					$mail_m->save();
 					$fetch_email_array[] = $mail_m->id;
 					
@@ -300,6 +303,28 @@ class Model_Email extends \Model_Document{
 		}
 		
 		$this->save();
+	}
+
+	function fromMemberName(){
+		
+		if(!$this->loaded()) return;
+		switch ($this['from']) {
+			case 'Customer':
+				$c = $this->add('xShop/Model_Customer')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($c->loaded())					
+					return $c['customer_name'];
+			break;			
+			case 'Supplier':
+				$s = $this->add('xPurchase/Model_Supplier')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($s->loaded())
+					return $s['name'];
+			break;
+			case 'Employee':
+				$e = $this->add('xHR/Model_Employee')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($e->loaded())
+					return $e['name'];
+			break;
+		}
 	}
 
 	function guessTo($doc=false){
