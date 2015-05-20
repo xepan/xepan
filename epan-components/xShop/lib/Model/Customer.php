@@ -50,13 +50,28 @@ class Model_Customer extends Model_MemberDetails{
 			return $m->refSQL('xShop/Quotation')->count();
 		})->sortable(true);
 
-		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeSave',array($this,'beforeCustomerSave'));
 
 		$this->arrangeFields();		
 	}
 
-	function beforeDelete(){
+	function beforeCustomerSave(){
+		$old_user = $this->add('Model_Users');
+		$old_user->addCondition('username',$this['username']);
+		$old_user->addCondition('username','<>',null);
+		$old_user->addCondition('username','<>','');
 		
+		if(isset($this->api->current_website))
+			$old_user->addCondition('epan_id',$this->api->current_website->id);
+		
+		if($this->loaded()){
+			$old_user->addCondition('id','<>',$this->id);
+		}
+
+		$old_user->tryLoadAny();
+		if($old_user->loaded()){
+			throw $this->exception("This username is allready taken, Chose Another",'ValidityCheck')->setField('username');
+		}
 	}
 
 	function arrangeFields(){
