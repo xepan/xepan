@@ -13,6 +13,7 @@ class Model_Email extends \Model_Document{
 			'allow_del'=>array(),
 			'can_create_activity'=>array(),
 			'can_create_ticket'=>array(),
+			'can_see_activities'=>false
 		);	
 
 	function init(){
@@ -44,6 +45,9 @@ class Model_Email extends \Model_Document{
 		$this->addHook('beforeDelete',$this);
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id',null,'Attachments');
+
+		$this->setOrder('created_at','desc');
+
 	//	$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
@@ -204,7 +208,7 @@ class Model_Email extends \Model_Document{
 		// return;
 		// Get some mail
 		try{
-			$mailsIds = $mailbox->searchMailBox('SINCE '.date('d-M-Y',strtotime('-1 day')));
+			$mailsIds = $mailbox->searchMailBox('SINCE '.date('d-M-Y',strtotime('-3 day')));
 			if(!$mailsIds) {
 				$mailbox->disconnect();
 			}else{
@@ -228,7 +232,7 @@ class Model_Email extends \Model_Document{
 					$mail_m['created_at']= $mail->date;
 					$mail_m['from_email'] = $mail->fromAddress;
 					$mail_m['to_email'] = is_array($mail->to)?implode(",", array_keys($mail->to)):$mail->to;
-					$mail_m['cc'] = is_array($mail->cc)?implode(",", $mail->cc):$mail->cc;
+					$mail_m['cc'] = is_array($mail->cc)?implode(",", array_keys($mail->cc)):$mail->cc;
 					$mail_m['subject'] = $mail->subject;
 					$mail_m['message'] = $mail->textHtml;
 					$mail_m['uid'] = $mail->id;
@@ -414,19 +418,27 @@ class Model_Email extends \Model_Document{
 		if(!$official_emails->count()->getOne())
 			return false;
 		
+		$or_cond = $this->dsql()->orExpr();
+
+
 		$official_email_array = array();
 		foreach ($official_emails as $official_email) {
 			$official_email_array[] = $official_email['email_username'];
 			$official_email_array[] = $official_email['imap_email_username'];
+			
+			$or_cond->where('cc','like','%'.$official_email['email_username'].'%');
+			$or_cond->where('cc','like','%'.$official_email['imap_email_username'].'%');
 		}
 
+		$or_cond->where('from_email','in',$official_email_array)
+				->where('to_email','in',$official_email_array);
+
+
 		$this->addCondition(
-					$this->dsql()->orExpr()
-						->where('from_email','in',$official_email_array)
-						->where('to_email','in',$official_email_array)
+					$or_cond
 					);
 
-		$this->tryLoadAny();
+		// $this->tryLoadAny();
 		return $this;
 	}
 

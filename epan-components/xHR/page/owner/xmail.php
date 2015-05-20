@@ -20,11 +20,19 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		});
 
 		$col = $this->add('Columns');
-		$left_col=$col->addColumn(3);
-		$right_col=$col->addColumn(9);
+		$left_col=$col->addColumn(2);
+		$right_col=$col->addColumn(10);
 
 		$customer=$this->add('xShop/Model_Customer');
 		$customer->addExpression('unread')->set(function($m,$q)use($official_email_array){
+			$to_search_cond = $q->orExpr();
+
+			foreach ($official_email_array as $oe) {
+				$to_search_cond->where('cc','like','%'.$oe.'%');
+			}
+
+			$to_search_cond->where('to_email',$official_email_array);
+
 			return $m->add('xCRM/Model_Email')
 				->addCondition(
 						$q->orExpr()
@@ -40,7 +48,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 								)
 					)
 				->addCondition('read_by_employee_id',null)
-				->addCondition('to_email',$official_email_array)
+				->addCondition($to_search_cond)
 				->count();
 		});
 
@@ -51,7 +59,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			$customer_crud->grid->addMethod('format_anchor',function($g,$f)use($right_col){
 					$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$right_col->js()->reload(array('customer_id'=>$g->model->id)).'">'.$g->model['customer_name'].' ( '.$g->model['unread'].' ) '.'</a>';
 				});
-			$customer_crud->grid->addFormatter('customer_name','anchor');
+			$customer_crud->grid->addFormatter('customer_name','anchor,wrap');
 		}
 
 
