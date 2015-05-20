@@ -123,6 +123,19 @@ class Model_Email extends \Model_Document{
 
 	}
 
+	function getAttachments(){
+		$attach_arry = array();
+		if($this->loaded()){
+			foreach ($this->attachment() as $attach) {
+				$attach_arry[] = $attach['id'];
+			}
+
+		}
+		
+		return $attach_arry;
+	}
+
+
 	function create_Activity_page($page){
 		$form= $page->add('Form_Stacked');
 
@@ -325,8 +338,17 @@ class Model_Email extends \Model_Document{
 		$document->tryLoadBy('name',$document_array_all[1]);
 
 		if($document->loaded()){
-			$document->createActivity('Email',$this['subject'],$this['message'],$this['from'],$this['from_id'], $this['to'], $this['to_id']);
-			$document->relatedDocument($this);
+			$new_activity = $document->createActivity('Email',$this['subject'],$this['message'],$this['from'],$this['from_id'], $this['to'], $this['to_id']);
+			// $new_activity->relatedDocument($document);
+
+			foreach ($this->attachment() as $attachment) {
+				$new_att = $this->add('Model_Attachment');
+				$new_att['related_document_id'] = $new_activity->id;
+				$new_att['related_root_document_name'] = $new_activity->root_document_name;
+				$new_att['name'] = $attachment['name'];
+				$new_att['attachment_url_id'] = $attachment['attachment_url_id'];
+				$new_att->save();
+			}			
 			return $document;
 		}
 
