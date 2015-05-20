@@ -253,7 +253,27 @@ class Model_Document extends Model_Table{
 		$crud->setModel($this->ref('Attachments'),array('name','attachment_url','updated_date'));
 
 		if(!$crud->isEditing()){
-			$crud->grid->addformatter('attachment_url','image');
+			$self = $this;
+			$crud->grid->add('VirtualPage')
+                ->addColumn('open', 'View file', array('Open','icon'=>'users'))
+                ->set(function($page)use($self, $crud){
+                    $id = $_GET[$page->short_name.'_id'];
+                    $id = $page->add('Model_Attachment')->load($id)->get('attachment_url_id');
+                    // find Filestore file
+                    $m = $page->add('filestore/Model_File')->load($id);
+                    
+                    // open as object
+                    $url = $m->get('url');
+                    $page->add('View')
+                        ->setElement('object')
+                        ->setAttr('type', $m->ref('filestore_type_id')->get('mime_type'))
+                        ->setAttr('data', $m->get('url'))
+                        // ->setAttr('width', '100%')
+                        // ->setAttr('height', '100%')
+                        ->setHTML('Your browser is to old to open this file inline<br/><a href="'.$url.'" target=_blank>'.$url.'</a>')
+                        ;
+             });
+				// $crud->grid->addformatter('attachment_url','image');
 		}
 
 		$crud->add('xHR/Controller_Acl');
@@ -375,6 +395,8 @@ class Model_Document extends Model_Table{
 		$new_activity['message']= $message;
 
 		$new_activity->save();
+		 return $new_activity;
+
 	}
 
 	function searchActivity($action,$from_on_date=null, $to_date=null, $from=null,$from_id=null,$to=null,$to_id=null){

@@ -1,9 +1,17 @@
 <?php
 class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
+	
 	function init(){
 		parent::init();
+		
 		$this->app->title='x-Mail';
-			$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-envelope"></i> Mail Managment <small> Manage companies Mail  </small>');
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-envelope"></i> Mail Managment <small> Manage companies Mail  </small>');
+		$dept_id = $this->api->stickyGET('department_id');
+		
+		$dept = $this->add('xHR/Model_Department')->load($dept_id);
+		$official_email_array = $dept->getOfficialEmails();
+		
+
 		$message_vp = $this->add('VirtualPage')->set(function($p){
 			$email_id=$p->api->stickyGET('xcrm_email_id');
 			$m=$p->add('xCRM/Model_Email')->tryLoad($email_id);
@@ -11,16 +19,12 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			$email_view->setModel($m);
 		});
 
-		$dept_id= $this->api->stickyGET('department_id');
-		
-		$this->add('View_Success')->set($dept_id);
-
-		$col=$this->add('Columns');
+		$col = $this->add('Columns');
 		$left_col=$col->addColumn(3);
 		$right_col=$col->addColumn(9);
 
 		$customer=$this->add('xShop/Model_Customer');
-		$customer->addExpression('unread')->set(function($m,$q){
+		$customer->addExpression('unread')->set(function($m,$q)use($official_email_array){
 			return $m->add('xCRM/Model_Email')
 				->addCondition(
 						$q->orExpr()
@@ -36,11 +40,12 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 								)
 					)
 				->addCondition('read_by_employee_id',null)
+				->addCondition('to_email',$official_email_array)
 				->count();
 		});
 
 		$customer_crud=$left_col->add('CRUD',array('grid_class'=>'xHR/Grid_MailParty','allow_add'=>false,'allow_edit'=>false,'allow_del'=>false));
-		$customer_crud->setModel($customer);
+		$customer_crud->setModel($customer->setOrder('unread','desc'));
 		
 		if(!$customer_crud->isEditing()){
 			$customer_crud->grid->addMethod('format_anchor',function($g,$f)use($right_col){
@@ -161,6 +166,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 
 		$reload_btn = $mail_crud->addButton('FETCH');
 		$guess_btn = $mail_crud->addButton('Guess');
+		$reset = $mail_crud->addButton('Reset');
 		if( !($reload_btn instanceof \Dummy) and $reload_btn->isClicked()){
 			$this->add('xCRM/Model_Email')->fetchDepartment($this->api->current_department);
 			$this->js()->univ()->successMessage('Fetch Successfully')->execute();
@@ -170,6 +176,9 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			$this->add('xCRM/Model_ReceivedEmail');
 		}
 
+		if($reset->isClicked()){
+			
+		}
 
 	}
 }

@@ -8,16 +8,30 @@ class Grid extends Grid_Advanced{
 
 	function init(){
 		parent::init();
+
 		$this->order= $this->addOrder();
         $this->addHook('formatRow',function($grid){
             if($grid->hasColumn('delete')){
                 $grid->columns['delete']['descr']="";
             }
-            if($grid->hasColumn('edit')){                
-                $grid->current_row_html['edit']='<button type="button" class="atk-button-small pb_edit">fddf</button>';
-            }
+//            if($grid->hasColumn('edit')){                
+//                $grid->current_row_html['edit']='<button type="button" class="atk-button-small pb_edit">fddf</button>';
+//            }
         });
 	}
+
+    function _performDelete($id)
+    {        
+        if ($this->model) {
+            if($this->model->hasMethod('forceDelete')){
+                $this->model->load($id)->forceDelete();
+            }
+            else
+                $this->model->delete($id);
+        } else {
+            $this->dq->where('id', $id)->delete();
+        }
+    }
 
 	function add_sno(){
 		$this->addColumn('sno','s_no');
