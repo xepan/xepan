@@ -47,6 +47,8 @@ class Model_Subscription extends \Model_Document {
 		$this->hasMany('xShop/Quotation','lead_id');
 		$this->hasMany('xEnquiryNSubscription/SubscriptionCategoryAssociation','subscriber_id');
 
+		$this->addExpression('associated_categories')->set($this->refSQL('xEnquiryNSubscription/SubscriptionCategoryAssociation')->count());
+
 		$this->add('Controller_Validator');
 		$this->is(array(
 			'name|to_trim',
