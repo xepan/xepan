@@ -92,12 +92,17 @@ class Model_Email extends \Model_Document{
 
 	}
 
-	function addAttachment($attach_id){
+	function addAttachment($attach_id,$name=null){
 		if(!$attach_id) return;
 		$attach = $this->add('xCRM/Model_EmailAttachment');
 		$attach['attachment_url_id'] = $attach_id;
 		$attach['related_document_id'] = $this->id;
+		if($name)
+			$attach['name'] = $name;
+
 		$attach->save();
+
+		return $attach;
 	}
 
 	function send(){		
@@ -186,7 +191,7 @@ class Model_Email extends \Model_Document{
 		// return;
 		// Get some mail
 		try{
-			$mailsIds = $mailbox->searchMailBox('SINCE '.date('d-M-Y',strtotime('-5 day')));
+			$mailsIds = $mailbox->searchMailBox('SINCE '.date('d-M-Y',strtotime('-1 day')));
 			if(!$mailsIds) {
 				$mailbox->disconnect();
 			}else{
@@ -217,8 +222,18 @@ class Model_Email extends \Model_Document{
 					$mail_m['direction'] = 'received';
 					$mail_m->save();
 					$fetch_email_array[] = $mail_m->id;
-					$mail_m->unload();
+					
+					//MAIL ATTACHMENT 
+					$attachments = $mail->getAttachments();
+					foreach ($attachments as $attach) {
+						$file =	$this->add('filestore/Model_File',array('policy_add_new_type'=>true,'import_mode'=>'move','import_source'=>$attach->filePath));
+						$file['filestore_volume_id'] = $file->getAvailableVolumeID();
+						$file['original_filename'] = $attach->name;
+						$file->save();
+						$mail_m->addAttachment($file->id,$attach->name);
+					}
 
+					$mail_m->unload();
 					$i++;
 				}
 
