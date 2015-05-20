@@ -49,6 +49,7 @@ class page_base_owner extends Page {
         $admin_m->addItem(array('Dashboard','icon'=>'gauge-1'),'/owner/dashboard');
         $admin_m->addItem(array('User Management','icon'=>'users'),'/owner/users');
         $admin_m->addItem(array('General Settings','icon'=>'cog'),'/owner/epansettings');
+        $admin_m->addItem(array('Documents','icon'=>'cog'),'/owner/documents');
         $admin_m->addItem(array('Application Repository','icon'=>'cog'),'/owner/applicationrepository');
         $admin_m->addItem(array('Developer Zone','icon'=>'cog'),'developerZone_page_owner_dashboard');
         // $admin_m->addSeparator();
