@@ -26,7 +26,7 @@ class page_owner_updater extends page_base_owner {
 
     function page_updateall($dynamic_model_update=true,$git_exec_path=null, $git_branch=''){
 
-        $this->update($dynamic_model_update,$git_exec_path,$git_branch);
+        $this->page_update($dynamic_model_update,$git_exec_path,$git_branch);
         
         $components = $this->add('Model_MarketPlace')->addCondition('type','<>','element');
         foreach ($components as $comp) {
@@ -36,7 +36,7 @@ class page_owner_updater extends page_base_owner {
 
     }
 
-	function update($dynamic_model_update=true,$git_exec_path=null, $git_branch=''){
+	function page_update($dynamic_model_update=true,$git_exec_path=null, $git_branch=''){
 		if($this->git_path==null)
 			throw $this->exception('public variable git_path must be defined in page class');
 		
