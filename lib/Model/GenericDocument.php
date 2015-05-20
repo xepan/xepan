@@ -1,6 +1,8 @@
 <?php
 
 class Model_GenericDocument extends Model_Document {
+	public $table='xepan_generic_documents';
+	
 	public $root_document_name = "\GenericDocument";
 	public $status=array('draft','submitted','inactive');
 

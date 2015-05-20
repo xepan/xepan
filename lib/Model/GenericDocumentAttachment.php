@@ -1,7 +1,7 @@
 <?php
 
 
-class Model_GenericDocumentAttahcment extends \Model_Attachment{
+class Model_GenericDocumentAttachment extends Model_Attachment{
 	public $root_document_name = "\GenericDocumentAttahcment";
 
 	function init(){
