@@ -395,6 +395,8 @@ class Model_Document extends Model_Table{
 		$new_activity['message']= $message;
 
 		$new_activity->save();
+		 return $new_activity;
+
 	}
 
 	function searchActivity($action,$from_on_date=null, $to_date=null, $from=null,$from_id=null,$to=null,$to_id=null){
