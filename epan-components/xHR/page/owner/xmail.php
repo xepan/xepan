@@ -190,32 +190,36 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		}
 
 		$mail_crud=$right_col->add('CRUD');
-		$mail_crud->setModel($emails,array(),array('subject','to_email','from_email','message','from','id','from_id'));
+		$mail_crud->setModel($emails,array(),array('subject','to_email','from_email','message','from','id','from_id','direction'));
 		$mg=$mail_crud->grid;
 		
 		if(!$mail_crud->isEditing()){
 			$mg->addMethod('format_subject',function($g,$f)use($message_vp){
 
+				//Read Or Unread Emails
 				if(!$g->model['read_by_employee_id'])
 					$g->setTDParam('subject','class','atk-text-bold');
 				else
 					$g->setTDParam('subject','class','atk-text-normal');
+				
 				//Check for Email is Incomening or OutGoing
-				$snr = "";									
-				if($g->model->isReceive()){	
-					$snr = '<small class="atk-swatch-green">In</small>';
-				}elseif($g->model->isSent()){
-					$snr = '<small class="atk-swatch-yellow">Out</small>';
+				$snr = "";
+				if($g->model['direction']=="received"){
+					$g->setTDParam('subject','style','box-shadow:3px 0px 0px 0px green inset;');
+					$snr .= '<span class="atk-swatch-green glyphicon glyphicon-import" title="Received E-Mail"></span>';
+				}elseif($g->model['direction']=="sent"){
+					$g->setTDParam('subject','style','box-shadow: 3px 0px 0px 0px red inset;');
+					$snr .= '<span class="atk-swatch-red glyphicon glyphicon-export" title="Sent E-Mail"></span>';
 				}
-				// $str.= '<small class="atk-col-2">'.$snr.'</small>';
 
 				$str = '<div  class="atk-row">';
 				//From Email
 				$str.= '<div class="atk-col-2" title="'.$g->model['from_email'].'" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
+					$str.= $snr;
 					if($g->model->fromMemberName())
 						$str.=$g->model->fromMemberName().'<br/>';
 					if($g->model['fromName'])
-						$str.=$g->model['from_name'].'<br/>';				
+						$str.=$g->model['from_name'].'<br/>';
 				$str.= $g->model['from_email'].'</div>';
 				//Subject
 				$str.= '<div class="atk-col-8" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.'<a href="javascript:void(0)" onclick="'.$g->js(null,$this->js()->_selectorThis()->closest('td')->removeClass('atk-text-bold'))->univ()->frameURL('E-mail',$g->api->url($message_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a> - ';
@@ -224,7 +228,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				//Attachments
 				if($g->model->attachment()->count()->getOne())
 					$str.= '<div class="atk-col-1"><i class="icon-attach"></i></div>';
-				else 
+				else
 					$str.= '<div class="atk-col-1 text-right"></div>';
 				//Date Fields
 				$str.= '<div class="atk-col-1 atk-size-micro">'.$g->add('xDate')->diff(Carbon::now(),$g->model['created_at']).'</div>';
@@ -240,6 +244,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			$mg->removeColumn('id');
 			$mg->removeColumn('from_id');
 			$mg->removeColumn('from');
+			$mg->removeColumn('direction');
 		}
 
 		
