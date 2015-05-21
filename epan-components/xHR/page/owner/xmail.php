@@ -204,23 +204,36 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				
 				//Check for Email is Incomening or OutGoing
 				$snr = "";
+				$from = "";
 				if($g->model['direction']=="received"){
 					$g->setTDParam('subject','style','box-shadow:3px 0px 0px 0px green inset;');
 					$snr .= '<span class="atk-swatch-green glyphicon glyphicon-import" title="Received E-Mail"></span>';
+					
+					//Form Email
+					$from.= '<div class="atk-col-2" title="'.$g->model['from_email'].'" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
+					$from.= $snr;
+					if($g->model->fromMemberName())
+						$from.=$g->model->fromMemberName().'<br/>';
+					if($g->model['from_name'])
+						$from.=$g->model['from_name'].'<br/>';
+					$from.= $g->model['from_email'].'</div>';
+
 				}elseif($g->model['direction']=="sent"){
 					$g->setTDParam('subject','style','box-shadow: 3px 0px 0px 0px red inset;');
 					$snr .= '<span class="atk-swatch-red glyphicon glyphicon-export" title="Sent E-Mail"></span>';
+					
+					//To Email if Sent
+					$from = " ";
+					$from.= '<div class="atk-col-2" title="'.$g->model['to_email'].'" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
+					$from.= $snr;
+					if($g->model->toMemberName())
+						$from.=$g->model->toMemberName().'<br/>';
+					$from.= $g->model['to_email'].'</div>';
 				}
 
 				$str = '<div  class="atk-row">';
 				//From Email
-				$str.= '<div class="atk-col-2" title="'.$g->model['from_email'].'" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
-					$str.= $snr;
-					if($g->model->fromMemberName())
-						$str.=$g->model->fromMemberName().'<br/>';
-					if($g->model['fromName'])
-						$str.=$g->model['from_name'].'<br/>';
-				$str.= $g->model['from_email'].'</div>';
+				$str.= $from;
 				//Subject
 				$str.= '<div class="atk-col-8" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.'<a href="javascript:void(0)" onclick="'.$g->js(null,$this->js()->_selectorThis()->closest('td')->removeClass('atk-text-bold'))->univ()->frameURL('E-mail',$g->api->url($message_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a> - ';
 				//Message
@@ -234,6 +247,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				$str.= '<div class="atk-col-1 atk-size-micro">'.$g->add('xDate')->diff(Carbon::now(),$g->model['created_at']).'</div>';
 	
 				$str.= '</div>';
+				
 				$g->current_row_html[$f] = $str;
 			});
 			$mg->addFormatter('subject','subject');
