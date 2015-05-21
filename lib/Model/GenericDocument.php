@@ -18,7 +18,7 @@ class Model_GenericDocument extends Model_Document {
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
-		$this->addField('title');
+		$this->addField('name');
 		$this->addField('content')->type('text')->display(array('form'=>'RichText'));
 
 		$this->hasMany('GenericDocumentAttachment','related_document_id',null,'Attachments');
