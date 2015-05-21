@@ -11,8 +11,8 @@ class Model_Email extends \Model_Document{
 			// 'allow_add'=>array(),
 			// 'allow_edit'=>array(),
 			// 'allow_del'=>array(),
-			'can_create_activity'=>array(),
-			'can_create_ticket'=>array(),
+			'can_create_activity'=>array('caption'=>'Action'),
+			// 'can_create_ticket'=>array(),
 			'can_see_activities'=>false,
 			'can_manage_attachments'=>false
 		);	
@@ -41,6 +41,8 @@ class Model_Email extends \Model_Document{
 		$this->addField('subject');
 		$this->addField('message')->type('text');
 		$this->addField('attachments')->type('text');
+		
+		$this->addField('keep_unread')->type('boolean')->defaultValue(false);
 		
 		$this->addField('direction')->enum(array('sent','received'))->defaultValue('sent');
 
