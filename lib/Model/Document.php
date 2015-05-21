@@ -451,7 +451,8 @@ class Model_Document extends Model_Table{
 		
 	}
 
-	function getTo(){		
+	function getTo(){
+		
 		if($this instanceof \xShop\Model_Order){		
 			return $this->customer();
 		}elseif($this instanceof \xShop\Model_Quotation){
@@ -465,11 +466,12 @@ class Model_Document extends Model_Table{
 		}elseif($this instanceof \xCRM\Model_Ticket){
 			return $this->customer();
 		}elseif($this instanceof \xShop\Model_Customer){
+			return $this;		
+		}elseif($this instanceof \xShop\Model_MemberDetails){
 			return $this;
 		}
 
 		return new \Dummy();
-
 	}
 
 	function setEmployeeNull(){
