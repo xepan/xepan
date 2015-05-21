@@ -16,7 +16,7 @@ class Grid_DispatchRequest extends \Grid{
 			$p->api->stickyGET('dispatch_request_clicked');
 			$p->add('xDispatch/View_DispatchRequest',
 				array(
-					'dispatchrequest'=>$this->add('xDispatch/Model_DispatchRequest')->load($_GET['dispatch_request_clicked'])
+					'dispatchrequest'=>$p->add('xDispatch/Model_DispatchRequest')->load($_GET['dispatch_request_clicked'])
 					)
 				);
 		});

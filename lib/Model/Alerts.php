@@ -4,6 +4,8 @@ class Model_Alerts extends Model_Table{
 	function init(){
 		parent::init();
 		$this->hasOne('Epan','epan_id');
+		$this->addCondition('epan_id',$this->api->current_website->id);
+		
 		$this->addField('name')->caption('Title')->sortable(true);
 		$this->addField('created_at')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		$this->addField('is_read')->type('boolean')->defaultValue(false)->sortable(true);

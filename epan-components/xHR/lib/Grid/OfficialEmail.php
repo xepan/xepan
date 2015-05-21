@@ -66,7 +66,7 @@ class Grid_OfficialEmail extends \Grid{
 		if($this->model['status']!="active")
 			$status = "atk-swatch-red";
 		
-		$str = '<div class="text-center atk-size-giga '.$status.' "> Email Transport :: '.$this->model['email_transport'].'</div>';
+		$str = '<div class="text-center atk-size-giga '.$status.' "> '.$this->model['email_username'].'</div>';
 		$str .= '<div class="atk-row">';
 
 		$str.= '<div class="atk-col-6">';//OutGoing Email Setting Column1
@@ -74,7 +74,7 @@ class Grid_OfficialEmail extends \Grid{
 		$str.= 'Encryption : '.$this->model['encryption'].'</br>';
 		$str.= 'Email Host : '.$this->model['email_host'].'</br>';
 		$str.= 'Email Port : '.$this->model['email_port'].'</br>';
-		$str.= 'Email UserName : '.$this->model['email_username'].'</br>';
+		$str.= 'Email TRansport : '.$this->model['email_transport'].'</br>';
 		$str.=	'</div>';
 		
 		$str.= '<div class="atk-col-6">';//Imap Email Setting Column2

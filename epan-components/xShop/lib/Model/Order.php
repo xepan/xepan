@@ -396,15 +396,19 @@ class Model_Order extends \Model_Document{
 			$invoice->save();
 
 			$invoice->relatedDocument($this);
-
+			
 			$ois = $this->orderItems();
-			foreach ($ois as $oi) {
+			foreach ($ois as $oi) {	
+				if(count($items_array)) {
+					if(!in_array($oi['id'],$items_array)){
+						continue;
+					}
+				}
+			// throw new \Exception($ois->count()->getOne()."I-".$oi->id.print_r($items_array,true));
 
-				if(count($items_array) AND !in_array($oi->id,$items_array)) continue;
-				
 				if($oi->invoice())
 					throw $this->exception('Order Item already used in Invoice','Growl');
-				
+			
 				$invoice->addItem(
 						$oi->item(),
 						$oi['qty'],

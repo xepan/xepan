@@ -8,11 +8,13 @@ class Model_Email extends \Model_Document{
 	public $root_document_name='xCRM\Email';
 	public $actions=array(
 			'can_view'=>array(),
-			'allow_add'=>array(),
-			'allow_edit'=>array(),
-			'allow_del'=>array(),
+			// 'allow_add'=>array(),
+			// 'allow_edit'=>array(),
+			// 'allow_del'=>array(),
 			'can_create_activity'=>array(),
 			'can_create_ticket'=>array(),
+			'can_see_activities'=>false,
+			'can_manage_attachments'=>false
 		);	
 
 	function init(){
@@ -31,6 +33,7 @@ class Model_Email extends \Model_Document{
 		$this->addField('to_id');
 
 		$this->addField('from_email');
+		$this->addField('from_name');
 		$this->addField('to_email');
 		$this->addField('cc')->type('text');
 		$this->addField('bcc')->type('text');
@@ -44,6 +47,9 @@ class Model_Email extends \Model_Document{
 		$this->addHook('beforeDelete',$this);
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id',null,'Attachments');
+
+		$this->setOrder('created_at','desc');
+
 	//	$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
@@ -204,7 +210,8 @@ class Model_Email extends \Model_Document{
 		// return;
 		// Get some mail
 		try{
-			$mailsIds = $mailbox->searchMailBox('SINCE '.date('d-M-Y',strtotime('-1 day')));
+			$conditions = $conditions?:'SINCE '.date('d-M-Y',strtotime('-1 day'));
+			$mailsIds = $mailbox->searchMailBox($conditions);
 			if(!$mailsIds) {
 				$mailbox->disconnect();
 			}else{
@@ -228,11 +235,12 @@ class Model_Email extends \Model_Document{
 					$mail_m['created_at']= $mail->date;
 					$mail_m['from_email'] = $mail->fromAddress;
 					$mail_m['to_email'] = is_array($mail->to)?implode(",", array_keys($mail->to)):$mail->to;
-					$mail_m['cc'] = is_array($mail->cc)?implode(",", $mail->cc):$mail->cc;
+					$mail_m['cc'] = is_array($mail->cc)?implode(",", array_keys($mail->cc)):$mail->cc;
 					$mail_m['subject'] = $mail->subject;
 					$mail_m['message'] = $mail->textHtml;
 					$mail_m['uid'] = $mail->id;
 					$mail_m['direction'] = 'received';
+					$mail_m['from_name'] = $mail->fromName;
 					$mail_m->save();
 					$fetch_email_array[] = $mail_m->id;
 					
@@ -295,6 +303,28 @@ class Model_Email extends \Model_Document{
 		}
 		
 		$this->save();
+	}
+
+	function fromMemberName(){
+		
+		if(!$this->loaded()) return;
+		switch ($this['from']) {
+			case 'Customer':
+				$c = $this->add('xShop/Model_Customer')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($c->loaded())					
+					return $c['customer_name'];
+			break;			
+			case 'Supplier':
+				$s = $this->add('xPurchase/Model_Supplier')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($s->loaded())
+					return $s['name'];
+			break;
+			case 'Employee':
+				$e = $this->add('xHR/Model_Employee')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($e->loaded())
+					return $e['name'];
+			break;
+		}
 	}
 
 	function guessTo($doc=false){
@@ -414,19 +444,27 @@ class Model_Email extends \Model_Document{
 		if(!$official_emails->count()->getOne())
 			return false;
 		
+		$or_cond = $this->dsql()->orExpr();
+
+
 		$official_email_array = array();
 		foreach ($official_emails as $official_email) {
 			$official_email_array[] = $official_email['email_username'];
 			$official_email_array[] = $official_email['imap_email_username'];
+			
+			$or_cond->where('cc','like','%'.$official_email['email_username'].'%');
+			$or_cond->where('cc','like','%'.$official_email['imap_email_username'].'%');
 		}
 
+		$or_cond->where('from_email','in',$official_email_array)
+				->where('to_email','in',$official_email_array);
+
+
 		$this->addCondition(
-					$this->dsql()->orExpr()
-						->where('from_email','in',$official_email_array)
-						->where('to_email','in',$official_email_array)
+					$or_cond
 					);
 
-		$this->tryLoadAny();
+		// $this->tryLoadAny();
 		return $this;
 	}
 
