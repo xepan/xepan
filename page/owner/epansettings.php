@@ -66,7 +66,15 @@ class page_owner_epansettings extends page_base_owner {
 			$email_form->js()->univ()->successMessage('Information Updated')->execute();
 		}
 
-		// $company_settings= $tabs->addTabURL('./comp_settings','Company Settings');
+		$misc_settings= $tabs->addTab('Misc Settings');
+		$misc_form = $misc_settings->add('Form_Stacked');
+		$misc_form->setModel($this->api->current_website,array('time_zone'));
+		$misc_form->addSubmit('Update');
+
+		if($misc_form->isSubmitted()){
+			$misc_form->save();
+			$misc_form->js()->univ()->successMessage('Updated')->execute();
+		}
 	}
 
 	function page_comp_settings(){
