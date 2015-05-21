@@ -17,7 +17,7 @@ class page_xAccount_page_owner_amtpaid extends page_xAccount_page_owner_main {
 
 		$form = $cash_tab->add('Form_Stacked');
 
-
+		$form->addField('DatePicker','date')->set($this->api->now)->validateNotNull(true);
 		$cash_field = $form->addField('autocomplete/Basic','cash_account')->validateNotNull(true);
 		$cash_field->setModel($cash_accounts);
 
@@ -53,7 +53,7 @@ class page_xAccount_page_owner_amtpaid extends page_xAccount_page_owner_main {
 
 		$form = $bank_tab->add('Form_Stacked');
 
-
+		$form->addField('DatePicker','date')->set($this->api->now)->validateNotNull(true);
 		$bank_field = $form->addField('autocomplete/Basic','bank_account')->validateNotNull(true);
 		$bank_field->setModel($bank_accounts);
 

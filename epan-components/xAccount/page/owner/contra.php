@@ -16,7 +16,7 @@ class page_xAccount_page_owner_contra extends page_xAccount_page_owner_main {
 
 		$bank_accounts = $this->add('xAccount/Model_Account');
 		$bank_accounts->loadBankAccounts();
-
+		$cash_to_bank_form->addField('DatePicker','date')->set($this->api->now)->validateNotNull(true);
 		$to_bank_field = $cash_to_bank_form->addField('autocomplete/Basic','to_bank_account')->validateNotNull(true);
 		$to_bank_field->setModel($bank_accounts);
 		$to_bank_field->set($this->add('xAccount/Model_Account')->loadDefaultBankAccount()->get('id'));
@@ -55,7 +55,7 @@ class page_xAccount_page_owner_contra extends page_xAccount_page_owner_main {
 
 		$bank_accounts = $this->add('xAccount/Model_Account');
 		$bank_accounts->loadBankAccounts();
-
+		$bank_to_cash_form->addField('DatePicker','date')->set($this->api->now)->validateNotNull(true);
 		$from_bank_field = $bank_to_cash_form->addField('autocomplete/Basic','from_bank_account')->validateNotNull(true);
 		$from_bank_field->setModel($bank_accounts);
 		$from_bank_field->set($this->add('xAccount/Model_Account')->loadDefaultBankAccount()->get('id'));
