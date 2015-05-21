@@ -506,4 +506,14 @@ class Model_Email extends \Model_Document{
 		$this->save();
 	}
 
+
+	function markRead(){
+		if(!$this['read_by_employee_id']){
+			$this['read_by_employee_id'] = $this->api->current_employee->id;
+			$this->save();
+		}
+
+		return $this;
+	}
+
 }
