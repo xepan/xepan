@@ -8,12 +8,18 @@ class page_owner_documents extends page_base_owner{
 		$this->app->title='Company: Documents';
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-files-o"></i> Company :: Documents  <small>Public / Departmental / Shared / Personal </small>' );
 
-		$doc_m= $this->add('Model_GenericDocument');
+		// $doc_m= $this->add('Model_GenericDocument');
 
-		$crud = $this->add('CRUD',array('grid_class'=>'Grid_GenericDocument'));
-		$crud->setModel($doc_m);
+		// $crud = $this->add('CRUD',array('grid_class'=>'Grid_GenericDocument'));
+		// $crud->setModel($doc_m);
+		// $crud->add('xHR\Controller_Acl');
 
-		$crud->add('xHR\Controller_Acl');
+
+		$tabs=$this->add('Tabs');
+		$tabs->addTabURL('owner/documents_public','Public');
+		$tabs->addTabURL('owner/documents_department','Departmental');
+		$tabs->addTabURL('owner/documents_shared','Shared');
+		$tabs->addTabURL('owner/documents_private','Private');
 		
 	}
 }
