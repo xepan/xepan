@@ -3,8 +3,23 @@ namespace xShop;
 class Grid_Customer extends \Grid{
 	function init(){
 		parent::init();
+
+		$this->add_sno();
+		$this->addPaginator($ipp=100);
+
+		$this->vp = $this->add('VirtualPage')->set(function($p){
+			$this->api->StickyGET('customer_id');
+			$grid = $p->add('xShop/Grid_Order');
+			$so = $p->add('xShop/Model_Order')->addCondition('member_id',$_GET['customer_id']);
+			$grid->setModel($so);
+		});
+
+		$this->addColumn('total_sales_order');
 	} 
+
 	function setModel($model,$fields=null){
+		if(!$fields)
+			$fields = $model->getActualFields();
 		$m = parent::setModel($model,$fields);
 
 		if($this->hasColumn('item_name')) $this->removeColumn('item_name');
@@ -22,10 +37,20 @@ class Grid_Customer extends \Grid{
 		$this->fooHideAlways('billing_address');
 		$this->fooHideAlways('shipping_address');
 
-		$this->addPaginator(15);
-		$this->addQuickSearch(array('name','no_person','discount_amount','from','to'));
-		$this->add_sno();
+		$this->addPaginator(50);
+
+		if(!$fields)
+			$fields = $model->getActualFields();
+		$this->addQuickSearch($fields,null);
+
+		//Total Order Count
+		$this->addFormatter('total_sales_order','total_sales_order');
+		$this->add('misc/Export');
 		return $m;	
+	}
+
+	function format_total_sales_order($f){
+		$this->current_row_html[$f] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Customer ( '.$this->model['customer_name'].' ) Sales Order List ', $this->api->url($this->vp->getURL(),array('customer_id'=>$this->model['id']))).'">'. $this->model->ref('xShop/Order')->count()->getOne()."</a>";
 	}
 
 	function formatRow(){

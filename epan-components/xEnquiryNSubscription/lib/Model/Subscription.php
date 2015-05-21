@@ -19,7 +19,7 @@ class Model_Subscription extends \Model_Document {
 		$this->hasOne('Epan','epan_id')->system(true);
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		//For Lead Category
-		$this->hasOne('xMarketingCampaign/LeadCategory','leadcategory_id')->caption('Category')->display(array('form'=>'autocomplete/Plus'));
+		//$this->hasOne('xMarketingCampaign/LeadCategory','leadcategory_id')->caption('Category')->display(array('form'=>'autocomplete/Plus'));
 		// $this->hasOne('xEnquiryNSubscription/SubscriptionCategories','category_id');
 		$this->addField('lead_type')->group('a~2~Basic Information')->defaultValue('sales');
 		$this->addField('name')->sortable(true)->group('a~3');
@@ -46,6 +46,8 @@ class Model_Subscription extends \Model_Document {
 		$this->hasMany('xShop/Opportunity','lead_id');
 		$this->hasMany('xShop/Quotation','lead_id');
 		$this->hasMany('xEnquiryNSubscription/SubscriptionCategoryAssociation','subscriber_id');
+
+		$this->addExpression('associated_categories')->set($this->refSQL('xEnquiryNSubscription/SubscriptionCategoryAssociation')->count());
 
 		$this->add('Controller_Validator');
 		$this->is(array(

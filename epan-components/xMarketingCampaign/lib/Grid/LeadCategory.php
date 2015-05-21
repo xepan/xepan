@@ -9,12 +9,11 @@ class Grid_LeadCategory extends \Grid{
 		$this->add_sno();
 	}
 
-	function setModel($model,$fields=array()){
+	function setModel($model,$fields=null){
 		if(!count($fields))
-			$fields=array('name','totalleads');
+			$fields=array('name','is_active','total_emails','totalleads');
 		$m = parent::setModel($model,$fields);
-		
-		$this->hasColumn('totalleads')?$this->removeColumn('totalleads'):"";
+		$this->removeColumn('item_name');		
 		$this->addQuickSearch($fields);
 		return $m;
 		

@@ -13,7 +13,7 @@ class Model_Department extends \Model_Table{
 		//$this->hasOne('xHR/Department','previous_department_id')->defaultValue('0');
 		
 		$this->addField('production_level')->type('int')->mandatory(true);
-		$this->addField('name')->Caption('Department')->mandatory(true);
+		$this->addField('name')->Caption('Department/Phase')->mandatory(true);
 	
 		$this->addField('proceed_after_previous_department')->type('boolean')->group('a~4~Department Attributes');
 		$this->addField('internal_approved')->type('boolean')->group('a~4');
@@ -207,6 +207,10 @@ class Model_Department extends \Model_Table{
 		return $this['is_production_department'];
 	}
 
+	function isSystem(){
+		return $this['is_system'];
+	}
+
 	function outSourceParties(){
 		return $this->add('xProduction/Model_OutSourceParty')->addCondition('id',$this->getAssociatedOutsourceParty());
 	}
@@ -256,6 +260,18 @@ class Model_Department extends \Model_Table{
 
 	function officialEmails(){
 		return $this->add('xHR/Model_OfficialEmail')->addCondition('department_id',$this->id);
+	}
+
+	function getOfficialEmails(){
+		$off_emails_array =array();
+		if(!$this->loaded())
+			return $off_emails_array;
+		
+		foreach ($this->officialEmails() as $off_email) {
+			$off_emails_array[]=$off_email['imap_email_username'];	
+		}
+
+		return $off_emails_array;
 	}
 	
 	function salaryTemplates(){

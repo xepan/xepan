@@ -10,6 +10,8 @@ class Model_OfficialEmail extends \Model_Document{
 			'allow_add'=>array(),
 			'allow_edit'=>array(),
 			'allow_del'=>array(),
+			'can_see_activities'=>false,
+			'can_manage_attachments'=>false
 		);
 	
 	function init(){

@@ -46,7 +46,10 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
 					$in_active_class = "atk-effect-danger";
 					$badge = "badge atk-swatch-red";
 				}
-				$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$dept_col->js()->reload(array('hr_department_id'=>$g->model->id)).'" class="'.$in_active_class.'">'.$g->current_row[$f].'</a>'.'<span title="Production Level" class="pull-right '.$badge.'">'.$pl.'</span>';
+				$email_icon="&nbsp;";
+				if($g->model->officialEmails()->count()->getOne() >0)
+					$email_icon="<i class='fa fa-envelope'></i> ";
+				$g->current_row_html[$f]= $email_icon.'<a href="javascript:void(0)" onclick="'.$dept_col->js()->reload(array('hr_department_id'=>$g->model->id)).'" class="'.$in_active_class.'">'.$g->current_row[$f].'</a>'.'<span title="Production Level" class="pull-right '.$badge.'">'.$pl.'</span>';
 			});
 			$dept_crud->grid->addFormatter('name','name');
 		}
@@ -70,7 +73,7 @@ class page_xHR_page_owner_department extends page_xHR_page_owner_main {
                 return $filter_box->js(null,$dept_col->js()->reload())->hide()->execute();
             });
 		$tab = $dept_col->add('Tabs');
-			if($selected_department->isProductionPhase())
+			if($selected_department->isProductionPhase() && ! $selected_department->isSystem())
 				$tab->addTabURL('xHR_page_owner_department_basic','Basic');
 			
 			$tab->addTabURL('xHR_page_owner_department_post','Posts <span class="badge">'.$selected_department->post()->count()->getOne().'</span>');

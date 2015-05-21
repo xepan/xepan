@@ -367,11 +367,14 @@ class Model_Item extends \Model_Document{
 	}
 
 	function updateContent($id,$content){
-		if($this->loaded())
-			throw new \Exception("Model_loaded at time of item");
-		$this->load($id);
-		$this['description']=$content;
-		$this->save();
+		if(!$id) return 'false';
+
+		$item = $this->add('xShop/Model_Item');
+		$item->tryLoad($id);
+		if(!$item->loaded()) return 'false';
+			
+		$item['description']=$content=="undefined"?"":$content;
+		$item->save();
 		return 'true';
 	}
 
@@ -524,6 +527,59 @@ class Model_Item extends \Model_Document{
 		$cf = array();
 		$dept=array();
 		if($custom_field_values_array != ""){
+			foreach ($custom_field_values_array as $cf_key => $cf_value) {
+				$cf[] = "- :: $cf_key :: $cf_value";
+			}
+		}
+
+		
+		// echo implode("<br/>",$cf);
+
+		$quantitysets = $this->ref('xShop/QuantitySet')->setOrder(array('custom_fields_conditioned desc','qty desc','is_default asc'));
+		$i=1;
+		foreach ($quantitysets as $qsjunk) {
+			// check if all conditioned match AS WELL AS qty
+			$cond = $this->add('xShop/Model_QuantitySetCondition')->addCondition('quantityset_id',$qsjunk->id);
+			$all_conditions_matched = true;
+			foreach ($cond as $condjunk) {				
+				if(!in_array(trim(str_replace("  ", " ", $condjunk['custom_field_value'])),$cf)){
+					$all_conditions_matched = false;
+				}
+			}
+
+			if($all_conditions_matched && $qty >= $qsjunk['qty']){
+				// echo 'breaking at '. $i++. ' '; 
+				break;
+			}
+		}
+
+		// throw new \Exception(print_r(array('original_price'=>$quantitysets['old_price']?:$quantitysets['price'],'sale_price'=>$quantitysets['price']),true));
+		return array('original_price'=>$quantitysets['old_price']?:$quantitysets['price'],'sale_price'=>$quantitysets['price']);
+		// return array('original_price'=>rand(1000,9999),'sale_price'=>rand(100,999));
+
+			// return array default_price
+		// 1. Check Custom Rate Charts
+			/*
+				Look $qty >= Qty of rate chart
+				get the most field values matched
+				having lesser selections of type any or say ...
+				when max number of custom fields are having values other than any/%
+			*/
+		// 2. Custom Field Based Rate Change
+
+		// 3. Quanitity Set
+
+		// 4. Default Price * qty
+	}
+
+	function  getPriceBack($custom_field_values_array, $qty, $rate_chart='retailer'){
+		
+		// throw new \Exception(print_r($custom_field_values_array,true));
+
+		$cf_array = array();
+		$cf = array();
+		$dept=array();
+		if($custom_field_values_array != ""){
 			foreach ($custom_field_values_array as $dept_id => $cf_value) {
 				if($dept_id=='stockeffectcustomfield'){
 					$dept['name'] = 'stockeffectcustomfield';
@@ -532,7 +588,7 @@ class Model_Item extends \Model_Document{
 				}
 
 				$cf_array[$dept_id] = $cf_value;
-				$c = $this->customFieldsRedableToId(json_encode($cf_array));
+				$c = $this->genericRedableCustomFieldAndValue(json_encode($cf_array));
 				$arry = explode(",", $c);
 				foreach ($arry as $key => $value) {
 					$temp = explode("::", $value);
@@ -541,6 +597,7 @@ class Model_Item extends \Model_Document{
 			}
 		}
 
+		
 		// echo implode("<br/>",$cf);
 
 		$quantitysets = $this->ref('xShop/QuantitySet')->setOrder(array('custom_fields_conditioned desc','qty desc','is_default asc'));
@@ -641,11 +698,17 @@ class Model_Item extends \Model_Document{
 			}
 		},
 		*/
+		$qty_added=array();
 		$qty_set_array = array();
 		//load Associated Quantity Set
 			$qty_set_model = $this->ref('xShop/QuantitySet');
 			//foreach qtySet get all Condition
 				foreach ($qty_set_model as $junk){
+					if(!in_array($junk['qty'], $qty_added)){
+						$qty_added[]= $junk['qty'];
+					}else{
+						continue;
+					}
 					$qty_set_array[$qty_set_model['id']]['name'] = $qty_set_model['name'];
 					$qty_set_array[$qty_set_model['id']]['qty'] = $qty_set_model['qty'];
 					$qty_set_array[$qty_set_model['id']]['old_price'] = $qty_set_model['old_price'];
@@ -803,6 +866,7 @@ class Model_Item extends \Model_Document{
 
 			$cf_value = $cf->ref('xShop/CustomFieldValue')->addCondition('name',$cf_value_name)->tryLoadAny();
 			$array[] = array($cf->id => $cf_value->id);
+			
 		}
 
 		$json_array[$sales_department->id] = $array;

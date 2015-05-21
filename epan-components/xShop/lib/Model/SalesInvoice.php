@@ -7,6 +7,8 @@ class Model_SalesInvoice extends Model_Invoice{
 			'can_view'=>array(),
 			'can_reject'=>array(),
 			'can_send_via_email'=>array(),
+			'allow_edit'=>array(),
+
 		);
 
 	function init(){

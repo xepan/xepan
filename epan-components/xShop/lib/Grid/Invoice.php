@@ -25,6 +25,8 @@ class Grid_Invoice extends \Grid{
 		if($_GET['print']){
 			$this->js()->univ()->newWindow($this->api->url('xShop_page_owner_printsaleinvoice',array('saleinvoice_id'=>$_GET['print'],'cut_page'=>0)))->execute();
 		}
+
+		$this->addPaginator($ipp=50);
 	}
 	
 	function format_view($field){
@@ -43,16 +45,20 @@ class Grid_Invoice extends \Grid{
 	
 	function setModel($invoice_model,$field=array()){
 		if(!$field)
-			$field = array('name','customer','invoice_no','created_at','sales_order','total_amount','tax','gross_amount','discount','net_amount','invoiceitem_count');
+			$field = array('name','sales_order','customer','total_amount','discount','tax','net_amount','customer_id');
+
 
 		$m=parent::setModel($invoice_model,$field);
 		$this->addFormatter('name','view');
 		$this->addFormatter('sales_order','orderview');
-		if($invoice_model['status'] == 'draft' or $invoice_model['status'] == 'redesign')
+		// if($invoice_model['status'] == 'draft' or $invoice_model['status'] == 'redesign')
 			$this->addColumn('expander','items',array('page'=>'xShop_page_owner_invoice_items','descr'=>'Items'));
 		
 		$this->removeColumn('customer');
 		$this->removeColumn('invoiceitem_count');
+		
+		$this->addQuickSearch(array('name','customer','total_amount','sales_order'));
+
 		return $m;
 	}
 	

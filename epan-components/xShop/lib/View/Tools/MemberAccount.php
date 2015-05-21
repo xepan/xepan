@@ -10,7 +10,7 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 		if(!$this->api->auth->model->loaded())
 			return;
 			
-			$this->add('View_Info')->set('Member Panel'." id = ".$this->api->auth->model->id);
+			$this->add('H1')->set($this->api->auth->model['name'])->addClass('xsnb-member-name');
 			
 			$tab = $this->add('Tabs')->addClass('nav-stacked');
 			//Account Information

@@ -151,11 +151,10 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 		//Live Edit of item Detail (server site live edit )
 		if( $this->api->edit_mode == true ){
 			$this->js(true)->_load('xshopContentUpdate');
-			$str = '<div class="epan-container epan-sortable-component epan-component  ui-sortable component-outline epan-sortable-extra-padding ui-selected xshop-item-detail-content-live-edit" component_type="Container" id="xshop_item_detail_content_live_edit_"'.$item['id'].'>';
+			$str = '<div class="epan-container epan-sortable-component epan-component  ui-sortable component-outline epan-sortable-extra-padding ui-selected xshop-item-detail-content-live-edit" component_type="Container" id="xshop_item_detail_content_live_edit_'.$item['id'].'">';
 			$str.= $item_description;
 			$str.="</div>";
-			
-			// $btn Todoooooooooooooooo???????????????/	
+									
 			$btn = 'onclick="javascript:$(this).univ().producDetailUpdate(';
 			$btn.= '\'xshop_item_detail_content_live_edit_'.$item['id'].'\' , \''.$item['id'].'\' , \''.$item['sku'].'\')"';
 			$str.='<div id="xshop_item_detail_live_edit_update" class="btn btn-danger pull-right btn-block" '.$btn.'>Update</div>';

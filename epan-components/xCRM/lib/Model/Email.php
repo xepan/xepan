@@ -8,11 +8,13 @@ class Model_Email extends \Model_Document{
 	public $root_document_name='xCRM\Email';
 	public $actions=array(
 			'can_view'=>array(),
-			'allow_add'=>array(),
-			'allow_edit'=>array(),
-			'allow_del'=>array(),
+			// 'allow_add'=>array(),
+			// 'allow_edit'=>array(),
+			// 'allow_del'=>array(),
 			'can_create_activity'=>array(),
 			'can_create_ticket'=>array(),
+			'can_see_activities'=>false,
+			'can_manage_attachments'=>false
 		);	
 
 	function init(){
@@ -31,6 +33,7 @@ class Model_Email extends \Model_Document{
 		$this->addField('to_id');
 
 		$this->addField('from_email');
+		$this->addField('from_name');
 		$this->addField('to_email');
 		$this->addField('cc')->type('text');
 		$this->addField('bcc')->type('text');
@@ -44,6 +47,9 @@ class Model_Email extends \Model_Document{
 		$this->addHook('beforeDelete',$this);
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id',null,'Attachments');
+
+		$this->setOrder('created_at','desc');
+
 	//	$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
@@ -92,12 +98,17 @@ class Model_Email extends \Model_Document{
 
 	}
 
-	function addAttachment($attach_id){
+	function addAttachment($attach_id,$name=null){
 		if(!$attach_id) return;
 		$attach = $this->add('xCRM/Model_EmailAttachment');
 		$attach['attachment_url_id'] = $attach_id;
 		$attach['related_document_id'] = $this->id;
+		if($name)
+			$attach['name'] = $name;
+
 		$attach->save();
+
+		return $attach;
 	}
 
 	function send(){		
@@ -117,6 +128,19 @@ class Model_Email extends \Model_Document{
 		return $this->add('xCRM/Model_EmailAttachment')->addCondition('related_document_id',$this->id);
 
 	}
+
+	function getAttachments(){
+		$attach_arry = array();
+		if($this->loaded()){
+			foreach ($this->attachment() as $attach) {
+				$attach_arry[] = $attach['id'];
+			}
+
+		}
+		
+		return $attach_arry;
+	}
+
 
 	function create_Activity_page($page){
 		$form= $page->add('Form_Stacked');
@@ -186,7 +210,8 @@ class Model_Email extends \Model_Document{
 		// return;
 		// Get some mail
 		try{
-			$mailsIds = $mailbox->searchMailBox('SINCE '.date('d-M-Y',strtotime('-5 day')));
+			$conditions = $conditions?:'SINCE '.date('d-M-Y',strtotime('-1 day'));
+			$mailsIds = $mailbox->searchMailBox($conditions);
 			if(!$mailsIds) {
 				$mailbox->disconnect();
 			}else{
@@ -210,15 +235,26 @@ class Model_Email extends \Model_Document{
 					$mail_m['created_at']= $mail->date;
 					$mail_m['from_email'] = $mail->fromAddress;
 					$mail_m['to_email'] = is_array($mail->to)?implode(",", array_keys($mail->to)):$mail->to;
-					$mail_m['cc'] = is_array($mail->cc)?implode(",", $mail->cc):$mail->cc;
+					$mail_m['cc'] = is_array($mail->cc)?implode(",", array_keys($mail->cc)):$mail->cc;
 					$mail_m['subject'] = $mail->subject;
 					$mail_m['message'] = $mail->textHtml;
 					$mail_m['uid'] = $mail->id;
 					$mail_m['direction'] = 'received';
+					$mail_m['from_name'] = $mail->fromName;
 					$mail_m->save();
 					$fetch_email_array[] = $mail_m->id;
-					$mail_m->unload();
+					
+					//MAIL ATTACHMENT 
+					$attachments = $mail->getAttachments();
+					foreach ($attachments as $attach) {
+						$file =	$this->add('filestore/Model_File',array('policy_add_new_type'=>true,'import_mode'=>'move','import_source'=>$attach->filePath));
+						$file['filestore_volume_id'] = $file->getAvailableVolumeID();
+						$file['original_filename'] = $attach->name;
+						$file->save();
+						$mail_m->addAttachment($file->id,$attach->name);
+					}
 
+					$mail_m->unload();
 					$i++;
 				}
 
@@ -269,6 +305,28 @@ class Model_Email extends \Model_Document{
 		$this->save();
 	}
 
+	function fromMemberName(){
+		
+		if(!$this->loaded()) return;
+		switch ($this['from']) {
+			case 'Customer':
+				$c = $this->add('xShop/Model_Customer')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($c->loaded())					
+					return $c['customer_name'];
+			break;			
+			case 'Supplier':
+				$s = $this->add('xPurchase/Model_Supplier')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($s->loaded())
+					return $s['name'];
+			break;
+			case 'Employee':
+				$e = $this->add('xHR/Model_Employee')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($e->loaded())
+					return $e['name'];
+			break;
+		}
+	}
+
 	function guessTo($doc=false){
 		if($doc){
 			$to = $doc->getTo();
@@ -310,8 +368,17 @@ class Model_Email extends \Model_Document{
 		$document->tryLoadBy('name',$document_array_all[1]);
 
 		if($document->loaded()){
-			$document->createActivity('Email',$this['subject'],$this['message'],$this['from'],$this['from_id'], $this['to'], $this['to_id']);
-			$document->relatedDocument($this);
+			$new_activity = $document->createActivity('Email',$this['subject'],$this['message'],$this['from'],$this['from_id'], $this['to'], $this['to_id']);
+			// $new_activity->relatedDocument($document);
+
+			foreach ($this->attachment() as $attachment) {
+				$new_att = $this->add('Model_Attachment');
+				$new_att['related_document_id'] = $new_activity->id;
+				$new_att['related_root_document_name'] = $new_activity->root_document_name;
+				$new_att['name'] = $attachment['name'];
+				$new_att['attachment_url_id'] = $attachment['attachment_url_id'];
+				$new_att->save();
+			}			
 			return $document;
 		}
 
@@ -377,19 +444,27 @@ class Model_Email extends \Model_Document{
 		if(!$official_emails->count()->getOne())
 			return false;
 		
+		$or_cond = $this->dsql()->orExpr();
+
+
 		$official_email_array = array();
 		foreach ($official_emails as $official_email) {
 			$official_email_array[] = $official_email['email_username'];
 			$official_email_array[] = $official_email['imap_email_username'];
+			
+			$or_cond->where('cc','like','%'.$official_email['email_username'].'%');
+			$or_cond->where('cc','like','%'.$official_email['imap_email_username'].'%');
 		}
 
+		$or_cond->where('from_email','in',$official_email_array)
+				->where('to_email','in',$official_email_array);
+
+
 		$this->addCondition(
-					$this->dsql()->orExpr()
-						->where('from_email','in',$official_email_array)
-						->where('to_email','in',$official_email_array)
+					$or_cond
 					);
 
-		$this->tryLoadAny();
+		// $this->tryLoadAny();
 		return $this;
 	}
 

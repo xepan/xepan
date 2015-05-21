@@ -211,8 +211,9 @@ class Grid_Item extends \Grid{
 		//Item Image Formatter
 		$img_url = "epan-components/xShop/templates/images/item_no_image.png";
 		$item_images=$this->model->images()->setLimit(1)->tryLoadAny();
-		if($item_images->loaded())
+		if($item_images->loaded()){
 			$img_url = $item_images->ref('item_image_id')->ref('thumb_file_id')->get('url');
+		}
 
 
 		$this->current_row_html['image']='<img style="max-width:70px;" alt="'.$item_images['alt_text'].'" title="'.$item_images['title'].'" src="'.$img_url.'"></img>';

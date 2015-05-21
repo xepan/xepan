@@ -25,8 +25,13 @@ class page_xHR_page_owner_department_post extends page_xHR_page_owner_main {
 				$emp_model = $this->add('xHR/Model_Employee')
 					->addCondition('post_id',$p->id)
 					->addCondition('department_id',$_GET['hr_department_id']);
-				$p->add('CRUD')
-				->setModel($emp_model,array(),array('name'));
+				$emp_model->addExpression('username')->set($emp_model->refSQL('user_id')->fieldQuery('username'));
+				$emp_model->addExpression('last_login_date')->set($emp_model->refSQL('user_id')->fieldQuery('last_login_date'));
+				$c= $p->add('CRUD');
+				$c->setModel($emp_model,array(),array('name','username','last_login_date'));
+				if(!$c->isEditing('add') and !$c->isEditing('edit')){
+					$c->grid->addSno();
+				}
 			});
 		}
 

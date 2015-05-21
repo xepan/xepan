@@ -10,8 +10,10 @@ class Model_Employee extends \Model_Table{
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
-		$this->hasOne('xHR/Post','post_id')->group('a~3~Basic Info')->display(array('form'=>'autocomplete/Basic'));
+		$this->hasOne('xHR/Post','post_id')->display(array('form'=>'autocomplete/Basic'));
 		$this->hasOne('Users','user_id')->display(array('form'=>'autocomplete/Plus'));
+		$this->addExpression('username')->set($this->refSQL('user_id')->fieldQuery('username'));
+		
 		$this->hasOne('xHR/Department','department_id')->display(array('form'=>'autocomplete/Basic'));
 		
 		//basic Details
@@ -141,10 +143,12 @@ class Model_Employee extends \Model_Table{
 			throw $this->exception('Cannot Delete,first delete Salary, Team Association, OfficialEmail or Email','Growl');	
 		}
 
+
 			
 	}
 
 	function forceDelete(){
+		
 		$this->ref('CreatedAccounts')->each(function($m){
 			$m->set('employee_id',NULL)->saveAndUnload();
 		});
@@ -177,6 +181,12 @@ class Model_Employee extends \Model_Table{
 		$this->ref('xHR/EmployeeLeave')->each(function($leave){
 			$leave->forceDelete();
 		});
+
+		$this->add('Model_LastSeen')->addCondition('employee_id',$this->id)->deleteAll();
+		$this->add('xProduction\Model_Task')
+			->addCondition('employee_id',$this->id)->each(function($obj){
+				$obj->delete();
+			});
 
 		// Remove created_by_id from all documents
 		$done_documents = array();

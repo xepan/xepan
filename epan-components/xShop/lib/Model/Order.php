@@ -16,7 +16,7 @@ class Model_Order extends \Model_Document{
 
 		$this->hasOne('xShop/PaymentGateway','paymentgateway_id');
 		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->display(array('form'=>'autocomplete/Basic'))->caption('Terms & Cond.');
-		$this->hasOne('xShop/Priority','priority_id')->group('z~6')->mandatory(true)->defaultValue($this->add('xShop/Model_Priority')->addCondition('name','Medium')->tryLoadAny()->get('id'));
+		$this->hasOne('xShop/Priority','priority_id')->group('z~6')->mandatory(true);//->defaultValue($this->add('xShop/Model_Priority')->addCondition('name','Medium')->fieldQuery('id'));
 
 		$f = $this->hasOne('xShop/Customer','member_id')->group('a~3')->sortable(true)->display(array('form'=>'autocomplete/Plus'))->caption('Customer')->mandatory(true);
 		$f->icon = "fa fa-user~red";
@@ -72,7 +72,7 @@ class Model_Order extends \Model_Document{
 
 
 		$this->hasMany('xShop/OrderDetails','order_id');
-		$this->hasMany('xShop/SalesOrderAttachment','related_document_id',null,'Attachements');
+		$this->hasMany('xShop/SalesOrderAttachment','related_document_id',null,'Attachments');
 		$this->hasMany('xShop/SalesInvoice','sales_order_id');
 		$this->hasMany('xDispatch/DeliveryNote','order_id');
 		
@@ -198,7 +198,7 @@ class Model_Order extends \Model_Document{
 			}
 		}
 
-		$m->ref('Attachements')->each(function($attach){
+		$m->ref('Attachments')->each(function($attach){
 			$attach->forceDelete();
 		});
 	}
@@ -477,6 +477,23 @@ class Model_Order extends \Model_Document{
 		return false;
 	}
 
+	function submit_page($page){
+
+		if(!$this->orderItems()->count()->getOne()){
+			$page->add('View_Error')->set('Order Detail Cannot be Empty');
+			return false;
+		}
+
+		$form=$page->add('Form');
+		$form->addSubmit('Submit');
+		if($form->isSubmitted()){
+			$this->submit();
+			return true;
+		}
+		
+		// return true;
+	}
+
 	function submit(){
 		$this->setStatus('submitted');
 		return $this;
@@ -484,8 +501,6 @@ class Model_Order extends \Model_Document{
 
 	function reject_page($page){
 		$form= $page->add('Form_Stacked');
-		$form->addField('text','reason');
-		$form->addSubmit('Reject & Send to Re Design');
 		if($form->isSubmitted()){
 			$this->setStatus('redesign',$form['reason']);
 			return true;
@@ -514,6 +529,7 @@ class Model_Order extends \Model_Document{
 		$form->addSubmit('cancel');
 		if($form->isSubmitted()){
 			foreach ($ois as $oi) {
+				// $order_item = $this->add('xShop/Model_OrderDetails')->load($oi);
 				$oi->jobCards()->setStatus('cancelled',$form['reason']);
 			}
 			$this->cancel($form['reason']);

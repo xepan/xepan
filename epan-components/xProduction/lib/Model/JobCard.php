@@ -61,7 +61,7 @@ class Model_JobCard extends \Model_Document{
 		if($stock_movement)
 			throw $this->exception('Cannot Delete First Delete it\'s Stock Movement');
 		
-		$this->ref('Attachements')->deleteAll();
+		$this->ref('Attachments')->deleteAll();
 	}	
 
 	function forceDelete(){
@@ -363,9 +363,7 @@ class Model_JobCard extends \Model_Document{
 			$this->orderItem()->order()->isOrderClose(true);
 		}
 	}
-
 	
-
 	function approve(){
 		$rt = $this->relatedTask();
 		if($rt->loaded())

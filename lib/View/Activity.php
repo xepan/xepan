@@ -135,7 +135,15 @@ class View_Activity extends View {
 		//<img class="img-box atk-shape-rounded"></img>
 		$img = '<span class="img-box glyphicon glyphicon-user atk-size-yotta text-center"></span>';
 		$this->template->trySetHtml('actor_img',$img);
+
+		$attachment = "";
+		foreach ($model->attachments() as $attachment) {
+			$attachment .='<a target="_blank" href="'.$attachment['attachment_url'].'"></a>';
+		}
+		
+		$this->template->trySetHtml('attchments',$attachment);
 	}
+
 
 	function defaultTemplate(){
 		return array('view/activity');

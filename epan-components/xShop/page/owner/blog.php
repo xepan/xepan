@@ -6,9 +6,9 @@ class page_xShop_page_owner_blog extends page_xShop_page_owner_main{
 		parent::init();
 		
 		$application_id=$this->api->recall('xshop_application_id');
-		$this->app->title=$this->api->current_department['name'] .': Blogs';
+		$this->app->title='Blogs';
+		$this->app->layout->template->trySetHTML('page_title','<i class=""></i> Blog Management <small> Manage Blog </small>');
 	
-		//Item
 		$removeColumns = array('application',
 							'is_publish',
 							'sku',

@@ -36,6 +36,8 @@ class Filter_Lead extends \Filter_Base
             return $this->view->model->addConditionLike($v, $this->fields);
         }
         if($this->view->model) {
+            $this->view->model->join('xenquirynsubscription_subscatass.subscriber_id')
+                                ->addField('category_id');
             $q = $this->view->model->_dsql();
         } else {
             $q = $this->view->dq;
@@ -48,8 +50,9 @@ class Filter_Lead extends \Filter_Base
             $or->where($field, 'like', '%'.$v.'%');
         }
 
-        if($newcat)
-	        $and->where('leadcategory_id',$newcat);
+        if($newcat){
+	        $q->where('category_id',$newcat);
+        }
 
         // if($status)
         //     $and->where('is_active',$status=='active'?1:0);
