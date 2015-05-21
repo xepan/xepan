@@ -6,6 +6,7 @@ class page_owner_documents extends page_base_owner{
 		parent::init();
 
 		$this->app->title='Company: Documents';
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-files-o"></i> Company :: Documents  <small>Public / Departmental / Shared / Personal </small>' );
 
 		$doc_m= $this->add('Model_GenericDocument');
 

@@ -66,7 +66,7 @@ class Model_Epan extends Model_Table {
 		$f=$this->addField('return_path')->group('rp~12');
 		$f->icon ='fa fa-backward~blue';
 
-
+		$this->addField('time_zone')->enum(timezone_identifiers_list())->defaultValue(date_default_timezone_get());
 
 		$this->addField('parked_domain')->hint('Specify your domain in yourdomainname.com format');
 
