@@ -15,6 +15,8 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$message_vp = $this->add('VirtualPage')->set(function($p){
 			$email_id=$p->api->stickyGET('xcrm_email_id');
 			$m=$p->add('xCRM/Model_Email')->tryLoad($email_id);
+			//Mark Read Email
+			$m->markRead();
 			$email_view=$p->add('xHR/View_Email');
 			$email_view->setModel($m);
 		});
@@ -188,6 +190,11 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		
 		if(!$mail_crud->isEditing()){
 			$mg->addMethod('format_subject',function($g,$f)use($message_vp){
+
+				if(!$g->model['read_by_employee_id'])
+					$g->setTDParam('subject','class','atk-text-bold');
+				else
+					$g->setTDParam('subject','class','atk-text-normal');
 				//Check for Email is Incomening or OutGoing
 				$snr = "";									
 				if($g->model->isReceive()){	
@@ -221,12 +228,13 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				$g->current_row_html[$f] = $str;
 			});
 			$mg->addFormatter('subject','subject');
-			
+
 			$mg->removeColumn('to_email');
 			$mg->removeColumn('from_email');
 			$mg->removeColumn('message');
 			$mg->removeColumn('id');
 			$mg->removeColumn('from_id');
+			$mg->removeColumn('from');
 		}
 
 		
