@@ -327,6 +327,27 @@ class Model_Email extends \Model_Document{
 		}
 	}
 
+	function toMemberName(){
+		
+		if(!$this->loaded()) return;
+		switch ($this['to']) {
+			case 'Customer':
+				$c = $this->add('xShop/Model_Customer')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($c->loaded())					
+					return $c['customer_name'];
+			break;			
+			case 'Supplier':
+				$s = $this->add('xPurchase/Model_Supplier')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($s->loaded())
+					return $s['name'];
+			break;
+			case 'Employee':
+				$e = $this->add('xHR/Model_Employee')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($e->loaded())
+					return $e['name'];
+			break;
+		}
+	}
 	function guessTo($doc=false){
 		if($doc){
 			$to = $doc->getTo();
