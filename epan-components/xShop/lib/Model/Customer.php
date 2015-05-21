@@ -25,8 +25,8 @@ class Model_Customer extends Model_MemberDetails{
 		$user_j->addField('user_epan_id','epan_id');
 		$user_j->addField('username')->sortable(true)->group('b~6~Customer Login')->sortable(true);
 		$user_j->addField('password')->type('password')->group('b~6');
-		$user_j->addField('customer_name','name')->group('a~6~Basic Info')->mandatory(true);
-		$user_j->addField('customer_email','email')->sortable(true)->group('a~6');
+		$user_j->addField('customer_name','name')->group('a~4~Basic Info')->mandatory(true);
+		$user_j->addField('customer_email','email')->sortable(true)->group('a~4');
 		$user_j->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(50)->group('a~6')->sortable(true)->mandatory(false);
 		$user_j->addField('user_account_activation','is_active')->type('boolean')->defaultValue(true)->group('a~6')->sortable(true)->mandatory(false)->caption('Login User Account Activated');
 

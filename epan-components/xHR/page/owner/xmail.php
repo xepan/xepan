@@ -86,12 +86,17 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$customer_crud=$left_col->add('CRUD',array('grid_class'=>'xHR/Grid_MailParty','allow_add'=>false,'allow_edit'=>false,'allow_del'=>false));
 		$customer_crud->setModel($customer->setOrder('unread','desc'));
 		if(!$customer_crud->isEditing()){
+			
+			$customer_crud->grid->addMethod('init_anchor',function($g,$f){
+				$g->columns[$f]['thparam'] .= 'style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;"';
+			});
+
 			$customer_crud->grid->addMethod('format_anchor',function($g,$f)use($right_col){
-					$html = '<div class="atk-row"><div class="atk-col-8" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
+						$html = '';
 						$html .= '<a style="text-decoration:none;color:gray;" title="'.$g->model['customer_name'].'" href="javascript:void(0)" onclick="'.$right_col->js()->reload(array('customer_id'=>$g->model->id)).'">'.$g->model['customer_name'].'</a>';
 						$html .= '</div>';
 						
-						$html .= '<div class="atk-col-4 text-right">';
+						$html .= '<div class="atk-move-right">';
 						//unread
 						if($g->model['unread'])
 							$html .='<span class="label label-success"  title="Unread Emails">'.$g->model['unread'].'</span>';
@@ -102,7 +107,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 					$html .= '</div>';
 					$g->current_row_html[$f]=$html;
 				});
-			$customer_crud->grid->addFormatter('customer_name','anchor,wrap');
+			$customer_crud->grid->addFormatter('customer_name','wrap,anchor');
 		}
 
 
@@ -213,7 +218,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 						$str.=$g->model['from_name'].'<br/>';				
 				$str.= $g->model['from_email'].'</div>';
 				//Subject
-				$str.= '<div class="atk-col-8" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.'<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('E-mail',$g->api->url($message_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a> - ';
+				$str.= '<div class="atk-col-8" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.'<a href="javascript:void(0)" onclick="'.$g->js(null,$this->js()->_selectorThis()->closest('td')->removeClass('atk-text-bold'))->univ()->frameURL('E-mail',$g->api->url($message_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a> - ';
 				//Message
 				$str.= substr(strip_tags($g->model['message']),0,50).'</div>';
 				//Attachments
@@ -222,7 +227,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				else 
 					$str.= '<div class="atk-col-1 text-right"></div>';
 				//Date Fields
-				$str.= '<div class="atk-col-1">'.$g->add('xDate')->diff(Carbon::now(),$g->model['created_at']).'</div>';
+				$str.= '<div class="atk-col-1 atk-size-micro">'.$g->add('xDate')->diff(Carbon::now(),$g->model['created_at']).'</div>';
 	
 				$str.= '</div>';
 				$g->current_row_html[$f] = $str;

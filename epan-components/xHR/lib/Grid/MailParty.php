@@ -14,10 +14,9 @@ class Grid_MailParty extends \Grid{
 
 		return $m;
 	}
+	
 
 	function formatRow(){
-		$this->current_row_html['customer_name']=$this->model['customer_name']."  " ."<small class='atk-effect-danger'>"."(  ".$this->model['unread'] ."  )"."</small>";
-		$this->current_row_html['name']=$this->model['name']."  " ."<small class='atk-effect-info'>"."(  ".$this->model['unread'] ."  )"."</small>";
 
 		parent::formatRow();									
 	}
