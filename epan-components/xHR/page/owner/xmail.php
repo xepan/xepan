@@ -22,8 +22,8 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		});
 
 		$col = $this->add('Columns');
-		$left_col=$col->addColumn(3);
-		$right_col=$col->addColumn(9);
+		$left_col=$col->addColumn(2);
+		$right_col=$col->addColumn(10);
 
 //CUSTOMER SECTION----------------------------------------------------------------------
 		$customer=$this->add('xShop/Model_Customer');
