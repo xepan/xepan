@@ -52,8 +52,8 @@ class Model_Subscription extends \Model_Document {
 		$this->add('Controller_Validator');
 		$this->is(array(
 			'name|to_trim',
-			'email|email',
-			'email|unique',
+			// 'email|email'
+			// 'email|unique',
 			)
 		);
 

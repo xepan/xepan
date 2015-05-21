@@ -15,6 +15,8 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$message_vp = $this->add('VirtualPage')->set(function($p){
 			$email_id=$p->api->stickyGET('xcrm_email_id');
 			$m=$p->add('xCRM/Model_Email')->tryLoad($email_id);
+			//Mark Read Email
+			$m->markRead();
 			$email_view=$p->add('xHR/View_Email');
 			$email_view->setModel($m);
 		});
@@ -84,12 +86,17 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$customer_crud=$left_col->add('CRUD',array('grid_class'=>'xHR/Grid_MailParty','allow_add'=>false,'allow_edit'=>false,'allow_del'=>false));
 		$customer_crud->setModel($customer->setOrder('unread','desc'));
 		if(!$customer_crud->isEditing()){
+			
+			$customer_crud->grid->addMethod('init_anchor',function($g,$f){
+				$g->columns[$f]['thparam'] .= 'style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;"';
+			});
+
 			$customer_crud->grid->addMethod('format_anchor',function($g,$f)use($right_col){
-					$html = '<div class="atk-row"><div class="atk-col-8" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
+						$html = '';
 						$html .= '<a style="text-decoration:none;color:gray;" title="'.$g->model['customer_name'].'" href="javascript:void(0)" onclick="'.$right_col->js()->reload(array('customer_id'=>$g->model->id)).'">'.$g->model['customer_name'].'</a>';
 						$html .= '</div>';
 						
-						$html .= '<div class="atk-col-4 text-right">';
+						$html .= '<div class="atk-move-right">';
 						//unread
 						if($g->model['unread'])
 							$html .='<span class="label label-success"  title="Unread Emails">'.$g->model['unread'].'</span>';
@@ -100,7 +107,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 					$html .= '</div>';
 					$g->current_row_html[$f]=$html;
 				});
-			$customer_crud->grid->addFormatter('customer_name','anchor,wrap');
+			$customer_crud->grid->addFormatter('customer_name','wrap,anchor');
 		}
 
 
@@ -183,50 +190,75 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		}
 
 		$mail_crud=$right_col->add('CRUD');
-		$mail_crud->setModel($emails,array(),array('subject','to_email','from_email','message','from','id','from_id'));
+		$mail_crud->setModel($emails,array(),array('subject','to_email','from_email','message','from','id','from_id','direction'));
 		$mg=$mail_crud->grid;
 		
 		if(!$mail_crud->isEditing()){
 			$mg->addMethod('format_subject',function($g,$f)use($message_vp){
+
+				//Read Or Unread Emails
+				if(!$g->model['read_by_employee_id'])
+					$g->setTDParam('subject','class','atk-text-bold');
+				else
+					$g->setTDParam('subject','class','atk-text-normal');
+				
 				//Check for Email is Incomening or OutGoing
-				$snr = "";									
-				if($g->model->isReceive()){	
-					$snr = '<small class="atk-swatch-green">In</small>';
-				}elseif($g->model->isSent()){
-					$snr = '<small class="atk-swatch-yellow">Out</small>';
+				$snr = "";
+				$from = "";
+				if($g->model['direction']=="received"){
+					$g->setTDParam('subject','style','box-shadow:3px 0px 0px 0px green inset;');
+					$snr .= '<span class="atk-swatch-green glyphicon glyphicon-import" title="Received E-Mail"></span>';
+					
+					//Form Email
+					$from.= '<div class="atk-col-2" title="'.$g->model['from_email'].'" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
+					$from.= $snr;
+					if($g->model->fromMemberName())
+						$from.=$g->model->fromMemberName().'<br/>';
+					if($g->model['from_name'])
+						$from.=$g->model['from_name'].'<br/>';
+					$from.= $g->model['from_email'].'</div>';
+
+				}elseif($g->model['direction']=="sent"){
+					$g->setTDParam('subject','style','box-shadow: 3px 0px 0px 0px red inset;');
+					$snr .= '<span class="atk-swatch-red glyphicon glyphicon-export" title="Sent E-Mail"></span>';
+					
+					//To Email if Sent
+					$from = " ";
+					$from.= '<div class="atk-col-2" title="'.$g->model['to_email'].'" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
+					$from.= $snr;
+					if($g->model->toMemberName())
+						$from.=$g->model->toMemberName().'<br/>';
+					$from.= $g->model['to_email'].'</div>';
 				}
-				// $str.= '<small class="atk-col-2">'.$snr.'</small>';
 
 				$str = '<div  class="atk-row">';
 				//From Email
-				$str.= '<div class="atk-col-2" title="'.$g->model['from_email'].'" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
-					if($g->model->fromMemberName())
-						$str.=$g->model->fromMemberName().'<br/>';
-					if($g->model['fromName'])
-						$str.=$g->model['from_name'].'<br/>';				
-				$str.= $g->model['from_email'].'</div>';
+				$str.= $from;
 				//Subject
-				$str.= '<div class="atk-col-8" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.'<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('E-mail',$g->api->url($message_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a> - ';
+				$str.= '<div class="atk-col-8" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.'<a href="javascript:void(0)" onclick="'.$g->js(null,$this->js()->_selectorThis()->closest('td')->removeClass('atk-text-bold'))->univ()->frameURL('E-mail',$g->api->url($message_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a> - ';
 				//Message
 				$str.= substr(strip_tags($g->model['message']),0,50).'</div>';
 				//Attachments
 				if($g->model->attachment()->count()->getOne())
 					$str.= '<div class="atk-col-1"><i class="icon-attach"></i></div>';
-				else 
+				else
 					$str.= '<div class="atk-col-1 text-right"></div>';
 				//Date Fields
-				$str.= '<div class="atk-col-1">'.$g->add('xDate')->diff(Carbon::now(),$g->model['created_at']).'</div>';
+				$str.= '<div class="atk-col-1 atk-size-micro">'.$g->add('xDate')->diff(Carbon::now(),$g->model['created_at']).'</div>';
 	
 				$str.= '</div>';
+				
 				$g->current_row_html[$f] = $str;
 			});
 			$mg->addFormatter('subject','subject');
-			
+
 			$mg->removeColumn('to_email');
 			$mg->removeColumn('from_email');
 			$mg->removeColumn('message');
 			$mg->removeColumn('id');
 			$mg->removeColumn('from_id');
+			$mg->removeColumn('from');
+			$mg->removeColumn('direction');
 		}
 
 		
