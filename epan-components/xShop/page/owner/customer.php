@@ -34,11 +34,11 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 										'landmark','city','state','pan_no','tin_no',
 										'country','address',
 										'pincode','billing_address',
-										'shipping_address'
+										'shipping_address','user_account_activation','is_active'
 										),
 								array('customer_name','customer_email',
 										'mobile_number','address','city','state',
-										'country','pincode')
+										'country','pincode','user_account_activation','is_active')
 								);
 
         $crud->add('xHR/Controller_Acl');

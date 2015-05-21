@@ -20,6 +20,7 @@ class Model_GenericDocument extends Model_Document {
 
 		$this->addField('title');
 		$this->addField('content')->type('text')->display(array('form'=>'RichText'));
+		$this->addField('is_public')->type('boolean')->defaultValue(false);
 
 		$this->hasMany('GenericDocumentAttahcment','related_document_id',null,'Attachments');
 	}
