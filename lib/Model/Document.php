@@ -464,6 +464,8 @@ class Model_Document extends Model_Table{
 			return $this->supplier();
 		}elseif($this instanceof \xCRM\Model_Ticket){
 			return $this->customer();
+		}elseif($this instanceof \xShop\Model_Customer){
+			return $this;
 		}
 
 		return new \Dummy();
