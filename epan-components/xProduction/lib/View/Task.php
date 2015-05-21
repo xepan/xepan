@@ -31,7 +31,7 @@ class View_Task extends \View{
 		}		
 		$this->template->trySetHtml('priority',$icon_html);	
 
-		$this->template->trySetHtml('task_subject','<a href="javascript:void(0)" onclick="'.$this->js()->univ()->frameURL('Task Content',$this->api->url($this->task_vp->getURL(),array('task_id'=>$model->id))).'">'.$model['subject'].'</a>');
+		$this->template->trySetHtml('task_subject','<a href="javascript:void(0)" onclick="'.$this->js()->univ()->frameURL($model['subject'],$this->api->url($this->task_vp->getURL(),array('task_id'=>$model->id))).'">'.substr(strip_tags($model['subject']),0,40).'</a>');
 		parent::setModel($model);
 	}
 
