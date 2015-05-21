@@ -18,11 +18,24 @@ class View_Email extends \View{
 		$from_email .= $model['from_email'];
 
 		$this->template->trySetHTML('email_from',$from_email);
-		
+
+		$attachment_html = "";
+		$att = $this->add('Model_Attachment')->addCondition('related_document_id',$this->id)->addCondition('related_root_document_name','xCRM\Email');
+		foreach($att as $attachment){
+			$attachment_html .= '<a target="_blank" href="'.$attachment['attachment_url'].'">'.$attachment['attachment_url'].'111</a>'; 
+		}
+
+		$this->template->setHTML('attachment',$attachment_html);
+
 		parent::setModel($model);
 	}
 
 	function defaultTemplate(){
 		return array('view/xemail-message');
 	}
+
+	function getAttachmentHtml(){
+
+	}
+
 }
