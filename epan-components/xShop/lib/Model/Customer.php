@@ -10,7 +10,8 @@ class Model_Customer extends Model_MemberDetails{
 			'allow_add'=>array(),
 			'allow_edit'=>array(),
 			'allow_del'=>array(),
-			'can_start_processing'=>array(),
+			'can_start_processing'=>array('caption'=>'Create Opportunity'),
+			'can_manage_attachments'=>false
 		);
 
 	function init(){

@@ -28,7 +28,7 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 		
 		$members->setOrder('id');
 
-		if($crud->isEditing()){
+		if($crud->isEditing('add') or $crud->isEditing('edit')){
 			$cats = $crud->form->addField('DropDownNormal','add_to_category')
 				->setEmptyText('Do not add to any subscription category');
 			$cats->setModel('xMarketingCampaign/LeadCategory');
