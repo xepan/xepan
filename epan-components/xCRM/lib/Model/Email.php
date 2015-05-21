@@ -122,10 +122,10 @@ class Model_Email extends \Model_Document{
 	}	
 
 	function attachment(){
-		if(!$this->loaded())
-			return new \Dummy();
+		// if(!$this->loaded())
+		// 	return new \Dummy();
 		
-		return $this->add('xCRM/Model_EmailAttachment')->addCondition('related_document_id',$this->id);
+		return $this->ref('Attachments')->addCondition('related_document_id',$this->id);
 
 	}
 
