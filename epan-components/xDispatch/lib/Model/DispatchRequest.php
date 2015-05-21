@@ -199,8 +199,13 @@ class Model_DispatchRequest extends \Model_Document {
 
 			if(!$form['selected_items'])
 				throw $this->Exception('No Item Selected'.$form['selected_items'],'Growl');
-				
+			
+			$orderitems_selected = array();
 			$items_selected = json_decode($form['selected_items'],true);
+			foreach ($items_selected as $key => $value) {
+				$d = $this->add('xDispatch/Model_DispatchRequestItem')->load($value);
+				$orderitems_selected[] = $d['orderitem_id'];
+			}
 
 			//CHECK FOR GENERATE INVOICE
 			if($form['generate_invoice']){
@@ -236,12 +241,13 @@ class Model_DispatchRequest extends \Model_Document {
 				
 				//GENERATE INVOICE FOR SELECTED / ALL ITEMS
 				if($form['include_items']=='All'){
-					$items_selected=array();
+					empty($orderitems_selected);
+					$orderitems_selected=array();
 					foreach ($this->itemRows() as $itm) {
-						$items_selected [] = $itm->id;
+						$orderitems_selected[] = $itm['orderitem_id'];
 					}
 				}
-				$invoice = $this->order()->createInvoice($status='approved',$salesLedger=null, $items_selected);
+				$invoice = $this->order()->createInvoice($status='approved',$salesLedger=null, $orderitems_selected);
 
 				if($form['payment'] == "cash")
 					$invoice->payViaCash($form['amount']);
