@@ -145,11 +145,45 @@ class Model_Email extends \Model_Document{
 
 
 	function create_Activity_page($page){
-		$form= $page->add('Form_Stacked');
+		
+		$form = $page->add('Form_Stacked');
+		$col = $form->add('Columns');
+		
+		$from_field = $form->addField('DropDownNormal','from')->setValueList(
+								array('Customer'=>'Customer',
+										'Supplier'=>'Supplier',
+										'Affiliate'=>'Affiliate'
+								))->setEmptyText('Select From');
+	
+		$from_name_field = $form->addField('autocomplete/Basic','from_name');
+		
+		$from_field->js('change',$form->js()->atk4_form('reloadField','from_name',array($this->api->url(),'from'=>$from_field->js()->val())));
+		
+		// $from_name_field->send_other_fields = array($_GET['from']);
+		// if($from_selected = $_GET['o_'.$from_field->name]){
+
+		// 	switch ($from_selected) {
+		// 			case 'Customer':
+		// 				$m = $this->add('xShop/Model_Customer');
+		// 				$from_name_field->setModel($m);	
+		// 			break;						
+		// 		}
+		// 	// $from_name_field->model->addCondition('member_id',$member_selected);
+		// 	// $loan_against_account_field->model->addCondition('ActiveStatus',true);
+		// 	// $loan_against_account_field->model->addCondition('LockingStatus',false);
+		// }
+
+
+		$to_field = $form->addField('DropDownNormal','to')->setValueList(
+						array('Customer'=>'Customer',
+								'Supplier'=>'Supplier',
+								'Affiliate'=>'Affiliate'
+						))->setEmptyText('Select To');
+		
+		$to_name_field = $form->addField('autocomplete/Basic','to_name');
 
 		$form->addSubmit('Create Activity');
 		if($form->isSubmitted()){
-			
 			return true;
 		}
 		
