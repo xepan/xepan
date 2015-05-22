@@ -10,6 +10,7 @@ class Grid_Lead extends \Grid{
 		$this->addPaginator(100);
 		$this->add_sno();
 	}
+	
 	function format_weblink($field){
 		$is_ok ='<span class="pull-right fa fa-circle" style="color:red"></span>';
 		$this->setTDParam($field,'title','Invalid Email');
@@ -25,8 +26,22 @@ class Grid_Lead extends \Grid{
 	}
 
 	function setModel($model,$fields=array()){
+		
+		$model->addExpression('recent_3_cateories')
+			->set(
+					$model->add('xMarketingCampaign/Model_LeadCategory',array('table_alias'=>'top3'))
+					->addCondition('id','in',
+							$model->refSQL('xEnquiryNSubscription/SubscriptionCategoryAssociation')
+									->setOrder('last_updated_on')
+									->fieldQuery('category_id')
+						)
+					->_dsql()
+					->field($model->dsql()->expr("substring_index(group_concat(name SEPARATOR ', '), ', ', 3)"))
+				);
+
 		if(!count($fields))
-			$fields = array('email','name','from_app','is_ok','ip','lead_type','organization_name','website','phone','mobile_no','associated_categories','total_opportunity','total_quotation'); 
+			$fields = array('email','name','from_app','is_ok','ip','lead_type','organization_name','website','phone','mobile_no','associated_categories','total_opportunity','total_quotation','last_updated_on','recent_3_cateories'); 
+
 		$m = parent::setModel($model,$fields);
 
 		$this->fooHideAlways('ip');
@@ -35,8 +50,11 @@ class Grid_Lead extends \Grid{
 		$this->fooHideAlways('website');
 		$this->fooHideAlways('phone');
 		$this->fooHideAlways('mobile_no');
+		$this->fooHideAlways('last_updated_on');
 
 		$this->addFormatter('email','weblink');
+		$this->addFormatter('name','wrap');
+		$this->addFormatter('recent_3_cateories','wrap');
 		// $this->addQuickSearch($fields);
 
 		$this->hasColumn('is_ok')?$this->removeColumn('is_ok'):"";
