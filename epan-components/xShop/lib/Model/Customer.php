@@ -132,4 +132,10 @@ class Model_Customer extends Model_MemberDetails{
 		$opportunity->save();
 	}
 	
+	function updateEmail($email){
+		if(!$this->loaded()) return false;
+		
+		$this['customer_email'] = $this['customer_email'].', '.$email;
+		$this->save();
+	}
 }
