@@ -20,9 +20,10 @@ class View_Email extends \View{
 		$this->template->trySetHTML('email_from',$from_email);
 
 		$attachment_html = "";
-		$att = $this->add('Model_Attachment')->addCondition('related_document_id',$this->id)->addCondition('related_root_document_name','xCRM\Email');
-		foreach($att as $attachment){
-			$attachment_html .= '<a target="_blank" href="'.$attachment['attachment_url'].'">'.$attachment['attachment_url'].'111</a>'; 
+		// $att = $this->add('Model_Attachment')->addCondition('related_document_id',$model->id)->addCondition('related_root_document_name','xCRM\Email');
+
+		foreach($model->attachment() as $attachment){
+			$attachment_html .= '<br/><a target="_blank" href="'.$attachment['attachment_url'].'">'.$attachment->ref('attachment_url_id')->get('original_filename').'</a>'; 
 		}
 
 		$this->template->setHTML('attachment',$attachment_html);

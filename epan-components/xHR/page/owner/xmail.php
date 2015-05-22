@@ -292,6 +292,12 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			$mg->removeColumn('from_id');
 			$mg->removeColumn('from');
 			$mg->removeColumn('direction');
+
+			$f=$mail_crud->grid->add('Form',null,'grid_buttons');
+			$field=$f->addField('Hidden','selected_emails','');
+			$f->template->del('form_buttons');
+			$mail_crud->grid->addSelectable($field);
+
 		}
 
 		
