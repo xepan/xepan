@@ -298,6 +298,14 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			$f->template->del('form_buttons');
 			$mail_crud->grid->addSelectable($field);
 
+			$mail_crud->grid->addButton(array('','icon'=>'trash'))
+				->js('click',array($f->js()->submit(),$mail_crud->grid->js()->find('tr input:checked')->closest('tr')->remove()));
+			;
+
+			if($f->isSubmitted()){
+				$f->js()->univ()->successMessage('Done')->execute();
+			}
+
 		}
 
 		
