@@ -354,13 +354,24 @@ class Model_Email extends \Model_Document{
 		}
 
 		//Task_______________________________________________
+
 		$col_right->add('H4')->set('Create Task')->addClass('atk-swatch-ink atk-padding-small');
 		$task_form = $col_right->add('Form_Stacked');
 		$narration_field = $task_form->addField('text','narration')->set($this['subject']);
-		$employee_field = $task_form->addField('autocomplete/Basic','employee','Assign To Employee')->setModel($employee_model);
-		$task_end_date = $task_form->addField('DatePicker','expected_end_date');
-		$task_priority = $task_form->addField('DropDown','priority')->setValueList(array('Low'=>'Low','Medium'=>'Medium','High'=>'High','Urgent'=>'Urgent'))->set('Medium');
+		$employee_field = $task_form->addField('autocomplete/Basic','employee','Assign To Employee');
+		$employee_field->setModel($employee_model);
+		$task_end_date_field = $task_form->addField('DatePicker','expected_end_date');
+		$task_priority_field = $task_form->addField('DropDown','priority')->setValueList(array('Low'=>'Low','Medium'=>'Medium','High'=>'High','Urgent'=>'Urgent'))->set('Medium');
 		$task_form->addSubmit('Create Task & Assign');
+		
+		$pre_task = $this->task();
+		if($pre_task->loaded()){
+			$narration_field->set($pre_task['subject']);
+			$employee_field->set($pre_task['employee_id']);
+			$task_end_date_field->set($pre_task['expected_end_date']);
+			$task_priority_field->set($pre_task['Priority']);
+		}
+
 		if($task_form->isSubmitted()){
 			$this->createTask($task_form['narration'],$task_form['employee'],$task_form['expected_end_date'],$task_form['priority']);
 			return true;
@@ -373,6 +384,9 @@ class Model_Email extends \Model_Document{
 		if(!$this->loaded()) return false;
 
 		$task = $this->add('xProduction/Model_Task');
+		if($this['task_id'])
+			$task->load($this['task_id']);
+		
 		$task['status']= 'assigned';
 		$task['employee_id']= $assing_to_employee_id;
 		$task['subject'] = $narration;
@@ -398,6 +412,14 @@ class Model_Email extends \Model_Document{
 		
 	}
 
+	function mark_processed($remark){
+		$this['task_status'] = 'processed';
+		$this->save();
+	}
+
+	function task(){
+		return $this->ref('task_id');
+	}
 
 	function create_Activity(){
 		if(!$this->loaded()) return false;

@@ -223,11 +223,14 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		}
 
 		$mail_crud=$right_col->add('CRUD');
-		$mail_crud->setModel($emails,array(),array('subject','to_email','from_email','message','from','id','from_id','direction'));
+		$mail_crud->setModel($emails,array(),array('subject','to_email','from_email','message','from','id','from_id','direction','task_id','task_status'));
 		$mg=$mail_crud->grid;
 		
 		if(!$mail_crud->isEditing()){
 			$mg->addMethod('format_subject',function($g,$f)use($message_vp){
+				$task_html = "";
+				if($g->model['task_id'] and $g->model['status'] !='cancelled')
+					$task_html = $this->taskHtml($g->model['task_status']);
 
 				//Read Or Unread Emails
 				if(!$g->model['read_by_employee_id'])
@@ -268,7 +271,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				//From Email
 				$str.= $from;
 				//Subject
-				$str.= '<div class="atk-col-8" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.'<a href="javascript:void(0)" onclick="'.$g->js(null,$this->js()->_selectorThis()->closest('td')->removeClass('atk-text-bold'))->univ()->frameURL('E-mail',$g->api->url($message_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a> - ';
+				$str.= '<div class="atk-col-8" style="overflow:hidden; display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.$task_html.'<a href="javascript:void(0)" onclick="'.$g->js(null,$this->js()->_selectorThis()->closest('td')->removeClass('atk-text-bold'))->univ()->frameURL('E-mail',$g->api->url($message_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a> - ';
 				//Message
 				$str.= substr(strip_tags($g->model['message']),0,50).'</div>';
 				//Attachments
@@ -292,6 +295,8 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			$mg->removeColumn('from_id');
 			$mg->removeColumn('from');
 			$mg->removeColumn('direction');
+			$mg->removeColumn('task_id');
+			$mg->removeColumn('task_status');
 
 			$f=$mail_crud->grid->add('Form',null,'grid_buttons');
 			$field=$f->addField('Hidden','selected_emails','');
@@ -328,5 +333,40 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			
 		}
 
+	}
+
+	function taskHtml($status){		
+		//'processing','processed','completed','cancelled','rejected'		
+		$class= "atk-effect-danger";
+		$title= "Task";
+		switch ($status) {
+			case 'assigned':
+				$title = "Task Assigned";
+				$class = "atk-effect-danger";
+			break;
+			case 'processing':
+				$title = "Task Processing";
+				$class = 'atk-effect-warning'; 
+			break;
+			
+			case 'processed':
+				$title = "Task Processed";
+				$class = 'atk-effect-success'; 
+			break;
+
+			case 'completed':
+				$title = "Task Completed";
+				$class = ''; 
+			break;
+			case 'rejected':
+				$title = "Task Rejected by Employee";
+				$class = 'atk-effect-danger'; 
+			break;
+			case 'cancelled':
+				$title = "Task Cancelled by Employee";
+				$class = ''; 
+			break;
+		}
+		return '<span title="'.$title.'" class="icon-text-width '.$class.'"> </span>';
 	}
 }
