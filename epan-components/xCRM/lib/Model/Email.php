@@ -206,7 +206,8 @@ class Model_Email extends \Model_Document{
 				break;
 			}
 
-			$from_filed_to_fill->set($this['from_id']);
+			if(isset($from_filed_to_fill))
+				$from_filed_to_fill->set($this['from_id']);
 		}
 
 		if($from_form->isSubmitted()){
@@ -291,7 +292,8 @@ class Model_Email extends \Model_Document{
 				break;
 			}
 
-			$to_filed_to_fill->set($this['to_id']);
+			if(isset($to_filed_to_fill))
+				$to_filed_to_fill->set($this['to_id']);
 		}
 
 		if($to_form->isSubmitted()){
@@ -545,6 +547,7 @@ class Model_Email extends \Model_Document{
 			break;
 		}
 	}
+	
 	function guessTo($doc=false){
 		if($doc){
 			$to = $doc->getTo();
@@ -560,8 +563,6 @@ class Model_Email extends \Model_Document{
 				$this['to'] = 'Supplier';
 				$this['to_id'] = $to->id;
 			}
-		}else{
-
 		}
 
 		$this->save();
