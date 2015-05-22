@@ -45,11 +45,11 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 					$subs['website'] = $m['website'];
 					$subs['from_id'] = $m->id;
 					$subs->save();
-					// throw new \Exception($m['customer_email'], 1);
-					$subs_cat = $this->add('xEnquiryNSubscription\Model_SubscriptionCategories');
-					$subs_cat->load($form['add_to_category']);
-					$subs_cat->addSubscriber($subs);
-					// throw new \Exception($m['customer_name']. ' '.  $form->get('add_to_category'), 1);
+					if($form['add_to_category']){
+						$subs_cat = $this->add('xEnquiryNSubscription\Model_SubscriptionCategories');
+						$subs_cat->load($form['add_to_category']);
+						$subs_cat->addSubscriber($subs);
+					}
 				});
 			});
 		}
@@ -72,7 +72,8 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 			$subs = $this->add('xEnquiryNSubscription\Model_Subscription');
 			$subs->addCondition('email',$crud->form->model['customer_email']);
 			$subs->tryLoadAny();
-			$crud->form->getElement('add_to_category')->set($subs->ref('xEnquiryNSubscription/SubscriptionCategoryAssociation')->tryLoadAny()->get('id'));
+			if($subs->loaded())
+				$crud->form->getElement('add_to_category')->set($subs->ref('xEnquiryNSubscription/SubscriptionCategoryAssociation')->tryLoadAny()->get('id'));
 		}
 
         $crud->add('xHR/Controller_Acl');

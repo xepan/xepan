@@ -55,6 +55,36 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				->count();
 		});
 
+		$customer->addExpression('last_email_on')->set(function($m,$q)use($official_email_array){
+			$to_search_cond = $q->orExpr();
+
+			foreach ($official_email_array as $oe) {
+				$to_search_cond->where('cc','like','%'.$oe.'%');
+			}
+
+			$to_search_cond->where('to_email',$official_email_array);
+
+			return $m->add('xCRM/Model_Email')
+				->addCondition(
+						$q->orExpr()
+							->where(
+									$q->andExpr()
+									->where('from','Customer')
+									->where('from_id',$q->getField('id'))
+								)
+							->where(
+									$q->andExpr()
+										->where('to','Customer')
+										->where('to_id',$q->getField('id'))
+								)
+					)
+				// ->addCondition('read_by_employee_id',null)
+				->addCondition($to_search_cond)
+				->setOrder('created_at','desc')
+				->setLimit(1)
+				->fieldQuery('created_at');
+		});
+
 		$customer->addExpression('total_email')->set(function($m,$q)use($official_email_array){
 			$to_search_cond = $q->orExpr();
 
@@ -84,11 +114,13 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		});
 
 		$customer_crud=$left_col->add('CRUD',array('grid_class'=>'xHR/Grid_MailParty','allow_add'=>false,'allow_edit'=>false,'allow_del'=>false));
-		$customer_crud->setModel($customer->setOrder('unread','desc'));
+		$customer->_dsql()->order(array('unread desc','last_email_on desc'));
+		
+		$customer_crud->setModel($customer);
 		if(!$customer_crud->isEditing()){
 			
 			$customer_crud->grid->addMethod('init_anchor',function($g,$f){
-				$g->columns[$f]['thparam'] .= 'style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;"';
+				$g->columns[$f]['tdparam'] .= 'style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;"';
 			});
 
 			$customer_crud->grid->addMethod('format_anchor',function($g,$f)use($right_col){
@@ -107,7 +139,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 					$html .= '</div>';
 					$g->current_row_html[$f]=$html;
 				});
-			$customer_crud->grid->addFormatter('customer_name','wrap,anchor');
+			$customer_crud->grid->addFormatter('customer_name','anchor,wrap');
 		}
 
 
@@ -146,6 +178,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 
 //Emails--------------------------------------------------------------------------------------
 		$email = $this->add('xCRM/Model_Email');
+		$email->getElement('subject')->caption('Emails');
 		$emails = $email->loadDepartmentEmails();
 		if(!$emails){
 			$emails = $email->addCondition('id',-1);
@@ -259,6 +292,20 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			$mg->removeColumn('from_id');
 			$mg->removeColumn('from');
 			$mg->removeColumn('direction');
+
+			$f=$mail_crud->grid->add('Form',null,'grid_buttons');
+			$field=$f->addField('Hidden','selected_emails','');
+			$f->template->del('form_buttons');
+			$mail_crud->grid->addSelectable($field);
+
+			$mail_crud->grid->addButton(array('','icon'=>'trash'))
+				->js('click',array($f->js()->submit(),$mail_crud->grid->js()->find('tr input:checked')->closest('tr')->remove()));
+			;
+
+			if($f->isSubmitted()){
+				$f->js()->univ()->successMessage('Done')->execute();
+			}
+
 		}
 
 		
