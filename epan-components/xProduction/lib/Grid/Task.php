@@ -10,7 +10,22 @@ class Grid_Task extends \Grid{
 		$this->task_vp->set(function($p){
 			$task_id=$this->api->stickyGET('task_id');
 			$m=$p->add('xProduction/Model_Task')->load($task_id);
-			$p->add('View')->setHTML($m['content'])->addCLass('well');
+			$p->add('View')->setHTML('<div class="atk-row">'.
+									 	'<div class="atk-col-8  text-center atk-size-mega page-header  ">'.
+									 		'<h2 class="atk-size-mega page-header atk-text-bold atk-effect-danger">'.$m['subject'].'</h2>'.
+									 	'</div>'.
+									 	'<div class="atk-col-4 atk-align-right">'.
+									 		'<div class="atk-row page-header">'.
+											 	'<div class="atk-col-12 atk-effect-success">'."Starting Date :- ".$m['expected_start_date'].'</div>'.
+											 	'<div class="atk-col-12 atk-effect-danger">'."Ending Date :- ".$m['expected_end_date'].'</div>'.
+											 	'<div class="atk-col-12 atk-effect-warning">'."Created At :- ".$m['created_at'].'</div>'.
+											 	'<div class="atk-col-12 atk-effect-info">'."Created By :-".$m['created_by'].'</div>'.
+									 		'</div>'.
+									 	'</div>'.
+									 '</div>'.'<br/>'.
+									 '<div class="well">'.
+				$m['content']).'</div>'
+			;
 		});
 	}
 
