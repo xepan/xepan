@@ -498,7 +498,10 @@ class Model_JobCard extends \Model_Document{
 	}
 
 	function order(){
-		return $this->orderItem()->order();
+		if($this->orderItem())
+			return $this->orderItem()->order();
+		
+		return false;
 	}
 
 
