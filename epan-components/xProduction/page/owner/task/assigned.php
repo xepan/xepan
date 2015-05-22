@@ -7,7 +7,7 @@ class page_xProduction_page_owner_task_assigned extends page_xProduction_page_ow
 		
 		$col=$this->add('Columns');
 		// $left_col=$col->addColumn(6);
-		$right_col=$col->addColumn(12);
+		$right_col=$col->addColumn(4);
 		
 		// $left_col->add('View_Info')->set('Assign To Me');
 		// $assign_to_me_task = $left_col->add('xProduction/Model_Task_Assigned');

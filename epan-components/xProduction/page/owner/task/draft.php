@@ -5,8 +5,8 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 	function init(){
 		parent::init();
 		$col=$this->add('Columns');
-		$left_col=$col->addColumn(6);
-		$right_col=$col->addColumn(6);
+		$left_col=$col->addColumn(7);
+		$right_col=$col->addColumn(5);
 
 		$task_vp = $this->add('VirtualPage');
 		$task_vp->set(function($p){
@@ -28,7 +28,7 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 				
 		$crud->setModel($draft,array('subject','content','Priority','expected_start_date','expected_end_date'),array('subject','Priority','expected_start_date','expected_end_date'));
 		$crud->grid->addMethod('format_subject',function($g,$f)use($task_vp){
-			$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('Task Content',$g->api->url($task_vp->getURL(),array('task_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a>';
+			$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL($g->model['subject'],$g->api->url($task_vp->getURL(),array('task_id'=>$g->model->id))).'">'.substr(strip_tags($g->model['subject']),0,25).'</a>';
 		});
 		$crud->grid->addFormatter('subject','subject');
 
