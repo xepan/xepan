@@ -11,7 +11,8 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 		$task_vp = $this->add('VirtualPage');
 		$task_vp->set(function($p){
 			$m=$p->add('xProduction/Model_Task')->tryLoad($_GET['task_id']);
-			$p->add('View')->setHTML('<div class="atk-row">'.
+			$p->add('View')->setHTML(
+									'<div class="atk-row">'.
 									 	'<div class="atk-col-8  text-center atk-size-mega page-header  ">'.
 									 		'<h2 class="atk-size-mega page-header atk-text-bold atk-effect-danger">'.$m['subject'].'</h2>'.
 									 	'</div>'.
@@ -23,9 +24,9 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 											 	'<div class="atk-col-12 atk-effect-info">'."Created By :-".$m['created_by'].'</div>'.
 									 		'</div>'.
 									 	'</div>'.
-									 '</div>'.'<br/>'.
-									 '<div class="well">'.
-				$m['content']).'</div>'
+									'</div>'.'<br/>'.
+									'<div class="well">'.
+					$m['content']).'</div>'
 			;
 		});
 
