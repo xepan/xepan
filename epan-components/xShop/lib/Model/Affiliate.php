@@ -59,4 +59,10 @@ class Model_Affiliate extends \Model_Table {
 		$this->ref('xShop/ItemAffiliateAssociation')->deleteAll();
 	}
 
+	function updateEmail($email){
+		if(!$this->loaded()) return false;
+		
+		$this['email_id'] = $this['email_id'].', '.$email;
+		$this->save();
+	}
 }

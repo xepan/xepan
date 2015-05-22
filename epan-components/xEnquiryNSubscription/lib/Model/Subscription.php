@@ -85,4 +85,11 @@ class Model_Subscription extends \Model_Document {
 	function beforeDelete(){
 		$this->ref('xEnquiryNSubscription/SubscriptionCategoryAssociation')->deleteAll();
 	}
+
+	function updateEmail($email){
+		if(!$this->loaded()) return false;
+
+		$this['email'] = $this['email'].', '.$email;
+		$this->save();
+	}
 }
