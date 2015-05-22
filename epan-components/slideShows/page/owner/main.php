@@ -2,6 +2,7 @@
 
 class page_slideShows_page_owner_main extends page_componentBase_page_owner_main {
 	function page_index(){
+		
 		// $this->add('H1')->set('Component Owner Main Page');
 		$this->add('H1')->setHTML('<i class="fa fa-film"></i> '.$this->component_name. '<small>Attractive, Custom and Effectfull Slide Shows</small>');
 		$tab=$this->add('Tabs');

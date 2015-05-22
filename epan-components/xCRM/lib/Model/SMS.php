@@ -34,6 +34,6 @@ class Model_SMS extends \Model_Document {
 	}
 
 	function senitizeNos($no){
-		return $no;
+		return trim($no);
 	}
 }

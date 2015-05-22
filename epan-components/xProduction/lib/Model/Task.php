@@ -68,7 +68,8 @@ class Model_Task extends \Model_Document{
 
 	function mark_processed($remark){
 		if($rd = $this->relatedDocument()){
-			$rd->setStatus('processed');
+			if($rd->hasMethod('mark_processed'))
+				$rd->mark_processed($remark);
 		}
 
 		$this->setStatus('processed',$remark);
