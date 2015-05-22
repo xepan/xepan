@@ -22,9 +22,13 @@ class Model_Email extends \Model_Document{
 		
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
+		$this->hasOne('xProduction/Task','task_id');
 
 		$this->hasOne('xHR/Employee','read_by_employee_id');
+		
+		$this->addField('task_status');
 
+		
 		$this->addField('uid');
 		$this->addField('from'); // Customer, Employee, Supplier ... string
 		$this->addField('from_id');
@@ -335,6 +339,7 @@ class Model_Email extends \Model_Document{
 			// }
 		}
 
+		//Document ___________________________________________________
 		$col_midright->add('H4')->set('Document')->addClass('atk-swatch-ink atk-padding-small');
 		$document_form = $col_midright->add('Form_Stacked');
 		$document_form->addField('autocomplete/Basic','opportunity')->setModel('xShop/Model_Opportunity');
@@ -348,8 +353,49 @@ class Model_Email extends \Model_Document{
 
 		}
 
-		$col_right->add('H4')->set('Task')->addClass('atk-swatch-ink atk-padding-small');
+		//Task_______________________________________________
+		$col_right->add('H4')->set('Create Task')->addClass('atk-swatch-ink atk-padding-small');
+		$task_form = $col_right->add('Form_Stacked');
+		$narration_field = $task_form->addField('text','narration')->set($this['subject']);
+		$employee_field = $task_form->addField('autocomplete/Basic','employee','Assign To Employee')->setModel($employee_model);
+		$task_end_date = $task_form->addField('DatePicker','expected_end_date');
+		$task_priority = $task_form->addField('DropDown','priority')->setValueList(array('Low'=>'Low','Medium'=>'Medium','High'=>'High','Urgent'=>'Urgent'))->set('Medium');
+		$task_form->addSubmit('Create Task & Assign');
+		if($task_form->isSubmitted()){
+			$this->createTask($task_form['narration'],$task_form['employee'],$task_form['expected_end_date'],$task_form['priority']);
+			return true;
+		}
 
+	}	
+
+	//Create Task and Assign To Employee
+	function createTask($narration,$assing_to_employee_id,$expected_end_date=null,$priority='Medium'){
+		if(!$this->loaded()) return false;
+
+		$task = $this->add('xProduction/Model_Task');
+		$task['status']= 'assigned';
+		$task['employee_id']= $assing_to_employee_id;
+		$task['subject'] = $narration;
+		$task['content'] = $this['subject'].'<br/>'.$this['message'];
+		$task['expected_end_date'] = $expected_end_date;
+		$task['Priority'] = $priority;
+		$task->relatedDocument($this);
+		$task->save();
+
+		//Update Email Task Id
+		$this['task_id'] = $task->id;
+		$this['task_status'] = $task['status'];
+		$this->save();
+
+
+		foreach ($this->attachment() as $attach) {
+			$task_attach = $this->add('xCRM/Model_TaskAttachment');
+			$task_attach['attachment_url_id'] = $attach->id;
+			$task_attach['related_document_id'] = $task->id;
+			$task_attach['name'] = $attach['name'];
+			$task_attach->save();
+		}
+		
 	}
 
 
