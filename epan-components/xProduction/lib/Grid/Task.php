@@ -5,10 +5,9 @@ class Grid_Task extends \Grid{
 	public $ipp=10;
 	function init(){
 		parent::init();
-
 		$this->task_vp = $this->add('VirtualPage');
 		$this->task_vp->set(function($p){
-			$task_id=$this->api->stickyGET('task_id');
+			$task_id=$p->api->stickyGET('task_id');
 			$m=$p->add('xProduction/Model_Task')->tryLoad($_GET['task_id']);
 			
 			$start_date = "";
