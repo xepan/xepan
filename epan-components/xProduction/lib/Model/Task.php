@@ -131,5 +131,8 @@ class Model_Task extends \Model_Document{
 		}
 	}
 
+	function cancel(){
+		$this->setStatus('cancelled');
+	}
 
 }

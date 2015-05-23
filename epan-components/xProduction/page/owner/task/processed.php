@@ -14,6 +14,7 @@ class page_xProduction_page_owner_task_processed extends page_xProduction_page_o
 		
 		$crud=$left_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false,'allow_del'=>false,'grid_class'=>'xProduction/Grid_Task'));
 		$crud->setModel($mytask);
+			$crud->manageAction('see_activities');
 
 		// $crud->add('xHR/Controller_Acl');
 
@@ -23,7 +24,8 @@ class page_xProduction_page_owner_task_processed extends page_xProduction_page_o
 		$crud=$right_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false,'allow_del'=>false,'grid_class'=>'xProduction/Grid_Task'));
 		$crud->setModel($emptask);
 		$crud->manageAction('approve');
-
+			$crud->manageAction('see_activities');
+			$crud->manageAction('cancel');
 		// $crud->add('xHR/Controller_Acl');
 	}
 }
