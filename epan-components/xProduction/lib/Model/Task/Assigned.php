@@ -6,6 +6,8 @@ class Model_Task_Assigned extends Model_Task{
 			'can_view'=>array(),
 			'can_reject'=>array(),
 			'can_start_processing'=>array(),
+			'can_see_activities'=>array(),
+			'can_cancel'=>array(),
 		);
 	function init(){
 		parent::init();

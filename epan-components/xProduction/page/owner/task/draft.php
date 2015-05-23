@@ -35,7 +35,6 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 		$form= $left_col->add('Form_Minimal');
 		$form->addField('line','to_do');
 		$crud=$left_col->add('CRUD');
-
 		if($form->isSubmitted()){
 			$draft['subject'] = $form['to_do'];
 			$draft->save();
@@ -43,6 +42,7 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 		}
 				
 		$crud->setModel($draft,array('subject','content','Priority','expected_start_date','expected_end_date'),array('subject','Priority','expected_start_date','expected_end_date'));
+		$crud->manageAction('see_activities');
 		$crud->grid->addMethod('format_subject',function($g,$f)use($task_vp){
 			$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL($g->model['subject'],$g->api->url($task_vp->getURL(),array('task_id'=>$g->model->id))).'">'.substr(strip_tags($g->model['subject']),0,25).'</a>';
 		});
@@ -59,6 +59,7 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 		$left_crud->setModel($assign_to_me_task);
 		$left_crud->manageAction('start_processing');
 		$left_crud->manageAction('reject_page');
+		$left_crud->manageAction('see_activities');
 		// $left_crud->add('xHR/Controller_Acl');
 
 	}

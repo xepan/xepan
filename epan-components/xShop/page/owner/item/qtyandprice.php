@@ -8,7 +8,7 @@ class page_xShop_page_owner_item_qtyandprice extends page_xShop_page_owner_main{
 	}
 	
 	function page_index(){
-		$item = $this->add('xShop/Model_Item')->load($_GET['item_id']);
+		$item = $this->add('xShop/Model_Item')->load($this->api->stickyGET('item_id'));
 		// $this->add('View_Info')->set('Display Basic Price For Item Here Again As Form .. updatable');
 		
 		$form = $this->add('Form_Stacked');
@@ -30,7 +30,7 @@ class page_xShop_page_owner_item_qtyandprice extends page_xShop_page_owner_main{
 		
 			$upl_btn=$g->addButton('Upload Data');
 			$upl_btn->setIcon('ui-icon-arrowthick-1-n');
-			$upl_btn->js('click')->univ()->frameURL('Data Upload',$this->api->url('./upload'));
+			$upl_btn->js('click')->univ()->frameURL('Data Upload',$this->api->url('./upload',array('item_id'=>$_GET['item_id'])));
 		
 			$g->addColumn('expander','conditions');
 
@@ -47,7 +47,7 @@ class page_xShop_page_owner_item_qtyandprice extends page_xShop_page_owner_main{
 	}
 
 	function page_conditions(){
-		$item_id = $_GET['item_id'];
+		$item_id = $this->api->stickyGET('item_id');
 
 		$item_model = $this->add('xShop/Model_Item')->load($_GET['item_id']);
         $application_id = $this->api->recall('xshop_application_id');
@@ -72,8 +72,9 @@ class page_xShop_page_owner_item_qtyandprice extends page_xShop_page_owner_main{
 	}
 
 	function page_upload(){
+		$item_id = $this->api->stickyGET('item_id');
 		$form = $this->add('Form');
-		$form->addField('line','custom_fields')->setFieldHint('Enter comma seperated custom fields');
+		$form->addField('line','custom_fields')->setFieldHint('Enter comma separated custom fields');
 		$form->addSubmit('Generate Sample File');
 		
 		if($_GET[$this->name]){
@@ -107,13 +108,14 @@ class page_xShop_page_owner_item_qtyandprice extends page_xShop_page_owner_main{
 		// 	exit;
 		// }
 
-		$this->add('View')->setElement('iframe')->setAttr('src',$this->api->url('./execute',array('cut_page'=>1)))->setAttr('width','100%');
+		$this->add('View')->setElement('iframe')->setAttr('src',$this->api->url('./execute',array('cut_page'=>1,'item_id'=>$_GET['item_id'])))->setAttr('width','100%');
 	}
 
 	function page_upload_execute(){
-
+		$item_id = $this->api->stickyGET('item_id');
+		
 		$form= $this->add('Form');
-		$form->template->loadTemplateFromString("<form method='POST' action='".$this->api->url(null,array('cut_page'=>1))."' enctype='multipart/form-data'>
+		$form->template->loadTemplateFromString("<form method='POST' action='".$this->api->url(null,array('cut_page'=>1,'item_id'=>$_GET['item_id']))."' enctype='multipart/form-data'>
 			<input type='file' name='csv_qty_set_file'/>
 			<label> Remove old qty sets <input type='checkbox' name='remove_old'/></label>
 			<input type='submit' value='Upload'/>
@@ -131,8 +133,72 @@ class page_xShop_page_owner_item_qtyandprice extends page_xShop_page_owner_main{
 
 				$importer = new CSVImporter($_FILES['csv_qty_set_file']['tmp_name'],true,',');
 				$data = $importer->get(); 
+				$item = $this->add('xShop/Model_Item')->load($_GET['item_id']);
 
-				print_r($data);
+				if($_POST['remove_old']){
+					// Remove all Quantity sets if said so
+					// TODO
+					$qs = $this->add('xShop/Model_QuantitySet');
+					$qs->addCondition('item_id',$item->id);
+
+					foreach ($qs as $junk) {
+						$qs->forceDelete();
+					}
+				}
+
+				foreach ($data as $row) { // field like Qty ... Cst 1, Cst 2 ... Price
+					// take qty and price and enter a condition set row 
+					// $nqs = (unset qty, price and continue) xShop/QuantitySet
+					$qs = $this->add('xShop/Model_QuantitySet');
+					$qs['item_id'] = $item->id;
+					$qs['qty'] = $row['Qty'];
+					$qs['price'] = $row['Price'];
+					$qs->save();
+					unset($row['Qty']);
+					unset($row['Price']);
+
+					// Take rest of fields for making conditions in this set 
+					foreach ($row as $field => $value) {
+						// $ncf = Create/Load new Custom field If not exists $field xShop/Model_CustomFields
+						$cf = $this->add('xShop/Model_CustomFields')
+							->addCondition('name',$field)
+							->addCondition('application_id',$this->api->xshop_application_id())
+							->tryLoadAny();
+						if(!$cf->loaded()) $cf->save();
+
+						$icassos = $this->add('xShop/Model_ItemCustomFieldAssos')
+										->addCondition('customfield_id',$cf->id)
+										->addCondition('item_id',$item->id)
+										->addCondition('can_effect_stock',true)
+										->tryLoadAny();
+
+						if(!$icassos->loaded()) $icassos->save();
+						
+						if(!$value) continue;
+
+						// $ncfv = check if its $value is added for current item, if not add xShop/Model_CustomFieldValue
+						$iassoscfval = $this->add('xShop/Model_CustomFieldValue')
+										->addCondition('itemcustomfiledasso_id',$icassos->id)
+										->addCondition('customfield_id',$cf->id)
+										->addCondition('item_id',$item->id)
+										->addCondition('name',trim($value))
+										->tryLoadAny();
+
+						if(!$iassoscfval->loaded()) $iassoscfval->save();
+						// add condition if not exists xShop/Model_QuantitySetCondition
+
+
+						$qscond = $this->add('xShop/Model_QuantitySetCondition')
+										->addCondition('quantityset_id',$qs->id)
+										->addCondition('custom_field_value_id',$iassoscfval->id)
+										->addCondition('customfield_id',$cf->id)
+										->addCondition('item_id',$item->id)
+										->tryLoadAny();
+
+						if(!$qscond->loaded())
+							$qscond->save();
+					}
+				}
 				
 				$this->add('View_Info')->set(count($data).' Recored Imported');
 				$this->js(true)->univ()->closeDialog();
