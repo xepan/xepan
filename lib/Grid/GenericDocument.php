@@ -7,10 +7,11 @@ class Grid_GenericDocument extends \Grid{
 		
 		$this->content_vp = $this->add('VirtualPage');
 		$this->content_vp->set(function($p){
-			$doc_id=$this->api->stickyGET('generic_document_id');
+			$doc_id=$p->api->stickyGET('generic_document_id');
 			$m=$p->add('Model_GenericDocument')->load($doc_id);
 			$p->add('View')->setHTML($m['content']);
 		});
+
 
 	}
 	function format_preview($f){
@@ -36,8 +37,13 @@ class Grid_GenericDocument extends \Grid{
 		// $this->addFormatter('content','imagethumb');
 		$this->addPaginator(50);
 		$this->addSno();
-		$this->addQuickSearch(array('title'));
+		$this->addQuickSearch(array('title'),null,'Filter_Document');
 		
+		$btn= $this->addButton("Category Management");
+		if(!$btn instanceof \Dummy and $btn->isClicked()){
+			$this->js()->univ()->frameURL('Document Category',$this->api->url('owner_documentscategory'))->execute();
+		}
+
 		return $m;
 
 	}
