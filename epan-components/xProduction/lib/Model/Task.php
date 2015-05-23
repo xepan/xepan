@@ -49,7 +49,11 @@ class Model_Task extends \Model_Document{
 	}
 
 	function start_processing(){
-		$this->relatedDocument()->set('status','processing')->save();
+		if($rd = $this->relatedDocument()){
+			if($rd->hasMethod('start_processing'))
+				$rd->start_processing();
+		}
+
 		$this['status']='processing';
 		$this->saveAndUnload();
 	}
@@ -75,9 +79,13 @@ class Model_Task extends \Model_Document{
 		$this->setStatus('processed',$remark);
 	}
 
-	function approve(){
-		$this['status']='completed';
-		$this->saveAndUnload();
+	function approve($remark){
+		if($rd = $this->relatedDocument()){
+			if($rd->hasMethod('approve'))
+				$rd->approve($remark);
+		}
+
+		$this->setStatus('completed',$remark);
 	}
 
 	function assign_page($page){
