@@ -311,8 +311,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				$f->js()->univ()->successMessage('Done')->execute();
 			}
 
-			$mg->addQuickSearch(array('from_email','to_email','cc','bcc','subject','message'),null,'xCRM/Filter_xMail')
-
+			$mg->addQuickSearch(array('from_email','to_email','cc','bcc','subject','message'),null,'xCRM/Filter_xMail');
 		}
 
 		
