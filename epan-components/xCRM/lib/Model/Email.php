@@ -452,7 +452,10 @@ class Model_Email extends \Model_Document{
 
 
 	function create_Ticket(){
-
+		$t = $this->add('xCRM/Model_Ticket');
+		$t['status'] = "Submitted";
+		$t->save();
+		$t->relatedDocument($this);
 	}
 
 	function fetchDepartment($department,$conditions=null){
@@ -531,6 +534,9 @@ class Model_Email extends \Model_Document{
 					foreach ($fetch_email_array as $email_id) {
 						$email->load($email_id);
 						$email->populateFromAndToIds();
+						if($email->forSupport()){
+							$email->create_Ticket();
+						}
 						$email->unload();
 					}
 				}
@@ -541,6 +547,18 @@ class Model_Email extends \Model_Document{
 			$mailbox->disconnect();
 			throw $e;
 		}
+	}
+
+	function forSupport(){
+		$off_email = $this->add('xHR/Model_OfficialEmail');
+		$support_emails = $off_email->supportEmails();
+		
+		foreach ($support_emails as $support_email) {
+			if(	in_array($support_email['imap_email_username'],explode(',', $this['to_email'].','.$this['cc'])) )
+				return true;
+		}
+
+		return false;
 	}
 
 	function populateFromAndToIds(){
