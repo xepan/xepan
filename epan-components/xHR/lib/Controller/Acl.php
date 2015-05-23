@@ -130,7 +130,7 @@ class Controller_Acl extends \AbstractController {
 				$this->doGRID();
 			}
 
-			$this->owner->model->setOrder('updated_at','desc');
+			// $this->owner->model->setOrder('updated_at','desc');
 
 		}elseif($this->owner instanceof \Grid){
 			$this->doGRID();

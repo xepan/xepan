@@ -381,4 +381,11 @@ class Model_Employee extends \Model_Table{
 			return false;
 		return $this['mobile_no'];	
 	}
+
+	function updateEmail($email){
+		if(!$this->loaded()) return false;
+		
+		$this['personal_email'] = $this['personal_email'].', '.$email;
+		$this->save();
+	}
 }

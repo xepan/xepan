@@ -1,21 +1,14 @@
-<div class='panel panel-success atk-size-micro '>
+<link rel="stylesheet" type="text/css" href="epan-components/xProduction/templates/css/task.css"/>
+<div class="xsticky atk-size-micro yellow atk-padding">
+			<i class="xpin"></i>
 			<div class='atk-row '>
 					<div class='atk-col-5  '>
 							Task No.: {$name}&nbsp;&nbsp;<b class=''>{$priority}</b><br>
 							{$created_at}&nbsp;{$task_created_att}
 					</div>					
-					<div class='atk-col-7   atk-button'data-toggle='modal' data-target='{$name}'>
+					<div class='atk-col-7 atk-size-kilo'>
 						{$task_subject}
 					</div>
-
-					<div class='modal fade bs-example-modal-sm' tabindex='-1'role='dialog' id='{$name}' aria-hidden='false'>
-						<div class='modal-dialog modal-sm'>
-    						<div class='modal-content'>
-      							{$content}
-    						</div>
-  						</div>
-					</div>
-
 			</div>
 			<div class='atk-row'>
 				<div class='atk-col-6'>
@@ -32,4 +25,4 @@
 				</div>
 			</div>
 										
-		</div>		
+</div>

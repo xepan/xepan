@@ -121,6 +121,9 @@ class Model_OrderDetails extends \Model_Document{
 			if($jc->loaded() and !in_array($jc['status'], array("completed","forwarded")) ){
 				$jc->delete();
 			}
+
+			// $dept_status['status'] = 'Waiting';
+			// $dept_status->save();
 		}
 	}
 

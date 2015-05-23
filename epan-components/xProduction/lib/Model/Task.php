@@ -30,6 +30,8 @@ class Model_Task extends \Model_Document{
 		$this->addField('expected_start_date')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		$this->addField('expected_end_date')->type('datetime')->defaultValue(null);
 
+		$this->hasMany('xProduction/TaskAttachment','related_document_id',null,'Attachments');
+		$this->hasMany('xCRM/Email','task_id');
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
@@ -66,7 +68,8 @@ class Model_Task extends \Model_Document{
 
 	function mark_processed($remark){
 		if($rd = $this->relatedDocument()){
-			$rd->setStatus('processed');
+			if($rd->hasMethod('mark_processed'))
+				$rd->mark_processed($remark);
 		}
 
 		$this->setStatus('processed',$remark);
@@ -120,5 +123,8 @@ class Model_Task extends \Model_Document{
 		}
 	}
 
+	function cancel(){
+		$this->setStatus('cancelled');
+	}
 
 }

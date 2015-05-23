@@ -368,7 +368,7 @@ class Model_Document extends Model_Table{
 	function setStatus($status,$message=null,$subject=null,$from=null,$from_id=null,$to=null,$to_id=null){
 		$this['status']=$status;
 		$this->createActivity($status, $subject?:ucwords($status) ,$message?:'Document Status Changed',$from,$from_id,$to,$to_id);
-		$this->saveAs($this->getRootClass());
+		return $this->saveAs($this->getRootClass());
 	}
 
 	function createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null){
