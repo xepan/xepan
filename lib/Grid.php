@@ -190,4 +190,31 @@ class Grid extends Grid_Advanced{
         $this->columns[$column]['thparam'] .= " data-toggle='true'";
     }
 
+    function updateGrandTotals()
+    {
+        // get model
+        $m = clone $this->getIterator();
+
+        // create DSQL query for sum and count request
+        $fields = array_keys($this->totals);
+
+        // select as sub-query
+        $sub_q = $m->_dsql()->del('limit')->del('order');
+
+        // $q = $this->api->db->dsql();//->debug();
+        // $q->table($sub_q->render(), 'grandTotals'); // alias is mandatory if you pass table as DSQL
+        foreach ($fields as $field) {
+            $sub_q->field($sub_q->sum($field), $field);
+        }
+        $sub_q->field($sub_q->count(), 'total_cnt');
+
+        // execute DSQL
+        $data = $sub_q->getHash();
+
+        // parse results
+        $this->total_rows = $data['total_cnt'];
+        unset($data['total_cnt']);
+        $this->totals = $data;
+    }
+
 }
