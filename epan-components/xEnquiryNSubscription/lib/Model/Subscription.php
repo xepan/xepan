@@ -19,7 +19,7 @@ class Model_Subscription extends \Model_Document {
 		$this->hasOne('Epan','epan_id')->system(true);
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		//For Lead Category
-		$this->hasOne('xMarketingCampaign/LeadCategory','leadcategory_id')->caption('Category')->display(array('form'=>'autocomplete/Plus'));
+		//$this->hasOne('xMarketingCampaign/LeadCategory','leadcategory_id')->caption('Category')->display(array('form'=>'autocomplete/Plus'));
 		// $this->hasOne('xEnquiryNSubscription/SubscriptionCategories','category_id');
 		$this->addField('lead_type')->group('a~2~Basic Information')->defaultValue('sales');
 		$this->addField('name')->sortable(true)->group('a~3');
@@ -30,6 +30,7 @@ class Model_Subscription extends \Model_Document {
 		$this->addField('phone')->sortable(true)->group('b~3');
 		$this->addField('mobile_no')->sortable(true)->group('b~3');
 		$this->addField('fax')->group('b~3');
+		$this->addField('remark')->type('text')->group('b1~12~Remarks');
 
 		$f=$this->addField('is_ok')->type('boolean')->defaultValue(1)->sortable(true)->group('c~6~Other Information');
 		$f->icon='fa fa-exclamation~blue';
@@ -47,11 +48,17 @@ class Model_Subscription extends \Model_Document {
 		$this->hasMany('xShop/Quotation','lead_id');
 		$this->hasMany('xEnquiryNSubscription/SubscriptionCategoryAssociation','subscriber_id');
 
+		$this->addExpression('associated_categories')
+			->set(
+				$this->refSQL('xEnquiryNSubscription/SubscriptionCategoryAssociation')
+				->count()
+			)->sortable(true);
+
 		$this->add('Controller_Validator');
 		$this->is(array(
 			'name|to_trim',
-			'email|email',
-			'email|unique',
+			// 'email|email'
+			// 'email|unique',
 			)
 		);
 
@@ -82,5 +89,12 @@ class Model_Subscription extends \Model_Document {
 	}
 	function beforeDelete(){
 		$this->ref('xEnquiryNSubscription/SubscriptionCategoryAssociation')->deleteAll();
+	}
+
+	function updateEmail($email){
+		if(!$this->loaded()) return false;
+
+		$this['email'] = $this['email'].', '.$email;
+		$this->save();
 	}
 }

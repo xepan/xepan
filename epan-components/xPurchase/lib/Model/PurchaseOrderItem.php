@@ -5,6 +5,13 @@ class Model_PurchaseOrderItem extends \Model_Document{
 	public $table="xpurchase_purchase_order_item";
 	public $status=array('waiting','processing','received','completed');
 	public $root_document_name='xPurchase\PurchaseOrderItem';
+	public $actions=array(
+			//'can_view'=>array('caption'=>'Whose created Quotation(draft) this post can see'),
+			'allow_edit'=>array('caption'=>'Whose created Quotation this post can edit'),
+			'allow_add'=>array('caption'=>'Can this post create new Quotation'),
+			'allow_del'=>array('caption'=>'Whose Created Quotation this post can delete'),
+			'forceDelete'=>array(),
+		);
 	function init(){
 		parent::init();
 

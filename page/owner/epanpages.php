@@ -3,6 +3,8 @@
 class page_owner_epanpages extends page_base_owner {
 	
 	function page_index(){
+		$this->app->title='Web :: Pages';
+
 		if($_GET['live_edit']){
 			$page = $this->add('Model_EpanPage')->load($_GET['live_edit']);
 			if($this->api->getConfig('sef_url') AND false){

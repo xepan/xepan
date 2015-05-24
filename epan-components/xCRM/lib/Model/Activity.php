@@ -98,7 +98,7 @@ class Model_Activity extends \Model_Document{
 		$this->addField('notify_via_sms')->type('boolean')->defaultValue(false);
 		$this->addField('sms_to');
 		
-		$this->add('filestore/Field_File','attachment_id');
+		$this->add('filestore/Field_File','attachment_id',array('policy_add_new_type'=>true));
 		$this->setOrder('created_at','desc');
 
 		$this->addHook('beforeSave,beforeDelete',function($obj){
@@ -106,7 +106,8 @@ class Model_Activity extends \Model_Document{
 				throw $this->exception('You are not authorized for action','Growl');
 		});
 
-		// $this->hasMany('Attachment','activity_id');
+		$this->hasMany('xCRM/ActivityAttachment','related_document_id',null,'Attachments');
+
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
 		$this->addHook('beforeDelete',$this);
@@ -118,23 +119,31 @@ class Model_Activity extends \Model_Document{
 		$this->delete();
 	}
 
+	function attachments(){
+		return $this->add('xCRM/Model_ActivityAttachment')->addCondition('related_document_id',$this->id);
+	}
+
 	function beforeSave(){
+				
+		$to = $this->relatedDocument()->getTo();
+
+		if($to instanceof \xShop\Model_Customer){
+			$this['to'] = 'Customer';
+			$this['to_id'] = $to->id;
 		
-		// $to = $this->relatedDocument()->getTo();
-		// if($to instanceof \xShop\Model_Customer){
-		// 	$this['to'] = 'Customer';
-		// 	$this['to_id'] = $to->id;
+		}elseif($to instanceof \xHR\Model_Employee){
+			$this['to'] = 'Employee';
+			$this['to_id'] = $to->id;
 		
-		// }elseif($to instanceof \xHR\Model_Employee){
-		// 	$this['to'] = 'Employee';
-		// 	$this['to_id'] = $to->id;
-		
-		// }elseif($to instanceof \xPurchase\Model_Supplier) {
-		// 	$this['to'] = 'Supplier';
-		// 	$this['to_id'] = $to->id;
+		}elseif($to instanceof \xPurchase\Model_Supplier) {
+			$this['to'] = 'Supplier';
+			$this['to_id'] = $to->id;
 	
-		// }
-		
+		}elseif($to instanceof \xShop\Model_MemberDetails){
+			$this['to'] = 'Member';
+			$this['to_id'] = $to->id;
+		}
+
 	}
 
 	function beforeDelete(){
@@ -143,21 +152,21 @@ class Model_Activity extends \Model_Document{
 		}
 	}
 
-	function addAttachment($model){
-		if($model) return;
+	// function addAttachment($model){
+	// 	if(!$model) return;
 
-		$attach_send = $this->add('Model_Attachment')->addCondition('related_document_id',$model->id);
-		foreach ($attach_send as $attach) {
-			$activity_attach = $this->add('xCRM/Model_ActivityAttachment');
-			$activity_attach['related_document_id'] = $this->id;
-			$activity_attach['related_document_name'] ='xCRM\ActivityAttachment';
-			$activity_attach['created_by_id'] = $this->api->current_employee->id;
-			$activity_attach['attachment_url_id'] = $attach['attachment_url_id'];
-			$activity_attach['name'] = $attach['name'];
-			$activity_attach->save();
-		}
+	// 	$attach_send = $this->add('Model_Attachment')->addCondition('related_document_id',$model->id);
+	// 	foreach ($attach_send as $attach) {
+	// 		$activity_attach = $this->add('xCRM/Model_ActivityAttachment');
+	// 		$activity_attach['related_document_id'] = $this->id;
+	// 		$activity_attach['related_document_name'] ='xCRM\ActivityAttachment';
+	// 		$activity_attach['created_by_id'] = $this->api->current_employee->id;
+	// 		$activity_attach['attachment_url_id'] = $attach['attachment_url_id'];
+	// 		$activity_attach['name'] = $attach['name'];
+	// 		$activity_attach->save();
+	// 	}
 
-	}
+	// }
 
 	function afterSave($obj){
 		if(!isset($this->notified)){

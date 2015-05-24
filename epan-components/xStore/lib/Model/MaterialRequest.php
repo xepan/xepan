@@ -66,6 +66,14 @@ class Model_MaterialRequest extends \Model_Document {
 		});
 	}
 
+	function orderItem(){
+		if(!$this['orderitem_id']){
+			return false;
+		}
+		return $this->ref('orderitem_id');
+	}
+
+
 	function forceDelete(){
 		foreach($sm = $this->ref('xStore/StockMovement') as $junk){
 			$sm->forceDelete();
@@ -256,5 +264,168 @@ class Model_MaterialRequest extends \Model_Document {
 		$this->setStatus('completed');
 	}
 
-	
+	function create($from_department, $to_department, $related_document=false, $order_item=false, $items_array=array(), $dispatch_to_warehouse=false, $status=false){
+		$this['from_department_id'] = $from_department->id;
+		$this['to_department_id'] = $to_department->id;
+
+		if($related_document){
+			$this->relatedDocument($related_document);
+		}
+
+		if($order_item){
+			$this['orderitem_id'] = $order_item->id;
+			if($osid = $order_item->deptartmentalStatus($to_department))
+				$this['orderitem_departmental_status_id'] = $osid->id;
+		}
+
+		if($dispatch_to_warehouse){
+			$this['dispatch_to_warehouse_id'] = $dispatch_to_warehouse->id;
+		}else{
+			$this['dispatch_to_warehouse_id'] = $from_department->warehouse()->get('id');
+		}
+
+		if($status)
+			$this['status'] = $status;
+
+		$this->save();
+		
+		foreach ($items_array as $item) {
+			$this->addItem($this->add('xShop/Model_Item')->load($item['id']),$item['qty'],$item['unit'],$item['custom_fields']);
+		}
+		return $this;
+	}
+
+	function order(){
+		if($this->orderItem())
+			return $this->orderItem()->order();
+
+		return false;
+	}
+
+	function department(){
+		return $this->toDepartment();
+	}
+
+	function toDepartment(){
+		return $this->ref('to_department_id');
+	}
+
+	function isCreatedFromOrder(){
+		return $this['orderitem_id'];
+	}
+
+	function assign_page($page){
+		$cols=$page->add('Columns');
+		$col=$cols->addColumn(6);
+		$form = $col->add('Form_Stacked');
+		$form->addField('dropdown','assign_to_employee')->setEmptyText("Select Employee")->setModel('xHR/Model_Employee');
+		$form->addField('dropdown','assign_to_team')->setEmptyText("Select Team")->setModel('xProduction/Model_Team');
+		$form->addSubmit('Assign');
+			
+		if($form->isSubmitted()){
+			throw $this->exception("Working....",'Growl');
+
+			if($form['assign_to_employee'] AND $form['assign_to_team']){
+				$form->displayError('assign_to_team','Select either team or employee, not both');
+			}
+
+			if(!$form['assign_to_employee'] AND !$form['assign_to_team']){
+				$form->displayError('assign_to_employee','Select either team or employee (not both)');
+			}			
+
+			if($form['assign_to_employee']){
+				$this['employee_id']=$form['assign_to_employee'];
+				$this->setStatus('assigned',null,'Task :'.$this['name'],null,null,'Employee',$this['employee_id']);
+				return true;
+			}
+
+			if($form['assign_to_team']){
+				$this['team_id']=$form['assign_to_team'];
+				$this->setStatus('assigned',null,'Task :'.$this['subject'],null,null,'Team',$this['team_id']);
+				return true;
+			}
+			
+		}
+	}
+
+	function cancel_page($page){
+		$jobcard_id = $this['id'];
+
+		$form= $page->add('Form_Stacked');
+		$form->addField('text','reason');
+		$form->addSubmit('cancle');
+		if($form->isSubmitted()){
+			//Forwarding Jobcard to Its Next Department
+			$this->forward();
+			//check if Ordee Is Closed then Complete the Order
+			if($this['orderitem_id']){
+				$this->orderItem()->order()->isOrderClose(true);
+			}
+
+			$this->add('xProduction/Model_JobCard')->load($jobcard_id)->setStatus('cancelled',$form['reason']);
+			return true;
+		}
+	}
+
+	function approve(){
+		$rt = $this->relatedTask();
+		if($rt->loaded())
+			$rt->set('status','complete')->save();
+
+		$this->setStatus('approved');
+		
+	}
+
+	function forward(){
+		if($next = $this->orderItem()->nextDeptStatus()){
+			$dis_req_of_jobcard=$next->createJobCardFromOrder();
+			if($next->department()->isDispatch()){
+				$oi=$this->orderItem();
+				$items_array=array(array('id'=>$oi->item()->get('id'),'qty'=>$oi['qty'],'unit'=>$oi['unit'],'custom_fields'=>$oi['custom_fields']));
+
+				$this->add('xStore/Model_MaterialRequest')
+					->create(
+						$from_department=$this->add('xHR/Model_Department')->loadDispatch(),
+						$to_department=$this->department(), 
+						$related_document=$dis_req_of_jobcard, 
+						$order_item=$this->orderItem(), 
+						$items_array, 
+						$dispatch_to_warehouse=false,
+						'approved'
+						);
+
+			}
+			$this->setStatus('forwarded');
+		}else{
+			$this->complete();
+			$this->order()->isOrderClose(true);
+		}
+	}
+
+	function start_processing(){
+		$this->setStatus('processing');
+	}
+
+
+	function setStatus($status,$message=null,$subject=null,$set_dept_satatus=true){
+		if($this['orderitem_id']){
+			$verb = ' in ';
+			$ds = $this->orderItem()->deptartmentalStatus($this->department());
+			if($ds and $set_dept_satatus) {
+				if($status=='forwarded')
+					$verb = ' from ';
+				$ds->setStatus(ucwords($status) . $verb . $this->department()->get('name'));
+			}
+		}
+		parent::setStatus($status,$message,$subject);
+	}
+
+
+	function outsource(){
+		$this->addCondition('outsource_party','<>',null);
+		$this->addCondition('status','<>',array('completed','cancelled','draft','submitted'));
+		$this->tryLoadAny();
+		return $this;
+	}
+
 }

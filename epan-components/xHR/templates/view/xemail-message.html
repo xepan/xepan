@@ -1,23 +1,18 @@
 <div class="" id="{$_name}"  class="{$class}" style="{$style} ">
+	<div class="atk-size-mega page-header" style="margin-top:5px;">
+		{$subject}{$inbox}
+	</div>
 	<div class="row">
-		<div class="col-md-6">
-			To ,<br>
-				{$email_to}
+		<div class="col-md-8">
+			<b>{$email_from}<b>
+			<div class="atk-text-bold">To: {$email_to}</div>
+			<div class="atk-text-normal">
+				{$email_message}
+			</div>
 		</div>
-		<div class="col-md-6 text-right">
-			{$created_at}
-		</div><br><br><br>
-	</div>
-	<div class="atk-row atk-swatch-gray" style="margin:0 auto 0 auto;">
-		<div class="atk-col-12 " >
-			<span class="">Subject: </span><b> {$subject}</b>
+		<div class="col-md-4 text-right">
+			{$created_at} 
+			{$attachment}
 		</div>
-	</div>
-	<div class="well well-sm">
-	{$email_message}
-	</div>
-	
-	<div class="">
-		{$email_from}
 	</div>
 </div>

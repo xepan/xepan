@@ -13,23 +13,25 @@ class Model_MemberDetails extends \Model_Document{
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		
-		$this->addField('mobile_number')->sortable(true)->group('a~6');
-		$this->addField('other_emails')->type('text')->group('a~6');
+		$this->addField('organization_name')->sortable(true)->group('a~4');
+		$this->addField('website')->sortable(true)->group('a~4');
+		$this->addField('mobile_number')->sortable(true)->group('a~4');
+		$this->addField('other_emails')->type('text')->group('a~4');
 		// $this->addField('join_on')->type('datetime')->defaultValue(date('Y-m-d H:i:s'));
 		// $this->addField('verified_on')->type('datetime')->defaultValue(null);
-		$this->addField('landmark')->sortable(true)->group('a~6');
-		$this->addField('city')->sortable(true)->group('a~6');
-		$this->addField('state')->sortable(true)->group('a~6');
-		$this->addField('country')->sortable(true)->group('a~6');
-		$this->addField('pincode')->sortable(true)->group('a~6')->type('int');
+		$this->addField('landmark')->sortable(true)->group('a~4');
+		$this->addField('city')->sortable(true)->group('a~4');
+		$this->addField('state')->sortable(true)->group('a~4');
+		$this->addField('country')->sortable(true)->group('a~4');
+		$this->addField('pincode')->sortable(true)->group('a~4')->type('int');
 		
-		$this->addField('address')->type('text')->group('a~6')->caption('Permanent Address');
-		$this->addField('billing_address')->type('text')->group('a~6');
-		$this->addField('shipping_address')->type('text')->group('a~6');
-		$this->addField('tin_no')->group('a~6');
-		$this->addField('pan_no')->group('a~6');
+		$this->addField('address')->type('text')->group('a~4')->caption('Permanent Address');
+		$this->addField('billing_address')->type('text')->group('a~4');
+		$this->addField('shipping_address')->type('text')->group('a~4');
+		$this->addField('tin_no')->group('a~4');
+		$this->addField('pan_no')->group('a~4');
 
-		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true)->group('a~6');
+		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true)->group('a~4');
 
 						
 		// $this->hasMany('xShop/Order','member_id');

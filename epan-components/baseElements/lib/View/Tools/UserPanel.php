@@ -164,6 +164,7 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 						$user_model->save();
 						}
 					elseif($this->api->current_website['user_activation']=='self_activated'){							
+						$user_model['is_active'] = 0;
 						$user_model->save();
 						$user_model->sendVerificationMail($user_model['email'],null,$user_model['activation_code']);
 					}else{											
@@ -180,10 +181,10 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 						$custom_field_value_model->createNew($user_model['id'],$junk['id'],$allFields[$this->api->normalizeName($junk['name'])]);
 					}
 
-					$this->js(null,$this->js()->univ()->successMessage('Created Successfully'))->reload()->execute();		
+					$this->js(null,$this->js()->univ()->successMessage('Account Created Successfully'))->reload()->execute();		
 				}
 
-			}elseif($_GET['verify_account']){
+			}elseif($_GET['verify_account'] and $this->html_attributes['show_verify_me']){
 				
 				$verify_user_model=$this->add('Model_Users');	
 							
@@ -284,22 +285,22 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 					$redirect_url = $this->api->recall('next_url',$redirect_url);
 						// $this->api->forget('next_url');
 					if($form->isSubmitted()){
-						$user_model = $this->add('Model_Users');
-						$this->api->auth->addEncryptionHook($user_model);
-						$user_model->addCondition('username',$form['username']);
-						$user_model->addCondition('password',$form['password']);
-						$user_model->tryLoadAny();
+						// $this->api->auth->addEncryptionHook($user_model);
+						// $user_model->addCondition('username',$form['username']);
+						// $user_model->addCondition('password',$this->api->auth->encryptPassword($form['password']));
+						// $user_model->tryLoadAny();
 
-						if(!$user_model->loaded())
+						if(!($id = $this->api->auth->verifyCredentials($form['username'],$form['password'])))
 							$form->displayError('username','Wrong Credentials');
 
+						$user_model = $this->add('Model_Users')->load($id);
 						if(!$user_model['is_active'])
 							$form->displayError('username','Please Activate Your Account First');
 
 						//save into Cookies
 						//end of saving into cookies
-						$this->app->auth->addEncryptionHook($user_model);
-						$this->api->auth->login($user_model);
+						// $this->app->auth->addEncryptionHook($user_model);
+						$this->api->auth->login($form['username']);
 						// if reload page
 						$this->api->redirect($this->api->url(null,$redirect_url))->execute();
 						// else

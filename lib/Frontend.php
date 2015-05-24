@@ -89,9 +89,6 @@ class Frontend extends ApiFrontend{
 			// already installed connect to provided settings and go on
 			$this->dbConnect();
 
-			$this->today = date('Y-m-d',strtotime($this->recall('current_date',date('Y-m-d'))));
-        	$this->now = date('Y-m-d H:i:s',strtotime($this->recall('current_date',date('Y-m-d H:i:s'))));
-
 			$this->add( 'jUI' );
 			$this->api->template->appendHTML('js_include','<script src="templates/js/jquery-migrate-1.2.1.min.js"></script>'."\n");
 			$this->api->template->appendHTML('js_include','<script src="templates/js/xepan-jquery.js"></script>'."\n");
@@ -142,6 +139,9 @@ class Frontend extends ApiFrontend{
 
 				$this->add( 'Controller_EpanCMSApp' )->frontEnd();
 				
+				date_default_timezone_set($this->current_website['time_zone']?:'UTC');
+				$this->today = date('Y-m-d',strtotime($this->recall('current_date',date('Y-m-d'))));
+	        	$this->now = date('Y-m-d H:i:s',strtotime($this->recall('current_date',date('Y-m-d H:i:s'))));
 				$this->current_employee = $this->add('xHR/Model_Employee');
 				
 				// MULTISITE CONTROLER

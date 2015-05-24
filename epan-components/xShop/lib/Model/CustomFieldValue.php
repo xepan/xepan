@@ -24,7 +24,7 @@ class Model_CustomFieldValue extends \Model_Table{
 
 		$this->addExpression('field_name_with_value')->set(function($m,$q){
 			return $q->concat(
-				$this->api->db->dsql()->fx('IFNULL',array($m->add('xShop/Model_ItemCustomFieldAssos',array('table_alias'=>'cfdept'))->addCondition('id',$q->getField('itemcustomfiledasso_id'))->fieldQuery('department_phase'),'-')),
+				$q->api->db->dsql()->fx('IFNULL',array($m->add('xShop/Model_ItemCustomFieldAssos',array('table_alias'=>'cfdept'))->addCondition('id',$q->getField('itemcustomfiledasso_id'))->fieldQuery('department_phase'),'-')),
 				' :: ',
 				$m->refSQL('customfield_id')->fieldQuery('name'),
 				' :: ',

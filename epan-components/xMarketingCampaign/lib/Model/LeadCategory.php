@@ -23,10 +23,11 @@ class Model_LeadCategory extends \xEnquiryNSubscription\Model_SubscriptionCatego
 		// $this->addField('name')->sortable(true);
 
 		$this->addExpression('totalleads')->set(function($m,$q){
-			return $m->refSQL('xMarketingCampaign/Lead')->count();
+			// $asso = $m->add('xEnquiryNSubscription/Model_SubscriptionCategoryAssociation')->addCondition('category_id',$m->id);
+			return $m->refSQL('xEnquiryNSubscription/SubscriptionCategoryAssociation')->count();
 		})->sortable(true);
 
-		$this->hasMany('xMarketingCampaign/Lead','leadcategory_id');
+		// $this->hasMany('xMarketingCampaign/Lead','leadcategory_id');
 		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}

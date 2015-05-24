@@ -20,10 +20,9 @@ class Grid_Department extends \Grid{
 		// $this->fooToggler('production_level');
 		return $m;
 	}
+
 	function formatRow(){
 
-		// $this->current_row_html['name']="";
-
-		parent::formatRow();
+		return parent::formatRow();
 	}
 }

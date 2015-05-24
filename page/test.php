@@ -4,6 +4,11 @@
 class page_test extends Page {
 
 	function page_index(){
+		echo $this->api->now;
+		// print_r(timezone_identifiers_list());
+	}
+
+	function page_defdocwrite(){
 		$filename = getcwd().'/epan-components/xHR/default-documents.xepan';
 		$d= $this->add('xHR/Model_Document');
 		$arr = $d->getRows();

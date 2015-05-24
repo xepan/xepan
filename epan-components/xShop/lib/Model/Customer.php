@@ -10,7 +10,8 @@ class Model_Customer extends Model_MemberDetails{
 			'allow_add'=>array(),
 			'allow_edit'=>array(),
 			'allow_del'=>array(),
-			'can_start_processing'=>array(),
+			'can_start_processing'=>array('caption'=>'Create Opportunity'),
+			'can_manage_attachments'=>false
 		);
 
 	function init(){
@@ -23,10 +24,10 @@ class Model_Customer extends Model_MemberDetails{
 
 		$user_j = $this->join('users','users_id');
 		$user_j->addField('user_epan_id','epan_id');
-		$user_j->addField('username')->sortable(true)->group('b~6~Customer Loign');
+		$user_j->addField('username')->sortable(true)->group('b~6~Customer Login')->sortable(true);
 		$user_j->addField('password')->type('password')->group('b~6');
-		$user_j->addField('customer_name','name')->group('a~6~Basic Info')->mandatory(true);
-		$user_j->addField('customer_email','email')->sortable(true)->group('a~6');
+		$user_j->addField('customer_name','name')->group('a~4~Basic Info')->mandatory(true);
+		$user_j->addField('customer_email','email')->sortable(true)->group('a~4');
 		$user_j->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(50)->group('a~6')->sortable(true)->mandatory(false);
 		$user_j->addField('user_account_activation','is_active')->type('boolean')->defaultValue(true)->group('a~6')->sortable(true)->mandatory(false)->caption('Login User Account Activated');
 
@@ -50,13 +51,28 @@ class Model_Customer extends Model_MemberDetails{
 			return $m->refSQL('xShop/Quotation')->count();
 		})->sortable(true);
 
-		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeSave',array($this,'beforeCustomerSave'));
 
 		$this->arrangeFields();		
 	}
 
-	function beforeDelete(){
+	function beforeCustomerSave(){
+		$old_user = $this->add('Model_Users');
+		$old_user->addCondition('username',$this['username']);
+		$old_user->addCondition('username','<>',null);
+		$old_user->addCondition('username','<>','');
 		
+		if(isset($this->api->current_website))
+			$old_user->addCondition('epan_id',$this->api->current_website->id);
+		
+		if($this->loaded()){
+			$old_user->addCondition('id','<>',$this->id);
+		}
+
+		$old_user->tryLoadAny();
+		if($old_user->loaded()){
+			throw $this->exception("This username is allready taken, Chose Another",'ValidityCheck')->setField('username');
+		}
 	}
 
 	function arrangeFields(){
@@ -116,4 +132,10 @@ class Model_Customer extends Model_MemberDetails{
 		$opportunity->save();
 	}
 	
+	function updateEmail($email){
+		if(!$this->loaded()) return false;
+		
+		$this['customer_email'] = $this['customer_email'].', '.$email;
+		$this->save();
+	}
 }

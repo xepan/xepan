@@ -8,11 +8,13 @@ class Model_Email extends \Model_Document{
 	public $root_document_name='xCRM\Email';
 	public $actions=array(
 			'can_view'=>array(),
-			'allow_add'=>array(),
-			'allow_edit'=>array(),
-			'allow_del'=>array(),
-			'can_create_activity'=>array(),
-			'can_create_ticket'=>array(),
+			// 'allow_add'=>array(),
+			// 'allow_edit'=>array(),
+			// 'allow_del'=>array(),
+			'can_create_activity'=>array('caption'=>'Action'),
+			// 'can_create_ticket'=>array(),
+			'can_see_activities'=>false,
+			'can_manage_attachments'=>false
 		);	
 
 	function init(){
@@ -20,9 +22,13 @@ class Model_Email extends \Model_Document{
 		
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
+		$this->hasOne('xProduction/Task','task_id');
 
 		$this->hasOne('xHR/Employee','read_by_employee_id');
+		
+		$this->addField('task_status');
 
+		
 		$this->addField('uid');
 		$this->addField('from'); // Customer, Employee, Supplier ... string
 		$this->addField('from_id');
@@ -31,6 +37,7 @@ class Model_Email extends \Model_Document{
 		$this->addField('to_id');
 
 		$this->addField('from_email');
+		$this->addField('from_name');
 		$this->addField('to_email');
 		$this->addField('cc')->type('text');
 		$this->addField('bcc')->type('text');
@@ -39,11 +46,16 @@ class Model_Email extends \Model_Document{
 		$this->addField('message')->type('text');
 		$this->addField('attachments')->type('text');
 		
+		$this->addField('keep_unread')->type('boolean')->defaultValue(false);
+		
 		$this->addField('direction')->enum(array('sent','received'))->defaultValue('sent');
 
 		$this->addHook('beforeDelete',$this);
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id',null,'Attachments');
+
+		$this->setOrder('created_at','desc');
+
 	//	$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
@@ -92,12 +104,17 @@ class Model_Email extends \Model_Document{
 
 	}
 
-	function addAttachment($attach_id){
+	function addAttachment($attach_id,$name=null){
 		if(!$attach_id) return;
 		$attach = $this->add('xCRM/Model_EmailAttachment');
 		$attach['attachment_url_id'] = $attach_id;
 		$attach['related_document_id'] = $this->id;
+		if($name)
+			$attach['name'] = $name;
+
 		$attach->save();
+
+		return $attach;
 	}
 
 	function send(){		
@@ -111,24 +128,298 @@ class Model_Email extends \Model_Document{
 	}	
 
 	function attachment(){
-		if(!$this->loaded())
-			return new \Dummy();
+		// if(!$this->loaded())
+		// 	return new \Dummy();
 		
-		return $this->add('xCRM/Model_EmailAttachment')->addCondition('related_document_id',$this->id);
+		return $this->ref('Attachments')->addCondition('related_document_id',$this->id);
 
 	}
 
-	function create_Activity_page($page){
-		$form= $page->add('Form_Stacked');
+	function getAttachments(){
+		$attach_arry = array();
+		if($this->loaded()){
+			foreach ($this->attachment() as $attach) {
+				$attach_arry[] = $attach['id'];
+			}
 
-		$form->addSubmit('Create Activity');
-		if($form->isSubmitted()){
+		}
+		
+		return $attach_arry;
+	}
+
+
+	function create_Activity_page($page){
+	
+		$col = $page->add('Columns');
+		$col_left = $col->addColumn(3);
+		$col_midleft = $col->addColumn(3);
+		$col_midright = $col->addColumn(3);
+		$col_right = $col->addColumn(3);
+		
+		//Model____________________________	
+		$customer_model = $page->add('xShop/Model_Customer');
+		$supplier_model = $page->add('xPurchase/Model_Supplier');
+		$affiliate_model = $page->add('xShop/Model_Affiliate');
+		$lead_model = $page->add('xMarketingCampaign/Model_Lead');
+		$employee_model = $page->add('xHR/Model_Employee');
+	
+		//From____________________________________________________	
+		$col_left->add('H4')->set('From')->addClass('atk-swatch-ink atk-padding-small');
+		
+		$from_form = $col_left->add('Form_Stacked');
+
+		$from_lead_field = $from_form->addField('autocomplete/Basic','from_lead');
+		$from_lead_field->setModel($lead_model);
+		
+		$from_customer_field = $from_form->addField('autocomplete/Basic','from_customer');
+		$from_customer_field->setModel($customer_model);
+
+		$from_supplier_field = $from_form->addField('autocomplete/Basic','from_supplier');
+		$from_supplier_field->setModel($supplier_model);
+
+		$from_affiliate_field = $from_form->addField('autocomplete/Basic','from_affiliate');
+		$from_affiliate_field->setModel($affiliate_model);
+		
+		$from_employee_field = $from_form->addField('autocomplete/Basic','from_employee');
+		$from_employee_field->setModel($employee_model);
+
+		$from_form->addField('Checkbox','store_email');
+		$from_form->addSubmit('Set From');
+		
+		if($this['from']){
+
+			switch ($this['from']) {
+				case 'Customer':
+					$from_filed_to_fill = $from_customer_field;
+				break;
+
+				case 'Employee';
+					$from_filed_to_fill = $from_employee_field;
+				break;
+
+				case 'Lead';
+					$from_filed_to_fill = $from_lead_field;
+				break;
+
+				case 'Supplier';
+					$from_filed_to_fill = $from_supplier_field;
+				break;
+
+				case 'Affiliate';
+					$from_filed_to_fill = $from_affiliate_field;
+				break;
+			}
+
+			if(isset($from_filed_to_fill))
+				$from_filed_to_fill->set($this['from_id']);
+		}
+
+		if($from_form->isSubmitted()){
+			if( ($from_form['from_customer']?1:0) + ($from_form['from_supplier']?1:0) + ($from_form['from_affiliate']?1:0) + ($from_form['from_lead']?1:0) > 1 )
+				throw $this->exception('Please Select Any One From','Growl');
 			
+			$from = "";
+			$from_id = "";
+
+			if($from_form['from_customer']){
+				$from = "Customer";
+				$from_id = $from_form['from_customer'];
+
+			}elseif ($from_form['from_supplier']) {
+				$from = "Supplier";
+				$from_id = $from_form['from_supplier'];
+
+			}elseif($from_form['from_lead']){
+				$from = "Lead";
+				$from_id = $from_form['from_lead'];
+
+			}elseif($from_form['from_employee']){
+				$from = "Employee";
+				$from = $from_form['from_employee'];
+
+			}elseif($from_form['from_affiliate']){
+				$from = "Affiliate";
+				$from = $from_form['from_affiliate'];				
+			}
+
+			$this->setFrom($from_id, $from);
+			if($from_form['store_email'])
+				$this->updateFromEmail();
+
 			return true;
+
+		}
+
+		//TO Updatee________________________________________________________
+		$col_midleft->add('H4')->set('To')->addClass('atk-swatch-ink atk-padding-small');
+		
+		$to_form = $col_midleft->add('Form_Stacked');
+		
+		$to_lead_field = $to_form->addField('autocomplete/Basic','to_lead');
+		$to_lead_field->setModel($lead_model);
+		
+		$to_customer_field = $to_form->addField('autocomplete/Basic','to_customer');
+		$to_customer_field->setModel($customer_model);
+		
+		$to_supplier_field = $to_form->addField('autocomplete/Basic','to_supplier');
+		$to_supplier_field->setModel($supplier_model);
+		
+		$to_affiliate_field = $to_form->addField('autocomplete/Basic','to_affiliate');
+		$to_affiliate_field->setModel($affiliate_model);
+		
+		$to_employee_field = $to_form->addField('autocomplete/Basic','to_employee');
+		$to_employee_field->setModel($employee_model);
+		
+		$to_form->addField('Checkbox','store_email');
+		$to_form->addSubmit('Set To');
+		
+		if($this['to']){
+			switch ($this['to']) {
+				case 'Customer':
+					$to_filed_to_fill = $to_customer_field;
+				break;
+
+				case 'Employee';
+					$to_filed_to_fill = $to_employee_field;
+				break;
+
+				case 'Lead';
+					$to_filed_to_fill = $to_lead_field;
+				break;
+
+				case 'Supplier';
+					$to_filed_to_fill = $to_supplier_field;
+				break;
+
+				case 'Affiliate';
+					$to_filed_to_fill = $to_affiliate_field;
+				break;
+			}
+
+			if(isset($to_filed_to_fill))
+				$to_filed_to_fill->set($this['to_id']);
+		}
+
+		if($to_form->isSubmitted()){
+			
+			if( ($to_form['to_customer']?1:0) + ($to_form['to_supplier']?1:0) + ($to_form['to_affiliate']?1:0) + ($to_form['to_lead']?1:0) > 1 )
+				throw $this->exception('Please Select Any One To','Growl');
+			
+			$to = "";
+			$to_id = "";
+
+			if($to_form['to_customer']){
+				$to = "Customer";
+				$to_id = $to_form['from_customer'];
+
+			}elseif ($to_form['to_supplier']) {
+				$to = "Supplier";
+				$to_id = $to_form['to_supplier'];
+
+			}elseif($to_form['to_lead']){
+				$to = "Lead";
+				$to_id = $to_form['to_lead'];
+
+			}elseif($to_form['to_employee']){
+				$to = "Employee";
+				$to_id = $to_form['to_employee'];
+
+			}elseif($from_form['to_affiliate']){
+				$to = "Affiliate";
+				$to_id = $to_form['to_affiliate'];				
+			}
+
+			if($to_form['store_email']){
+				$this->updateToEmail();
+			}
+
+			$this->setTo($to_id, $to);
+			return true;
+			// $to_form->js()->univ()->successMessage('To Update Successfully')->execute();
+			// }
+		}
+
+		//Document ___________________________________________________
+		$col_midright->add('H4')->set('Document')->addClass('atk-swatch-ink atk-padding-small');
+		$document_form = $col_midright->add('Form_Stacked');
+		$document_form->addField('autocomplete/Basic','opportunity')->setModel('xShop/Model_Opportunity');
+		$document_form->addField('autocomplete/Basic','quotation')->setModel('xShop/Model_Quotation');
+		$document_form->addField('autocomplete/Basic','sale_order')->setModel('xShop/Model_Order');
+		$document_form->addField('autocomplete/Basic','purchase_order')->setModel('xPurchase/Model_PurchaseOrder');
+		$document_form->addField('autocomplete/Basic','sale_invoice')->setModel('xShop/Model_SalesInvoice');
+		$document_form->addField('autocomplete/Basic','purchase_invoice')->setModel('xPurchase/Model_PurchaseInvoice');
+		$document_form->addSubmit('Set Document');
+		if($document_form->isSubmitted()){
+
+		}
+
+		//Task_______________________________________________
+
+		$col_right->add('H4')->set('Create Task')->addClass('atk-swatch-ink atk-padding-small');
+		$task_form = $col_right->add('Form_Stacked');
+		$narration_field = $task_form->addField('text','narration')->set($this['subject']);
+		$employee_field = $task_form->addField('autocomplete/Basic','employee','Assign To Employee');
+		$employee_field->setModel($employee_model);
+		$task_end_date_field = $task_form->addField('DatePicker','expected_end_date');
+		$task_priority_field = $task_form->addField('DropDown','priority')->setValueList(array('Low'=>'Low','Medium'=>'Medium','High'=>'High','Urgent'=>'Urgent'))->set('Medium');
+		$task_form->addSubmit('Create Task & Assign');
+		
+		$pre_task = $this->task();
+		if($pre_task->loaded()){
+			$narration_field->set($pre_task['subject']);
+			$employee_field->set($pre_task['employee_id']);
+			$task_end_date_field->set($pre_task['expected_end_date']);
+			$task_priority_field->set($pre_task['Priority']);
+		}
+
+		if($task_form->isSubmitted()){
+			$this->createTask($task_form['narration'],$task_form['employee'],$task_form['expected_end_date'],$task_form['priority']);
+			return true;
+		}
+
+	}	
+
+	//Create Task and Assign To Employee
+	function createTask($narration,$assing_to_employee_id,$expected_end_date=null,$priority='Medium'){
+		if(!$this->loaded()) return false;
+
+		$task = $this->add('xProduction/Model_Task');
+		if($this['task_id'])
+			$task->load($this['task_id']);
+		
+		$task['status']= 'assigned';
+		$task['employee_id']= $assing_to_employee_id;
+		$task['subject'] = $narration;
+		$task['content'] = $this['subject'].'<br/>'.$this['message'];
+		$task['expected_end_date'] = $expected_end_date;
+		$task['Priority'] = $priority;
+		$task->relatedDocument($this);
+		$task->save();
+
+		//Update Email Task Id
+		$this['task_id'] = $task->id;
+		$this['task_status'] = $task['status'];
+		$this->save();
+
+
+		foreach ($this->attachment() as $attach) {
+			$task_attach = $this->add('xCRM/Model_TaskAttachment');
+			$task_attach['attachment_url_id'] = $attach->id;
+			$task_attach['related_document_id'] = $task->id;
+			$task_attach['name'] = $attach['name'];
+			$task_attach->save();
 		}
 		
 	}
 
+	function mark_processed($remark){
+		$this['task_status'] = 'processed';
+		$this->save();
+	}
+
+	function task(){
+		return $this->ref('task_id');
+	}
 
 	function create_Activity(){
 		if(!$this->loaded()) return false;
@@ -161,7 +452,10 @@ class Model_Email extends \Model_Document{
 
 
 	function create_Ticket(){
-
+		$t = $this->add('xCRM/Model_Ticket');
+		$t['status'] = "Submitted";
+		$t->save();
+		$t->relatedDocument($this);
 	}
 
 	function fetchDepartment($department,$conditions=null){
@@ -186,7 +480,8 @@ class Model_Email extends \Model_Document{
 		// return;
 		// Get some mail
 		try{
-			$mailsIds = $mailbox->searchMailBox('SINCE '.date('d-M-Y',strtotime('-5 day')));
+			$conditions = $conditions?:'SINCE '.date('d-M-Y',strtotime('-1 day'));
+			$mailsIds = $mailbox->searchMailBox($conditions);
 			if(!$mailsIds) {
 				$mailbox->disconnect();
 			}else{
@@ -210,15 +505,26 @@ class Model_Email extends \Model_Document{
 					$mail_m['created_at']= $mail->date;
 					$mail_m['from_email'] = $mail->fromAddress;
 					$mail_m['to_email'] = is_array($mail->to)?implode(",", array_keys($mail->to)):$mail->to;
-					$mail_m['cc'] = is_array($mail->cc)?implode(",", $mail->cc):$mail->cc;
+					$mail_m['cc'] = is_array($mail->cc)?implode(",", array_keys($mail->cc)):$mail->cc;
 					$mail_m['subject'] = $mail->subject;
 					$mail_m['message'] = $mail->textHtml;
 					$mail_m['uid'] = $mail->id;
 					$mail_m['direction'] = 'received';
+					$mail_m['from_name'] = $mail->fromName;
 					$mail_m->save();
 					$fetch_email_array[] = $mail_m->id;
-					$mail_m->unload();
+					
+					//MAIL ATTACHMENT 
+					$attachments = $mail->getAttachments();
+					foreach ($attachments as $attach) {
+						$file =	$this->add('filestore/Model_File',array('policy_add_new_type'=>true,'import_mode'=>'move','import_source'=>$attach->filePath));
+						$file['filestore_volume_id'] = $file->getAvailableVolumeID();
+						$file['original_filename'] = $attach->name;
+						$file->save();
+						$mail_m->addAttachment($file->id,$attach->name);
+					}
 
+					$mail_m->unload();
 					$i++;
 				}
 
@@ -228,6 +534,9 @@ class Model_Email extends \Model_Document{
 					foreach ($fetch_email_array as $email_id) {
 						$email->load($email_id);
 						$email->populateFromAndToIds();
+						if($email->forSupport()){
+							$email->create_Ticket();
+						}
 						$email->unload();
 					}
 				}
@@ -238,6 +547,18 @@ class Model_Email extends \Model_Document{
 			$mailbox->disconnect();
 			throw $e;
 		}
+	}
+
+	function forSupport(){
+		$off_email = $this->add('xHR/Model_OfficialEmail');
+		$support_emails = $off_email->supportEmails();
+		
+		foreach ($support_emails as $support_email) {
+			if(	in_array($support_email['imap_email_username'],explode(',', $this['to_email'].','.$this['cc'])) )
+				return true;
+		}
+
+		return false;
 	}
 
 	function populateFromAndToIds(){
@@ -269,6 +590,50 @@ class Model_Email extends \Model_Document{
 		$this->save();
 	}
 
+	function fromMemberName(){
+		
+		if(!$this->loaded()) return;
+		switch ($this['from']) {
+			case 'Customer':
+				$c = $this->add('xShop/Model_Customer')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($c->loaded())					
+					return $c['customer_name'];
+			break;			
+			case 'Supplier':
+				$s = $this->add('xPurchase/Model_Supplier')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($s->loaded())
+					return $s['name'];
+			break;
+			case 'Employee':
+				$e = $this->add('xHR/Model_Employee')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($e->loaded())
+					return $e['name'];
+			break;
+		}
+	}
+
+	function toMemberName(){
+		
+		if(!$this->loaded()) return;
+		switch ($this['to']) {
+			case 'Customer':
+				$c = $this->add('xShop/Model_Customer')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($c->loaded())					
+					return $c['customer_name'];
+			break;			
+			case 'Supplier':
+				$s = $this->add('xPurchase/Model_Supplier')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($s->loaded())
+					return $s['name'];
+			break;
+			case 'Employee':
+				$e = $this->add('xHR/Model_Employee')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($e->loaded())
+					return $e['name'];
+			break;
+		}
+	}
+	
 	function guessTo($doc=false){
 		if($doc){
 			$to = $doc->getTo();
@@ -284,8 +649,6 @@ class Model_Email extends \Model_Document{
 				$this['to'] = 'Supplier';
 				$this['to_id'] = $to->id;
 			}
-		}else{
-
 		}
 
 		$this->save();
@@ -310,8 +673,17 @@ class Model_Email extends \Model_Document{
 		$document->tryLoadBy('name',$document_array_all[1]);
 
 		if($document->loaded()){
-			$document->createActivity('Email',$this['subject'],$this['message'],$this['from'],$this['from_id'], $this['to'], $this['to_id']);
-			$document->relatedDocument($this);
+			$new_activity = $document->createActivity('Email',$this['subject'],$this['message'],$this['from'],$this['from_id'], $this['to'], $this['to_id']);
+			// $new_activity->relatedDocument($document);
+
+			foreach ($this->attachment() as $attachment) {
+				$new_att = $this->add('Model_Attachment');
+				$new_att['related_document_id'] = $new_activity->id;
+				$new_att['related_root_document_name'] = $new_activity->root_document_name;
+				$new_att['name'] = $attachment['name'];
+				$new_att['attachment_url_id'] = $attachment['attachment_url_id'];
+				$new_att->save();
+			}			
 			return $document;
 		}
 
@@ -377,19 +749,27 @@ class Model_Email extends \Model_Document{
 		if(!$official_emails->count()->getOne())
 			return false;
 		
+		$or_cond = $this->dsql()->orExpr();
+
+
 		$official_email_array = array();
 		foreach ($official_emails as $official_email) {
 			$official_email_array[] = $official_email['email_username'];
 			$official_email_array[] = $official_email['imap_email_username'];
+			
+			$or_cond->where('cc','like','%'.$official_email['email_username'].'%');
+			$or_cond->where('cc','like','%'.$official_email['imap_email_username'].'%');
 		}
 
+		$or_cond->where('from_email','in',$official_email_array)
+				->where('to_email','in',$official_email_array);
+
+
 		$this->addCondition(
-					$this->dsql()->orExpr()
-						->where('from_email','in',$official_email_array)
-						->where('to_email','in',$official_email_array)
+					$or_cond
 					);
 
-		$this->tryLoadAny();
+		// $this->tryLoadAny();
 		return $this;
 	}
 
@@ -429,6 +809,134 @@ class Model_Email extends \Model_Document{
 	function setReadByEmployeeNull(){
 		$this['read_by_employee_id'] = null;
 		$this->save();
+	}
+
+
+	function markRead(){
+		if(!$this['read_by_employee_id']){
+			$this['read_by_employee_id'] = $this->api->current_employee->id;
+			$this->save();
+		}
+
+		return $this;
+	}
+
+	function setFrom($from_id,$from,$from_name=null){
+
+		$this['from_id'] = $from_id;
+		$this['from'] = $from;
+		$this['from_name'] = $from_name;
+		$this->save();
+		return $this;
+	}
+
+	function setTo($to_id,$to){
+		$this['to_id'] = $to_id;
+		$this['to'] = $to;
+		$this->save();
+
+		return $this;
+	}
+
+	function loadFrom(){
+		if(!$this->loaded()) return false;
+
+		switch ($this['from']) {
+				case 'Customer':
+					return $this->add('xShop/Model_Customer')->load($this['from_id']);
+				break;
+
+				case 'Employee';
+					return $this->add('xHR/Model_Employee')->load($this['from_id']);
+				break;
+
+				case 'Lead';
+					return $this->add('xMarketingCampaign/Model_Lead')->load($this['from_id']);
+				break;
+
+				case 'Supplier';
+						return $this->add('xPurchase/Model_Supplier')->load($this['from_id']);
+				break;
+
+				case 'Affiliate';
+					return $this->add('xShop/Model_Affiliate')->load($this['from_id']);
+				break;
+			}
+	}
+
+	function loadTo(){
+		if(!$this->loaded()) return false;
+
+
+		switch ($this['from']) {
+				case 'Customer':
+					return $this->add('xShop/Model_Customer')->load($this['from_id']);
+				break;
+
+				case 'Employee';
+					return $this->add('xHR/Model_Employee')->load($this['from_id']);
+				break;
+
+				case 'Lead';
+					return $this->add('xMarketingCampaign/Model_Lead')->load($this['from_id']);
+				break;
+
+				case 'Supplier';
+						return $this->add('xPurchase/Model_Supplier')->load($this['from_id']);
+				break;
+
+				case 'Affiliate';
+					return $this->add('xShop/Model_Affiliate')->load($this['from_id']);
+				break;
+		}
+	}
+
+	function updateFromEmail(){
+		switch ($this['from']) {
+				case 'Customer':
+					$this->add('xShop/Model_Customer')->load($this['from_id'])->updateEmail($this['from_email']);
+				break;
+
+				case 'Employee';
+					$this->add('xHR/Model_Employee')->load($this['from_id'])->updateEmail($this['from_email']);
+				break;
+
+				case 'Lead';
+					$this->add('xMarketingCampaign/Model_Lead')->load($this['from_id'])->updateEmail($this['from_email']);
+				break;
+
+				case 'Supplier';
+					$this->add('xPurchase/Model_Supplier')->load($this['from_id'])->updateEmail($this['from_email']);
+				break;
+
+				case 'Affiliate';
+					$this->add('xShop/Model_Affiliate')->load($this['from_id'])->updateEmail($this['from_email']);
+				break;
+			}
+	}
+
+	function updateToEmail(){
+		switch ($this['to']) {
+				case 'Customer':
+					$this->add('xShop/Model_Customer')->load($this['to_id'])->updateEmail($this['to_email']);
+				break;
+
+				case 'Employee';
+					$this->add('xHR/Model_Employee')->load($this['to_id'])->updateEmail($this['to_email']);
+				break;
+
+				case 'Lead';
+					$this->add('xMarketingCampaign/Model_Lead')->load($this['to_id'])->updateEmail($this['to_email']);
+				break;
+
+				case 'Supplier';
+					$this->add('xPurchase/Model_Supplier')->load($this['to_id'])->updateEmail($this['to_email']);
+				break;
+
+				case 'Affiliate';
+					$this->add('xShop/Model_Affiliate')->load($this['to_id'])->updateEmail($this['to_email']);
+				break;
+			}
 	}
 
 }

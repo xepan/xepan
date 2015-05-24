@@ -18,6 +18,7 @@ class Controller_getRate extends \AbstractController {
 			if(!$this->owner->isEditing('add') and !$this->owner->isEditing('edit')) return;
 			$form = $this->owner->form;
 		}
+
 		if($this->owner instanceof \Form)
 			$form = $this->owner;
 
@@ -43,9 +44,9 @@ class Controller_getRate extends \AbstractController {
         $qty_field->on('change', $get_rate_js_chain);
         $custom_fields_field->on('change', $get_rate_js_chain);
 
-        if($this->api->stickyGET('xget_rate')){
+        if($this->api->stickyGET('xget_rate')){            
             $item = $this->add('xShop/Model_Item')->load($_GET['item_id']);
-            $rate = $item->getPrice($custom_field_values_array = json_decode($_GET['custom_fields'],true), $qty=$_GET['qty'], $rate_chart='retailer');
+            $rate = $item->getPriceBack($custom_field_values_array = json_decode($_GET['custom_fields'],true), $qty=$_GET['qty'], $rate_chart='retailer');
             $out_work = array();
             $out_work[] = $rate_field->js()->val($rate['sale_price']);
             $out_work[] = $amount_field->js()->val($rate['sale_price'] * $_GET['qty']);

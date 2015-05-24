@@ -79,7 +79,8 @@ class page_xShop_page_owner_item extends page_xShop_page_owner_main{
 		
 		$remove_fields_form =array(
 				'negative_qty_allowed',
-				'designs'
+				'designs',
+				'is_blog'
 			);
 
 		$bg = $this->add('xShop/View_Badges_ItemPage');

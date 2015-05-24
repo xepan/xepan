@@ -32,7 +32,7 @@ class Filter_Base extends Filter
         $this->template->trySet('fieldset', 'atk-row');
         $this->template->tryDel('button_row');
 
-        $this->addClass('atk-col-3');
+        // $this->addClass('atk-col-3');
     }
 
     function recursiveRender(){
@@ -80,5 +80,7 @@ class Filter_Base extends Filter
     function defaultTemplate(){
         return array('view/form/xquicksearch');
         return array('form/quicksearch');
+        return array('form_horizontal');
+        return array('form_empty');
     }
 }

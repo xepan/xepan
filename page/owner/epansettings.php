@@ -28,7 +28,8 @@ class page_owner_epansettings extends page_base_owner {
 		$email_tab = $tabs->addTab('Default Email Settings');
 		$email_form = $email_tab->add('Form_Stacked');
 		$email_form->setModel($this->api->current_website,array('email_transport','encryption','email_host','email_port','email_username','email_password','email_reply_to','email_reply_to_name','from_email','from_name','sender_email','sender_name','smtp_auto_reconnect','email_threshold','return_path'));
-
+		$email_form->addSubmit('Update');
+		
 		//SMS Setting
 		$sms_tab = $tabs->addTab('SMS Settings');
 		$sms_form = $sms_tab->add('Form_Stacked');
@@ -65,7 +66,15 @@ class page_owner_epansettings extends page_base_owner {
 			$email_form->js()->univ()->successMessage('Information Updated')->execute();
 		}
 
-		// $company_settings= $tabs->addTabURL('./comp_settings','Company Settings');
+		$misc_settings= $tabs->addTab('Misc Settings');
+		$misc_form = $misc_settings->add('Form_Stacked');
+		$misc_form->setModel($this->api->current_website,array('time_zone'));
+		$misc_form->addSubmit('Update');
+
+		if($misc_form->isSubmitted()){
+			$misc_form->save();
+			$misc_form->js()->univ()->successMessage('Updated')->execute();
+		}
 	}
 
 	function page_comp_settings(){
