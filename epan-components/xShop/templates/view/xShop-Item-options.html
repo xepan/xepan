@@ -383,13 +383,12 @@ $('#xShop-gridbtn').click(function(event) {
 // 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 // });
 
-
 $('#xshop_item_topbar').change(function(event) {
 if($('#xshop_item_topbar').is(':checked')?$(current_selected_component).attr('xshop_item_topbar','true'):$(current_selected_component).attr('xshop_item_topbar','false'));
 $(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
 
-$('#xshop-item-editcss').click(function(){
+$('#xshop-item-editcss').click(function(event){
 	$(this).univ().frameURL('Edit CSS ( xShop item Display Layout )','index.php?page=xShop_page_itemlayoutcss&cut_page=1&xshop_item_layout='+$(current_selected_component).attr('xshop_itemlayout'));
 });
 
