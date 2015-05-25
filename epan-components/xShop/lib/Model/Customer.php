@@ -5,7 +5,8 @@ namespace xShop;
 class Model_Customer extends Model_MemberDetails{
 	public $title_field ='customer_search_phrase';
 	public $is_view = true;
-	
+	public $root_document_name="xShop\Customer";
+
 	public $actions=array(
 			'allow_add'=>array(),
 			'allow_edit'=>array(),
