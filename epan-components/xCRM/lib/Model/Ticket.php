@@ -36,13 +36,15 @@ class Model_Ticket extends \Model_Document{
 		$this->addField('priority')->enum(array('Low','Medium','High','Urgent'))->defaultValue('Medium');
 
 		$this->hasMany('xCRM/TicketAttachment','related_document_id',null,'Attachments');
-		$this->addHook('beforeSave',$this);
+		$this->addHook('afterSave',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');	
 		
 	}
 
-	function beforeSave(){
+	function afterSave(){
+
 		$this['name'] = "[".$this->root_document_name." ".sprintf("%05d", $this->id)."]";
+		$this->save();
 	}
 
 	function addAttachment($attach_id,$name=null){
