@@ -17,6 +17,8 @@ class Model_Ticket extends \Model_Document{
  		$this->hasOne('xShop/Model_Order','order_id');
 		
 		$this->addField('name');
+
+		$this->hasMany('xCRM/TicketAttachment','related_document_id',null,'Attachments');
 		//$this->add('dynamic_model/Controller_AutoCreator');	
 		
 	}
