@@ -60,7 +60,7 @@ class Model_OfficialEmail extends \Model_Document{
 	
 
 	function supportEmails(){
-		return $this->addCondition('is_support_email',true)->addCondition('statu','active')->tryLoadAny();
+		return $this->addCondition('is_support_email',true)->addCondition('status','active')->tryLoadAny();
 	}
 
 }

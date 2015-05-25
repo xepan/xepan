@@ -51,7 +51,8 @@ class Grid_GenericDocument extends \Grid{
 		// $this->addFormatter('content','imagethumb');
 		$this->addPaginator(50);
 		$this->addSno();
-		$this->addQuickSearch(array('name'),null,'Filter_Document');
+		$flt=$this->addQuickSearch(array('name'),null,'Filter_Document');
+		$flt->doc_cat_field->getModel()->addCondition('status',$model['status']);
 		
 		$btn= $this->addButton("Category Management");
 		if(!$btn instanceof \Dummy and $btn->isClicked()){
