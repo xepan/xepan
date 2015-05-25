@@ -138,4 +138,96 @@ class Model_Customer extends Model_MemberDetails{
 		$this['customer_email'] = $this['customer_email'].', '.$email;
 		$this->save();
 	}
+
+	function see_activities_page($page){
+		$q=$this->dsql();
+		$activities = $this->add('xCRM/Model_Activity')
+								->addCondition(
+									$q->orExpr()
+										->where(
+											$q->andExpr()
+											->where('from','Customer')
+											->where('from_id',$this->id)
+											)
+										->where(
+											$q->andExpr()
+												->where('to','Customer')
+												->where('to_id',$this->id)
+										)
+					);
+		$activities->setOrder('created_at','desc');
+
+		$crud = $page->add('CRUD');
+
+		if($crud->isEditing('add')){
+			$activities->getElement('action')->setValueList(array('comment'=>'Comment','email'=>'E-mail','call'=>'Call','sms'=>'SMS','personal'=>'Personal','action'=>'Action Taken'))->display(array('form'=>'Form_Field_DropDownNormal'));
+		}
+
+		if($crud->isEditing('edit')){
+			$activities->getElement('action')->display(array('form'=>'Readonly'));
+		}
+
+		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to','attachment_id'));
+
+		if(!$crud->isEditing()){
+			$crud->grid->controller->importField('created_at');
+			$g = $crud->grid;
+			$g->addMethod('format_activity',function($g,$f)use($activities){
+					$v = $g->api->add('View_Activity');
+					$v->setModel($g->model);
+					$g->current_row_html[$f]= $v->getHTML();
+				});
+			$g->addFormatter('action','activity');
+
+			$g->removeColumn('created_at');
+			$g->removeColumn('action_from');
+			$g->removeColumn('subject');
+			$g->removeColumn('message');
+			$g->removeColumn('notify_via_email');
+			$g->removeColumn('email_to');
+			$g->removeColumn('notify_via_sms');
+			$g->removeColumn('sms_to');
+			$g->removeColumn('attachment_id');
+
+		}
+
+
+		if($crud->isEditing('add')){
+			$form = $crud->form;
+			$action_field = $crud->form->getElement('action');
+			$send_email_field = $crud->form->getElement('notify_via_email');
+			$send_sms_field = $crud->form->getElement('notify_via_sms');
+			
+			$email_to_field = $crud->form->getElement('email_to')->set($this->getTo()->email());
+			$sms_to_field = $crud->form->getElement('sms_to')->set($this->getTo()->mobileno());
+			//Actions if Email
+			$action_field->js('change')->univ()->bindConditionalShow(array(
+				'comment'=>array('email_to','notify_via_email'),
+				'call'=>array('email_to','notify_via_email'),
+				'sms'=>array('email_to','notify_via_email'),
+				'action'=>array('email_to','notify_via_email'),
+				'personal'=>array('email_to','notify_via_email'),
+				'email'=>array('email_to')
+				));
+
+			//Send Email
+			$send_email_field->js('change')->univ()->bindConditionalShow(array(
+				''=>'',
+				'*'=>array('email_to')
+			),'div.atk-form-row');
+
+			//Send SMS
+			$send_sms_field->js('change')->univ()->bindConditionalShow(array(
+				''=>'',
+				'*'=>array('sms_to')
+			),'div.atk-form-row');
+
+			
+			//File Type for Attachment
+
+		}
+
+		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>'All','allow_add'=>true,'allow_edit'=>'Self Only','allow_del'=>'Self Only')));
+
+	}
 }
