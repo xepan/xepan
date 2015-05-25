@@ -13,9 +13,9 @@ class page_xHR_page_owner_department_departmentemail extends page_xHR_page_owner
 
 		if(!$dept->isCRM()){
 			$email->getElement('is_support_email')->system(true);
-			$email->getElement('auto_reply')->system(true);
-			$email->getElement('email_subject')->system(true);
-			$email->getElement('email_body')->system(true);
+			// $email->getElement('auto_reply')->system(true);
+			// $email->getElement('email_subject')->system(true);
+			// $email->getElement('email_body')->system(true);
 		}
 		
 
