@@ -16,6 +16,7 @@ class Model_Ticket extends \Model_Document{
  		$this->hasOne('xShop/Model_Customer','customer_id');
  		$this->hasOne('xShop/Model_Order','order_id');
 		
+		$this->addField('name');
 		//$this->add('dynamic_model/Controller_AutoCreator');	
 		
 	}

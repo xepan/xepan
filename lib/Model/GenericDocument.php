@@ -17,11 +17,14 @@ class Model_GenericDocument extends Model_Document {
 
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
+		$this->hasOne('Model_GenericDocumentCategory','generic_doc_category_id');
 
 		$this->addField('name');
 		$this->addField('content')->type('text')->display(array('form'=>'RichText'));
 
 		$this->hasMany('GenericDocumentAttachment','related_document_id',null,'Attachments');
+	
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function attechmentImages(){

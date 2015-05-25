@@ -98,7 +98,7 @@ class Model_Activity extends \Model_Document{
 		$this->addField('notify_via_sms')->type('boolean')->defaultValue(false);
 		$this->addField('sms_to');
 		
-		$this->add('filestore/Field_File','attachment_id');
+		$this->add('filestore/Field_File','attachment_id',array('policy_add_new_type'=>true));
 		$this->setOrder('created_at','desc');
 
 		$this->addHook('beforeSave,beforeDelete',function($obj){

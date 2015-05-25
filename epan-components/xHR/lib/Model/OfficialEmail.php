@@ -22,8 +22,11 @@ class Model_OfficialEmail extends \Model_Document{
 
 		$this->hasOne('xHR/Department','department_id')->sortable(true)->display(array('form'=>'autocomplete/Basic'));
 		$this->hasOne('xHR/Employee','employee_id')->sortable(true)->display(array('form'=>'autocomplete/Basic'));
+		
 
 		$this->addField('email_transport')->setValueList(array('SmtpTransport'=>'SMTP Transport','SendmailTransport'=>'SendMail','MailTransport'=>'PHP Mail function'))->defaultValue('smtp')->group('es~6~<i class="fa fa-cog "></i> OutGoing - Email Transporter To Use');
+		$this->addField('is_support_email')->type('boolean')->group('es~6');
+		
 		$this->addField('encryption')->enum(array('none','ssl','tls'))->mandatory(true)->group('ecs~1~<i class="glyphicon glyphicon-link "></i>OutGoing - Connection Settings');
 		$this->addField('email_host')->group('ecs~4');
 		$this->addField('email_port')->group('ecs~1');
@@ -46,5 +49,13 @@ class Model_OfficialEmail extends \Model_Document{
 	// 	$this->delete();
 	// }
 
+	function department(){
+		return $this->ref('department_id');
+	}
 	
+
+	function supportEmails(){
+		return $this->addCondition('is_support_email',true);
+	}
+
 }

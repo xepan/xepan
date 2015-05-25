@@ -11,6 +11,9 @@ class page_xHR_page_owner_department_departmentemail extends page_xHR_page_owner
 		$email->addCondition('department_id',$dept_id);
 		$email->getElement('employee_id')->system(true);
 
+		if(!$dept->isCRM())
+			$email->getElement('is_support_email')->system(true);
+		
 
 		$crud=$this->add('CRUD',array('grid_class'=>'xHR/Grid_OfficialEmail'));
 		$crud->setModel($email);
@@ -23,6 +26,7 @@ class page_xHR_page_owner_department_departmentemail extends page_xHR_page_owner
 			$g->removeColumn('email_password');
 			$g->removeColumn('related_document');
 		}
+
 		$crud->add('xHR/Controller_Acl');
 
 	}
