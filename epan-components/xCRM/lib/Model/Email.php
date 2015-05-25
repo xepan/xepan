@@ -639,6 +639,11 @@ class Model_Email extends \Model_Document{
 				if($e->loaded())
 					return $e['name'];
 			break;
+			case 'Affiliate':
+				$e = $this->add('xShop/Model_Affiliate')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($e->loaded())
+					return $e['name'];
+			break;
 		}
 	}
 
