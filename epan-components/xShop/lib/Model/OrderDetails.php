@@ -82,10 +82,13 @@ class Model_OrderDetails extends \Model_Document{
 	function beforeSave(){
 		if($this->dirty['invoice_id'] and $this['invoice_id'])
 			return;
-		//CHECK FOR THE ORDER IS UNDER PROCESSING/COMPLETE
-		if(in_array($this->order()->get('status'), array('draft','submitted','redesign')))
-			return ;
-		//CHECK FOR NEW/UPDATE DEPARTMENT YES
+		
+		if($this->loaded() AND $this->dirty['custom_fields']){
+
+			//CHECK FOR THE ORDER IS UNDER PROCESSING/COMPLETE
+			if(in_array($this->order()->get('status'), array('draft','submitted','redesign')))
+				return ;
+			//CHECK FOR NEW/UPDATE DEPARTMENT YES
 			if(count($new_department = $this->getNewDepartment())){
 				//$ND = GET NEW DEPARTMENT ID AND LEVEL
 				//$LC_J = GET LAST JOBCARD COMPLETED IN DEPARTMENT LEVEL
@@ -107,6 +110,7 @@ class Model_OrderDetails extends \Model_Document{
 			//remove not completed jobcard
 			$this->removeUncompletedJobcard();
 			$this->reDepartmentAssociation();
+		}
 	}
 
 	function removeUncompletedJobcard(){
@@ -122,8 +126,8 @@ class Model_OrderDetails extends \Model_Document{
 				$jc->delete();
 			}
 
-			// $dept_status['status'] = 'Waiting';
-			// $dept_status->save();
+			$dept_status['status'] = 'Waiting';
+			$dept_status->save();
 		}
 	}
 
@@ -170,6 +174,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->createDepartmentalAssociations();
 		if($department_association = $this->nextDeptStatus()){
 			$department_association->createJobCardFromOrder();
+			
 		}
 	}
 
@@ -363,6 +368,9 @@ class Model_OrderDetails extends \Model_Document{
 			return $return_array;
 		}else{
 			$m = $this->add('xShop/Model_OrderItemDepartmentalStatus');
+			$m->join('xhr_departments','department_id')->addField('production_level');
+			$m->setOrder('production_level');
+			
 			$m->addCondition('orderitem_id',$this->id);
 			if($department){
 				$m->addCondition('department_id',$department->id);
