@@ -37,7 +37,7 @@ class Grid_Lead extends \Grid{
 						)
 					->_dsql()
 					->field($model->dsql()->expr("substring_index(group_concat(name SEPARATOR ', '), ', ', 3)"))
-				);
+				)->sortable(true);
 
 		if(!count($fields))
 			$fields = array('email','name','from_app','is_ok','ip','lead_type','organization_name','website','phone','mobile_no','associated_categories','total_opportunity','total_quotation','last_updated_on','recent_3_cateories'); 

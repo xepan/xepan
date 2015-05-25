@@ -177,7 +177,7 @@ class Model_Email extends \Model_Document{
 		$from_supplier_field = $from_form->addField('autocomplete/Basic','from_supplier');
 		$from_supplier_field->setModel($supplier_model);
 
-		$from_affiliate_field = $from_form->addField('autocomplete/Basic','from_affiliate');
+		$from_affiliate_field = $from_form->addField('autocomplete/Plus','from_affiliate');
 		$from_affiliate_field->setModel($affiliate_model);
 		
 		$from_employee_field = $from_form->addField('autocomplete/Basic','from_employee');
@@ -235,11 +235,11 @@ class Model_Email extends \Model_Document{
 
 			}elseif($from_form['from_employee']){
 				$from = "Employee";
-				$from = $from_form['from_employee'];
+				$from_id = $from_form['from_employee'];
 
 			}elseif($from_form['from_affiliate']){
 				$from = "Affiliate";
-				$from = $from_form['from_affiliate'];				
+				$from_id = $from_form['from_affiliate'];				
 			}
 
 			$this->setFrom($from_id, $from);
@@ -412,9 +412,19 @@ class Model_Email extends \Model_Document{
 		
 	}
 
+	function start_processing($remark=null){
+		$this['task_status'] = 'processing';
+		$this->save();
+	}
+
 	function mark_processed($remark){
 		$this['task_status'] = 'processed';
 		$this->save();
+	}
+
+	function approve(){
+		$this['task_status'] = 'completed';
+		$this->save();	
 	}
 
 	function task(){

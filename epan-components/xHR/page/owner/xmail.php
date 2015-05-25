@@ -223,7 +223,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		}
 
 		$mail_crud=$right_col->add('CRUD');
-		$mail_crud->setModel($emails,array(),array('subject','to_email','from_email','message','from','id','from_id','direction','task_id','task_status'));
+		$mail_crud->setModel($emails,array(),array('subject','to_email','from_email','message','from','id','from_id','direction','task_id','task_status','from_name','cc','bcc'));
 		$mg=$mail_crud->grid;
 		
 		if(!$mail_crud->isEditing()){
@@ -290,6 +290,9 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 
 			$mg->removeColumn('to_email');
 			$mg->removeColumn('from_email');
+			$mg->removeColumn('from_name');
+			$mg->removeColumn('cc');
+			$mg->removeColumn('bcc');
 			$mg->removeColumn('message');
 			$mg->removeColumn('id');
 			$mg->removeColumn('from_id');
@@ -312,6 +315,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			}
 
 			$mg->addQuickSearch(array('from_email','to_email','cc','bcc','subject','message'),null,'xCRM/Filter_xMail');
+
 		}
 
 		
