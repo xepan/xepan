@@ -82,4 +82,18 @@ class Model_Ticket extends \Model_Document{
 			$new_activity = $this->createActivity('Email',$subject,$email_body,$this['from'],$this['from_id'], $this['to'], $this['to_id'],$email_to);
 		}
 	}
+
+	function customer(){
+		$cstmr = $this->add('xShop/Model_Customer');
+		$cstmr->addCondition('customer_email','like','%'.$this['from_email'].'%');
+		
+		if($cstmr->count()->getOne() > 1)
+			return false;
+
+		$cstmr->tryLoadAny();
+		if($cstmr->loaded())
+			return $cstmr;
+
+		return false;
+	}
 }
