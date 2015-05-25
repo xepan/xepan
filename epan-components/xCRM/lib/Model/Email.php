@@ -464,11 +464,23 @@ class Model_Email extends \Model_Document{
 	function create_Ticket(){
 		$t = $this->add('xCRM/Model_Ticket');
 		$t['status'] = "Submitted";
+		$t['uid'] = $this['uid'];
+		$t['from'] = $this['from'];
+		$t['from_id'] = $this['from_id'];
+		$t['from_email'] = $this['from_email'];
+		$t['from_name'] = $this['from_name'];
+		$t['to'] = $this['to'];
+		$t['to_id'] = $this['to_id'];
+		$t['to_email'] = $this['to_email'];
+		$t['cc'] = $this['cc'];
+		$t['subject'] = $this['subject'];
+		$t['message'] = $this['message'];
 		
 		if($this['from']=="Customer")
 			$t['customer_id'] = $this['from_id'];
-		
+
 		$t->save();
+		$t->autoReply();
 		$t->relatedDocument($this);
 	}
 
@@ -568,7 +580,7 @@ class Model_Email extends \Model_Document{
 		$support_emails = $off_email->supportEmails();
 		
 		foreach ($support_emails as $support_email) {
-			if(	in_array($support_email['imap_email_username'],explode(',', $this['to_email'].','.$this['cc'])) )
+			if(	in_array($support_email['imap_email_username'],explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc'])) )
 				return true;
 		}
 
