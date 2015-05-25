@@ -61,9 +61,9 @@ class Model_Ticket extends \Model_Document{
 			if(!$this['from_email'])
 				return false;
 
-			$subject = $support_email['email_subject']?:"Ticket Created";
+			$subject = $this['name']." ".$support_email['email_subject']?:"Ticket Created";
 			$subject = str_replace("{{customer_name}}", $this['customer'], $subject);
-			$subject = str_replace("{{ticket_number}}", $this['name'], $subject);
+			// $subject = str_replace("{{ticket_number}}", $this['name'], $subject);
 			
 			$email_body = $support_email['email_body'];
 			$footer = $support_email['footer'];
