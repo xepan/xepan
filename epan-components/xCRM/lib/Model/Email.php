@@ -462,6 +462,7 @@ class Model_Email extends \Model_Document{
 
 
 	function create_Ticket(){
+		echo "3";
 		$t = $this->add('xCRM/Model_Ticket');
 		$t['status'] = "Submitted";
 		$t['uid'] = $this['uid'];
@@ -479,9 +480,9 @@ class Model_Email extends \Model_Document{
 		if($this['from']=="Customer")
 			$t['customer_id'] = $this['from_id'];
 
+		$t->relatedDocument($this);
 		$t->save();
 		$t->autoReply();
-		$t->relatedDocument($this);
 	}
 
 	function fetchDepartment($department,$conditions=null){
@@ -561,6 +562,7 @@ class Model_Email extends \Model_Document{
 						$email->load($email_id);
 						$email->populateFromAndToIds();
 						if($email->forSupport()){
+							echo "2";
 							$email->create_Ticket();
 						}
 						$email->unload();
@@ -576,6 +578,7 @@ class Model_Email extends \Model_Document{
 	}
 
 	function forSupport(){
+		echo "1";
 		$off_email = $this->add('xHR/Model_OfficialEmail');
 		$support_emails = $off_email->supportEmails();
 		

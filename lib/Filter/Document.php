@@ -11,7 +11,8 @@ class Filter_Document extends \Filter_Base
         //Category
         $this->search_field = $this->addField('Line', 'q', '')->setAttr('placeholder','Search')->setNoSave();
         // $this->type_field = $this->addField('Dropdown', 'category', '')->setEmptyText('All NewsLetter Category')->setNoSave()->setModel('Model_GenericDocumentCategory');
-        $this->doc_cat_field = $this->addField('MultiSelect', 'category', '')->setModel('Model_GenericDocumentCategory');
+        $this->doc_cat_field = $this->addField('MultiSelect', 'category', '');
+        $this->doc_cat_field->setModel('Model_GenericDocumentCategory');
 
         // $this->doc_cat_field->setAttr('multiple','multiple');
         // $this->doc_cat_field->selectnemu_options=array('maxWidth'=>200);
