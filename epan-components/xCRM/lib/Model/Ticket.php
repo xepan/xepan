@@ -74,6 +74,8 @@ class Model_Ticket extends \Model_Document{
 			$email_body = str_replace("{{customer_name}}", $this['customer']?$this['customer']:" ", $email_body);
 			$email_body = str_replace("{{created_date}}", $this['created_date'], $email_body);
 
+			$email_body = $email_body .'<br/>'.$footer;
+			 
 			$this->sendEmail($this['from_email'],$subject,$email_body,$this['cc'],$this['bcc']);
 				
 			$email_to = $this['from_email'].','.$this['cc'].$this['bcc'];
