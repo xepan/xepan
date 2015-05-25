@@ -36,15 +36,15 @@ class Model_Ticket extends \Model_Document{
 		$this->addField('priority')->enum(array('Low','Medium','High','Urgent'))->defaultValue('Medium');
 
 		$this->hasMany('xCRM/TicketAttachment','related_document_id',null,'Attachments');
-		$this->addHook('afterSave',$this);
+		// $this->addHook('afterSave',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');	
 		
 	}
 
 	function afterSave(){
 
-		$this['name'] = "[".$this->root_document_name." ".sprintf("%05d", $this->id)."]";
-		$this->save();
+		// $this['name'] = "[".$this->root_document_name." ".sprintf("%05d", $this->id)."]";
+		// $this->save();
 	}
 
 	function addAttachment($attach_id,$name=null){
@@ -77,14 +77,16 @@ class Model_Ticket extends \Model_Document{
 			if(!$this['from_email'])
 				return false;
 
-			$subject = $this['name']." ".$support_email['email_subject']?:"Ticket Created";
+			$ticket_number = "[".$this->root_document_name." ".$this['name']."]";
+
+			$subject = $ticket_number." ".$support_email['email_subject']?:"Ticket Created";
 			$subject = str_replace("{{customer_name}}", $this['customer'], $subject);
 			// $subject = str_replace("{{ticket_number}}", $this['name'], $subject);
 			
 			$email_body = $support_email['email_body'];
 			$footer = $support_email['footer'];
 
-			$email_body = str_replace("{{ticket_number}}", $this['name'], $email_body);
+			$email_body = str_replace("{{ticket_number}}", $ticket_number, $email_body);
 			$email_body = str_replace("{{status}}", $this['status'], $email_body);
 			$email_body = str_replace("{{priority}}", $this['priority'], $email_body);
 			$email_body = str_replace("{{customer_name}}", $this['customer']?$this['customer']:" ", $email_body);

@@ -564,7 +564,7 @@ class Model_Email extends \Model_Document{
 					foreach ($fetch_email_array as $email_id) {
 						$email->load($email_id);
 						$email->populateFromAndToIds();
-						if($email->forSupport()){
+						if($email->forSupport() and !$email->hasDocument()){
 							$email->create_Ticket();
 						}
 						$email->unload();
@@ -682,6 +682,26 @@ class Model_Email extends \Model_Document{
 		}
 
 		$this->save();
+	}
+
+	function hasDocument(){
+		preg_match_all('/([a-zA-Z]+[\\\\][a-zA-Z]+[ ]+[0-9]+)/',$this['subject'],$preg_match_array);
+		// throw new \Exception($this['subject'].  var_dump($preg_match_array[1][0]), 1);
+		if(!count($preg_match_array[1])) return false;
+		
+
+		//Guess Ticket
+		$relatedDocument = $preg_match_array[1][0];
+		$document_array_all = explode(" ", $relatedDocument);
+		$document_array = explode("\\", $document_array_all[0]);
+
+		$document = $this->add($document_array[0].'\Model_'.$document_array[1]);
+		$document->tryLoadBy('name',$document_array_all[1]);
+
+		if($document->loaded())
+			return true;
+
+		return false;
 	}
 
 	function guessDocumentAndCreateActivityOrTicket(){
