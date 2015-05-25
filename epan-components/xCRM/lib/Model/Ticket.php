@@ -44,6 +44,19 @@ class Model_Ticket extends \Model_Document{
 		$this['name'] = "[".$this->root_document_name." ".$this['name']."]";
 	}
 
+	function addAttachment($attach_id,$name=null){
+		if(!$attach_id) return;
+		$attach = $this->add('xCRM/Model_TicketAttachment');
+		$attach['attachment_url_id'] = $attach_id;
+		$attach['related_document_id'] = $this->id;
+		if($name)
+			$attach['name'] = $name;
+
+		$attach->save();
+
+		return $attach;
+	}
+	
 	function supportEmail(){
 		$off_email = $this->add('xHR/Model_OfficialEmail');
 		$off_email->addCondition('imap_email_username',$this['to_email'])
