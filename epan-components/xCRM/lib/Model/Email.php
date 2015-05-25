@@ -564,7 +564,7 @@ class Model_Email extends \Model_Document{
 					foreach ($fetch_email_array as $email_id) {
 						$email->load($email_id);
 						$email->populateFromAndToIds();
-						if($email->forSupport() and !$email->hasDocument()){
+						if(!($email->hasDocument()) AND $email->forSupport()){
 							$email->create_Ticket();
 						}
 						$email->unload();
@@ -699,7 +699,7 @@ class Model_Email extends \Model_Document{
 		$document->tryLoadBy('name',$document_array_all[1]);
 
 		if($document->loaded())
-			return true;
+			return $document;
 
 		return false;
 	}
