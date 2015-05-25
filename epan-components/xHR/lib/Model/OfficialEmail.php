@@ -55,7 +55,7 @@ class Model_OfficialEmail extends \Model_Document{
 	
 
 	function supportEmails(){
-		return $this->addCondition('is_support_email',true)->tryLoadAny();
+		return $this->addCondition('is_support_email',true)->addCondition('statuc','active')->tryLoadAny();
 	}
 
 }
