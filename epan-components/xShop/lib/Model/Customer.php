@@ -142,19 +142,20 @@ class Model_Customer extends Model_MemberDetails{
 
 	function see_activities_page($page){
 		$q=$this->dsql();
-		$activities = $this->add('xCRM/Model_Activity')
-								->addCondition(
-									$q->orExpr()
-										->where(
-											$q->andExpr()
-											->where('from','Customer')
-											->where('from_id',$this->id)
-											)
-										->where(
-											$q->andExpr()
-												->where('to','Customer')
-												->where('to_id',$this->id)
-										)
+
+		$activities = $this->add('xCRM/Model_Activity');
+		$activities->addCondition(
+						$q->orExpr()
+							->where(
+								$q->andExpr()
+								->where('from','Customer')
+								->where('from_id',$this->id)
+								)
+							->where(
+								$q->andExpr()
+									->where('to','Customer')
+									->where('to_id',$this->id)
+						)
 					);
 		$activities->setOrder('created_at','desc');
 
@@ -167,7 +168,11 @@ class Model_Customer extends Model_MemberDetails{
 		if($crud->isEditing('edit')){
 			$activities->getElement('action')->display(array('form'=>'Readonly'));
 		}
-
+		$self=$this;
+		$crud->addHook('crud_form_submit',function($crud,$form)use($self){
+			$form->model->relatedDocument($self);
+			return true;
+		});
 		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to','attachment_id'));
 
 		if(!$crud->isEditing()){
@@ -199,8 +204,10 @@ class Model_Customer extends Model_MemberDetails{
 			$send_email_field = $crud->form->getElement('notify_via_email');
 			$send_sms_field = $crud->form->getElement('notify_via_sms');
 			
-			$email_to_field = $crud->form->getElement('email_to')->set($this->getTo()->email());
-			$sms_to_field = $crud->form->getElement('sms_to')->set($this->getTo()->mobileno());
+			$party= $this->getParty();
+			
+			$email_to_field = $crud->form->getElement('email_to')->set($party->email());
+			$sms_to_field = $crud->form->getElement('sms_to')->set($party->mobileno());
 			//Actions if Email
 			$action_field->js('change')->univ()->bindConditionalShow(array(
 				'comment'=>array('email_to','notify_via_email'),
