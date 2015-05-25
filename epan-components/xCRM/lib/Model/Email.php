@@ -454,6 +454,10 @@ class Model_Email extends \Model_Document{
 	function create_Ticket(){
 		$t = $this->add('xCRM/Model_Ticket');
 		$t['status'] = "Submitted";
+		
+		if($this['from']=="Customer")
+			$t['customer_id'] = $this['from_id'];
+		
 		$t->save();
 		$t->relatedDocument($this);
 	}
