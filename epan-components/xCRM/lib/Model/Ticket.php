@@ -42,7 +42,7 @@ class Model_Ticket extends \Model_Document{
 	}
 
 	function beforeSave(){
-		$this['name'] = "[".$this->root_document_name." ".$this['name']."]";
+		$this['name'] = "[".$this->root_document_name." ".sprintf("%05d", $x->id)."]";
 	}
 
 	function addAttachment($attach_id,$name=null){
