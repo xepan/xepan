@@ -40,9 +40,9 @@ class Model_Ticket extends \Model_Document{
 		
 	}
 
-	// function beforeSave(){
-	// 	$this['name'] = "[".$this->root_document_name.$this['name']."]";
-	// }
+	function beforeSave(){
+		$this['name'] = "[".$this->root_document_name." ".$this['name']."]";
+	}
 
 	function supportEmail(){
 		$off_email = $this->add('xHR/Model_OfficialEmail');
