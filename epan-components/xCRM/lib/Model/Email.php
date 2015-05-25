@@ -671,7 +671,7 @@ class Model_Email extends \Model_Document{
 	
 	function guessTo($doc=false){
 		if($doc){
-			$to = $doc->getTo();
+			$to = $doc->getParty();
 			if($to instanceof \xShop\Model_Customer){
 				$this['to'] = 'Customer';
 				$this['to_id'] = $to->id;
