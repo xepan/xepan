@@ -39,6 +39,11 @@ class Model_OfficialEmail extends \Model_Document{
 		$this->addField('imap_email_password')->type('password')->group('pop~1')->caption('Password');
 		$this->addField('imap_flags')->mandatory(true)->defaultValue('/imap/ssl/novalidate-cert')->group('pop~6')->caption('Flags');
 
+		$this->addField('auto_reply')->type('boolean')->group('ar~4~Auto Reply');
+		$this->addField('email_subject')->group('ar~12')->hint('{{customer_name}},{{ticket_number}}');
+		$this->addField('email_body')->type('text')->display(array('form'=>'RichText'))->group('ar~12')->hint('{{ticket_number}},{{status}},{{priority}},{{customer_name}},{{created_date}}');
+
+		$this->addField('footer')->type('text')->display(array('form'=>'RichText'))->group('e~12~Email Footer');
 		// $this->addHook('beforeDelete',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
@@ -55,7 +60,7 @@ class Model_OfficialEmail extends \Model_Document{
 	
 
 	function supportEmails(){
-		return $this->addCondition('is_support_email',true)->tryLoadAny();
+		return $this->addCondition('is_support_email',true)->addCondition('statuc','active')->tryLoadAny();
 	}
 
 }

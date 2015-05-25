@@ -9,8 +9,11 @@ class Model_Ticket_Submitted extends Model_Ticket{
 			'can_submit'=>array(),
 			'can_assign'=>array(),
 		);
+	
 	function init(){
 		parent::init();
+
 		$this->addCondition('status','submitted');
+	
 	}
 }	

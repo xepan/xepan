@@ -371,7 +371,7 @@ class Model_Document extends Model_Table{
 		return $this->saveAs($this->getRootClass());
 	}
 
-	function createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null){
+	function createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null){
 		if(!$from){
 			$from = 'Employee';
 			$from_id = $this->api->current_employee->id;
@@ -385,10 +385,13 @@ class Model_Document extends Model_Table{
 		$new_activity['action'] = $action;
 		$new_activity['from']= $from;
 		$new_activity['from_id']= $from_id;
-		
+				
 		if($to){
 			$new_activity['to']= $to;
 			$new_activity['to_id']= $to_id;
+		}
+		if($email_to){
+			$new_activity['email_to'] = $email_to;
 		}
 
 		$new_activity['subject']= $subject;

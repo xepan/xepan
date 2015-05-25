@@ -17,3 +17,4 @@ vendor/*
 todo
 /*.sql
 *.orig
+lib/Model/GenericDocument.php
