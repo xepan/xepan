@@ -13,11 +13,7 @@ class page_xHR_page_owner_department_departmentemail extends page_xHR_page_owner
 
 		if(!$dept->isCRM()){
 			$email->getElement('is_support_email')->system(true);
-			// $email->getElement('auto_reply')->system(true);
-			// $email->getElement('email_subject')->system(true);
-			// $email->getElement('email_body')->system(true);
-		}
-		
+		}		
 
 		$crud=$this->add('CRUD',array('grid_class'=>'xHR/Grid_OfficialEmail'));
 		$crud->setModel($email);
@@ -31,8 +27,13 @@ class page_xHR_page_owner_department_departmentemail extends page_xHR_page_owner
 			$g->removeColumn('related_document');
 		}
 
-		if($crud->isEditing()){
-			// $f = $crud->form;
+		if($crud->isEditing('edit') or $crud->isEditing('add')){
+			$f = $crud->form;
+			if(!$f->get('is_support_email')){
+				$f->getElement('denied_email_subject')->destroy();
+				$f->getElement('denied_email_body')->destroy();
+			}
+
 			// $is_support_email_field=$f->getElement('is_support_email');
 			// $is_support_email_field->js(true)->univ()
 			// 	->bindConditionalShow(array(

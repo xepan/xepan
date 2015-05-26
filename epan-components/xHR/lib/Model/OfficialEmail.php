@@ -25,7 +25,7 @@ class Model_OfficialEmail extends \Model_Document{
 		
 
 		$this->addField('email_transport')->setValueList(array('SmtpTransport'=>'SMTP Transport','SendmailTransport'=>'SendMail','MailTransport'=>'PHP Mail function'))->defaultValue('smtp')->group('es~6~<i class="fa fa-cog "></i> OutGoing - Email Transporter To Use');
-		$this->addField('is_support_email')->type('boolean')->group('es~6');
+		$this->addField('is_support_email')->type('boolean')->group('es~6')->hint('To see the changes save and edit again');
 		
 		$this->addField('encryption')->enum(array('none','ssl','tls'))->mandatory(true)->group('ecs~1~<i class="glyphicon glyphicon-link "></i>OutGoing - Connection Settings');
 		$this->addField('email_host')->group('ecs~4');
