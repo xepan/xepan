@@ -43,6 +43,6 @@ class page_xHR_page_owner_department_departmentemail extends page_xHR_page_owner
 		}
 
 		$crud->add('xHR/Controller_Acl');
-
+		$this->js(true)->_selector('*')->xtooltip();
 	}
 }
