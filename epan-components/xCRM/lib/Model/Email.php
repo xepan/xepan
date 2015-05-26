@@ -996,4 +996,22 @@ class Model_Email extends \Model_Document{
 			}
 	}
 
+	function loadOfficialEmail($according="to"){
+		if(!$this->loaded()) return false;
+		
+		if($according=="to")
+			$email = $this['to_email'].','$this['cc'].','.$this['bcc'];
+
+		if($according=="from")
+			$email = $this['from_email'].','$this['cc'].','.$this['bcc'];
+			
+		$off_email = $this->add('xHR/Model_OfficialEmail');
+		$official_email->addCondition('imap_email_username','like','%'.$email.'%');
+		$official_email->tryLoadAny();
+		if($official_email->loaded())
+			return $official_email;
+
+		return false;
+	}
+
 }

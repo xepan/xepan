@@ -15,10 +15,49 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$message_vp = $this->add('VirtualPage')->set(function($p){
 			$email_id=$p->api->stickyGET('xcrm_email_id');
 			$m=$p->add('xCRM/Model_Email')->tryLoad($email_id);
+			$off_email = $m->loadOfficialEmail("to");
 			//Mark Read Email
 			$m->markRead();
 			$email_view=$p->add('xHR/View_Email');
 			$email_view->setModel($m);
+
+			$reply_form = $p->add('Form');
+			$reply_form->addField('line','to')->set($m['from_email']);
+			$reply_form->addField('RichText','message');
+			$reply_form->addSubmit('reply');
+
+			if($reply_form->isSubmitted()){
+				$related_doc = $m->relatedDocument();
+				$doc = $m->hasDocument();
+				$email_body = $reply_form['message'];
+				$subject = "Re. ".$m['subject'];
+				
+				//if this(Email) ka Document he to
+				if($doc){
+					//Create karo Related Document Ki Activity
+					$email_to = $m['from_email'].','.$m['cc'].$m['bcc'];
+					$doc->createActivity('email',$subject,$email_body,$m['from'],$m['from_id'], $m['to'], $m['to_id']],$email_to,true,true);
+				}else{//Create Karo Email 
+					$email = $this->add('xCRM/Model_Email');
+					$email['from'] = "Employee";
+					$email['from_name'] = ;
+					$email['from_id'] = $this->api->current_employee->id;
+					$email['to_id'] = $m['from_id'];
+					$email['to'] = $m['from'];
+					$email['cc'] = $m['cc'];
+					$email['bcc'] = $m['bcc'];
+					$email['subject'] = $subject;
+					$email['message'] = $message ;
+					$email['from_email'] = $off_email?$off_email['email_username']:"";
+					$email['to_email'] = $reply_form['to'];
+					$email['direction'] = "sent";
+					$email->save();
+					$email->sendEmail($reply_form['to'],$subject,$email_body,explode(",",trim($m['cc'])),explode(",",trim($m['bcc'])),array(),$support_email);
+				}
+
+				return true;
+			}
+
 		});
 
 		$col = $this->add('Columns');
