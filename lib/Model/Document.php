@@ -142,6 +142,10 @@ class Model_Document extends Model_Table{
 		return $this->root_document_name;
 	}
 
+	function getNextSeriesNumber($config_value=0){
+		return $config_value + 1 + $this->newInstance()->dsql()->del('fields')->field('max(name)')->getOne();
+	}
+
 	function defaultAfterInsert($newobj,$id){
 		$x=$this;//->newInstance();
 		$x->load($id);
