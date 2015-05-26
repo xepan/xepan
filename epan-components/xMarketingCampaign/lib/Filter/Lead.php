@@ -10,9 +10,12 @@ class Filter_Lead extends \Filter_Base
         parent::init();
 
         $this->search_field = $this->addField('Line', 'q', '')->setAttr('placeholder','Search')->setNoSave();
-        $this->type_field = $this->addField('Dropdown', 'category', '')->setEmptyText('All Leads Category')->setNoSave()->setModel('xMarketingCampaign/LeadCategory');
         // $this->status_field = $this->addField('Dropdown', 'status', '')->setEmptyText('Any Status')->setValueList(array('active'=>'Active','inactive'=>'InActive'))->setNoSave();
+        $this->cat_field = $this->addField('MultiSelect', 'category', '');
+        $this->cat_field->setModel('xMarketingCampaign/Model_LeadCategory');
 
+        $this->cat_field->setAttr('multiple','multiple');
+        $this->cat_field->selectnemu_options=array('maxWidth'=>200);
     }
 
     /**

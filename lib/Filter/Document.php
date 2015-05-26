@@ -14,8 +14,8 @@ class Filter_Document extends \Filter_Base
         $this->doc_cat_field = $this->addField('MultiSelect', 'category', '');
         $this->doc_cat_field->setModel('Model_GenericDocumentCategory');
 
-        // $this->doc_cat_field->setAttr('multiple','multiple');
-        // $this->doc_cat_field->selectnemu_options=array('maxWidth'=>200);
+        $this->doc_cat_field->setAttr('multiple','multiple');
+        $this->doc_cat_field->selectnemu_options=array('maxWidth'=>200);
 
     }
 

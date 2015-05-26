@@ -76,6 +76,10 @@ class Model_Invoice extends \Model_Document{
 		
 		if($this['sales_order'] and $this['po'])
 			throw $this->Exception('Select Either Sales Order or Purchase Order','ValidityCheck')->setField('sales_order_id');
+
+		if(!$this['name']){
+			$this['name'] = $this->getNextSeriesNumber($this->add('xShop/Model_Configuration')->tryLoadAny()->get('sale_invoice_starting_number'));
+		}
 	}
 
 
