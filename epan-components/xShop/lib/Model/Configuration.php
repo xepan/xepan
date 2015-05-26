@@ -55,6 +55,12 @@ class Model_Configuration extends \Model_Table {
 		$this->addField('cash_voucher_email_subject');
 		$this->addField('cash_voucher_email_body')->type('text')->display(array('form'=>'RichText'));		
 		
+		$this->addField('quotation_starting_number');
+		$this->addField('sale_order_starting_number');
+		$this->addField('purchase_order_starting_number');
+		$this->addField('sale_invoice_starting_number');
+		$this->addField('purchase_invoice_starting_number');
+
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
