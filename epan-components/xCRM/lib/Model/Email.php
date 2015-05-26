@@ -814,10 +814,12 @@ class Model_Email extends \Model_Document{
 			
 			$or_cond->where('cc','like','%'.$official_email['email_username'].'%');
 			$or_cond->where('cc','like','%'.$official_email['imap_email_username'].'%');
+			$or_cond->where('from_email','like','%'.$official_email['email_username'].'%');
+			$or_cond->where('from_email','like','%'.$official_email['imap_email_username'].'%');
+			$or_cond->where('to_email','like','%'.$official_email['email_username'].'%');
+			$or_cond->where('to_email','like','%'.$official_email['imap_email_username'].'%');
 		}
 
-		$or_cond->where('from_email','in',$official_email_array)
-				->where('to_email','in',$official_email_array);
 
 
 		$this->addCondition(
