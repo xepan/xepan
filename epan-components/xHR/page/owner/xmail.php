@@ -13,14 +13,15 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-envelope"></i> '.$dept['name'].' Mails <small> '.implode(", ", $official_email_array).'  </small>');
 
 		$message_vp = $this->add('VirtualPage')->set(function($p){
-			$email_id=$p->api->stickyGET('xcrm_email_id');
-			$m=$p->add('xCRM/Model_Email')->tryLoad($email_id);
-			$off_email = $m->loadOfficialEmail("to");
+			$email_id = $p->api->stickyGET('xcrm_email_id');
+			$m = $p->add('xCRM/Model_Email')->tryLoad($email_id);
 			//Mark Read Email
 			$m->markRead();
 			$email_view=$p->add('xHR/View_Email');
 			$email_view->setModel($m);
 
+			// $off_email = $m->loadOfficialEmail();
+			
 			$reply_form = $p->add('Form');
 			$reply_form->addField('line','to')->set($m['from_email']);
 			$reply_form->addField('RichText','message');
@@ -36,11 +37,11 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				if($doc){
 					//Create karo Related Document Ki Activity
 					$email_to = $m['from_email'].','.$m['cc'].$m['bcc'];
-					$doc->createActivity('email',$subject,$email_body,$m['from'],$m['from_id'], $m['to'], $m['to_id']],$email_to,true,true);
+					$doc->createActivity('email',$subject,$email_body,$m['from'],$m['from_id'], $m['to'], $m['to_id'],$email_to,true,true);
 				}else{//Create Karo Email 
 					$email = $this->add('xCRM/Model_Email');
 					$email['from'] = "Employee";
-					$email['from_name'] = ;
+					$email['from_name'] = $this->api->current_employee['name'];
 					$email['from_id'] = $this->api->current_employee->id;
 					$email['to_id'] = $m['from_id'];
 					$email['to'] = $m['from'];
