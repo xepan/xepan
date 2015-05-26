@@ -16,14 +16,15 @@ class Model_NewsLetterTemplate extends \Model_Document{
 		);
 
 
-
+	public $title_field= 'title';
+	
 	function init(){
 		parent::init();
 		
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
-		$f=$this->addField('name')->mandatory(true)->group('a1~6~NewsLetter Templates')->sortable(true)->display(array('grid'=>'shorttext'));
+		$f=$this->addField('title')->mandatory(true)->group('a1~6~NewsLetter Templates')->sortable(true)->display(array('grid'=>'shorttext'));
 		$f->icon='fa fa-adn~red';
 		$this->addField('description')->type('text');
 		$this->addField('content')->type('text')->display(array('form'=>'RichText'))->mandatory(true);
