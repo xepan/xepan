@@ -43,7 +43,7 @@ class Grid_Customer extends \Grid{
 
 		if(!$fields)
 			$fields = $model->getActualFields();
-		$this->addQuickSearch($fields,null);
+		$this->addQuickSearch($fields,null,'xShop/Filter_Customer');
 
 		//Total Order Count
 		$this->addFormatter('total_sales_order','total_sales_order');
