@@ -95,7 +95,8 @@ class Model_Ticket extends \Model_Document{
 
 			}else{//REPLY NOT REGISTERED USER----------------------------------- 
 				$subject = $support_email['denied_email_subject'];
-				$subject = str_replace("{{customer_name}}", $this['customer'], $subject);
+				$subject = str_replace("{{from_name}}", $this['from_name'], $subject);
+				$subject = str_replace("{{from_email}}", $this['from_email'], $subject);
 
 				$email_body = $support_email['denied_email_body'];
 				$email_body = str_replace("{{from_name}}", $this['from_name']?$this['customer']:" ", $email_body);

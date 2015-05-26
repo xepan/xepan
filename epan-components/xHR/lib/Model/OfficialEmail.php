@@ -43,7 +43,7 @@ class Model_OfficialEmail extends \Model_Document{
 		$this->addField('email_subject')->group('ar~12')->hint('{{customer_name}}');
 		$this->addField('email_body')->type('text')->display(array('form'=>'RichText'))->group('ar~12')->hint('{{ticket_number}},{{status}},{{priority}},{{customer_name}},{{created_date}},{{from_name}},{{from_email}}');
 
-		$this->addField('denied_email_subject')->group('ar~12')->hint('{{customer_name}}');
+		$this->addField('denied_email_subject')->group('ar~12')->hint('{{from_name}}, {{from_email}}');
 		$this->addField('denied_email_body')->type('text')->display(array('form'=>'RichText'))->group('ar~12')->hint('{{from_name}},{{from_email}}');
 
 		$this->addField('footer')->type('text')->display(array('form'=>'RichText'))->group('e~12~Email Footer');
