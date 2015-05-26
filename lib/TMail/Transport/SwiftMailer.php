@@ -90,7 +90,7 @@ class TMail_Transport_SwiftMailer extends AbstractObject {
         if($bcc){
             if(is_array($bcc)){
                 foreach ($bcc as $bcc_1) {
-                    if($bcs_1 and $bcs_1!="")
+                    if($bcc_1 and $bcc_1!="")
                         $message->addBcc($bcc_1);
                 }
             }else{
