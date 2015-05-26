@@ -64,11 +64,14 @@ class Model_Ticket extends \Model_Document{
 		$off_email = $this->add('xHR/Model_OfficialEmail');
 		$off_email->addCondition('imap_email_username',$this['to_email'])
 					->addCondition('status','active');
+
 		return $off_email->tryLoadAny();
 	}
 
 	function autoReply(){
-		if(!$this->loaded()) return false;
+		if(!$this->loaded()){
+			return false;	
+		} 
 
 		if($this->supportEmail()->count()->getOne()){
 			$support_email = $this->supportEmail();
@@ -93,11 +96,11 @@ class Model_Ticket extends \Model_Document{
 			$email_body = str_replace("{{created_date}}", $this['created_date'], $email_body);
 
 			$email_body = $email_body .'<br/>'.$footer;
-			 
-			$this->sendEmail($this['from_email'],$subject,$email_body,$this['cc'],$this['bcc']);
+			// explode(",",trim($this['cc'])),explode(",",trim($this['bcc']))
+			$this->sendEmail($this['from_email'],$subject,$email_body,array(),array(),array(),$support_email);
 				
 			$email_to = $this['from_email'].','.$this['cc'].$this['bcc'];
-			$new_activity = $this->createActivity('Email',$subject,$email_body,$this['from'],$this['from_id'], $this['to'], $this['to_id'],$email_to);
+			$new_activity = $this->createActivity('email',$subject,$email_body,$this['from'],$this['from_id'], $this['to'], $this['to_id'],$email_to);
 		}
 	}
 
