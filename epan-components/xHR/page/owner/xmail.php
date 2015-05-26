@@ -36,7 +36,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				if($doc){
 					//Create karo Related Document Ki Activity
 					$email_to = $m['from_email'].','.$m['cc'].$m['bcc'];
-					$doc->createActivity('email',$subject,$email_body,$m['from'],$m['from_id'], $m['to'], $m['to_id']],$email_to,true,true);
+					$doc->createActivity('email',$subject,$email_body,$m['from'],$m['from_id'], $m['to'], $m['to_id'],$email_to,true,true);
 				}else{//Create Karo Email 
 					$email = $this->add('xCRM/Model_Email');
 					$email['from'] = "Employee";
