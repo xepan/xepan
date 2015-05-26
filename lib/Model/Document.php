@@ -115,7 +115,7 @@ class Model_Document extends Model_Table{
 				->addCondition('related_root_document_name',$this->root_document_name)
 				->addCondition('related_document_id',$this->id)
 		->each(function($obj){
-			$obj->delete();
+			$obj->forceDelete();
 		});
 	}
 
@@ -309,6 +309,11 @@ class Model_Document extends Model_Table{
 		if($crud->isEditing('edit')){
 			$activities->getElement('action')->display(array('form'=>'Readonly'));
 		}
+
+		$crud->addHook('crud_form_submit',function($crud,$form){
+			$form->model->notify = true;
+			return true;
+		});
 
 		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to','attachment_id'));
 

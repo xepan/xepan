@@ -171,6 +171,7 @@ class Model_Customer extends Model_MemberDetails{
 		$self=$this;
 		$crud->addHook('crud_form_submit',function($crud,$form)use($self){
 			$form->model->relatedDocument($self);
+			$form->model->notify = true;
 			return true;
 		});
 		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to','attachment_id'));
