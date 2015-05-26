@@ -32,5 +32,22 @@ class page_test extends Page {
 		}
 	}
 
+	function page_invremove(){
+		$this->add('xShop/Model_SalesInvoice')->each(function ($obj){
+			echo $obj['name'];
+			$obj->forceDelete();
+		});
+
+		$i=0;
+		$this->add('xAccount/Model_Transaction')->each(function ($obj)use(&$i){
+			echo $obj['name']."<br>";
+			$obj->forceDelete();
+			$i++;
+		});
+
+		echo $i;
+
+
+	}
 	
 }

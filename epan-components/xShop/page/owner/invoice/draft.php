@@ -32,9 +32,9 @@ class page_xShop_page_owner_invoice_draft extends page_xShop_page_owner_main{
 		});
 
 		$invoice_draft = $this->add('xShop/Model_Invoice_Draft');
-		
+		$invoice_draft->getElement('created_at')->system(false)->editable(true);
 		$crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_Invoice'));
-		$crud->setModel($invoice_draft,array('customer_id','termsandcondition_id','discount','billing_address','invoiceitem_count'),array());
+		$crud->setModel($invoice_draft,array('customer_id','termsandcondition_id','discount','created_at','billing_address'),array());
 
 		if(!$crud->isEditing()){
 			$btn = $crud->addButton('From Sales order');

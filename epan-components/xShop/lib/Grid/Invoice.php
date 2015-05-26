@@ -45,7 +45,7 @@ class Grid_Invoice extends \Grid{
 	
 	function setModel($invoice_model,$field=array()){
 		if(!$field)
-			$field = array('name','sales_order','customer','total_amount','discount','tax','net_amount','customer_id');
+			$field = array('name','sales_order','customer','total_amount','discount','tax','net_amount','customer_id','created_at');
 
 
 		$m=parent::setModel($invoice_model,$field);
