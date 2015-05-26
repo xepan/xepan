@@ -148,7 +148,7 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 						$cash_form->addStyle('padding','20px');	
 
 			$number_tab=$tab->addTab('Starting Number');
-			$number_form = $number_tab->add('Form');
+			$number_form = $number_tab->add('Form_Stacked');
 			$number_form->setModel($config_model,array('quotation_starting_number','sale_order_starting_number','purchase_order_starting_number','sale_invoice_starting_number','purchase_invoice_starting_number'));
 			$number_form->addSubmit('Update');
 			if($number_form->Submitted()){
