@@ -455,7 +455,7 @@ class Model_Document extends Model_Table{
 		$current_lastseen->save();
 	}
 
-	function sendEmail($email,$subject,$email_body,$cc=array(),$bcc=array(),$attachements=array(),$from_official_email=null){
+	function sendEmail($email,$subject,$email_body,$cc=array(),$bcc=array(),$attachements=array(),$from_official_email=array()){
 		$tm=$this->add( 'TMail_Transport_PHPMailer' ,array('email_settings'=>$from_official_email));	
 		try{
 			$tm->send($email, $email,$subject, $email_body ,false,$cc,$bcc,false,'',$attachements);
