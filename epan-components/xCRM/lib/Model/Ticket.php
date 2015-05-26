@@ -3,7 +3,7 @@ namespace xCRM;
 
 class Model_Ticket extends \Model_Document{
 	
-	public $status=array('draft','submitted','solved','canceled','assigned');
+	public $status=array('draft','submitted','solved','canceled','assigned','junk');
 	public $table="xcrm_tickets";
 	public $root_document_name= 'xCRM\Ticket';
 
@@ -36,15 +36,8 @@ class Model_Ticket extends \Model_Document{
 		$this->addField('priority')->enum(array('Low','Medium','High','Urgent'))->defaultValue('Medium');
 
 		$this->hasMany('xCRM/TicketAttachment','related_document_id',null,'Attachments');
-		// $this->addHook('afterSave',$this);
-		//$this->add('dynamic_model/Controller_AutoCreator');	
+		//$this->add('dynamic_model/Controller_AutoCreator');
 		
-	}
-
-	function afterSave(){
-
-		// $this['name'] = "[".$this->root_document_name." ".sprintf("%05d", $this->id)."]";
-		// $this->save();
 	}
 
 	function addAttachment($attach_id,$name=null){
@@ -71,7 +64,7 @@ class Model_Ticket extends \Model_Document{
 	function autoReply(){
 		if(!$this->loaded()){
 			return false;	
-		} 
+		}
 
 		if($this->supportEmail()->count()->getOne()){
 			$support_email = $this->supportEmail();
@@ -81,24 +74,40 @@ class Model_Ticket extends \Model_Document{
 				return false;
 
 			$ticket_number = "[".$this->root_document_name." ".$this['name']."]";
-
-			$subject = $ticket_number." ".$support_email['email_subject']?:"Ticket Created";
-			$subject = str_replace("{{customer_name}}", $this['customer'], $subject);
-			// $subject = str_replace("{{ticket_number}}", $this['name'], $subject);
-			
-			$email_body = $support_email['email_body'];
 			$footer = $support_email['footer'];
 
-			$email_body = str_replace("{{ticket_number}}", $ticket_number, $email_body);
-			$email_body = str_replace("{{status}}", $this['status'], $email_body);
-			$email_body = str_replace("{{priority}}", $this['priority'], $email_body);
-			$email_body = str_replace("{{customer_name}}", $this['customer']?$this['customer']:" ", $email_body);
-			$email_body = str_replace("{{created_date}}", $this['created_date'], $email_body);
+//AUTO REPLY OF CREATE TICKET ONLY IF FROM EMAIL IS OUR CUSTOMER OR MEMBER------------------------ 
+			if( in_array($this['from'], array("Customer","Member")) ){
 
-			$email_body = $email_body .'<br/>'.$footer;
-			// explode(",",trim($this['cc'])),explode(",",trim($this['bcc']))
-			$this->sendEmail($this['from_email'],$subject,$email_body,array(),array(),array(),$support_email);
+				$subject = $ticket_number." ".$support_email['email_subject']?:"Ticket Created";
+				$subject = str_replace("{{customer_name}}", $this['customer'], $subject);
+				// $subject = str_replace("{{ticket_number}}", $this['name'], $subject);
 				
+				$email_body = $support_email['email_body'];
+
+				$email_body = str_replace("{{ticket_number}}", $ticket_number, $email_body);
+				$email_body = str_replace("{{status}}", $this['status'], $email_body);
+				$email_body = str_replace("{{priority}}", $this['priority'], $email_body);
+				$email_body = str_replace("{{customer_name}}", $this['customer']?$this['customer']:" ", $email_body);
+				$email_body = str_replace("{{created_date}}", $this['created_date'], $email_body);
+				$email_body = str_replace("{{from_name}}", $this['from_name']?$this['customer']:" ", $email_body);
+				$email_body = str_replace("{{from_email}}", $this['from_email']?$this['customer']:" ", $email_body);
+
+			}else{//REPLY NOT REGISTERED USER----------------------------------- 
+				$subject = $support_email['denied_email_subject'];
+				$subject = str_replace("{{customer_name}}", $this['customer'], $subject);
+
+				$email_body = $support_email['denied_email_body'];
+				$email_body = str_replace("{{from_name}}", $this['from_name']?$this['customer']:" ", $email_body);
+				$email_body = str_replace("{{from_email}}", $this['from_email']?$this['customer']:" ", $email_body);
+				
+				$this['status'] = 'junk';
+				$this->save();
+			}
+			
+			$email_body = $email_body .'<br/>'.$footer;
+			$this->sendEmail($this['from_email'],$subject,$email_body,explode(",",trim($this['cc'])),explode(",",trim($this['bcc'])),array(),$support_email);
+			
 			$email_to = $this['from_email'].','.$this['cc'].$this['bcc'];
 			$new_activity = $this->createActivity('email',$subject,$email_body,$this['from'],$this['from_id'], $this['to'], $this['to_id'],$email_to);
 		}
