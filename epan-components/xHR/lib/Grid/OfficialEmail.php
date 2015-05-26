@@ -37,7 +37,11 @@ class Grid_OfficialEmail extends \Grid{
 						'imap_email_port',
 						'imap_email_username',
 						'imap_email_password',
-						'imap_flags'
+						'imap_flags',
+						'denied_email_subject',
+						'denied_email_body',
+						'email_body',
+						'email_subject'
 					);
 		}
 
@@ -55,6 +59,10 @@ class Grid_OfficialEmail extends \Grid{
 		if($this->hasColumn('imap_email_password'))$this->removeColumn('imap_email_password');
 		if($this->hasColumn('imap_flags'))$this->removeColumn('imap_flags');
 		if($this->hasColumn('status'))$this->removeColumn('status');
+		if($this->hasColumn('denied_email_body'))$this->removeColumn('denied_email_body');
+		if($this->hasColumn('denied_email_subject'))$this->removeColumn('denied_email_subject');
+		if($this->hasColumn('email_body'))$this->removeColumn('email_body');
+		if($this->hasColumn('email_subject'))$this->removeColumn('email_subject');
 		// $this->addFormatter('name','name11');
 		return $m;
 	}
