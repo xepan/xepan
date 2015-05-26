@@ -40,7 +40,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 			$email_to_process->addCondition('process_via','xMarketingCampaign');
 		}
 
-		
+		$newsletter_crud->add('xHR/Controller_Acl');
 	}
 
 	function page_send(){
