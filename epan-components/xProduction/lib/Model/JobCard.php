@@ -354,7 +354,6 @@ class Model_JobCard extends \Model_Document{
 
 
 	function complete(){
-		$this->setStatus('completed');
 		if($this['orderitem_id']){
 			$ds = $this->orderItem()->deptartmentalStatus($this->department());
 			if($ds) {
@@ -362,6 +361,7 @@ class Model_JobCard extends \Model_Document{
 			}
 			$this->orderItem()->order()->isOrderClose(true);
 		}
+		$this->setStatus('completed');
 	}
 	
 	function approve(){
@@ -395,7 +395,7 @@ class Model_JobCard extends \Model_Document{
 			$this->setStatus('forwarded');
 		}else{
 			$this->complete();
-			$this->order()->isOrderClose(true);
+			//$this->order()->isOrderClose(true);
 		}
 	}
 
@@ -498,7 +498,8 @@ class Model_JobCard extends \Model_Document{
 	}
 
 	function order(){
-		return $this->orderItem()->order();
+		if($this->orderItem())
+			return $this->orderItem()->order();
 	}
 
 
