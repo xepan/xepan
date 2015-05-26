@@ -147,7 +147,7 @@ class TMail_Transport_SwiftMailer extends AbstractObject {
             $arr = parse_url($m[1]);
             if (isset($arr['host'])) continue;
             // add
-            $cid = $message->embed(Swift_Image::fromPath(getcwd().'/'.$arr['path']));
+            $cid = $message->embed(Swift_Image::fromPath(getcwd().'/'.urldecode($arr['path'])));
             $body = str_replace($img, '<img alt="" src="'.$cid.'" style="border: none;" />', $body); 
         }
         return $body;
