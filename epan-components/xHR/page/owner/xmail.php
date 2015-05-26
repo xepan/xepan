@@ -311,6 +311,13 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			;
 
 			if($f->isSubmitted()){
+				$ids = json_decode($f['selected_emails'],true);
+				$this->add('xCRM/Model_Email')
+					->addCondition('id',$ids)
+					->each(function($obj){
+						$obj->forceDelete();
+					});
+
 				$f->js()->univ()->successMessage('Done')->execute();
 			}
 
@@ -323,20 +330,11 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$mail_crud->add('xHR/Controller_Acl');
 
 		$reload_btn = $mail_crud->addButton('FETCH');
-		$guess_btn = $mail_crud->addButton('Guess');
-		$reset = $mail_crud->addButton('Reset');
 		if( !($reload_btn instanceof \Dummy) and $reload_btn->isClicked()){
 			$this->add('xCRM/Model_Email')->fetchDepartment($this->api->current_department);
 			$this->js()->univ()->successMessage('Fetch Successfully')->execute();
 		}
 
-		if($guess_btn->isClicked()){
-			$this->add('xCRM/Model_ReceivedEmail');
-		}
-
-		if($reset->isClicked()){
-			
-		}
 
 	}
 
