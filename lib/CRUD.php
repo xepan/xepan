@@ -3,6 +3,7 @@
 class CRUD extends View_CRUD{
 	public $form_class='Form_Stacked';
 	public $add_form_beautifier = true;
+	public $keep_open_on_submit= false;
 
 	function setModel($model,$f=null,$f2=null){
 		parent::setModel($model,$f,$f2);
@@ -28,6 +29,18 @@ class CRUD extends View_CRUD{
         }
 		return false;		
 	}
+
+	public function formSubmitSuccess()
+    {
+    	$close_js=null;
+
+        if(!$this->keep_open_on_submit){
+	        $close_js=$this->form->js()->univ()->closeDialog();
+        }
+
+        $js=$this->js(null,array($close_js, $this->form->js()->univ()->successMessage("Saved")))->trigger('reload');
+        return $js;
+    }
 
 	function manageAction($action_name,$icon='target'){
 		

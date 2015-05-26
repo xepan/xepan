@@ -23,7 +23,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 		})->sortable(true);
 
 		$newsletter_model->getElement('created_by_app')->defaultValue('xMarketingCampaign');
-		$newsletter_crud = $this->add('CRUD',array('grid_class'=>'xEnquiryNSubscription/Grid_NewsLetter'));
+		$newsletter_crud = $this->add('CRUD',array('grid_class'=>'xEnquiryNSubscription/Grid_NewsLetter','keep_open_on_submit'=>true));
 		$newsletter_crud->setModel($newsletter_model,null,array('category','is_active','name','email_subject','unsend_emails','created_by_app'));
 
 		if(!$newsletter_crud->isEditing()){
