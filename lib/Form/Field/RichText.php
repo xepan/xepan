@@ -2,6 +2,7 @@
 
 class Form_Field_RichText extends Form_Field_Text{
 	public $rand_class=null;
+	public $options=array();
 	function init(){
 		parent::init();
 		
@@ -13,9 +14,9 @@ class Form_Field_RichText extends Form_Field_Text{
 
 	function render(){
 		
-		$this->js(true)->_load('tinymce/tinymce.min')->_load('tinymce/jquery.tinymce.min')->_load('tinymce/xepan3.tinymce');
+		$this->js(true)->_load('tinymce/tinymce.min')->_load('tinymce/jquery.tinymce.min')->_load('tinymce/xepan4.tinymce');
 		// $this->js(true)->_load('tinymce/tinymce.min')->_load('tinymce/jquery.tinymce.min')->tinymce();
-		$this->js(true)->univ()->xtinymce($this);
+		$this->js(true)->univ()->xtinymce($this, $this->options);
 
 		// $this->js(true)->univ()->createRTE(array(
 		// 									'toolbar'=>'maxi',

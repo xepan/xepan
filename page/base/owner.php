@@ -58,6 +58,7 @@ class page_base_owner extends Page {
 		$this->shorcut_menus[]=array("page"=>"Dashboard","url"=>$this->api->url("owner_dashboard"),"keys"=>'dashboard');
 		$this->shorcut_menus[]=array("page"=>"Users","url"=>$this->api->url("owner_users"),'keys'=>'users logins');
 		$this->shorcut_menus[]=array("page"=>"General Settings","url"=>$this->api->url("owner_epansettings"),'keys'=>'company settings general configurations');
+		$this->shorcut_menus[]=array("page"=>"Generic Documents","url"=>$this->api->url("owner_documents"),'keys'=>'documents files scan private public shared');
 
 		// Alert Notification 
 		// Pages and Templates
@@ -450,10 +451,10 @@ class page_base_owner extends Page {
 	}
 
 	function recursiveRender(){
-		// if($_GET['xnotifier'] /*or !$_GET['cut_page']*/){
-		// 	$this->add('View_Notification',array('update_seen_till'=>$_GET['see']));
-		// 	// $this->add('clippy/Agent');
-		// }
+		if($_GET['xnotifier'] or !$_GET['cut_page']){
+			$this->add('View_Notification',array('update_seen_till'=>$_GET['see']));
+			// $this->add('clippy/Agent');
+		}
 
 		parent::recursiveRender();
 	}

@@ -213,6 +213,10 @@ class Model_Users extends Model_Table {
 		return $this->id == $first_super_user->id;
 	}
 
+	function isSuperUser(){
+		return $this['type']==100;
+	}
+
 	function getDefaultSuperUser(){
 		$this->addCondition('type',100);
 		$this->setOrder('id');

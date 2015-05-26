@@ -7,17 +7,17 @@ class Grid_MailParty extends \Grid{
 	}
 	
 	function setModel($model){
-		$m=parent::setModel($model,array('name','customer_name','unread'));
+		$m=parent::setModel($model,array('name','customer_name','unread','last_email_on'));
 
 		$this->removeColumn('unread');
+		$this->removeColumn('last_email_on');
 		// $this->addFormatter('customer_name','wrap');
 
 		return $m;
 	}
+	
 
 	function formatRow(){
-		$this->current_row_html['customer_name']=$this->model['customer_name']."  " ."<small class='atk-effect-danger'>"."(  ".$this->model['unread'] ."  )"."</small>";
-		$this->current_row_html['name']=$this->model['name']."  " ."<small class='atk-effect-info'>"."(  ".$this->model['unread'] ."  )"."</small>";
 
 		parent::formatRow();									
 	}

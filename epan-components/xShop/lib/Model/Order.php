@@ -296,9 +296,7 @@ class Model_Order extends \Model_Document{
 		$config_model=$this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
 
-		$subject = $config_model['order_detail_email_subject']?:$this['name']." "."::"." "."ORDER";
 		$email_body=$config_model['order_detail_email_body']?:"Order Layout Is Empty";
-		
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name']?"<b>".$customer['customer_name']."</b><br>":" ", $email_body);
 		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address']?$customer['billing_address']:" ", $email_body);
@@ -315,18 +313,23 @@ class Model_Order extends \Model_Document{
 		$emails = explode(',', $customer['customer_email']);
 		
 		$form = $p->add('Form_Stacked');
-		$form->addField('line','to')->set($emails[0]);
+		
+		$this->populateSendFrom($form, $this->api->current_department);
+
+		$form->addField('Email','to')->set($emails[0])->validateNotNull();
 		// array_pop(array_re/verse($emails));
 		unset($emails[0]);
 
 		$form->addField('line','cc')->set(implode(',',$emails));
 		$form->addField('line','bcc');
-		$form->addField('line','subject')->set($subject);
+		$form->addField('line','subject')->validateNotNull()->set($config_model['order_detail_email_subject']);
 		$form->addField('RichText','custom_message');
 		$form->add('View')->setHTML($email_body);
 		$form->addSubmit('Send');
 		if($form->isSubmitted()){
 
+			$subject = $this->emailSubjectPrefix($form['subject']);
+			
 			$ccs=$bccs = array();
 			if($form['cc'])
 				$ccs = explode(',',$form['cc']);
@@ -335,9 +338,9 @@ class Model_Order extends \Model_Document{
 				$bccs = explode(',',$form['bcc']);
 
 			$email_body = $form['custom_message']."<br>".$email_body;
-			$this->sendEmail($form['to'],$form['subject'],$email_body,$ccs,$bccs);
-			$this->createActivity('email',$form['subject'],$form['custom_message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
-			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
+			$this->sendEmail($form['to'],$subject,$email_body,$ccs,$bccs,array(),$this->getPopulatedSendFrom($form));
+			$this->createActivity('email',$form['subject'],$email_body,$from=null,$from_id=null, $to='Customer', $to_id=$customer->id,$form['to'].",".$form['cc'].",".$form['bcc']);
+			return true;
 		}	
 	}
 

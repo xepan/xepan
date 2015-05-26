@@ -119,4 +119,11 @@ class Model_Supplier extends \Model_Document{
 			return false;
 		return $this['contact_no'];
 	}
+
+	function updateEmail($email){
+		if(!$this->loaded()) return false;
+		
+		$this['email'] = $this['email'].', '.$email;
+		$this->save();
+	}
 }		

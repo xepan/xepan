@@ -36,6 +36,7 @@ class page_xShop_page_owner_opportunity extends page_xShop_page_owner_main{
 			$c->setModel($model_quotation);
 				
 		}
+		$this->js(true)->_selector('*')->xtooltip();
 	}
 }	
 

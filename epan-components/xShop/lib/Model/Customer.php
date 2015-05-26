@@ -5,12 +5,14 @@ namespace xShop;
 class Model_Customer extends Model_MemberDetails{
 	public $title_field ='customer_search_phrase';
 	public $is_view = true;
-	
+	public $root_document_name="xShop\Customer";
+
 	public $actions=array(
 			'allow_add'=>array(),
 			'allow_edit'=>array(),
 			'allow_del'=>array(),
-			'can_start_processing'=>array(),
+			'can_start_processing'=>array('caption'=>'Create Opportunity'),
+			'can_manage_attachments'=>false
 		);
 
 	function init(){
@@ -23,10 +25,10 @@ class Model_Customer extends Model_MemberDetails{
 
 		$user_j = $this->join('users','users_id');
 		$user_j->addField('user_epan_id','epan_id');
-		$user_j->addField('username')->sortable(true)->group('b~6~Customer Loign')->sortable(true);
+		$user_j->addField('username')->sortable(true)->group('b~6~Customer Login')->sortable(true);
 		$user_j->addField('password')->type('password')->group('b~6');
-		$user_j->addField('customer_name','name')->group('a~6~Basic Info')->mandatory(true);
-		$user_j->addField('customer_email','email')->sortable(true)->group('a~6');
+		$user_j->addField('customer_name','name')->group('a~4~Basic Info')->mandatory(true);
+		$user_j->addField('customer_email','email')->sortable(true)->group('a~4');
 		$user_j->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(50)->group('a~6')->sortable(true)->mandatory(false);
 		$user_j->addField('user_account_activation','is_active')->type('boolean')->defaultValue(true)->group('a~6')->sortable(true)->mandatory(false)->caption('Login User Account Activated');
 
@@ -131,4 +133,110 @@ class Model_Customer extends Model_MemberDetails{
 		$opportunity->save();
 	}
 	
+	function updateEmail($email){
+		if(!$this->loaded()) return false;
+		
+		$this['customer_email'] = $this['customer_email'].', '.$email;
+		$this->save();
+	}
+
+	function see_activities_page($page){
+		$q=$this->dsql();
+
+		$activities = $this->add('xCRM/Model_Activity');
+		$activities->addCondition(
+						$q->orExpr()
+							->where(
+								$q->andExpr()
+								->where('from','Customer')
+								->where('from_id',$this->id)
+								)
+							->where(
+								$q->andExpr()
+									->where('to','Customer')
+									->where('to_id',$this->id)
+						)
+					);
+		$activities->setOrder('created_at','desc');
+
+		$crud = $page->add('CRUD');
+
+		if($crud->isEditing('add')){
+			$activities->getElement('action')->setValueList(array('comment'=>'Comment','email'=>'E-mail','call'=>'Call','sms'=>'SMS','personal'=>'Personal','action'=>'Action Taken'))->display(array('form'=>'Form_Field_DropDownNormal'));
+		}
+
+		if($crud->isEditing('edit')){
+			$activities->getElement('action')->display(array('form'=>'Readonly'));
+		}
+		$self=$this;
+		$crud->addHook('crud_form_submit',function($crud,$form)use($self){
+			$form->model->relatedDocument($self);
+			$form->model->notify = true;
+			return true;
+		});
+		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to','attachment_id'));
+
+		if(!$crud->isEditing()){
+			$crud->grid->controller->importField('created_at');
+			$g = $crud->grid;
+			$g->addMethod('format_activity',function($g,$f)use($activities){
+					$v = $g->api->add('View_Activity');
+					$v->setModel($g->model);
+					$g->current_row_html[$f]= $v->getHTML();
+				});
+			$g->addFormatter('action','activity');
+
+			$g->removeColumn('created_at');
+			$g->removeColumn('action_from');
+			$g->removeColumn('subject');
+			$g->removeColumn('message');
+			$g->removeColumn('notify_via_email');
+			$g->removeColumn('email_to');
+			$g->removeColumn('notify_via_sms');
+			$g->removeColumn('sms_to');
+			$g->removeColumn('attachment_id');
+
+		}
+
+
+		if($crud->isEditing('add')){
+			$form = $crud->form;
+			$action_field = $crud->form->getElement('action');
+			$send_email_field = $crud->form->getElement('notify_via_email');
+			$send_sms_field = $crud->form->getElement('notify_via_sms');
+			
+			$party= $this->getParty();
+			
+			$email_to_field = $crud->form->getElement('email_to')->set($party->email());
+			$sms_to_field = $crud->form->getElement('sms_to')->set($party->mobileno());
+			//Actions if Email
+			$action_field->js('change')->univ()->bindConditionalShow(array(
+				'comment'=>array('email_to','notify_via_email'),
+				'call'=>array('email_to','notify_via_email'),
+				'sms'=>array('email_to','notify_via_email'),
+				'action'=>array('email_to','notify_via_email'),
+				'personal'=>array('email_to','notify_via_email'),
+				'email'=>array('email_to')
+				));
+
+			//Send Email
+			$send_email_field->js('change')->univ()->bindConditionalShow(array(
+				''=>'',
+				'*'=>array('email_to')
+			),'div.atk-form-row');
+
+			//Send SMS
+			$send_sms_field->js('change')->univ()->bindConditionalShow(array(
+				''=>'',
+				'*'=>array('sms_to')
+			),'div.atk-form-row');
+
+			
+			//File Type for Attachment
+
+		}
+
+		$crud->add('xHR/Controller_Acl',array('override'=>array('can_view'=>'All','allow_add'=>true,'allow_edit'=>'Self Only','allow_del'=>'Self Only')));
+
+	}
 }

@@ -395,7 +395,7 @@ class Model_JobCard extends \Model_Document{
 			$this->setStatus('forwarded');
 		}else{
 			$this->complete();
-			//$this->order()->isOrderClose(true);
+			// $this->order()->isOrderClose(true);
 		}
 	}
 
@@ -500,6 +500,8 @@ class Model_JobCard extends \Model_Document{
 	function order(){
 		if($this->orderItem())
 			return $this->orderItem()->order();
+		
+		return false;
 	}
 
 

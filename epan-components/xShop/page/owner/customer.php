@@ -27,19 +27,54 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 		}
 		
 		$members->setOrder('id');
+
+		if($crud->isEditing('add') or $crud->isEditing('edit')){
+			$cats = $crud->form->addField('DropDownNormal','add_to_category')
+				->setEmptyText('Do not add to any subscription category');
+			$cats->setModel('xMarketingCampaign/LeadCategory');
+			$crud->form->addHook('update',function($form)use($members){
+				$members->addHook('afterSave',function($m)use($form){
+					
+					$subs = $m->add('xEnquiryNSubscription\Model_Subscription');
+					$subs->addCondition('email',$m['customer_email']);
+					$subs->tryLoadAny();
+					$subs['name'] = $m['customer_name'];
+					$subs['mobile_no'] = $m['mobile_number'];
+					$subs['from_app'] = 'Customer';
+					$subs['organization_name'] = $m['organization_name'];
+					$subs['website'] = $m['website'];
+					$subs['from_id'] = $m->id;
+					$subs->save();
+					if($form['add_to_category']){
+						$subs_cat = $this->add('xEnquiryNSubscription\Model_SubscriptionCategories');
+						$subs_cat->load($form['add_to_category']);
+						$subs_cat->addSubscriber($subs);
+					}
+				});
+			});
+		}
+
 		$crud->setModel($members,array(
 										'username','password',
-										'customer_name','customer_email',
-										'type','email','other_emails','mobile_number',
+										'customer_name','customer_email','organization_name',
+										'type','website','other_emails','mobile_number',
 										'landmark','city','state','pan_no','tin_no',
 										'country','address',
 										'pincode','billing_address',
-										'shipping_address'
+										'shipping_address','user_account_activation','is_active'
 										),
 								array('customer_name','customer_email',
 										'mobile_number','address','city','state',
-										'country','pincode')
+										'country','pincode','user_account_activation','is_active')
 								);
+
+		if($crud->isEditing('edit')){
+			$subs = $this->add('xEnquiryNSubscription\Model_Subscription');
+			$subs->addCondition('email',$crud->form->model['customer_email']);
+			$subs->tryLoadAny();
+			if($subs->loaded())
+				$crud->form->getElement('add_to_category')->set($subs->ref('xEnquiryNSubscription/SubscriptionCategoryAssociation')->tryLoadAny()->get('id'));
+		}
 
         $crud->add('xHR/Controller_Acl');
 		
