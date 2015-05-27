@@ -997,12 +997,11 @@ class Model_Email extends \Model_Document{
 
 	function loadOfficialEmail($according="to"){
 		if(!$this->loaded()) return false;
-		
 		if($according=="to")
-			$email_to = explode(',', $m['to_email'].','.$m['cc'].','.$m['bcc']);
+			$email_to = explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc']);
 
 		if($according=="from")
-			$email_to = explode(',', $m['to_email'].','.$m['cc'].','.$m['bcc']);
+			$email_to = explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc']);
 
 		$off_emails = $this->add('xHR/Model_OfficialEmail');
 		$off_emails->addCondition('imap_email_username',$email_to);
@@ -1012,6 +1011,7 @@ class Model_Email extends \Model_Document{
 			return $off_emails;
 
 		return false;
+
 	}
 
 }

@@ -25,17 +25,24 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		
 		$reply_vp = $this->add('VirtualPage')->set(function($p){
 			$email_id = $p->api->stickyGET('xcrm_email_id');
+
 			$m = $p->add('xCRM/Model_Email')->tryLoad($email_id);
+			$official_email = $m->loadOfficialEmail();
+			$footer = "";
+			if($official_email)
+				$footer = $official_email['footer'];
 			
 			$reply_form = $p->add('Form_Stacked');
 			//Load Official/Support Email According to,cc,bcc
 			$reply_message = '<p>On Date: '.$m['created_at'].', '.$m['from_name'].' <'.$m['from_email'].'> Wrote </p>'.$m['message'];
+			$reply_message = '<blockquote>'.$reply_message.'</blockquote>';
+			$reply_message = $reply_message.'<br/>'.$footer;
 
 			$reply_form->addField('line','to')->set($m['from_email']);
 			$reply_form->addField('line','cc')->set($m['cc']);
 			$reply_form->addField('line','bcc')->set($m['bcc']);
 			$reply_form->addField('line','subject')->set("Re. ".$m['subject']);
-			$reply_form->addField('RichText','message')->set('<blockquote>'.$reply_message.'</blockquote>')->setStyle('cursor','');
+			$reply_form->addField('RichText','message')->set($reply_message)->setStyle('cursor','');
 			$reply_form->addSubmit('reply');
 
 			if($reply_form->isSubmitted()){
