@@ -14,22 +14,35 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 
 		$message_vp = $this->add('VirtualPage')->set(function($p){
 			$email_id = $p->api->stickyGET('xcrm_email_id');
-			$m = $p->add('xCRM/Model_Email')->tryLoad($email_id);
-			
-			$reply_form = $p->add('Form_Stacked');
-			
+			$m = $p->add('xCRM/Model_Email')->tryLoad($email_id);			
 			//Mark Read Email
 			$m->markRead();
 			$email_view=$p->add('xHR/View_Email');
 			$email_view->setModel($m);
+				return true;
 
+		});
+		
+		$reply_vp = $this->add('VirtualPage')->set(function($p){
+			$email_id = $p->api->stickyGET('xcrm_email_id');
+
+			$m = $p->add('xCRM/Model_Email')->tryLoad($email_id);
+			$official_email = $m->loadOfficialEmail();
+			$footer = "";
+			if($official_email)
+				$footer = $official_email['footer'];
+			
+			$reply_form = $p->add('Form_Stacked');
 			//Load Official/Support Email According to,cc,bcc
+			$reply_message = '<p>On Date: '.$m['created_at'].', '.$m['from_name'].' <'.$m['from_email'].'> Wrote </p>'.$m['message'];
+			$reply_message = '<blockquote>'.$reply_message.'</blockquote>';
+			$reply_message = $reply_message.'<br/>'.$footer;
 
 			$reply_form->addField('line','to')->set($m['from_email']);
 			$reply_form->addField('line','cc')->set($m['cc']);
 			$reply_form->addField('line','bcc')->set($m['bcc']);
-			$reply_form->addField('line','subject')->set($m['subject']);
-			$reply_form->addField('RichText','message');
+			$reply_form->addField('line','subject')->set("Re. ".$m['subject']);
+			$reply_form->addField('RichText','message')->set($reply_message)->setStyle('cursor','');
 			$reply_form->addSubmit('reply');
 
 			if($reply_form->isSubmitted()){
@@ -62,7 +75,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 					// $email->send($reply_form['to'],$subject,$email_body,explode(",",trim($reply_form['cc'])),explode(",",trim($reply_form['bcc'])),array(),$m->loadOfficialEmail());
 				}
 
-				return true;
+				$reply_form->js()->univ()->successMessage('Reply Message Send')->execute();
 			}
 
 		});
@@ -273,6 +286,8 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$mg=$mail_crud->grid;
 		
 		if(!$mail_crud->isEditing()){
+			$mg->addColumn('reply');
+
 			$mg->addMethod('format_subject',function($g,$f)use($message_vp){
 				$task_html = "";
 				if($g->model['task_id'] and $g->model['status'] !='cancelled')
@@ -317,7 +332,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				//From Email
 				$str.= $from;
 				//Subject
-				$str.= '<div class="atk-col-8" style="overflow:hidden; display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.$task_html.'<a href="javascript:void(0)" onclick="'.$g->js(null,$this->js()->_selectorThis()->closest('td')->removeClass('atk-text-bold'))->univ()->frameURL('E-mail',$g->api->url($message_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a> - ';
+				$str.= '<div class="atk-col-7" style="overflow:hidden; display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.$task_html.'<a href="javascript:void(0)" onclick="'.$g->js(null,$this->js()->_selectorThis()->closest('td')->removeClass('atk-text-bold'))->univ()->frameURL('E-mail',$g->api->url($message_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a> - ';
 				//Message
 				$str.= substr(strip_tags($g->model['message']),0,50).'</div>';
 				//Attachments
@@ -326,13 +341,20 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				else
 					$str.= '<div class="atk-col-1 text-right"></div>';
 				//Date Fields
-				$str.= '<div class="atk-col-1 atk-size-micro">'.$g->add('xDate')->diff(Carbon::now(),$g->model['created_at']).'</div>';
+				$str.= '<div class="atk-col-2 atk-size-micro">'.$g->add('xDate')->diff(Carbon::now(),$g->model['created_at']).'<br/>'.$g->model['created_at'].'</div>';
 	
 				$str.= '</div>';
 				
 				$g->current_row_html[$f] = $str;
 			});
 			$mg->addFormatter('subject','subject');
+
+			//REPLY FORMATTER
+			$mg->addMethod('format_reply',function($g,$f)use($reply_vp){
+				$reply_html = '<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('E-mail Reply',$g->api->url($reply_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'"><i class="icon-reply"></i></a>';
+				$g->current_row_html[$f] = $reply_html;
+			});
+			$mg->addFormatter('reply','reply');
 
 			$mg->removeColumn('to_email');
 			$mg->removeColumn('from_email');
@@ -381,7 +403,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			$this->js()->univ()->successMessage('Fetch Successfully')->execute();
 		}
 
-
+		// $this->js(true)->_selector('*')->xtooltip();
 	}
 
 	function taskHtml($status){		
@@ -418,4 +440,6 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		}
 		return '<span title="'.$title.'" class="icon-text-width '.$class.'"> </span>';
 	}
+
+
 }

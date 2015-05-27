@@ -12,7 +12,6 @@ class Model_Email extends \Model_Document{
 			// 'allow_edit'=>array(),
 			// 'allow_del'=>array(),
 			'can_create_activity'=>array('caption'=>'Action'),
-			// 'can_create_ticket'=>array(),
 			'can_see_activities'=>false,
 			'can_manage_attachments'=>false
 		);	
@@ -998,12 +997,11 @@ class Model_Email extends \Model_Document{
 
 	function loadOfficialEmail($according="to"){
 		if(!$this->loaded()) return false;
-		
 		if($according=="to")
-			$email_to = explode(',', $m['to_email'].','.$m['cc'].','.$m['bcc']);
+			$email_to = explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc']);
 
 		if($according=="from")
-			$email_to = explode(',', $m['to_email'].','.$m['cc'].','.$m['bcc']);
+			$email_to = explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc']);
 
 		$off_emails = $this->add('xHR/Model_OfficialEmail');
 		$off_emails->addCondition('imap_email_username',$email_to);
@@ -1013,6 +1011,7 @@ class Model_Email extends \Model_Document{
 			return $off_emails;
 
 		return false;
+
 	}
 
 }
