@@ -30,6 +30,7 @@ class Grid_Invoice extends \Grid{
 	}
 	
 	function format_view($field){
+
 		if($this->model['invoiceitem_count']==0){
 			$this->setTDParam($field, 'class', ' atk-swatch-yellow ');
 		}else{
@@ -45,7 +46,7 @@ class Grid_Invoice extends \Grid{
 	
 	function setModel($invoice_model,$field=array()){
 		if(!$field)
-			$field = array('name','sales_order','customer','total_amount','discount','tax','net_amount','customer_id','created_at');
+			$field = array('name','sales_order','customer','total_amount','discount','tax','net_amount','customer_id','created_at','invoiceitem_count');
 
 
 		$m=parent::setModel($invoice_model,$field);
