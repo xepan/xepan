@@ -325,7 +325,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				//From Email
 				$str.= $from;
 				//Subject
-				$str.= '<div class="atk-col-8" style="overflow:hidden; display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.$task_html.'<a href="javascript:void(0)" onclick="'.$g->js(null,$this->js()->_selectorThis()->closest('td')->removeClass('atk-text-bold'))->univ()->frameURL('E-mail',$g->api->url($message_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a> - ';
+				$str.= '<div class="atk-col-7" style="overflow:hidden; display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.$task_html.'<a href="javascript:void(0)" onclick="'.$g->js(null,$this->js()->_selectorThis()->closest('td')->removeClass('atk-text-bold'))->univ()->frameURL('E-mail',$g->api->url($message_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'">'.$g->current_row[$f].'</a> - ';
 				//Message
 				$str.= substr(strip_tags($g->model['message']),0,50).'</div>';
 				//Attachments
@@ -334,7 +334,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				else
 					$str.= '<div class="atk-col-1 text-right"></div>';
 				//Date Fields
-				$str.= '<div class="atk-col-1 atk-size-micro">'.$g->add('xDate')->diff(Carbon::now(),$g->model['created_at']).'</div>';
+				$str.= '<div class="atk-col-2 atk-size-micro">'.$g->add('xDate')->diff(Carbon::now(),$g->model['created_at']).'<br/>'.$g->model['created_at'].'</div>';
 	
 				$str.= '</div>';
 				
@@ -397,7 +397,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			$this->js()->univ()->successMessage('Fetch Successfully')->execute();
 		}
 
-
+		// $this->js(true)->_selector('*')->xtooltip();
 	}
 
 	function taskHtml($status){		
@@ -434,4 +434,6 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		}
 		return '<span title="'.$title.'" class="icon-text-width '.$class.'"> </span>';
 	}
+
+
 }
