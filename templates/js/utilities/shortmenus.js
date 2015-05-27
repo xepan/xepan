@@ -52,7 +52,9 @@ $.atk4(function(){
 				},
 				select: function(event, ui){
 					$(outer).dialog('close');
-					if($.inArray(ui.item.value,opened_pages) != -1){
+					// console.log(opened_pages);
+					// console.log($.inArray(ui.item.value.replace(/[_]/g,'/'),opened_pages));
+					if($.inArray(ui.item.value.replace(/[_]/g,'/'),opened_pages) != -1){
 						$.univ.errorMessage('Already Opened, Cannot ReOpen');
 						return;
 					}

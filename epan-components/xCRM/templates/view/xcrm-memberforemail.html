@@ -1,0 +1,19 @@
+<div class="xcrm-member {$class}" style=" {$style}">{$Content}
+	<ul class="list-group">
+		<li  class="list-group-item atk-swatch-blue" data-toggle="collapse" data-parent="#accordion" href="#{$_name}" aria-expanded="true" aria-controls="{$_name}">
+			{$member_type}
+		</li>
+		<div id="{$_name}" class="panel-collapse collapse {$panel_open}" style="max-height:300px;overflow-y:scroll;">
+		{rows}
+			{row}
+				<li class="list-group-item" title="{$member_name}">
+					{$unread_email}
+					<span class="badge"  title="Total Emails">{$total_email}
+					</span>
+					{$member_name}
+				</li>
+			{/row}
+		{/rows}
+		</div>
+	</ul>
+</div>
