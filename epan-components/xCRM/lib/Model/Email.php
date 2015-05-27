@@ -1000,17 +1000,17 @@ class Model_Email extends \Model_Document{
 		if(!$this->loaded()) return false;
 		
 		if($according=="to")
-			$email = $this['to_email'];
+			$email_to = explode(',', $m['to_email'].','.$m['cc'].','.$m['bcc']);
 
 		if($according=="from")
-			$email = $this['from_email'];
-			
-		$off_email = $this->add('xHR/Model_OfficialEmail');
-		$off_email->addCondition('imap_email_username',$email);
+			$email_to = explode(',', $m['to_email'].','.$m['cc'].','.$m['bcc']);
+
+		$off_emails = $this->add('xHR/Model_OfficialEmail');
+		$off_emails->addCondition('imap_email_username',$email_to);
+		$off_emails->tryLoadAny();
 		
-		$official_email->tryLoadAny();
-		if($official_email->loaded())
-			return $official_email;
+		if($off_emails->loaded())
+			return $off_emails;
 
 		return false;
 	}

@@ -15,29 +15,34 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$message_vp = $this->add('VirtualPage')->set(function($p){
 			$email_id = $p->api->stickyGET('xcrm_email_id');
 			$m = $p->add('xCRM/Model_Email')->tryLoad($email_id);
+			
+			$reply_form = $p->add('Form_Stacked');
+			
 			//Mark Read Email
 			$m->markRead();
 			$email_view=$p->add('xHR/View_Email');
 			$email_view->setModel($m);
 
-			// $off_email = $m->loadOfficialEmail();
-			
-			$reply_form = $p->add('Form');
+			//Load Official/Support Email According to,cc,bcc
+
 			$reply_form->addField('line','to')->set($m['from_email']);
+			$reply_form->addField('line','cc')->set($m['cc']);
+			$reply_form->addField('line','bcc')->set($m['bcc']);
+			$reply_form->addField('line','subject')->set($m['subject']);
 			$reply_form->addField('RichText','message');
 			$reply_form->addSubmit('reply');
 
 			if($reply_form->isSubmitted()){
-				$related_doc = $m->relatedDocument();
-				$doc = $m->hasDocument();
+				$related_activity = $m->relatedDocument();
+				$related_document = $related_activity->relatedDocument();
 				$email_body = $reply_form['message'];
-				$subject = "Re. ".$m['subject'];
+				$subject = $reply_form['subject'];
 				
-				//if this(Email) ka Document he to
-				if($doc){
+				//if this(Email) ka Related Document he to
+				if( !($related_document instanceof \Dummy)){
 					//Create karo Related Document Ki Activity
-					$email_to = $m['from_email'].','.$m['cc'].$m['bcc'];
-					$doc->createActivity('email',$subject,$email_body,$m['from'],$m['from_id'], $m['to'], $m['to_id'],$email_to,true,true);
+					$email_to = $reply_form['to'].','.$reply_form['cc'].$reply_form['bcc'];
+					$related_document->createActivity('email',$subject,$email_body,$m['from'],$m['from_id'], $m['to'], $m['to_id'],$email_to,true,true);
 				}else{//Create Karo Email 
 					$email = $this->add('xCRM/Model_Email');
 					$email['from'] = "Employee";
@@ -48,12 +53,12 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 					$email['cc'] = $m['cc'];
 					$email['bcc'] = $m['bcc'];
 					$email['subject'] = $subject;
-					$email['message'] = $message ;
-					$email['from_email'] = $off_email?$off_email['email_username']:"";
+					$email['message'] = $email_body;
+					$email['from_email'] = $m['to_email'];//TODO Official Email 
 					$email['to_email'] = $reply_form['to'];
 					$email['direction'] = "sent";
 					$email->save();
-					$email->sendEmail($reply_form['to'],$subject,$email_body,explode(",",trim($m['cc'])),explode(",",trim($m['bcc'])),array(),$support_email);
+					$email->sendEmail($reply_form['to'],$subject,$email_body,explode(",",trim($reply_form['cc'])),explode(",",trim($reply_form['bcc'])),array(),$m->loadOfficialEmail());
 				}
 
 				return true;
