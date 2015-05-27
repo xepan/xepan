@@ -1,0 +1,19 @@
+<div class="xcrm-member {$class}" style=" {$style}">{$Content}
+	<ul class="list-group">
+		<li class="list-group-item atk-swatch-blue">
+			{$member_type}
+		</li>
+		<div style="max-height:300px;overflow-y:scroll;">
+		{rows}
+			{row}
+				<li class="list-group-item" title="{$member_name}">
+					{$unread_email}
+					<span class="badge"  title="Total Emails">{$total_email}
+					</span>
+					{$member_name}
+				</li>
+			{/row}
+		{/rows}
+		</div>
+	</ul>
+</div>
