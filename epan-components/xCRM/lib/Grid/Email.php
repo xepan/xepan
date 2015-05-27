@@ -35,8 +35,8 @@ class Grid_Email extends \Grid{
 			$reply_form->addField('line','cc')->set($m['cc']);
 			$reply_form->addField('line','bcc')->set($m['bcc']);
 			$reply_form->addField('line','subject')->set("Re. ".$m['subject']);
-			$reply_form->addField('RichText','message')->set($reply_message)->setStyle('cursor','');
-			$reply_form->addSubmit('reply');
+			$reply_form->addField('RichText','message')->set($reply_message);
+			$reply_form->addSubmit('Reply');
 
 			if($reply_form->isSubmitted()){
 				$related_activity = $m->relatedDocument();
