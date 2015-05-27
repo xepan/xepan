@@ -17,7 +17,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$right_col=$col->addColumn(10);
 
 //CUSTOMER SECTION----------------------------------------------------------------------
-		$left_col->add('xCRM/View_MemberForEmail',array('model'=>$this->add('xShop/Model_CustomerForEmail'),'member_type'=>'Customer'));
+		$left_col->add('xCRM/View_MemberForEmail',array('model'=>$this->add('xShop/Model_CustomerForEmail'),'member_type'=>'Customer','panel_open'=>"on"));
 
 //SUPPLIER SECTION--------------------------------------------------------------------------------------------------------------------------
 		$left_col->add('xCRM/View_MemberForEmail',array('model'=>$this->add('xPurchase/Model_SupplierForEmail'),'member_type'=>'Supplier'))->addStyle('margin-top','5%');
@@ -26,7 +26,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$left_col->add('xCRM/View_MemberForEmail',array('model'=>$this->add('xShop/Model_AffiliateForEmail'),'member_type'=>'Affiliate'))->addStyle('margin-top','5%');
 
 //Emails--------------------------------------------------------------------------------------
-		$right_col->add('xCRM/View_Email');
+		$right_col->add('xCRM/View_Email')->addClass('xcrm-memberforemail');
 		
 		// $this->js(true)->_selector('*')->xtooltip();
 	}
