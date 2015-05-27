@@ -31,7 +31,7 @@ class Model_Ticket extends \Model_Document{
 		$this->addField('bcc')->type('text');
 
 		$this->addField('subject');
-		$this->addField('message')->type('text');
+		$this->addField('message')->type('text')->display(array('form'=>'RichText'));
 
 		$this->addField('priority')->enum(array('Low','Medium','High','Urgent'))->defaultValue('Medium');
 
