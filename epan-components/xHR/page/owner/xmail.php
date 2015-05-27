@@ -352,9 +352,10 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 			$f->template->del('form_buttons');
 			$mail_crud->grid->addSelectable($field);
 
-			$mail_crud->grid->addButton(array('','icon'=>'trash'))
-				->js('click',array($f->js()->submit(),$mail_crud->grid->js()->find('tr input:checked')->closest('tr')->remove()));
-			;
+			$del_btn = $mail_crud->grid->addButton(array('','icon'=>'trash'));
+			if($del_btn->isClicked("Are you sure")){
+				$del_btn->js(null,array($f->js()->submit(),$mail_crud->grid->js()->find('tr input:checked')->closest('tr')->remove()))->execute();
+			}
 
 			if($f->isSubmitted()){
 				$ids = json_decode($f['selected_emails'],true);
