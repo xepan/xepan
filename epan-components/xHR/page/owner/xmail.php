@@ -14,22 +14,28 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 
 		$message_vp = $this->add('VirtualPage')->set(function($p){
 			$email_id = $p->api->stickyGET('xcrm_email_id');
-			$m = $p->add('xCRM/Model_Email')->tryLoad($email_id);
-			
-			$reply_form = $p->add('Form_Stacked');
-			
+			$m = $p->add('xCRM/Model_Email')->tryLoad($email_id);			
 			//Mark Read Email
 			$m->markRead();
 			$email_view=$p->add('xHR/View_Email');
 			$email_view->setModel($m);
+				return true;
 
+		});
+		
+		$reply_vp = $this->add('VirtualPage')->set(function($p){
+			$email_id = $p->api->stickyGET('xcrm_email_id');
+			$m = $p->add('xCRM/Model_Email')->tryLoad($email_id);
+			
+			$reply_form = $p->add('Form_Stacked');
 			//Load Official/Support Email According to,cc,bcc
+			$reply_message = '<p>On Date: '.$m['created_at'].', '.$m['from_name'].' <'.$m['from_email'].'> Wrote </p>'.$m['message'];
 
 			$reply_form->addField('line','to')->set($m['from_email']);
 			$reply_form->addField('line','cc')->set($m['cc']);
 			$reply_form->addField('line','bcc')->set($m['bcc']);
-			$reply_form->addField('line','subject')->set($m['subject']);
-			$reply_form->addField('RichText','message');
+			$reply_form->addField('line','subject')->set("Re. ".$m['subject']);
+			$reply_form->addField('RichText','message')->set('<blockquote>'.$reply_message.'</blockquote>')->setStyle('cursor','');
 			$reply_form->addSubmit('reply');
 
 			if($reply_form->isSubmitted()){
@@ -62,7 +68,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 					// $email->send($reply_form['to'],$subject,$email_body,explode(",",trim($reply_form['cc'])),explode(",",trim($reply_form['bcc'])),array(),$m->loadOfficialEmail());
 				}
 
-				return true;
+				$reply_form->js()->univ()->successMessage('Reply Message Send')->execute();
 			}
 
 		});
@@ -273,6 +279,8 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$mg=$mail_crud->grid;
 		
 		if(!$mail_crud->isEditing()){
+			$mg->addColumn('reply');
+
 			$mg->addMethod('format_subject',function($g,$f)use($message_vp){
 				$task_html = "";
 				if($g->model['task_id'] and $g->model['status'] !='cancelled')
@@ -333,6 +341,13 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 				$g->current_row_html[$f] = $str;
 			});
 			$mg->addFormatter('subject','subject');
+
+			//REPLY FORMATTER
+			$mg->addMethod('format_reply',function($g,$f)use($reply_vp){
+				$reply_html = '<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('E-mail Reply',$g->api->url($reply_vp->getURL(),array('xcrm_email_id'=>$g->model->id))).'"><i class="icon-reply"></i></a>';
+				$g->current_row_html[$f] = $reply_html;
+			});
+			$mg->addFormatter('reply','reply');
 
 			$mg->removeColumn('to_email');
 			$mg->removeColumn('from_email');

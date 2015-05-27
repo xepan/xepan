@@ -12,7 +12,6 @@ class Model_Email extends \Model_Document{
 			// 'allow_edit'=>array(),
 			// 'allow_del'=>array(),
 			'can_create_activity'=>array('caption'=>'Action'),
-			// 'can_create_ticket'=>array(),
 			'can_see_activities'=>false,
 			'can_manage_attachments'=>false
 		);	
