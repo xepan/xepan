@@ -58,7 +58,8 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 					$email['to_email'] = $reply_form['to'];
 					$email['direction'] = "sent";
 					$email->save();
-					$email->sendEmail($reply_form['to'],$subject,$email_body,explode(",",trim($reply_form['cc'])),explode(",",trim($reply_form['bcc'])),array(),$m->loadOfficialEmail());
+					$email->send();
+					// $email->send($reply_form['to'],$subject,$email_body,explode(",",trim($reply_form['cc'])),explode(",",trim($reply_form['bcc'])),array(),$m->loadOfficialEmail());
 				}
 
 				return true;
