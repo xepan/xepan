@@ -99,8 +99,8 @@ class Model_Ticket extends \Model_Document{
 				$subject = str_replace("{{from_email}}", $this['from_email'], $subject);
 
 				$email_body = $support_email['denied_email_body'];
-				$email_body = str_replace("{{from_name}}", $this['from_name']?$this['customer']:" ", $email_body);
-				$email_body = str_replace("{{from_email}}", $this['from_email']?$this['customer']:" ", $email_body);
+				$email_body = str_replace("{{from_name}}", $this['from_name'], $email_body);
+				$email_body = str_replace("{{from_email}}", $this['from_email'], $email_body);
 				
 				$this['status'] = 'junk';
 				$this->save();
