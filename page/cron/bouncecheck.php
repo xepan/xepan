@@ -9,7 +9,7 @@ class page_cron_bouncecheck extends Page {
 		$cwsMailBounceHandler = new CwsMailBounceHandler();
 		$cwsMailBounceHandler->test_mode = true; // default false
 		// $cwsMailBounceHandler->debug_verbose = CWSMBH_VERBOSE_DEBUG; // default CWSMBH_VERBOSE_QUIET
-		$cwsMailBounceHandler->purge = true; // default false
+		$cwsMailBounceHandler->purge = false; // default false
 		//$cwsMailBounceHandler->disable_delete = false; // default false
 		//$cwsMailBounceHandler->open_mode = CWSMBH_OPEN_MODE_IMAP; // default CWSMBH_OPEN_MODE_IMAP
 		//$cwsMailBounceHandler->move_soft = false; // default false
@@ -78,18 +78,21 @@ class page_cron_bouncecheck extends Page {
 		echo "removing $email from subscribers<br/>";
 
 		$check = array(
-				'xShop/Model_Customer' => array('customer_email','other_emails'),
+				'xShop/Model_Customer' => array('email','other_emails'), // email is renamed as customer_email in model
 				'xPurchase/Model_Supplier' => array('email'),
 				'xShop/Model_Affiliate' => array('email_id'),
 				'xHR/Model_Employee' => array('personal_email','company_email_id'),
 				'xEnquiryNSubscription/Model_Subscription' => array('email'),
 			);
 
-		$q = $this->api->db->dsql();
 		foreach ($check as $model => $fields) {
+			$q = $this->api->db->dsql();
+			$or = $q->orExpr();
+			echo $model ."<br>";
 			foreach ($fields as $f) {
-				$or = $q->orExpr($f,'like',"%$email%");
+				$or->where($f,'like',"%$email%");
 			}
+
 			$this->add($model)
 			->addCondition($or)
 			->each(function($obj)use($email, $fields){
@@ -100,9 +103,11 @@ class page_cron_bouncecheck extends Page {
 						    unset($emails_count[$key]);
 						}
 						$obj[$f] = implode(", ", $emails_count);
-						$obj->save();
+						echo $obj[$f]. "changed <br/>";
+						// $obj->save();
 					}else{
-						$obj->deactivate();
+						echo $obj[$f]. "deactivated <br/>";
+						// $obj->deactivate();
 					}
 					// create activity
 						// $email has been bounced hard and removed

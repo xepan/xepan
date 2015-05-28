@@ -4,7 +4,12 @@
 class page_test extends Page {
 
 	function page_index(){
-		echo $this->api->now;
+		$email = $this->add('xCRM/Model_Email')
+			->addCondition('id',array(339,340))
+			->each(function($obj){
+				$obj->guessDocumentAndCreateActivityOrTicket();
+			});
+
 		// print_r(timezone_identifiers_list());
 	}
 
