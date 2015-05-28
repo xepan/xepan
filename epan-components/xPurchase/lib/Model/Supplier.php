@@ -126,4 +126,13 @@ class Model_Supplier extends \Model_Document{
 		$this['email'] = $this['email'].', '.$email;
 		$this->save();
 	}
+
+	function deactivate(){
+		if(!$this->loaded())
+			return false;
+		
+		$this['is_active'] = false;
+		$this->save();
+		return true;
+	}
 }		
