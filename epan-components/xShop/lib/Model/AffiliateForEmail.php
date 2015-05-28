@@ -6,7 +6,7 @@ class Model_AffiliateForEmail extends Model_Affiliate {
 		parent::init();
 		
 		$dept_id = $this->api->stickyGET('department_id');
-		$dept = $this->add('xHR/Model_Department')->tryload($dept_id);
+		$dept = $this->add('xHR/Model_Department')->tryLoad($dept_id);
 		$official_email_array = $dept->getOfficialEmails();
 
 		$this->addExpression('unread')->set(function($m,$q)use($official_email_array){
