@@ -50,6 +50,7 @@ class Model_Email extends \Model_Document{
 		$this->addField('direction')->enum(array('sent','received'))->defaultValue('sent');
 
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeSave',$this);
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id',null,'Attachments');
 
@@ -62,6 +63,11 @@ class Model_Email extends \Model_Document{
 		$this->ref('Attachments')->each(function($m){
 			$m->forceDelete();
 		});
+	}
+
+	function beforeSave(){
+		if(!$this['from_email'])
+			$this['from_email'] =$this->api->current_website['email_username'];
 	}
 
 	function createFromActivity($activity){
