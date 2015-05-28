@@ -8,8 +8,11 @@ class Model_SupplierForEmail extends Model_Supplier {
 		parent::init();
 
 		$dept_id = $this->api->stickyGET('department_id');
-		$dept = $this->add('xHR/Model_Department')->tryLoad($dept_id);
-		$official_email_array = $dept->getOfficialEmails();
+		$dept = $this->add('xHR/Model_Department')->addCondition('id',$dept_id);
+		$dept->tryLoadAny();
+		$official_email_array=array();
+		if($dept->loaded())
+			$official_email_array = $dept->getOfficialEmails();
 
 		$this->addExpression('unread')->set(function($m,$q)use($official_email_array){
 			$to_search_cond = $q->orExpr();
