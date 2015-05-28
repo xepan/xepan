@@ -106,9 +106,10 @@ class page_cron_bouncecheck extends Page {
 					}
 					// create activity
 						// $email has been bounced hard and removed
-					$subject = $obj[$f]."has been bounced Hard and Removed";
-					$to_arry =explode('\\', $obj->root_document_name());
-					$obj->createActivity("action",$subject,"",$from=null,$from_id=null, $to=$to_arry[1], $to_id=$obj->id,$email_to=$obj[$f]);
+					$subject = $obj[$f]." has been bounced Hard and Removed";
+					$to_arry = explode('\\', $obj->root_document_name());
+					if($obj instanceof \Model_Document)
+						$obj->createActivity("action",$subject,"",$from=null,$from_id=null, $to=$to_arry[1], $to_id=$obj->id,$email_to=$obj[$f]);
 				}
 			});
 		}

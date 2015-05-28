@@ -1,7 +1,7 @@
 <?php
 
 namespace xShop;
-class Model_Affiliate extends \Model_Table {
+class Model_Affiliate extends \Model_Document {
 	var $table= "xshop_affiliate";
 	public $status = array();
 	public $actions = array(
