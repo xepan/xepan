@@ -75,24 +75,38 @@ class page_cron_bouncecheck extends Page {
 		echo "removing $email from suppliers<br/>";
 		echo "removing $email from affiliates<br/>";
 		echo "removing $email from employees<br/>";
+
 		echo "removing $email from subscribers<br/>";
 
-		$this->add('xEnquiryNSubscription/Model_Subscription')
-			->addCondition('email','like',"%$email%")
-			->each(function($obj)use($email){
-				$emails_count=explode(",", $obj['email']);
-				if(count($emails_count)>1){
-					$obj['remark'] = $obj['remark']. "<br>\n\r ". $email. " bounced and removed. ";
-					if(($key = array_search($email, $emails_count)) !== false) {
-					    unset($emails_count[$key]);
+		$check = array(
+				'xEnquiryNSubscription/Model_Subscription' => array('email');
+				'xShop/Model_Customer' => array('customer_email','other_emails');
+			)
+
+		$q = $this->api->db->dsql();
+		foreach ($check as $model => $fields) {
+			foreach ($fields as $f) {
+				$or = $q->orExpr($f,'like',"%$email%");
+			}
+			$this->add($model)
+			->addCondition($or)
+			->each(function($obj)use($email, $fields){
+				foreach ($fields as $f) {
+					$emails_count=explode(",", $obj[$f]);
+					if(count($emails_count)>1){
+						if(($key = array_search($email, $emails_count)) !== false) {
+						    unset($emails_count[$key]);
+						}
+						$obj[$f] = implode(", ", $emails_count);
+						$obj->save();
+					}else{
+						$obj->deactivate();
 					}
-					$obj['email'] = implode(", ", $emails_count);
-					$obj->save();
-				}else{
-					$obj['is_ok']=false;
-					$obj->save();
+					// create activity
+						// $email has been bounced hard and removed
 				}
 			});
+		}
 	}
 
 }
