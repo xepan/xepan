@@ -50,6 +50,7 @@ class Model_Email extends \Model_Document{
 		$this->addField('direction')->enum(array('sent','received'))->defaultValue('sent');
 
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeSave',$this);
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id',null,'Attachments');
 
@@ -62,6 +63,11 @@ class Model_Email extends \Model_Document{
 		$this->ref('Attachments')->each(function($m){
 			$m->forceDelete();
 		});
+	}
+
+	function beforeSave(){
+		if(!$this['from_email'])
+			$this['from_email'] =$this->api->current_website['email_username'];
 	}
 
 	function createFromActivity($activity){
@@ -686,19 +692,19 @@ class Model_Email extends \Model_Document{
 		$to_email = $to_email.",".$this['cc'].",".$this['bcc'];
 
 		//GUESS CUSTOMER
-		if($customer = $this->customer($to_email) AND $this['from']!='Customer'){
-			$this['from'] = "Customer";
-			$this['from_id'] = $customer['id'];
-		}elseif($supplier = $this->supplier($to_email) AND $this['from']!='Supplier'){
+		if( ($customer = $this->customer($to_email) )AND $this['from']!='Customer'){
+			$this['to'] = "Customer";
+			$this['to_id'] = $customer['id'];
+		}elseif( ($supplier = $this->supplier($to_email)) AND $this['from']!='Supplier'){
 			//guess Supplier
-			$this['from'] = "Supplier";
-			$this['from_id'] = $supplier['id'];
-		}elseif($afiliate = $this->afiliate($to_email)  AND $this['from']!='Affiliate'){
-			$this['from'] = "Affiliate";
-			$this['from_id'] = $afiliate['id'];
-		}elseif($emp = $this->employee($to_email)  AND $this['from']!='Employee'){
-			$this['from'] = "Employee";
-			$this['from_id'] = $emp['id'];
+			$this['to'] = "Supplier";
+			$this['to_id'] = $supplier['id'];
+		}elseif( ($afiliate = $this->afiliate($to_email))  AND $this['from']!='Affiliate'){
+			$this['to'] = "Affiliate";
+			$this['to_id'] = $afiliate['id'];
+		}elseif( ($emp = $this->employee($to_email))  AND $this['from']!='Employee'){
+			$this['to'] = "Employee";
+			$this['to_id'] = $emp['id'];
 		}
 		
 		$this->save();
@@ -794,8 +800,20 @@ class Model_Email extends \Model_Document{
 	}
 
 	function supplier($email){
-		$supplr = $this->add('xPurchase/Model_Supplier'); 
-		$supplr->addCondition('email','like','%'.$email.'%');
+		if(!is_array($email)){
+			$email = explode(",", $email);
+		}
+
+		$supplr = $this->add('xPurchase/Model_Supplier');
+		
+		$or = $supplr->dsql()->orExpr();
+		foreach ($email as $em) {
+			$em=trim($em);
+			if(!$em or $em=='') continue;
+			$or->where('email','like','%'.$em.'%');
+		}
+
+		$supplr->addCondition($or);
 
 		if($supplr->count()->getOne() > 1)
 			return false;
@@ -808,8 +826,20 @@ class Model_Email extends \Model_Document{
 	}
 
 	function afiliate($email){
+		if(!is_array($email)){
+			$email = explode(",", $email);
+		}
+
 		$afiliate = $this->add('xShop/Model_Affiliate');
-		$afiliate->addCondition('email_id','like','%'.$email.'%');
+		
+		$or = $afiliate->dsql()->orExpr();
+		foreach ($email as $em) {
+			$em=trim($em);
+			if(!$em or $em=='') continue;
+			$or->where('email_id','like','%'.$em.'%');
+		}
+				
+		$afiliate->addCondition($or);
 		
 		if($afiliate->count()->getOne() > 1)
 			return false;
@@ -822,8 +852,20 @@ class Model_Email extends \Model_Document{
 	}
 
 	function employee($email){
+		if(!is_array($email)){
+			$email = explode(",", $email);
+		}
+
 		$emp = $this->add('xHR/Model_Employee');
-		$emp->addCondition('personal_email','like','%'.$email.'%');
+		
+		$or = $emp->dsql()->orExpr();
+		foreach ($email as $em) {
+			$em=trim($em);
+			if(!$em or $em=='') continue;
+			$or->where('personal_email','like','%'.$em.'%');
+		}
+		
+		$emp->addCondition($or);
 		
 		if($emp->count()->getOne() > 1)
 			return false;
@@ -1040,21 +1082,28 @@ class Model_Email extends \Model_Document{
 
 	function loadOfficialEmail($according="to"){
 		if(!$this->loaded()) return false;
+		
 		if($according=="to")
-			$email_to = explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc']);
+			$email = explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc']);
 
 		if($according=="from")
-			$email_to = explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc']);
+			$email = explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc']);
 
 		$off_emails = $this->add('xHR/Model_OfficialEmail');
-		$off_emails->addCondition('imap_email_username',$email_to);
-		$off_emails->tryLoadAny();
+		$or = $off_emails->dsql()->orExpr();
+		foreach ($email as $em) {
+			$em=trim($em);
+			if(!$em or $em=='') continue;
+			$or->where('imap_email_username','like','%'.$em.'%');
+		}
 		
+		$off_emails->addCondition($or);
+
+		$off_emails->tryLoadAny();
 		if($off_emails->loaded())
 			return $off_emails;
 
 		return false;
-
 	}
 
 }
