@@ -59,8 +59,9 @@ class Grid_Email extends \Grid{
 			$from.= $this->model['from_email'].'</div>';
 
 		}elseif($this->model['direction']=="sent"){
+			//IN This CASE FROM IS REPLACED VIA TO
 			$this->setTDParam('subject','style','box-shadow: 3px 0px 0px 0px red inset;');
-			$snr .= '<span class="atk-swatch-red glyphicon glyphicon-export" title="Sent E-Mail"></span>';
+			$snr .= '<span class="atk-swatch-red glyphicon glyphicon-export" title="Send E-Mail"></span>';
 			
 			//To Email if Sent
 			$from = " ";
