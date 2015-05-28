@@ -3,6 +3,13 @@ namespace xHR;
 
 class Model_Employee extends \Model_Table{
 	public $table="xhr_employees";
+	public $status = array();
+	public $actions = array(
+				'allow_del'=>array(),
+				'allow_edit'=>array(),
+				'allow_add'=>array()
+				);
+	public $root_document_name = 'xHR\Employee';
 
 	function init(){
 		parent::init();

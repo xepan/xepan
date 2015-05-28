@@ -83,7 +83,7 @@ class page_cron_bouncecheck extends Page {
 				'xShop/Model_Affiliate' => array('email_id'),
 				'xHR/Model_Employee' => array('personal_email','company_email_id'),
 				'xEnquiryNSubscription/Model_Subscription' => array('email'),
-			)
+			);
 
 		$q = $this->api->db->dsql();
 		foreach ($check as $model => $fields) {
@@ -107,7 +107,8 @@ class page_cron_bouncecheck extends Page {
 					// create activity
 						// $email has been bounced hard and removed
 					$subject = $obj[$f]."has been bounced Hard and Removed";
-					$obj->createActivity("action",$subject,"",$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null,$notify_via_email=false, $notify_via_sms=false);
+					$to_arry =explode('\\', $obj->root_document_name());
+					$obj->createActivity("action",$subject,"",$from=null,$from_id=null, $to=$to_arry[1], $to_id=$obj->id,$email_to=$obj[$f]);
 				}
 			});
 		}
