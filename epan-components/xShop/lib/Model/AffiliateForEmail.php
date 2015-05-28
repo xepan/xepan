@@ -14,9 +14,8 @@ class Model_AffiliateForEmail extends Model_Affiliate {
 
 			foreach ($official_email_array as $oe) {
 				$to_search_cond->where('cc','like','%'.$oe.'%');
+				$to_search_cond->where('to_email','like','%'.$oe.'%');
 			}
-
-			$to_search_cond->where('to_email',$official_email_array);
 
 			return $m->add('xCRM/Model_Email')
 				->addCondition(
