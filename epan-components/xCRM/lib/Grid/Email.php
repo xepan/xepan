@@ -118,6 +118,8 @@ class Grid_Email extends \Grid{
 			$this->removeColumn('direction');
 			$this->removeColumn('task_id');
 			$this->removeColumn('task_status');
+			$this->removeColumn('to');
+			$this->removeColumn('to_id');
 
 			$f=$this->add('Form',null,'grid_buttons');
 			$field=$f->addField('Hidden','selected_emails','');

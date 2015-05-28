@@ -21,13 +21,13 @@ class View_EmailReply extends \View{
 			$reply_form = $this->add('Form_Stacked');
 			//Load Official/Support Email According to,cc,bcc
 			$reply_message = '<p>On Date: '.$m['created_at'].', '.$m['from_name'].' <'.$m['from_email'].'> Wrote </p>'.$m['message'];
-			$reply_message = '<blockquote>'.$reply_message.'</blockquote>';
-			$reply_message = $reply_message.'<br/>'.$footer;
+			$reply_message = '<p></p><br/><blockquote>'.$reply_message.'</blockquote>';
+			$reply_message = $reply_message.'<br/>';
 
 			$reply_form->addField('line','to')->set($m['from_email']);
 			$reply_form->addField('line','cc')->set($m['cc']);
 			$reply_form->addField('line','bcc')->set($m['bcc']);
-			$reply_form->addField('line','subject')->set("Re. ".$m['subject']);
+			$reply_form->addField('line','subject')->set("Re: ".$m['subject']);
 			$reply_form->addField('RichText','message')->set($reply_message);
 			$reply_form->addSubmit('Reply');
 
@@ -49,10 +49,10 @@ class View_EmailReply extends \View{
 					$email['from_id'] = $this->api->current_employee->id;
 					$email['to_id'] = $m['from_id'];
 					$email['to'] = $m['from'];
-					$email['cc'] = $m['cc'];
-					$email['bcc'] = $m['bcc'];
+					$email['cc'] = $reply_form['cc'];
+					$email['bcc'] = $reply_form['bcc'];
 					$email['subject'] = $subject;
-					$email['message'] = $email_body;
+					$email['message'] = $email_body . $footer;
 					$email['from_email'] = $from_official_email; 
 					$email['to_email'] = $reply_form['to'];
 					$email['direction'] = "sent";
@@ -61,7 +61,7 @@ class View_EmailReply extends \View{
 					// $email->send($reply_form['to'],$subject,$email_body,explode(",",trim($reply_form['cc'])),explode(",",trim($reply_form['bcc'])),array(),$m->loadOfficialEmail());
 				}
 
-				$reply_form->js()->univ()->successMessage('Reply Message Send')->execute();
+				$reply_form->js(null,$this->js()->univ()->closeDialog())->univ()->successMessage('Reply Message Send')->execute();
 			}
 
 		// $this->js(true)->_selector('.xcrm-emailreply')->xtooltip();

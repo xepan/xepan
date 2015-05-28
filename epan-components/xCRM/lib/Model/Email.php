@@ -542,7 +542,7 @@ class Model_Email extends \Model_Document{
 					$mail_m['to_email'] = is_array($mail->to)?implode(",", array_keys($mail->to)):$mail->to;
 					$mail_m['cc'] = is_array($mail->cc)?implode(",", array_keys($mail->cc)):$mail->cc;
 					$mail_m['subject'] = $mail->subject;
-					$mail_m['message'] = $mail->textHtml;
+					$mail_m['message'] = $mail->textHtml?:$mail->textPlain;
 					$mail_m['uid'] = $mail->id;
 					$mail_m['direction'] = 'received';
 					$mail_m['from_name'] = $mail->fromName;
@@ -608,7 +608,7 @@ class Model_Email extends \Model_Document{
 
 		if(!$this['from_email'])
 			return false;
-
+		
 		//GUESS CUSTOMER
 		if($customer = $this->customer($this['from_email'])){
 			$this['from'] = "Customer";
@@ -737,16 +737,21 @@ class Model_Email extends \Model_Document{
 		//get ticket no from subject
 		preg_match_all('/([a-zA-Z]+[\\\\][a-zA-Z]+[ ]+[0-9]+)/',$this['subject'],$preg_match_array);
 		// throw new \Exception($this['subject'].  var_dump($preg_match_array[1][0]), 1);
-		if(!count($preg_match_array[1])) return;
+		if(count($preg_match_array[1])){
+			//Guess Ticket
+			$relatedDocument = $preg_match_array[1][0];
+			$document_array_all = explode(" ", $relatedDocument);
+			$document_array = explode("\\", $document_array_all[0]);
+
+			$document = $this->add($document_array[0].'\Model_'.$document_array[1]);
+			$document->tryLoadBy('name',$document_array_all[1]);
+		}else{
+			$document = $this->loadFrom();
+			if(!$document) return;
+		}
 		
 
-		//Guess Ticket
-		$relatedDocument = $preg_match_array[1][0];
-		$document_array_all = explode(" ", $relatedDocument);
-		$document_array = explode("\\", $document_array_all[0]);
 
-		$document = $this->add($document_array[0].'\Model_'.$document_array[1]);
-		$document->tryLoadBy('name',$document_array_all[1]);
 
 		if($document->loaded()){
 			$new_activity = $document->createActivity('Email',$this['subject'],$this['message'],$this['from'],$this['from_id'], $this['to'], $this['to_id']);
@@ -784,7 +789,8 @@ class Model_Email extends \Model_Document{
 		foreach ($email as $em) {
 			$em=trim($em);
 			if(!$em or $em=='') continue;
-			$or->where('customer_email','like','%'.$em.'%');
+			$or->where('email','like','%'.$em.'%');
+			$or->where('other_emails','like','%'.$em.'%');
 		}
 		
 		$cstmr->addCondition($or);
@@ -1003,6 +1009,8 @@ class Model_Email extends \Model_Document{
 					return $this->add('xShop/Model_Affiliate')->load($this['from_id']);
 				break;
 			}
+
+			return false;
 	}
 
 	function loadTo(){

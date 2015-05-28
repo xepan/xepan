@@ -23,9 +23,9 @@ class View_MemberForEmail extends \CompleteLister{
 		$this->js(true)->_selector('.xcrm-member')->xtooltip();
 	}
 
-	function setModel($model){
-		parent::setModel($model);	
-	}
+	// function setModel($model){
+	// 	parent::setModel($model);	
+	// }
 
 	function formatRow(){
 		$member_name="";
@@ -44,7 +44,7 @@ class View_MemberForEmail extends \CompleteLister{
 		if($this->model['unread'])
 			$this->current_row_html['unread_email'] = '<span class="badge atk-swatch-green" title="Unread Emails">'.$this->model['unread'].'</span>';
 		else
-			$this->template->tryDel('unread_email');
+			$this->current_row_html['unread_email'] = "";
 
 		if($this->panel_open == "on")
 			$this->template->trySetHtml('panel_open','in');
