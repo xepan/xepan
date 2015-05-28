@@ -318,7 +318,7 @@ class Model_MemberDetails extends \Model_Document{
 
 	function deactivate(){
 		if(!$this->loaded())
-			throw new \Exception("Model Must be Loaded");
+			return false;
 
 		$this['is_active'] = false;
 		$this->save();

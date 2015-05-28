@@ -75,12 +75,14 @@ class page_cron_bouncecheck extends Page {
 		echo "removing $email from suppliers<br/>";
 		echo "removing $email from affiliates<br/>";
 		echo "removing $email from employees<br/>";
-
 		echo "removing $email from subscribers<br/>";
 
 		$check = array(
-				'xEnquiryNSubscription/Model_Subscription' => array('email');
-				'xShop/Model_Customer' => array('customer_email','other_emails');
+				'xShop/Model_Customer' => array('customer_email','other_emails'),
+				'xPurchase/Model_Supplier' => array('email'),
+				'xShop/Model_Affiliate' => array('email_id'),
+				'xHR/Model_Employee' => array('personal_email','company_email_id'),
+				'xEnquiryNSubscription/Model_Subscription' => array('email'),
 			)
 
 		$q = $this->api->db->dsql();
@@ -104,6 +106,8 @@ class page_cron_bouncecheck extends Page {
 					}
 					// create activity
 						// $email has been bounced hard and removed
+					$subject = $obj[$f]."has been bounced Hard and Removed";
+					$obj->createActivity("action",$subject,"",$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null,$notify_via_email=false, $notify_via_sms=false);
 				}
 			});
 		}

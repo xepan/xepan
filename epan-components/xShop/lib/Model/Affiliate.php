@@ -65,4 +65,13 @@ class Model_Affiliate extends \Model_Table {
 		$this['email_id'] = $this['email_id'].', '.$email;
 		$this->save();
 	}
+
+	function deactivate(){
+		if(!$this->loaded())
+			return false;
+		
+		$this['is_active'] = false;
+		$this->save();
+		return true;
+	}
 }

@@ -97,4 +97,13 @@ class Model_Subscription extends \Model_Document {
 		$this['email'] = $this['email'].', '.$email;
 		$this->save();
 	}
+
+	function deactivate(){
+		if(!$this->loaded())
+			return false;
+
+		$this['is_ok'] = false;
+		$this->save();
+		return true;
+	}
 }

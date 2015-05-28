@@ -388,4 +388,13 @@ class Model_Employee extends \Model_Table{
 		$this['personal_email'] = $this['personal_email'].', '.$email;
 		$this->save();
 	}
+
+	function deactivate(){
+		if(!$this->loaded())
+			return false;
+		
+		$this['is_active'] = false;
+		$this->save();
+		return true;
+	}
 }
