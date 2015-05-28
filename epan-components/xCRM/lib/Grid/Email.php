@@ -24,7 +24,7 @@ class Grid_Email extends \Grid{
 		
 	}
 
-	function setModel($model,$fields){
+	function setModel($model,$fields=array()){
 		parent::setmodel($model,$fields);
 
 		$fields = $model->getActualFields();
