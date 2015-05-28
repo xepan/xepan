@@ -64,7 +64,7 @@ class View_EmailReply extends \View{
 				$reply_form->js()->univ()->successMessage('Reply Message Send')->execute();
 			}
 
-		$this->js(true)->_selector('.xcrm-member')->xtooltip();
+		// $this->js(true)->_selector('.xcrm-emailreply')->xtooltip();
 	}
 
 	function defaultTemplate(){
