@@ -2,13 +2,8 @@
 
 class View_Activity extends View {
 
-	function init(){
-		parent::init();
-
-	}
-
 	function setModel($model){
-		//Set Date 
+		//Set Date
 		$this->template->trySetHtml('activity_date',$this->add('xDate')->diff(Carbon::now(),$model['created_at']));
 
 		$panel_html = "";
@@ -106,17 +101,17 @@ class View_Activity extends View {
 		$this->template->trySetHtml('action_name',$model['action']);
 		$this->template->trySetHtml('action_from',$model['action_from']);
 
-		//DISPLAY NOTIFY VIA EMAIL  
+		//DISPLAY NOTIFY VIA EMAIL 
 		$notify_via_email_html = "";
 		if($model['notify_via_email'])
-			$notify_via_email_html = "Notify Via Email ".$model['email_to'];
+			$notify_via_email_html = '<div class="atk-move-right atk-box-small"><i class="atk-swatch-green icon-mail"></i> Notify Via Email: '.$model['email_to'].'</div>';
 
 		$this->template->trySetHtml('notify_via_email', $notify_via_email_html);
 		
 		//DISPLAY NOTIFY VIA SMS  
 		$notify_via_sms_html = "";
 		if($model['notify_via_sms'])
-			$notify_via_sms_html = "Notify Via SMS ".$model['sms_to'];
+			$notify_via_sms_html = '<div class="atk-move-right atk-box-small"><i class="atk-swatch-green icon-phone"></i> Notify Via SMS: '.$model['sms_to'].'</div>';
 
 		$this->template->trySetHtml('notify_via_sms',$notify_via_sms_html);
 
@@ -133,7 +128,7 @@ class View_Activity extends View {
 		
 		//Load Actor Image
 		//<img class="img-box atk-shape-rounded"></img>
-		$img = '<span class="img-box glyphicon glyphicon-user atk-size-yotta text-center"></span>';
+		$img = '<span class="img-box glyphicon glyphicon-user atk-size-yotta text-center" style="width:100%;"></span>';
 		$this->template->trySetHtml('actor_img',$img);
 
 		$attachment = "";
