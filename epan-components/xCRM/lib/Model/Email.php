@@ -593,7 +593,7 @@ class Model_Email extends \Model_Document{
 	function populateFromAndToIds(){
 		$this->guessFrom();
 		$doc = $this->guessDocumentAndCreateActivityOrTicket();
-		$this->guessTo($doc);
+		$this->guessTo();
 	}
 
 	function guessFrom(){
@@ -604,14 +604,17 @@ class Model_Email extends \Model_Document{
 			return false;
 
 		//GUESS CUSTOMER
-		if($customer = $this->customer()){
+		if($customer = $this->customer($this['from_email'])){
 			$this['from'] = "Customer";
 			$this['from_id'] = $customer['id'];
-		}elseif($supplier = $this->supplier()){
+		}elseif($supplier = $this->supplier($this['from_email'])){
 			//guess Supplier
 			$this['from'] = "Supplier";
 			$this['from_id'] = $supplier['id'];
-		}elseif($emp = $this->employee()){
+		}elseif($afiliate = $this->afiliate($this['from_email'])){
+			$this['from'] = "Affiliate";
+			$this['from_id'] = $afiliate['id'];
+		}elseif($emp = $this->employee($this['from_email'])){
 			$this['from'] = "Employee";
 			$this['from_id'] = $emp['id'];
 		}
@@ -651,40 +654,53 @@ class Model_Email extends \Model_Document{
 		if(!$this->loaded()) return;
 		switch ($this['to']) {
 			case 'Customer':
-				$c = $this->add('xShop/Model_Customer')->addCondition('id',$this['from_id'])->tryLoadAny();
+				$c = $this->add('xShop/Model_Customer')->addCondition('id',$this['to_id'])->tryLoadAny();
 				if($c->loaded())					
 					return $c['customer_name'];
 			break;			
 			case 'Supplier':
-				$s = $this->add('xPurchase/Model_Supplier')->addCondition('id',$this['from_id'])->tryLoadAny();
+				$s = $this->add('xPurchase/Model_Supplier')->addCondition('id',$this['to_id'])->tryLoadAny();
 				if($s->loaded())
 					return $s['name'];
 			break;
 			case 'Employee':
-				$e = $this->add('xHR/Model_Employee')->addCondition('id',$this['from_id'])->tryLoadAny();
+				$e = $this->add('xHR/Model_Employee')->addCondition('id',$this['to_id'])->tryLoadAny();
 				if($e->loaded())
 					return $e['name'];
+			break;
+			case 'Affiliate':
+				$a = $this->add('xShop/Model_Affiliate')->addCondition('id',$this['to_id'])->tryLoadAny();
+				if($a->loaded())
+					return $a['name'];
 			break;
 		}
 	}
 	
-	function guessTo($doc=false){
-		if($doc){
-			$to = $doc->getParty();
-			if($to instanceof \xShop\Model_Customer){
-				$this['to'] = 'Customer';
-				$this['to_id'] = $to->id;
-			
-			}elseif($to instanceof \xHR\Model_Employee){
-				$this['to'] = 'Employee';
-				$this['to_id'] = $to->id;
-			
-			}elseif($to instanceof \xPurchase\Model_Supplier) {
-				$this['to'] = 'Supplier';
-				$this['to_id'] = $to->id;
-			}
-		}
+	function guessTo(){
+		if(!$this->loaded())
+			return false;
 
+		if(!$to_email = $this['to_email'])
+			return false;
+
+		$to_email = $to_email.",".$this['cc'].",".$this['bcc'];
+
+		//GUESS CUSTOMER
+		if($customer = $this->customer($to_email) AND $this['from']!='Customer'){
+			$this['from'] = "Customer";
+			$this['from_id'] = $customer['id'];
+		}elseif($supplier = $this->supplier($to_email) AND $this['from']!='Supplier'){
+			//guess Supplier
+			$this['from'] = "Supplier";
+			$this['from_id'] = $supplier['id'];
+		}elseif($afiliate = $this->afiliate($to_email)  AND $this['from']!='Affiliate'){
+			$this['from'] = "Affiliate";
+			$this['from_id'] = $afiliate['id'];
+		}elseif($emp = $this->employee($to_email)  AND $this['from']!='Employee'){
+			$this['from'] = "Employee";
+			$this['from_id'] = $emp['id'];
+		}
+		
 		$this->save();
 	}
 
@@ -750,10 +766,23 @@ class Model_Email extends \Model_Document{
 
 	}
 
-	function customer(){
+	function customer($email){
+
+		if(!is_array($email)){
+			$email = explode(",", $email);
+		}
+
 		$cstmr = $this->add('xShop/Model_Customer');
-		$cstmr->addCondition('customer_email','like','%'.$this['from_email'].'%');
+
+		$or = $cstmr->dsql()->orExpr();
+		foreach ($email as $em) {
+			$em=trim($em);
+			if(!$em or $em=='') continue;
+			$or->where('customer_email','like','%'.$em.'%');
+		}
 		
+		$cstmr->addCondition($or);
+
 		if($cstmr->count()->getOne() > 1)
 			return false;
 
@@ -764,9 +793,9 @@ class Model_Email extends \Model_Document{
 		return false;
 	}
 
-	function supplier(){
+	function supplier($email){
 		$supplr = $this->add('xPurchase/Model_Supplier'); 
-		$supplr->addCondition('email','like','%'.$this['from_email'].'%');
+		$supplr->addCondition('email','like','%'.$email.'%');
 
 		if($supplr->count()->getOne() > 1)
 			return false;
@@ -778,9 +807,23 @@ class Model_Email extends \Model_Document{
 		return false;
 	}
 
-	function employee(){
+	function afiliate($email){
+		$afiliate = $this->add('xShop/Model_Affiliate');
+		$afiliate->addCondition('email_id','like','%'.$email.'%');
+		
+		if($afiliate->count()->getOne() > 1)
+			return false;
+
+		$afiliate->tryLoadAny();
+		if($afiliate->loaded())
+			return $afiliate;
+
+		return false;
+	}
+
+	function employee($email){
 		$emp = $this->add('xHR/Model_Employee');
-		$emp->addCondition('personal_email','like','%'.$this['from_email'].'%');
+		$emp->addCondition('personal_email','like','%'.$email.'%');
 		
 		if($emp->count()->getOne() > 1)
 			return false;

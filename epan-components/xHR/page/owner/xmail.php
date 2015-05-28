@@ -5,9 +5,8 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		parent::init();
 		
 		$this->app->title='x-Mail';
-		$dept_id = $this->api->stickyGET('department_id');
-		
-		$dept = $this->add('xHR/Model_Department')->load($dept_id);
+
+		$dept = $this->api->current_department;
 		$official_email_array = $dept->getOfficialEmails();
 		
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-envelope"></i> '.$dept['name'].' Mails <small> '.implode(", ", $official_email_array).'  </small>');
@@ -16,17 +15,18 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 		$left_col=$col->addColumn(2);
 		$right_col=$col->addColumn(10);
 
+//Emails--------------------------------------------------------------------------------------
+		$email_view = $right_col->add('xCRM/View_Email')->addClass('xcrm-memberforemail');
+
 //CUSTOMER SECTION----------------------------------------------------------------------
-		$left_col->add('xCRM/View_MemberForEmail',array('model'=>$this->add('xShop/Model_CustomerForEmail'),'member_type'=>'Customer','panel_open'=>"on"));
+		$left_col->add('xCRM/View_MemberForEmail',array('model'=>$this->add('xShop/Model_CustomerForEmail'),'member_type'=>'Customer','panel_open'=>"on",'email_view'=>$email_view));
 
 //SUPPLIER SECTION--------------------------------------------------------------------------------------------------------------------------
-		$left_col->add('xCRM/View_MemberForEmail',array('model'=>$this->add('xPurchase/Model_SupplierForEmail'),'member_type'=>'Supplier'))->addStyle('margin-top','5%');
+		$left_col->add('xCRM/View_MemberForEmail',array('model'=>$this->add('xPurchase/Model_SupplierForEmail'),'member_type'=>'Supplier','email_view'=>$email_view))->addStyle('margin-top','5%');
 
 //AFFILIATE SECTION-----------------------------------------------------------------------
-		$left_col->add('xCRM/View_MemberForEmail',array('model'=>$this->add('xShop/Model_AffiliateForEmail'),'member_type'=>'Affiliate'))->addStyle('margin-top','5%');
+		$left_col->add('xCRM/View_MemberForEmail',array('model'=>$this->add('xShop/Model_AffiliateForEmail'),'member_type'=>'Affiliate','email_view'=>$email_view))->addStyle('margin-top','5%');
 
-//Emails--------------------------------------------------------------------------------------
-		$right_col->add('xCRM/View_Email')->addClass('xcrm-memberforemail');
 		
 		// $this->js(true)->_selector('*')->xtooltip();
 	}

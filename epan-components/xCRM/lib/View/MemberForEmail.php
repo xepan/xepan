@@ -7,6 +7,7 @@ class View_MemberForEmail extends \CompleteLister{
 	public $member_type;
 	public $sno=1;
 	public $panel_open="off";
+	public $email_view=null;
 
 	function init(){
 		parent::init();
@@ -35,7 +36,10 @@ class View_MemberForEmail extends \CompleteLister{
 		elseif($this->member_type=="Affiliate") 
 			$member_name = $this->model['name'];
 
-		$this->current_row_html['member_name'] = $member_name;
+		$js=$this->email_view->js()->reload(array(strtolower($this->member_type).'_id' => $this->model->id));
+		$this->current_row_html['member_name'] = '<a href=\'#member\' onclick="'.$js.'">'.$member_name."</a>";
+		
+		$this->current_row['member_name_title'] = $member_name;
 
 		if($this->model['unread'])
 			$this->current_row_html['unread_email'] = '<span class="badge atk-swatch-green" title="Unread Emails">'.$this->model['unread'].'</span>';
