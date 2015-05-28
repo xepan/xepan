@@ -1076,21 +1076,28 @@ class Model_Email extends \Model_Document{
 
 	function loadOfficialEmail($according="to"){
 		if(!$this->loaded()) return false;
+		
 		if($according=="to")
-			$email_to = explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc']);
+			$email = explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc']);
 
 		if($according=="from")
-			$email_to = explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc']);
+			$email = explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc']);
 
 		$off_emails = $this->add('xHR/Model_OfficialEmail');
-		$off_emails->addCondition('imap_email_username',$email_to);
-		$off_emails->tryLoadAny();
+		$or = $off_emails->dsql()->orExpr();
+		foreach ($email as $em) {
+			$em=trim($em);
+			if(!$em or $em=='') continue;
+			$or->where('imap_email_username','like','%'.$em.'%');
+		}
 		
+		$off_emails->addCondition($or);
+
+		$off_emails->tryLoadAny();
 		if($off_emails->loaded())
 			return $off_emails;
 
 		return false;
-
 	}
 
 }
