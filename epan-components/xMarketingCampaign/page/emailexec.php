@@ -9,7 +9,7 @@ class page_xMarketingCampaign_page_emailexec extends Page {
 		// $this->app->title=$this->api->current_department['name'] .': Mass Email';
 		$email_job = $this->add('xEnquiryNSubscription/Model_EmailJobs');
 		$email_job->addExpression('un_processed_job')->set(function($m,$q){
-			return $m->refSQL('xEnquiryNSubscription/EmailQueue')->addCondition('is_sent',false)->count(true);
+			return $m->refSQL('xEnquiryNSubscription/EmailQueue')->addCondition('is_sent',false)->count();
 		});
 
 		$email_job->addCondition('un_processed_job','>',0);
@@ -52,6 +52,9 @@ class page_xMarketingCampaign_page_emailexec extends Page {
 		$email_queue = $this->add('xEnquiryNSubscription/Model_EmailQueue');
 		$email_queue->addCondition('emailjobs_id',$email_job->id);
 		$email_queue->addCondition('is_sent',false);
+
+		$subs_join = $email_queue->leftJoin('xenquirynsubscription_subscription','subscriber_id');
+		$subs_join->addField('subscriber_email','email');
 		
 		// $email_queue->addCondition('subscriber','not like',"%@gmail.");
 		// $email_queue->addCondition('subscriber','not like',"%@yahoo.");
@@ -61,7 +64,7 @@ class page_xMarketingCampaign_page_emailexec extends Page {
 		$email_queue->setLimit($email_setting_for_this_minute['remaining_emails_in_this_minute']);
 
 
-		echo "Email Setting taken " . $email_setting_for_this_minute['email_username'];
+		// echo "Email Setting taken " . $email_setting_for_this_minute['email_username'];
 
 		switch ($email_setting_for_this_minute['email_transport']) {
 			case 'SmtpTransport':
@@ -112,22 +115,29 @@ class page_xMarketingCampaign_page_emailexec extends Page {
 		$i=1;
 		foreach ($email_queue as $junk) {	
 		  	
-		  	$to_email = $junk['email']?:$junk['subscriber'];
+		  	$to_email = $junk['email']?:$junk['subscriber_email'];
 
 		  	$email_body = str_replace("{{email}}", $to_email, $email_body);
 
 		  	try{
-		  		$message->setTo($to_email);
+		  		$message->setTo(explode(",",$to_email));
 		  	}catch(Exception $e){
-		  		// continue;
+		  		throw $e;
 		  	}
 		  	$message->setBody($email_body,'text/html');
 
 		  	// $start = microtime(true);
-			$sent_this =  $mailer->send($message, $failed);
+		  	try{
+				$sent_this =  $mailer->send($message, $failed);
+		  	}catch(Exception $e){
+		  		throw $e;
+		  		$sent_this = false;
+		  	}
+
 			if(!$sent_this){
+				// echo $message ."<br>";
 				// This is not actually bounced. keep it a separate portion
-				$email_queue->ref('subscriber_id')->set('is_bounced',true)->saveAndUnload();
+				// $email_queue->ref('subscriber_id')->set('is_bounced',true)->saveAndUnload();
 			}else{
 				$sent += $sent_this;
 			}
@@ -154,7 +164,7 @@ class page_xMarketingCampaign_page_emailexec extends Page {
 		else
 			$this->add('View_Error');
 
-		$this->js(true)->reload();
+		// $this->js(true)->reload();
 
 	}
 

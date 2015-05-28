@@ -36,7 +36,7 @@ class page_xMarketingCampaign_page_owner_newsletters_massemail extends page_xMar
 			
 			$new_job = $this->add('xEnquiryNSubscription/Model_EmailJobs');
 			$new_job['newsletter_id'] = $_GET['xenquirynsubscription_newsletter_id'];
-			$new_job['process_via']='xEnquiryNSubscription';
+			$new_job['process_via']='xMarketingCampaign';
 			$new_job->save();
 
 			$q= $this->add('xEnquiryNSubscription/Model_EmailQueue');
