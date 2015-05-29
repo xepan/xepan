@@ -13,7 +13,7 @@ class Model_Ticket extends \Model_Document{
  		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
- 		$this->hasOne('xShop/Model_Customer','customer_id');
+ 		$this->hasOne('xShop/Model_Customer','customer_id')->display(array('form'=>'autocomplete/Plus'))->mandatory(true);
  		$this->hasOne('xShop/Model_Order','order_id');
 		
 		$this->addField('name');
@@ -33,7 +33,7 @@ class Model_Ticket extends \Model_Document{
 		$this->addField('subject');
 		$this->addField('message')->type('text')->display(array('form'=>'RichText'));
 
-		$this->addField('priority')->enum(array('Low','Medium','High','Urgent'))->defaultValue('Medium');
+		$this->addField('priority')->enum(array('Low','Medium','High','Urgent'))->defaultValue('Medium')->mandatory(true);
 
 		$this->hasMany('xCRM/TicketAttachment','related_document_id',null,'Attachments');
 		//$this->add('dynamic_model/Controller_AutoCreator');
@@ -56,7 +56,8 @@ class Model_Ticket extends \Model_Document{
 	function supportEmail(){
 		$off_email = $this->add('xHR/Model_OfficialEmail');
 		$off_email->addCondition('imap_email_username',$this['to_email'])
-					->addCondition('status','active');
+					->addCondition('status','active')
+					->addCondition('is_support_email','true');
 
 		return $off_email->tryLoadAny();
 	}
@@ -114,9 +115,13 @@ class Model_Ticket extends \Model_Document{
 		}
 	}
 
-	function customer(){
+	function customer($to="from"){
+		$email = $this['from_email'];
+		if($to == "to")
+			$email = $this['to_email'];
+
 		$cstmr = $this->add('xShop/Model_Customer');
-		$cstmr->addCondition('customer_email','like','%'.$this['from_email'].'%');
+		$cstmr->addCondition('customer_email','like','%'.$email.'%');
 		
 		if($cstmr->count()->getOne() > 1)
 			return false;
@@ -127,4 +132,23 @@ class Model_Ticket extends \Model_Document{
 
 		return false;
 	}
+
+	function submit(){
+		$current_id = $this->id;
+		$customer = $this->ref('customer_id');
+
+		$this['from'] = 'Customer';
+		$this['from_id'] = $this['customer_id'];
+		$this['from_name'] = $customer['customer_name'];
+
+		$this['to_email'] = $this->api->current_employee->supportEmails()->get('imap_email_username');
+		$this->save();
+
+		$this->setStatus('submitted');
+		
+		$t = $this->add('xCRM/Model_Ticket')->load($current_id);
+		$t->autoReply();	
+		return true;
+	}
+
 }

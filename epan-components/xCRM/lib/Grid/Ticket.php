@@ -20,22 +20,20 @@ class Grid_Ticket extends \Grid{
 		$this->current_row_html[$f]='<a href="javascript:void(0)" onclick="'. $this->js()->univ()->frameURL($this->model['subject'],$this->api->url($this->vp->getURL(),array('id'=>$this->model->id))) .'">'.$this->current_row[$f].'</a>';
 	}
 
-	function setModel($model){
-		$m = parent::setModel($model,array('name','uid','from',
-										'from_id','from_email',
-										'from_name','to','to_id',
-										'to_email','cc','bcc','subject',
-										'message','priority'));
+	function setModel($model,$fields = array()){
+		$m = parent::setModel($model,$fields);
 
-		$this->fooHideAlways('uid');
-		$this->fooHideAlways('from_id');
-		$this->fooHideAlways('to_id');
-		$this->fooHideAlways('cc');
-		$this->fooHideAlways('bcc');
+		// $this->fooHideAlways('uid');
+		// $this->fooHideAlways('from_id');
+		// $this->fooHideAlways('to_id');
+		// $this->fooHideAlways('cc');
+		// $this->fooHideAlways('bcc');
+		if($this->hasColumn('message'))$this->addFormatter('message','preview');
+		if($this->hasColumn('customer_id'))$this->removeColumn('customer_id');
 
-		$this->addPaginator(50);
+		$this->addQuickSearch($model->getActualFields());
+		$this->addPaginator($ipp=50);
 		$this->add_sno();
-		$this->addFormatter('message','preview');
 		return $m;
 	}
 }

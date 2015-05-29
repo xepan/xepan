@@ -259,7 +259,18 @@ class Model_Department extends \Model_Table{
 	}
 
 	function officialEmails(){
-		return $this->add('xHR/Model_OfficialEmail')->addCondition('department_id',$this->id);
+		return $this->add('xHR/Model_OfficialEmail')->addCondition('department_id',$this->id)->addCondition('status','active');;
+	}
+
+	function supportEmails($include_auto_reply=false){
+		$support_email =  $this->add('xHR/Model_OfficialEmail')
+						->addCondition('department_id',$this->id)
+						->addCondition('status','active')
+						->addCondition('is_support_email',true);
+		if($include_auto_reply)
+			$support_email->addCondition('auto_reply',true);
+
+		return $support_email;
 	}
 
 	function getOfficialEmails($include_support=false){
