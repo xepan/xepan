@@ -3,15 +3,17 @@
 		{$subject}{$inbox}
 	</div>
 	<div class="row">
-		<div class="col-md-8">
+		<div class="col-md-10">
 			<b>{$email_from}<b>
 			<div class="atk-text-bold">To: {$email_to}</div>
+			<hr/>
 			<div class="atk-text-normal">
 				{$email_message}
 			</div>
 		</div>
-		<div class="col-md-4 text-right">
-			{$created_at} 
+		<div class="col-md-2 text-right">
+			{$created_at}
+			<div class="atk-swatch-ink atk-box-small text-center">Attachments</div>
 			{$attachment}
 		</div>
 	</div>

@@ -1,8 +1,16 @@
 <?php
 
 namespace xShop;
-class Model_Affiliate extends \Model_Table {
+class Model_Affiliate extends \Model_Document {
 	var $table= "xshop_affiliate";
+	public $status = array();
+	public $actions = array(
+				'allow_del'=>array(),
+				'allow_edit'=>array(),
+				'allow_add'=>array()
+				);
+	public $root_document_name = 'xShop\Affiliate';
+
 	function init(){
 		parent::init();
 
@@ -64,5 +72,14 @@ class Model_Affiliate extends \Model_Table {
 		
 		$this['email_id'] = $this['email_id'].', '.$email;
 		$this->save();
+	}
+
+	function deactivate(){
+		if(!$this->loaded())
+			return false;
+		
+		$this['is_active'] = false;
+		$this->save();
+		return true;
 	}
 }

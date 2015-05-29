@@ -12,9 +12,10 @@ class View_Email extends \View{
 		$this->template->trySetHTML('subject',$model['subject']);
 		$this->template->trySetHTML('email_message',$model['message']);
 
-		$from_email = "";
+		$from_email = "From: ";
 		$from_email .= $model->fromMemberName();
-		$from_email .= $model['from_name'].'<br/>';
+		if($model['from_name'])
+			$from_email .= " < ".$model['from_name'].' > ';
 		$from_email .= $model['from_email'];
 
 		$this->template->trySetHTML('email_from',$from_email);

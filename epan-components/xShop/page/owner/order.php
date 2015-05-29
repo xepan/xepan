@@ -16,8 +16,10 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 
 		$order_model = $this->add('xShop/Model_Order');
 		$order_model->title_field = 'search_phrase';
-
-		$cols = $this->app->layout->add('Columns',null,'page_title');
+		
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-dashboard icon-money"></i> Sales Orders');
+		
+		$cols = $this->add('Columns');
 		$lc= $cols->addColumn(8);
 		$rc= $cols->addColumn(4);
 		$lc->add('View')->setHTML('<i class="fa fa-users"></i> Sale Orders Management <small> Manage your sale Orders </small>');

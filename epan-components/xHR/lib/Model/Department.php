@@ -262,12 +262,18 @@ class Model_Department extends \Model_Table{
 		return $this->add('xHR/Model_OfficialEmail')->addCondition('department_id',$this->id);
 	}
 
-	function getOfficialEmails(){
+	function getOfficialEmails($include_support=false){
 		$off_emails_array =array();
-		if(!$this->loaded())
+		if(!$this->loaded()){
 			return $off_emails_array;
+		}
 		
-		foreach ($this->officialEmails() as $off_email) {
+		$oe = $this->officialEmails();
+		
+		if(!$include_support)
+			$oe->addCondition('is_support_email',false);
+		
+		foreach ($oe as $off_email) {
 			$off_emails_array[]=$off_email['imap_email_username'];	
 		}
 

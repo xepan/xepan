@@ -390,8 +390,9 @@ class page_base_owner extends Page {
 					$my_menu->addItem("Accounts Settings",$this->api->url('xProduction_page_owner_user_accountinfo',array('department_id'=>$this->api->current_employee['department_id'])));
 					
 					$my_menu->addItem("X Mail",$this->api->url('xHR_page_owner_xmail',array('department_id'=>$this->api->current_employee['department_id'])));
-					$this->shorcut_menus[]=array("page"=>"X Mail","url"=>$this->api->url('xHR_page_owner_xmail',array('department_id'=>$dept_model->id)));
 					
+					$this->shorcut_menus[]=array("page"=>"My Tasks","url"=>$this->api->url('xProduction_page_owner_user_tasks',array('department_id'=>$dept_model->id)));
+					$this->shorcut_menus[]=array("page"=>"X Mail","url"=>$this->api->url('xHR_page_owner_xmail',array('department_id'=>$dept_model->id)));
 					$this->shorcut_menus[]=array("page"=>"My Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 					$this->shorcut_menus[]=array("page"=>"My Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 					$this->shorcut_menus[]=array("page"=>"My Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
@@ -466,6 +467,7 @@ class page_base_owner extends Page {
 		$this->api->template->appendHTML('js_include','<script src="templates/js/shortcut.js"></script>'."\n");
 		
 		$this->api->js(true)->_load('utilities/fuse.min')->_load('utilities/shortmenus')->univ()->setUpShortMenus($this->shorcut_menus, $this->api->url());
+
 		parent::render();
 	}
 
