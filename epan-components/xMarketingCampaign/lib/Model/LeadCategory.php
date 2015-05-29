@@ -28,22 +28,15 @@ class Model_LeadCategory extends \xEnquiryNSubscription\Model_SubscriptionCatego
 		})->sortable(true);
 
 		// $this->hasMany('xMarketingCampaign/Lead','leadcategory_id');
-		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeDelete',array($this,"leadCategoryBeforeDelete"));
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function beforeDelete(){
-		if($this->ref('xMarketingCampaign/Lead')->count()->getOne() > 0)
+	function leadCategoryBeforeDelete(){
+		if($this->ref('xEnquiryNSubscription/SubscriptionCategoryAssociation')->count()->getOne() > 0)
 			throw $this->exception('Category contains Leads','Growl');
 				
 	}
 
-	function forceDelete(){
-
-		$this->ref('xEnquiryNSubscription/SubscriptionCategoryAssociation')->each(function($m){
-			$m->forceDelete();
-		});
-
-		$this->delete();		
-	}
+	
 }

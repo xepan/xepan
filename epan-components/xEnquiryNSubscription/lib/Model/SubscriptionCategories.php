@@ -102,4 +102,13 @@ class Model_SubscriptionCategories extends \Model_Document {
 	 	$this->ref('xEnquiryNSubscription/SubscriptionConfig')->deleteAll();
 	 	$this->ref('xEnquiryNSubscription/SubscriptionCategoryAssociation')->deleteAll();
 	}
+
+	function forceDelete(){
+
+		$this->ref('xEnquiryNSubscription/SubscriptionCategoryAssociation')->each(function($m){
+			$m->forceDelete();
+		});
+
+		$this->delete();		
+	}
 }
