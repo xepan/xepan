@@ -33,6 +33,8 @@ class Model_Subscription extends \Model_Document {
 		$this->addField('remark')->type('text')->group('b1~12~Remarks');
 
 		$f=$this->addField('is_ok')->type('boolean')->defaultValue(1)->sortable(true)->group('c~6~Other Information');
+		$this->addExpression('is_active')->set('is_ok');
+		
 		$f->icon='fa fa-exclamation~blue';
 		
 		$f=$this->addField('ip')->caption('IP')->group('c~6');
@@ -103,7 +105,7 @@ class Model_Subscription extends \Model_Document {
 			return false;
 
 		$this['is_ok'] = false;
-		$this->save();
+		$this->saveAndUnload();
 		return true;
 	}
 }
