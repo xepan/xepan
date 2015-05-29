@@ -16,6 +16,5 @@ class Model_OtherEmail extends Model_Email{
 								->where('to',null)
 								)
 							);
-		$this->debug();
 	}
 } 
