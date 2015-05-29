@@ -42,7 +42,7 @@ class Model_Invoice extends \Model_Document{
 		$this->addHook('afterSave',$this);
 		
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
-		
+		$this->setOrder('id','desc');
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 	

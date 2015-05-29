@@ -12,8 +12,12 @@ class page_xShop_page_owner_printsaleinvoice extends Page{
 
 		if(!$invoice->loaded()) $this->add('View_Warning')->set('Invoice Not Found');
 
-		$sale_invoice_detail=$this->add('xShop/View_SalesInvoiceDetail');
-		$sale_invoice_detail->setModel($invoice->itemrows());
+		$sale_invoice_detail=$this->add('xShop/View_SalesInvoiceDetail',array('show_customfield' =>true));
+		
+		$inv_item = $this->add('xShop/Model_InvoiceItem');
+		$inv_item->addCondition('invoice_id', $invoice->id);
+		$inv_item->tryLoadAny();
+		$sale_invoice_detail->setModel($inv_item);
 		
 		$tnc=$invoice->termAndCondition();
 
