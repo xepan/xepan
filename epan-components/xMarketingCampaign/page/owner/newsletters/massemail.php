@@ -31,6 +31,8 @@ class page_xMarketingCampaign_page_owner_newsletters_massemail extends page_xMar
 			$asso_j->addField('send_news_letters');
 
 			$subscribers->addCondition('category_id',$form['subscriptions']);
+			$subscribers->addCondition('is_active',true);
+
 			if(!$form['include_unsubscribed_members_too'])
 				$subscribers->addCondition('send_news_letters',true);
 			
