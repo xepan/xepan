@@ -329,6 +329,7 @@ class Model_Document extends Model_Table{
 					$v->setModel($g->model);
 					$g->current_row_html[$f]= $v->getHTML();
 				});
+			$g->addFormatter('action','Wrap');
 			$g->addFormatter('action','activity');
 
 			$g->removeColumn('created_at');
@@ -341,6 +342,8 @@ class Model_Document extends Model_Table{
 			$g->removeColumn('sms_to');
 			$g->removeColumn('attachment_id');
 
+			$g->addQuickSearch($g->model->getActualFields());
+			$g->addPaginator($ipp=10);
 		}
 
 
