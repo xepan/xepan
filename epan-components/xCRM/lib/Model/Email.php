@@ -884,13 +884,16 @@ class Model_Email extends \Model_Document{
 	}
 
 
-	function loadDepartmentEmails($dept_id=null){
+	function loadDepartmentEmails($dept_id=null, $include_support_emails=false){
 		if(!$dept_id)
 			$dept_id = $this->api->stickyGET('department_id');
 		
 		$official_emails = $this->add('xHR/Model_OfficialEmail');
 		$official_emails->addCondition('department_id',$dept_id);
 		
+		if(!$include_support_emails)
+			$official_emails->addCondition('is_support_email',false);
+
 		if(!$official_emails->count()->getOne())
 			return false;
 		
