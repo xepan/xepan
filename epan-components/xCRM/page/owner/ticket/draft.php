@@ -7,11 +7,8 @@ class page_xCRM_page_owner_ticket_draft extends page_xCRM_page_owner_main{
 		$ticket_draft = $this->add('xCRM/Model_Ticket_Draft');
 
 		$crud = $this->add('CRUD',array('grid_class'=>'xCRM/Grid_Ticket'));
-		$crud->setModel($ticket_draft,array('name','uid','from','from_id',
-												'from_email','from_name','to',
-												'to_id','to_email','cc','bcc',
-												'subject','message','priority')
-										,array());
+		$crud->setModel($ticket_draft,array('customer_id','priority','subject','message'),array('name','customer','priority'));
+
 		$crud->add('xHR/Controller_Acl');
 	}
 }		
