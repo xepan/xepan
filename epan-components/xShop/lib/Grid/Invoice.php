@@ -53,8 +53,9 @@ class Grid_Invoice extends \Grid{
 		$this->addFormatter('name','view');
 		$this->addFormatter('name','Wrap');
 		$this->addFormatter('sales_order','orderview');
+		$this->addFormatter('sales_order','Wrap');
 		// if($invoice_model['status'] == 'draft' or $invoice_model['status'] == 'redesign')
-			$this->addColumn('expander','items',array('page'=>'xShop_page_owner_invoice_items','descr'=>'Items'));
+		$this->addColumn('expander','items',array('page'=>'xShop_page_owner_invoice_items','descr'=>'Items'));
 		
 		if($this->hasColumn('customer_id')){
 			$this->removeColumn('customer_id');

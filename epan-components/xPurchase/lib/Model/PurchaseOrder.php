@@ -30,6 +30,7 @@ class Model_PurchaseOrder extends \Model_Document{
 
 		$this->addExpression('orderitem_count')->set($this->refSQL('xPurchase/PurchaseOrderItem')->count());
 		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->setOrder('id','desc');
 	}
 
 	function beforeDelete(){
