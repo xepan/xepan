@@ -23,7 +23,8 @@ class Model_SubscriptionCategories extends \Model_Document {
 		$this->hasMany('xEnquiryNSubscription/HostsTouched','category_id');
 		$this->hasMany('xEnquiryNSubscription/SubscriptionCategoryAssociation','category_id');
 		$this->hasMany('xEnquiryNSubscription/SubscriptionConfig','category_id');
-		$this->hasMany('xEnquiryNSubscription/DataSearchPhrase','subscription_category_id');
+		$this->hasMany('xMarketingCampaign/DataSearchPhrase','subscription_category_id');
+		$this->hasMany('xMarketingCampaign/CampaignSubscriptionCategory','category_id');
 
 		$this->addExpression('total_emails')->set(function($m,$q){
 			$mq=$m->add('xEnquiryNSubscription/Model_Subscription',array('table_alias'=>'tmq'));
@@ -102,7 +103,8 @@ class Model_SubscriptionCategories extends \Model_Document {
 	function beforeDelete(){
 	 	$this->ref('xEnquiryNSubscription/SubscriptionConfig')->deleteAll();
 	 	$this->ref('xEnquiryNSubscription/SubscriptionCategoryAssociation')->deleteAll();
-	 	$this->ref('xEnquiryNSubscription/DataSearchPhrase')->deleteAll();
+	 	$this->ref('xMarketingCampaign/DataSearchPhrase')->deleteAll();
+	 	$this->ref('xMarketingCampaign/CampaignSubscriptionCategory')->deleteAll();
 	}
 
 	function forceDelete(){
