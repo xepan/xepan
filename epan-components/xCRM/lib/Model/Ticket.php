@@ -35,6 +35,11 @@ class Model_Ticket extends \Model_Document{
 
 		$this->addField('priority')->enum(array('Low','Medium','High','Urgent'))->defaultValue('Medium')->mandatory(true);
 
+		$this->addExpression('last_activity_date')->set(function ($m, $q){
+			$activity = $m->activities()->setOrder('id','desc')->tryLoadAny();
+			return $activity->dsql->fieldQuery('created_at');
+		});
+
 		$this->hasMany('xCRM/TicketAttachment','related_document_id',null,'Attachments');
 		//$this->add('dynamic_model/Controller_AutoCreator');
 		
@@ -133,7 +138,8 @@ class Model_Ticket extends \Model_Document{
 		return false;
 	}
 
-	function submit(){
+	function submit(){//Open Ticket
+		
 		$current_id = $this->id;
 		$customer = $this->ref('customer_id');
 
@@ -141,7 +147,7 @@ class Model_Ticket extends \Model_Document{
 		$this['from_id'] = $this['customer_id'];
 		$this['from_name'] = $customer['customer_name'];
 
-		$this['to_email'] = $this->api->current_employee->supportEmails()->get('imap_email_username');
+		$this['to_email'] = $this->api->current_department->supportEmails()->get('imap_email_username');
 		$this->save();
 
 		$this->setStatus('submitted');
@@ -150,5 +156,33 @@ class Model_Ticket extends \Model_Document{
 		$t->autoReply();	
 		return true;
 	}
+
+
+	function cancel(){
+		$this->setStatus('canceled');
+		return true;
+	}
+
+	function assign(){
+		$this->setStatus('assigned');
+		return;
+	}
+
+	function mark_processed(){//Solved
+		//Send Email for Ticket Close;
+		
+		$this->setStatus('solved');
+		return;	
+	}
+
+
+	function createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null,$notify_via_email=false, $notify_via_sms=false){
+		if($this['status'] == 'solved'){
+			$this['status']='submitted';
+			$this->save();
+		}
+		parent::createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null,$notify_via_email=false, $notify_via_sms=false);
+	}
+
 
 }

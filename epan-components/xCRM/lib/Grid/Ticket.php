@@ -23,11 +23,6 @@ class Grid_Ticket extends \Grid{
 	function setModel($model,$fields = array()){
 		$m = parent::setModel($model,$fields);
 
-		// $this->fooHideAlways('uid');
-		// $this->fooHideAlways('from_id');
-		// $this->fooHideAlways('to_id');
-		// $this->fooHideAlways('cc');
-		// $this->fooHideAlways('bcc');
 		if($this->hasColumn('message'))$this->addFormatter('message','preview');
 		if($this->hasColumn('customer_id'))$this->removeColumn('customer_id');
 
@@ -35,5 +30,18 @@ class Grid_Ticket extends \Grid{
 		$this->addPaginator($ipp=50);
 		$this->add_sno();
 		return $m;
+	}
+
+	function formatRow(){
+		$assign_html = "";
+		//Read Or Unread Emails
+		//Check for Email is Incomening or OutGoing
+		$this->current_row_html['subject'] = $this->model['subject'];
+		parent::formatRow();
+	}
+
+
+	function recursiveRender(){
+		parent::recursiveRender();
 	}
 }
