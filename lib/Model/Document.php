@@ -143,7 +143,8 @@ class Model_Document extends Model_Table{
 	}
 
 	function getNextSeriesNumber($config_value=0){
-		return $config_value + 1 + $this->newInstance()->dsql()->del('fields')->field('max(name)')->getOne();
+		$i = $this->add('xShop/Model_Invoice');
+		return $config_value + 1 + $i->dsql()->del('fields')->field('max(name)')->getOne();
 	}
 
 	function defaultAfterInsert($newobj,$id){
