@@ -40,7 +40,7 @@ class Model_LeadCategory extends \xEnquiryNSubscription\Model_SubscriptionCatego
 
 	function forceDelete(){
 
-		$this->ref('xMarketingCampaign/Lead')->each(function($m){
+		$this->ref('xEnquiryNSubscription/SubscriptionCategoryAssociation')->each(function($m){
 			$m->forceDelete();
 		});
 
