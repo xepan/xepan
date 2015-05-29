@@ -5,6 +5,8 @@ class page_cron_bouncecheck extends Page {
 	function init(){
 		parent::init();
 
+		ini_set('memory_limit', '2048M');
+		set_time_limit(0);
 
 		$cwsMailBounceHandler = new CwsMailBounceHandler();
 		$cwsMailBounceHandler->test_mode = true; // default false
@@ -82,6 +84,7 @@ class page_cron_bouncecheck extends Page {
 				'xPurchase/Model_Supplier' => array('email'),
 				'xShop/Model_Affiliate' => array('email_id'),
 				'xHR/Model_Employee' => array('personal_email','company_email_id'),
+				'xMarketingCampaign/Model_Lead' => array('email'),
 				'xEnquiryNSubscription/Model_Subscription' => array('email'),
 			);
 
@@ -93,8 +96,11 @@ class page_cron_bouncecheck extends Page {
 				$or->where($f,'like',"%$email%");
 			}
 
-			$this->add($model)
-			->addCondition($or)
+			$m=$this->add($model);
+			if($m->hasElement('is_active')) $m->addCondition('is_active',true);
+			if($m->hasElement('is_ok')) $m->addCondition('is_ok',true);
+			
+			$m->addCondition($or)
 			->each(function($obj)use($email, $fields){
 				foreach ($fields as $f) {
 					$emails_count=explode(",", $obj[$f]);
@@ -103,16 +109,16 @@ class page_cron_bouncecheck extends Page {
 						    unset($emails_count[$key]);
 						}
 						$obj[$f] = implode(", ", $emails_count);
-						echo $obj[$f]. "changed <br/>";
-						// $obj->save();
+						// echo $obj[$f]. " changed <br/>";
+						$obj->save();
 					}else{
-						echo $obj[$f]. "deactivated <br/>";
-						// $obj->deactivate();
+						// echo $obj[$f]. " deactivated <br/>";
+						$obj->deactivate();
 					}
 					// create activity
 						// $email has been bounced hard and removed
 					$subject = $obj[$f]." has been bounced Hard and Removed";
-					$to_arry = explode('\\', $obj->root_document_name());
+					$to_arry = explode('\\', $obj->root_document_name);
 					if($obj instanceof \Model_Document)
 						$obj->createActivity("action",$subject,"",$from=null,$from_id=null, $to=$to_arry[1], $to_id=$obj->id,$email_to=$obj[$f]);
 				}
