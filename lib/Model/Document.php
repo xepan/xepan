@@ -12,9 +12,10 @@ class Model_Document extends Model_Table{
 			'can_submit'=>'lock atk-swatch-red',
 			'can_manage_attachments'=>'attach',
 			'can_approve'=>'thumbs-up-alt atk-swatch-green',
-			'can_reject'=>'ccw atk-swatch-red',
-			'can_reject'=>'ccw atk-swatch-red',
 			'can_see_activities'=>'comment atk-swatch-blue',
+			'can_send_via_email'=>'mail atk-swatch-blue',
+			'can_reject'=>'cancel-circled atk-swatch-red',
+			'can_cancel'=>'cancel atk-swatch-red',
 		);
 
 	function init(){
@@ -47,7 +48,7 @@ class Model_Document extends Model_Table{
 
 		// set icons
 		foreach ($this->actions as $ac_view=>$details) {
-			if(!isset($details['icon']) and isset($this->default_icons[$ac_view]) and $this->actions[$ac_view] != false)
+			if(!isset($details['icon']) and isset($this->default_icons[$ac_view]) and $this->actions[$ac_view] !== false and $this->actions[$ac_view] !== null)
 				$this->actions[$ac_view]['icon'] = $this->default_icons[$ac_view];
 		}
 
