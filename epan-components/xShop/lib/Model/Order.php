@@ -383,7 +383,7 @@ class Model_Order extends \Model_Document{
 		return false;
 	}
 
-	function createInvoice($status='draft',$salesLedger=null, $items_array=array()){
+	function createInvoice($status='draft',$salesLedger=null, $items_array=array(),$amount=0,$discount=0){
 		try{
 
 			$this->api->db->beginTransaction();
@@ -391,8 +391,8 @@ class Model_Order extends \Model_Document{
 			$invoice['sales_order_id'] = $this['id'];
 			$invoice['customer_id'] = $this->customer()->get('id');
 			$invoice['billing_address'] = $this['billing_address'];
-			$invoice['total_amount'] = $this['total_amount'];
-			$invoice['discount'] = $this['discount_voucher_amount'];
+			$invoice['total_amount'] = $amount?$amount:$this['total_amount'];
+			$invoice['discount'] = $discount?$discount:$this['discount_voucher_amount'];
 			$invoice['tax'] = $this['tax'];
 			$invoice['net_amount'] = $this['net_amount'];
 			$invoice['termsandcondition_id'] = $this['termsandcondition_id'];
