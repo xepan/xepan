@@ -43,14 +43,16 @@ class page_cron_bouncecheck extends Page {
 		* Remote mailbox
 		*/
 		$cwsMailBounceHandler->open_mode = CWSMBH_OPEN_MODE_IMAP;
-		$cwsMailBounceHandler->host = 'sun.rightdns.com'; // Mail host server ; default 'localhost'
-		$cwsMailBounceHandler->username = 'bounce@xavoc.com'; // Mailbox username
-		$cwsMailBounceHandler->password = ''; // Mailbox password
-		$cwsMailBounceHandler->port = 993; // the port to access your mailbox ; default 143, other common choices are 110 (pop3), 995 (gmail)
+		$cwsMailBounceHandler->host = $this->api->current_website['bounce_imap_email_host']; // Mail host server ; default 'localhost'
+		$cwsMailBounceHandler->username = $this->api->current_website['return_path']; // Mailbox username
+		$cwsMailBounceHandler->password = $this->api->current_website['bounce_imap_email_password']; // Mailbox password
+		$cwsMailBounceHandler->port = $this->api->current_website['bounce_imap_email_port']; // the port to access your mailbox ; default 143, other common choices are 110 (pop3), 995 (gmail)
 		//$cwsMailBounceHandler->service = 'imap'; // the service to use (imap or pop3) ; default 'imap'
 		$cwsMailBounceHandler->service_option = 'ssl'; // the service options (none, tls, notls, ssl) ; default 'notls'
 		//$cwsMailBounceHandler->cert = CWSMBH_CERT_NOVALIDATE; // certificates validation (CWSMBH_CERT_VALIDATE or CWSMBH_CERT_NOVALIDATE) if service_option is 'tls' or 'ssl' ; default CWSMBH_CERT_NOVALIDATE
 		//$cwsMailBounceHandler->boxname = 'TEST'; // the mailbox to access ; default 'INBOX'
+
+		// $cwsMailBounceHandler->imap_opt = $this->api->current_website['bounce_imap_flags'];
 		if ($cwsMailBounceHandler->openImapRemote()) {
 			$cwsMailBounceHandler->processMails();
 		}
@@ -73,11 +75,11 @@ class page_cron_bouncecheck extends Page {
 	}
 
 	function removeEmail($email){
-		echo "removing $email from customers<br/>";
-		echo "removing $email from suppliers<br/>";
-		echo "removing $email from affiliates<br/>";
-		echo "removing $email from employees<br/>";
-		echo "removing $email from subscribers<br/>";
+		// echo "removing $email from customers<br/>";
+		// echo "removing $email from suppliers<br/>";
+		// echo "removing $email from affiliates<br/>";
+		// echo "removing $email from employees<br/>";
+		// echo "removing $email from subscribers<br/>";
 
 		$check = array(
 				'xShop/Model_Customer' => array('email','other_emails'), // email is renamed as customer_email in model
@@ -91,7 +93,7 @@ class page_cron_bouncecheck extends Page {
 		foreach ($check as $model => $fields) {
 			$q = $this->api->db->dsql();
 			$or = $q->orExpr();
-			echo $model ."<br>";
+			// echo $model ."<br>";
 			foreach ($fields as $f) {
 				$or->where($f,'like',"%$email%");
 			}
