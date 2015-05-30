@@ -163,18 +163,78 @@ class Model_Ticket extends \Model_Document{
 		return true;
 	}
 
+	function assign_page($p){
+		$employee_model = $p->add('xHR/Model_Employee')->addCondition('is_active',true);
+
+		//Task_______________________________________________
+		$p->add('H4')->set('Assign Ticket/Create Task')->addClass('atk-swatch-ink atk-padding-small');
+		$task_form = $p->add('Form_Stacked');
+		$narration_field = $task_form->addField('text','narration')->set($this['subject']);
+		$employee_field = $task_form->addField('autocomplete/Basic','employee','Assign To Employee');
+		$employee_field->setModel($employee_model);
+		$task_end_date_field = $task_form->addField('DatePicker','expected_end_date');
+		$task_priority_field = $task_form->addField('DropDown','priority')->setValueList(array('Low'=>'Low','Medium'=>'Medium','High'=>'High','Urgent'=>'Urgent'))->set($this['priority']);
+		$task_form->addSubmit('Create Task & Assign');
+		
+		$pre_task = $this->task();
+		if($pre_task){
+			$narration_field->set($pre_task['subject']);
+			$employee_field->set($pre_task['employee_id']);
+			$task_end_date_field->set($pre_task['expected_end_date']);
+			$task_priority_field->set($pre_task['Priority']);
+		}
+
+		if($task_form->isSubmitted()){
+			$this->createTask($task_form['narration'],$task_form['employee'],$task_form['expected_end_date'],$task_form['priority']);
+			$this->assign();
+			return true;
+		}
+	}
+
+	function task(){
+		$task = $this->add('xProduction/Model_Task');
+		$task->loadWhoseRelatedDocIs($this);
+		return $task;
+	}
+
 	function assign(){
 		$this->setStatus('assigned');
-		return;
+		return true;
 	}
 
 	function mark_processed(){//Solved
 		//Send Email for Ticket Close;
-		
 		$this->setStatus('solved');
 		return;	
 	}
 
+	//Create Task and Assign To Employee
+	function createTask($narration,$assing_to_employee_id,$expected_end_date=null,$priority='Medium'){
+		if(!$this->loaded()) return false;
+		
+		$task = $this->add('xProduction/Model_Task');
+		$pre_task = $this->task();
+		if($pre_task)
+			$task->load($pre_task->id);
+		
+		$task['status']= 'assigned';
+		$task['employee_id']= $assing_to_employee_id;
+		$task['subject'] = $narration;
+		$task['content'] = $this['subject'].'<br/>'.$this['message'];
+		$task['expected_end_date'] = $expected_end_date;
+		$task['Priority'] = $priority;
+		$task->relatedDocument($this);
+		$task->save();
+
+		foreach ($this->attachment() as $attach) {
+			$task_attach = $this->add('xCRM/Model_TaskAttachment');
+			$task_attach['attachment_url_id'] = $attach->id;
+			$task_attach['related_document_id'] = $task->id;
+			$task_attach['name'] = $attach['name'];
+			$task_attach->save();
+		}
+		
+	}
 
 	function createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null,$notify_via_email=false, $notify_via_sms=false){
 		if($this['status'] == 'solved'){
@@ -184,5 +244,8 @@ class Model_Ticket extends \Model_Document{
 		parent::createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null,$notify_via_email=false, $notify_via_sms=false);
 	}
 
+	function attachment(){
+		return $this->ref('Attachments')->addCondition('related_document_id',$this->id);
+	}
 
 }
