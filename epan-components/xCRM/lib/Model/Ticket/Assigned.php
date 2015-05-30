@@ -7,6 +7,7 @@ class Model_Ticket_Assigned extends Model_Ticket{
 			'allow_add'=>array(),
 			'allow_del'=>array(),
 			'can_cancel'=>array(),
+			'can_assign'=>array(),
 			'can_mark_processed'=>array(),
 		);
 	function init(){
