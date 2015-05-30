@@ -163,7 +163,7 @@ class Model_Quotation extends \Model_Document{
 			$email_body = $form['custom_message']."<br>".$email_body;
 			$this->sendEmail($form['to'],$form['subject'],$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));
 			$this->createActivity('email',$form['subject'],$form['message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
-			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
+			return true;			
 		}
 		
 	}
