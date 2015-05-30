@@ -263,7 +263,7 @@ class Model_Department extends \Model_Table{
 	}
 
 	function getOfficialEmails(){
-		$off_emails_array =array();
+		$off_emails_array = array(0);
 		if(!$this->loaded())
 			return $off_emails_array;
 		
