@@ -40,8 +40,8 @@ class Model_Quotation extends \Model_Document{
 	}
 
 	function afterSave(){
-		if( !($this['lead_id'] or $this['customer_id']) )
-			throw $this->exception('Lead or Customer Required','ValidityCheck')->setField('customer_id');
+		//if( !$this['lead_id'] and !$this['customer_id'] )
+		//	throw $this->exception('Lead or Customer Required','ValidityCheck')->setField('customer_id');
 
 		//$this->updateAmounts();
 	}
