@@ -41,7 +41,8 @@ class Grid_Ticket extends \Grid{
 		//Subject
 		$str.= '<div class="atk-col-6" style="overflow:hidden; display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.$this->priority().' '.$assign_html.$this->model['subject'].' - ';
 		//Message
-		$str.= substr(strip_tags($this->model['message']),0,50).'</div>';
+		$str.= substr(strip_tags($this->model['message']),0,50).'<br/>'.$this->taskStatus().'</div>';
+		//Employee Task Status
 		//Attachments
 		if($this->model->attachment()->count()->getOne())
 			$str.= '<div class="atk-col-1"><i class="icon-attach"></i></div>';
@@ -53,6 +54,14 @@ class Grid_Ticket extends \Grid{
 		
 		$this->current_row_html['subject'] = $str;
 		parent::formatRow();
+	}
+
+	function taskStatus(){
+		$task = $this->model->task();
+		if($task)
+			return '<div class="atk-text-bold icon-text-width " title="Task Assign"> '.$task['employee']." :: ".$task['status'].'</div>';
+		
+		return false;
 	}
 
 	function priority(){

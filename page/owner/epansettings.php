@@ -59,10 +59,10 @@ class page_owner_epansettings extends page_base_owner {
 		// $email_form->getElement('return_path')->setAttr('placeholder','Return Path');
 		$email_form->getElement('smtp_auto_reconnect')->setAttr('placeholder','SMTP Auto Reconnect');
 		$email_form->getElement('email_threshold')->setAttr('placeholder','Maximum Emails allowed to send per hour for Mass Emailing');
-		$email_form->getElement('bounce_imap_email_host')->setAttr('placeholder','Maximum Emails allowed to send per hour for Mass Emailing');
-		$email_form->getElement('bounce_imap_email_port')->setAttr('placeholder','Maximum Emails allowed to send per hour for Mass Emailing');
-		$email_form->getElement('bounce_imap_email_password')->setAttr('placeholder','Maximum Emails allowed to send per hour for Mass Emailing');
-		$email_form->getElement('bounce_imap_flags')->setAttr('placeholder','Maximum Emails allowed to send per hour for Mass Emailing');
+		$email_form->getElement('bounce_imap_email_host');
+		$email_form->getElement('bounce_imap_email_port');
+		$email_form->getElement('bounce_imap_email_password');
+		$email_form->getElement('bounce_imap_flags');
 		$email_form->add('Controller_FormBeautifier');
 
 		if($email_form->isSubmitted()){

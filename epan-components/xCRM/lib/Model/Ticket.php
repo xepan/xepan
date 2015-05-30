@@ -194,7 +194,10 @@ class Model_Ticket extends \Model_Document{
 	function task(){
 		$task = $this->add('xProduction/Model_Task');
 		$task->loadWhoseRelatedDocIs($this);
-		return $task;
+		if($task->loaded())
+			return $task;
+
+		return false;
 	}
 
 	function assign(){
