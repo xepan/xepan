@@ -6,8 +6,9 @@ class Model_Ticket_Submitted extends Model_Ticket{
 			'allow_edit'=>array(),
 			'allow_add'=>array(),
 			'allow_del'=>array(),
-			'can_submit'=>array(),
+			'can_cancel'=>array(),
 			'can_assign'=>array(),
+			'can_mark_processed'=>array(),
 		);
 	
 	function init(){

@@ -1,12 +1,15 @@
 <?php
 
-class page_xMarketingCampaign_page_owner_campaignexec extends page_xMarketingCampaign_page_owner_main{
+class page_xMarketingCampaign_page_campaignexec extends Page{
 
 	public $today=null;
 
 	function init(){
 		parent::init();
 
+		ini_set('memory_limit', '2048M');
+		set_time_limit(0);
+		
 		$this->today  = date('Y-m-d');
 
 		if($_GET['today']){
@@ -18,7 +21,7 @@ class page_xMarketingCampaign_page_owner_campaignexec extends page_xMarketingCam
 	}
 
 	function emailExec(){
-		$this->add('View_Info')->set('Comapign Executing.......wait');
+		$this->add('View_Info')->set('Campaign Scheduling .......wait');
 
 		$news_letters_model = $this->add('xMarketingCampaign/Model_CampaignNewsLetter');
 		$campaign_j = $news_letters_model->join('xmarketingcampaign_campaigns','campaign_id');
@@ -76,6 +79,7 @@ class page_xMarketingCampaign_page_owner_campaignexec extends page_xMarketingCam
 
 			$candidate_subscribers->addCondition('category_id',$categories);
 			$candidate_subscribers->addCondition('send_news_letters',true);
+			$candidate_subscribers->addCondition('is_active',true);
 
 			$i=0;
 			$q=$this->add('xEnquiryNSubscription/Model_EmailQueue');

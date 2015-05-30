@@ -143,7 +143,8 @@ class Model_Document extends Model_Table{
 	}
 
 	function getNextSeriesNumber($config_value=0){
-		return $config_value + 1 + $this->newInstance()->dsql()->del('fields')->field('max(name)')->getOne();
+		$i = $this->add('xShop/Model_Invoice');
+		return $config_value + 1 + $i->dsql()->del('fields')->field('max(name)')->getOne();
 	}
 
 	function defaultAfterInsert($newobj,$id){
@@ -329,6 +330,7 @@ class Model_Document extends Model_Table{
 					$v->setModel($g->model);
 					$g->current_row_html[$f]= $v->getHTML();
 				});
+			$g->addFormatter('action','Wrap');
 			$g->addFormatter('action','activity');
 
 			$g->removeColumn('created_at');
@@ -341,6 +343,8 @@ class Model_Document extends Model_Table{
 			$g->removeColumn('sms_to');
 			$g->removeColumn('attachment_id');
 
+			$g->addQuickSearch($g->model->getActualFields());
+			$g->addPaginator($ipp=10);
 		}
 
 

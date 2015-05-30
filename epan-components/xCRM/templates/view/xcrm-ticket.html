@@ -1,18 +1,17 @@
 <div class="" id="{$_name}"  class="{$class}" style="{$style} ">
 	<div class="atk-size-mega page-header" style="margin-top:5px;">
-		{$subject}{$inbox}
+		{$ticket_priority}{$subject}
 	</div>
 	<div class="row">
 		<div class="col-md-10">
-			<b>{$email_from}<b>
-			<div class="atk-text-bold">To: {$email_to}</div>
+			<b>Customer: {$customer}<b>
 			<hr/>
 			<div class="atk-text-normal">
-				{$email_message}
+				{$ticket_message}
 			</div>
 		</div>
 		<div class="col-md-2 text-right">
-			{$created_at}
+			{$human_date}<br/>{$created_at}
 			<div class="atk-swatch-ink atk-box-small text-center">Attachments</div>
 			{$attachment}
 		</div>

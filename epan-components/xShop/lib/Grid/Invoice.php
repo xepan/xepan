@@ -30,14 +30,14 @@ class Grid_Invoice extends \Grid{
 	}
 	
 	function format_view($field){
-
+		$this->setTDParam('name','style','width:180px;');
 		if($this->model['invoiceitem_count']==0){
 			$this->setTDParam($field, 'class', ' atk-swatch-yellow ');
 		}else{
 			$this->setTDParam($field, 'class', '');
 		}
 
-		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Invoice', $this->api->url($this->vp->getURL(),array('invoice_clicked'=>$this->model->id))).'">'. $this->current_row[$field] ."</a>".'<br><small style="color:gray;">'.$this->model['customer'].'</small>';
+		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Invoice', $this->api->url($this->vp->getURL(),array('invoice_clicked'=>$this->model->id))).'">'. $this->current_row[$field] ."</a>".'<br><small title="'.$this->model['customer'].'" style="color:gray;width:100px;">'.$this->model['customer'].'</small>';
 	}
 
 	function format_orderview($field){
@@ -45,23 +45,62 @@ class Grid_Invoice extends \Grid{
 	}
 	
 	function setModel($invoice_model,$field=array()){
+		$invoice_model->getField('total_amount')->caption('Amount');
 		if(!$field)
-			$field = array('name','sales_order','customer','total_amount','discount','tax','net_amount','customer_id','created_at','invoiceitem_count');
-
-
+			$field = array('name','sales_order','customer','total_amount','discount','tax','net_amount','customer_id','created_at','invoiceitem_count','gross_amount');
 		$m=parent::setModel($invoice_model,$field);
+		
 		$this->addFormatter('name','view');
+		$this->addFormatter('name','Wrap');
 		$this->addFormatter('sales_order','orderview');
+		$this->addFormatter('sales_order','Wrap');
 		// if($invoice_model['status'] == 'draft' or $invoice_model['status'] == 'redesign')
-			$this->addColumn('expander','items',array('page'=>'xShop_page_owner_invoice_items','descr'=>'Items'));
+		$this->addColumn('expander','items',array('page'=>'xShop_page_owner_invoice_items','descr'=>'Items'));
 		
-		$this->removeColumn('customer');
-		$this->removeColumn('invoiceitem_count');
+		if($this->hasColumn('customer_id')){
+			$this->removeColumn('customer_id');
+			$this->removeColumn('customer');
+		}
+
+		if($this->hasColumn('invoiceitem_count'))$this->removeColumn('invoiceitem_count');
 		
-		$this->addQuickSearch(array('name','customer','total_amount','sales_order'));
+		if($this->hasColumn('tax'))$this->removeColumn('tax');
+		if($this->hasColumn('gross_amount'))$this->removeColumn('gross_amount');
+		if($this->hasColumn('discount'))$this->removeColumn('discount');
+		if($this->hasColumn('net_amount'))$this->removeColumn('net_amount');
+
+		$this->addQuickSearch($invoice_model->getActualFields());
 
 		return $m;
 	}
 	
+	function formatRow(){
+		$hr = '<hr style="margin:0px;"/>';
+		$amount = '<div class="atk-row atk-size-micro">';
+		$amount .= '<div class="atk-col-4">';
+		$amount.= 'Total Amount<br/>';
+		if($this->model['tax']>0)	
+			$amount.= 'Tax'.$hr;
+		$amount.= 'Gross Amount<br/>';
+		if($this->model['discount_voucher_amount']>0)	
+			$amount.= 'Discount Amount'.$hr;;
+		$amount.= 'Net Amount';
+		$amount .= '</div>';
+			
+		$amount .= '<div class="atk-col-8 pull-right">';
+		$amount .= $this->model['total_amount'].'<br/>';
+		if($this->model['tax']>0)
+			$amount .= $this->model['tax'].$hr;
+		$amount .= $this->model['gross_amount'].'<br/>';
+		if($this->model['discount_voucher_amount']>0)
+			$amount .= $this->model['discount_voucher_amount'].$hr;
+		$amount .= '<b>'.$this->model['net_amount'].'</b>';
+		$amount .= '</div>';
+		$amount .= '</div>';
+
+		$this->current_row_html['total_amount'] = $amount;
+		
+		parent::formatRow();
+	}
 
 	}	

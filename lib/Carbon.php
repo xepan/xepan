@@ -1847,7 +1847,7 @@ class Carbon extends DateTime
         $txt = $delta . ' ' . $unit;
         $txt .= $delta == 1 ? '' : 's';
 
-        if ($isNow) {
+        if ($isNow OR TRUE) {
             if ($isFuture) {
                 return $txt . ' from now';
             }

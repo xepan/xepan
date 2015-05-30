@@ -28,7 +28,7 @@ class Model_Invoice extends \Model_Document{
 		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->display(array('form'=>'autocomplete/Basic'))->caption('Terms & Cond.');
 
 		$this->addField('type')->enum(array('salesInvoice','purchaseInvoice'));
-		$this->addField('name')->caption('Invoice No');
+		$this->addField('name')->caption('Invoice No')->type('int');
 		$this->addField('total_amount')->type('money');
 		$this->addField('gross_amount')->type('money')->sortable(true);
 		$this->addField('discount')->type('money');
@@ -42,7 +42,7 @@ class Model_Invoice extends \Model_Document{
 		$this->addHook('afterSave',$this);
 		
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
-		
+		$this->setOrder('id','desc');
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 	

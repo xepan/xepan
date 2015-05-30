@@ -46,7 +46,7 @@ class Form_Field_MultiSelect extends Form_Field_DropDownNormal {
         if($this->value===null || $this->value===''){
             $selected = $value==='';
         } else {
-            $selected = $value == $this->value;
+            $selected = in_array($value , explode(",", $this->value));
         }
         return $this->getTag('option',array(
                     'value'=>$value,

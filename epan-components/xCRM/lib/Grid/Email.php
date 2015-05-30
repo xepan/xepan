@@ -18,65 +18,13 @@ class Grid_Email extends \Grid{
 
 		$this->reply_vp = $this->add('VirtualPage')->set(function($p){
 			$email_id = $p->api->stickyGET('xcrm_email_id');
-
-			$m = $p->add('xCRM/Model_Email')->tryLoad($email_id);
-			$official_email = $m->loadOfficialEmail();
-			$footer = "";
-			if($official_email)
-				$footer = $official_email['footer'];
-			
-			$reply_form = $p->add('Form_Stacked');
-			//Load Official/Support Email According to,cc,bcc
-			$reply_message = '<p>On Date: '.$m['created_at'].', '.$m['from_name'].' <'.$m['from_email'].'> Wrote </p>'.$m['message'];
-			$reply_message = '<blockquote>'.$reply_message.'</blockquote>';
-			$reply_message = $reply_message.'<br/>'.$footer;
-
-			$reply_form->addField('line','to')->set($m['from_email']);
-			$reply_form->addField('line','cc')->set($m['cc']);
-			$reply_form->addField('line','bcc')->set($m['bcc']);
-			$reply_form->addField('line','subject')->set("Re. ".$m['subject']);
-			$reply_form->addField('RichText','message')->set($reply_message);
-			$reply_form->addSubmit('Reply');
-
-			if($reply_form->isSubmitted()){
-				$related_activity = $m->relatedDocument();
-				$related_document = $related_activity->relatedDocument();
-				$email_body = $reply_form['message'];
-				$subject = $reply_form['subject'];
-				
-				//if this(Email) ka Related Document he to
-				if( !($related_document instanceof \Dummy)){
-					//Create karo Related Document Ki Activity
-					$email_to = $reply_form['to'].','.$reply_form['cc'].$reply_form['bcc'];
-					$related_document->createActivity('email',$subject,$email_body,$m['from'],$m['from_id'], $m['to'], $m['to_id'],$email_to,true,true);
-				}else{//Create Karo Email 
-					$email = $this->add('xCRM/Model_Email');
-					$email['from'] = "Employee";
-					$email['from_name'] = $this->api->current_employee['name'];
-					$email['from_id'] = $this->api->current_employee->id;
-					$email['to_id'] = $m['from_id'];
-					$email['to'] = $m['from'];
-					$email['cc'] = $m['cc'];
-					$email['bcc'] = $m['bcc'];
-					$email['subject'] = $subject;
-					$email['message'] = $email_body;
-					$email['from_email'] = $m['to_email'];//TODO Official Email 
-					$email['to_email'] = $reply_form['to'];
-					$email['direction'] = "sent";
-					$email->save();
-					$email->send();
-					// $email->send($reply_form['to'],$subject,$email_body,explode(",",trim($reply_form['cc'])),explode(",",trim($reply_form['bcc'])),array(),$m->loadOfficialEmail());
-				}
-
-				$reply_form->js()->univ()->successMessage('Reply Message Send')->execute();
-			}
-
+			$p->add('xCRM/View_EmailReply',array('email_id'=>$email_id));
 		});
 
 		
 	}
 
-	function setModel($model,$fields){
+	function setModel($model,$fields=array()){
 		parent::setmodel($model,$fields);
 
 		$fields = $model->getActualFields();
@@ -111,8 +59,9 @@ class Grid_Email extends \Grid{
 			$from.= $this->model['from_email'].'</div>';
 
 		}elseif($this->model['direction']=="sent"){
+			//IN This CASE FROM IS REPLACED VIA TO
 			$this->setTDParam('subject','style','box-shadow: 3px 0px 0px 0px red inset;');
-			$snr .= '<span class="atk-swatch-red glyphicon glyphicon-export" title="Sent E-Mail"></span>';
+			$snr .= '<span class="atk-swatch-red glyphicon glyphicon-export" title="Send E-Mail"></span>';
 			
 			//To Email if Sent
 			$from = " ";
@@ -169,6 +118,8 @@ class Grid_Email extends \Grid{
 			$this->removeColumn('direction');
 			$this->removeColumn('task_id');
 			$this->removeColumn('task_status');
+			$this->removeColumn('to');
+			$this->removeColumn('to_id');
 
 			$f=$this->add('Form',null,'grid_buttons');
 			$field=$f->addField('Hidden','selected_emails','');

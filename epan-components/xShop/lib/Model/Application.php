@@ -25,6 +25,7 @@ class Model_Application extends \Model_Document{
 		$this->hasMany('xShop/Specification','application_id');
 		$this->hasMany('xShop/Configuration','application_id');
 		$this->hasMany('xShop/ItemOffer','application_id');
+		$this->hasMany('xShop/Affiliate','application_id');
 		$this->addHook('beforeDelete',$this);
 
 		
@@ -38,8 +39,9 @@ class Model_Application extends \Model_Document{
 		$specs = $m->ref('xShop/Specification')->count()->getOne();
 		$config = $m->ref('xShop/Configuration')->count()->getOne();
 		$offers = $m->ref('xShop/ItemOffer')->count()->getOne();
+		$affi = $m->ref('xShop/Affiliate')->count()->getOne();
 
-		if($cats or $items or $cfs or $specs or $config or $offers){
+		if($cats or $items or $cfs or $specs or $config or $offers or $affi){
 			throw $this->exception("Shop/Blog (".$m['name'].") cannot deleted, first delete its category",'Growl');
 		}	
 
@@ -68,6 +70,10 @@ class Model_Application extends \Model_Document{
 
 		$this->ref('xShop/ItemOffer')->each(function($offer){
 			$offer->forceDelete();
+		});
+
+		$this->ref('xShop/Affiliate')->each(function($affi){
+			$affi->forceDelete();
 		});
 		
 		$this->delete();

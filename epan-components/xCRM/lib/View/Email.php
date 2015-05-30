@@ -71,15 +71,15 @@ class View_Email extends \View{
 		}
 
 		$mail_crud=$associate_tab->add('CRUD',array('grid_class'=>'xCRM/Grid_Email'));
-		$mail_crud->setModel($emails,array(),array('subject','to_email','from_email','message','from','id','from_id','direction','task_id','task_status','from_name','cc','bcc'));
+		$mail_crud->setModel($emails,array(),array('subject','to_email','from_email','message','from','id','from_id','direction','task_id','task_status','from_name','cc','bcc','to','to_id','from','from_id'));
 		$mail_crud->add('xHR/Controller_Acl');
 
 
 		$other_mail = $this->add('xCRM/Model_OtherEmail');
 		$other_mail = $other_mail->loadDepartmentEmails();
 		$other_mail_crud = $other_tab->add('CRUD',array('grid_class'=>'xCRM/Grid_Email'));
-		$other_mail_crud->setModel($other_mail,array(),array('subject','to_email','from_email','message','from','id','from_id','direction','task_id','task_status','from_name','cc','bcc'));
-		$other_mail_crud->add('xHR/Controller_Acl');
+		$other_mail_crud->setModel($other_mail,array(),array('subject','to_email','from_email','message','from','id','from_id','direction','task_id','task_status','from_name','cc','bcc','to','to_id','from','from_id'));
 
+		$other_mail_crud->add('xHR/Controller_Acl');
 	}
 }
