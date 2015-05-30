@@ -49,7 +49,7 @@ class page_base_owner extends Page {
         
         $admin_m->addItem(array('Dashboard','icon'=>'gauge-1'),'/owner/dashboard');
         $admin_m->addItem(array('User Management','icon'=>'users'),'/owner/users');
-        $admin_m->addItem(array('Affiliate','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
+        $admin_m->addItem(array('Affiliates','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
         $admin_m->addItem(array('General Settings','icon'=>'cog'),'/owner/epansettings');
         $admin_m->addItem(array('Documents','icon'=>'cog'),'/owner/documents');
         $admin_m->addItem(array('Application Repository','icon'=>'cog'),'/owner/applicationrepository');
@@ -59,7 +59,7 @@ class page_base_owner extends Page {
 		
 		$this->shorcut_menus[]=array("page"=>"Dashboard","url"=>$this->api->url("owner_dashboard"),"keys"=>'dashboard');
 		$this->shorcut_menus[]=array("page"=>"Users","url"=>$this->api->url("owner_users"),'keys'=>'users logins');
-		$this->shorcut_menus[]=array("page"=>"Affiliate","url"=>$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
+		$this->shorcut_menus[]=array("page"=>"Affiliates","url"=>$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"General Settings","url"=>$this->api->url("owner_epansettings"),'keys'=>'company settings general configurations');
 		$this->shorcut_menus[]=array("page"=>"Generic Documents","url"=>$this->api->url("owner_documents"),'keys'=>'documents files scan private public shared');
 

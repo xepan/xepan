@@ -26,7 +26,7 @@
 					<th align="left">Sno</th>
 					<th align="center">Item Name</th>
 					<th align="right" class="text-right">Qty</th>
-					<th align="right" class="text-right">Unit</th>
+					<!-- <th align="right" class="text-right">Unit</th> -->
 					<th align="right" class="text-right">Rate</th>
 					<th align="right" class="text-right">Amount</th>
 					
@@ -39,8 +39,8 @@
 						<td align="left">
 					<h4>{$item}<br><small>{$custom_fields}</small></h4>
 					</td>
-						<td align="right">{$qty}</td>
-						<td align="right">{$unit}</td>
+						<td align="right">{$qty}&nbsp<small>{$unit}</small></td>
+						<!-- <td align="right"></td> -->
 						<td align="right">{$rate}</td>
 						<td align="right">{$amount}</td>
 						
