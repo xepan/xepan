@@ -280,11 +280,27 @@ class Model_Order extends \Model_Document{
 		$this->save();
 	}
 
-	function send_via_email_page($p){
 
-		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
-						
-		$tnc=$this->termAndCondition();
+	function itemsTermAndCondition(){
+		$tnc = "";
+		$item_array = array();
+		foreach ($this->itemRows() as $q_item) {
+			$item = $q_item->item();
+			if(in_array($item->id, $item_array)) continue;
+
+			$tnc .= $item['terms_condition'];
+			$item_array[]=$item->id;
+		}
+
+		return $tnc;
+		
+	}
+
+
+	function parseEmailBody(){
+
+		$tnc = $this->termAndCondition();
+		$tnc = $tnc['terms_and_condition'].$this->itemsTermAndCondition();
 
 		$print_order = $this->add('xShop/View_OrderDetail',array('show_department'=>false,'show_price'=>true,'show_customfield'=>true));
 		$print_order->setModel($this->itemrows());
@@ -308,7 +324,19 @@ class Model_Order extends \Model_Document{
 		$email_body = str_replace("{{order_no}}", $this['name'], $email_body);
 		$email_body = str_replace("{{order_date}}", $this['created_date'], $email_body);
 		$email_body = str_replace("{{sale_order_details}}", $order_detail_html, $email_body);
-		$email_body = str_replace("{{terms_and_conditions}}", $tnc['terms_and_condition']?$tnc['terms_and_condition']:" ", $email_body);
+		$email_body = str_replace("{{terms_and_conditions}}", $tnc?$tnc:" ", $email_body);
+
+		return $email_body;
+	}
+
+	function send_via_email_page($p){
+
+		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
+						
+		$email_body = $this->parseEmailBody();
+		$customer = $this->customer();
+		$config_model=$this->add('xShop/Model_Configuration');
+		$config_model->tryLoadAny();
 
 		$emails = explode(',', $customer['customer_email']);
 		
