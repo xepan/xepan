@@ -8,7 +8,7 @@ class Model_Invoice_Approved extends Model_SalesInvoice{
 			'allow_del'=>array(),
 			'allow_edit'=>array(),
 			'can_cancel'=>array(),
-			'can_mark_processed'=>array(),
+			'can_mark_processed'=>array('caption'=>'Paid & Cleared','icon'=>'rupee atk-swatch-green'),
 			'can_send_via_email'=>array()
 		);
 

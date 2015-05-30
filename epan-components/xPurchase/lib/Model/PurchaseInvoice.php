@@ -36,6 +36,9 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 	}
 
 	function cancle(){
+		if($tr= $this->transaction()){
+			$tr->forceDelete();
+		}
 		$this->setStatus('caneled');
 	}
 
