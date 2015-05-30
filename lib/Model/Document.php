@@ -12,9 +12,10 @@ class Model_Document extends Model_Table{
 			'can_submit'=>'lock atk-swatch-red',
 			'can_manage_attachments'=>'attach',
 			'can_approve'=>'thumbs-up-alt atk-swatch-green',
-			'can_reject'=>'ccw atk-swatch-red',
-			'can_reject'=>'ccw atk-swatch-red',
 			'can_see_activities'=>'comment atk-swatch-blue',
+			'can_send_via_email'=>'mail atk-swatch-blue',
+			'can_reject'=>'cancel-circled atk-swatch-red',
+			'can_cancel'=>'cancel atk-swatch-red',
 		);
 
 	function init(){
@@ -39,15 +40,17 @@ class Model_Document extends Model_Table{
 			$this->actions = array_merge(array('can_view'=>array('caption'=>'Whose created Document you can see')),$this->actions);
 			
 			if(!$this instanceof \Model_Attachment){
-				$this->actions = array_merge(array('can_manage_attachments' => array()),$this->actions);
-				$this->actions = array_merge(array('can_see_activities' => array()),$this->actions);
+				if(!isset($this->actions['can_manage_attachments']))
+					$this->actions = array_merge(array('can_manage_attachments' => array()),$this->actions);
+				// if(!isset($this->actions['can_see_activities']))
+				// 	$this->actions = array_merge(array('can_see_activities' => array()),$this->actions);
 			}
 			
 		}
 
 		// set icons
 		foreach ($this->actions as $ac_view=>$details) {
-			if(!isset($details['icon']) and isset($this->default_icons[$ac_view]) and $this->actions[$ac_view] != false)
+			if(!isset($details['icon']) and isset($this->default_icons[$ac_view]) and $this->actions[$ac_view] !== false and $this->actions[$ac_view] !== null)
 				$this->actions[$ac_view]['icon'] = $this->default_icons[$ac_view];
 		}
 
@@ -262,7 +265,7 @@ class Model_Document extends Model_Table{
 		}
 	}
 
-	function manage_attachments_page($page){
+	function attachments_page($page){
 		$crud = $page->add('CRUD');
 		$crud->setModel($this->ref('Attachments'),array('name','attachment_url_id'),array('name','attachment_url','updated_date'));
 
@@ -301,7 +304,7 @@ class Model_Document extends Model_Table{
 		return $activities;
 	}
 
-	function see_activities_page($page){
+	function activities_page($page){
 
 		$activities = $this->activities();
 

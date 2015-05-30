@@ -5,6 +5,7 @@ class Model_Affiliate extends \Model_Document {
 	var $table= "xshop_affiliate";
 	public $status = array();
 	public $actions = array(
+				'can_see_activities'=>array(),
 				'allow_del'=>array(),
 				'allow_edit'=>array(),
 				'allow_add'=>array()
@@ -81,5 +82,17 @@ class Model_Affiliate extends \Model_Document {
 		$this['is_active'] = false;
 		$this->save();
 		return true;
+	}
+
+	function email(){
+		if(!$this->loaded())
+			return false;
+		return $this['email_id'];
+	}
+
+	function mobileno(){
+		if(!$this->loaded())
+			return false;
+		return $this['mobile_no'];	
 	}
 }

@@ -121,6 +121,7 @@ class Grid_Email extends \Grid{
 			$this->removeColumn('to');
 			$this->removeColumn('to_id');
 
+			// Delete Email Form
 			$f=$this->add('Form',null,'grid_buttons');
 			$field=$f->addField('Hidden','selected_emails','');
 			$f->template->del('form_buttons');
@@ -136,6 +137,27 @@ class Grid_Email extends \Grid{
 					->addCondition('id',$ids)
 					->each(function($obj){
 						$obj->forceDelete();
+					});
+
+				$f->js()->univ()->successMessage('Done')->execute();
+			}
+
+			// Mark Read Email Form
+			$f=$this->add('Form',null,'grid_buttons');
+			$field=$f->addField('Hidden','selected_emails','');
+			$f->template->del('form_buttons');
+			$this->addSelectable($field);
+
+			$this->addButton(array('','icon'=>'doc'))
+				->js('click',array($f->js()->submit(),$this->js()->find('tr input:checked')->closest('tr')->find('td.atk-text-bold')->removeClass('atk-text-bold')));
+			;
+
+			if($f->isSubmitted()){
+				$ids = json_decode($f['selected_emails'],true);
+				$this->add('xCRM/Model_Email')
+					->addCondition('id',$ids)
+					->each(function($obj){
+						$obj->markRead();
 					});
 
 				$f->js()->univ()->successMessage('Done')->execute();
