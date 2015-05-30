@@ -42,12 +42,14 @@ class page_base_owner extends Page {
 		// }
 		// $l=$this->app->add('Layout_Fluid'); // Usermanu is added in here
 
+		$dept_model = $this->add('xHR/Model_Department');
 		$this->app->top_menu =  $m=$this->app->layout->add('Menu_Horizontal',null,'Top_Menu');
 
-        $admin_m = $m->addMenu('Admin');
+        $admin_m = $m->addMenu('Company');
         
         $admin_m->addItem(array('Dashboard','icon'=>'gauge-1'),'/owner/dashboard');
         $admin_m->addItem(array('User Management','icon'=>'users'),'/owner/users');
+        $admin_m->addItem(array('Affiliate','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
         $admin_m->addItem(array('General Settings','icon'=>'cog'),'/owner/epansettings');
         $admin_m->addItem(array('Documents','icon'=>'cog'),'/owner/documents');
         $admin_m->addItem(array('Application Repository','icon'=>'cog'),'/owner/applicationrepository');
@@ -57,12 +59,12 @@ class page_base_owner extends Page {
 		
 		$this->shorcut_menus[]=array("page"=>"Dashboard","url"=>$this->api->url("owner_dashboard"),"keys"=>'dashboard');
 		$this->shorcut_menus[]=array("page"=>"Users","url"=>$this->api->url("owner_users"),'keys'=>'users logins');
+		$this->shorcut_menus[]=array("page"=>"Affiliate","url"=>$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
 		$this->shorcut_menus[]=array("page"=>"General Settings","url"=>$this->api->url("owner_epansettings"),'keys'=>'company settings general configurations');
 		$this->shorcut_menus[]=array("page"=>"Generic Documents","url"=>$this->api->url("owner_documents"),'keys'=>'documents files scan private public shared');
 
 		// Alert Notification 
 		// Pages and Templates
-		$dept_model = $this->add('xHR/Model_Department');
 
 		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xHR')->tryLoadAny()->get('id'))){
 	        
@@ -149,7 +151,6 @@ class page_base_owner extends Page {
 			$sales_m->addItem(array('Quotation','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_quotation',array('department_id'=>$dept_model->id)));
 			// $sales_m->addItem(array('Category','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_category',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Item','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_item',array('department_id'=>$dept_model->id)));
-			$sales_m->addItem(array('Affiliate','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('E-Voucher','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_voucher',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Customer','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_customer',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Sales Order','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_order',array('department_id'=>$dept_model->id)));
@@ -171,7 +172,6 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Quotation","url"=>$this->api->url('xShop_page_owner_quotation',array('department_id'=>$dept_model->id)));
 			// $this->shorcut_menus[]=array("page"=>"Category","url"=>$this->api->url('xShop_page_owner_category',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Item","url"=>$this->api->url('xShop_page_owner_item',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Affiliate","url"=>$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"E-Voucher","url"=>$this->api->url('xShop_page_owner_voucher',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Customer","url"=>$this->api->url('xShop_page_owner_customer',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Sales Orders","url"=>$this->api->url('xShop_page_owner_order',array('department_id'=>$dept_model->id)));
@@ -223,7 +223,7 @@ class page_base_owner extends Page {
 
 			$crm_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$crm_m->addItem(array('Support Tickets','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_ticket',array('department_id'=>$dept_model->id)));
-			$crm_m->addItem(array('Company Emails','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+			// $crm_m->addItem(array('Company Emails','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 
 
 			$crm_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
