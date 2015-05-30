@@ -40,8 +40,10 @@ class Model_Document extends Model_Table{
 			$this->actions = array_merge(array('can_view'=>array('caption'=>'Whose created Document you can see')),$this->actions);
 			
 			if(!$this instanceof \Model_Attachment){
-				$this->actions = array_merge(array('can_manage_attachments' => array()),$this->actions);
-				$this->actions = array_merge(array('can_see_activities' => array()),$this->actions);
+				if(!isset($this->actions['can_manage_attachments']))
+					$this->actions = array_merge(array('can_manage_attachments' => array()),$this->actions);
+				// if(!isset($this->actions['can_see_activities']))
+				// 	$this->actions = array_merge(array('can_see_activities' => array()),$this->actions);
 			}
 			
 		}
@@ -263,7 +265,7 @@ class Model_Document extends Model_Table{
 		}
 	}
 
-	function manage_attachments_page($page){
+	function attachments_page($page){
 		$crud = $page->add('CRUD');
 		$crud->setModel($this->ref('Attachments'),array('name','attachment_url_id'),array('name','attachment_url','updated_date'));
 
@@ -302,7 +304,7 @@ class Model_Document extends Model_Table{
 		return $activities;
 	}
 
-	function see_activities_page($page){
+	function activities_page($page){
 
 		$activities = $this->activities();
 
