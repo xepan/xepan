@@ -14,6 +14,8 @@ class page_xShop_page_owner_afflilate extends page_xShop_page_owner_main{
 		$aff_crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_Affiliate'));
 		$aff_crud->setModel($afflilate_model);
 
+		$aff_crud->add('xHR/Controller_Acl');
+
 	}
 }
 

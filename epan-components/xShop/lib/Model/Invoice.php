@@ -48,6 +48,11 @@ class Model_Invoice extends \Model_Document{
 	
 	function afterSave(){
 		$this->updateAmounts();
+		// TODO UPdate Transaction entry as well if any
+		if($tr= $this->transaction()){
+			$tr->forceDelete();
+			$this->createVoucher();
+		}
 	}
 
 	function termAndCondition(){
