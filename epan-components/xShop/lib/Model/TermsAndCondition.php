@@ -23,6 +23,7 @@ class Model_TermsAndCondition extends \Model_Document{
 		
 		$this->hasMany('xShop/Quotation','termsandcondition_id');
 		$this->hasMany('xShop/Order','termsandcondition_id');
+		$this->hasMany('xShop/PurchaseOrder','termsandcondition_id');
 
 		$this->addHook('beforeDelete',$this);
 		// $this->add('dynamic_model/Controller_AutoCreator');

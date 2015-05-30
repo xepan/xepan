@@ -37,7 +37,11 @@ class View_OrderDetail extends \CompleteLister{
 			$this->template->set('total_amount',$order['gross_amount']);
 			//$this->template->set('delivery_date',$order['delivery_date']);
 			// $this->template->set('discount_voucher',$order['discount_voucher']);
-			$this->template->set('discount_voucher_amount',$order['discount_voucher_amount']?:'0.00');
+			if($order['discount_voucher_amount'])
+				$this->template->set('discount_voucher_amount',$order['discount_voucher_amount']?:'0.00');
+			else
+				$this->template->set('discount_amount_section'," ");
+				
 			$this->template->set('net_amount',$order['net_amount']);
 			// $this->template->set('departments',"1");
 			// $this->template->set('order_item_custom_field',$model['id']);

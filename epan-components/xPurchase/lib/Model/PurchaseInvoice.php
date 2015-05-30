@@ -155,15 +155,28 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 			return true;
 		}
 	}
-		
-		function send_via_email_page($p){
+	
+	function itemsTermAndCondition(){
+		$tnc = "";
+		$item_array = array();
+		foreach ($this->itemRows() as $q_item) {
+			$item = $q_item->item();
+			if(in_array($item->id, $item_array)) continue;
 
-		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
+			$tnc .= $item['terms_condition'];
+			$item_array[]=$item->id;
+		}
+
+		return $tnc;
 		
+	}
+	
+	function parseEmailBody(){
 		$view=$this->add('xPurchase/View_PurchaseInvoiceDetail');
 		$view->setModel($this->itemrows());
 		
 		$tnc=$this->termAndCondition();
+
 
 		$supplier = $this->supplier();
 		$supplier_email=$supplier->get('email');
@@ -171,7 +184,7 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		$config_model=$this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
 		
-		$subject = $config_model['purchase_invoice_email_subject']?:"[ Invoice No.:".$this['name']." ]"." "."::"." "."PURCHASE INVOICE";
+		// $subject = $config_model['purchase_invoice_email_subject']?:"[ Invoice No.:".$this['name']." ]"." "."::"." "."PURCHASE INVOICE";
 		
 		$email_body=$config_model['purchase_invoice_email_body']?:"Purchase Invoice Layout Is Empty";
 		
@@ -188,10 +201,23 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		$email_body = str_replace("{{purchase_Order_no}}", $this['name'], $email_body);
 		$email_body = str_replace("{{purchase_Order_date}}", $this['created_at'], $email_body);
 		$email_body = str_replace("{{terms_an_conditions}}", $tnc['terms_and_condition']?$tnc['terms_and_condition']:" ", $email_body);
-		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
-		// echo $email_body;
-		// return;
-		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
+
+		return $email_body;
+	}
+
+
+	function send_via_email_page($p){
+
+		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
+		
+		$email_body = $this->parseEmailBody();
+
+		$supplier = $this->supplier();
+		$supplier_email=$supplier->get('email');
+
+		$config_model=$this->add('xShop/Model_Configuration');
+		$config_model->tryLoadAny();
+		
 		$emails = explode(',', $supplier['email']);
 		
 		$form = $p->add('Form_Stacked');
@@ -200,15 +226,19 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 
 		$form->addField('line','cc')->set(implode(',',$emails));
 		$form->addField('line','bcc');
-		$form->addField('line','subject')->set($subject);
+		$form->addField('line','subject')->validateNotNull()->set($config_model['purchase_invoice_email_subject']);
 		$form->addField('RichText','custom_message');
 		$form->add('View')->setHTML($email_body);
 		$form->addSubmit('Send');
 		if($form->isSubmitted()){
+			
+			$subject = $this->emailSubjectPrefix($form['subject']);
+
 			$email_body = $form['custom_message']."<br>".$email_body;
-			$this->sendEmail($form['to'],$form['subject'],$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));
-			$this->createActivity('email',$form['subject'],$form['custom_message'],$from=null,$from_id=null, $to='supplier', $to_id=$supplier->id);
-			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
+			$this->sendEmail($form['to'],$subject,$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));
+			$this->createActivity('email',$subject,$form['custom_message'],$from=null,$from_id=null, $to='supplier', $to_id=$supplier->id);
+			// $form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
+			return true;
 		}
 	}
 
