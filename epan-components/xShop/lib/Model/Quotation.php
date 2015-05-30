@@ -128,7 +128,7 @@ class Model_Quotation extends \Model_Document{
 		$config_model=$this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
 		
-		$subject = $config_model['quotation_email_subject']?:$this['name']." "."::"." "."Quotation";
+		// $subject = $config_model['quotation_email_subject']?:$this['name']." "."::"." "."Quotation";
 		
 		$email_body=$config_model['quotation_email_body']?:"Quotation Layout Is Empty";
 		
@@ -155,14 +155,17 @@ class Model_Quotation extends \Model_Document{
 
 		$form->addField('line','cc')->set(implode(',',$emails));
 		$form->addField('line','bcc');
-		$form->addField('line','subject')->set($subject);
+		$form->addField('line','subject')->validateNotNull()->set($config_model['quotation_email_subject']);
 		$form->addField('RichText','custom_message');
 		$form->add('View')->setHTML($email_body);
 		$form->addSubmit('Send');
 		if($form->isSubmitted()){
+			
+			$subject = $this->emailSubjectPrefix($form['subject']);
+
 			$email_body = $form['custom_message']."<br>".$email_body;
-			$this->sendEmail($form['to'],$form['subject'],$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));
-			$this->createActivity('email',$form['subject'],$form['message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
+			$this->sendEmail($form['to'],$subject,$email_body,explode(',',$form['cc']),explode(',',$form['bcc']));
+			$this->createActivity('email',$subject,$form['message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
 			return true;			
 		}
 		
