@@ -11,6 +11,7 @@ class Model_Item extends \Model_Document{
 	public $actions=array(
 			'allow_add'=>array(),
 			'allow_edit'=>array(),
+			'allow_del'=>array(),
 		);
 
 	function init(){
