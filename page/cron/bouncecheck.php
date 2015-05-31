@@ -9,9 +9,9 @@ class page_cron_bouncecheck extends Page {
 		set_time_limit(0);
 
 		$cwsMailBounceHandler = new CwsMailBounceHandler();
-		$cwsMailBounceHandler->test_mode = true; // default false
+		$cwsMailBounceHandler->test_mode = false; // default false
 		// $cwsMailBounceHandler->debug_verbose = CWSMBH_VERBOSE_DEBUG; // default CWSMBH_VERBOSE_QUIET
-		$cwsMailBounceHandler->purge = false; // default false
+		$cwsMailBounceHandler->purge = true; // default false
 		//$cwsMailBounceHandler->disable_delete = false; // default false
 		//$cwsMailBounceHandler->open_mode = CWSMBH_OPEN_MODE_IMAP; // default CWSMBH_OPEN_MODE_IMAP
 		//$cwsMailBounceHandler->move_soft = false; // default false

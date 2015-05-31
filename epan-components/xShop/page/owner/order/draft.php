@@ -2,7 +2,9 @@
 class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 	Public $transaction;
 	function init(){
+		$this->api->xpr->markPoint('Order Draft Init start');
 		parent::init();
+		$this->api->xpr->markPoint('Order Draft Parent  Init Done');
 
 		$crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_Order','add_form_beautifier'=>false));
 		
@@ -87,5 +89,6 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 		}
 		$crud->add('Controller_FormBeautifier');
 		$crud->add('xHR/Controller_Acl');
+		$this->api->xpr->markPoint('Order Draft  Init Done');
 	}
 }		

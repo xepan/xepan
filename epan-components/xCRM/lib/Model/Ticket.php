@@ -35,9 +35,14 @@ class Model_Ticket extends \Model_Document{
 
 		$this->addField('priority')->enum(array('Low','Medium','High','Urgent'))->defaultValue('Medium')->mandatory(true);
 
-		$this->addExpression('last_activity_date')->set(function ($m, $q){
-			$activity = $m->activities()->setOrder('id','desc')->tryLoadAny();
-			return $activity->dsql->fieldQuery('created_at');
+		$self= $this;
+		$this->addExpression('last_activity_date')->set(function ($m, $q)use($self){
+			$activities = $this->add('xCRM/Model_Activity');
+			$activities->addCondition('related_root_document_name',$self->root_document_name);
+			$activities->addCondition('related_document_id',$q->getField('id'));
+			$activities->setOrder('created_at','desc');
+			$activities->setLimit(1);
+			return $activities->fieldQuery('created_at');
 		});
 
 		$this->hasMany('xCRM/TicketAttachment','related_document_id',null,'Attachments');

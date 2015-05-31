@@ -6,11 +6,13 @@ class page_base_owner extends Page {
 	
 	function init(){
 		parent::init();
-
+		$this->api->xpr->markPoint("ownermain init start");
 		$this->shorcut_menus = array();
+		
 		// Looks like you are called from update page
 		if(isset($this->git_path)) return;
 
+		// Load Current Department :: Accessible to all children pages
 		$this->api->current_department = new Dummy();
 		if($_GET['department_id']){
 			$id = $this->api->stickyGET('department_id');
@@ -21,16 +23,18 @@ class page_base_owner extends Page {
 			$this->api->template->tryDel('admin_template');
 		}
 
+		// Main BackEnd Authentication
 		$user_model = $this->add('Model_User_BackEnd');
 		$this->api->auth->setModel($user_model,'username','password');
 		$this->api->auth->addHook('updateForm',function($auth){
 			$auth->form->addClass('stacked');
 		});
 		$this->api->auth->check();
-		$this->api->current_website = $this->api->auth->model->ref('epan_id');
-		$this->api->current_page = $this->api->current_website->ref('EpanPage');
-		$this->api->memorize('website_requested',$this->api->current_website['name']);
-		$this->api->load_plugins();
+
+		// $this->api->current_website = $this->api->auth->model->ref('epan_id');
+		// $this->api->current_page = $this->api->current_website->ref('EpanPage');
+		// $this->api->memorize('website_requested',$this->api->current_website['name']);
+		// $this->api->load_plugins();
 
 		// Setup current employee
 		$this->app->current_employee = $this->add('xHR/Model_Employee');
@@ -449,6 +453,7 @@ class page_base_owner extends Page {
 		$this->api->event('menu-created',$menu);
 
 
+		$this->api->xpr->markPoint("ownermain init done");
 	}
 
 	function recursiveRender(){

@@ -8,7 +8,8 @@ class Model_Affiliate extends \Model_Document {
 				'can_see_activities'=>array(),
 				'allow_del'=>array(),
 				'allow_edit'=>array(),
-				'allow_add'=>array()
+				'allow_add'=>array(),
+				'can_manage_attachments'=>false
 				);
 	public $root_document_name = 'xShop\Affiliate';
 
