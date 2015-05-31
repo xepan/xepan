@@ -40,7 +40,7 @@ class Model_SalesInvoice extends Model_Invoice{
 
 	function transaction(){
 		$tr = $this->add('xAccount/Model_Transaction')->loadWhoseRelatedDocIs($this);
-		if($tr->loaded()) return $tr;
+		if($tr and $tr->loaded()) return $tr;
 		return false;
 	}
 

@@ -39,6 +39,7 @@ class View_SalesInvoice extends  \CompleteLister{
 	function formatRow(){
 		$this->current_row['sno']=$this->sno;
 		$this->current_row['redable_custom_fields']=$this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
+		$this->current_row['unit']=$this->model['unit'];
 
 		// $this->current_row['tax_amount']=$this->model['tax_amount'];	
 		$this->sno++;

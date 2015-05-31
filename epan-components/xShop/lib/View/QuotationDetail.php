@@ -14,6 +14,7 @@ class View_QuotationDetail extends \CompleteLister{
 	function formatRow(){
 
 		$this->current_row_html['sno']=$this->sno;
+		$this->current_row_html['unit']=$this->model['unit'];
 		if($this->show_department)
 			$this->current_row_html['departments']=$this->model->redableDeptartmentalStatus(true,true,false,true);
 		if(!$this->show_price){

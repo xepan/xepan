@@ -67,6 +67,10 @@ class Model_OrderDetails extends \Model_Document{
 			return $m->refSQL('order_id')->fieldQuery('created_by_id');
 		});
 
+		$this->addExpression('unit')->set(function($m,$q){
+			return $m->refSQL('item_id')->fieldQuery('qty_unit');
+		});
+
 		$this->addExpression('item_with_qty_fields','custom_fields');
 
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');

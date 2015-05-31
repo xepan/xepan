@@ -29,6 +29,7 @@ class View_Quotation extends \CompleteLister{
 	function formatRow(){
 		$this->current_row['sno']=$this->sno;
 		$this->current_row['redable_custom_fields']=$this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
+		$this->current_row['unit']=$this->model['unit'];
 		$this->sno++;
 	}
 
