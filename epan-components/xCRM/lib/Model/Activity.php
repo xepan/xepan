@@ -36,9 +36,9 @@ class Model_Activity extends \Model_Document{
 			$emp_q->del('fields');
 
 			$nq1=$m->api->db->dsql();
-			$users = $nq1->table('users');
-			$cust_j = $users->join('xshop_memberdetails.users_id');
-			$users->where('users_id',$q->getField('from_id'));
+			$users = $nq1->table('xshop_memberdetails');
+			$cust_j = $users->join('users','users_id',null,'cuj');
+			$users->where('xshop_memberdetails.id',$q->getField('from_id'));
 			$users->del('fields');
 
 			$nq2=$m->api->db->dsql();
@@ -51,7 +51,7 @@ class Model_Activity extends \Model_Document{
 			$str="(
 					CASE ".$q->getField('from')."
 						WHEN 'Employee' THEN (".$emp_q->field('name')->render().")
-						WHEN 'Customer' THEN (". $users->field('name')->render() ." )
+						WHEN 'Customer' THEN (". $users->field('cuj.name')->render() ." )
 						WHEN 'Supplier' THEN (". $suppliers->field('name')->render() ." )
 					END
 				)";
@@ -68,9 +68,9 @@ class Model_Activity extends \Model_Document{
 			$emp_q->del('fields');
 
 			$nq1=$m->api->db->dsql();
-			$users = $nq1->table('users');
-			$cust_j = $users->join('xshop_memberdetails.users_id');
-			$users->where('users_id',$q->getField('to_id'));
+			$users = $nq1->table('xshop_memberdetails');
+			$cust_j = $users->join('users','users_id',null,'cujto');
+			$users->where('xshop_memberdetails.id',$q->getField('from_id'));
 			$users->del('fields');
 
 			$nq2=$m->api->db->dsql();
@@ -81,7 +81,7 @@ class Model_Activity extends \Model_Document{
 			$str="(
 					CASE ".$q->getField('to')."
 						WHEN 'Employee' THEN (".$emp_q->field('name')->render().")
-						WHEN 'Customer' THEN (". $users->field('name')->render() ." )
+						WHEN 'Customer' THEN (". $users->field('cujto.name')->render() ." )
 						WHEN 'Supplier' THEN (". $suppliers->field('name')->render() ." )
 					END
 				)";
@@ -92,7 +92,7 @@ class Model_Activity extends \Model_Document{
 		$this->addField('subject');
 		$this->addField('message')->type('text')->display(array('form'=>'RichText'));
 		
-		$this->addField('action')->enum(array('created','comment','email','call','sms','personal','submitted','approved','rejected','redesign','canceled','forwarded','reply','received','processed','active','completed'))->mandatory(true);
+		$this->addField('action')->enum(array('created','comment','email','call','sms','personal','submitted','approved','rejected','redesign','canceled','forwarded','reply','received','processed','active','completed','action'))->mandatory(true);
 		$this->addField('notify_via_email')->type('boolean')->defaultValue(false);
 		$this->addField('email_to');
 		$this->addField('notify_via_sms')->type('boolean')->defaultValue(false);
@@ -124,25 +124,26 @@ class Model_Activity extends \Model_Document{
 	}
 
 	function beforeSave(){
-				
-		$to = $this->relatedDocument()->getTo();
+		
+		$to = $this->relatedDocument()->getParty();
 
 		if($to instanceof \xShop\Model_Customer){
 			$this['to'] = 'Customer';
 			$this['to_id'] = $to->id;
-		
 		}elseif($to instanceof \xHR\Model_Employee){
 			$this['to'] = 'Employee';
 			$this['to_id'] = $to->id;
-		
 		}elseif($to instanceof \xPurchase\Model_Supplier) {
 			$this['to'] = 'Supplier';
 			$this['to_id'] = $to->id;
-	
 		}elseif($to instanceof \xShop\Model_MemberDetails){
 			$this['to'] = 'Member';
 			$this['to_id'] = $to->id;
+		}elseif($to instanceof \xShop\Model_Affiliate){
+			$this['to'] = 'Affiliate';
+			$this['to_id'] = $to->id;
 		}
+
 
 	}
 
@@ -169,7 +170,7 @@ class Model_Activity extends \Model_Document{
 	// }
 
 	function afterSave($obj){
-		if(!isset($this->notified)){
+		if(isset($this->notify) AND $this->notify){
 			if($this['notify_via_email'] OR $this['action']=='email'){
 				$this->notifyViaEmail();
 			}
@@ -178,7 +179,7 @@ class Model_Activity extends \Model_Document{
 				$this->notifyViaSMS();
 			}
 		}
-		$this->notified = true;
+		$this->notify = false;
 	}
 
 	function getAssociateTo(){
@@ -199,6 +200,9 @@ class Model_Activity extends \Model_Document{
 	}
 
 	function notifyViaEmail(){
+		$this['notify_via_email']= true;
+		$this->save();
+
 		$email_created = $this->add('xCRM/Model_Email')->createFromActivity($this);
 		$email_created->send();
 	}

@@ -259,15 +259,32 @@ class Model_Department extends \Model_Table{
 	}
 
 	function officialEmails(){
-		return $this->add('xHR/Model_OfficialEmail')->addCondition('department_id',$this->id);
+		return $this->add('xHR/Model_OfficialEmail')->addCondition('department_id',$this->id)->addCondition('status','active');;
 	}
 
-	function getOfficialEmails(){
+	function supportEmails($include_auto_reply=false){
+		$support_email =  $this->add('xHR/Model_OfficialEmail')
+						->addCondition('department_id',$this->id)
+						->addCondition('status','active')
+						->addCondition('is_support_email',true);
+		if($include_auto_reply)
+			$support_email->addCondition('auto_reply',true);
+
+		return $support_email;
+	}
+
+	function getOfficialEmails($include_support=false){
 		$off_emails_array =array();
-		if(!$this->loaded())
+		if(!$this->loaded()){
 			return $off_emails_array;
+		}
 		
-		foreach ($this->officialEmails() as $off_email) {
+		$oe = $this->officialEmails();
+		
+		if(!$include_support)
+			$oe->addCondition('is_support_email',false);
+		
+		foreach ($oe as $off_email) {
 			$off_emails_array[]=$off_email['imap_email_username'];	
 		}
 

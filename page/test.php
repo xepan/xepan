@@ -4,8 +4,25 @@
 class page_test extends Page {
 
 	function page_index(){
-		echo $this->api->now;
+		$email = $this->add('xCRM/Model_Email')
+			->addCondition('id',array(339,340))
+			->each(function($obj){
+				$obj->guessDocumentAndCreateActivityOrTicket();
+			});
+
 		// print_r(timezone_identifiers_list());
+	}
+
+	function page_cst_organization_name_update(){
+
+		$cst = $this->add('xShop/Model_Customer')->each(function($obj){
+			if(!$obj['organization_name']){
+				$obj['organization_name'] = $obj['customer_name'];
+				$obj->save();
+			}
+
+		});
+
 	}
 
 	function page_defdocwrite(){
@@ -32,5 +49,22 @@ class page_test extends Page {
 		}
 	}
 
+	// function page_invremove(){
+	// 	$this->add('xShop/Model_SalesInvoice')->each(function ($obj){
+	// 		echo $obj['name'];
+	// 		$obj->forceDelete();
+	// 	});
+
+	// 	$i=0;
+	// 	$this->add('xAccount/Model_Transaction')->each(function ($obj)use(&$i){
+	// 		echo $obj['name']."<br>";
+	// 		$obj->forceDelete();
+	// 		$i++;
+	// 	});
+
+	// 	echo $i;
+
+
+	// }
 	
 }

@@ -28,7 +28,7 @@ class Model_Invoice extends \Model_Document{
 		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->display(array('form'=>'autocomplete/Basic'))->caption('Terms & Cond.');
 
 		$this->addField('type')->enum(array('salesInvoice','purchaseInvoice'));
-		$this->addField('name')->caption('Invoice No');
+		$this->addField('name')->caption('Invoice No')->type('int');
 		$this->addField('total_amount')->type('money');
 		$this->addField('gross_amount')->type('money')->sortable(true);
 		$this->addField('discount')->type('money');
@@ -42,12 +42,17 @@ class Model_Invoice extends \Model_Document{
 		$this->addHook('afterSave',$this);
 		
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
-		
+		$this->setOrder('id','desc');
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
 	function afterSave(){
 		$this->updateAmounts();
+		// TODO UPdate Transaction entry as well if any
+		if($tr= $this->transaction()){
+			$tr->forceDelete();
+			$this->createVoucher();
+		}
 	}
 
 	function termAndCondition(){
@@ -76,6 +81,10 @@ class Model_Invoice extends \Model_Document{
 		
 		if($this['sales_order'] and $this['po'])
 			throw $this->Exception('Select Either Sales Order or Purchase Order','ValidityCheck')->setField('sales_order_id');
+
+		if(!$this['name']){
+			$this['name'] = $this->getNextSeriesNumber($this->add('xShop/Model_Configuration')->tryLoadAny()->get('sale_invoice_starting_number'));
+		}
 	}
 
 
@@ -120,25 +129,36 @@ class Model_Invoice extends \Model_Document{
 		$in_item['custom_fields'] = $custom_fields;
 		$in_item->save();
 	}
+	
+	function itemsTermAndCondition(){
+		$tnc = "";
+		$item_array = array();
+		foreach ($this->itemRows() as $q_item) {
+			$item = $q_item->item();
+			if(in_array($item->id, $item_array)) continue;
 
+			$tnc .= $item['terms_condition'];
+			$item_array[]=$item->id;
+		}
 
-	function send_via_email_page($p){
-
-		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
+		return $tnc;
 		
+	}
+
+	function parseEmailBody(){
+
 		$view=$this->add('xShop/View_SalesInvoiceDetail');
 		$view->setModel($this->itemrows());
 		
-		$tnc=$this->termAndCondition();
+		$tnc = $this->termAndCondition();
+		$tnc = $tnc['terms_and_condition'].$this->itemsTermAndCondition();
 
 		$customer = $this->customer();
 		$customer_email=$customer->get('customer_email');
 
 		$config_model=$this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
-		
-		$subject = $config_model['invoice_email_subject']?:$this['name']." "."::"." "."INVOICE";
-		
+				
 		$email_body=$config_model['invoice_email_body']?:"Invoice Layout Is Empty";
 		
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
@@ -157,12 +177,24 @@ class Model_Invoice extends \Model_Document{
 		$email_body = str_replace("{{invoice_date}}", $this['created_at'], $email_body);
 		$email_body = str_replace("{{dispatch_challan_no}}", "", $email_body);
 		$email_body = str_replace("{{dispatch_challan_date}}", "", $email_body);
-		$email_body = str_replace("{{terms_an_conditions}}", $tnc['terms_and_condition']?"<b>Terms & Condition.:</b><br>".$tnc['terms_and_condition']:" ", $email_body);
-		// $email_body = str_replace("{{dispatch_challan_date}}", $this['created_at'], $email_body);
-		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
-		// return;
-		$emails = explode(',', $customer['customer_email']);
+		$email_body = str_replace("{{terms_an_conditions}}", $tnc?$tnc:"", $email_body);
+
+		return $email_body;
+	}
+
+	function send_via_email_page($p){
+
+		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
+		$config_model=$this->add('xShop/Model_Configuration');
+		$config_model->tryLoadAny();
+
+		$customer = $this->customer();
+		$customer_email=$customer->get('customer_email');
+
+		$emails = explode(',', $customer['customer_email']);
+		$email_body = $this->parseEmailBody();
+
 		$form = $p->add('Form_Stacked');
 		$form->addField('line','to')->set($emails[0]);
 		// array_pop(array_re/verse($emails));
@@ -170,7 +202,7 @@ class Model_Invoice extends \Model_Document{
 
 		$form->addField('line','cc')->set(implode(',',$emails));
 		$form->addField('line','bcc');
-		$form->addField('line','subject')->set($subject);
+		$form->addField('line','subject')->validateNotNull()->set($config_model['invoice_email_subject']);
 		$form->addField('RichText','custom_message');
 		$form->add('View')->setHTML($email_body);
 		$form->addSubmit('Send');
@@ -182,11 +214,12 @@ class Model_Invoice extends \Model_Document{
 
 			if($form['bcc'])
 				$bccs = explode(',',$form['bcc']);
-
+			
+			$subject = $this->emailSubjectPrefix($form['subject']);
 			$email_body = $form['custom_message']."<br>".$email_body;
-			$this->sendEmail($form['to'],$form['subject'],$email_body,$ccs,$bccs);
-			$this->createActivity('email',$form['subject'],$form['message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
-			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
+			$this->sendEmail($form['to'],$subject,$email_body,$ccs,$bccs);
+			$this->createActivity('email',$subject,$form['message'],$from=null,$from_id=null, $to='Customer', $to_id=$customer->id);
+			return true;			
 		}
 		
 	}

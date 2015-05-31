@@ -25,7 +25,7 @@ class Model_OfficialEmail extends \Model_Document{
 		
 
 		$this->addField('email_transport')->setValueList(array('SmtpTransport'=>'SMTP Transport','SendmailTransport'=>'SendMail','MailTransport'=>'PHP Mail function'))->defaultValue('smtp')->group('es~6~<i class="fa fa-cog "></i> OutGoing - Email Transporter To Use');
-		$this->addField('is_support_email')->type('boolean')->group('es~6');
+		$this->addField('is_support_email')->type('boolean')->group('es~6')->hint('To see the changes save and edit again')->defaultValue(false);
 		
 		$this->addField('encryption')->enum(array('none','ssl','tls'))->mandatory(true)->group('ecs~1~<i class="glyphicon glyphicon-link "></i>OutGoing - Connection Settings');
 		$this->addField('email_host')->group('ecs~4');
@@ -39,6 +39,14 @@ class Model_OfficialEmail extends \Model_Document{
 		$this->addField('imap_email_password')->type('password')->group('pop~1')->caption('Password');
 		$this->addField('imap_flags')->mandatory(true)->defaultValue('/imap/ssl/novalidate-cert')->group('pop~6')->caption('Flags');
 
+		$this->addField('auto_reply')->type('boolean')->group('ar~4~Auto Reply');
+		$this->addField('email_subject')->group('ar~12')->hint('{{customer_name}}');
+		$this->addField('email_body')->type('text')->display(array('form'=>'RichText'))->group('ar~12')->hint('{{ticket_number}},{{status}},{{priority}},{{customer_name}},{{created_date}},{{from_name}},{{from_email}}');
+
+		$this->addField('denied_email_subject')->group('ar~12')->hint('{{from_name}}, {{from_email}}');
+		$this->addField('denied_email_body')->type('text')->display(array('form'=>'RichText'))->group('ar~12')->hint('{{from_name}},{{from_email}}');
+
+		$this->addField('footer')->type('text')->display(array('form'=>'RichText'))->group('e~12~Email Footer');
 		// $this->addHook('beforeDelete',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}
@@ -55,7 +63,7 @@ class Model_OfficialEmail extends \Model_Document{
 	
 
 	function supportEmails(){
-		return $this->addCondition('is_support_email',true);
+		return $this->addCondition('is_support_email',true)->addCondition('status','active')->tryLoadAny();
 	}
 
 }

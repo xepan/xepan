@@ -51,6 +51,10 @@ class Model_InvoiceItem extends \Model_Document{
 			return "((".$q->getField('amount').") + ( IFNULL((". $tpa->_dsql()->del('fields')->field('tax_amount')->render()."),0) ))";
 		})->type('money');
 
+		$this->addExpression('unit')->set(function($m,$q){
+			return $m->refSQL('item_id')->fieldQuery('qty_unit');
+		});
+
 		$this->addHook('afterSave',$this);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');

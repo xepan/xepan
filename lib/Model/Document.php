@@ -12,9 +12,10 @@ class Model_Document extends Model_Table{
 			'can_submit'=>'lock atk-swatch-red',
 			'can_manage_attachments'=>'attach',
 			'can_approve'=>'thumbs-up-alt atk-swatch-green',
-			'can_reject'=>'ccw atk-swatch-red',
-			'can_reject'=>'ccw atk-swatch-red',
 			'can_see_activities'=>'comment atk-swatch-blue',
+			'can_send_via_email'=>'mail atk-swatch-blue',
+			'can_reject'=>'cancel-circled atk-swatch-red',
+			'can_cancel'=>'cancel atk-swatch-red',
 		);
 
 	function init(){
@@ -39,15 +40,17 @@ class Model_Document extends Model_Table{
 			$this->actions = array_merge(array('can_view'=>array('caption'=>'Whose created Document you can see')),$this->actions);
 			
 			if(!$this instanceof \Model_Attachment){
-				$this->actions = array_merge(array('can_manage_attachments' => array()),$this->actions);
-				$this->actions = array_merge(array('can_see_activities' => array()),$this->actions);
+				if(!isset($this->actions['can_manage_attachments']))
+					$this->actions = array_merge(array('can_manage_attachments' => array()),$this->actions);
+				// if(!isset($this->actions['can_see_activities']))
+				// 	$this->actions = array_merge(array('can_see_activities' => array()),$this->actions);
 			}
 			
 		}
 
 		// set icons
 		foreach ($this->actions as $ac_view=>$details) {
-			if(!isset($details['icon']) and isset($this->default_icons[$ac_view]) and $this->actions[$ac_view] != false)
+			if(!isset($details['icon']) and isset($this->default_icons[$ac_view]) and $this->actions[$ac_view] !== false and $this->actions[$ac_view] !== null)
 				$this->actions[$ac_view]['icon'] = $this->default_icons[$ac_view];
 		}
 
@@ -102,6 +105,7 @@ class Model_Document extends Model_Table{
 		});
 
 		$this->addHook('beforeSave',array($this,'defaultBeforeSave'));
+		$this->addHook('beforeDelete',array($this,'defaultBeforeDelete'));
 		$this->addHook('afterInsert',array($this,'defaultAfterInsert'));
 		$this->addHook('afterLoad',array($this,'defaultAfterLoad'));
 
@@ -109,6 +113,14 @@ class Model_Document extends Model_Table{
 		$this->addExpression('updated_date')->set('DATE_FORMAT('.$this->dsql()->getField('updated_at').',"%Y-%m-%d")');
 	}
 
+	function defaultBeforeDelete(){
+		$this->add('xCRM/Model_Activity')
+				->addCondition('related_root_document_name',$this->root_document_name)
+				->addCondition('related_document_id',$this->id)
+		->each(function($obj){
+			$obj->forceDelete();
+		});
+	}
 
 	function defaultAfterLoad(){
 		if($this->hasElement('custom_fields') and $this['custom_fields'] and $this->hasElement('item_id')){
@@ -131,6 +143,11 @@ class Model_Document extends Model_Table{
 
 	function getSeries(){
 		return $this->root_document_name;
+	}
+
+	function getNextSeriesNumber($config_value=0){
+		$i = $this->add('xShop/Model_Invoice');
+		return $config_value + 1 + $i->dsql()->del('fields')->field('max(name)')->getOne();
 	}
 
 	function defaultAfterInsert($newobj,$id){
@@ -248,7 +265,7 @@ class Model_Document extends Model_Table{
 		}
 	}
 
-	function manage_attachments_page($page){
+	function attachments_page($page){
 		$crud = $page->add('CRUD');
 		$crud->setModel($this->ref('Attachments'),array('name','attachment_url_id'),array('name','attachment_url','updated_date'));
 
@@ -287,7 +304,7 @@ class Model_Document extends Model_Table{
 		return $activities;
 	}
 
-	function see_activities_page($page){
+	function activities_page($page){
 
 		$activities = $this->activities();
 
@@ -301,6 +318,11 @@ class Model_Document extends Model_Table{
 			$activities->getElement('action')->display(array('form'=>'Readonly'));
 		}
 
+		$crud->addHook('crud_form_submit',function($crud,$form){
+			$form->model->notify = true;
+			return true;
+		});
+
 		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to','attachment_id'));
 
 		if(!$crud->isEditing()){
@@ -311,6 +333,7 @@ class Model_Document extends Model_Table{
 					$v->setModel($g->model);
 					$g->current_row_html[$f]= $v->getHTML();
 				});
+			$g->addFormatter('action','Wrap');
 			$g->addFormatter('action','activity');
 
 			$g->removeColumn('created_at');
@@ -323,6 +346,8 @@ class Model_Document extends Model_Table{
 			$g->removeColumn('sms_to');
 			$g->removeColumn('attachment_id');
 
+			$g->addQuickSearch($g->model->getActualFields());
+			$g->addPaginator($ipp=10);
 		}
 
 
@@ -332,8 +357,10 @@ class Model_Document extends Model_Table{
 			$send_email_field = $crud->form->getElement('notify_via_email');
 			$send_sms_field = $crud->form->getElement('notify_via_sms');
 			
-			$email_to_field = $crud->form->getElement('email_to')->set($this->getTo()->email());
-			$sms_to_field = $crud->form->getElement('sms_to')->set($this->getTo()->mobileno());
+			$party= $this->getParty();
+
+			$email_to_field = $crud->form->getElement('email_to')->set($party->email());
+			$sms_to_field = $crud->form->getElement('sms_to')->set($party->mobileno());
 			//Actions if Email
 			$action_field->js('change')->univ()->bindConditionalShow(array(
 				'comment'=>array('email_to','notify_via_email'),
@@ -371,7 +398,7 @@ class Model_Document extends Model_Table{
 		return $this->saveAs($this->getRootClass());
 	}
 
-	function createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null){
+	function createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null,$notify_via_email=false, $notify_via_sms=false){
 		if(!$from){
 			$from = 'Employee';
 			$from_id = $this->api->current_employee->id;
@@ -385,15 +412,19 @@ class Model_Document extends Model_Table{
 		$new_activity['action'] = $action;
 		$new_activity['from']= $from;
 		$new_activity['from_id']= $from_id;
-		
+				
 		if($to){
 			$new_activity['to']= $to;
 			$new_activity['to_id']= $to_id;
 		}
+		if($email_to){
+			$new_activity['email_to'] = $email_to;
+		}
 
 		$new_activity['subject']= $subject;
 		$new_activity['message']= $message;
-
+		$new_activity->notify = $notify_via_email;
+		
 		$new_activity->save();
 		 return $new_activity;
 
@@ -435,12 +466,12 @@ class Model_Document extends Model_Table{
 		$current_lastseen->save();
 	}
 
-	function sendEmail($email,$subject,$email_body,$cc=array(),$bcc=array(),$attachements=array()){
-		$tm=$this->add( 'TMail_Transport_PHPMailer' );	
+	function sendEmail($email,$subject,$email_body,$cc=array(),$bcc=array(),$attachements=array(),$from_official_email=array()){
+		$tm=$this->add( 'TMail_Transport_PHPMailer' ,array('email_settings'=>$from_official_email));	
 		try{
 			$tm->send($email, $email,$subject, $email_body ,false,$cc,$bcc,false,'',$attachements);
 		}catch( phpmailerException $e ) {
-			$this->api->js(null,'$("#form-'.$_REQUEST['form_id'].'")[0].reset()')->univ()->errorMessage( $e->errorMessage() . " " . $email )->execute();
+			throw $this->exception($e->errorMessage(),'Growl');
 		}catch( Exception $e ) {
 			throw $e;
 		}
@@ -451,7 +482,7 @@ class Model_Document extends Model_Table{
 		
 	}
 
-	function getTo(){
+	function getParty(){
 		
 		if($this instanceof \xShop\Model_Order){		
 			return $this->customer();
@@ -469,6 +500,8 @@ class Model_Document extends Model_Table{
 			return $this;		
 		}elseif($this instanceof \xShop\Model_MemberDetails){
 			return $this;
+		}elseif($this instanceof \xShop\Model_Affiliate){
+			return $this;
 		}
 
 		return new \Dummy();
@@ -477,6 +510,32 @@ class Model_Document extends Model_Table{
 	function setEmployeeNull(){
 		$this['created_by_id'] = null;
 		$this->saveAndUnload();
+	}
+
+	function emailSubjectPrefix($subject){
+		return "[".$this->root_document_name.' '. ($this['name']?:$this['customer_name']?:""). '] ' . $subject;
+	}
+
+	function populateSendFrom(&$form, $department, $setDefault=null){
+		$oe= $department->officialEmails();
+
+		$field = $form->addField('DropDown','department_send_from','Send From');
+		$field->setEmptyText('From Company Email');
+		$field->setModel($oe);
+
+		if($oe->count()->getOne() > 0){
+			if($setDefault){
+				$field->set($oe->addCondition('email_username',$setDefault)->tryLoadAny()->get('id'));
+			}else{
+				$field->set($oe->tryLoadAny()->get('id'));
+			}
+		}
+	}
+
+	function getPopulatedSendFrom(&$form){
+		if(!$form['department_send_from']) return $this->api->current_website;
+
+		return $this->add('xHR/Model_OfficialEmail')->load($form['department_send_from']);
 	}
 
 }

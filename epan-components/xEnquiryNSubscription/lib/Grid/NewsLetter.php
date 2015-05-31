@@ -38,9 +38,14 @@ class Grid_NewsLetter extends \Grid{
 	}
 
 	function recursiveRender(){
-		$btn= $this->addButton("NewsLetter Category Management");
-		if($btn->isClicked()){
+		$cat_btn= $this->addButton("NewsLetter Category Management");
+		if($cat_btn->isClicked()){
 			$this->js()->univ()->frameURL('NewsLetter Category',$this->api->url('xMarketingCampaign_page_owner_newsletterscat'))->execute();
+		}
+
+		$temp_btn= $this->addButton("Templates Management");
+		if($temp_btn->isClicked()){
+			$this->js()->univ()->frameURL('NewsLetter Category',$this->api->url('xMarketingCampaign_page_owner_newsletterstemplates'))->execute();
 		}
 		$config_model=$this->add('xEnquiryNSubscription/Model_Config')->tryLoadAny();
 		if(!$config_model['show_all_newsletters']){

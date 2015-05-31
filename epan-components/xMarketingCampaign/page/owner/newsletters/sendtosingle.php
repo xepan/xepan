@@ -7,7 +7,7 @@ class page_xMarketingCampaign_page_owner_newsletters_sendtosingle extends page_x
 		$this->api->stickyGET('xenquirynsubscription_newsletter_id');
 		
 		$existing_jobs = $this->add('xEnquiryNSubscription/Model_EmailQueue');
-		$job_j = $existing_jobs->join('xenquirynsubscription_emailjobs','emailjobs_id');
+		$job_j = $existing_jobs->leftJoin('xenquirynsubscription_emailjobs','emailjobs_id');
 		$job_j->addField('newsletter_id');
 		$existing_jobs->addCondition('newsletter_id',$_GET['xenquirynsubscription_newsletter_id']);
 		$existing_jobs->setOrder('id','desc');

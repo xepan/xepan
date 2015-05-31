@@ -2,6 +2,7 @@
 
 class Grid_GenericDocument extends \Grid{
 	public $content_vp;
+	public $cat_vp;
 	function init(){
 		parent::init();
 		
@@ -10,6 +11,19 @@ class Grid_GenericDocument extends \Grid{
 			$doc_id=$p->api->stickyGET('generic_document_id');
 			$m=$p->add('Model_GenericDocument')->load($doc_id);
 			$p->add('View')->setHTML($m['content']);
+		});
+
+
+		$this->cat_vp = $this->add('VirtualPage');
+		$this->cat_vp->set(function($p){
+		$status=$p->api->stickyGET('status');
+		$cat=$p->add('Model_GenericDocumentCategory')->addCondition('status',$status);
+		$crud=$p->add('CRUD');
+		$crud->setModel($cat);
+		$grid=$crud->grid;
+		$grid->removeColumn('item_name');
+		$grid->removeColumn('created_by');
+		$grid->removeColumn('related_document');
 		});
 
 
@@ -37,11 +51,12 @@ class Grid_GenericDocument extends \Grid{
 		// $this->addFormatter('content','imagethumb');
 		$this->addPaginator(50);
 		$this->addSno();
-		$this->addQuickSearch(array('title'),null,'Filter_Document');
+		$flt=$this->addQuickSearch(array('name'),null,'Filter_Document');
+		$flt->doc_cat_field->getModel()->addCondition('status',$model['status']);
 		
 		$btn= $this->addButton("Category Management");
 		if(!$btn instanceof \Dummy and $btn->isClicked()){
-			$this->js()->univ()->frameURL('Document Category',$this->api->url('owner_documentscategory'))->execute();
+			$this->js()->univ()->frameURL('Document Category',$this->api->url($this->cat_vp->getURL(),array('status'=>$model['status'])))->execute();
 		}
 
 		return $m;

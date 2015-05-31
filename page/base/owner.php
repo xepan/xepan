@@ -6,11 +6,22 @@ class page_base_owner extends Page {
 	
 	function init(){
 		parent::init();
-
+		$this->api->xpr->markPoint("ownermain init start");
+		
+		// Main BackEnd Authentication
+		$user_model = $this->add('Model_User_BackEnd');
+		$this->api->auth->setModel($user_model,'username','password');
+		$this->api->auth->addHook('updateForm',function($auth){
+			$auth->form->addClass('stacked');
+		});
+		$this->api->auth->check();
+		
 		$this->shorcut_menus = array();
+		
 		// Looks like you are called from update page
 		if(isset($this->git_path)) return;
 
+		// Load Current Department :: Accessible to all children pages
 		$this->api->current_department = new Dummy();
 		if($_GET['department_id']){
 			$id = $this->api->stickyGET('department_id');
@@ -21,16 +32,11 @@ class page_base_owner extends Page {
 			$this->api->template->tryDel('admin_template');
 		}
 
-		$user_model = $this->add('Model_User_BackEnd');
-		$this->api->auth->setModel($user_model,'username','password');
-		$this->api->auth->addHook('updateForm',function($auth){
-			$auth->form->addClass('stacked');
-		});
-		$this->api->auth->check();
-		$this->api->current_website = $this->api->auth->model->ref('epan_id');
-		$this->api->current_page = $this->api->current_website->ref('EpanPage');
-		$this->api->memorize('website_requested',$this->api->current_website['name']);
-		$this->api->load_plugins();
+
+		// $this->api->current_website = $this->api->auth->model->ref('epan_id');
+		// $this->api->current_page = $this->api->current_website->ref('EpanPage');
+		// $this->api->memorize('website_requested',$this->api->current_website['name']);
+		// $this->api->load_plugins();
 
 		// Setup current employee
 		$this->app->current_employee = $this->add('xHR/Model_Employee');
@@ -42,12 +48,14 @@ class page_base_owner extends Page {
 		// }
 		// $l=$this->app->add('Layout_Fluid'); // Usermanu is added in here
 
+		$dept_model = $this->add('xHR/Model_Department');
 		$this->app->top_menu =  $m=$this->app->layout->add('Menu_Horizontal',null,'Top_Menu');
 
-        $admin_m = $m->addMenu('Admin');
+        $admin_m = $m->addMenu('Company');
         
         $admin_m->addItem(array('Dashboard','icon'=>'gauge-1'),'/owner/dashboard');
         $admin_m->addItem(array('User Management','icon'=>'users'),'/owner/users');
+        $admin_m->addItem(array('Affiliate','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_afflilate'));
         $admin_m->addItem(array('General Settings','icon'=>'cog'),'/owner/epansettings');
         $admin_m->addItem(array('Documents','icon'=>'cog'),'/owner/documents');
         $admin_m->addItem(array('Application Repository','icon'=>'cog'),'/owner/applicationrepository');
@@ -57,17 +65,21 @@ class page_base_owner extends Page {
 		
 		$this->shorcut_menus[]=array("page"=>"Dashboard","url"=>$this->api->url("owner_dashboard"),"keys"=>'dashboard');
 		$this->shorcut_menus[]=array("page"=>"Users","url"=>$this->api->url("owner_users"),'keys'=>'users logins');
+		$this->shorcut_menus[]=array("page"=>"Affiliate","url"=>$this->api->url('xShop_page_owner_afflilate'));
 		$this->shorcut_menus[]=array("page"=>"General Settings","url"=>$this->api->url("owner_epansettings"),'keys'=>'company settings general configurations');
 		$this->shorcut_menus[]=array("page"=>"Generic Documents","url"=>$this->api->url("owner_documents"),'keys'=>'documents files scan private public shared');
 
 		// Alert Notification 
 		// Pages and Templates
-		$dept_model = $this->add('xHR/Model_Department');
+		$installed_comps= $this->add('Model_InstalledComponents');
+		$user_allowed_apps = $this->api->auth->model->getAllowedApp();
 
-		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xHR')->tryLoadAny()->get('id'))){
+		// throw new \Exception(print_r($installed_comps->getCached(array('namespace'=>'xHR'),'id')));
+		
+		if(in_array($installed_comps->getCached(array('namespace'=>'xHR'),'id'),$user_allowed_apps)){
 	        
 			$hr_m = $m->addMenu(array('HR','bagde'=>12));
-			$dept_model->loadHR();
+			$dept_model->id = $dept_model->getCached(array('name'=>'HR'),'id');
 
 			$hr_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$hr_m->addItem(array('Departments','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_department',array('department_id'=>$dept_model->id)));
@@ -95,9 +107,9 @@ class page_base_owner extends Page {
 		}
 
 
-		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xMarketingCampaign')->tryLoadAny()->get('id'))){
+		if(in_array($installed_comps->getCached(array('namespace'=>'xMarketingCampaign'),'id'),$user_allowed_apps)){
 			$marketing_m = $m->addMenu('Marketing');
-			$dept_model->loadMarketing();
+			$dept_model->id = $dept_model->getCached(array('name'=>'Marketing'),'id');
 			
 			$marketing_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$marketing_m->addItem(array('Leads','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_leads',array('department_id'=>$dept_model->id)));
@@ -137,19 +149,19 @@ class page_base_owner extends Page {
 			$exec_m->addItem(array('Start Sending Mass Email','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_emailexec',array('department_id'=>$dept_model->id)));
 			$exec_m->addItem(array('Update Social Activities','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_updatesocialactivityexec',array('department_id'=>$dept_model->id)));
 			$exec_m->addItem(array('Scheduled Emails from Campaign','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_campaignexec',array('department_id'=>$dept_model->id)));
-	}
+		}
 
-		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xShop')->tryLoadAny()->get('id'))){
+
+		if(in_array($installed_comps->getCached(array('namespace'=>'xShop'),'id'),$user_allowed_apps)){
 			$sales_m = $m->addMenu('Sales');
-			$dept_model->loadSales();
+			$dept_model->id = $dept_model->getCached(array('name'=>'Sales'),'id');
 
 
 			$sales_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Opportunity','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_opportunity',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Quotation','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_quotation',array('department_id'=>$dept_model->id)));
-			$sales_m->addItem(array('Category','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_category',array('department_id'=>$dept_model->id)));
+			// $sales_m->addItem(array('Category','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_category',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Item','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_item',array('department_id'=>$dept_model->id)));
-			$sales_m->addItem(array('Affiliate','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('E-Voucher','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_voucher',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Customer','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_customer',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Sales Order','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_order',array('department_id'=>$dept_model->id)));
@@ -169,9 +181,8 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array('keys'=>'sales dashboard, mainpage department summery',"page"=>"Sales Dashboard","url"=>$this->api->url('xShop_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array('keys'=>'opportunity hot leads',"page"=>"Opportunity","url"=>$this->api->url('xShop_page_owner_opportunity',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Quotation","url"=>$this->api->url('xShop_page_owner_quotation',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Category","url"=>$this->api->url('xShop_page_owner_category',array('department_id'=>$dept_model->id)));
+			// $this->shorcut_menus[]=array("page"=>"Category","url"=>$this->api->url('xShop_page_owner_category',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Item","url"=>$this->api->url('xShop_page_owner_item',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Affiliate","url"=>$this->api->url('xShop_page_owner_afflilate',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"E-Voucher","url"=>$this->api->url('xShop_page_owner_voucher',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Customer","url"=>$this->api->url('xShop_page_owner_customer',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Sales Orders","url"=>$this->api->url('xShop_page_owner_order',array('department_id'=>$dept_model->id)));
@@ -186,8 +197,9 @@ class page_base_owner extends Page {
 
 		}
 
+		
 
-		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xProduction')->tryLoadAny()->get('id'))){
+		if(in_array($installed_comps->getCached(array('namespace'=>'xProduction'),'id'),$user_allowed_apps)){
 			$production_m = $m->addMenu('Production');
 
 			$production_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dashboard',array('department_id'=>$dept_model->id)));
@@ -215,15 +227,16 @@ class page_base_owner extends Page {
 				$this->shorcut_menus[]=array("page"=>$d['name']. " Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$d->id)));
 			}
 		}
+
 			
-		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xCRM')->tryLoadAny()->get('id'))){
+		if(in_array($installed_comps->getCached(array('namespace'=>'xCRM'),'id'),$user_allowed_apps)){
 			
 			$crm_m = $m->addMenu('CRM');
-			$dept_model->loadCRM();
+			$dept_model->id = $dept_model->getCached(array('name'=>'CRM'),'id');
 
 			$crm_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$crm_m->addItem(array('Support Tickets','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_ticket',array('department_id'=>$dept_model->id)));
-			$crm_m->addItem(array('Company Emails','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));
+			// $crm_m->addItem(array('Company Emails','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 
 
 			$crm_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
@@ -240,10 +253,12 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"CRM Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"CRM Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 		}
-			
-		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xAccounts')->tryLoadAny()->get('id'))){
+		
+
+		if(in_array($installed_comps->getCached(array('namespace'=>'xAccounts'),'id'),$user_allowed_apps)){
 			$accounts_m = $m->addMenu('Accounts');
-			$dept_model->loadAccounts();
+			$dept_model->id = $dept_model->getCached(array('name'=>'Account'),'id');
+
 			$accounts_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			// $accounts_m->addItem(array('Balance Sheet','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_balancesheet',array('department_id'=>$dept_model->id)));
 			// $accounts_m->addItem(array('Group','icon'=>'gauge-1'),$this->api->url('xAccount_page_owner_group',array('department_id'=>$dept_model->id)));
@@ -277,10 +292,14 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Accounts Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Account Debit/Credit Note","url"=>$this->api->url('xAccount_page_owner_debitcreditnote',array('department_id'=>$dept_model->id)));
 		}
-			
-		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xPurchase')->tryLoadAny()->get('id'))){
+		
+
+		// throw new \Exception(print_r($installed_comps->getCached(array('namespace'=>'xPurchase'),'id')));
+		
+		if(in_array($installed_comps->getCached(array('namespace'=>'xPurchase'),'id'),$user_allowed_apps)){
 			$purchase_m = $m->addMenu('Purchase');
-			$dept_model->loadPurchase();
+			$dept_model->id = $dept_model->getCached(array('name'=>'Purchase'),'id');
+
 			$purchase_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xPurchase_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$purchase_m->addItem(array('Supplier','icon'=>'gauge-1'),$this->api->url('xPurchase_page_owner_supplier',array('department_id'=>$dept_model->id)));
 			$purchase_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
@@ -302,10 +321,11 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Purchase Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 		}	
 
-		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xStore')->tryLoadAny()->get('id'))){
-			$store_m = $m->addMenu('Store');
 
-			$dept_model->loadStore();
+		if(in_array($installed_comps->getCached(array('namespace'=>'xStore'),'id'),$user_allowed_apps)){
+			$store_m = $m->addMenu('Store');
+			$dept_model->id = $dept_model->getCached(array('name'=>'Store'),'id');
+
 			$store_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$store_m->addItem(array('Stock','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stock',array('department_id'=>$dept_model->id)));
 			$store_m->addItem(array('Warehouse','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_warehouse',array('department_id'=>$dept_model->id)));
@@ -327,9 +347,11 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Warehouse","url"=>$this->api->url('xStore_page_owner_warehouse',array('department_id'=>$dept_model->id)));
 		}	
 
-		if(true or $this->api->auth->model->isAllowedApp($this->add('Model_InstalledComponents')->addCondition('namespace','xDispatch')->tryLoadAny()->get('id'))){
+
+		if(in_array($installed_comps->getCached(array('namespace'=>'xDispatch'),'id'),$user_allowed_apps)){
 			$dispatch_m = $m->addMenu('Dispatch');
-			$dept_model->loadDispatch();
+			$dept_model->id = $dept_model->getCached(array('name'=>'Dispatch'),'id');
+
 			$dispatch_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xDispatch_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$dispatch_m->addItem(array('Dispatch Requests','icon'=>'gauge-1'),$this->api->url('xDispatch_page_owner_dispatchrequest',array('department_id'=>$dept_model->id)));
 			$dispatch_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
@@ -350,12 +372,13 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Dispatch Stock Management","url"=>$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 		}	
 
+		// 		in_array($installed_comps->getCached(array('namespace'=>'xHR'),'id'),$user_allowed_apps)
+		// $dept_model->id = $dept_model->getCached(array('name'=>'HR'),'id');
 		// Add User Department secific Menus
-		$employee = $this->add('xHR/Model_Employee')->loadFromLogin();
-		
-		if($employee->loaded()){
-			$dept_namespace = $employee->department()->get('related_application_namespace');
-			$dept_namespace;
+			
+		$this->api->xpr->markPoint("All Menus Set");
+		if($this->api->current_employee->loaded()){
+			$dept_namespace = $this->api->current_employee->department()->get('related_application_namespace');
 			// if($dept_namespace){
 
 				$task = $this->add('xProduction/Model_Task');
@@ -390,14 +413,16 @@ class page_base_owner extends Page {
 					$my_menu->addItem("Accounts Settings",$this->api->url('xProduction_page_owner_user_accountinfo',array('department_id'=>$this->api->current_employee['department_id'])));
 					
 					$my_menu->addItem("X Mail",$this->api->url('xHR_page_owner_xmail',array('department_id'=>$this->api->current_employee['department_id'])));
-					$this->shorcut_menus[]=array("page"=>"X Mail","url"=>$this->api->url('xHR_page_owner_xmail',array('department_id'=>$dept_model->id)));
 					
+					$this->shorcut_menus[]=array("page"=>"My Tasks","url"=>$this->api->url('xProduction_page_owner_user_tasks',array('department_id'=>$dept_model->id)));
+					$this->shorcut_menus[]=array("page"=>"X Mail","url"=>$this->api->url('xHR_page_owner_xmail',array('department_id'=>$dept_model->id)));
 					$this->shorcut_menus[]=array("page"=>"My Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 					$this->shorcut_menus[]=array("page"=>"My Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 					$this->shorcut_menus[]=array("page"=>"My Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
 			// }
 		
 		}
+		$this->api->xpr->markPoint("My Tasks done now alerts");
 
 		// ============ USER MENUS =================
 		
@@ -448,13 +473,14 @@ class page_base_owner extends Page {
 		$this->api->event('menu-created',$menu);
 
 
+		$this->api->xpr->markPoint("ownermain init done");
 	}
 
 	function recursiveRender(){
-		// if($_GET['xnotifier'] /*or !$_GET['cut_page']*/){
-		// 	$this->add('View_Notification',array('update_seen_till'=>$_GET['see']));
-		// 	// $this->add('clippy/Agent');
-		// }
+		if($_GET['xnotifier'] or !$_GET['cut_page']){
+			$this->add('View_Notification',array('update_seen_till'=>$_GET['see']));
+			// $this->add('clippy/Agent');
+		}
 
 		parent::recursiveRender();
 	}
@@ -466,6 +492,7 @@ class page_base_owner extends Page {
 		$this->api->template->appendHTML('js_include','<script src="templates/js/shortcut.js"></script>'."\n");
 		
 		$this->api->js(true)->_load('utilities/fuse.min')->_load('utilities/shortmenus')->univ()->setUpShortMenus($this->shorcut_menus, $this->api->url());
+
 		parent::render();
 	}
 

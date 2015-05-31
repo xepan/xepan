@@ -160,8 +160,9 @@ class Controller_Acl extends \AbstractController {
 
 	function doCRUD(){
 		// echo "i m here 2 <br>";
-		if($this->api->auth->model->isDefaultSuperUser() AND $this->show_acl_btn AND !$this->owner->isEditing()){
-			if($this->api->getConfig('open_acl_for_all',false) OR $this->api->auth->model->isDefaultSuperUser()){
+		if($this->api->auth->model->isSuperUser() AND $this->show_acl_btn AND !$this->owner->isEditing()){
+			if($this->api->getConfig('open_acl_for_all',false) OR $this->api->auth->model->isSuperUser()){
+				
 				$btn = $this->owner->grid->buttonset->addButton()->set('ACL APPLIED');
 				$self= $this;
 				$vp = $this->owner->add('VirtualPage')->set(function($p)use($self){
@@ -207,130 +208,103 @@ class Controller_Acl extends \AbstractController {
 					$this->owner->js()->univ()->frameURL('ACL Status for '.$self->owner->model->document_name . $dept , $vp->getURL())->execute();
 				}
 			}else{
-				if(!$this->permissions['can_view'] OR $this->permissions['can_view']=='No'){
-					$this->owner->grid->add('View',null,'subheader')->set(' Records Accessibility Restrictions Applied')->addClass('atk-swatch-red');
+				$acl_titles=array();
+				foreach ($this->my_model->actions as $acl => $value) {
+					$acl_title = $acl;
+					if(isset($this->my_model->actions[$acl]['caption'])) $acl_title=$this->my_model->actions[$acl]['caption'];
+					switch ($this->permissions[$acl]) {
+						case 'No':
+							$color='danger';
+							break;
+						case 'Self Only':
+							$color='warning';
+							break;
+						default:
+							$color='success';
+							break;
+					}
+					$acl_titles[]= $acl_title .": <span class=\"atk-effect-$color\">".$this->permissions[$acl]."</span><br/>";
 				}
+				$this->owner->grid->addButton('Acl')
+					->set('Acl')
+					->setAttr('title', implode("", $acl_titles))
+					->addClass('btn btn-default')
+					->js(true)->xtooltip();
 			}
 		}
 
-		if(!$this->api->auth->model->isDefaultSuperUser() AND $this->permissions['can_view'] != 'All'){
+		if(!$this->api->auth->model->isSuperUser() AND $this->permissions['can_view'] != 'All'){
 			$this->filterModel($this->owner->model, isset($this->owner->model->acl_field)?$this->owner->model->acl_field:'created_by_id');
 		}
 
-		if(!$this->isPermissionDefined('allow_add') OR (!$this->api->auth->model->isDefaultSuperUser() AND !$this->permissions['allow_add'])){
+		if(!$this->isPermissionDefined('allow_add') OR (!$this->api->auth->model->isSuperUser() AND !$this->permissions['allow_add'])){
 			$this->owner->allow_add=false;
 			if($this->owner->add_button instanceof \View)
 				$this->owner->add_button->destroy();
 		}
 
-		if(!$this->isPermissionDefined('allow_edit') OR (!$this->api->auth->model->isDefaultSuperUser() and $this->permissions['allow_edit'] and $this->permissions['allow_edit'] =='No')){
+		if(!$this->isPermissionDefined('allow_edit') OR (!$this->api->auth->model->isSuperUser() and $this->permissions['allow_edit'] and $this->permissions['allow_edit'] =='No')){
 			$this->owner->allow_edit=false;
 			$this->owner->grid->removeColumn('edit');
 		}else{
-			if(!$this->api->auth->model->isDefaultSuperUser())
+			if(!$this->api->auth->model->isSuperUser())
 				$this->filterGrid('edit','allow_');
 		}
 
-		if(!$this->isPermissionDefined('allow_del') OR (!$this->api->auth->model->isDefaultSuperUser() AND $this->permissions['allow_del'] == 'No')){
+		if(!$this->isPermissionDefined('allow_del') OR (!$this->api->auth->model->isSuperUser() AND $this->permissions['allow_del'] == 'No')){
 			$this->owner->allow_del=false;
 			$this->owner->grid->removeColumn('delete');
 		}else{
-			if(!$this->api->auth->model->isDefaultSuperUser())
+			if(!$this->api->auth->model->isSuperUser())
 				$this->filterGrid('delete','allow_','del');
 		}
 
-
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_submit'] != 'No'){
-			$this->manageAction('submit','can_submit');
-		}
-	
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_select_outsource'] and $this->permissions['can_select_outsource'] !='No'){
-			$this->manageAction('select_outsource','can_select_outsource');
+		foreach ($this->my_model->actions as $acl => $value) {
+			if($this->api->auth->model->isSuperUser() OR ($this->permissions[$acl] != 'No' && $this->permissions[$acl] !==false )){
+				$acl_arr = explode("_", $acl);
+				$i=0;
+				foreach ($acl_arr as $words) {
+					if(in_array($words,array('can','see','manage')))
+						unset($acl_arr[$i]);
+					$i++;
+				}
+				$this->manageAction(implode("_", $acl_arr),$acl);
+			}
 		}		
 
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_approve'] and $this->permissions['can_approve'] !='No'){
-			$this->manageAction('approve','can_approve');
-		}	
-		
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_reject'] !='No'){
-			$this->manageAction('reject','can_reject');
-		}
-		
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_redesign'] !='No'){
-			$this->manageAction('redesign','can_redesign');
-		}
+		// if($this->api->auth->model->isSuperUser() OR $this->permissions['can_manage_tasks'] !='No'){
+		// 	if($tt=$this->permissions['task_types']){
+		// 		switch ($tt) {
+		// 			case 'job_card_tasks':
+		// 				$this->addRootDocumentTaskPage();
+		// 				break;
+		// 			case "job_card_current_status_tasks":
+		// 				$this->addDocumentSpecificTaskPage();
+		// 			break;
 
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_assign'] !='No'){			
-			$this->manageAction('assign','can_assign');
-		}
+		// 			case "job_card_all_status_tasks":
+		// 			break;
 
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_receive']){
-			$this->manageAction('receive','can_receive');
-		}
+		// 			default:
+		// 				# code...
+		// 				break;
+		// 		}
+		// 	}
+		// }
 
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_accept'] and $this->permissions['can_accept'] !='No'){
-			$this->manageAction('accept','can_accept');
-		}
+		// if($this->api->auth->model->isSuperUser() OR $this->permissions['can_see_activities'] AND $this->permissions['can_see_activities'] != 'No'){
+		// 	$this->manageAction('see_activities','can_see_activities');
+		// }
 
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_cancel'] and $this->permissions['can_cancel'] !='No'){
-			$this->manageAction('cancel','can_cancel');
-		}
-
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_forward'] !='No'){
-			$this->manageAction('forward','can_forward');
-		}
-
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_start_processing'] !='No'){
-			$this->manageAction('start_processing','can_start_processing');
-		}
-
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_mark_processed'] !='No'){
-			$this->manageAction('mark_processed','can_mark_processed');
-		}
-
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_manage_attachments'] !='No'){
-			$this->manageAction('manage_attachments','can_manage_attachments');
-		}
-
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_forcedelete'] && $this->permissions['can_forcedelete'] !='No'){
-			$this->manageAction('forcedelete','can_forcedelete');
-		}
-		
-		
-
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_manage_tasks'] !='No'){
-			if($tt=$this->permissions['task_types']){
-				switch ($tt) {
-					case 'job_card_tasks':
-						$this->addRootDocumentTaskPage();
-						break;
-					case "job_card_current_status_tasks":
-						$this->addDocumentSpecificTaskPage();
-					break;
-
-					case "job_card_all_status_tasks":
-					break;
-
-					default:
-						# code...
-						break;
-				}
-			}
-		}
-
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_see_activities'] AND $this->permissions['can_see_activities'] != 'No'){
-			$this->manageAction('see_activities','can_see_activities');
-		}
-
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_send_via_email'] !='No'){
-			$this->manageAction('send_via_email','can_send_via_email');
-		}
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_create_activity'] !='No'){
-			$this->manageAction('create_activity','can_create_activity'); // Used in Email
-		}
-		if($this->api->auth->model->isDefaultSuperUser() OR $this->permissions['can_create_ticket'] !='No'){
-			$this->manageAction('create_ticket','can_create_ticket');
-		}
+		// if($this->api->auth->model->isSuperUser() OR $this->permissions['can_send_via_email'] !='No'){
+		// 	$this->manageAction('send_via_email','can_send_via_email');
+		// }
+		// if($this->api->auth->model->isSuperUser() OR $this->permissions['can_create_activity'] !='No'){
+		// 	$this->manageAction('create_activity','can_create_activity'); // Used in Email
+		// }
+		// if($this->api->auth->model->isSuperUser() OR $this->permissions['can_create_ticket'] !='No'){
+		// 	$this->manageAction('create_ticket','can_create_ticket');
+		// }
 
 		// if($this->permissions['can_send_via_email'] !='No' AND $this->owner->model->hasMethod('send_via_email')){
 		// 	$this->owner->addAction('send_via_email',array('toolbar'=>false));		
@@ -365,8 +339,13 @@ class Controller_Acl extends \AbstractController {
 		else
 			$icon = 'target';
 
-		if($this->owner->model->hasMethod($action_name.'_page')){
-			$action_page_function = $action_name.'_page';
+		$page_proxy_function = isset($this->my_model->actions[$full_acl_key]['function'])?$this->my_model->actions[$full_acl_key]['function']."_page":false;
+		$page_function = $action_name . '_page';
+		
+		$proxy_function = isset($this->my_model->actions[$full_acl_key]['function'])?$this->my_model->actions[$full_acl_key]['function']:false;
+
+		if( ($page_proxy_function && $this->my_model->hasMethod($page_proxy_function)) || $this->owner->model->hasMethod($action_name.'_page')){
+			$action_page_function = ($page_proxy_function && $this->my_model->hasMethod($page_proxy_function))?$page_proxy_function:$page_function;
 			
 			$title = explode("_", $action_name);
 			for($i=0;$i<count($title);$i++){
@@ -376,7 +355,6 @@ class Controller_Acl extends \AbstractController {
 			}
 
 			$title = implode(" ", $title);
-			
 			if(isset($this->my_model->actions) and isset($this->my_model->actions[$full_acl_key]['caption']))
 				$title = $this->my_model->actions[$full_acl_key]['caption'];
 
@@ -409,7 +387,8 @@ class Controller_Acl extends \AbstractController {
 				}
 			}
 			$this->filterGrid('fr_'.$this->api->normalizeName(ucwords($title)));
-		}elseif($this->owner->model->hasMethod($action_name)){
+		}elseif(($proxy_function && $this->my_model->hasMethod($proxy_function)) ||$this->owner->model->hasMethod($action_name)){
+			$action_name = $proxy_function?:$action_name;
 			try{
 				$this->api->db->beginTransaction();
 					$this->owner->addAction($action_name,array('toolbar'=>false,'icon'=>$icon));		
@@ -437,7 +416,7 @@ class Controller_Acl extends \AbstractController {
 		// 'Include Subordinats & Colleagues'=>'Created By Subordinats or Colleagues',
 		// 'Assigned To Me'=>'Assigned To Me','Assigned To My Team'=>'Assigned To Me & My Team',
 		// 'If Team Leader'=>'If Team Leader','All'=>'All');
-		if($this->api->auth->model->isDefaultSuperUser()) return;
+		if($this->api->auth->model->isSuperUser()) return;
 
 		if(!$model->hasField($filter_column)){
 			throw $this->exception("$filter_column must be defined in model " . get_class($model));
@@ -483,7 +462,7 @@ class Controller_Acl extends \AbstractController {
 	}
 
 	function filterGrid($column, $prefix = 'can_', $col_name=false){
-		if($this->api->auth->model->isDefaultSuperUser()) return;
+		if($this->api->auth->model->isSuperUser()) return;
 		// echo $prefix.($col_name?:$column) . ' = ' . $this->permissions[$prefix.($col_name?:$column)] . ' <br/>';
 		$filter_ids = null;
 		switch ($this->permissions[$prefix.($col_name?:$column)]) {

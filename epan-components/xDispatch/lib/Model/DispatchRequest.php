@@ -154,7 +154,7 @@ class Model_DispatchRequest extends \Model_Document {
 
 	function mark_processed_page($p){//Mark Processd = Delivey in this case
 		$customer = $this->order()->customer();
-
+		$order = $this->order();
 		$p->add('H3')->set('Items to Deliver');
 		$grid = $p->add('Grid');
 		$grid->setModel($this->itemRows()->addCondition('status','received'),array('dispatch_request','item_with_qty_fields','qty','unit','custom_fields','item'));
@@ -169,10 +169,12 @@ class Model_DispatchRequest extends \Model_Document {
 		// $form->addField('text','billing_address')->set($customer['billing_address']);
 		$c->addColumn(6)->addField('text','shipping_address')->set($customer['shipping_address']);
 		$c->addColumn(6)->addField('text','delivery_narration');
-		$c->addColumn(6)->addField('Checkbox','generate_invoice');
-		$c->addColumn(12)->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'))->setEmptyText('Select Items Included in Invoice');
-		$c->addColumn(12)->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
-		$c->addColumn(12)->addField('Money','amount');
+		$c->addColumn(12)->addField('Checkbox','generate_invoice');
+		$c->addColumn(4)->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'))->setEmptyText('Select Items Included in Invoice');
+		$c->addColumn(4)->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
+		$c->addColumn(4)->addField('DropDown','invoice_action')->setValueList(array('keep_open'=>'Keep Open','mark_processed'=>'Mark Processed'));//->setEmptyText('Select Invoice Action');
+		$c->addColumn(6)->addField('Money','amount');
+		$c->addColumn(6)->addField('Money','discount')->set($order['discount_voucher_amount']);
 		$c->addColumn(4)->addField('line','bank_account_detail');
 		$c->addColumn(4)->addField('line','cheque_no');
 		$c->addColumn(4)->addField('DatePicker','cheque_date');
@@ -247,7 +249,9 @@ class Model_DispatchRequest extends \Model_Document {
 						$orderitems_selected[] = $itm['orderitem_id'];
 					}
 				}
-				$invoice = $this->order()->createInvoice($status='approved',$salesLedger=null, $orderitems_selected);
+
+				$invoice = $this->order()->createInvoice($status='approved',$salesLedger=null, $orderitems_selected,$form['amount'],$form['discount']);
+
 
 				if($form['payment'] == "cash")
 					$invoice->payViaCash($form['amount']);
@@ -255,6 +259,11 @@ class Model_DispatchRequest extends \Model_Document {
 				if($form['payment'] == "cheque")
 					$invoice->payViaCheque($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_detail'],$self_bank_account=null);
 
+				if($form['invoice_action']=="mark_processed"){
+					$invoice_id = $invoice->id;
+					$invoice->setStatus('completed');
+					$invoice = $this->add('xShop/Model_SalesInvoice')->load($invoice_id);
+				}
 			}
 			
 			if($form['send_invoice_via_email']){

@@ -48,12 +48,12 @@ class Grid_Order extends \Grid {
 		if($fields==null){
 			$fields = array(
 						'name','order_from','created_at','member',
-						'net_amount','last_action','created_by','orderitem_count','delivery_date','priority_id'
+						'net_amount','last_action','created_by','orderitem_count','delivery_date','priority_id','priority'
 						);
 		}
 
 		$m = parent::setModel($model,$fields);
-
+		$this->removeColumn('priority_id');
 		$this->addColumn('expander','details',array('page'=>'xShop_page_owner_order_detail','descr'=>'Details'));
 
 		// $this->addColumn('Button','print');

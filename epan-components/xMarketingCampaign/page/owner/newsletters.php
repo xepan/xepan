@@ -23,8 +23,14 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 		})->sortable(true);
 
 		$newsletter_model->getElement('created_by_app')->defaultValue('xMarketingCampaign');
-		$newsletter_crud = $this->add('CRUD',array('grid_class'=>'xEnquiryNSubscription/Grid_NewsLetter'));
+		$newsletter_crud = $this->add('CRUD',array('grid_class'=>'xEnquiryNSubscription/Grid_NewsLetter','keep_open_on_submit'=>true));
 		$newsletter_crud->setModel($newsletter_model,null,array('category','is_active','name','email_subject','unsend_emails','created_by_app'));
+
+		if($newsletter_crud->isEditing('add') or $newsletter_crud->isEditing('edit')){
+			$mf = $newsletter_crud->form->getElement('matter');
+			$mf->options=array('templates'=> 'index.php?page=xMarketingCampaign_page_owner_newsletterstemplates&getjson=true'
+			);
+		}
 
 		if(!$newsletter_crud->isEditing()){
 		
@@ -40,7 +46,7 @@ class page_xMarketingCampaign_page_owner_newsletters extends page_xMarketingCamp
 			$email_to_process->addCondition('process_via','xMarketingCampaign');
 		}
 
-		
+		$newsletter_crud->add('xHR/Controller_Acl');
 	}
 
 	function page_send(){

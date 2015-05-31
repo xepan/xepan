@@ -54,8 +54,10 @@ class Frontend extends ApiFrontend{
 
 	function init() {
 		parent::init();
+		
 		$this->requires( 'atk', '4.2.0' );
 		
+
 		$this->addLocation(array(
 			'js'=>'atk4/public/atk4/js'
 			))->setParent( $this->pathfinder->base_location );
@@ -63,6 +65,8 @@ class Frontend extends ApiFrontend{
 		$this->addLocation(array(
 				'addons'=>array( 'epan-addons', 'epan-components', 'atk4-addons' ))
 		)->setParent( $this->pathfinder->base_location );
+	
+		$this->add('performance/Controller_Profiler');
 
 		$this->addLocation(array(
             'page'=>array('epan-components','epan-addons'),
@@ -139,10 +143,6 @@ class Frontend extends ApiFrontend{
 
 				$this->add( 'Controller_EpanCMSApp' )->frontEnd();
 				
-				date_default_timezone_set($this->current_website['time_zone']?:'UTC');
-				$this->today = date('Y-m-d',strtotime($this->recall('current_date',date('Y-m-d'))));
-	        	$this->now = date('Y-m-d H:i:s',strtotime($this->recall('current_date',date('Y-m-d H:i:s'))));
-				$this->current_employee = $this->add('xHR/Model_Employee');
 				
 				// MULTISITE CONTROLER
 				// $this->load_plugins();
@@ -153,6 +153,11 @@ class Frontend extends ApiFrontend{
 				// 	$this->exec_plugins( 'website-page-loaded', $this->api->page_requested );
 
 			}
+			
+			date_default_timezone_set($this->current_website['time_zone']?:'UTC');
+			$this->today = date('Y-m-d',strtotime($this->recall('current_date',date('Y-m-d'))));
+        	$this->now = date('Y-m-d H:i:s',strtotime($this->recall('current_date',date('Y-m-d H:i:s'))));
+			$this->current_employee = $this->add('xHR/Model_Employee');
 
 			$auth=$this->add( 'BasicAuth' );
 			$auth->setModel( 'Users', 'username', 'password' );
@@ -261,6 +266,7 @@ class Frontend extends ApiFrontend{
 			;
 			
 			setlocale(LC_MONETARY, 'en_IN');
+			$this->xpr->markPoint('Front-end init Finished');
 		}
 	}
 

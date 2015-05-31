@@ -12,7 +12,6 @@ class Model_Email extends \Model_Document{
 			// 'allow_edit'=>array(),
 			// 'allow_del'=>array(),
 			'can_create_activity'=>array('caption'=>'Action'),
-			// 'can_create_ticket'=>array(),
 			'can_see_activities'=>false,
 			'can_manage_attachments'=>false
 		);	
@@ -51,6 +50,7 @@ class Model_Email extends \Model_Document{
 		$this->addField('direction')->enum(array('sent','received'))->defaultValue('sent');
 
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeSave',$this);
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id',null,'Attachments');
 
@@ -63,6 +63,11 @@ class Model_Email extends \Model_Document{
 		$this->ref('Attachments')->each(function($m){
 			$m->forceDelete();
 		});
+	}
+
+	function beforeSave(){
+		if(!$this['from_email'])
+			$this['from_email'] =$this->api->current_website['email_username'];
 	}
 
 	function createFromActivity($activity){
@@ -177,7 +182,7 @@ class Model_Email extends \Model_Document{
 		$from_supplier_field = $from_form->addField('autocomplete/Basic','from_supplier');
 		$from_supplier_field->setModel($supplier_model);
 
-		$from_affiliate_field = $from_form->addField('autocomplete/Basic','from_affiliate');
+		$from_affiliate_field = $from_form->addField('autocomplete/Plus','from_affiliate');
 		$from_affiliate_field->setModel($affiliate_model);
 		
 		$from_employee_field = $from_form->addField('autocomplete/Basic','from_employee');
@@ -235,11 +240,11 @@ class Model_Email extends \Model_Document{
 
 			}elseif($from_form['from_employee']){
 				$from = "Employee";
-				$from = $from_form['from_employee'];
+				$from_id = $from_form['from_employee'];
 
 			}elseif($from_form['from_affiliate']){
 				$from = "Affiliate";
-				$from = $from_form['from_affiliate'];				
+				$from_id = $from_form['from_affiliate'];				
 			}
 
 			$this->setFrom($from_id, $from);
@@ -412,9 +417,19 @@ class Model_Email extends \Model_Document{
 		
 	}
 
+	function start_processing($remark=null){
+		$this['task_status'] = 'processing';
+		$this->save();
+	}
+
 	function mark_processed($remark){
 		$this['task_status'] = 'processed';
 		$this->save();
+	}
+
+	function approve(){
+		$this['task_status'] = 'completed';
+		$this->save();	
 	}
 
 	function task(){
@@ -454,8 +469,28 @@ class Model_Email extends \Model_Document{
 	function create_Ticket(){
 		$t = $this->add('xCRM/Model_Ticket');
 		$t['status'] = "Submitted";
-		$t->save();
+		$t['uid'] = $this['uid'];
+		$t['from'] = $this['from'];
+		$t['from_id'] = $this['from_id'];
+		$t['from_email'] = $this['from_email'];
+		$t['from_name'] = $this['from_name'];
+		$t['to'] = $this['to'];
+		$t['to_id'] = $this['to_id'];
+		$t['to_email'] = $this['to_email'];
+		$t['cc'] = $this['cc'];
+		$t['subject'] = $this['subject'];
+		$t['message'] = $this['message'];
+		
+		if($this['from']=="Customer")
+			$t['customer_id'] = $this['from_id'];
+
 		$t->relatedDocument($this);
+		$t->save();
+		foreach ($this->attachment() as $attach) {
+			$t->addAttachment($attach['attachment_url_id'],$attach['name']);	
+		}
+		$t->autoReply();
+
 	}
 
 	function fetchDepartment($department,$conditions=null){
@@ -507,7 +542,7 @@ class Model_Email extends \Model_Document{
 					$mail_m['to_email'] = is_array($mail->to)?implode(",", array_keys($mail->to)):$mail->to;
 					$mail_m['cc'] = is_array($mail->cc)?implode(",", array_keys($mail->cc)):$mail->cc;
 					$mail_m['subject'] = $mail->subject;
-					$mail_m['message'] = $mail->textHtml;
+					$mail_m['message'] = $mail->textHtml?:$mail->textPlain;
 					$mail_m['uid'] = $mail->id;
 					$mail_m['direction'] = 'received';
 					$mail_m['from_name'] = $mail->fromName;
@@ -534,7 +569,7 @@ class Model_Email extends \Model_Document{
 					foreach ($fetch_email_array as $email_id) {
 						$email->load($email_id);
 						$email->populateFromAndToIds();
-						if($email->forSupport()){
+						if(!($email->hasDocument()) AND $email->forSupport()){
 							$email->create_Ticket();
 						}
 						$email->unload();
@@ -554,7 +589,7 @@ class Model_Email extends \Model_Document{
 		$support_emails = $off_email->supportEmails();
 		
 		foreach ($support_emails as $support_email) {
-			if(	in_array($support_email['imap_email_username'],explode(',', $this['to_email'].','.$this['cc'])) )
+			if(	in_array($support_email['imap_email_username'],explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc'])) )
 				return true;
 		}
 
@@ -564,7 +599,7 @@ class Model_Email extends \Model_Document{
 	function populateFromAndToIds(){
 		$this->guessFrom();
 		$doc = $this->guessDocumentAndCreateActivityOrTicket();
-		$this->guessTo($doc);
+		$this->guessTo();
 	}
 
 	function guessFrom(){
@@ -573,16 +608,19 @@ class Model_Email extends \Model_Document{
 
 		if(!$this['from_email'])
 			return false;
-
+		
 		//GUESS CUSTOMER
-		if($customer = $this->customer()){
+		if($customer = $this->customer($this['from_email'])){
 			$this['from'] = "Customer";
 			$this['from_id'] = $customer['id'];
-		}elseif($supplier = $this->supplier()){
+		}elseif($supplier = $this->supplier($this['from_email'])){
 			//guess Supplier
 			$this['from'] = "Supplier";
 			$this['from_id'] = $supplier['id'];
-		}elseif($emp = $this->employee()){
+		}elseif($afiliate = $this->afiliate($this['from_email'])){
+			$this['from'] = "Affiliate";
+			$this['from_id'] = $afiliate['id'];
+		}elseif($emp = $this->employee($this['from_email'])){
 			$this['from'] = "Employee";
 			$this['from_id'] = $emp['id'];
 		}
@@ -609,6 +647,11 @@ class Model_Email extends \Model_Document{
 				if($e->loaded())
 					return $e['name'];
 			break;
+			case 'Affiliate':
+				$e = $this->add('xShop/Model_Affiliate')->addCondition('id',$this['from_id'])->tryLoadAny();
+				if($e->loaded())
+					return $e['name'];
+			break;
 		}
 	}
 
@@ -617,51 +660,60 @@ class Model_Email extends \Model_Document{
 		if(!$this->loaded()) return;
 		switch ($this['to']) {
 			case 'Customer':
-				$c = $this->add('xShop/Model_Customer')->addCondition('id',$this['from_id'])->tryLoadAny();
+				$c = $this->add('xShop/Model_Customer')->addCondition('id',$this['to_id'])->tryLoadAny();
 				if($c->loaded())					
 					return $c['customer_name'];
 			break;			
 			case 'Supplier':
-				$s = $this->add('xPurchase/Model_Supplier')->addCondition('id',$this['from_id'])->tryLoadAny();
+				$s = $this->add('xPurchase/Model_Supplier')->addCondition('id',$this['to_id'])->tryLoadAny();
 				if($s->loaded())
 					return $s['name'];
 			break;
 			case 'Employee':
-				$e = $this->add('xHR/Model_Employee')->addCondition('id',$this['from_id'])->tryLoadAny();
+				$e = $this->add('xHR/Model_Employee')->addCondition('id',$this['to_id'])->tryLoadAny();
 				if($e->loaded())
 					return $e['name'];
+			break;
+			case 'Affiliate':
+				$a = $this->add('xShop/Model_Affiliate')->addCondition('id',$this['to_id'])->tryLoadAny();
+				if($a->loaded())
+					return $a['name'];
 			break;
 		}
 	}
 	
-	function guessTo($doc=false){
-		if($doc){
-			$to = $doc->getTo();
-			if($to instanceof \xShop\Model_Customer){
-				$this['to'] = 'Customer';
-				$this['to_id'] = $to->id;
-			
-			}elseif($to instanceof \xHR\Model_Employee){
-				$this['to'] = 'Employee';
-				$this['to_id'] = $to->id;
-			
-			}elseif($to instanceof \xPurchase\Model_Supplier) {
-				$this['to'] = 'Supplier';
-				$this['to_id'] = $to->id;
-			}
-		}
+	function guessTo(){
+		if(!$this->loaded())
+			return false;
 
+		if(!$to_email = $this['to_email'])
+			return false;
+
+		$to_email = $to_email.",".$this['cc'].",".$this['bcc'];
+
+		//GUESS CUSTOMER
+		if( ($customer = $this->customer($to_email) )AND $this['from']!='Customer'){
+			$this['to'] = "Customer";
+			$this['to_id'] = $customer['id'];
+		}elseif( ($supplier = $this->supplier($to_email)) AND $this['from']!='Supplier'){
+			//guess Supplier
+			$this['to'] = "Supplier";
+			$this['to_id'] = $supplier['id'];
+		}elseif( ($afiliate = $this->afiliate($to_email))  AND $this['from']!='Affiliate'){
+			$this['to'] = "Affiliate";
+			$this['to_id'] = $afiliate['id'];
+		}elseif( ($emp = $this->employee($to_email))  AND $this['from']!='Employee'){
+			$this['to'] = "Employee";
+			$this['to_id'] = $emp['id'];
+		}
+		
 		$this->save();
 	}
 
-	function guessDocumentAndCreateActivityOrTicket(){
-		if(!$this['subject'])
-			return false;
-
-		//get ticket no from subject
+	function hasDocument(){
 		preg_match_all('/([a-zA-Z]+[\\\\][a-zA-Z]+[ ]+[0-9]+)/',$this['subject'],$preg_match_array);
 		// throw new \Exception($this['subject'].  var_dump($preg_match_array[1][0]), 1);
-		if(!count($preg_match_array[1])) return;
+		if(!count($preg_match_array[1])) return false;
 		
 
 		//Guess Ticket
@@ -671,6 +723,35 @@ class Model_Email extends \Model_Document{
 
 		$document = $this->add($document_array[0].'\Model_'.$document_array[1]);
 		$document->tryLoadBy('name',$document_array_all[1]);
+
+		if($document->loaded())
+			return $document;
+
+		return false;
+	}
+
+	function guessDocumentAndCreateActivityOrTicket(){
+		if(!$this['subject'])
+			return false;
+
+		//get ticket no from subject
+		preg_match_all('/([a-zA-Z]+[\\\\][a-zA-Z]+[ ]+[0-9]+)/',$this['subject'],$preg_match_array);
+		// throw new \Exception($this['subject'].  var_dump($preg_match_array[1][0]), 1);
+		if(count($preg_match_array[1])){
+			//Guess Ticket
+			$relatedDocument = $preg_match_array[1][0];
+			$document_array_all = explode(" ", $relatedDocument);
+			$document_array = explode("\\", $document_array_all[0]);
+
+			$document = $this->add($document_array[0].'\Model_'.$document_array[1]);
+			$document->tryLoadBy('name',$document_array_all[1]);
+		}else{
+			$document = $this->loadFrom();
+			if(!$document) return;
+		}
+		
+
+
 
 		if($document->loaded()){
 			$new_activity = $document->createActivity('Email',$this['subject'],$this['message'],$this['from'],$this['from_id'], $this['to'], $this['to_id']);
@@ -696,10 +777,24 @@ class Model_Email extends \Model_Document{
 
 	}
 
-	function customer(){
+	function customer($email){
+
+		if(!is_array($email)){
+			$email = explode(",", $email);
+		}
+
 		$cstmr = $this->add('xShop/Model_Customer');
-		$cstmr->addCondition('customer_email','like','%'.$this['from_email'].'%');
+
+		$or = $cstmr->dsql()->orExpr();
+		foreach ($email as $em) {
+			$em=trim($em);
+			if(!$em or $em=='') continue;
+			$or->where('email','like','%'.$em.'%');
+			$or->where('other_emails','like','%'.$em.'%');
+		}
 		
+		$cstmr->addCondition($or);
+
 		if($cstmr->count()->getOne() > 1)
 			return false;
 
@@ -710,9 +805,21 @@ class Model_Email extends \Model_Document{
 		return false;
 	}
 
-	function supplier(){
-		$supplr = $this->add('xPurchase/Model_Supplier'); 
-		$supplr->addCondition('email','like','%'.$this['from_email'].'%');
+	function supplier($email){
+		if(!is_array($email)){
+			$email = explode(",", $email);
+		}
+
+		$supplr = $this->add('xPurchase/Model_Supplier');
+		
+		$or = $supplr->dsql()->orExpr();
+		foreach ($email as $em) {
+			$em=trim($em);
+			if(!$em or $em=='') continue;
+			$or->where('email','like','%'.$em.'%');
+		}
+
+		$supplr->addCondition($or);
 
 		if($supplr->count()->getOne() > 1)
 			return false;
@@ -724,9 +831,47 @@ class Model_Email extends \Model_Document{
 		return false;
 	}
 
-	function employee(){
+	function afiliate($email){
+		if(!is_array($email)){
+			$email = explode(",", $email);
+		}
+
+		$afiliate = $this->add('xShop/Model_Affiliate');
+		
+		$or = $afiliate->dsql()->orExpr();
+		foreach ($email as $em) {
+			$em=trim($em);
+			if(!$em or $em=='') continue;
+			$or->where('email_id','like','%'.$em.'%');
+		}
+				
+		$afiliate->addCondition($or);
+		
+		if($afiliate->count()->getOne() > 1)
+			return false;
+
+		$afiliate->tryLoadAny();
+		if($afiliate->loaded())
+			return $afiliate;
+
+		return false;
+	}
+
+	function employee($email){
+		if(!is_array($email)){
+			$email = explode(",", $email);
+		}
+
 		$emp = $this->add('xHR/Model_Employee');
-		$emp->addCondition('personal_email','like','%'.$this['from_email'].'%');
+		
+		$or = $emp->dsql()->orExpr();
+		foreach ($email as $em) {
+			$em=trim($em);
+			if(!$em or $em=='') continue;
+			$or->where('personal_email','like','%'.$em.'%');
+		}
+		
+		$emp->addCondition($or);
 		
 		if($emp->count()->getOne() > 1)
 			return false;
@@ -739,13 +884,16 @@ class Model_Email extends \Model_Document{
 	}
 
 
-	function loadDepartmentEmails($dept_id=null){
+	function loadDepartmentEmails($dept_id=null, $include_support_emails=false){
 		if(!$dept_id)
 			$dept_id = $this->api->stickyGET('department_id');
 		
 		$official_emails = $this->add('xHR/Model_OfficialEmail');
 		$official_emails->addCondition('department_id',$dept_id);
 		
+		if(!$include_support_emails)
+			$official_emails->addCondition('is_support_email',false);
+
 		if(!$official_emails->count()->getOne())
 			return false;
 		
@@ -759,10 +907,12 @@ class Model_Email extends \Model_Document{
 			
 			$or_cond->where('cc','like','%'.$official_email['email_username'].'%');
 			$or_cond->where('cc','like','%'.$official_email['imap_email_username'].'%');
+			$or_cond->where('from_email','like','%'.$official_email['email_username'].'%');
+			$or_cond->where('from_email','like','%'.$official_email['imap_email_username'].'%');
+			$or_cond->where('to_email','like','%'.$official_email['email_username'].'%');
+			$or_cond->where('to_email','like','%'.$official_email['imap_email_username'].'%');
 		}
 
-		$or_cond->where('from_email','in',$official_email_array)
-				->where('to_email','in',$official_email_array);
 
 
 		$this->addCondition(
@@ -862,6 +1012,8 @@ class Model_Email extends \Model_Document{
 					return $this->add('xShop/Model_Affiliate')->load($this['from_id']);
 				break;
 			}
+
+			return false;
 	}
 
 	function loadTo(){
@@ -937,6 +1089,32 @@ class Model_Email extends \Model_Document{
 					$this->add('xShop/Model_Affiliate')->load($this['to_id'])->updateEmail($this['to_email']);
 				break;
 			}
+	}
+
+	function loadOfficialEmail($according="to"){
+		if(!$this->loaded()) return false;
+		
+		if($according=="to")
+			$email = explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc']);
+
+		if($according=="from")
+			$email = explode(',', $this['to_email'].','.$this['cc'].','.$this['bcc']);
+
+		$off_emails = $this->add('xHR/Model_OfficialEmail');
+		$or = $off_emails->dsql()->orExpr();
+		foreach ($email as $em) {
+			$em=trim($em);
+			if(!$em or $em=='') continue;
+			$or->where('imap_email_username','like','%'.$em.'%');
+		}
+		
+		$off_emails->addCondition($or);
+
+		$off_emails->tryLoadAny();
+		if($off_emails->loaded())
+			return $off_emails;
+
+		return false;
 	}
 
 }

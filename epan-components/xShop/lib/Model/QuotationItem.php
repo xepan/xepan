@@ -33,6 +33,10 @@ class Model_QuotationItem extends \Model_Document{
 			return $m->refSQL('item_id')->fieldQuery('name');
 		});
 
+		$this->addExpression('unit')->set(function($m,$q){
+			return $m->refSQL('item_id')->fieldQuery('qty_unit');
+		});
+
 
 		$this->addExpression('tax_per_sum')->set(function($m,$q){
 			$tax_assos = $m->add('xShop/Model_ItemTaxAssociation');

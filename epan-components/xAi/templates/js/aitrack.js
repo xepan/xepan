@@ -36,7 +36,7 @@ $.each({
 			// alert('removed');
 		});
 
-		$('body').trigger('checkInView.inview');
+		// $('body').trigger('checkInView.inview');
 	},
 
 	initEngagingText: function(){

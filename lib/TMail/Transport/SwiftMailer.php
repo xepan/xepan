@@ -2,12 +2,17 @@
 class TMail_Transport_SwiftMailer extends AbstractObject {
 
 	public $mailer=null;
+    public $email_settings=null;
 
 	function init(){
 		parent::init();
 		require_once('lib/Swift/swift_init.php');
 
-    	$email_settings = $this->api->current_website;
+        $email_settings = $this->email_settings;
+
+    	if(!$this->email_settings) {
+            $email_settings = $this->email_settings = $this->api->current_website;
+        }
 
     	switch ($email_settings['email_transport']) {
 			case 'SmtpTransport':
@@ -31,8 +36,15 @@ class TMail_Transport_SwiftMailer extends AbstractObject {
 	}
 	    
     function send($to, $from, $subject, $body, $headers="",$ccs=array(), $bcc=array(),  $skip_inlining_images=false, $read_confirmation_to='',$attachments=array()){
-		$email_settings = $this->api->current_website;
-    	
+		
+        $email_settings = $this->email_settings;
+
+        if(!$this->email_settings['from_email']) $email_settings['from_email'] = $this->api->current_website['from_email'];
+        if(!$this->email_settings['from_name']) $email_settings['from_name'] = $this->api->current_website['from_name'];
+        if(!$this->email_settings['email_reply_to']) $email_settings['email_reply_to'] = $this->api->current_website['email_reply_to'];
+        if(!$this->email_settings['sender_email']) $email_settings['sender_email'] = $this->api->current_website['sender_email'];
+        if(!$this->email_settings['return_path']) $email_settings['return_path'] = $this->api->current_website['return_path'];
+        
     	// throw new \Exception(var_dump($attachments), 1);
         
 		// $logger = new Swift_Plugins_Loggers_EchoLogger();
@@ -67,7 +79,8 @@ class TMail_Transport_SwiftMailer extends AbstractObject {
         if($ccs){
             if(is_array($ccs)){
                 foreach ($ccs as $ccs_1) {
-                    $message->addCc($ccs_1);
+                    if($ccs_1 and $ccs_1!="")
+                        $message->addCc($ccs_1);
                 }
             }else{
                 $message->addCc($ccs);
@@ -77,7 +90,8 @@ class TMail_Transport_SwiftMailer extends AbstractObject {
         if($bcc){
             if(is_array($bcc)){
                 foreach ($bcc as $bcc_1) {
-                    $message->addBcc($bcc_1);
+                    if($bcc_1 and $bcc_1!="")
+                        $message->addBcc($bcc_1);
                 }
             }else{
                 $message->addBcc($bcc);
@@ -133,7 +147,7 @@ class TMail_Transport_SwiftMailer extends AbstractObject {
             $arr = parse_url($m[1]);
             if (isset($arr['host'])) continue;
             // add
-            $cid = $message->embed(Swift_Image::fromPath(getcwd().'/'.$arr['path']));
+            $cid = $message->embed(Swift_Image::fromPath(getcwd().'/'.urldecode($arr['path'])));
             $body = str_replace($img, '<img alt="" src="'.$cid.'" style="border: none;" />', $body); 
         }
         return $body;
