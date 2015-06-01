@@ -72,6 +72,13 @@ class Model_Invoice extends \Model_Document{
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
 			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
 		}	
+		
+		//xShop Configuration model must be loaded in Api
+		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		if($shop_config['is_round_amount_calculation']){
+			$this['net_amount'] = round($this['net_amount'],0);
+		}
+
 		$this->save();
 	}
 

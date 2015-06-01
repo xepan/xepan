@@ -266,6 +266,7 @@ class Model_Order extends \Model_Document{
 	}
 
 	function updateAmounts(){		
+		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
 		$this['total_amount']=0;
 		$this['gross_amount']=0;
 		$this['tax']=0;
@@ -277,6 +278,11 @@ class Model_Order extends \Model_Document{
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
 			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
 		}
+
+		if($shop_config['is_round_amount_calculation']){
+			$this['net_amount'] = round($this['net_amount'],0);
+		}
+
 		$this->save();
 	}
 

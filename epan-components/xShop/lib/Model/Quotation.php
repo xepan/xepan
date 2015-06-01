@@ -45,7 +45,7 @@ class Model_Quotation extends \Model_Document{
 		// if( (!$this['lead_id'] AND !$this['customer_id']) )
 		// 	throw $this->exception('Lead or Customer Required','ValidityCheck')->setField('customer_id');
 
-		//$this->updateAmounts();
+		$this->updateAmounts();
 	}
 
 	function beforeDelete(){
@@ -83,6 +83,12 @@ class Model_Quotation extends \Model_Document{
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
 			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
 		}
+		
+		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		if($shop_config['is_round_amount_calculation']){
+			$this['net_amount'] = round($this['net_amount'],0);
+		}
+
 		$this->save();
 	}
 	function submit(){

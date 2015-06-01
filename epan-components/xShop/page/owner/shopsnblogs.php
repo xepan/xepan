@@ -168,6 +168,19 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 						}
 			$number_form->addClass('panel panel-default');
 			$number_form->addStyle('padding','20px');
+
+
+			$misc_tab=$tab->addTab('Misc Setting');
+			$misc_form = $misc_tab->add('Form_Stacked');
+			$misc_form->setModel($config_model,array('is_round_amount_calculation'));
+			$misc_form->addSubmit('Update');
+			if($misc_form->Submitted()){
+				$misc_form->update();
+				$misc_form->js(null,$misc_form->js()->reload())->univ()->successMessage('Updated')->execute();
+			}
+			$misc_form->addClass('panel panel-default');
+			$misc_form->addStyle('padding','20px');
+
 	}
 
 }
