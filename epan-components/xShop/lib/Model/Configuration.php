@@ -66,6 +66,8 @@ class Model_Configuration extends \Model_Table {
 		$this->addField('sale_invoice_starting_number');
 		$this->addField('purchase_invoice_starting_number');
 
+		//Round Amount Calculation
+		$this->addField('is_round_amount_calculation')->type('boolean');
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
