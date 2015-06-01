@@ -182,6 +182,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->createDepartmentalAssociations();
 		if($department_association = $this->nextDeptStatus($create_jobcard_after_dept)){
 			$department_association->createJobCardFromOrder();
+			
 		}
 	}
 
@@ -439,6 +440,7 @@ class Model_OrderDetails extends \Model_Document{
 			return false;
 
 		$d = $this->deptartmentalStatus($department=false,$from_custom_fields=true);
+		
 		$str = "";
 		foreach ($d as $department_asso) {
 			// throw new \Exception($department_asso[''], 1);	
@@ -487,6 +489,26 @@ class Model_OrderDetails extends \Model_Document{
 				}
 			}
 
+		}
+
+		return $str;
+	}
+
+	// Return Department wise custom field
+	function departmentRedableCustomFiled($department_id){
+		$str =""; 
+		$array = json_decode($this['custom_fields'],true);
+		foreach ($array as $id => $cf ) {
+			// $str.=$this['custom_fields'];
+			if($department_id == $id){
+				if(!empty($cf)){
+					$ar[$id] = $cf;
+					$str .= "[".$this->ref('item_id')->genericRedableCustomFieldAndValue(json_encode($ar))." ]<br>";
+					unset($ar[$id]);							
+				}else{
+					$str.="<br>";
+				}
+			}
 		}
 
 		return $str;

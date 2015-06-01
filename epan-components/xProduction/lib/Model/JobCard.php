@@ -6,8 +6,8 @@ class Model_JobCard extends \Model_Document{
 	public $table ="xproduction_jobcard";
 	public $status=array('draft','submitted','approved','received','assigned','processing','processed','forwarded','completed','cancelled');
 	public $root_document_name = 'xProduction\JobCard';
-
 	public $show_details = true;
+	
 
 	function init(){
 		parent::init();
@@ -502,6 +502,85 @@ class Model_JobCard extends \Model_Document{
 			return $this->orderItem()->order();
 		
 		return false;
+	}
+
+	function parseEmailBody(){
+
+		// $view=$this->add('xShop/View_SalesInvoiceDetail');
+		// $view->setModel($this->itemrows());
+		$jobcard_details='<div class ="atk-row">'.
+							'<div class="atk-col-8"><b> Items</b><br/>'.$this->orderItem()->get('item_name').'<br/>'.
+								$this->orderItem()->departmentRedableCustomFiled($this->toDepartment()->id).'</div>'.
+							'<div class="atk-col-4 text-right"><b> QTY</b><br/>'.$this->orderItem()->get('qty').'</div>'
+						.'</div>';
+
+		$outsource = $this->outSourceParty();
+		$outsource_email=$outsource['email_id'];
+
+		$config_model=$this->add('xShop/Model_Configuration');
+		$config_model->tryLoadAny();
+					
+		$email_body=$config_model['outsource_email_body']?:"OutSource  Layout Is Empty";
+		
+		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
+		$email_body = str_replace("{{outsource_party}}", $outsource['name'], $email_body);
+		$email_body = str_replace("{{outsource_party_contact_person}}", $outsource['contact_person'], $email_body);
+		$email_body = str_replace("{{outsource_party_contact_no}}", $outsource['contact_no']?$outsource['contact_no']:" ", $email_body);
+		$email_body = str_replace("{{outsource_party_email_id}}", $outsource['email_id']?$outsource['email_id']:" ", $email_body);
+		$email_body = str_replace("{{outsource_party_address}}", $outsource['address']?$outsource['address']:" ", $email_body);
+		$email_body = str_replace("{{outsource_party_pan_it_no}}",$outsource['pan_it_no']?$outsource['pan_it_no']:" ", $email_body);
+		$email_body = str_replace("{{outsource_party_tin_no}}", $outsource['tin_no']?$outsource['tin_no']:" ", $email_body);
+		$email_body = str_replace("{{jobcard_details}}", $jobcard_details, $email_body);
+		$email_body = str_replace("{{Jobcard_no}}", $this['name'], $email_body);
+		$email_body = str_replace("{{jobcard_date}}", $this['created_at'], $email_body);
+
+
+		return $email_body;
+	}
+
+	function send_via_email_page($p){
+
+		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
+		
+		$config_model=$this->add('xShop/Model_Configuration');
+		$config_model->tryLoadAny();
+
+		if(!$this->loaded())
+			return;
+		$email_body = $this->parseEmailBody();
+		
+		$outsource = $this->outSourceParty();
+		$outsource_email=$outsource['email_id'];
+
+		$emails = explode(',', $outsource['email_id']);
+
+		$form = $p->add('Form_Stacked');
+		$form->addField('line','to')->set($emails[0]);
+		// array_pop(array_re/verse($emails));
+		unset($emails[0]);
+
+		$form->addField('line','cc')->set(implode(',',$emails));
+		$form->addField('line','bcc');
+		$form->addField('line','subject')->validateNotNull()->set($config_model['outsource_email_subject']);
+		$form->addField('RichText','custom_message');
+		$form->add('View')->setHTML($email_body);
+		$form->addSubmit('Send');
+		if($form->isSubmitted()){
+
+			$ccs=$bccs = array();
+			if($form['cc'])
+				$ccs = explode(',',$form['cc']);
+
+			if($form['bcc'])
+				$bccs = explode(',',$form['bcc']);
+			
+			$subject = $this->emailSubjectPrefix($form['subject']);
+			$email_body = $form['custom_message']."<br>".$email_body;
+			$this->sendEmail($form['to'],$subject,$email_body,$ccs,$bccs);
+			$this->createActivity('email',$subject,$form['message'],$from=null,$from_id=null, $to='outsource', $to_id=$outsource->id);
+			return true;			
+		}
+		
 	}
 
 
