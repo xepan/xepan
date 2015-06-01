@@ -169,7 +169,7 @@ class Model_Employee extends \Model_Table{
 		});
 		
 		$this->ref('xCRM/Email')->each(function($email){
-			$email->setReadByEmployeeNull();
+			$email->newInstance()->load($email->id)->setReadByEmployeeNull();
 		});
 		
 		$this->ref('LastSeen')->each(function($last_seen){

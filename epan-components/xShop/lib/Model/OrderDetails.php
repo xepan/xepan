@@ -36,6 +36,10 @@ class Model_OrderDetails extends \Model_Document{
 			return $m->refSQL('item_id')->fieldQuery('name');
 		});
 
+		$this->addExpression('unit')->set(function($m,$q){
+			return $m->refSQL('item_id')->fieldQuery('unit');
+		});
+
 
 		$this->addExpression('tax_per_sum')->set(function($m,$q){
 			$tax_assos = $m->add('xShop/Model_ItemTaxAssociation');
@@ -61,6 +65,10 @@ class Model_OrderDetails extends \Model_Document{
 
 		$this->addExpression('created_by_id')->set(function($m,$q){
 			return $m->refSQL('order_id')->fieldQuery('created_by_id');
+		});
+
+		$this->addExpression('unit')->set(function($m,$q){
+			return $m->refSQL('item_id')->fieldQuery('qty_unit');
 		});
 
 		$this->addExpression('item_with_qty_fields','custom_fields');

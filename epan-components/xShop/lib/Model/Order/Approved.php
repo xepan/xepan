@@ -7,9 +7,9 @@ class Model_Order_Approved extends Model_Order{
 			'can_view'=>array(),
 			'can_cancel'=>array(),
 			'can_send_via_email'=>array(),
-			'can_forcedelete'=>array(),
 			'allow_edit'=>array(),
 			'allow_add'=>array(),
+			'can_forcedelete'=>array('icon'=>'trash-1 atk-swatch-red'),
 		);
 	
 

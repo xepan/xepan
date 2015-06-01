@@ -2,20 +2,19 @@
 
 namespace xShop;
 
-class View_OrderDetail extends \CompleteLister{
+class View_QuotationDetail extends \CompleteLister{
 	public $sno=1;
 	public $show_price = false;
 	public $show_department = true;
 	public $show_customfield = false;
 	function init(){
 		parent::init();
-
 	}
 
 	function formatRow(){
 
-			$this->current_row_html['unit']=$this->model['unit'];
 		$this->current_row_html['sno']=$this->sno;
+		$this->current_row_html['unit']=$this->model['unit'];
 		if($this->show_department)
 			$this->current_row_html['departments']=$this->model->redableDeptartmentalStatus(true,true,false,true);
 		if(!$this->show_price){
@@ -31,7 +30,7 @@ class View_OrderDetail extends \CompleteLister{
 		parent::setModel($model);
 
 		if($this->show_price){
-			$order= $model->ref('order_id');
+			$order= $model->ref('quotation_id');
 			// $order= $model->ref('priority_id');
 			// $this->template->set('gross_amount',$order['amount']);
 			$this->template->set('total_amount',$order['gross_amount']);
@@ -39,9 +38,10 @@ class View_OrderDetail extends \CompleteLister{
 			// $this->template->set('discount_voucher',$order['discount_voucher']);
 			if($order['discount_voucher_amount'])
 				$this->template->set('discount_voucher_amount',$order['discount_voucher_amount']?:'0.00');
-			else
-				$this->template->set('discount_amount_section'," ");
-				
+			else{
+				$this->template->set('discount_amount_section',"");
+			}
+
 			$this->template->set('net_amount',$order['net_amount']);
 			// $this->template->set('departments',"1");
 			// $this->template->set('order_item_custom_field',$model['id']);
@@ -61,7 +61,7 @@ class View_OrderDetail extends \CompleteLister{
 		        'js'=>'templates/js',
 		    )
 		);
-		return array('view/xShop-orderDetail');
+		return array('view/xShop-quotationDetail');
 	}
 
 }

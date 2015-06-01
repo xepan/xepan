@@ -15,12 +15,16 @@ class Model_MaterialRequestItem extends \Model_Document{
 		$this->hasOne('xStore/MaterialRequest','material_request_jobcard_id');
 		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'xShop/Item'));
 		$this->addField('qty')->sortable(true);
-		$this->addField('unit')->sortable(true);
+		// $this->addField('unit')->sortable(true);
 		$this->addField('narration')->type('text');
 		
 		$this->addField('custom_fields')->type('text')->sortable(true);
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterLoad',$this);
+
+		$this->addExpression('unit')->set(function($m,$q){
+			return $m->refSQL('item_id')->fieldQuery('qty_unit');
+		});
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 

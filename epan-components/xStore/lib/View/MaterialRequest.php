@@ -30,6 +30,7 @@ class View_MaterialRequest extends \CompleteLister{
 	function formatRow(){
 		$this->current_row['sno']=$this->sno;
 		$this->current_row_html['custom_field'] =  $this->add('xShop/Model_Item')->genericRedableCustomFieldAndValue($this->model['custom_fields']);
+		$this->current_row['unit']=$this->model['unit'];
 		$this->sno++;
 	}
 

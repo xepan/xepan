@@ -13,6 +13,7 @@ class View_PurchaseOrderDetail extends \CompleteLister{
 	function formatRow(){
 
 		$this->current_row_html['sno']=$this->sno;
+		$this->current_row_html['unit']=$this->model['unit'];
 		$this->sno++;
 	}
 

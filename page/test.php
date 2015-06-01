@@ -13,6 +13,18 @@ class page_test extends Page {
 		// print_r(timezone_identifiers_list());
 	}
 
+	function page_cst_organization_name_update(){
+
+		$cst = $this->add('xShop/Model_Customer')->each(function($obj){
+			if(!$obj['organization_name']){
+				$obj['organization_name'] = $obj['customer_name'];
+				$obj->save();
+			}
+
+		});
+
+	}
+
 	function page_defdocwrite(){
 		$filename = getcwd().'/epan-components/xHR/default-documents.xepan';
 		$d= $this->add('xHR/Model_Document');
