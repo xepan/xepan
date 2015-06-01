@@ -36,10 +36,6 @@ class Model_OrderDetails extends \Model_Document{
 			return $m->refSQL('item_id')->fieldQuery('name');
 		});
 
-		$this->addExpression('unit')->set(function($m,$q){
-			return $m->refSQL('item_id')->fieldQuery('unit');
-		});
-
 
 		$this->addExpression('tax_per_sum')->set(function($m,$q){
 			$tax_assos = $m->add('xShop/Model_ItemTaxAssociation');
@@ -88,14 +84,15 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function beforeSave(){
+		$forwarded_jobcard = false;
 		if($this->dirty['invoice_id'] and $this['invoice_id'])
 			return;
 		
-		if($this->loaded() AND $this->dirty['custom_fields']){
+		//CHECK FOR THE ORDER IS UNDER PROCESSING/COMPLETE
+		if(in_array($this->order()->get('status'), array('draft','submitted','redesign')))
+			return ;
 
-			//CHECK FOR THE ORDER IS UNDER PROCESSING/COMPLETE
-			if(in_array($this->order()->get('status'), array('draft','submitted','redesign')))
-				return ;
+		if($this->loaded() AND $this->dirty['custom_fields']){
 			//CHECK FOR NEW/UPDATE DEPARTMENT YES
 			if(count($new_department = $this->getNewDepartment())){
 				//$ND = GET NEW DEPARTMENT ID AND LEVEL
@@ -103,6 +100,9 @@ class Model_OrderDetails extends \Model_Document{
 				$jbs = $this->jobCards();
 				foreach ($jbs as $jb) {
 					if($jb['status']=="completed" or $jb['status'] == "forwarded"){
+						if($jb['status'] == "forwarded")
+							$forwarded_jobcard = $jb->toDepartment();
+
 						$dept_jobcard_complete = $this->add('xHR/Model_Department')->tryLoad($jb['to_department_id']);
 						if($dept_jobcard_complete->loaded()){
 							foreach ($new_department as $dept) {
@@ -117,7 +117,7 @@ class Model_OrderDetails extends \Model_Document{
 			
 			//remove not completed jobcard
 			$this->removeUncompletedJobcard();
-			$this->reDepartmentAssociation();
+			$this->reDepartmentAssociation($forwarded_jobcard);
 		}
 	}
 
@@ -132,10 +132,10 @@ class Model_OrderDetails extends \Model_Document{
 			$jc->tryLoadAny();
 			if($jc->loaded() and !in_array($jc['status'], array("completed","forwarded")) ){
 				$jc->delete();
+				$dept_status['status'] = 'Waiting';
+				$dept_status->save();
 			}
 
-			$dept_status['status'] = 'Waiting';
-			$dept_status->save();
 		}
 	}
 
@@ -178,11 +178,10 @@ class Model_OrderDetails extends \Model_Document{
 		return $new_departments;
 	}
 	
-	function reDepartmentAssociation(){
+	function reDepartmentAssociation($create_jobcard_after_dept = false){
 		$this->createDepartmentalAssociations();
-		if($department_association = $this->nextDeptStatus()){
+		if($department_association = $this->nextDeptStatus($create_jobcard_after_dept)){
 			$department_association->createJobCardFromOrder();
-			
 		}
 	}
 
@@ -440,7 +439,6 @@ class Model_OrderDetails extends \Model_Document{
 			return false;
 
 		$d = $this->deptartmentalStatus($department=false,$from_custom_fields=true);
-		
 		$str = "";
 		foreach ($d as $department_asso) {
 			// throw new \Exception($department_asso[''], 1);	
@@ -463,7 +461,9 @@ class Model_OrderDetails extends \Model_Document{
 			if($show_status and $department_asso['department'] != 'stockeffectcustomfield'){//Show Department Status and check for the department is stockeffect
 				$str .=" ( ".($department_asso['status']?:'Waiting')." )";
 				if($with_jobcard){
-					$jobcard_no = $this->jobCards($department_asso['department_id'])->get('name')?:'Not Created';
+					$jobcard_no = $this->jobCards($department_asso['department_id'])->get('name');
+					if($jobcard_no == '##Dummy Object')
+						$jobcard_no = 'Not Created';
 					$str.= "[ Jobcard : ".$jobcard_no." ]";
 				}
 			}
