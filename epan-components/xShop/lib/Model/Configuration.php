@@ -51,6 +51,11 @@ class Model_Configuration extends \Model_Table {
 
 		$f = $this->addField('purchase_invoice_email_subject')->group('e~12~<i class="fa fa-envelope"></i> Purchase Invoice Email Mail Subject ( Bill ) Email');
 		$f = $this->addField('purchase_invoice_email_body')->type('text')->caption('Purchase Invoice Email Body')->hint('Purchase Invoice  Email Body : this Bill send to Suppliers who placed order, {{company_name}},{{owner_name}},{{mobile_number}},{{purchase_order_address}},{{supplier_email}},{{supplier_tin_no}},{{supplier_pan_no}},{{purchase_Order_no}},{{purchase_Order_date}}')->group('e~11')->display(array('form'=>'RichText'));
+
+		$f = $this->addField('outsource_email_subject')->group('e~12~<i class="fa fa-envelope"></i> OutSource Party Email Mail Subject ( Bill ) Email');
+		$f = $this->addField('outsource_email_body')->type('text')->caption('OutSource Party Email Body')
+							->hint('OutSource Party  Email Body : this Bill send to OutSource Party who placed order,
+							 {{outsource_party}},{{outsource_party_contact_person}},{{outsource_party_contact_no}},{{outsource_party_email_id}},{{outsource_party_address}},{{outsource_party_pan_it_no}},{{outsource_party_tin_no}},{{jobcard_details}},{{Jobcard_no}},{{jobcard_date}}')->group('e~11')->display(array('form'=>'RichText'));
 		
 		$this->addField('cash_voucher_email_subject');
 		$this->addField('cash_voucher_email_body')->type('text')->display(array('form'=>'RichText'));		
