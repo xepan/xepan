@@ -515,7 +515,7 @@ class Model_JobCard extends \Model_Document{
 						.'</div>';
 
 		$outsource = $this->outSourceParty();
-		$outsource_email=$outsource->get('email_id');
+		$outsource_email=$outsource['email_id'];
 
 		$config_model=$this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
