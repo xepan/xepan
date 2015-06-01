@@ -212,14 +212,16 @@ class page_base_owner extends Page {
 
 			foreach($production_depts as $d){
 				// if($d->id != $this->api->current_employee->department()->get('id')) continue;
-				$production_m->addItem(array($d['name']. ' Job Status','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
-				$production_m->addItem(array($d['name']. ' Material Requests','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$d->id)));
-				$production_m->addItem(array($d['name']. ' Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$d->id)));
+				$production_menu = $production_m->addMenu($d['name']);
+
+				$production_menu->addItem(array(' Job Status','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
+				$production_menu->addItem(array(' Material Requests','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$d->id)));
+				$production_menu->addItem(array(' Stock Management','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_stockmanagement',array('department_id'=>$d->id)));
 				$this->shorcut_menus[]=array("page"=>$d['name']. ' Job Status',"url"=>$this->api->url('xProduction_page_owner_dept_main',array('department_id'=>$d->id)));
 				$this->shorcut_menus[]=array("page"=>$d['name']. ' Material Requests',"url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$d->id)));
 				
 				if($d->officialEmails()->count()->getOne()){
-					$production_m->addItem(array($d['name']. ' X Mail','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_xmail',array('department_id'=>$d->id)));
+					$production_menu->addItem(array(' X Mail','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_xmail',array('department_id'=>$d->id)));
 					$this->shorcut_menus[]=array("page"=>$d['name']. ' X Mail',"url"=>$this->api->url('xHR_page_owner_xmail',array('department_id'=>$d->id)));
 				}
 				$this->shorcut_menus[]=array("page"=>$d['name']. " Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$d->id)));
