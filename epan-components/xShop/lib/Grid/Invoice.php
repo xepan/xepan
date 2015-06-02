@@ -47,7 +47,7 @@ class Grid_Invoice extends \Grid{
 	function setModel($invoice_model,$field=array()){
 		$invoice_model->getField('total_amount')->caption('Amount');
 		if(!$field)
-			$field = array('name','sales_order','customer','total_amount','discount','tax','net_amount','customer_id','created_at','invoiceitem_count','gross_amount');
+			$field = array('name','sales_order','customer','total_amount','discount','tax','net_amount','customer_id','created_at','invoiceitem_count','gross_amount','shipping_charge');
 		$m=parent::setModel($invoice_model,$field);
 		
 		$this->addFormatter('name','view');
@@ -67,6 +67,7 @@ class Grid_Invoice extends \Grid{
 		if($this->hasColumn('tax'))$this->removeColumn('tax');
 		if($this->hasColumn('gross_amount'))$this->removeColumn('gross_amount');
 		if($this->hasColumn('discount'))$this->removeColumn('discount');
+		if($this->hasColumn('shipping_charge'))$this->removeColumn('shipping_charge');
 		if($this->hasColumn('net_amount'))$this->removeColumn('net_amount');
 
 		$this->addQuickSearch($invoice_model->getActualFields());
@@ -75,6 +76,7 @@ class Grid_Invoice extends \Grid{
 	}
 	
 	function formatRow(){
+		// $this->setTDParam('net_amount','style','min-width:100px;');
 		$hr = '<hr style="margin:0px;"/>';
 		$amount = '<div class="atk-row atk-size-micro">';
 		$amount .= '<div class="atk-col-4">';
@@ -82,9 +84,13 @@ class Grid_Invoice extends \Grid{
 		if($this->model['tax']>0)	
 			$amount.= 'Tax'.$hr;
 		$amount.= 'Gross Amount<br/>';
-		if($this->model['discount_voucher_amount']>0)	
-			$amount.= 'Discount Amount'.$hr;;
-		$amount.= 'Net Amount';
+		if($this->model['discount']>0)
+			$amount.= 'Discount Amount'.'<br/>';
+		if($this->model['shipping_charge'])	
+			$amount.= 'Shipping Charge'.'<br/>';
+
+		$amount .= $hr;
+		$amount .= 'Net Amount';
 		$amount .= '</div>';
 			
 		$amount .= '<div class="atk-col-8 pull-right">';
@@ -92,8 +98,13 @@ class Grid_Invoice extends \Grid{
 		if($this->model['tax']>0)
 			$amount .= $this->model['tax'].$hr;
 		$amount .= $this->model['gross_amount'].'<br/>';
-		if($this->model['discount_voucher_amount']>0)
-			$amount .= $this->model['discount_voucher_amount'].$hr;
+		
+		if($this->model['discount']>0)
+			$amount .= $this->model['discount'].'<br/>';
+		if($this->model['shipping_charge'])
+			$amount .= $this->model['shipping_charge'].'<br/>';
+		// $amount .= $hr;
+		$amount .= $hr;
 		$amount .= '<b>'.$this->model['net_amount'].'</b>';
 		$amount .= '</div>';
 		$amount .= '</div>';
