@@ -2,10 +2,10 @@
 class page_xDispatch_page_owner_stockmanagement extends page_xDispatch_page_owner_main {
 	function init(){
 		parent::init();
-		$this->app->title= 'xDispatch : Stock Management';
-		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> xDispatch  <small> Stock Management  </small>');
+		
+		$this->app->title=$this->api->current_department['name'] .': Stock Management';
 
-		// $this->template->trySetHTML('page_title','<i class="fa fa-users"></i> '.$this->api->current_department['name']. '<small> Stock Management </small>');
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> '.$this->api->current_department['name']. '<small> Stock Management </small>');
 		$dept_id = $this->api->stickyGET('department_id');
 		$warehouse = $this->api->current_department->warehouse();
 		$this->add('PageHelp',array('page'=>'stockmanagement'));
