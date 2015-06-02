@@ -34,6 +34,7 @@ class Model_Invoice extends \Model_Document{
 		$this->addField('discount')->type('money');
 		$this->addField('tax')->type('money');
 		$this->addField('net_amount')->type('money');
+		$this->addField('shipping_charge')->type('money');
 		$this->addField('billing_address')->type('text');
 		$this->addField('transaction_reference')->type('text');
 		$this->addField('transaction_response_data')->type('text');
@@ -70,9 +71,10 @@ class Model_Invoice extends \Model_Document{
 			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
 			$this['gross_amount'] = $this['gross_amount'] + $oi['texted_amount'];
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
-			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
+			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount'];
 		}	
 		
+		$this['net_amount'] = $this['net_amount'] + $this['shipping_charge'];
 		//xShop Configuration model must be loaded in Api
 		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
 		if($shop_config['is_round_amount_calculation']){

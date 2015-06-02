@@ -27,6 +27,7 @@ class View_SalesInvoice extends  \CompleteLister{
 		$this->template->trySetHtml('gross_amount',$this->invoice['gross_amount']?:'0.00');
 		$this->template->trySetHtml('discount_voucher_amount',$this->invoice['discount_voucher_amount']?:'0.00');
 		$this->template->trySetHtml('net_amount',$this->invoice['net_amount']);
+		$this->template->trySetHtml('shipping_charge',$this->invoice['shipping_charge']?:'0.00');
 
 		if(!$this->invoice['termsandcondition_id'])
 			$this->template->del('tandc_section');

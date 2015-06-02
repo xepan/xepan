@@ -417,7 +417,7 @@ class Model_Order extends \Model_Document{
 		return false;
 	}
 
-	function createInvoice($status='draft',$salesLedger=null, $items_array=array(),$amount=0,$discount=0){
+	function createInvoice($status='draft',$salesLedger=null, $items_array=array(),$amount=0,$discount=0,$shipping_charge=0){
 		try{
 
 			$this->api->db->beginTransaction();
@@ -429,6 +429,7 @@ class Model_Order extends \Model_Document{
 			$invoice['discount'] = $discount?$discount:$this['discount_voucher_amount'];
 			$invoice['tax'] = $this['tax'];
 			$invoice['net_amount'] = $this['net_amount'];
+			$invoice['shipping_charge'] = $this['shipping_charge']+$shipping_charge;
 			$invoice['termsandcondition_id'] = $this['termsandcondition_id'];
 			$invoice->save();
 
