@@ -5,6 +5,7 @@ class Model_Invoice_Submitted extends Model_PurchaseInvoice{
 			'can_view'=>array(),
 			'can_approve'=>array(),
 			'can_cancel'=>array(),
+			'can_see_activities'=>array(),
 		);
 	
 	function init(){

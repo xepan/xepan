@@ -8,6 +8,7 @@ class Model_PurchaseOrder_Approved extends Model_PurchaseOrder{
 			'can_send_via_email'=>array(),
 			'can_mark_processed'=>array(),
 			'can_forceDelete'=>array(),
+			'can_see_activities'=>array(),
 		);
 	function init(){
 		parent::init();
