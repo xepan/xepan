@@ -13,6 +13,7 @@ class Model_Opportunity extends \Model_Document {
 			'allow_add'=>array(),
 			'allow_del'=>array(),
 			'can_manage_attachments'=>array(),
+			'can_see_activities'=>array(),
 		);
 	
 	function init(){
