@@ -21,7 +21,8 @@ class Model_InvoiceItem extends \Model_Document{
 		$this->hasOne('xShop/OrderDetails','orderitem_id');
 		
 		$this->hasOne('xShop/Item','item_id')->display(array('form'=>'xShop/Item'));
-		
+		$this->hasOne('xShop/Tax','tax_id');
+
 		$this->addField('rate')->type('money')->group('b~3');
 		$this->addField('qty')->group('b~3~Order Details')->mandatory(true);
 		// $this->addField('unit');
@@ -33,6 +34,9 @@ class Model_InvoiceItem extends \Model_Document{
 		$this->addExpression('tax_per_sum')->set(function($m,$q){
 			$tax_assos = $m->add('xShop/Model_ItemTaxAssociation');
 			$tax_assos->addCondition('item_id',$q->getField('item_id'));
+			if($q->getField('tax_id'))
+				$tax_assos->addCondition('tax_id',$q->getField('tax_id'));
+
 			$tax = $tax_assos->sum('name');
 				return "IF(".$q->getField('apply_tax').">0,(".$tax->render()."),'0')";
 		})->type('money')->caption('Total Tax %');
@@ -56,9 +60,19 @@ class Model_InvoiceItem extends \Model_Document{
 		});
 
 		$this->addHook('afterSave',$this);
+		$this->addHook('beforeSave',$this);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 
+	}
+
+	function beforeSave(){
+			//Check for the apply tax
+		if($this['apply_tax'] and ($tax_asso = $this->item()->applyTaxs())){
+			$tax_asso->addCondition('tax_id',$this['tax_id']);
+			if(!$tax_asso->count()->getOne())
+				throw $this->exception('Tax Not Applied','ValidityCheck')->setField('tax_id');
+		}
 	}
 
 	function item(){
