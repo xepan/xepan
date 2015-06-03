@@ -23,6 +23,9 @@ class Model_Tax extends \Model_Document{
 		$this->addField('value')->caption('Tax in %')->mandatory(true);
 
 		$this->hasMany('xShop/ItemTaxAssociation','tax_id');
+		$this->hasMany('xShop/OrderDetails','tax_id');
+		$this->hasMany('xShop/InvoiceItem','tax_id');
+		
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterInsert',$this);
