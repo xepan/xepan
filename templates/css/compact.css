@@ -5864,7 +5864,7 @@ ul[class*=atk-menu] > li *[class*=atk-menu]:not(.atk-menu-separated) li {
   padding: 0;
   list-style-type: none;
 }
-ul[class*=atk-menu] > li:hover *[class*=atk-menu] {
+ul[class*=atk-menu] > li:hover > ul[class*=atk-menu] {
   display: block;
 }
 ul[class*=atk-menu] > li:hover[class*=atk-swatch] > a[class*=atk-swatch] {

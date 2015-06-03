@@ -51,6 +51,9 @@ class page_xStore_page_owner_materialrequestsent_draft extends page_xStore_page_
         }
         $crud->grid->removeColumn('created_by');
         $crud->grid->removeColumn('material_request_jobcard');
+        $crud->grid->removeColumn('item');
+
+        $crud->grid->addOrder()->move('unit','before','narration')->now();
 	}
 
 

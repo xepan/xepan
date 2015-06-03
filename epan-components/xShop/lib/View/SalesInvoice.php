@@ -27,6 +27,7 @@ class View_SalesInvoice extends  \CompleteLister{
 		$this->template->trySetHtml('gross_amount',$this->invoice['gross_amount']?:'0.00');
 		$this->template->trySetHtml('discount_voucher_amount',$this->invoice['discount_voucher_amount']?:'0.00');
 		$this->template->trySetHtml('net_amount',$this->invoice['net_amount']);
+		$this->template->trySetHtml('shipping_charge',$this->invoice['shipping_charge']?:'0.00');
 
 		if(!$this->invoice['termsandcondition_id'])
 			$this->template->del('tandc_section');
@@ -39,6 +40,7 @@ class View_SalesInvoice extends  \CompleteLister{
 	function formatRow(){
 		$this->current_row['sno']=$this->sno;
 		$this->current_row['redable_custom_fields']=$this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
+		$this->current_row['unit']=$this->model['unit'];
 
 		// $this->current_row['tax_amount']=$this->model['tax_amount'];	
 		$this->sno++;

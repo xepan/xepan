@@ -38,7 +38,7 @@
 					<tr>
 						<td align="left">{$sno}</td>
 						<td align="left">{item} Item {/item}<br><small>{$redable_custom_fields}</small></td>
-						<td align="right">{$qty}</td>
+						<td align="right">{$qty}&nbsp<small>{$unit}</small></td>
 						<!-- <td align="right">{$unit}</td> -->
 						<td align="right">{$rate}</td>
 						<td align="right">{$tax_amount}<br>@  {tax_per_sum}{/tax_per_sum} %</td>
@@ -57,7 +57,12 @@
 			<td>&nbsp;</td>
 			<th>Discount Voucher Amount</th>
 			<td class='' colspan="4"><b> - &#8377;{discount_voucher_amount}{/discount_voucher_amount} </b> </td>
-		</tr>		
+		</tr>
+		<tr align="right">
+			<td>&nbsp;</td>
+			<th>Shipping Charge</th>
+			<td class='' colspan="4"><b> - &#8377;{shipping_charge}{/shipping_charge} </b> </td>
+		</tr>
 		<tr align="right">
 			<td>&nbsp;</td>
 			<th>Net Amount</th>

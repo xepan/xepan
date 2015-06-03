@@ -38,18 +38,25 @@ class Model_SalesInvoice extends Model_Invoice{
 		return $this->ref('customer_id');
 	}
 
+	// function transaction(){
+	// 	$tr = $this->add('xAccount/Model_Transaction')->loadWhoseRelatedDocIs($this);
+	// 	if($tr and $tr->loaded()) return $tr;
+	// 	return false;
+	// }
+
 	function createVoucher($salesLedger=null,$taxLedger=null,$discountLedger=null){		
 		if(!$salesLedger) $salesLedger = $this->add('xAccount/Model_Account')->loadDefaultSalesAccount();
 		if(!$taxLedger) $taxLedger = $this->add('xAccount/Model_Account')->loadDefaultTaxAccount();
 		if(!$discountLedger) $discountLedger = $this->add('xAccount/Model_Account')->loadDefaultDiscountAccount();
+
 		$transaction = $this->add('xAccount/Model_Transaction');
-		$transaction->createNewTransaction('SALES INVOICE', $this, $transaction_date=$this->api->today, $Narration=null);
+		$transaction->createNewTransaction('SALES INVOICE', $this, $transaction_date=$this['created_at'], $Narration=null);
 
 		$transaction->addCreditAccount($salesLedger,$this['total_amount']);
 		$transaction->addCreditAccount($taxLedger,$this['tax']);
 		
 		$transaction->addDebitAccount($discountLedger,$this['discount']);
-		$transaction->addDebitAccount($this->customer()->account(),$this['net_amount']);
+		$transaction->addDebitAccount($this->customer()->account(),$this['net_amount']-$this['discount']);
 
 		$transaction->execute();
 		
@@ -87,6 +94,16 @@ class Model_SalesInvoice extends Model_Invoice{
 		$this['transaction_reference'] =  $transaction_reference;
 	    $this['transaction_response_data'] = json_encode($transaction_reference_data);
 	    $this->save();
+
+	    if(!$self_bank_account) $self_bank_account = $this->add('xAccount/Model_Account')->loadDefaultBankAccount();
+
+	    $transaction = $this->add('xAccount/Model_Transaction');
+		$transaction->createNewTransaction('INVOICE ONLINE PAYMENT RECEIVED', $this, $transaction_date=$this->api->now, $Narration=null);
+		
+		$transaction->addCreditAccount($this->customer()->account(),$amount);
+		$transaction->addDebitAccount($self_bank_account ,$amount);
+		
+		$transaction->execute();
 	}
 
 	function submit(){
@@ -119,7 +136,10 @@ class Model_SalesInvoice extends Model_Invoice{
 	}
 
 	function cancel($reason){
-			$this->setStatus('canceled',$reason);
+		if($tr= $this->transaction()){
+			$tr->forceDelete();
+		}
+		$this->setStatus('canceled',$reason);
 	}
 
 	function mark_processed_page($p){

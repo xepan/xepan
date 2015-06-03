@@ -34,16 +34,18 @@ class Model_Quotation extends \Model_Document{
 		$this->addHook('afterSave',$this);
 
 		$this->hasMany('xShop/QuotationItem','quotation_id');
+		$this->addExpression('quotationitem_count')->set($this->refSQL('xShop/QuotationItem')->count());
+
 		$this->hasMany('xShop/SalesOrderAttachment','related_document_id',null,'Attachements');
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function afterSave(){
-		//if( !$this['lead_id'] and !$this['customer_id'] )
-		//	throw $this->exception('Lead or Customer Required','ValidityCheck')->setField('customer_id');
+		// if( (!$this['lead_id'] AND !$this['customer_id']) )
+		// 	throw $this->exception('Lead or Customer Required','ValidityCheck')->setField('customer_id');
 
-		//$this->updateAmounts();
+		$this->updateAmounts();
 	}
 
 	function beforeDelete(){
@@ -81,6 +83,12 @@ class Model_Quotation extends \Model_Document{
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
 			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
 		}
+		
+		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		if($shop_config['is_round_amount_calculation']){
+			$this['net_amount'] = round($this['net_amount'],0);
+		}
+
 		$this->save();
 	}
 	function submit(){
@@ -116,39 +124,14 @@ class Model_Quotation extends \Model_Document{
 
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
-		$tnc=$this->termAndCondition();
-
-		$print_order = $this->add('xShop/View_QuotationDetail',array('show_department'=>false,'show_price'=>true,'show_customfield'=>true));
-		$print_order->setModel($this->itemrows());
-		$quotation_detail_html = $print_order->getHTML(false);
-
+		$email_body = $this->parseEmailBody();
 		$customer = $this->customer();
-		$customer_email=$customer->get('customer_email');
-
-		$config_model=$this->add('xShop/Model_Configuration');
-		$config_model->tryLoadAny();
-		
-		// $subject = $config_model['quotation_email_subject']?:$this['name']." "."::"." "."Quotation";
-		
-		$email_body=$config_model['quotation_email_body']?:"Quotation Layout Is Empty";
-		
-		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
-		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);
-		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number'], $email_body);
-		$email_body = str_replace("{{address}}",$customer['address'], $email_body);
-		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address'], $email_body);
-		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address'], $email_body);
-		$email_body = str_replace("{{customer_email}}", $customer['customer_email'], $email_body);
-		$email_body = str_replace("{{quotation_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{quotation_date}}", $this['created_at'], $email_body);
-		$email_body = str_replace("{{quotation_detail}}", $quotation_detail_html, $email_body);
-		$email_body = str_replace("{{terms_and_conditions}}", $tnc['terms_and_condition']?$tnc['terms_and_condition']:" ", $email_body);
-		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
-		// echo $email_body;
-		// return;
 		$emails = explode(',', $customer['customer_email']);
 		
-		$form = $page->add('Form_Stacked');
+		$config_model=$this->add('xShop/Model_Configuration');
+		$config_model->tryLoadAny();
+
+		$form = $page->add('Form_Stacked');	
 		$form->addField('line','to')->set($emails[0]);
 		// array_pop(array_re/verse($emails));
 		unset($emails[0]);
@@ -195,5 +178,55 @@ class Model_Quotation extends \Model_Document{
 	function termAndCondition(){
 		return $this->ref('termsandcondition_id');
 	}
+
+	function parseEmailBody(){
+
+		$tnc = $this->termAndCondition();
+		$tnc = $tnc['terms_and_condition'].$this->itemsTermAndCondition();
+		
+		$print_order = $this->add('xShop/View_QuotationDetail',array('show_department'=>false,'show_price'=>true,'show_customfield'=>true));
+		$print_order->setModel($this->itemrows());
+		$quotation_detail_html = $print_order->getHTML(false);
+
+		$customer = $this->customer();
+		$customer_email=$customer->get('customer_email');
+
+		$config_model=$this->add('xShop/Model_Configuration');
+		$config_model->tryLoadAny();
+		
+		// $subject = $config_model['quotation_email_subject']?:$this['name']." "."::"." "."Quotation";
+		
+		$email_body=$config_model['quotation_email_body']?:"Quotation Layout Is Empty";
+		
+		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
+		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);
+		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number'], $email_body);
+		$email_body = str_replace("{{address}}",$customer['address'], $email_body);
+		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address'], $email_body);
+		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address'], $email_body);
+		$email_body = str_replace("{{customer_email}}", $customer['customer_email'], $email_body);
+		$email_body = str_replace("{{quotation_no}}", $this['name'], $email_body);
+		$email_body = str_replace("{{quotation_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{quotation_detail}}", $quotation_detail_html, $email_body);
+		$email_body = str_replace("{{terms_and_conditions}}", $tnc?$tnc:" ", $email_body);
+
+		return $email_body;
+	}
+
+	function itemsTermAndCondition(){
+		$tnc = "";
+		$item_array = array();
+		foreach ($this->itemRows() as $q_item) {
+			$item = $q_item->item();
+			if(in_array($item->id, $item_array)) continue;
+
+			$tnc .= $item['terms_condition'];
+			$item_array[]=$item->id;
+		}
+
+		return $tnc;
+		
+	}
+
 }
 

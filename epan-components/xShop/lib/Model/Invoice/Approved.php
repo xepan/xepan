@@ -5,11 +5,13 @@ class Model_Invoice_Approved extends Model_SalesInvoice{
 	
 	public $actions=array(
 			'can_view'=>array(),
-			'allow_del'=>array(),
-			'allow_edit'=>array(),
+			'can_mark_processed'=>array('caption'=>'Paid & Cleared','icon'=>'money atk-swatch-green','title'=>'Hello There', 'function'=>'mark_paid_and_complete','default'=>'Self Only'),
+			'can_manage_attachments'=>array(),
+			'can_send_via_email'=>array(),
+			'can_see_activities'=>array(),
 			'can_cancel'=>array(),
-			'can_mark_processed'=>array(),
-			'can_send_via_email'=>array()
+			'allow_edit'=>array(),
+			'allow_del'=>array(),
 		);
 
 	function init(){

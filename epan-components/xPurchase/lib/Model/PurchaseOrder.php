@@ -11,6 +11,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
+		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->sortable(true)->display(array('form'=>'autocomplete/Basic'))->caption('Term and Condition');
 		$this->hasOne('xPurchase/Supplier','supplier_id')->sortable(true)->display(array('form'=>'autocomplete/Plus'));
 		$this->hasOne('xShop/Priority','priority_id')->group('z~6')->mandatory(true)->defaultValue($this->add('xShop/Model_Priority')->addCondition('name','Medium')->tryLoadAny()->get('id'));
 		$this->addField('name')->caption('Purchase Order');
@@ -27,10 +28,19 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->hasMany('xPurchase/PurchaseOrderAttachment','related_document_id',null,'Attachements');
 
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('afterSave',$this);
 
 		$this->addExpression('orderitem_count')->set($this->refSQL('xPurchase/PurchaseOrderItem')->count());
 		// $this->add('dynamic_model/Controller_AutoCreator');
 		$this->setOrder('id','desc');
+	}
+
+	function afterSave(){
+		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		if($shop_config['is_round_amount_calculation']){
+			$this['net_amount'] = round($this['net_amount'],0);
+			$this->save();
+		}
 	}
 
 	function beforeDelete(){
@@ -58,6 +68,10 @@ class Model_PurchaseOrder extends \Model_Document{
 
 	function itemRows(){
 		return $this->add('xPurchase/Model_PurchaseOrderItem')->addCondition('po_id',$this['id'])->tryLoadAny();
+	}
+
+	function termAndCondition(){
+		return $this->ref('termsandcondition_id');
 	}
 
 	function submit(){		
@@ -442,23 +456,36 @@ class Model_PurchaseOrder extends \Model_Document{
 		$transaction->addCreditAccount($self_bank_account ,$amount);
 		
 		$transaction->execute();
-	}	
-	
+	}
 
-	function send_via_email_page($p){
 
-		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
+	function itemsTermAndCondition(){
+		$tnc = "";
+		$item_array = array();
+		foreach ($this->itemRows() as $q_item) {
+			$item = $q_item->item();
+			if(in_array($item->id, $item_array)) continue;
+
+			$tnc .= $item['terms_condition'];
+			$item_array[]=$item->id;
+		}
+
+		return $tnc;
 		
+	}
+
+	function parseEmailBody(){
+		
+		$tnc = $this->termAndCondition();
+		$tnc = $tnc['terms_and_condition'].$this->itemsTermAndCondition();
+
 		$view=$this->add('xPurchase/View_PurchaseOrderDetail');
 		$view->setModel($this->itemrows());		
-		
 		$supplier = $this->supplier();
 		$supplier_email=$supplier->get('email');
 
 		$config_model=$this->add('xShop/Model_Configuration');
-		$config_model->tryLoadAny();
-		
-		$subject = $config_model['purchase_order_detail_email_subject']?:"[ Purchase Order No.:".$this['name']." ]"." "."::"." "."Purchase Order";
+		$config_model->tryLoadAny();		
 		
 		$email_body=$config_model['purchase_order_detail_email_body']?:"Purchase Order Layout Is Empty";
 	
@@ -476,7 +503,22 @@ class Model_PurchaseOrder extends \Model_Document{
 		$email_body = str_replace("{{purchase_order_no}}", $this['name'], $email_body);
 		$email_body = str_replace("{{purchase_order_date}}", $this['created_date'], $email_body);
 		$email_body = str_replace("{{delivery_to}}", $this['delivery_to'], $email_body);
+		$email_body = str_replace("{{terms_and_conditions}}", $tnc?$tnc:" ", $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
+
+		return $email_body;
+	}
+
+	function send_via_email_page($p){
+
+		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
+		
+		$email_body = $this->parseEmailBody();
+		$supplier = $this->supplier();
+		$supplier_email=$supplier->get('email');
+
+		$config_model=$this->add('xShop/Model_Configuration');
+		$config_model->tryLoadAny();
 
 		$emails = explode(',', $supplier['email']);
 		
@@ -487,11 +529,12 @@ class Model_PurchaseOrder extends \Model_Document{
 
 		$form->addField('line','cc')->set(implode(',',$emails));
 		$form->addField('line','bcc');
-		$form->addField('line','subject')->set($subject);
+		$form->addField('line','subject')->validateNotNull()->set($config_model['purchase_order_detail_email_subject']);
 		$form->addField('RichText','custom_message');
 		$form->add('View')->setHTML($email_body);
 		$form->addSubmit('Send');
 		if($form->isSubmitted()){
+			$subject = $this->emailSubjectPrefix($form['subject']);
 
 			$ccs=$bccs = array();
 			if($form['cc'])
@@ -501,9 +544,10 @@ class Model_PurchaseOrder extends \Model_Document{
 				$bccs = explode(',',$form['bcc']);
 
 			$email_body = $form['custom_message']."<br>".$email_body;
-			$this->sendEmail($form['to'],$form['subject'],$email_body,$ccs,$bccs);
-			$this->createActivity('email',$form['subject'],$form['custom_message'],$from=null,$from_id=null, $to='Supplier', $to_id=$supplier->id);
-			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
+			$this->sendEmail($form['to'],$subject,$email_body,$ccs,$bccs);
+			$this->createActivity('email',$subject,$form['custom_message'],$from=null,$from_id=null, $to='Supplier', $to_id=$supplier->id);
+			//$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
+			return true;
 		}
 	}
 }

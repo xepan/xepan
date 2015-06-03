@@ -3,7 +3,9 @@
 class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 
 	function init(){
+		$this->api->xpr->markPoint('page_xShop_page_owner_order Init Start');
 		parent::init();
+		$this->api->xpr->markPoint('page_xShop_page_owner_order Parent Init StarDone');
 		
 		$this->app->title=$this->api->current_department['name'] .': Orders';
 
@@ -44,6 +46,8 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 		$tab->addTabURL('xShop/page/owner/order_completed','Complete '.$this->add('xShop/Model_Order_Completed')->myCounts(true,false));
 		$tab->addTabURL('xShop/page/owner/order_cancelled','Cancel / Return '.$this->add('xShop/Model_Order_Cancelled')->myCounts(true,false));
 		$tab->addTabURL('xShop/page/owner/order_redesign','Redesign '.$this->add('xShop/Model_Order_Redesign')->myCounts(true,false));
+
+		$this->api->xpr->markPoint('page_xShop_page_owner_order Init Done');
     }
 
 }
