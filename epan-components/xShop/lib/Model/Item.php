@@ -1023,5 +1023,14 @@ class Model_Item extends \Model_Document{
 		
 	}
 
+	function applyTaxs(){
+		$tax_assos = $this->add('xShop/Model_ItemTaxAssociation');
+		$tax_assos->addCondition('item_id',$this->id);
+		if($tax_assos->count()->getOne())
+			return $tax_assos;
+
+		return false;
+	}
+
 }	
 
