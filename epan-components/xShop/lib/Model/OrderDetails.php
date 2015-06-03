@@ -23,6 +23,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->hasOne('xShop/Order','order_id');
 		$this->hasOne('xShop/Item_Saleable','item_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
 		$this->hasOne('xShop/Invoice','invoice_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
+		$this->hasOne('xShop/Tax','tax_id');
 
 		$this->addField('rate')->type('money')->group('b~3');
 		$this->addField('qty')->group('b~3~Order Details')->mandatory(true);
@@ -36,11 +37,13 @@ class Model_OrderDetails extends \Model_Document{
 			return $m->refSQL('item_id')->fieldQuery('name');
 		});
 
-
 		$this->addExpression('tax_per_sum')->set(function($m,$q){
 			$tax_assos = $m->add('xShop/Model_ItemTaxAssociation');
 			$tax_assos->addCondition('item_id',$q->getField('item_id'));
+			if($q->getField('tax_id'))
+				$tax_assos->addCondition('tax_id',$q->getField('tax_id'));
 			$tax = $tax_assos->sum('name');
+
 				return "IF(".$q->getField('apply_tax').">0,(".$tax->render()."),'0')";
 		})->type('money')->caption('Total Tax %');
 
@@ -84,6 +87,13 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function beforeSave(){
+		//Check for the apply tax
+		if($this['apply_tax'] and ($tax_asso = $this->item()->applyTaxs())){
+			$tax_asso->addCondition('tax_id',$this['tax_id']);
+			if(!$tax_asso->count()->getOne())
+				throw $this->exception('Tax Not Applied','ValidityCheck')->setField('tax_id');
+		}
+
 		$forwarded_jobcard = false;
 		if($this->dirty['invoice_id'] and $this['invoice_id'])
 			return;
