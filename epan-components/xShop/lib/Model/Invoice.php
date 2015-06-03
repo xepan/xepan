@@ -49,6 +49,7 @@ class Model_Invoice extends \Model_Document{
 	
 	function afterSave(){
 		$this->updateAmounts();
+
 		// TODO UPdate Transaction entry as well if any
 		if($tr= $this->transaction()){
 			$tr->forceDelete();
@@ -60,6 +61,12 @@ class Model_Invoice extends \Model_Document{
 		return $this->ref('termsandcondition_id');
 	}
 
+	function transaction(){
+		$tr = $this->add('xAccount/Model_Transaction')->loadWhoseRelatedDocIs($this);
+		if($tr and $tr->loaded()) return $tr;
+		return false;
+	}
+	
 	function updateAmounts(){
 		
 		$this['total_amount']=0;
