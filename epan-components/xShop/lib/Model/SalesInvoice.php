@@ -38,11 +38,11 @@ class Model_SalesInvoice extends Model_Invoice{
 		return $this->ref('customer_id');
 	}
 
-	function transaction(){
-		$tr = $this->add('xAccount/Model_Transaction')->loadWhoseRelatedDocIs($this);
-		if($tr and $tr->loaded()) return $tr;
-		return false;
-	}
+	// function transaction(){
+	// 	$tr = $this->add('xAccount/Model_Transaction')->loadWhoseRelatedDocIs($this);
+	// 	if($tr and $tr->loaded()) return $tr;
+	// 	return false;
+	// }
 
 	function createVoucher($salesLedger=null,$taxLedger=null,$discountLedger=null){		
 		if(!$salesLedger) $salesLedger = $this->add('xAccount/Model_Account')->loadDefaultSalesAccount();
