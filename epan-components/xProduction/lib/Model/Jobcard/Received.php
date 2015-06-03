@@ -11,6 +11,7 @@ class Model_Jobcard_Received extends Model_JobCard{
 			'can_mark_processed'=>array('icon'=>'ok'),
 			'can_cancel'=>array(),
 			'can_send_via_email'=>array(),
+			'can_see_activities'=>array(),
 		);
 	
 	function init(){

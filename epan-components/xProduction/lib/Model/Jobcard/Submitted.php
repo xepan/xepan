@@ -8,6 +8,7 @@ class Model_Jobcard_Submitted extends Model_JobCard {
 			'allow_edit'=>array(),
 			'can_approve'=>array('icon'=>' atk-swatch-red'),
 			'can_reject'=>array('icon'=>'cancel-circled atk-swatch-red'),
+			'can_see_activities'=>array(),
 		);
 	
 	
