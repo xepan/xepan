@@ -9,6 +9,7 @@ class Model_Order_Redesign extends Model_Order{
 			'allow_add'=>array(),
 			'allow_del'=>array(),
 			'can_submit'=>array(),
+			'can_see_activities'=>array(),
 		);
 	
 

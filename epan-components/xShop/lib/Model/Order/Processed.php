@@ -10,6 +10,7 @@ class Model_Order_Processed extends Model_Order{
 			'allow_add'=>array(),
 			'allow_add'=>array(),
 			'can_mark_processed'=>array(),
+			'can_see_activities'=>array(),
 		);
 	
 	function init(){
