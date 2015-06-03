@@ -256,8 +256,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"CRM Stock Management","url"=>$this->api->url('xCRM_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 		}
 		
-			
-		if(in_array($installed_comps->getCached(array('namespace'=>'xAccounts'),'id'),$user_allowed_apps)){
+		if(in_array($installed_comps->getCached(array('namespace'=>'xAccount'),'id'),$user_allowed_apps)){
 			$accounts_m = $m->addMenu('Accounts');
 			$dept_model->id = $dept_model->getCached(array('name'=>'Accounts'),'id');
 
@@ -410,7 +409,7 @@ class page_base_owner extends Page {
 
 				$my_menu = $m->addMenu(array('My'. "   ",'badge'=>array($unread_task." / ".$task_badge,'swatch'=>'red'),'icon'=>'gauge-1'),$dept_namespace.'/Menu_User');
 				// if user ->post->can_create_teams
-					$my_menu->addItem("Teams",$this->api->url('xProduction_page_owner_teammanager',array('department_id'=>$this->api->current_employee['department_id'])));
+					// $my_menu->addItem("Teams",$this->api->url('xProduction_page_owner_teammanager',array('department_id'=>$this->api->current_employee['department_id'])));
 					$my_menu->addItem("My Material Requests",$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$this->api->current_employee['department_id'])));
 					$my_menu->addItem("Accounts Settings",$this->api->url('xProduction_page_owner_user_accountinfo',array('department_id'=>$this->api->current_employee['department_id'])));
 					
