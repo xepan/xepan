@@ -113,6 +113,7 @@ class Frontend extends ApiFrontend{
 				$this->stickyGET( $page_parameter );
 
 				$this->website_requested = $this->getConfig( 'default_site' );
+				$this->api->memorize('website_requested',$this->website_requested);
 				/**
 				 * $this->page_requested finds and gets the requested page
 				 * Always required in both multi site mode and single site mode
