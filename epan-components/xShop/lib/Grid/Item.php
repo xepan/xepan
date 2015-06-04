@@ -215,7 +215,7 @@ class Grid_Item extends \Grid{
 			$img_url = $item_images->ref('item_image_id')->ref('thumb_file_id')->get('url');
 		}
 
-
+		$this->setTDParam('image','style','width:100px;');
 		$this->current_row_html['image']='<img style="max-width:70px;" alt="'.$item_images['alt_text'].'" title="'.$item_images['title'].'" src="'.$img_url.'"></img>';
 		
 		parent::formatRow();
