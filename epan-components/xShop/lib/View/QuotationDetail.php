@@ -7,6 +7,7 @@ class View_QuotationDetail extends \CompleteLister{
 	public $show_price = false;
 	public $show_department = true;
 	public $show_customfield = false;
+	public $show_specification = false;
 	function init(){
 		parent::init();
 	}
@@ -23,6 +24,10 @@ class View_QuotationDetail extends \CompleteLister{
 		if($this->show_customfield){
 			$this->current_row_html['departments']=$this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
 		}
+		if($this->show_specification){
+			$this->current_row_html['specifications']= '[ '.$this->model->item()->redableSpecification(",").' ]';
+		}
+
 		$this->sno++;
 	}
 

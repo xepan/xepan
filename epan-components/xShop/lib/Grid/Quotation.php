@@ -11,7 +11,7 @@ class Grid_Quotation extends \Grid{
 		
 		$this->vp=$this->add('VirtualPage')->set(function($p){
 			$p->api->stickyGET('quotation_clicked');
-			$p->add('xShop/View_Quotation',array('quotation'=>$p->add('xShop/Model_Quotation')->load($_GET['quotation_clicked'])));
+			$p->add('xShop/View_Quotation',array('quotation'=>$p->add('xShop/Model_Quotation')->load($_GET['quotation_clicked']),'show_customfield'=>true,'show_specification'=>true));
 		});
 
 		$print = $this->addColumn('Button','print');

@@ -191,7 +191,7 @@ class Model_Quotation extends \Model_Document{
 		$tnc = $this->termAndCondition();
 		$tnc = $tnc['terms_and_condition'].$this->itemsTermAndCondition();
 		
-		$print_order = $this->add('xShop/View_QuotationDetail',array('show_department'=>false,'show_price'=>true,'show_customfield'=>true));
+		$print_order = $this->add('xShop/View_QuotationDetail',array('show_department'=>false,'show_price'=>true,'show_customfield'=>true,'show_specification'=>true));
 		$print_order->setModel($this->itemrows());
 		$quotation_detail_html = $print_order->getHTML(false);
 

@@ -84,9 +84,9 @@ class page_base_owner extends Page {
 			$hr_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$hr_m->addItem(array('Departments','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_department',array('department_id'=>$dept_model->id)));
 			$hr_m->addItem(array('Employees','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_employees',array('department_id'=>$dept_model->id)));
-			$hr_m->addItem(array('Employees Attendence','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_employeeattendence',array('department_id'=>$dept_model->id)));
-			$hr_m->addItem(array('Employees Leave','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_employeeleave',array('department_id'=>$dept_model->id)));
-			$hr_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
+			// $hr_m->addItem(array('Employees Attendence','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_employeeattendence',array('department_id'=>$dept_model->id)));
+			// $hr_m->addItem(array('Employees Leave','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_employeeleave',array('department_id'=>$dept_model->id)));
+			// $hr_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 			$hr_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 			$hr_m->addItem(array('Setup','icon'=>'cog'),$this->api->url('xHR_page_owner_setup',array('department_id'=>$dept_model->id)));
 
@@ -98,9 +98,9 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array('keys'=>'hr dashboard mainpage summery',"page"=>"HR Dashboard","url"=>$this->api->url('xHR_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array('keys'=>'departments production phase posts salatery templates',"page"=>"Departments","url"=>$this->api->url('xHR_page_owner_department',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Employees","url"=>$this->api->url('xHR_page_owner_employees',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Employees Attendence","url"=>$this->api->url('xHR_page_owner_employeeattendence',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Employees Leave","url"=>$this->api->url('xHR_page_owner_employeeleave',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"HR Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
+			// $this->shorcut_menus[]=array("page"=>"Employees Attendence","url"=>$this->api->url('xHR_page_owner_employeeattendence',array('department_id'=>$dept_model->id)));
+			// $this->shorcut_menus[]=array("page"=>"Employees Leave","url"=>$this->api->url('xHR_page_owner_employeeleave',array('department_id'=>$dept_model->id)));
+			// $this->shorcut_menus[]=array("page"=>"HR Material Request","url"=>$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"HR Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"HR Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"HR Stock Management","url"=>$this->api->url('xHR_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
