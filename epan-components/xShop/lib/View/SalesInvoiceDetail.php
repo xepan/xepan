@@ -16,6 +16,7 @@ class View_SalesInvoiceDetail extends \CompleteLister{
 		$this->current_row_html['departments']= $this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
 		$this->current_row_html['sno']=$this->sno;
 		$this->current_row_html['unit']= $this->model['unit'];
+		$this->current_row_html['tax_amount'] = round($this->model['tax_amount']);
 		$this->sno++;
 	}
 
