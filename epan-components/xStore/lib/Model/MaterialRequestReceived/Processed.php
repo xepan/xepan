@@ -6,6 +6,7 @@ class Model_MaterialRequestReceived_Processed extends Model_MaterialRequestRecei
 	public $actions=array(
 			'can_view'=>array(),
 			'can_accept'=>array(),
+			'can_see_activities'=>array(),
 		);
 	function init(){
 		parent::init();

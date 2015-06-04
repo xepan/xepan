@@ -1,7 +1,16 @@
 <?php
 namespace xProduction;
-class Model_OutSourceParty extends \Model_Table{
+class Model_OutSourceParty extends \Model_Document{
 	public $table="xproduction_out_source_parties";
+	public $root_document_name='xProduction\OutSourceParty';
+	public $status = array();
+ 	public $actions=array(
+			'can_view'=>array(),
+			'allow_edit'=>array(),
+			'allow_add'=>array(),
+			'allow_del'=>array(),
+			'can_see_activities'=>array(),
+		);
 
 	function init(){
 		parent::init();

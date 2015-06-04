@@ -9,6 +9,7 @@ class Model_Ticket_Assigned extends Model_Ticket{
 			'can_cancel'=>array(),
 			'can_assign'=>array(),
 			'can_mark_processed'=>array(),
+			'can_see_activities'=>array(),
 		);
 	function init(){
 		parent::init();

@@ -13,6 +13,7 @@ class Model_Item extends \Model_Document{
 			'allow_edit'=>array(),
 			'allow_del'=>array(),
 			'forceDelete'=>array(),
+			'can_see_activities'=>array(),
 		);
 
 	function init(){

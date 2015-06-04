@@ -6,7 +6,14 @@ class Model_Quotation extends \Model_Document{
 	public $table="xshop_quotation";
 	public $status=array('draft','approved','redesign','submitted','cancelled');
 	public $root_document_name="xShop\Quotation";
-
+	public $actions=array(
+			'can_view'=>array(),
+			'allow_edit'=>array(),
+			'allow_add'=>array(),
+			'allow_del'=>array(),
+			'can_see_activities'=>array(),
+			'send_via_email'=>array(),
+		);
 	function init(){
 		parent::init();
 
@@ -122,8 +129,8 @@ class Model_Quotation extends \Model_Document{
 
 	function send_via_email_page($page){
 
+		echo "string";
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
-		
 		$email_body = $this->parseEmailBody();
 		$customer = $this->customer();
 		$emails = explode(',', $customer['customer_email']);
