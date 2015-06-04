@@ -9,6 +9,7 @@ class Model_Order_Processing extends Model_Order{
 			'can_send_via_email'=>array(),
 			'can_cancel'=>array(),
 			'can_forcedelete'=>array(),
+			'can_see_activities'=>array(),
 		);
 	
 	function init(){

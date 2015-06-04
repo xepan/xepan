@@ -11,6 +11,7 @@ class Model_Quotation_Redesign extends Model_Quotation{
 			'allow_del'=>array(),
 			'can_submit'=>array(),
 			'can_cancel'=>array(),
+			'can_see_activities'=>array(),
 		);
 
 	function init(){

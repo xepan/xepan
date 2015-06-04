@@ -10,6 +10,7 @@ class Model_Quotation_Submitted extends Model_Quotation{
 			'allow_del'=>array(),
 			'can_approve'=>array(),
 			'can_reject'=>array(),
+			'can_see_activities'=>array(),
 		);
 	
 

@@ -68,6 +68,9 @@ class Model_InvoiceItem extends \Model_Document{
 
 	function beforeSave(){
 			//Check for the apply tax
+		if( !($this->dirty['apply_tax'] or $this->dirty['tax_id']))
+			return;
+		
 		if($this['apply_tax'] and ($tax_asso = $this->item()->applyTaxs())){
 			$tax_asso->addCondition('tax_id',$this['tax_id']);
 			if(!$tax_asso->count()->getOne())

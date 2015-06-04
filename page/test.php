@@ -67,4 +67,18 @@ class page_test extends Page {
 
 	// }
 	
+
+	function page_leadcatasso(){
+
+		$leads = $this->add('xEnquiryNSubscription/Model_Subscription')->addCondition('from_app','Customer');
+		foreach ($leads as $l) {
+			$asso = $this->add('xEnquiryNSubscription/Model_SubscriptionCategoryAssociation');
+			$asso['subscriber_id'] = $l->id;
+			$asso['subscribed_on'] = $l['created_at'];
+			$asso['send_news_letters'] = true;
+			$asso['category_id'] = 4;
+			$asso->save();
+
+		}
+	}
 }

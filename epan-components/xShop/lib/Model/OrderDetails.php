@@ -88,10 +88,12 @@ class Model_OrderDetails extends \Model_Document{
 
 	function beforeSave(){
 		//Check for the apply tax
-		if($this['apply_tax'] and ($tax_asso = $this->item()->applyTaxs())){
-			$tax_asso->addCondition('tax_id',$this['tax_id']);
-			if(!$tax_asso->count()->getOne())
-				throw $this->exception('Tax Not Applied','ValidityCheck')->setField('tax_id');
+		if( $this->dirty['apply_tax'] or $this->dirty['tax_id']){	
+			if($this['apply_tax'] and ($tax_asso = $this->item()->applyTaxs())){
+				$tax_asso->addCondition('tax_id',$this['tax_id']);
+				if(!$tax_asso->count()->getOne())
+					throw $this->exception('Tax Not Applied','ValidityCheck')->setField('tax_id');
+			}
 		}
 
 		$forwarded_jobcard = false;
