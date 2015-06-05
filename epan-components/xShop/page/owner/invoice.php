@@ -15,6 +15,7 @@ class page_xShop_page_owner_invoice extends page_xShop_page_owner_main{
 		$tab->addTabURL('xShop/page/owner/invoice_completed','Completed'.$this->add('xShop/Model_Invoice_Completed')->myCounts(true,false));
 		$tab->addTabURL('xShop/page/owner/invoice_redesign','Redesign '.$this->add('xShop/Model_Invoice_Redesign')->myCounts(true,false));
 		$tab->addTabURL('xShop/page/owner/invoice_canceled','Canceled '.$this->add('xShop/Model_Invoice_Canceled')->myCounts(true,false));
+		$tab->addTabURL('xShop/page/owner/invoice_all','All '.$this->add('xShop/Model_SalesInvoice')->myCounts(true,false));
 
 	}
 
