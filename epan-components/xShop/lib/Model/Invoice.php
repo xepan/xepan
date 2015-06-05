@@ -190,7 +190,7 @@ class Model_Invoice extends \Model_Document{
 		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no']?$customer['pan_no']:" - ", $email_body);
 		$email_body = str_replace("{{invoice_details}}", $view->getHtml(), $email_body);
 		$email_body = str_replace("{{invoice_order_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{invoice_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{invoice_date}}", $this['created_date'], $email_body);
 		$email_body = str_replace("{{dispatch_challan_no}}", "", $email_body);
 		$email_body = str_replace("{{dispatch_challan_date}}", "", $email_body);
 		$email_body = str_replace("{{terms_an_conditions}}", $tnc?$tnc:"", $email_body);
