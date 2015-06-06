@@ -15,6 +15,7 @@ class page_xDispatch_page_owner_dispatchrequest extends page_xDispatch_page_owne
 		$tabs->addTabURL('xDispatch_page_owner_dispatchrequest_partialcomplete','Partial Complete'.$this->add('xDispatch/Model_DispatchRequest_PartialComplete')->myCounts(true,false));
 		$tabs->addTabURL('xDispatch_page_owner_dispatchrequest_complete','Complete'.$this->add('xDispatch/Model_DispatchRequest_Completed')->myCounts(true,false));
 		$tabs->addTabURL('xDispatch_page_owner_dispatchrequest_cancel','Cancel'.$this->add('xDispatch/Model_DispatchRequest_Cancelled')->myCounts(true,false));
+		$tabs->addTabURL('xDispatch_page_owner_dispatchrequest','All'.$this->add('xDispatch/Model_DispatchRequest')->myCounts(true,false));
 	}
 
 }
