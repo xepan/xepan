@@ -36,7 +36,7 @@ class Model_Configuration extends \Model_Table {
 		// Purchase Order Email Subject & Body
 
 		$f = $this->addField('purchase_order_detail_email_subject')->group('d~12~<i class="fa fa-envelope"></i> Purchase Order  Detail ( Bill ) Email');
-		$f = $this->addField('purchase_order_detail_email_body')->type('text')->caption('Purchase Order Detail Email Body')->hint('Purchase Order Email Body : this Bill send to Suppliers who placed Purchase order,{{company_name}},{{owner_name}},{{mobile_number}},{{purchase_order_address}},{{supplier_email}},{{supplier_tin_no}},{{supplier_pan_no}},{{purchase_Order_no}},{{purchase_Order_date}}')->group('d~11')->display(array('form'=>'RichText'));
+		$f = $this->addField('purchase_order_detail_email_body')->type('text')->caption('Purchase Order Detail Email Body')->hint('Purchase Order Email Body : this Bill send to Suppliers who placed Purchase order,{{company_name}},{{owner_name}},{{mobile_number}},{{purchase_order_address}},{{supplier_email}},{{supplier_tin_no}},{{supplier_pan_no}},{{purchase_Order_no}},{{purchase_Order_date}},{{purchase_order_summary}}')->group('d~11')->display(array('form'=>'RichText'));
 
 		// Quotation Email Subject & Body
 
