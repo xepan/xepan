@@ -454,7 +454,9 @@ class Model_Order extends \Model_Document{
 						$oi['amount'],
 						$oi['unit'],
 						$oi['narration'],
-						$oi['custom_fields']
+						$oi['custom_fields'],
+						$oi['apply_tax'],
+						$oi['tax_id']
 					);					
 				$invoice->updateAmounts();
 				$oi->invoice($invoice);	
