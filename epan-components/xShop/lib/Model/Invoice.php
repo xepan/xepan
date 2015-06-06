@@ -134,7 +134,7 @@ class Model_Invoice extends \Model_Document{
 		return $this;
 	}
 
-	function addItem($item,$qty,$rate,$amount,$unit,$narration,$custom_fields,$apply_tax,$tax_id){
+	function addItem($item,$qty,$rate,$amount,$unit,$narration,$custom_fields,$apply_tax=0,$tax_id=0){
 		$in_item = $this->ref('xShop/InvoiceItem');
 		$in_item['item_id'] = $item->id;
 		$in_item['qty'] = $qty;

@@ -48,7 +48,7 @@ class Grid_Order extends \Grid {
 		if($fields==null){
 			$fields = array(
 						'name','order_from','created_at','member',
-						'net_amount','last_action','created_by','orderitem_count','delivery_date','priority_id','priority'
+						'net_amount','last_action','created_by','orderitem_count','delivery_date','priority_id','priority','order_summary'
 						);
 		}
 

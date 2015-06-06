@@ -32,6 +32,7 @@ class page_base_owner extends Page {
 			$this->api->template->tryDel('admin_template');
 		}
 
+		$this->api->current_xshop_configuration = $this->add('xShop/Model_Configuration')->tryLoadAny();
 
 		// $this->api->current_website = $this->api->auth->model->ref('epan_id');
 		// $this->api->current_page = $this->api->current_website->ref('EpanPage');
