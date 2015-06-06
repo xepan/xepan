@@ -3,11 +3,13 @@
 namespace xPurchase;
 
 class Grid_Invoice extends \Grid{
+	public $ipp = 50;
 	function init(){
 		parent::init();
 		$self= $this;
 		$this->addSno();
 
+		// $this->setPaginator($ipp);
 		$this->vp=$this->add('VirtualPage')->set(function($p)use($self){
 			$p->add('xPurchase/View_PurchaseInvoice',array('invoice'=>$p->add('xPurchase/Model_PurchaseInvoice')->load($p->api->stickyGET('invoice_clicked'))));
 		});
