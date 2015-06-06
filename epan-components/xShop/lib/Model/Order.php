@@ -321,6 +321,7 @@ class Model_Order extends \Model_Document{
 		$email_body=$config_model['order_detail_email_body']?:"Order Layout Is Empty";
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name']?$customer['customer_name']:"", $email_body);
+		$email_body = str_replace("{{customer_organization_name}}", $customer['organization_name'], $email_body);
 		$email_body = str_replace("{{order_billing_address}}",$customer['billing_address']?$customer['billing_address']:"", $email_body);
 		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number']?$customer['mobile_number']:"", $email_body);
 		$email_body = str_replace("{{customer_email}}", $customer['customer_email']?$customer['customer_email']:"", $email_body);
