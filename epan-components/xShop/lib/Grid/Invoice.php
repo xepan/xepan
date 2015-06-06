@@ -47,7 +47,7 @@ class Grid_Invoice extends \Grid{
 	function setModel($invoice_model,$field=array()){
 		$invoice_model->getField('total_amount')->caption('Amount');
 		if(!$field)
-			$field = array('name','sales_order','customer','total_amount','discount','tax','net_amount','customer_id','created_at','invoiceitem_count','gross_amount','shipping_charge','created_at');
+			$field = array('name','sales_order','customer','total_amount','discount','tax','net_amount','customer_id','created_at','invoiceitem_count','gross_amount','shipping_charge','created_at','narration');
 		$m=parent::setModel($invoice_model,$field);
 		
 		$this->addFormatter('name','view');

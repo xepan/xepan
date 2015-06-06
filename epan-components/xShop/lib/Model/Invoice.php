@@ -38,6 +38,8 @@ class Model_Invoice extends \Model_Document{
 		$this->addField('billing_address')->type('text');
 		$this->addField('transaction_reference')->type('text');
 		$this->addField('transaction_response_data')->type('text');
+		$this->addField('narration')->type('text');
+		
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
@@ -196,6 +198,7 @@ class Model_Invoice extends \Model_Document{
 		$email_body = str_replace("{{dispatch_challan_no}}", "", $email_body);
 		$email_body = str_replace("{{dispatch_challan_date}}", "", $email_body);
 		$email_body = str_replace("{{terms_an_conditions}}", $tnc?$tnc:"", $email_body);
+		$email_body = str_replace("{{invoice_narration}}",$this['narration'], $email_body);
 
 		return $email_body;
 	}
