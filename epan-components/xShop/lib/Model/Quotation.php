@@ -35,6 +35,7 @@ class Model_Quotation extends \Model_Document{
 		// $this->addField('discount_voucher')->group('b~3');
 		$this->addField('discount_voucher_amount')->group('b~3')->defaultValue(0)->caption('Discount Amount');
 		$this->addField('net_amount')->type('money')->mandatory(true)->group('b~3')->sortable(true);
+		$this->addField('narration')->type('text')->type('text');
 
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
@@ -216,6 +217,7 @@ class Model_Quotation extends \Model_Document{
 		$email_body = str_replace("{{quotation_date}}", $this['created_at'], $email_body);
 		$email_body = str_replace("{{quotation_detail}}", $quotation_detail_html, $email_body);
 		$email_body = str_replace("{{terms_and_conditions}}", $tnc?$tnc:" ", $email_body);
+		$email_body = str_replace("{{quotation_narration}}",$this['narration'], $email_body);
 
 		return $email_body;
 	}

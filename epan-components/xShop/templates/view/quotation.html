@@ -30,7 +30,7 @@
 			{row}
 				<tr>
 					<td align="left">{$sno}</td>
-					<td align="left" style="width:300px"><h3>{item_name} Item {/item_name}<br><small>{$redable_custom_fields}</small></h3></td>
+					<td align="left" style="width:300px"><h3>{item_name} Item {/item_name}<br><small>{$redable_custom_fields}<br/>{$item_narration}</small></h3></td>
 					<td align="right">{$qty}&nbsp<small>{$unit}</small></td>
 					<!-- <td align="right">{$unit}</td> -->
 					<td align="right">{$rate}</td>
@@ -57,7 +57,7 @@
 		</tr>
 
 		<tr>
-			<td colspan="6">
+			<td colspan="3">
 			{tandc_section}
 			<!-- <hr> -->
 				<div class='text-justify'>
@@ -66,6 +66,9 @@
 					{$item_specific_conditions}
 				</div>
 			{/tandc_section}
+			</td>
+			<td colspan="3">
+				Narration: <br/>{$narration}
 			</td>
 		</tr>
 		</tbody>
