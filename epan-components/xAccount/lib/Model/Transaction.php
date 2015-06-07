@@ -52,6 +52,14 @@ class Model_Transaction extends \Model_Document{
 			throw $this->exception('TRansaction Contains Rows, Cannot Delete','Growl');
 	}
 
+	function cr_sum(){
+		return $this->ref('xAccount/TransactionRow')->sum('amountCr');
+	}
+
+	function dr_sum(){
+		return $this->ref('xAccount/TransactionRow')->sum('amountDr');
+	}
+
 	
 	function forceDelete(){
 		foreach ($this->ref('xAccount/TransactionRow') as $trrow) {

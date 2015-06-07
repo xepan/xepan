@@ -651,4 +651,12 @@ class Model_Document extends Model_Table{
 	}
 
 
+
+	function human_date($date=null){
+		if(!$date)
+			$date = $this['created_at'];
+		return $this->add('xDate')->diff(\Carbon::now(),$date);
+	}
+
+
 }

@@ -115,6 +115,15 @@ class Model_SalesInvoice extends Model_Invoice{
 		$this->setStatus('approved');
 	}
 
+	function transactions(){
+		$transaction = $this->add('xAccount/Model_Transaction');
+		if($tr=$transaction->loadWhoseRelatedDocIs($this)){
+			return $tr;
+		}
+
+		return false;	
+	}
+	
 	function cancel_page($p){
 		$transaction = $this->add('xAccount/Model_Transaction');
 		$form = $p->add('Form');
