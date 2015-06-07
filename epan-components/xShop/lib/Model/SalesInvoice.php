@@ -5,10 +5,10 @@ class Model_SalesInvoice extends Model_Invoice{
 	public $root_document_name = 'xShop\SalesInvoice';
 	public $actions=array(
 			'can_view'=>array(),
-			'can_reject'=>array(),
-			'can_send_via_email'=>array(),
+			'can_send_via_email'=>array('caption'=>'E-mail'),
 			'allow_edit'=>array(),
-
+			'allow_del'=>array(),
+			'can_cancel'=>array(),
 		);
 
 	function init(){

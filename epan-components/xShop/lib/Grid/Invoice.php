@@ -45,6 +45,7 @@ class Grid_Invoice extends \Grid{
 	}
 
 	function format_info($field){
+
 		$str = $this->RowHtml('Created Date',$this->model->human_date(),null,$this->model['created_at'],$hr=true);
 		$str .= $this->RowHtml($this->model['status'],$this->model->human_date($this->model['updated_at']),'Invoice Status',$this->model['updated_at'],$hr=true);
 
@@ -85,7 +86,9 @@ class Grid_Invoice extends \Grid{
 		$this->addFormatter('sales_order','Wrap');
 		if($this->hasColumn('created_at'))
 			$this->addFormatter('created_at','info');
-		// if($invoice_model['status'] == 'draft' or $invoice_model['status'] == 'redesign')
+		if($this->hasColumn('narration'))
+			$this->addFormatter('narration','Wrap');
+		
 		$this->addColumn('expander','items',array('page'=>'xShop_page_owner_invoice_items','descr'=>'Items'));
 		
 		if($this->hasColumn('customer_id')){
@@ -103,6 +106,7 @@ class Grid_Invoice extends \Grid{
 		if($this->hasColumn('updated_date'))$this->removeColumn('updated_date');
 		if($this->hasColumn('updated_at'))$this->removeColumn('updated_at');
 		if($this->hasColumn('created_date'))$this->removeColumn('created_date');
+		if($this->hasColumn('status'))$this->removeColumn('status');
 
 		$this->addQuickSearch($invoice_model->getActualFields());
 
