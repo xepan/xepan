@@ -247,7 +247,8 @@ class Model_JobCard extends \Model_Document{
 			$f->qty_effected_custom_fields_only = true;
 		}
 
-		$dtpw = $form->addField('Checkbox','dispatch_directly','Dispatch Direclty (If Purchase Request)');
+		$dtpw = $form->addField('Checkbox','dispatch_directly','Dispatch Directly (If Purchase Request)');
+		$start_pro = $form->addField('Checkbox','start_processing')->set(true);
 		
 		// $gmr->js(true)->univ()->bindConditionalShow(array(
 		// 		''=>array(),
@@ -258,7 +259,7 @@ class Model_JobCard extends \Model_Document{
 		$form->addSubmit('Receive');
 
 		if($form->isSubmitted()){
-
+			$jobcardid=$this->id;
 			// A bunch of validations TODO 
 
 			if($form->hasElement('select_outsource_party') AND $form['select_outsource_party']){
@@ -301,9 +302,16 @@ class Model_JobCard extends \Model_Document{
 						'approved'
 						);
 
+
 			}
 
 			$this->receive();
+			if($form['start_processing']){
+				$job_model=$this->add('xProduction/Model_JobCard');
+				$job_model->load($jobcardid);
+				$job_model->start_processing();
+			}
+
 			return true;
 		}
 	}
@@ -463,6 +471,7 @@ class Model_JobCard extends \Model_Document{
 			$p->add('HR');
 
 			$form = $p->add('Form');
+			 $form->add('Form');
 			$form->addSubmit('Consume Stock & Mark Processed');
 
 			if($form->isSubmitted()){
