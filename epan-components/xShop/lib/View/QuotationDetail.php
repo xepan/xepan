@@ -27,6 +27,9 @@ class View_QuotationDetail extends \CompleteLister{
 		if($this->show_specification){
 			$this->current_row_html['specifications']= '[ '.$this->model->item()->redableSpecification(",").' ]';
 		}
+		
+		if($this->model['narration'])
+			$this->current_row_html['item_narration']= '<br/>Narration: '.$this->model['narration'];
 
 		$this->sno++;
 	}

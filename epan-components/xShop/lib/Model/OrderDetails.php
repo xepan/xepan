@@ -29,7 +29,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->addField('qty')->group('b~3~Order Details')->mandatory(true);
 		// $this->addField('unit')->group('b~3');
 		$this->addField('amount')->type('money')->group('b~3');
-		$this->addField('narration')->type('text')->system(false)->group('c~12~ Narration');
+		$this->addField('narration')->type('text')->system(false);
 		$this->addField('custom_fields')->type('text')->system(false);
 		$this->addField('apply_tax')->type('boolean')->defaultValue(true);
 

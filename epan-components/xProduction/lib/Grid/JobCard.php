@@ -50,6 +50,7 @@ class Grid_JobCard extends \Grid{
 		$this->removeColumn('outsource_party');
 
 		$this->addPaginator($this->ipp);
+		$this->addQuickSearch(array('order_no','name','created_at','orderitem','from_department','outsource_party'));
 		return $m;
 	}
 }

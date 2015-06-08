@@ -51,6 +51,10 @@ class Frontend extends ApiFrontend{
 
 	public $today;
 	public $now;
+	/*
+	* @var Model_xShop_Configuration
+	 */
+	public $current_xshop_configuration=null;
 
 	function init() {
 		parent::init();

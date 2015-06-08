@@ -1,10 +1,10 @@
 <?php
 
-class page_xPurchase_page_owner_invoice_approved extends page_xPurchase_page_owner_main{
+class page_xPurchase_page_owner_invoice_all extends page_xPurchase_page_owner_main{
 	function init(){
 		parent::init();
 
-		$model = $this->add('xPurchase/Model_Invoice_Approved');
+		$model = $this->add('xPurchase/Model_PurchaseInvoice');
 
 		$crud=$this->add('CRUD',array('grid_class'=>'xPurchase/Grid_Invoice'));
 		$crud->setModel($model,array('supplier_id','termsandcondition_id','discount','billing_address','invoiceitem_count','narration'),array('name','invoice_no','po','supplier','total_amount','tax','gross_amount','discount','net_amount','invoiceitem_count'));

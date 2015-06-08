@@ -28,6 +28,7 @@ class View_SalesInvoice extends  \CompleteLister{
 		$this->template->trySetHtml('discount_voucher_amount',$this->invoice['discount_voucher_amount']?:'0.00');
 		$this->template->trySetHtml('net_amount',$this->invoice['net_amount']);
 		$this->template->trySetHtml('shipping_charge',$this->invoice['shipping_charge']?:'0.00');
+		$this->template->trySetHtml('narration',$this->invoice['narration']);
 
 		if(!$this->invoice['termsandcondition_id'])
 			$this->template->del('tandc_section');
@@ -46,6 +47,7 @@ class View_SalesInvoice extends  \CompleteLister{
 		if($shop_config['is_round_amount_calculation']){
 			$this->current_row['tax_amount']=round($this->model['tax_amount'],2);
 		}
+		$this->current_row_html['item_narration']= "<br/>Narration: ".$this->model['narration'];
 		
 		$this->sno++;
 	}

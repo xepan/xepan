@@ -40,7 +40,7 @@ class Grid_Quotation extends \Grid{
 	
 	function setModel($quotation_model,$field=array()){
 		if(empty($field))
-			$field = array('quotation_number','name','customer','lead','opportunity','total_amount','tax','gross_amount','discount_voucher_amount','net_amount','quotationitem_count');
+			$field = array('quotation_number','name','customer','lead','opportunity','total_amount','tax','gross_amount','discount_voucher_amount','net_amount','quotationitem_count','narration');
 		
 		$m=parent::setModel($quotation_model,$field);
 
@@ -62,6 +62,7 @@ class Grid_Quotation extends \Grid{
 		if($this->hasColumn('discount_voucher_amount'))$this->removeColumn('discount_voucher_amount');
 		if($this->hasColumn('net_amount'))$this->removeColumn('net_amount');
 		if($this->hasColumn('quotationitem_count'))$this->removeColumn('quotationitem_count');
+		if($this->hasColumn('narration'))$this->removeColumn('narration');
 
 		return $m;
 	}

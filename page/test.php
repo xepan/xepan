@@ -49,6 +49,17 @@ class page_test extends Page {
 		}
 	}
 
+	function page_toword(){
+		// $d = $this->add('xShop/Model_Order');
+		// echo $d->convert_number_to_words(200);
+		require('System.php');
+		var_dump(class_exists('System', false));
+
+		// require('Numbers/Words.php');
+		// $nw = new Numbers_Words();
+		// echo $nw->toWords(200);
+	}
+
 	// function page_invremove(){
 	// 	$this->add('xShop/Model_SalesInvoice')->each(function ($obj){
 	// 		echo $obj['name'];

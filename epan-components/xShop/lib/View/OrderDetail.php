@@ -14,7 +14,7 @@ class View_OrderDetail extends \CompleteLister{
 
 	function formatRow(){
 
-			$this->current_row_html['unit']=$this->model['unit'];
+		$this->current_row_html['unit']=$this->model['unit'];
 		$this->current_row_html['sno']=$this->sno;
 		if($this->show_department)
 			$this->current_row_html['departments']=$this->model->redableDeptartmentalStatus(true,true,false,true);
@@ -24,6 +24,9 @@ class View_OrderDetail extends \CompleteLister{
 		if($this->show_customfield){
 			$this->current_row_html['departments']=$this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
 		}
+		if(trim($this->model['narration']))
+			$this->current_row_html['narration']= "Narration: ".$this->model['narration'];
+		
 		$this->sno++;
 	}
 

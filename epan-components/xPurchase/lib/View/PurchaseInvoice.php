@@ -28,8 +28,14 @@ class View_PurchaseInvoice extends  \CompleteLister{
 		$this->setModel($this->invoice->itemrows());
 	}
 
-	function formatRow(){
-		 $this->current_row['sno']=$this->sno;
+	function formatRow(){		
+		$this->current_row['sno']=$this->sno;
+		if($this->model['narration']){			
+			$this->current_row_html['item_narration']="<br/>Narration: ".$this->model['narration'];
+		}
+		else
+			$this->current_row_html['item_narration']="";
+
 		$this->sno++;
 	}
 		
