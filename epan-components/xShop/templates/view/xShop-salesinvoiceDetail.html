@@ -8,6 +8,7 @@
 			<th align="right" class="text-right">Qty</th>
 			{order_amount_section}
 			<th align="right" class="text-right">Rate</th>
+			<th align="right" class="text-right">Sub total</th>
 			<th align="right" class="text-right">Tax</th>
 			<th colspan="2" align="right" class="text-right">Amount</th>
 			{/order_amount_section}
@@ -24,6 +25,7 @@
 
 			{order_amount_section}
 				<td align="right" >{$rate}</td>
+				<td align="right" >{$sub_total}</td>
 				<td align="right" >{$tax_amount}<br>@  {tax_per_sum}{/tax_per_sum}</td>
 				<td colspan="2" align="right" >{$texted_amount}</td>
 			{/order_amount_section}
