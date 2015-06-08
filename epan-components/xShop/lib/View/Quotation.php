@@ -33,6 +33,7 @@ class View_Quotation extends \CompleteLister{
 		// throw new \Exception($this->model['narration']);
 		
 		$this->current_row['sno']=$this->sno;
+		$this->current_row['sub_total']=$this->model['qty'] * $this->model['rate'];
 		$this->current_row['redable_custom_fields']=$this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
 		$this->current_row['unit']=$this->model['unit'];		
 		$this->current_row['item_narration']="Narration: ".$this->model['narration'];
