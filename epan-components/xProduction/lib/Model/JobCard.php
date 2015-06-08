@@ -471,16 +471,27 @@ class Model_JobCard extends \Model_Document{
 			$p->add('HR');
 
 			$form = $p->add('Form');
-			 $form->add('Form');
+			$form->addField('Checkbox','forwarded_to_next_department')->set(true);
 			$form->addSubmit('Consume Stock & Mark Processed');
 
 			if($form->isSubmitted()){
+				$job_id=$this->id;
 				$this->setStatus('processed');
 				$m->executeConsume();
+				if($form['forwarded_to_next_department']){
+					$job_model=$this->add('xProduction/Model_JobCard');
+					$job_model->load($job_id);
+					$job_model->forward();
+				}
 				return true;
 			}	
 		}else{
 				$this->setStatus('processed');
+				if($form['forwarded_to_next_department']){
+					$job_model=$this->add('xProduction/Model_JobCard');
+					$job_model->load($job_id);
+					$job_model->forward();
+				}
 				return true;
 		}
 	}

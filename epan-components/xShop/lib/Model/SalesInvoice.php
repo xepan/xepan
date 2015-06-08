@@ -159,7 +159,7 @@ class Model_SalesInvoice extends Model_Invoice{
 		$form->addField('line','cheque_no');
 		$form->addField('DatePicker','cheque_date');
 		$form->addField('Checkbox','send_invoice_via_email');
-		$form->addField('line','email_to');
+		$form->addField('line','email_to')->set($this->customer()->get('customer_email'));
 
 
 
@@ -196,6 +196,7 @@ class Model_SalesInvoice extends Model_Invoice{
 			}
 
 		if($form['send_invoice_via_email']){
+			
 			$inv = $this->order()->invoice();
 			
 			if(!$inv){
@@ -207,8 +208,12 @@ class Model_SalesInvoice extends Model_Invoice{
 
 			if(!$form['email_to'])
 				$form->displayError('email_to','Email Not Proper. ');
+			
 
-			$inv->send_via_email();
+			// $customer=$this->customer();
+
+			$subject = $this->emailSubjectPrefix("");
+			$this->sendEmail($form['email_to'],$subject,$this->parseEmailBody());
 
 		}
 			$this->setStatus('completed');
