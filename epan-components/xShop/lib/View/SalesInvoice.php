@@ -42,6 +42,8 @@ class View_SalesInvoice extends  \CompleteLister{
 		$this->current_row['sno']=$this->sno;
 		$this->current_row['redable_custom_fields']=$this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
 		$this->current_row['unit']=$this->model['unit'];
+
+		$this->current_row['sub_total']=$this->model['qty']*$this->model['rate'];
 		
 		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
 		if($shop_config['is_round_amount_calculation']){
