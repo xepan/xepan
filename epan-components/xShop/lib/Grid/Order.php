@@ -18,6 +18,11 @@ class Grid_Order extends \Grid {
 			$order->setModel($o);
 		});
 		
+		$this->invoicevp = $this->add('VirtualPage')->set(function($p)use($self){
+			$inv_id = $p->api->stickyGET('sales_invoice_clicked');
+			$p->add('xShop/View_SalesInvoice',array('invoice'=>$p->add('xShop/Model_SalesInvoice')->load($inv_id)));
+		});
+
 		$print = $this->addColumn('Button','print');
 		if($_GET['print']){
 			$this->js()->univ()->newWindow($this->api->url('xShop_page_owner_printsaleorder',array('saleorder_id'=>$_GET['print'],'cut_page'=>0)))->execute();
@@ -93,7 +98,7 @@ class Grid_Order extends \Grid {
 		$hr = '<hr style="margin:0px;"/>';
 		$str = '<div class="atk-row atk-size-micro">';
 		$str .= '<div class="atk-col-6" title="'.$col_left_title.'">'.$col_left_info.'</div>';
-		$str .= '<div class="atk-col-6" title="'.$col_right_title.'">'.$col_right_info.'</div>';		
+		$str .= '<div class="atk-col-6" title="'.$col_right_title.'">'.$col_right_info.'</div>';
 		$str .= '</div>';
 
 		if($separator)$str.= $hr;	
@@ -111,7 +116,14 @@ class Grid_Order extends \Grid {
 
 		$this->current_row_html['net_amount'] = $amount;
 		
-		$this->current_row_html['created_at'] = $this->RowHtml('created Date',$this->model->human_date(),null,$this->model['created_at'],true).$this->RowHtml('created By',$this->model['created_by']);
+		$invoice = $this->model->invoice();
+		$invoice_html = '<small class="atk-effect-warning">Not Created</small>';
+		if($invoice){
+			$invoice_html = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Sale Invoice', $this->api->url($this->invoicevp->getURL(),array('sales_invoice_clicked'=>$invoice['id']))).'">'. $invoice['name'] ."</a>".' <small class="atk-swatch-blue">'.$invoice['status']."</small>";
+		}
+		$invoice_html = $this->RowHtml('Invoice',$invoice_html);
+
+		$this->current_row_html['created_at'] = $this->RowHtml('created Date',$this->model->human_date(),null,$this->model['created_at'],true).$this->RowHtml('created By',$this->model['created_by'],null,null,true).$invoice_html;
 		parent::formatRow();
 	}
 
