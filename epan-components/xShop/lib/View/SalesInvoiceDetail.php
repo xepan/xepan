@@ -33,15 +33,15 @@ class View_SalesInvoiceDetail extends \CompleteLister{
 		
 		$this->template->set('gross_amount',$invoice['gross_amount']);
 		//$this->template->set('delivery_date',$model['delivery_date']);
-		if(!$invoice['discount']){
+		if($invoice['discount'] == 0){
 			$this->template->set('discount_voucher_amount_section',"");
 		}else
 			$this->template->set('discount_voucher_amount',$invoice['discount']?:'0.00');
-		
-		if(!$invoice['shipping_charge']){
-			$this->template->set('shipping_charge_section',"");
+
+		if($invoice['shipping_charge']== 0){
+			$this->template->del('shipping_charge_section');
 		}else
-			$this->template->set('shipping_charge',$invoice['shipping_charge']?:'0.00');
+			$this->template->set('shipping_charge',$invoice['shipping_charge']);
 
 		$this->template->set('net_amount',$invoice['net_amount']);
 

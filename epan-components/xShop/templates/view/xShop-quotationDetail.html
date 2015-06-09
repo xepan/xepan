@@ -18,7 +18,7 @@
 		<tr valign="top">
 			<td align="left">{$sno}</td>
 			<td align="left" style="width:300px;">
-				<h4>{$item_name}<br><small>{$departments}{$specifications}{$item_narration}</small></h4>
+				<p>{$item_name}<br><small>{$departments}{$specifications}{$item_narration}</small></p>
 			</td>
 			
 				<td align="right">{$qty}&nbsp<small>{$unit}</small></td>
@@ -37,7 +37,7 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<th>Total</th>
-			<td class='' colspan="4"><b>&#8377;{$total_amount} </b> </td>
+			<td class='' colspan="4"><b>&#8377; {$total_amount} </b> </td>
 		</tr>
 
 		{discount_amount_section}
@@ -45,7 +45,7 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<th>Discount Amount</th>
-			<td class='' colspan="4"><b> - &#8377;{discount_voucher_amount}{/discount_voucher_amount} </b> </td>
+			<td class='' colspan="4"><b> - &#8377; {discount_voucher_amount}{/discount_voucher_amount} </b> </td>
 		</tr>
 		{/discount_amount_section}
 		<tr align="right">

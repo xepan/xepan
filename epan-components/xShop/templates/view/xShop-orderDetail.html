@@ -8,7 +8,7 @@
 			<th align="right" class="text-right">Qty</th>
 			{order_amount_section}
 			<th align="right" class="text-right">Rate</th>
-			<th align="right" class="text-right">Sub Total</th>
+			<th align="right" class="text-right">Total</th>
 			<th align="right" class="text-right">Tax</th>
 			<th colspan="2" align="right" class="text-right">Amount</th>
 			{/order_amount_section}
@@ -18,8 +18,8 @@
 		<tr valign="top">
 			<td align="left">{$sno}</td>
 			<td align="left" width="400px;">
-				<h4>{$item_name}<br><small>{$departments}</small>
-				<br/><small>{$narration}</small></h4>
+				<p>{$item_name}<br><small>{$departments}</small>
+				<br/><small>{$narration}</small></p>
 			</td>
 			
 				<td align="right">{$qty} &nbsp <small>{$unit}</small></td>
@@ -37,13 +37,13 @@
 		<tr align="right">
 			<td>&nbsp;</td>
 			<th>Total</th>
-			<td class='' colspan="6"><b>&#8377;{$total_amount} </b> </td>
+			<td class='' colspan="6"><b>&#8377; {$total_amount} </b> </td>
 		</tr>
 		{discount_amount_section}
 		<tr align="right">
 			<td>&nbsp;</td>
 			<th>Discount Amount</th>
-			<td class='' colspan="4"><b> - &#8377;{discount_voucher_amount}{/discount_voucher_amount} </b> </td>
+			<td class='' colspan="4"><b> - &#8377; {discount_voucher_amount}{/discount_voucher_amount} </b> </td>
 		</tr>
 		{/discount_amount_section}
 		<tr align="right">
