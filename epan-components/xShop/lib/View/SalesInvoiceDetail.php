@@ -48,7 +48,7 @@ class View_SalesInvoiceDetail extends \CompleteLister{
 		// throw new \Exception($model->item()->genericRedableCustomFieldAndValue($model['custom_fields']));
 		
 		// $this->template->set('invoice_item_custom_field',$model['id']);
-		$this->template->setHtml('detail_height_start','<table width="100%" style="height:360px !important;">');
+		$this->template->setHtml('detail_height_start','<table width="100%">');
 		$this->template->setHtml('detail_height_end','</table>');
 							
 	}

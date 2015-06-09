@@ -46,7 +46,7 @@ class Grid_Order extends \Grid {
 	}
 
 	function format_lastaction($field){
-		$this->current_row_html[$field] = $this->current_row[$field]. '<br/>Total Items: <small style="color:gray;">'.$this->model['orderitem_count']."</small>";
+		$this->current_row_html[$field] = '<div style="width:50px;">'.$this->current_row[$field]. '<br/>Total Items: <small style="color:gray;">'.$this->model['orderitem_count']."</small></div>";
 	}
 
 	function setModel($model,$fields=null){
@@ -75,8 +75,10 @@ class Grid_Order extends \Grid {
 		$this->addFormatter('name','view');
 		$this->addFormatter('created_at','Wrap');
 
-		if($this->hasColumn('last_action'))
+		if($this->hasColumn('last_action')){
 			$this->addFormatter('last_action','lastaction');
+			$this->addFormatter('last_action','Wrap');
+		}
 
 		if($this->hasColumn('orderitem_count'))$this->removeColumn('orderitem_count');
 		if($this->hasColumn('order_from'))$this->removeColumn('order_from');
@@ -115,7 +117,7 @@ class Grid_Order extends \Grid {
 		$amount .= $this->RowHtml('Net Amount','<b>'.$this->model['net_amount'].'<b/>');
 
 		$this->current_row_html['net_amount'] = $amount;
-		
+
 		$invoice = $this->model->invoice();
 		$invoice_html = '<small class="atk-effect-warning">Not Created</small>';
 		if($invoice){

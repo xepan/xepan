@@ -68,7 +68,7 @@ class Model_Order extends \Model_Document{
 						$dept_status->getElement('status')
 						)
 					);
-		})->caption('Last OrderItem Action');
+		})->caption('Last Action');
 
 
 		$this->hasMany('xShop/OrderDetails','order_id');
