@@ -12,7 +12,6 @@ class View_SalesInvoiceDetail extends \CompleteLister{
 	}
 
 	function formatRow(){
-
 		$this->current_row_html['departments']= $this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
 		$this->current_row_html['sno']=$this->sno;
 		$this->current_row_html['sub_total']=$this->model['qty']*$this->model['rate'];
@@ -21,6 +20,7 @@ class View_SalesInvoiceDetail extends \CompleteLister{
 		if($this->model['narration'])
 			$this->current_row_html['item_narration'] = "<br/>Narration: ".$this->model['narration'];
 		$this->sno++;
+		
 	}
 
 	function setModel($model){
@@ -48,6 +48,8 @@ class View_SalesInvoiceDetail extends \CompleteLister{
 		// throw new \Exception($model->item()->genericRedableCustomFieldAndValue($model['custom_fields']));
 		
 		// $this->template->set('invoice_item_custom_field',$model['id']);
+		$this->template->setHtml('detail_height_start','<table width="100%" style="height:360px !important;">');
+		$this->template->setHtml('detail_height_end','</table>');
 							
 	}
 	
