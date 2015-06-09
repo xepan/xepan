@@ -31,7 +31,7 @@ class Grid_Order extends \Grid {
 
 	function format_view($field){
 		$this->setTDParam($field, 'style', 'width:200px;');
-		if($this->model['orderitem_count']==0){
+		if(!$this->model['orderitem_count']){
 			$this->setTDParam($field, 'class', ' atk-swatch-yellow ');
 		}else{
 			$this->setTDParam($field, 'class', '');
@@ -68,11 +68,11 @@ class Grid_Order extends \Grid {
 		// if($_GET['print']){			
 		// 	$this->js()->univ()->newWindow($this->api->url("xShop/page_printorder",array('order_id'=>$_GET['print'],'cut_page'=>1,'subpage'=>'xshop-junk')),null,'height=689,width=1246,scrollbar=1')->execute();
 		// } 
-		if($this->hasColumn('last_action'))
-			$this->addFormatter('last_action','view');
+		// if($this->hasColumn('last_action'))
+			// $this->addFormatter('last_action','view');
 		
-		$this->addFormatter('name','view');
 		$this->addFormatter('name','Wrap');
+		$this->addFormatter('name','view');
 		$this->addFormatter('created_at','Wrap');
 
 		if($this->hasColumn('last_action'))
