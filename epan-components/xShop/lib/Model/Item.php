@@ -10,9 +10,9 @@ class Model_Item extends \Model_Document{
 
 	public $actions=array(
 			'allow_add'=>array(),
-			'allow_edit'=>array(),
 			'allow_del'=>array(),
 			'forceDelete'=>array(),
+			'can_see_activities'=>array(),
 		);
 
 	function init(){
@@ -959,13 +959,13 @@ class Model_Item extends \Model_Document{
 	}
 
 
-	function redableSpecification(){
+	function redableSpecification($seprater="<br/>"){
 		if(!$this->loaded())
 			return false;
 		$str = "";
 		$specifications = $this->specification();
 		foreach ($specifications as $specification) {
-			$str .= $specification['name']." :: ".$specification['value']."<br>";
+			$str .= $specification['name']." :: ".$specification['value'].$seprater;
 		}
 		return $str;
 

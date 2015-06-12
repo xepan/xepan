@@ -6,6 +6,7 @@ class Model_MaterialRequestSent_Submitted extends Model_MaterialRequestSent{
 			'allow_edit'=>array(),
 			'can_approve'=>array(),
 			'can_reject'=>array('icon'=>'cancel-circled'),
+			'can_see_activities'=>array(),
 		);
 	function init(){
 		parent::init();

@@ -504,6 +504,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$email_body = str_replace("{{purchase_order_date}}", $this['created_date'], $email_body);
 		$email_body = str_replace("{{delivery_to}}", $this['delivery_to'], $email_body);
 		$email_body = str_replace("{{terms_and_conditions}}", $tnc?$tnc:" ", $email_body);
+		$email_body = str_replace("{{purchase_order_summary}}", $this['order_summary'], $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
 
 		return $email_body;

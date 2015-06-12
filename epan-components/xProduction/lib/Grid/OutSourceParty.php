@@ -27,7 +27,12 @@ class Grid_OutSourceParty extends \Grid{
 		if($this->hasColumn('contact_person'))$this->removeColumn('contact_person');
 		if($this->hasColumn('contact_no'))$this->removeColumn('contact_no');
 		if($this->hasColumn('email_id'))$this->removeColumn('email_id');
+		if($this->hasColumn('item_name'))$this->removeColumn('item_name');
+		if($this->hasColumn('created_by'))$this->removeColumn('created_by');
+		if($this->hasColumn('related_document'))$this->removeColumn('related_document');
+		
 		$this->addColumn('contact');
+		
 		$this->addFormatter('name','wrap');
 		$this->addFormatter('contact','wrap');
 		$this->addFormatter('address','wrap');

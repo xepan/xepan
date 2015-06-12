@@ -5,10 +5,10 @@ class Model_SalesInvoice extends Model_Invoice{
 	public $root_document_name = 'xShop\SalesInvoice';
 	public $actions=array(
 			'can_view'=>array(),
-			'can_reject'=>array(),
-			'can_send_via_email'=>array(),
+			'can_send_via_email'=>array('caption'=>'E-mail'),
 			'allow_edit'=>array(),
-
+			'allow_del'=>array(),
+			'can_cancel'=>array(),
 		);
 
 	function init(){
@@ -115,6 +115,15 @@ class Model_SalesInvoice extends Model_Invoice{
 		$this->setStatus('approved');
 	}
 
+	function transactions(){
+		$transaction = $this->add('xAccount/Model_Transaction');
+		if($tr=$transaction->loadWhoseRelatedDocIs($this)){
+			return $tr;
+		}
+
+		return false;	
+	}
+	
 	function cancel_page($p){
 		$transaction = $this->add('xAccount/Model_Transaction');
 		$form = $p->add('Form');
@@ -150,7 +159,7 @@ class Model_SalesInvoice extends Model_Invoice{
 		$form->addField('line','cheque_no');
 		$form->addField('DatePicker','cheque_date');
 		$form->addField('Checkbox','send_invoice_via_email');
-		$form->addField('line','email_to');
+		$form->addField('line','email_to')->set($this->customer()->get('customer_email'));
 
 
 
@@ -187,6 +196,7 @@ class Model_SalesInvoice extends Model_Invoice{
 			}
 
 		if($form['send_invoice_via_email']){
+			
 			$inv = $this->order()->invoice();
 			
 			if(!$inv){
@@ -198,8 +208,12 @@ class Model_SalesInvoice extends Model_Invoice{
 
 			if(!$form['email_to'])
 				$form->displayError('email_to','Email Not Proper. ');
+			
 
-			$inv->send_via_email();
+			// $customer=$this->customer();
+
+			$subject = $this->emailSubjectPrefix("");
+			$this->sendEmail($form['email_to'],$subject,$this->parseEmailBody());
 
 		}
 			$this->setStatus('completed');

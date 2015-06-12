@@ -47,5 +47,6 @@ class page_xProduction_page_owner_dept_main extends page_xProduction_page_owner_
 			$tab->addTabURL('xProduction/page/owner/dept_forwarded','Forwarded '.$this->add('xProduction/Model_Jobcard_Forwarded')->addCondition('to_department_id',$this->api->current_department->id)->myCounts(true,false));
 			$tab->addTabURL('xProduction/page/owner/dept_completed','Complete '.$this->add('xProduction/Model_Jobcard_Completed')->addCondition('to_department_id',$this->api->current_department->id)->myCounts(true,false));
 			$tab->addTabURL('xProduction/page/owner/dept_cancelled','Cancel'.$this->add('xProduction/Model_Jobcard_Cancelled')->addCondition('to_department_id',$this->api->current_department->id)->myCounts(true,false));
+			$tab->addTabURL('xProduction/page/owner/dept_all','All'.$this->add('xProduction/Model_Jobcard')->addCondition('to_department_id',$this->api->current_department->id)->myCounts(true,false));
 	}
 }

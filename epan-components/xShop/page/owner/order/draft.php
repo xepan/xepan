@@ -73,7 +73,7 @@ class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 			$form->addField('line','email_to');
 		}
 
-		$crud->setModel('xShop/Model_Order_Draft',array('member_id','order_summary','delivery_date','termsandcondition_id','priority_id'),array('name','created_at','member','net_amount','last_action','created_by','orderitem_count'));
+		$crud->setModel('xShop/Model_Order_Draft',array('member_id','order_summary','delivery_date','termsandcondition_id','priority_id'),array('name','created_at','member','net_amount','last_action','created_by','orderitem_count','tax','gross_amount','discount_voucher_amount','total_amount'));
 		
 		if($crud->isEditing('add') OR $crud->isEditing('edit')){
 			$o = $form->add('Order');

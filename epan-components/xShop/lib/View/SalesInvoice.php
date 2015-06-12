@@ -28,6 +28,7 @@ class View_SalesInvoice extends  \CompleteLister{
 		$this->template->trySetHtml('discount_voucher_amount',$this->invoice['discount_voucher_amount']?:'0.00');
 		$this->template->trySetHtml('net_amount',$this->invoice['net_amount']);
 		$this->template->trySetHtml('shipping_charge',$this->invoice['shipping_charge']?:'0.00');
+		$this->template->trySetHtml('narration',$this->invoice['narration']);
 
 		if(!$this->invoice['termsandcondition_id'])
 			$this->template->del('tandc_section');
@@ -42,7 +43,14 @@ class View_SalesInvoice extends  \CompleteLister{
 		$this->current_row['redable_custom_fields']=$this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
 		$this->current_row['unit']=$this->model['unit'];
 
-		// $this->current_row['tax_amount']=$this->model['tax_amount'];	
+		$this->current_row['sub_total']=$this->model['qty']*$this->model['rate'];
+		
+		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		if($shop_config['is_round_amount_calculation']){
+			$this->current_row['tax_amount']=round($this->model['tax_amount'],2);
+		}
+		$this->current_row_html['item_narration']= "<br/>Narration: ".$this->model['narration'];
+		
 		$this->sno++;
 	}
 		

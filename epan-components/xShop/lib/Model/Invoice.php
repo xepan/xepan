@@ -28,7 +28,7 @@ class Model_Invoice extends \Model_Document{
 		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->display(array('form'=>'autocomplete/Basic'))->caption('Terms & Cond.');
 
 		$this->addField('type')->enum(array('salesInvoice','purchaseInvoice'));
-		$this->addField('name')->caption('Invoice No')->type('int');
+		$this->addField('name')->caption('Invoice No')->type('int')->sortable(true);
 		$this->addField('total_amount')->type('money');
 		$this->addField('gross_amount')->type('money')->sortable(true);
 		$this->addField('discount')->type('money');
@@ -38,6 +38,8 @@ class Model_Invoice extends \Model_Document{
 		$this->addField('billing_address')->type('text');
 		$this->addField('transaction_reference')->type('text');
 		$this->addField('transaction_response_data')->type('text');
+		$this->addField('narration')->type('text');
+		
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
@@ -134,7 +136,7 @@ class Model_Invoice extends \Model_Document{
 		return $this;
 	}
 
-	function addItem($item,$qty,$rate,$amount,$unit,$narration,$custom_fields){
+	function addItem($item,$qty,$rate,$amount,$unit,$narration,$custom_fields,$apply_tax=0,$tax_id=0){
 		$in_item = $this->ref('xShop/InvoiceItem');
 		$in_item['item_id'] = $item->id;
 		$in_item['qty'] = $qty;
@@ -143,6 +145,8 @@ class Model_Invoice extends \Model_Document{
 		$in_item['unit'] = $unit;
 		$in_item['narration'] = $narration;
 		$in_item['custom_fields'] = $custom_fields;
+		$in_item['apply_tax'] = $apply_tax;
+		$in_item['tax_id'] = $tax_id;
 		$in_item->save();
 	}
 	
@@ -179,6 +183,7 @@ class Model_Invoice extends \Model_Document{
 		
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);
+		$email_body = str_replace("{{customer_organization_name}}", $customer['organization_name'], $email_body);
 		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number']?$customer['mobile_number']:" ", $email_body);
 		$email_body = str_replace("{{city}}", $customer['city']?$customer['city']:" ", $email_body);
 		$email_body = str_replace("{{state}}", $customer['state']?$customer['state']:" ", $email_body);
@@ -190,10 +195,11 @@ class Model_Invoice extends \Model_Document{
 		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no']?$customer['pan_no']:" - ", $email_body);
 		$email_body = str_replace("{{invoice_details}}", $view->getHtml(), $email_body);
 		$email_body = str_replace("{{invoice_order_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{invoice_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{invoice_date}}", $this['created_date'], $email_body);
 		$email_body = str_replace("{{dispatch_challan_no}}", "", $email_body);
 		$email_body = str_replace("{{dispatch_challan_date}}", "", $email_body);
 		$email_body = str_replace("{{terms_an_conditions}}", $tnc?$tnc:"", $email_body);
+		$email_body = str_replace("{{invoice_narration}}",$this['narration'], $email_body);
 
 		return $email_body;
 	}

@@ -12,6 +12,7 @@ class page_xShop_page_owner_quotation extends page_xShop_page_owner_main{
 		$tab->addTabURL('xShop/page/owner/quotation/approved','Approved'.$this->add('xShop/Model_Quotation_Approved')->myCounts(true,false));
 		$tab->addTabURL('xShop/page/owner/quotation/cancelled','Cancelled'.$this->add('xShop/Model_Quotation_Cancelled')->myCounts(true,false));
 		$tab->addTabURL('xShop/page/owner/quotation/redesign','Redesign'.$this->add('xShop/Model_Quotation_Redesign')->myCounts(true,false));
+		$tab->addTabURL('xShop/page/owner/quotation/all','All'.$this->add('xShop/Model_Quotation')->myCounts(true,false));
 		
 		// $p=$crud->addFrame('communication_frame');
 		// if($p) $p->add('View_Error')->set($crud->id);

@@ -29,6 +29,11 @@ class View_PurchaseOrder extends \CompleteLister{
 	function formatRow(){
 		$this->current_row['sno']=$this->sno;
 		$this->current_row_html['custom_field'] =  $this->add('xShop/Model_Item')->genericRedableCustomFieldAndValue($this->model['custom_fields']);
+		if($this->model['narration'])
+			$this->current_row_html['item_narration'] = "<br/>Narration: " .$this->model['narration'];
+		else
+			$this->current_row_html['item_narration'] = "";
+
 		$this->sno++;
 	}
 

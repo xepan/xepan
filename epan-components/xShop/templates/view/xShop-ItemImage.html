@@ -10,15 +10,15 @@
 
 	{$Content}
 	{zoom3_image}
-		<img id="zoom_03" src="{zoom3_image_url}{/zoom3_image_url}" data-zoom-image="{$zoom3_large_image_url}" class="zoomwrapper-img">
+		<img id="zoom_03{$_name}" src="{zoom3_image_url}{/zoom3_image_url}" data-zoom-image="{$zoom3_large_image_url}" class="zoomwrapper-img">
 	{/zoom3_image}
 
-	<div id="gal1" class="xshop-item-image-list">
+	<div id="gal1{$_name}" class="xshop-item-image-list" style="margin-top:30px;">
 	{rows}
 	{row}
 		<div class="xshop-item-image-block">
 			<a href="#{$id}" data-image="{$thumb_image_url}" data-zoom-image="{$image_url}" class="xshop-item-image-link">
-				<img id="img_{$id}" src="{$thumb_image_url}" class="img" style="width:100%" />
+				<img id="img_{$id}" src="{$thumb_image_url}" class="img" style="width:100%" alt="{$img_alt}" title="{$img_title}" />
 			</a>
 		</div>	
 	{/row}
@@ -26,16 +26,34 @@
 	</div>
 	<script type="text/javascript">
 		$(document).ready(function(){
-			$("#zoom_03").elevateZoom({
-				gallery:'gal1', 
+			$("#zoom_03{$_name}").elevateZoom({
+				gallery:'gal1{$_name}', 
 				cursor: 'pointer', 
 				galleryActiveClass: 'active', 
 				imageCrossfade: true, 
-				loadingIcon: 'epan-components/xShop/templates/images/loading.gif'
+				constrainType:"height", 
+				constrainSize:274,
+				containLensZoom: true,
+				scrollZoom : true,
+				tint:true, 
+				// tintColour:'#F90', 
+				easing:true, 
+				// loadingIcon: 'epan-components/xShop/templates/images/loading.gif',
+				// tintOpacity:0.5
+				//zoomType: "inner"
+				
+				//zoomType: "lens"
+				//lensShape: "round"
+				//lensSize: 200
+
+				//zoomWindowFadeIn: 500, 
+				//zoomWindowFadeOut: 500, 
+				//lensFadeIn: 500, 
+				//lensFadeOut: 500
 			}); 
 			
-			$("#zoom_03").bind("click", function(e) {  
-		  		var ez =   $('#zoom_03').data('elevateZoom');
+			$("#zoom_03{$_name}").bind("click", function(e) {  
+		  		var ez =   $('#zoom_03{$_name}').data('elevateZoom');
 		  		ez.closeAll(); //NEW: This function force hides the lens, tint and window	
 				$.fancybox(ez.getGalleryList({
 				}));

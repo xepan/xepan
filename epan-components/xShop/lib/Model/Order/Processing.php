@@ -6,7 +6,7 @@ class Model_Order_Processing extends Model_Order{
 			'allow_edit'=>array(),
 			'allow_add'=>array(),
 			'can_view'=>array(),
-			'can_send_via_email'=>array(),
+			'can_send_via_email'=>array('caption'=>'Email'),
 			'can_cancel'=>array(),
 			'can_forcedelete'=>array(),
 			'can_see_activities'=>array(),

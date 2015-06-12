@@ -29,7 +29,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->addField('qty')->group('b~3~Order Details')->mandatory(true);
 		// $this->addField('unit')->group('b~3');
 		$this->addField('amount')->type('money')->group('b~3');
-		$this->addField('narration')->type('text')->system(false)->group('c~12~ Narration');
+		$this->addField('narration')->type('text')->system(false);
 		$this->addField('custom_fields')->type('text')->system(false);
 		$this->addField('apply_tax')->type('boolean')->defaultValue(true);
 
@@ -88,12 +88,15 @@ class Model_OrderDetails extends \Model_Document{
 
 	function beforeSave(){
 		//Check for the apply tax
-		if( $this->dirty['apply_tax'] or $this->dirty['tax_id']){	
+				
+		if( $this->dirty['apply_tax'] or $this->dirty['tax_id']){
 			if($this['apply_tax'] and ($tax_asso = $this->item()->applyTaxs())){
+
 				$tax_asso->addCondition('tax_id',$this['tax_id']);
 				if(!$tax_asso->count()->getOne())
 					throw $this->exception('Tax Not Applied','ValidityCheck')->setField('tax_id');
 			}
+
 		}
 
 		$forwarded_jobcard = false;

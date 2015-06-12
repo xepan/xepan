@@ -42,8 +42,11 @@ class Grid_DispatchRequest extends \Grid{
 
 		$m=parent::setModel($dispatch_request,$fields);
 
-		if(in_array('order_no', $fields))
+		if(in_array('order_no', $fields)){
 			$this->addFormatter('order_no','orderview');
+			$this->addFormatter('order_no','Wrap');
+		}
+
 		$this->addFormatter('name','dispatchrequest');
 		return $m;
 	}
