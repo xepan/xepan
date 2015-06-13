@@ -49,13 +49,13 @@ class Grid_Invoice extends \Grid{
 		$str = $this->RowHtml('Created Date',$this->model->human_date(),null,$this->model['created_at'],$hr=true);
 		$str .= $this->RowHtml($this->model['status'],$this->model->human_date($this->model['updated_at']),'Invoice Status',$this->model['updated_at'],$hr=true);
 
-		if($tr = $this->model->transactions()){
-			 $str .= $this->RowHtml('Transaction',$tr->human_date(),null,$this->model['updated_at'],$hr=false);
-			 $str .= $this->RowHtml('CR',$tr->cr_sum(),null,null,$hr=true);
-			 $str .= $this->RowHtml('DR',$tr->dr_sum());
-		}else{
-			$str.='<div class="atk-swatch-yellow">UnPaid</div>';
-		}
+		// if($tr = $this->model->transactions()){
+		// 	 $str .= $this->RowHtml('Transaction',$tr->human_date(),null,$this->model['updated_at'],$hr=false);
+		// 	 $str .= $this->RowHtml('CR',$tr->cr_sum(),null,null,$hr=true);
+		// 	 $str .= $this->RowHtml('DR',$tr->dr_sum());
+		// }else{
+		// 	$str.='<div class="atk-swatch-yellow">UnPaid</div>';
+		// }
 		
 		$this->current_row_html[$field] = $str;
 	}
