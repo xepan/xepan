@@ -44,10 +44,11 @@ class Model_SalesInvoice extends Model_Invoice{
 	// 	return false;
 	// }
 
-	function createVoucher($salesLedger=null,$taxLedger=null,$discountLedger=null){		
+	function createVoucher($salesLedger=null,$taxLedger=null,$discountLedger=null,$roundLedger=null){
 		if(!$salesLedger) $salesLedger = $this->add('xAccount/Model_Account')->loadDefaultSalesAccount();
 		if(!$taxLedger) $taxLedger = $this->add('xAccount/Model_Account')->loadDefaultTaxAccount();
 		if(!$discountLedger) $discountLedger = $this->add('xAccount/Model_Account')->loadDefaultDiscountAccount();
+		if(!$roundLedger) $roundLedger = $this->add('xAccount/Model_Account')->loadDefaultRoundAccount();
 
 		$transaction = $this->add('xAccount/Model_Transaction');
 		$transaction->createNewTransaction('SALES INVOICE', $this, $transaction_date=$this['created_at'], $Narration=null);
@@ -56,7 +57,14 @@ class Model_SalesInvoice extends Model_Invoice{
 		$transaction->addCreditAccount($taxLedger,$this['tax']);
 		
 		$transaction->addDebitAccount($discountLedger,$this['discount']);
-		$transaction->addDebitAccount($this->customer()->account(),$this['net_amount']-$this['discount']);
+		$transaction->addDebitAccount($this->customer()->account(),$this->round($this['net_amount']-$this['discount']));
+
+		$round_value = $this['net_amount'] - ( $this['gross_amount'] - $this['discount'] );
+
+		if($round_value > 0)
+			$transaction->addCreditAccount($roundLedger,abs($round_value));
+		else
+			$transaction->addDebitAccount($roundLedger,abs($round_value));
 
 		$transaction->execute();
 		
@@ -111,6 +119,9 @@ class Model_SalesInvoice extends Model_Invoice{
 	}
 
 	function approve(){
+		$this['created_at'] = date('Y-m-d H:i:s');
+		$this->save();
+
 		$this->createVoucher();
 		$this->setStatus('approved');
 	}
