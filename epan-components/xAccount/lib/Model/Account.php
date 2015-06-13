@@ -206,6 +206,19 @@ class Model_Account extends \Model_Document{
 		return $this;
 	}
 
+	function loadDefaultShippingAccount(){
+		$this->addCondition('name','Shipping Account');
+		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadIndirectExpenses()->fieldQuery('id'));
+		$this->tryLoadAny();
+
+		if(!$this->loaded()){
+			$this->save();
+		}
+
+		return $this;	
+	}
+
+
 	function loadCashAccounts(){
 		$this->addCondition('group_id',$this->add('xAccount/Model_Group')->loadCashAccount()->fieldQuery('id'));
 		return $this;

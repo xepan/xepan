@@ -658,7 +658,7 @@ class Model_Document extends Model_Table{
 		return $this->add('xDate')->diff(\Carbon::now(),$date);
 	}
 
-	function round($amount,$point=2){
+	function round($amount,$point=0){
 		return round($amount,$point);
 	}
 

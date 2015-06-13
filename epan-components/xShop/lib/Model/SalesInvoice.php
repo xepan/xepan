@@ -44,22 +44,24 @@ class Model_SalesInvoice extends Model_Invoice{
 	// 	return false;
 	// }
 
-	function createVoucher($salesLedger=null,$taxLedger=null,$discountLedger=null,$roundLedger=null){
+	function createVoucher($salesLedger=null,$taxLedger=null,$discountLedger=null,$roundLedger=null,$shippingLedger=null){
 		if(!$salesLedger) $salesLedger = $this->add('xAccount/Model_Account')->loadDefaultSalesAccount();
 		if(!$taxLedger) $taxLedger = $this->add('xAccount/Model_Account')->loadDefaultTaxAccount();
 		if(!$discountLedger) $discountLedger = $this->add('xAccount/Model_Account')->loadDefaultDiscountAccount();
 		if(!$roundLedger) $roundLedger = $this->add('xAccount/Model_Account')->loadDefaultRoundAccount();
+		if(!$shippingLedger) $shippingLedger = $this->add('xAccount/Model_Account')->loadDefaultShippingAccount();
 
 		$transaction = $this->add('xAccount/Model_Transaction');
 		$transaction->createNewTransaction('SALES INVOICE', $this, $transaction_date=$this['created_at'], $Narration=null);
 
 		$transaction->addCreditAccount($salesLedger,$this['total_amount']);
 		$transaction->addCreditAccount($taxLedger,$this['tax']);
+		$transaction->addCreditAccount($shippingLedger,$this['shipping_charge']);
 		
 		$transaction->addDebitAccount($discountLedger,$this['discount']);
-		$transaction->addDebitAccount($this->customer()->account(),$this->round($this['net_amount']-$this['discount']));
-
-		$round_value = $this['net_amount'] - ( $this['gross_amount'] - $this['discount'] );
+		$transaction->addDebitAccount($this->customer()->account(),$this->round($this['gross_amount'] + $this['shipping_charge']- $this['discount']));
+		
+		$round_value = $this['net_amount'] - ( $this['gross_amount'] + $this['shipping_charge'] - $this['discount']);
 
 		if($round_value > 0)
 			$transaction->addCreditAccount($roundLedger,abs($round_value));
