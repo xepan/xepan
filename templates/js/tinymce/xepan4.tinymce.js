@@ -14,7 +14,7 @@ $.each({
         com_options = $.extend({
             selector: '#'+$(obj).attr('id'),
             init_instance_callback : function(editor) {
-                console.log("Editor: " + editor.id + " is now initialized.");
+                // console.log("Editor: " + editor.id + " is now initialized.");
             },
             file_browser_callback: function elFinderBrowser(field_name, url, type, win) {
                 $('<div/>').dialogelfinder({

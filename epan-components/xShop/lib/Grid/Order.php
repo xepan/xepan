@@ -12,21 +12,34 @@ class Grid_Order extends \Grid {
 		
 		$this->addSno();
 
+
 		$this->vp = $this->add('VirtualPage')->set(function($p)use($self){
-			$o = $p->add('xShop/Model_Order')->load($_GET['sales_order_clicked']);
+			$order_id = $p->api->stickyGET('sales_order_clicked');
+
+			$print_btn  = $p->add('Button','null')->set('Print');
+			if($print_btn->isClicked()){
+				$p->js()->univ()->newWindow($this->api->url('xShop_page_owner_printsaleorder',array('saleorder_id'=>$order_id,'sale_performa'=>0,'cut_page'=>0)))->execute();
+			}
+			$o = $p->add('xShop/Model_Order')->load($order_id);
 			$order = $p->add('xShop/View_Order');
 			$order->setModel($o);
+			
 		});
 		
+		$this->invoicevp = $this->add('VirtualPage')->set(function($p)use($self){
+			$inv_id = $p->api->stickyGET('sales_invoice_clicked');
+			$p->add('xShop/View_SalesInvoice',array('invoice'=>$p->add('xShop/Model_SalesInvoice')->load($inv_id)));
+		});
+
 		$print = $this->addColumn('Button','print');
 		if($_GET['print']){
-			$this->js()->univ()->newWindow($this->api->url('xShop_page_owner_printsaleorder',array('saleorder_id'=>$_GET['print'],'cut_page'=>0)))->execute();
+			$this->js()->univ()->newWindow($this->api->url('xShop_page_owner_printsaleorder',array('saleorder_id'=>$_GET['print'],'sale_performa'=>1,'cut_page'=>0)))->execute();
 		}
 	}
 
 	function format_view($field){
 		$this->setTDParam($field, 'style', 'width:200px;');
-		if($this->model['orderitem_count']==0){
+		if(!$this->model['orderitem_count']){
 			$this->setTDParam($field, 'class', ' atk-swatch-yellow ');
 		}else{
 			$this->setTDParam($field, 'class', '');
@@ -41,7 +54,7 @@ class Grid_Order extends \Grid {
 	}
 
 	function format_lastaction($field){
-		$this->current_row_html[$field] = $this->current_row[$field]. '<br/>Total Items: <small style="color:gray;">'.$this->model['orderitem_count']."</small>";
+		$this->current_row_html[$field] = '<div style="width:50px;">'.$this->current_row[$field]. '<br/>Total Items: <small style="color:gray;">'.$this->model['orderitem_count']."</small></div>";
 	}
 
 	function setModel($model,$fields=null){
@@ -63,15 +76,17 @@ class Grid_Order extends \Grid {
 		// if($_GET['print']){			
 		// 	$this->js()->univ()->newWindow($this->api->url("xShop/page_printorder",array('order_id'=>$_GET['print'],'cut_page'=>1,'subpage'=>'xshop-junk')),null,'height=689,width=1246,scrollbar=1')->execute();
 		// } 
-		if($this->hasColumn('last_action'))
-			$this->addFormatter('last_action','view');
+		// if($this->hasColumn('last_action'))
+			// $this->addFormatter('last_action','view');
 		
-		$this->addFormatter('name','view');
 		$this->addFormatter('name','Wrap');
+		$this->addFormatter('name','view');
 		$this->addFormatter('created_at','Wrap');
 
-		if($this->hasColumn('last_action'))
+		if($this->hasColumn('last_action')){
 			$this->addFormatter('last_action','lastaction');
+			$this->addFormatter('last_action','Wrap');
+		}
 
 		if($this->hasColumn('orderitem_count'))$this->removeColumn('orderitem_count');
 		if($this->hasColumn('order_from'))$this->removeColumn('order_from');
@@ -93,7 +108,7 @@ class Grid_Order extends \Grid {
 		$hr = '<hr style="margin:0px;"/>';
 		$str = '<div class="atk-row atk-size-micro">';
 		$str .= '<div class="atk-col-6" title="'.$col_left_title.'">'.$col_left_info.'</div>';
-		$str .= '<div class="atk-col-6" title="'.$col_right_title.'">'.$col_right_info.'</div>';		
+		$str .= '<div class="atk-col-6" title="'.$col_right_title.'">'.$col_right_info.'</div>';
 		$str .= '</div>';
 
 		if($separator)$str.= $hr;	
@@ -110,8 +125,15 @@ class Grid_Order extends \Grid {
 		$amount .= $this->RowHtml('Net Amount','<b>'.$this->model['net_amount'].'<b/>');
 
 		$this->current_row_html['net_amount'] = $amount;
-		
-		$this->current_row_html['created_at'] = $this->RowHtml('created Date',$this->model->human_date(),null,$this->model['created_at'],true).$this->RowHtml('created By',$this->model['created_by']);
+
+		$invoice = $this->model->invoice();
+		$invoice_html = '<small class="atk-effect-warning">Not Created</small>';
+		if($invoice){
+			$invoice_html = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Sale Invoice', $this->api->url($this->invoicevp->getURL(),array('sales_invoice_clicked'=>$invoice['id']))).'">'. $invoice['name'] ."</a>".' <small class="atk-swatch-blue">'.$invoice['status']."</small>";
+		}
+		$invoice_html = $this->RowHtml('Invoice',$invoice_html);
+
+		$this->current_row_html['created_at'] = $this->RowHtml('created Date',$this->model->human_date(),null,$this->model['created_at'],true).$this->RowHtml('created By',$this->model['created_by'],null,null,true).$invoice_html;
 		parent::formatRow();
 	}
 

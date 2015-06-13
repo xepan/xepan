@@ -19,7 +19,7 @@ class page_xShop_page_owner_item_basic extends page_xShop_page_owner_main{
 		$form->add('Controller_FormBeautifier');
 		if($form->isSubmitted()){	
 			$form->update();
-			$form->js(null,$form->js()->reload())->univ()->successMessage('Item Update Information')->execute();
+			$form->js(null,$form->js()->reload())->univ()->successMessage('Item Update Successfully')->execute();
 			// $form->js()->univ()->successMessage('Item Updtaed')->execute();
 		}
 

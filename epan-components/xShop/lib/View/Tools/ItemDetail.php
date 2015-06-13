@@ -148,6 +148,8 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 		}
 		
 		$item_description = $item['description'];
+		// throw new \Exception($item_description);
+		
 		//Live Edit of item Detail (server site live edit )
 		if( $this->api->edit_mode == true ){
 			$this->js(true)->_load('xshopContentUpdate');

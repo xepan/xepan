@@ -1,0 +1,11 @@
+@media print{    
+    .noprint, .noprint *
+    {
+        display: none !important;
+    }
+    .noprint-background
+    {
+    	background-image: none !important;
+    	background: none !important;	
+    }
+}

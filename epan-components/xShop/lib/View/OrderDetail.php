@@ -16,6 +16,7 @@ class View_OrderDetail extends \CompleteLister{
 
 		$this->current_row_html['unit']=$this->model['unit'];
 		$this->current_row_html['sno']=$this->sno;
+			$this->current_row_html['sub_total']=$this->model['qty']*$this->model['rate'];
 		if($this->show_department)
 			$this->current_row_html['departments']=$this->model->redableDeptartmentalStatus(true,true,false,true);
 		if(!$this->show_price){
