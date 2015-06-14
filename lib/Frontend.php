@@ -191,9 +191,9 @@ class Frontend extends ApiFrontend{
 				$this->exec_plugins('beforeTemplateInit',$temp);
 
 				if($this->edit_template){
-					$current_template = $this->add('Model_EpanTemplates')->load($_GET['edit_template']);
+					$this->current_template = $current_template = $this->add('Model_EpanTemplates')->load($_GET['edit_template']);
 				}else{
-					$current_template = $this->current_page->ref('template_id');
+					$this->current_template = $current_template = $this->current_page->ref('template_id');
 				}
 
 				if($current_template->loaded()){

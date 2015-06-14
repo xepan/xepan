@@ -69,7 +69,43 @@ function crc32(str) {
     return (crc ^ (-1)) >>> 0;
 };
 
+epan_component_hover_function: function epan_component_hover_function(event) {
+                event.stopPropagation();
+                var self = this;
+                /* Stuff to do when the mouse enters the element */
+                component_handel = $('<div class=\'drag-handler atk-size-micro\' style=\' z-index:2000\'><i class=\'glyphicon glyphicon-move atk-move-left\'><div class=\'component_type_name \'> '+$(self).attr('component_type')+' </div></div>');
+                $(component_handel).appendTo($(this));
 
+                remove_btn = $('<div class=\'remove_btn\'  style=\' z-index:2000\' title=\'' + $(self).attr('component_type') + '\'><i class=\'glyphicon glyphicon-trash atk-effect-danger\'></i></div>');
+                $(remove_btn).appendTo($(this));
+                $(remove_btn).tooltip();
+                $(remove_btn).hover(function() {
+                    /* Stuff to do when the mouse enters the element */
+                    $(self).addClass('component-executed');
+
+                }, function() {
+                    /* Stuff to do when the mouse leaves the element */
+                    $(self).removeClass('component-executed');
+
+                });
+                $(remove_btn).click(function(event) {
+                    var count = $(self).find('[component_type]').length;
+                    var checkstr =  confirm('are you sure you want to delete this and '+count+' elements inside?');
+                    if(checkstr == true){
+                        remove_element($(self));
+                      // do your code
+                    }else{
+                        return false;
+                    }
+                });
+
+            }
+epan_component_hover_out_function: function epan_component_hover_out_function() {
+                /* Stuff to do when the mouse leaves the element */
+                $(this).find('.drag-handler').remove();
+                $(this).find('.remove_btn').remove();
+
+            }
 
 // MAKE SORTABLE ON PAGE 
 $(".epan-sortable-component").sortable(s = {
@@ -129,34 +165,7 @@ $(".epan-sortable-component").sortable(s = {
                 $(new_obj).resizable();
 
             // Make drag Handler on mouse Over
-            $(new_obj).hover(function(event) {
-                var self = this;
-                /* Stuff to do when the mouse enters the element */
-                component_handel = $('<div class=\'drag-handler\' style=\' z-index:2000\'><i class=\'glyphicon glyphicon-move\'></i></div>');
-                $(component_handel).appendTo($(this));
-
-                remove_btn = $('<div class=\'remove_btn\'  style=\' z-index:2000\' title=\'' + $(self).attr('component_type') + '\'><i class=\'glyphicon glyphicon-remove\'></i></div>');
-                $(remove_btn).appendTo($(this));
-                $(remove_btn).tooltip();
-                $(remove_btn).hover(function() {
-                    /* Stuff to do when the mouse enters the element */
-                    $(self).addClass('component-executed');
-
-                }, function() {
-                    /* Stuff to do when the mouse leaves the element */
-                    $(self).removeClass('component-executed');
-
-                });
-                $(remove_btn).click(function(event) {
-                    remove_element($(self));
-                });
-
-            }, function() {
-                /* Stuff to do when the mouse leaves the element */
-                $(this).find('.drag-handler').remove();
-                $(this).find('.remove_btn').remove();
-
-            });
+            $(new_obj).hover(epan_component_hover_function,epan_component_hover_out_function);
     
 
             var str = $(this).attr('component_type') + '_option.object_dropped("' + $(ui.item).parent('.epan-sortable-component').attr('id') + '","' + $(new_obj).attr('id') + '")';
@@ -180,13 +189,7 @@ $(".epan-sortable-component").sortable(s = {
         }
     },
     update: function(event, ui){
-        $(ui.item).css('background-color','red');
-        var created_str = $(ui.item).attr('component_type') + '_options.created(new_obj,ui.item);';
-        try {
-            eval(created_str);
-        } catch (err) {
-            console.log(err);
-        }
+
     }
 }); //.disableSelection();
 
@@ -403,12 +406,6 @@ $('#epan-editor-preview i').click(function(event){
     $('#epan-editor-left-panel').visibilityToggle();
 });
 
-var website_requested = '{$website_requested}';
-var current_website_id = '{$current_website_id}';
-var current_page_name = '{$current_page_name}';
-var current_page_id = '{$current_page_id}';
-var current_template_id = '{$current_template_id}';
-
 
 $('#epan-component-border').click(function(event) {
     if($('#epan-component-border:checked').size() > 0){
@@ -536,26 +533,7 @@ $(function() {
     });
 
     // Make drag Handler on mouse Over
-    $('.epan-component').hover(function(event) {
-        var self = this;
-        /* Stuff to do when the mouse enters the element */
-        component_handel = $('<div class=\'drag-handler\' style=\' z-index:2000\'><i class=\'glyphicon glyphicon-move\'></i></div>');
-        $(component_handel).appendTo($(this));
-
-        remove_btn = $('<div class=\'remove_btn\' style=\' z-index:2000\' title=\'' + $(self).attr('component_type') + '\'><i class=\'glyphicon glyphicon-remove\'></i></div>');
-        $(remove_btn).appendTo($(this));
-        $(remove_btn).tooltip();
-        $(remove_btn).click(function(event) {
-            remove_element($(self));
-            event.preventDefault();
-        });
-
-    }, function() {
-        /* Stuff to do when the mouse leaves the element */
-        $(this).find('.drag-handler').remove();
-        $(this).find('.remove_btn').remove();
-
-    });
+    $('.epan-component').hover(epan_component_hover_function, epan_component_hover_out_function);
 
     // Remove component-outline class on load to hide border
     $('.component-outline').removeClass('component-outline');

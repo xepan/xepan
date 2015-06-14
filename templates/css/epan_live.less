@@ -11,6 +11,8 @@
 @editor-right-width: 50px;
 @editor-bottom-height: @editor-top-height;
 
+@component-type-name-bg-color : #0095ff;
+
 @winheight:0px + '$(window).height()';
 
 
@@ -25,8 +27,17 @@
 	.drag-handler{
 		position: absolute;
 		top:0px;
-		left: 15px;
+		left: 0px;
 		cursor: move;
+		.component_type_name{
+			position: absolute;
+			top: 0px;
+			left: 20px;
+			word-wrap: none;
+			color: @editor-text-color;
+			background-color: @component-type-name-bg-color;
+			padding: 2px;
+		}
 	}
 	.remove_btn{
 		position: absolute;
@@ -37,6 +48,12 @@
 	.dragging-shorten{
 		width: 50px;
 		height: 50px;
+	}
+	&:hover.ui-selected {
+		outline: 2px dotted blue !important;
+	}
+	&:hover {
+		outline: 1px solid blue !important;
 	}
 }
 
@@ -236,11 +253,11 @@
 }
 
 .ui-selecting{
-	outline: 2px dashed lightblue;
+	outline: 2px dotted lightblue;
 }
 
 .ui-selected{
-	outline: 2px dashed blue !important;
+	outline: 2px dotted blue !important;
 }
 
 
@@ -318,4 +335,17 @@ body{
 
 .panel-group .panel{
 	overflow: visible;
+}
+
+
+.icon-strikethrough:before {
+  content: '\e8ad';
+}
+
+.icon-list-ul:before {
+  content: '\e8ab';
+}
+/* '' */
+.icon-list-ol:before {
+  content: '\e8ac';
 }
