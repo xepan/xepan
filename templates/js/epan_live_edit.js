@@ -69,7 +69,7 @@ function crc32(str) {
     return (crc ^ (-1)) >>> 0;
 };
 
-epan_component_hover_function: function epan_component_hover_function(event) {
+epan_component_hover_function= function epan_component_hover_function(event) {
                 event.stopPropagation();
                 var self = this;
                 /* Stuff to do when the mouse enters the element */
@@ -100,7 +100,7 @@ epan_component_hover_function: function epan_component_hover_function(event) {
                 });
 
             }
-epan_component_hover_out_function: function epan_component_hover_out_function() {
+epan_component_hover_out_function= function epan_component_hover_out_function() {
                 /* Stuff to do when the mouse leaves the element */
                 $(this).find('.drag-handler').remove();
                 $(this).find('.remove_btn').remove();

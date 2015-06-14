@@ -9,7 +9,7 @@
 						Insert Column
 					</td>
 					<td style="width:100%" class='text-center'>
-						<div class="row-addcolumn btn btn-default">Add Column</div>
+						<div class="row-addcolumn btn btn-default btn-sm">Add Column</div>
 					</td>
 				</tr>
 			</tbody>
@@ -24,10 +24,20 @@
 // 		$(current_selected_component).what to do ???
 // }) 
 $('.row-addcolumn').click(function(event,ui){
-	var new_col = $('<div id="{$_name}" component_type="Columns" class="col-md-4 epan-sortable-component epan-component"></div>');
+	var new_col = $('<div id={$_name} component_type=\'Columns\' class=\'atk-col-3 epan-sortable-component epan-component\' span=\'3\'></div>');
 	new_col.appendTo(current_selected_component);
 	new_col.sortable(s);
 	makeSelectable(new_col);
+	$(new_col).hover(epan_component_hover_function, epan_component_hover_out_function);
+	if ($('#epan-component-border:checked').size() > 0) {
+        $(new_col).addClass('component-outline');
+   	}
+
+    if ($('#epan-component-extra-padding:checked').size() > 0) {
+        if($(new_col).hasClass('epan-sortable-component'))
+            $(new_col).addClass('epan-sortable-extra-padding');
+        $(new_col).find('.epan-sortable-component').addClass('epan-sortable-extra-padding');
+    }	
 });
 
 
