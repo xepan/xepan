@@ -1,6 +1,6 @@
 <div id='{$_name}' class='epan-component-options' component_type="{$component_type}">
 	<h3>{$component_type_name}</h3>
-	<div class='xepan-collasp-header'>
+	<div class='xepan-collasp-header' id="epan-editor-columns-column">
 		<table class="table table-condensed table-hover">
 			<tbody>
 				<tr>
@@ -18,12 +18,14 @@
 		</table>
 	</div>
 </div>
+
 <script type="text/javascript">
 // ========== OPTION TO COMPONENT EFFECT ==============
 //
 // $(your_option_html_element).click(function(event,ui){
 		// 		$(current_selected_component).what to do ???
 // })
+
 $('.epan-component-tool-column').slider({
 		min: 1,
 		max: 12,
@@ -39,11 +41,9 @@ $('.epan-component-tool-column').slider({
 
 var {$component_type}_options = {
 	show: function (){
-		console.log($(current_selected_component));
-		console.log($(current_selected_component).attr('span'));
-			$('.epan-component-tool-column').slider('value',$(current_selected_component).attr('span'));
-			$('.epan-component-tool-column-size').html($(current_selected_component).attr('span'));
+		$('.epan-component-tool-column').slider('value',$(current_selected_component).attr('span'));
+		$('.epan-component-tool-column-size').html($(current_selected_component).attr('span'));
 	}
-
 }
+
 </script>

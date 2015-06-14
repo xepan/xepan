@@ -9,7 +9,7 @@
 						Insert Column
 					</td>
 					<td style="width:100%" class='text-center'>
-						<div class="row-addcolumn btn btn-default btn-sm">Add Column</div>
+						<div id="epan-editor-columns-row-add-col-btn" class="btn btn-default btn-sm">Add Column</div>
 					</td>
 				</tr>
 			</tbody>
@@ -23,8 +23,8 @@
 // $(your_option_html_element).click(function(event,ui){
 // 		$(current_selected_component).what to do ???
 // }) 
-$('.row-addcolumn').click(function(event,ui){
-	var new_col = $('<div id={$_name} component_type=\'Columns\' class=\'atk-col-3 epan-sortable-component epan-component\' span=\'3\'></div>');
+$('#epan-editor-columns-row-add-col-btn').click(function(event){
+	var new_col = $('<div component_type=\'Columns\' class=\'atk-col-3 epan-sortable-component epan-component\' span=\'3\'></div>');
 	new_col.appendTo(current_selected_component);
 	new_col.sortable(s);
 	makeSelectable(new_col);

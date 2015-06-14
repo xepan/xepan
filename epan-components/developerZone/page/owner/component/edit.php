@@ -24,8 +24,9 @@ class page_developerZone_page_owner_component_edit extends page_developerZone_pa
 
 		$crud2 = $plugins_tab->add('CRUD');
 		$plug_model = $component->ref('Plugins');
-		if($crud2->isEditing('edit'))
+		if($crud2->isEditing('edit')){
 			$plug_model->isInstalling = true ;// To avoid copying files before save
+		}
 		
 		$crud2->setModel($plug_model);
 		$crud2->add('Controller_FormBeautifier');
