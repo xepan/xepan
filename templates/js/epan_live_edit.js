@@ -103,7 +103,7 @@ $(".epan-sortable-component").sortable(s = {
             component_html = component_html.replace(regex, uuid);
 
             new_obj = $(component_html).attr('id', uuid);
-
+            
             if (create_sortable)
                 $(new_obj).sortable(s); //.disableSelection();
 
@@ -177,6 +177,15 @@ $(".epan-sortable-component").sortable(s = {
             sortable_disabled = false;
             $(ui.item).sortable("option", "disabled", false);
             $(ui.item).find('.epan-sortable-component').sortable("option", "disabled", false);
+        }
+    },
+    update: function(event, ui){
+        $(ui.item).css('background-color','red');
+        var created_str = $(ui.item).attr('component_type') + '_options.created(new_obj,ui.item);';
+        try {
+            eval(created_str);
+        } catch (err) {
+            console.log(err);
         }
     }
 }); //.disableSelection();

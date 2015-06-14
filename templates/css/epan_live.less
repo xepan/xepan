@@ -54,7 +54,7 @@
 }
 
 #epan-content-wrapper {
-	background-color: blue;
+	background-color: lighten(lightgray,20%);
 	margin-top: @editor-top-height + 5;
 	margin-bottom: @editor-bottom-height + 5;
 }
@@ -154,8 +154,8 @@
 .epan-frontend-editing-toolbar {
 	width: 100%;
 	height: @height-toolbar;
-	border-top: 3px solid orange;
-	border-bottom: 3px solid orange;
+	border-top: 3px solid darken(@editor-base-color,15%);
+	border-bottom: 3px solid darken(@editor-base-color,15%);
 	background-color: @editor-base-color;
 	position: fixed;
 	bottom: 0;
@@ -181,15 +181,20 @@
 			height: @height-toolbar -3;
 			ul.ui-tabs-nav li a.ui-tabs-anchor, ul.ui-tabs-nav li a.ui-tabs-anchor:visited{
 				color: darken(@editor-text-color,5%);
+				font-weight: normal;
+				font-size: 0.8em;
 				&:hover{
 					color: @editor-text-color;
 				}
+			}
+			ul.ui-tabs-nav li.ui-state-active.ui-tabs-active a, ul.ui-tabs-nav li.ui-state-active.ui-tabs-active a:visited{
+				color: @editor-base-color;
 			}
 			.epan-frontend-editing-tool {
 				width: 100px;
 				text-align: center;
 				border-right: 1px solid gray;
-				// position: relative;
+				
 				float: left;
 				&:hover{
 					#gradient > .vertical(#ddd,#aaa);
@@ -209,6 +214,7 @@
 				}
 				.title{
 					font-size: 0.8em;
+					word-wrap: break-word;
 				}
 				img.tool-icon {
 					// position: absolute;
@@ -234,7 +240,7 @@
 }
 
 .ui-selected{
-	outline: 2px dashed blue;
+	outline: 2px dashed blue !important;
 }
 
 
