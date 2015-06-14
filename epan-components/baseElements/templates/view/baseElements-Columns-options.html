@@ -29,16 +29,19 @@ $('.epan-component-tool-column').slider({
 		max: 12,
 		slide: function (event, ui){
 			$(current_selected_component)
-				.removeClass('col-md-1 col-md-2 col-md-3 col-md-4 col-md-5 col-md-6 col-md-7 col-md-8 col-md-9 col-md-10 col-md-11 col-md-12');
-			$(current_selected_component).addClass('col-md-'+ui.value);
+				.removeClass('atk-col-1 atk-col-2 atk-col-3 atk-col-4 atk-col-5 atk-col-6 atk-col-7 atk-col-8 atk-col-9 atk-col-10 atk-col-11 atk-col-12');
+
+			$(current_selected_component).addClass('atk-col-'+ui.value);
 			$(current_selected_component).attr('span',ui.value);
-			$('.epan-component-column-size').html(ui.value);
+			$('.epan-component-tool-column-size').html(ui.value);
 		}
 });
 
 var {$component_type}_options = {
 	show: function (){
-			$('.epan-component-tool-column').slider('value',12);
+		console.log($(current_selected_component));
+		console.log($(current_selected_component).attr('span'));
+			$('.epan-component-tool-column').slider('value',$(current_selected_component).attr('span'));
 			$('.epan-component-tool-column-size').html($(current_selected_component).attr('span'));
 	}
 
