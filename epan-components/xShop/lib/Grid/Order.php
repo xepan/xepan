@@ -12,10 +12,18 @@ class Grid_Order extends \Grid {
 		
 		$this->addSno();
 
+
 		$this->vp = $this->add('VirtualPage')->set(function($p)use($self){
-			$o = $p->add('xShop/Model_Order')->load($_GET['sales_order_clicked']);
+			$order_id = $p->api->stickyGET('sales_order_clicked');
+
+			$print_btn  = $p->add('Button','null')->set('Print');
+			if($print_btn->isClicked()){
+				$p->js()->univ()->newWindow($this->api->url('xShop_page_owner_printsaleorder',array('saleorder_id'=>$order_id,'sale_performa'=>0,'cut_page'=>0)))->execute();
+			}
+			$o = $p->add('xShop/Model_Order')->load($order_id);
 			$order = $p->add('xShop/View_Order');
 			$order->setModel($o);
+			
 		});
 		
 		$this->invoicevp = $this->add('VirtualPage')->set(function($p)use($self){
@@ -25,7 +33,7 @@ class Grid_Order extends \Grid {
 
 		$print = $this->addColumn('Button','print');
 		if($_GET['print']){
-			$this->js()->univ()->newWindow($this->api->url('xShop_page_owner_printsaleorder',array('saleorder_id'=>$_GET['print'],'cut_page'=>0)))->execute();
+			$this->js()->univ()->newWindow($this->api->url('xShop_page_owner_printsaleorder',array('saleorder_id'=>$_GET['print'],'sale_performa'=>1,'cut_page'=>0)))->execute();
 		}
 	}
 
