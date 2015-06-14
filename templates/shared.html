@@ -13,7 +13,12 @@
     -->
     <script type="text/javascript">
       $(function(){
-      edit_template={edit_template}false{/};
+        edit_template={edit_template}false{/};
+        website_requested = '{$website_requested}';
+        current_website_id = '{$current_website_id}';
+        current_page_name = '{$current_page_name}';
+        current_page_id = '{$current_page_id}';
+        current_template_id = '{$current_template_id}';
       {$document_ready}
       });
       $(document).on('focusin', function(event) {
@@ -27,7 +32,7 @@
     <div id="epan-content-wrapper" component_type="Web Page" class="epan-sortable-component">{$Content}</div>{editor_block}
     <div id="epan-editor-top-panel" class="epan-editor-top-panel">
       <div class="epan-editor-logo atk-move-left"><i class="icon-leaf"></i></div>
-      <div class="epan-editor-current-page atk-move-left">Page: <span class='epan-editor-current-page'>{current_page}Current Page Here{/current_page}</span></div>
+      <div onclick="$.univ().frameURL('{$page_tempalte_frame_title}','{$page_template_url}');" class="epan-editor-current-page atk-move-left">Page: <span class='epan-editor-current-page'>{current_page}Current Page Here{/current_page}</span></div>
       <div id="page-property-btn" title="Page Properties" class="atk-move-left editor-tooltip"><i class="icon-cog"></i></div>
       <div id="save-as-snapshot" title="Save And Take Snapshot" class="atk-move-left editor-tooltip"><i class="icon-camera"></i></div>
       <div id="epan-save-btn" title="Save" class="atk-move-left editor-tooltip atk-swatch-yellow"><i class="icon-floppy"></i></div>

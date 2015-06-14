@@ -13,7 +13,12 @@ html(lang='en')
       script(type='text/javascript', src='templates/css/ie8.js')
     script(type='text/javascript').
       $(function(){
-      edit_template={edit_template}false{/};
+        edit_template={edit_template}false{/};
+        website_requested = '{$website_requested}';
+        current_website_id = '{$current_website_id}';
+        current_page_name = '{$current_page_name}';
+        current_page_id = '{$current_page_id}';
+        current_template_id = '{$current_template_id}';
       {$document_ready}
       });
       $(document).on('focusin', function(event) {
@@ -31,7 +36,7 @@ html(lang='en')
     #epan-editor-top-panel.epan-editor-top-panel
       .epan-editor-logo.atk-move-left
         i.icon-leaf
-      .epan-editor-current-page.atk-move-left
+      .epan-editor-current-page.atk-move-left(onclick="$.univ().frameURL('{$page_tempalte_frame_title}','{$page_template_url}');")
         |Page: <span class='epan-editor-current-page'>{current_page}Current Page Here{/current_page}</span>
       #page-property-btn.atk-move-left.editor-tooltip(title="Page Properties")
         i.icon-cog
