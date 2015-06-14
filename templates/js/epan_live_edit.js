@@ -298,7 +298,7 @@ function unSelectAllComponent() {
 }
 
 // MAKE ALL COMPONENT SELECTABLE FOR OPTIONS AND ACTIONS etc...
-function makeSelectable(obj) {
+makeSelectable = function makeSelectable(obj) {
     obj.dblclick(function(event) {
         if ($(this).hasClass('ui-selected')) {
             $(this).removeClass('ui-selected');
