@@ -76,7 +76,7 @@ epan_component_hover_function: function epan_component_hover_function(event) {
                 component_handel = $('<div class=\'drag-handler atk-size-micro\' style=\' z-index:2000\'><i class=\'glyphicon glyphicon-move atk-move-left\'><div class=\'component_type_name \'> '+$(self).attr('component_type')+' </div></div>');
                 $(component_handel).appendTo($(this));
 
-                remove_btn = $('<div class=\'remove_btn\'  style=\' z-index:2000\' title=\'' + $(self).attr('component_type') + '\'><i class=\'glyphicon glyphicon-trash atk-effect-danger\'></i></div>');
+                remove_btn = $('<div class=\'remove_btn atk-swatch-yellow\'  style=\' z-index:2000\' title=\'' + $(self).attr('component_type') + '\'><i class=\'glyphicon glyphicon-trash atk-effect-danger\'></i></div>');
                 $(remove_btn).appendTo($(this));
                 $(remove_btn).tooltip();
                 $(remove_btn).hover(function() {
@@ -235,7 +235,7 @@ function updateBreadCrumb() {
     // .reverse()
     .each(function(index, el) {
         var self = this;
-        new_btn = $('<div class=\'glyphicon glyphicon-forward pull-left\' style=\'margin:0 5px;\'></div>' + '<div class=\' btn btn-link btn-xs pull-left\'>' + $(el).attr('component_type') + '</div>');
+        new_btn = $('<div class=\'glyphicon glyphicon-forward pull-left\' style=\'margin:0 5px;\'></div>' + '<div class=\' label label-success btn-xs pull-left \'>' + $(el).attr('component_type') + '</div>');
         new_btn.click(function(event) {
             if (self == current_selected_component) {
                 $(current_selected_component).effect("bounce", "slow");
