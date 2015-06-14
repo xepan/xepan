@@ -1,0 +1,46 @@
+<div id='{$_name}' class='epan-component-options' component_type="{$component_type}">
+	<h3>{$component_type_name}</h3>
+	<div class='xepan-collasp-header'>
+		<table class="table table-condensed table-hover">
+			<tbody>
+				<tr>
+					<td>
+						<p>Column Size</p>
+					</td>
+					<td>
+						<div class="epan-component-tool-column"></div>
+					</td>
+					<td width='20%'>
+						<div class="epan-component-tool-column-size"></div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<script type="text/javascript">
+// ========== OPTION TO COMPONENT EFFECT ==============
+//
+// $(your_option_html_element).click(function(event,ui){
+		// 		$(current_selected_component).what to do ???
+// })
+$('.epan-component-tool-column').slider({
+		min: 1,
+		max: 12,
+		slide: function (event, ui){
+			$(current_selected_component)
+				.removeClass('col-md-1 col-md-2 col-md-3 col-md-4 col-md-5 col-md-6 col-md-7 col-md-8 col-md-9 col-md-10 col-md-11 col-md-12');
+			$(current_selected_component).addClass('col-md-'+ui.value);
+			$(current_selected_component).attr('span',ui.value);
+			$('.epan-component-column-size').html(ui.value);
+		}
+});
+
+var {$component_type}_options = {
+	show: function (){
+			$('.epan-component-tool-column').slider('value',12);
+			$('.epan-component-tool-column-size').html($(current_selected_component).attr('span'));
+	}
+
+}
+</script>
