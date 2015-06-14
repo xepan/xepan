@@ -1,12 +1,13 @@
-
-<div id="{$_name}" class="epan-frontend-editing-tool {$class}">
-  <div><img width="32px" height="32px" src="{$icon}" class="tool-icon"/><br/><img src="epan-addons/editingToolbar/templates/images/tool_shadow.png" class="tool-shadow"/>
-    <div class="title">{title}Tool{/title}</div>{$Content}
-  </div>
-</div>
-<script type="text/javascript">
+.epan-frontend-editing-tool(id='{$_name}', class='{$class}')
+  div
+    img.tool-icon(width='32px', height='32px', src='{$icon}')
+    br
+    img.tool-shadow(src='epan-addons/editingToolbar/templates/images/tool_shadow.png')
+    .title {title}Tool{/title}
+    | {$Content}
+script(type='text/javascript').
   $(function(){
-  $('#{$_name}').draggable({
+  $('\#{$_name}').draggable({
   connectToSortable: '.epan-sortable-component',
   helper: 'clone',
   revert: 'invalid',
@@ -22,4 +23,4 @@
   }
   });
   });
-</script>{$options}
+| {$options}

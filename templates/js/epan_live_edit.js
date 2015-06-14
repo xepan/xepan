@@ -387,7 +387,66 @@ $('#epan-save-btn').click(function(event) {
 //     unSelectAllComponent();
 // });
 
+// Editor Related setup and functions
+$(".editor-tooltip").xtooltip();
 
+$('#epan-editor-preview i').click(function(event){
+    $('#epan-editor-left-panel').visibilityToggle();
+});
+
+var website_requested = '{$website_requested}';
+var current_website_id = '{$current_website_id}';
+var current_page_name = '{$current_page_name}';
+var current_page_id = '{$current_page_id}';
+var current_template_id = '{$current_template_id}';
+
+
+$('#epan-component-border').click(function(event) {
+    if($('#epan-component-border:checked').size() > 0){
+        $('.epan-component').addClass('component-outline');
+    }else{
+        $('.epan-component').removeClass('component-outline');
+    }
+});
+
+$('#epan-toolbar-position-top').click(function(event) {
+    $('.epan-frontend-editing-toolbar').css('top',0);
+    $('.epan-frontend-editing-toolbar').css('bottom','auto');
+});
+
+$('#epan-toolbar-position-bottom').click(function(event) {
+    $('.epan-frontend-editing-toolbar').css('top','auto');
+    $('.epan-frontend-editing-toolbar').css('bottom',0);
+});
+
+$('#epan-component-extra-padding').click(function(event) {
+    if($('#epan-component-extra-padding:checked').size() > 0){
+        $('.epan-sortable-component').addClass('epan-sortable-extra-padding');
+    }else{
+        $('.epan-sortable-component').removeClass('epan-sortable-extra-padding');
+    }
+});
+
+$('#epan-quick-component-options').draggable({
+    handle: '.option-drag-handler',
+    // containment: $('.top-page') //TODO to be done
+});
+
+$('#save-as-snapshot').click(function(event) {
+    save_and_take_snapshot =true;
+    $('#epan-save-btn').click();
+    save_and_take_snapshot =false;
+});
+
+$('#front-app-launcher').click(function(event) {
+    $('body').univ().frameURL('Front Component','?page=owner_frontapplauncher');
+});
+
+$('#epan-editcss-button').click(function(event) {
+    $(this).univ().frameURL('Edit CSS','index.php?page=edit_css&cut_page=1');
+});
+
+// End of Editor related functions
 
 $(function() {
 
