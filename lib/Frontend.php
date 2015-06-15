@@ -172,11 +172,11 @@ class Frontend extends ApiFrontend{
 				$auth->model->save();
 			});
 
-			if($this->api->auth->isLoggedIn() AND $this->api->auth->model->ref('epan_id')->get('name')==$this->api->website_requested AND $this->api->auth->model['type'] >= 80){
+			if($this->api->auth->isLoggedIn() AND $this->api->auth->model->ref('epan_id')->get('name')==$this->api->website_requested AND $this->api->auth->model['type'] >= 80 AND !$_GET['preview']){
 				$this->edit_mode = true;
 			}
 
-			if($_GET['edit_template']){
+			if($this->edit_mode AND $_GET['edit_template']){
 				$this->edit_template = true;
 				// $this->api->template->appendHTML('js_include','\nsfjdhkj;\n');
 				$this->stickyGET('edit_template');

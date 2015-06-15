@@ -452,6 +452,16 @@ $('#epan-editcss-button').click(function(event) {
     $(this).univ().frameURL('Edit CSS','index.php?page=edit_css&cut_page=1');
 });
 
+$('#epan-editor-preview-mobile').click(function(event){
+    $("<div>").append($("<iframe width='100%' height='100%' />")
+        .attr("src", "index.php?preview=1"))
+        .dialog({
+            width: 1024,
+            height: 768,
+            modal: true
+        });
+});
+
 // End of Editor related functions
 
 $(function() {
