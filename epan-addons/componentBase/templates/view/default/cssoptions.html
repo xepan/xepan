@@ -892,6 +892,36 @@
   });
   // TODO Get current width and put in Options
   $('#epan-component-width-input').val('');
+  
+  
+  //TRANSFORM INITIALIZATION
+  var tr = $(current_selected_component).css('transform');
+  var regExp = /\(([^)]+)\)/g;
+  var matches = tr.match(regExp);
+  
+  for (var i = 0; i < matches.length; i++) {
+    var str = matches[i];
+      if(i==0){
+        $('.epan-component-transform-rotate-value').html(matches[i]);
+        //- var set_value_rotate = matches[0].match(/[-*]\d+/);
+        //- $('.epan-component-transform-rotate').slider('value',set_value_rotate[0]);
+      }else if(i==1){
+        $('.epan-component-transform-scale-value').html(matches[i]);
+        //- var set_value_scale = matches[0].match(/[-*]\d+/);
+        //- $('.epan-component-transform-scale').slider('value',set_value_scale[0]);
+      }else if(i==2){
+        $('.epan-component-transform-skew-value').html(matches[i]);
+        //- var set_value_skew = matches[0].match(/[-*]\d+/);
+        //- $('.epan-component-transform-skew').slider('value',set_value_skew[0]);
+      }else if(i==3){
+        $('.epan-component-transform-translate-value').html(matches[i]);
+        //- var set_value_translate = matches[0].match(/[-*]\d+/);
+        //- $('.epan-component-transform-translate').slider('value',set_value_translate[0]);
+      }
+  
+    
   }
-  // $('.btn').button();
+  //- $('.epan-component-transform-rotate').slider('value',parseInt($(current_selected_component)[0].style.marginTop));
+  
+  }
 </script>
