@@ -45,7 +45,7 @@ class Model_Invoice extends \Model_Document{
 		$this->addHook('afterSave',$this);
 		
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
-		$this->setOrder('id','desc');
+		$this->setOrder('updated_at','desc');
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
@@ -80,10 +80,9 @@ class Model_Invoice extends \Model_Document{
 			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
 			$this['gross_amount'] = $this['gross_amount'] + $oi['texted_amount'];
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
-			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount'];
 		}	
 		
-		$this['net_amount'] = $this['net_amount'] + $this['shipping_charge'];
+		$this['net_amount'] = $this['gross_amount'] + $this['shipping_charge'] - $this['discount'];
 		//xShop Configuration model must be loaded in Api
 		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
 		if($shop_config['is_round_amount_calculation']){
