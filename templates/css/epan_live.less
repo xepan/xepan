@@ -274,6 +274,11 @@ body{
 	border :1px solid lightgray;
 	color: rgba(20, 20, 20, 1);
 	z-index: 1000;
+
+	div.color-menu.dropdown-menu{
+		margin-left: -72px;
+	}
+
 	// .border-top-radius(5px);
 	// .border-bottom-radius(5px);
 
@@ -287,8 +292,27 @@ body{
 		.epan-component-options{
 
 		}
-		.epan-css-options{
+	}
 
+	.epan-css-options{
+		max-height:500px;
+		overflow-y: scroll;
+
+		.panel-heading{
+			padding: 10px !important;
+			margin-bottom: 2px;
+			background-color: @editor-base-color;
+			border-top-left-radius:0px;
+			border-top-right-radius:0px;
+			border-bottom:2px solid darken(@editor-base-color,15%);
+			& a{
+			 	color:darken(@editor-text-color,15%); 
+				
+				&:hover{
+				 	color:@editor-text-color;
+				}
+			}
+			
 		}
 	}
 }

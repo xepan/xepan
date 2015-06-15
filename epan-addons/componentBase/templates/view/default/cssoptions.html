@@ -3,9 +3,9 @@
   <div id="accordion" class="panel-group remove-paddig-margin">
     <div class="xepan-collasp-header">
       <div class="panel-heading remove-padding-margin">
-        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Basic Properties</a></h4>
+        <h4 class="panel-title atk-size-milli"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Basic Properties</a></h4>
       </div>
-      <div id="collapseOne" class="panel-collapse collapse">
+      <div id="collapseOne" class="panel-collapse collapse in">
         <div class="panel-body xepan-collasp-body">
           <table class="table table-condensed table-hover">
             <tbody>
@@ -69,7 +69,7 @@
     <!-- PADDING-->
     <div class="xepan-collasp-header">
       <div class="panel-heading remove-padding-margin">
-        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Padding</a></h4>
+        <h4 class="panel-title atk-size-milli"><a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Padding</a></h4>
       </div>
       <div id="collapseTwo" class="panel-collapse collapse">
         <div class="panel-body xepan-collasp-body">
@@ -144,7 +144,7 @@
     <!-- MARGIN-->
     <div class="xepan-collasp-header">
       <div class="panel-heading remove-padding-margin">
-        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Margin</a></h4>
+        <h4 class="panel-title atk-size-milli"><a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Margin</a></h4>
       </div>
       <div id="collapseThree" class="panel-collapse collapse">
         <div class="panel-body xepan-collasp-body">
@@ -254,7 +254,7 @@
     <!-- BACKGROUND-->
     <div class="xepan-collasp-header">
       <div class="panel-heading remove-padding-margin">
-        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">Background</a></h4>
+        <h4 class="panel-title atk-size-milli"><a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">Background</a></h4>
       </div>
       <div id="collapseFour" class="panel-collapse collapse">
         <div class="panel-body xepan-collasp-body">
@@ -307,14 +307,14 @@
     <!-- BORDER-->
     <div class="xepan-collasp-header">
       <div class="panel-heading remove-padding-margin">
-        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseFive">Border</a></h4>
+        <h4 class="panel-title atk-size-milli"><a data-toggle="collapse" data-parent="#accordion" href="#collapseFive">Border</a></h4>
       </div>
       <div id="collapseFive" class="panel-collapse collapse">
         <div class="panel-body xepan-collasp-body">
           <table class="table table-condensed table-hover">
             <tbody>
               <tr>
-                <td>Effect All</td>
+                <td colspan="3">Effect All</td>
                 <td>
                   <input id="epan-all-border-same" type="checkbox" checked=""/>
                 </td>
@@ -333,9 +333,20 @@
                   </div>
                 </td>
                 <td>
-                  <div pos="top" style="solid" class="btn btn-default btn-xs pull-left epan-border-style">sld</div>
-                  <div pos="top" style="dashed" class="btn btn-default btn-xs pull-left epan-border-style">dash</div>
-                  <div pos="top" style="dotted" class="btn btn-default btn-xs pull-left epan-border-style">dotd</div>
+                  <select pos="top" class="epan-border-style">
+                    <option value="0">Select Style</option>
+                    <option value="dashed">dash</option>
+                    <option value="dotted">dotted</option>
+                    <option value="double">double</option>
+                    <option value="groove">groove</option>
+                    <option value="hidden">hidden</option>
+                    <option value="inset">inset</option>
+                    <option value="none">none</option>
+                    <option value="outset">outset</option>
+                    <option value="ridge">ridge</option>
+                    <option value="solid">solide</option>
+                    <option value="inherit">inherit</option>
+                  </select>
                 </td>
                 <td>
                   <input id="epan-component-border-top-width" type="text" size="2" pos="top" class="epan-border-width"/>
@@ -349,9 +360,20 @@
                   </div>
                 </td>
                 <td>
-                  <div pos="right" style="solid" class="btn btn-default btn-xs pull-left epan-border-style">sld</div>
-                  <div pos="right" style="dashed" class="btn btn-default btn-xs pull-left epan-border-style">dash</div>
-                  <div pos="right" style="dotted" class="btn btn-default btn-xs pull-left epan-border-style">dotd</div>
+                  <select pos="right" class="epan-border-style">
+                    <option value="0">Select Style</option>
+                    <option value="dashed">dash</option>
+                    <option value="dotted">dotted</option>
+                    <option value="double">double</option>
+                    <option value="groove">groove</option>
+                    <option value="hidden">hidden</option>
+                    <option value="inset">inset</option>
+                    <option value="none">none</option>
+                    <option value="outset">outset</option>
+                    <option value="ridge">ridge</option>
+                    <option value="solid">solide</option>
+                    <option value="inherit">inherit</option>
+                  </select>
                 </td>
                 <td>
                   <input id="epan-component-border-right-width" type="text" size="2" pos="right" class="epan-border-width"/>
@@ -365,9 +387,20 @@
                   </div>
                 </td>
                 <td>
-                  <div pos="bottom" style="solid" class="btn btn-default btn-xs pull-left epan-border-style">sld</div>
-                  <div pos="bottom" style="dashed" class="btn btn-default btn-xs pull-left epan-border-style">dash</div>
-                  <div pos="bottom" style="dotted" class="btn btn-default btn-xs pull-left epan-border-style">dotd</div>
+                  <select pos="bottom" class="epan-border-style">
+                    <option value="0">Select Style</option>
+                    <option value="dashed">dash</option>
+                    <option value="dotted">dotted</option>
+                    <option value="double">double</option>
+                    <option value="groove">groove</option>
+                    <option value="hidden">hidden</option>
+                    <option value="inset">inset</option>
+                    <option value="none">none</option>
+                    <option value="outset">outset</option>
+                    <option value="ridge">ridge</option>
+                    <option value="solid">solide</option>
+                    <option value="inherit">inherit</option>
+                  </select>
                 </td>
                 <td>
                   <input id="epan-component-border-bottom-width" type="text" size="2" pos="bottom" class="epan-border-width"/>
@@ -381,12 +414,97 @@
                   </div>
                 </td>
                 <td>
-                  <div pos="left" style="solid" class="btn btn-default btn-xs pull-left epan-border-style">sld</div>
-                  <div pos="left" style="dashed" class="btn btn-default btn-xs pull-left epan-border-style">dash</div>
-                  <div pos="left" style="dotted" class="btn btn-default btn-xs pull-left epan-border-style">dotd</div>
+                  <select pos="left" class="epan-border-style">
+                    <option value="0">Select Style</option>
+                    <option value="dashed">dash</option>
+                    <option value="dotted">dotted</option>
+                    <option value="double">double</option>
+                    <option value="groove">groove</option>
+                    <option value="hidden">hidden</option>
+                    <option value="inset">inset</option>
+                    <option value="none">none</option>
+                    <option value="outset">outset</option>
+                    <option value="ridge">ridge</option>
+                    <option value="solid">solide</option>
+                    <option value="inherit">inherit</option>
+                  </select>
                 </td>
                 <td>
                   <input id="epan-component-border-left-width" type="text" size="2" pos="left" class="epan-border-width"/>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">Radius Top-Left</td>
+                <td colspan="2">
+                  <input id="epan-border-radius-t-left" type="text" pos="border-top-left-radius" placeHolder="exp. 10px, 10em, 10% etc." class="epan-border-radius"/>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">Radius Top-Right</td>
+                <td colspan="2">
+                  <input id="epan-border-radius-t-right" type="text" pos="border-top-right-radius" placeHolder="exp. 10px, 10em, 10% etc." class="epan-border-radius"/>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">Radius Bottom-Left</td>
+                <td colspan="2">
+                  <input id="epan-border-radius-b-left" type="text" pos="border-bottom-left-radius" placeHolder="exp. 10px, 10em, 10% etc." class="epan-border-radius"/>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">Radius Bottom-Right</td>
+                <td colspan="2">
+                  <input id="epan-border-radius-b-right" type="text" pos="border-bottom-right-radius" placeHolder="exp. 10px, 10em, 10% etc." class="epan-border-radius"/>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!--CSS Tranform-->
+    <div class="xepan-collasp-header">
+      <div class="panel-heading remove-padding-margin">
+        <h4 class="panel-title atk-size-milli"><a data-toggle="collapse" data-parent="#accordion" href="#collapseSix">Tranform</a></h4>
+      </div>
+      <div id="collapseSix" class="panel-collapse collapse">
+        <div class="panel-body xepan-collasp-body">
+          <table class="table table-condensed table-hover">
+            <tbody>
+              <tr>
+                <td width="20%">Rotate</td>
+                <td width="60%">
+                  <div css-syntax="rotate" unit="deg" class="epan-component-transform epan-component-transform-rotate"></div>
+                </td>
+                <td width="20%">
+                  <div rotate="(0deg)" class="epan-component-transform-rotate-value"></div>
+                </td>
+              </tr>
+              <tr>
+                <td width="20%">Scale</td>
+                <td width="60%">
+                  <div css-syntax="scale" unit="" class="epan-component-transform epan-component-transform-scale"></div>
+                </td>
+                <td width="20%">
+                  <div scale="(1,1)" class="epan-component-transform-scale-value"></div>
+                </td>
+              </tr>
+              <tr>
+                <td width="20%">Skew</td>
+                <td width="60%">
+                  <div css-syntax="skew" unit="deg" class="epan-component-transform epan-component-transform-skew"></div>
+                </td>
+                <td width="20%">
+                  <div skew="(0deg,0deg)" class="epan-component-transform-skew-value"></div>
+                </td>
+              </tr>
+              <tr>
+                <td width="20%">Translate</td>
+                <td width="60%">
+                  <div css-syntax="translate" unit="px" class="epan-component-transform epan-component-transform-translate"></div>
+                </td>
+                <td width="20%">
+                  <div translate="(1px,1px)" class="epan-component-transform-translate-value"></div>
                 </td>
               </tr>
             </tbody>
@@ -574,6 +692,78 @@
   is_all_border_same =false;
   }
   });
+  
+  //Border Radius
+  $('.epan-border-radius').change(function(event){
+    $(current_selected_component).css($(this).attr('pos'),$(this).val());
+    $(current_selected_component).css('-moz-'+$(this).attr('pos'),$(this).val());
+    $(current_selected_component).css('-webkit-'+$(this).attr('pos'),$(this).val());
+  });
+  
+  //CSS TRANSFORM
+  $('.epan-component-transform').slider({
+    slide: function(event,ui){
+        if($(this).attr('css-syntax') == 'rotate'){
+          var rotate = '('+ui.value+'deg)';
+          $('.epan-component-transform-rotate-value').html(rotate).attr($(this).attr('css-syntax'),rotate);
+        }
+        
+        if($(this).attr('css-syntax') == 'scale'){
+          var scale =  '('+ui.value+','+ui.value+')';
+          $('.epan-component-transform-scale-value').html(scale);
+          $('.epan-component-transform-scale-value').attr($(this).attr('css-syntax'),scale);
+        }
+  
+        if($(this).attr('css-syntax') == 'skew'){
+          var skew =  '('+ui.value+'deg,'+ui.value+'deg)';
+          $('.epan-component-transform-skew-value').html(skew);
+          $('.epan-component-transform-skew-value').attr($(this).attr('css-syntax'),skew);
+        }
+        
+        if($(this).attr('css-syntax') == 'translate'){
+          var translate =  '('+ui.value+'px,'+ui.value+'px)';
+          $('.epan-component-transform-translate-value').html(translate);
+          $('.epan-component-transform-translate-value').attr($(this).attr('css-syntax'),translate);
+        }
+  
+  
+        var transform_value = 'rotate'+$('.epan-component-transform-rotate-value').attr('rotate');
+        transform_value += ' scale'+$('.epan-component-transform-scale-value').attr('scale');
+        transform_value += ' skew'+$('.epan-component-transform-skew-value').attr('skew');
+        transform_value += ' translate'+$('.epan-component-transform-translate-value').attr('translate');
+        
+        $(current_selected_component).css('transform',transform_value);
+        $(current_selected_component).css('-webkit-transform',transform_value);
+        $(current_selected_component).css('-moz-transform',transform_value);
+        $(current_selected_component).css('-o-transform',transform_value);
+        $(current_selected_component).css('-ms-transform',transform_value);
+        
+  
+        //- console.log($(this).attr('unit'));    
+    }
+  });
+  
+  $('.epan-component-transform-rotate').slider({
+    min: -360,
+    max: 360,
+  });
+  
+  $('.epan-component-transform-scale').slider({
+    min: -100,
+    max: 100,
+  });
+  
+  $('.epan-component-transform-skew').slider({
+    min: -180,
+    max: 180,
+  });
+  
+  $('.epan-component-transform-translate').slider({
+    min: -100,
+    max: 100,
+  });
+  
+  
   $('.epan-border-width').keyup(function(event) {
   // console.log('border-'+$(this).attr('pos')+'-width',$(this).val());
   if(is_all_border_same)
@@ -588,12 +778,12 @@
   else
   $(current_selected_component).css('border-'+$(this).attr('pos')+'-color','#'+$(this).val());
   });
-  $('.epan-border-style').click(function(event) {
+  $('.epan-border-style').change(function(event) {
   // console.log('border-'+$(this).attr('pos')+'-style',$(this).attr('style'));
   if(is_all_border_same)
-  $(current_selected_component).css('border-style',$(this).attr('style'));
+  $(current_selected_component).css('border-style',$(this).val());
   else
-  $(current_selected_component).css('border-'+$(this).attr('pos')+'-style',$(this).attr('style'));
+  $(current_selected_component).css('border-'+$(this).attr('pos')+'-style',$(this).val());
   $(this).siblings().removeClass('btn-primary');
   $(this).addClass('btn-primary');
   });
