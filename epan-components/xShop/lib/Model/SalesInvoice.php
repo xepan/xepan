@@ -9,6 +9,7 @@ class Model_SalesInvoice extends Model_Invoice{
 			'allow_edit'=>array(),
 			'allow_del'=>array(),
 			'can_cancel'=>array(),
+			'update_from_order'=>array(),
 		);
 
 	function init(){
@@ -237,5 +238,70 @@ class Model_SalesInvoice extends Model_Invoice{
 	}
 
 
+	function update_from_order_page($page){
+		if(!$this['sales_order_id']){
+			$page->add('View_Error')->set('Invoice Not Generated From Order');
+			return false;
+		}
+
+		$col = $page->add('Columns');
+		$col1 = $col->addColumn(6);
+		$col2 = $col->addColumn(6);
+		$col1->add('H3')->set('Order Items Not Included in Invoice')->addClass('atk-swatch-red atk-padding-small');
+		$col2->add('H3')->set('Items Included in Invoice')->addClass('atk-swatch-green atk-padding-small');
+		
+		$invoice_items = $this->itemrows();
+		if($order = $this->order()){
+			$order_items = $order->itemrows();
+			$order_items->addCondition('invoice_id',null);
+		}
+
+		$invoice_items_grid = $col2->add('Grid');
+		$order_items_grid = $col1->add('Grid');
+
+		$order_items_grid->setModel($order_items,array('name','qty','rate','amount','tax_per_sum','tax_amount','texted_amount'));
+		$invoice_items_grid->setModel($invoice_items,array('item','qty','rate','amount','tax_per_sum','tax_amount','texted_amount'));
+		
+		$form = $col1->add('Form');
+		$order_items_field = $form->addField('hidden','order_items');
+		$form->addSubmit('Update Invoice');
+		$order_items_grid->addSelectable($order_items_field);
+
+		if($form->isSubmitted()){
+			$js = array(
+					$invoice_items_grid->js()->reload(),
+					$order_items_grid->js()->reload()
+				);
+			$array = json_decode($form['order_items']);
+			if( !count($array))
+				$form->js(null,$js)->univ()->errorMessage('Select Order Items')->execute();
+			
+			$this->update_from_order($form['order_items']);
+			$form->js(null,$js)->univ()->successMessage('Invoice Updated')->execute();
+		}
+
+
+	}
+
+
+	function update_from_order($json){
+
+		$array = json_decode($json);
+			foreach ($array as $key => $value) {
+				$oi = $this->add('xShop/Model_OrderDetails')->load($value);				
+				$this->addItem(
+						$oi->item(),
+						$oi['qty'],
+						$oi['rate'],
+						$oi['amount'],
+						$oi['unit'],
+						$oi['narration'],
+						$oi['custom_fields'],
+						$oi['apply_tax'],
+						$oi['tax_id']
+					);
+				$oi->invoice($this);
+		}
+	}
 
 }
