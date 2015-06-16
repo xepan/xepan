@@ -28,10 +28,19 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->hasMany('xPurchase/PurchaseOrderAttachment','related_document_id',null,'Attachements');
 
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('afterSave',$this);
 
 		$this->addExpression('orderitem_count')->set($this->refSQL('xPurchase/PurchaseOrderItem')->count());
 		// $this->add('dynamic_model/Controller_AutoCreator');
 		$this->setOrder('id','desc');
+	}
+
+	function afterSave(){
+		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		if($shop_config['is_round_amount_calculation']){
+			$this['net_amount'] = round($this['net_amount'],0);
+			$this->save();
+		}
 	}
 
 	function beforeDelete(){
@@ -495,6 +504,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$email_body = str_replace("{{purchase_order_date}}", $this['created_date'], $email_body);
 		$email_body = str_replace("{{delivery_to}}", $this['delivery_to'], $email_body);
 		$email_body = str_replace("{{terms_and_conditions}}", $tnc?$tnc:" ", $email_body);
+		$email_body = str_replace("{{purchase_order_summary}}", $this['order_summary'], $email_body);
 		//END OF REPLACING VALUE INTO ORDER DETAIL EMAIL BODY
 
 		return $email_body;

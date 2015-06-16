@@ -6,10 +6,11 @@ class Model_Order_Approved extends Model_Order{
 	public $actions=array(
 			'can_view'=>array(),
 			'can_cancel'=>array(),
-			'can_send_via_email'=>array(),
+			'can_send_via_email'=>array('caption'=>'Email'),
 			'allow_edit'=>array(),
 			'allow_add'=>array(),
 			'can_forcedelete'=>array('icon'=>'trash-1 atk-swatch-red'),
+			'can_see_activities'=>array(),
 		);
 	
 

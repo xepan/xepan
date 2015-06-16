@@ -49,6 +49,17 @@ class page_test extends Page {
 		}
 	}
 
+	function page_toword(){
+		// $d = $this->add('xShop/Model_Order');
+		// echo $d->convert_number_to_words(200);
+		require('System.php');
+		var_dump(class_exists('System', false));
+
+		// require('Numbers/Words.php');
+		// $nw = new Numbers_Words();
+		// echo $nw->toWords(200);
+	}
+
 	// function page_invremove(){
 	// 	$this->add('xShop/Model_SalesInvoice')->each(function ($obj){
 	// 		echo $obj['name'];
@@ -67,4 +78,42 @@ class page_test extends Page {
 
 	// }
 	
+
+	function page_leadcatasso(){
+
+		$leads = $this->add('xEnquiryNSubscription/Model_Subscription')->addCondition('from_app','Customer');
+		foreach ($leads as $l) {
+			$asso = $this->add('xEnquiryNSubscription/Model_SubscriptionCategoryAssociation');
+			$asso['subscriber_id'] = $l->id;
+			$asso['subscribed_on'] = $l['created_at'];
+			$asso['send_news_letters'] = true;
+			$asso['category_id'] = 4;
+			$asso->save();
+
+		}
+	}
+
+	function page_cssicons(){
+		// $contents = ".abc {def}";
+		//Grab contents of css file
+		$contents = file_get_contents('templates/css/compact.css');
+
+		preg_match_all( "/\icon-[aA-zZ]*/", $contents , $match1);
+		preg_match_all( "/\icon-[aA-zZ]*-[aA-zZ]*/", $contents , $match2);
+		preg_match_all( "/\icon-[aA-zZ]*-[aA-zZ]*-[aA-zZ][0-9]*/", $contents , $match3);
+		// echo "<pre>";
+		// print_r( $match);
+		// echo "</pre>";
+		$match = array_merge($match1,$match2,$match3);
+
+		foreach ($match as $array => $value) {
+			foreach ($value as $c) {
+				$s = '<div class="atk-box pull-left"><i class="'.$c.' atk-size-mega"> '.$c.'</i></div>';
+				$this->add('View')->setHTML($s);
+				// $str = '<i class="'.$c.'" ></i>'; 
+				// $this->addText()
+			}
+		}
+	}
+
 }

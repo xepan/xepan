@@ -8,6 +8,7 @@ class Model_Quotation_Cancelled extends Model_Quotation{
 			'can_view'=>array(),
 			'allow_edit'=>array(),
 			'allow_del'=>array(),
+			'can_see_activities'=>array(),
 		);
 
 	function init(){

@@ -6,6 +6,7 @@ class Model_MaterialRequestReceived_ToReceive extends Model_MaterialRequestRecei
 	public $actions=array(
 			'can_view'=>array(),
 			'can_receive'=>array(),
+			'can_see_activities'=>array(),
 
 		);
 }	

@@ -14,18 +14,18 @@ class page_xProduction_page_owner_task_processed extends page_xProduction_page_o
 		
 		$crud=$left_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false,'allow_del'=>false,'grid_class'=>'xProduction/Grid_Task'));
 		$crud->setModel($mytask);
-			$crud->manageAction('see_activities');
+			$crud->manageAction('activities');
 
 		// $crud->add('xHR/Controller_Acl');
 
 		$right_col->add('View_Info')->set('Processed By Employee');
 		$emptask = $right_col->add('xProduction/Model_Task_Processed');
 		$emptask->addCondition('created_by_id',$this->api->current_employee->id);
-		$crud=$right_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false,'allow_del'=>false,'grid_class'=>'xProduction/Grid_Task'));
-		$crud->setModel($emptask);
-		$crud->manageAction('approve');
-			$crud->manageAction('see_activities');
-			$crud->manageAction('cancel');
+		$emp_crud=$right_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false,'allow_del'=>false,'grid_class'=>'xProduction/Grid_Task'));
+		$emp_crud->setModel($emptask);
+		$emp_crud->manageAction('approve');
+			$emp_crud->manageAction('activities');
+			$emp_crud->manageAction('cancel');
 		// $crud->add('xHR/Controller_Acl');
 	}
 }

@@ -72,7 +72,7 @@ class View_CartItem extends \View{
 			// if qty_from_set_only ???????????????????
 				// add dropdown type filed with values
 			// else
-				$q_f=$form->addField('line','cart_item_id')->set($model['id']);
+				$q_f=$form->addField('Hidden','cart_item_id')->set($model['id']);
 				$q_f=$form->addField('Number','qty')->set($model['qty'])->addClass('cart-spinner');
 			// $q_f->setAttr('size',1);
 			// $q_f->js(true)->spinner(array('min'=>1));

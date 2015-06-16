@@ -1,62 +1,68 @@
 <div id="{$_name}">
 {$Content}
-<table width='100%' class='table' style="font-size:11px;vertical-align:top;" >
+<table width='100%' class='table' style="vertical-align:top;" >
 	<tbody class='table-striped'>
-		<tr>
-			<th align="left">Sno</th>
-			<th align="left">Item</th>
-			<th align="right" class="text-right">Qty</th>
+		<thead>
+			<th align="left" width="5%" >Sno</th>
+			<th align="left" width="45%" >Item</th>
+			<th align="right" class="text-right" width="10%" >Qty</th>
 			{order_amount_section}
-			<th align="right" class="text-right">Rate</th>
-			<th align="right" class="text-right">Tax</th>
-			<th colspan="2" align="right" class="text-right">Amount</th>
+			<th align="right" class="text-right" width="10%">Rate</th>
+			<th align="right" class="text-right" width="10%">Total</th>
+			<th align="right" class="text-right" width="5%">Tax</th>
+			<th align="right" class="text-right" width="15%">Amount</th>
 			{/order_amount_section}
-		</tr>
+		</thead>
+	<tr>
+		<td colspan="7" style="height:300px;" valign="top">
+		{$detail_height_start}
 	{rows}
 	{row}
-		<tr valign="top">
-			<td align="left" valign="top">{$sno}</td>
-			<td align="left" width="400px">
-
-				<h4>{$item_name}<br><small>{$departments}</small></h4>
-			</td>
-			
-				<td align="right">{$qty} &nbsp<small>{$unit}</small> </td>
+		<tr valign="top" style="font-size: 12px;" >
+			<td align="left" valign="top" width="5%">{$sno}</td>
+			<td align="left" width="45%">
+				<p>{$item_name}<br><small>{$departments}{$item_narration}</small></p>
+			</td>		
+			<td align="right" width="10%">{$qty}{$unit}</td>
 			{order_amount_section}
-				<td align="right">{$rate}</td>
-				<td align="right">{$tax_amount}<br>@  {tax_per_sum}{/tax_per_sum}</td>
-				<td colspan="2" align="right">{$texted_amount}</td>
+				<td align="right" width="10%">{$rate}</td>
+				<td align="right" width="10%">{$sub_total}</td>
+				<td align="right" width="5%">{$tax_amount}<br/>@{tax_per_sum}{/tax_per_sum}%</td>
+				<td align="right" width="15%">{$texted_amount}</td>
 			{/order_amount_section}
 		</tr>
-		{/row}
+	{/row}
 	{/rows}
+			{$detail_height_end}
+		</td>
+	</tr>
+	
 
 		{order_amount_section}
+		<tr>
+			<td colspan="7"><hr/></td>
+		</tr>
 		<tr align="right">
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<th>Total</th>
-			<td class='' colspan="4"><b>&#8377;{$gross_amount} </b> </td>
+			<td colspan="3">Total</td>
+			<td colspan="4"><b>&#8377;{$gross_amount} </b> </td>
 		</tr>
 		{discount_voucher_amount_section}
 		<tr align="right">
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<th>Discount</th>
+			<td colspan="3">Discount</td>
 			<td class='' colspan="4"><b> - &#8377;{discount_voucher_amount}{/discount_voucher_amount} </b> </td>
 		</tr>
 		{/discount_voucher_amount_section}
+		{shipping_charge_section}
 		<tr align="right">
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<th>Net Amount</th>
+			<td colspan="3">Shipping Charge</td>
+			<td class='' colspan="4"><b> &#8377;{shipping_charge}{/shipping_charge} </b> </td>
+		</tr>
+		{/shipping_charge_section}
+		<tr align="right">
+			<td colspan="3">Net Amount</td>
 			<td colspan="4" class=''><b>&#8377; {$net_amount} </b> </td>
 		</tr>
 		{/order_amount_section}
-
 	</tbody>
 </table>
 </div>

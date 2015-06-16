@@ -10,6 +10,7 @@ class Model_DispatchRequest_Received extends Model_DispatchRequest{
 			'can_assign_to'=>array(),
 			'can_mark_processed'=>array(),
 			'can_cancel'=>array(),
+			'can_see_activities'=>array(),
 		);
 	function init(){
 		parent::init();

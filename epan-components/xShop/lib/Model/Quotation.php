@@ -6,7 +6,14 @@ class Model_Quotation extends \Model_Document{
 	public $table="xshop_quotation";
 	public $status=array('draft','approved','redesign','submitted','cancelled');
 	public $root_document_name="xShop\Quotation";
-
+	public $actions=array(
+			'can_view'=>array(),
+			'allow_edit'=>array(),
+			'allow_add'=>array(),
+			'allow_del'=>array(),
+			'can_see_activities'=>array(),
+			'send_via_email'=>array(),
+		);
 	function init(){
 		parent::init();
 
@@ -28,6 +35,7 @@ class Model_Quotation extends \Model_Document{
 		// $this->addField('discount_voucher')->group('b~3');
 		$this->addField('discount_voucher_amount')->group('b~3')->defaultValue(0)->caption('Discount Amount');
 		$this->addField('net_amount')->type('money')->mandatory(true)->group('b~3')->sortable(true);
+		$this->addField('narration')->type('text')->type('text');
 
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
@@ -45,7 +53,7 @@ class Model_Quotation extends \Model_Document{
 		// if( (!$this['lead_id'] AND !$this['customer_id']) )
 		// 	throw $this->exception('Lead or Customer Required','ValidityCheck')->setField('customer_id');
 
-		//$this->updateAmounts();
+		$this->updateAmounts();
 	}
 
 	function beforeDelete(){
@@ -83,6 +91,12 @@ class Model_Quotation extends \Model_Document{
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
 			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
 		}
+		
+		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		if($shop_config['is_round_amount_calculation']){
+			$this['net_amount'] = round($this['net_amount'],0);
+		}
+
 		$this->save();
 	}
 	function submit(){
@@ -116,8 +130,8 @@ class Model_Quotation extends \Model_Document{
 
 	function send_via_email_page($page){
 
+		echo "string";
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
-		
 		$email_body = $this->parseEmailBody();
 		$customer = $this->customer();
 		$emails = explode(',', $customer['customer_email']);
@@ -178,7 +192,7 @@ class Model_Quotation extends \Model_Document{
 		$tnc = $this->termAndCondition();
 		$tnc = $tnc['terms_and_condition'].$this->itemsTermAndCondition();
 		
-		$print_order = $this->add('xShop/View_QuotationDetail',array('show_department'=>false,'show_price'=>true,'show_customfield'=>true));
+		$print_order = $this->add('xShop/View_QuotationDetail',array('show_department'=>false,'show_price'=>true,'show_customfield'=>true,'show_specification'=>true));
 		$print_order->setModel($this->itemrows());
 		$quotation_detail_html = $print_order->getHTML(false);
 
@@ -203,6 +217,7 @@ class Model_Quotation extends \Model_Document{
 		$email_body = str_replace("{{quotation_date}}", $this['created_at'], $email_body);
 		$email_body = str_replace("{{quotation_detail}}", $quotation_detail_html, $email_body);
 		$email_body = str_replace("{{terms_and_conditions}}", $tnc?$tnc:" ", $email_body);
+		$email_body = str_replace("{{quotation_narration}}",$this['narration'], $email_body);
 
 		return $email_body;
 	}

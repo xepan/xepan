@@ -5,6 +5,7 @@ class Model_MaterialRequestReceived_Approved extends Model_MaterialRequestReceiv
 			'can_view'=>array(),
 			'can_receive'=>array(),
 			'can_cancel'=>array(),
+			'can_see_activities'=>array(),
 
 		);
 	function init(){

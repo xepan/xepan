@@ -10,6 +10,7 @@ class Model_Jobcard_Draft extends Model_JobCard {
 			'allow_del'=>array(),
 			'can_submit'=>array(),
 			'can_cancle'=>array(),
+			'can_see_activities'=>array(),
 		);
 	
 	

@@ -52,6 +52,14 @@ class Model_Transaction extends \Model_Document{
 			throw $this->exception('TRansaction Contains Rows, Cannot Delete','Growl');
 	}
 
+	function cr_sum(){
+		return $this->ref('xAccount/TransactionRow')->sum('amountCr');
+	}
+
+	function dr_sum(){
+		return $this->ref('xAccount/TransactionRow')->sum('amountDr');
+	}
+
 	
 	function forceDelete(){
 		foreach ($this->ref('xAccount/TransactionRow') as $trrow) {
@@ -139,6 +147,11 @@ class Model_Transaction extends \Model_Document{
 			$total_debit_amount += $dtl['amount'];
 		}
 
+		//FOR ROUND AMOUNT CALCULATION
+		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		if($shop_config['is_round_amount_calculation']){
+			$total_debit_amount = round($total_debit_amount,0);
+		}
 
 		$total_credit_amount =0;
 		// Foreach Cr add new Transactionrow (Cr Wala)
@@ -148,9 +161,15 @@ class Model_Transaction extends \Model_Document{
 			$total_credit_amount += $dtl['amount'];
 		}
 		
+		//FOR ROUND AMOUNT CALCULATION
+		if($shop_config['is_round_amount_calculation']){
+			$total_credit_amount = round($total_credit_amount,0);
+		}
+
 		// Credit Sum Must Be Equal to Debit Sum
 		if($total_debit_amount != $total_credit_amount)
 			throw $this->exception('Debit and Credit Must be Same')->addMoreInfo('DebitSum',$total_debit_amount)->addMoreInfo('CreditSum',$total_credit_amount);
+
 
 	}
 

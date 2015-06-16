@@ -28,26 +28,30 @@ class Model_Invoice extends \Model_Document{
 		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->display(array('form'=>'autocomplete/Basic'))->caption('Terms & Cond.');
 
 		$this->addField('type')->enum(array('salesInvoice','purchaseInvoice'));
-		$this->addField('name')->caption('Invoice No')->type('int');
+		$this->addField('name')->caption('Invoice No')->type('int')->sortable(true);
 		$this->addField('total_amount')->type('money');
 		$this->addField('gross_amount')->type('money')->sortable(true);
 		$this->addField('discount')->type('money');
 		$this->addField('tax')->type('money');
 		$this->addField('net_amount')->type('money');
+		$this->addField('shipping_charge')->type('money');
 		$this->addField('billing_address')->type('text');
 		$this->addField('transaction_reference')->type('text');
 		$this->addField('transaction_response_data')->type('text');
+		$this->addField('narration')->type('text');
+		
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
 		$this->addHook('afterSave',$this);
 		
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
-		$this->setOrder('id','desc');
+		$this->setOrder('updated_at','desc');
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
 	function afterSave(){
 		$this->updateAmounts();
+
 		// TODO UPdate Transaction entry as well if any
 		if($tr= $this->transaction()){
 			$tr->forceDelete();
@@ -59,6 +63,12 @@ class Model_Invoice extends \Model_Document{
 		return $this->ref('termsandcondition_id');
 	}
 
+	function transaction(){
+		$tr = $this->add('xAccount/Model_Transaction')->loadWhoseRelatedDocIs($this);
+		if($tr and $tr->loaded()) return $tr;
+		return false;
+	}
+	
 	function updateAmounts(){
 		
 		$this['total_amount']=0;
@@ -70,8 +80,15 @@ class Model_Invoice extends \Model_Document{
 			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
 			$this['gross_amount'] = $this['gross_amount'] + $oi['texted_amount'];
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
-			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
 		}	
+		
+		$this['net_amount'] = $this['gross_amount'] + $this['shipping_charge'] - $this['discount'];
+		//xShop Configuration model must be loaded in Api
+		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		if($shop_config['is_round_amount_calculation']){
+			$this['net_amount'] = round($this['net_amount'],0);
+		}
+
 		$this->save();
 	}
 
@@ -118,7 +135,7 @@ class Model_Invoice extends \Model_Document{
 		return $this;
 	}
 
-	function addItem($item,$qty,$rate,$amount,$unit,$narration,$custom_fields){
+	function addItem($item,$qty,$rate,$amount,$unit,$narration,$custom_fields,$apply_tax=0,$tax_id=0){
 		$in_item = $this->ref('xShop/InvoiceItem');
 		$in_item['item_id'] = $item->id;
 		$in_item['qty'] = $qty;
@@ -127,6 +144,8 @@ class Model_Invoice extends \Model_Document{
 		$in_item['unit'] = $unit;
 		$in_item['narration'] = $narration;
 		$in_item['custom_fields'] = $custom_fields;
+		$in_item['apply_tax'] = $apply_tax;
+		$in_item['tax_id'] = $tax_id;
 		$in_item->save();
 	}
 	
@@ -163,6 +182,7 @@ class Model_Invoice extends \Model_Document{
 		
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);
+		$email_body = str_replace("{{customer_organization_name}}", $customer['organization_name'], $email_body);
 		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number']?$customer['mobile_number']:" ", $email_body);
 		$email_body = str_replace("{{city}}", $customer['city']?$customer['city']:" ", $email_body);
 		$email_body = str_replace("{{state}}", $customer['state']?$customer['state']:" ", $email_body);
@@ -174,10 +194,11 @@ class Model_Invoice extends \Model_Document{
 		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no']?$customer['pan_no']:" - ", $email_body);
 		$email_body = str_replace("{{invoice_details}}", $view->getHtml(), $email_body);
 		$email_body = str_replace("{{invoice_order_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{invoice_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{invoice_date}}", $this['created_date'], $email_body);
 		$email_body = str_replace("{{dispatch_challan_no}}", "", $email_body);
 		$email_body = str_replace("{{dispatch_challan_date}}", "", $email_body);
 		$email_body = str_replace("{{terms_an_conditions}}", $tnc?$tnc:"", $email_body);
+		$email_body = str_replace("{{invoice_narration}}",$this['narration'], $email_body);
 
 		return $email_body;
 	}

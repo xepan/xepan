@@ -12,11 +12,15 @@ class View_SalesInvoiceDetail extends \CompleteLister{
 	}
 
 	function formatRow(){
-
 		$this->current_row_html['departments']= $this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
 		$this->current_row_html['sno']=$this->sno;
+		$this->current_row_html['sub_total']=$this->model['qty']*$this->model['rate'];
 		$this->current_row_html['unit']= $this->model['unit'];
+		$this->current_row_html['tax_amount'] = round($this->model['tax_amount']);
+		if($this->model['narration'])
+			$this->current_row_html['item_narration'] = "<br/>Narration: ".$this->model['narration'];
 		$this->sno++;
+		
 	}
 
 	function setModel($model){
@@ -29,14 +33,23 @@ class View_SalesInvoiceDetail extends \CompleteLister{
 		
 		$this->template->set('gross_amount',$invoice['gross_amount']);
 		//$this->template->set('delivery_date',$model['delivery_date']);
-		if(!$invoice['discount_voucher_amount']){
-			$this->template->tryDel('discount_voucher_amount_section');
+		if($invoice['discount'] == 0){
+			$this->template->set('discount_voucher_amount_section',"");
 		}else
-			$this->template->set('discount_voucher_amount',$invoice['discount_voucher_amount']?:'0.00');
+			$this->template->set('discount_voucher_amount',$invoice['discount']?:'0.00');
+
+		if($invoice['shipping_charge']== 0){
+			$this->template->del('shipping_charge_section');
+		}else
+			$this->template->set('shipping_charge',$invoice['shipping_charge']);
+
 		$this->template->set('net_amount',$invoice['net_amount']);
+
 		// throw new \Exception($model->item()->genericRedableCustomFieldAndValue($model['custom_fields']));
 		
 		// $this->template->set('invoice_item_custom_field',$model['id']);
+		$this->template->setHtml('detail_height_start','<table width="100%">');
+		$this->template->setHtml('detail_height_end','</table>');
 							
 	}
 	

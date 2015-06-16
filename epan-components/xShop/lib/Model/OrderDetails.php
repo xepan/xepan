@@ -23,12 +23,13 @@ class Model_OrderDetails extends \Model_Document{
 		$this->hasOne('xShop/Order','order_id');
 		$this->hasOne('xShop/Item_Saleable','item_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
 		$this->hasOne('xShop/Invoice','invoice_id')->display(array('form'=>'autocomplete/Basic'));//->group('a~6~Item Select');
+		$this->hasOne('xShop/Tax','tax_id');
 
 		$this->addField('rate')->type('money')->group('b~3');
 		$this->addField('qty')->group('b~3~Order Details')->mandatory(true);
 		// $this->addField('unit')->group('b~3');
 		$this->addField('amount')->type('money')->group('b~3');
-		$this->addField('narration')->type('text')->system(false)->group('c~12~ Narration');
+		$this->addField('narration')->type('text')->system(false);
 		$this->addField('custom_fields')->type('text')->system(false);
 		$this->addField('apply_tax')->type('boolean')->defaultValue(true);
 
@@ -36,15 +37,13 @@ class Model_OrderDetails extends \Model_Document{
 			return $m->refSQL('item_id')->fieldQuery('name');
 		});
 
-		$this->addExpression('unit')->set(function($m,$q){
-			return $m->refSQL('item_id')->fieldQuery('unit');
-		});
-
-
 		$this->addExpression('tax_per_sum')->set(function($m,$q){
 			$tax_assos = $m->add('xShop/Model_ItemTaxAssociation');
 			$tax_assos->addCondition('item_id',$q->getField('item_id'));
+			if($q->getField('tax_id'))
+				$tax_assos->addCondition('tax_id',$q->getField('tax_id'));
 			$tax = $tax_assos->sum('name');
+
 				return "IF(".$q->getField('apply_tax').">0,(".$tax->render()."),'0')";
 		})->type('money')->caption('Total Tax %');
 
@@ -88,14 +87,27 @@ class Model_OrderDetails extends \Model_Document{
 	}
 
 	function beforeSave(){
+		//Check for the apply tax
+				
+		if( $this->dirty['apply_tax'] or $this->dirty['tax_id']){
+			if($this['apply_tax'] and ($tax_asso = $this->item()->applyTaxs())){
+
+				$tax_asso->addCondition('tax_id',$this['tax_id']);
+				if(!$tax_asso->count()->getOne())
+					throw $this->exception('Tax Not Applied','ValidityCheck')->setField('tax_id');
+			}
+
+		}
+
+		$forwarded_jobcard = false;
 		if($this->dirty['invoice_id'] and $this['invoice_id'])
 			return;
 		
-		if($this->loaded() AND $this->dirty['custom_fields']){
+		//CHECK FOR THE ORDER IS UNDER PROCESSING/COMPLETE
+		if(in_array($this->order()->get('status'), array('draft','submitted','redesign')))
+			return ;
 
-			//CHECK FOR THE ORDER IS UNDER PROCESSING/COMPLETE
-			if(in_array($this->order()->get('status'), array('draft','submitted','redesign')))
-				return ;
+		if($this->loaded() AND $this->dirty['custom_fields']){
 			//CHECK FOR NEW/UPDATE DEPARTMENT YES
 			if(count($new_department = $this->getNewDepartment())){
 				//$ND = GET NEW DEPARTMENT ID AND LEVEL
@@ -103,6 +115,9 @@ class Model_OrderDetails extends \Model_Document{
 				$jbs = $this->jobCards();
 				foreach ($jbs as $jb) {
 					if($jb['status']=="completed" or $jb['status'] == "forwarded"){
+						if($jb['status'] == "forwarded")
+							$forwarded_jobcard = $jb->toDepartment();
+
 						$dept_jobcard_complete = $this->add('xHR/Model_Department')->tryLoad($jb['to_department_id']);
 						if($dept_jobcard_complete->loaded()){
 							foreach ($new_department as $dept) {
@@ -117,7 +132,7 @@ class Model_OrderDetails extends \Model_Document{
 			
 			//remove not completed jobcard
 			$this->removeUncompletedJobcard();
-			$this->reDepartmentAssociation();
+			$this->reDepartmentAssociation($forwarded_jobcard);
 		}
 	}
 
@@ -132,10 +147,10 @@ class Model_OrderDetails extends \Model_Document{
 			$jc->tryLoadAny();
 			if($jc->loaded() and !in_array($jc['status'], array("completed","forwarded")) ){
 				$jc->delete();
+				$dept_status['status'] = 'Waiting';
+				$dept_status->save();
 			}
 
-			$dept_status['status'] = 'Waiting';
-			$dept_status->save();
 		}
 	}
 
@@ -178,9 +193,9 @@ class Model_OrderDetails extends \Model_Document{
 		return $new_departments;
 	}
 	
-	function reDepartmentAssociation(){
+	function reDepartmentAssociation($create_jobcard_after_dept = false){
 		$this->createDepartmentalAssociations();
-		if($department_association = $this->nextDeptStatus()){
+		if($department_association = $this->nextDeptStatus($create_jobcard_after_dept)){
 			$department_association->createJobCardFromOrder();
 			
 		}
@@ -463,7 +478,9 @@ class Model_OrderDetails extends \Model_Document{
 			if($show_status and $department_asso['department'] != 'stockeffectcustomfield'){//Show Department Status and check for the department is stockeffect
 				$str .=" ( ".($department_asso['status']?:'Waiting')." )";
 				if($with_jobcard){
-					$jobcard_no = $this->jobCards($department_asso['department_id'])->get('name')?:'Not Created';
+					$jobcard_no = $this->jobCards($department_asso['department_id'])->get('name');
+					if($jobcard_no == '##Dummy Object')
+						$jobcard_no = 'Not Created';
 					$str.= "[ Jobcard : ".$jobcard_no." ]";
 				}
 			}
@@ -487,6 +504,26 @@ class Model_OrderDetails extends \Model_Document{
 				}
 			}
 
+		}
+
+		return $str;
+	}
+
+	// Return Department wise custom field
+	function departmentRedableCustomFiled($department_id){
+		$str =""; 
+		$array = json_decode($this['custom_fields'],true);
+		foreach ($array as $id => $cf ) {
+			// $str.=$this['custom_fields'];
+			if($department_id == $id){
+				if(!empty($cf)){
+					$ar[$id] = $cf;
+					$str .= "[".$this->ref('item_id')->genericRedableCustomFieldAndValue(json_encode($ar))." ]<br>";
+					unset($ar[$id]);							
+				}else{
+					$str.="<br>";
+				}
+			}
 		}
 
 		return $str;

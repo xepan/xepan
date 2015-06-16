@@ -6,7 +6,8 @@ class Model_Jobcard_Assigned extends Model_JobCard{
 	
 		public $actions=array(
 			'can_view'=>array(),
-			'can_start_processing'=>array()
+			'can_start_processing'=>array(),
+			'can_see_activities'=>array(),
 		);
 	
 	function init(){

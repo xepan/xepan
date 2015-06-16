@@ -9,7 +9,7 @@ class Model_Invoice_Submitted extends Model_SalesInvoice{
 			'allow_edit'=>array(),
 			'allow_del'=>array(),
 			'can_reject'=>array(),
-			
+			'can_see_activities'=>array(),
 		);
 
 	function init(){

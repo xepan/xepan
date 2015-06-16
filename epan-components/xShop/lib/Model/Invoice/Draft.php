@@ -9,6 +9,7 @@ class Model_Invoice_Draft extends Model_SalesInvoice{
 			'can_submit'=>array(),
 			'allow_del'=>array(),
 			'can_manage_attachments'=>array(),
+			'can_see_activities'=>array(),
 		);
 
 	function init(){

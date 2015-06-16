@@ -10,6 +10,7 @@ class Model_Invoice_Redesign extends Model_SalesInvoice{
 			'allow_del'=>array(),
 			'can_submit'=>array(),
 			'can_manage_attachments'=>array(),
+			'can_see_activities'=>array(),
 			
 		);
 

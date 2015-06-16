@@ -7,6 +7,7 @@ class View_QuotationDetail extends \CompleteLister{
 	public $show_price = false;
 	public $show_department = true;
 	public $show_customfield = false;
+	public $show_specification = false;
 	function init(){
 		parent::init();
 	}
@@ -15,6 +16,7 @@ class View_QuotationDetail extends \CompleteLister{
 
 		$this->current_row_html['sno']=$this->sno;
 		$this->current_row_html['unit']=$this->model['unit'];
+		$this->current_row_html['sub_total']=$this->model['qty']*$this->model['rate'];
 		if($this->show_department)
 			$this->current_row_html['departments']=$this->model->redableDeptartmentalStatus(true,true,false,true);
 		if(!$this->show_price){
@@ -23,6 +25,13 @@ class View_QuotationDetail extends \CompleteLister{
 		if($this->show_customfield){
 			$this->current_row_html['departments']=$this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
 		}
+		if($this->show_specification){
+			$this->current_row_html['specifications']= '[ '.$this->model->item()->redableSpecification(",").' ]';
+		}
+		
+		if($this->model['narration'])
+			$this->current_row_html['item_narration']= '<br/>Narration: '.$this->model['narration'];
+
 		$this->sno++;
 	}
 

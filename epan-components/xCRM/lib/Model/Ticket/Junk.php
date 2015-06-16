@@ -7,6 +7,7 @@ class Model_Ticket_Junk extends Model_Ticket{
 			'allow_add'=>array(),
 			'allow_del'=>array(),
 			'can_submit'=>array(),
+			'can_see_activities'=>array(),
 		);
 	function init(){
 		parent::init();

@@ -173,8 +173,9 @@ class Model_DispatchRequest extends \Model_Document {
 		$c->addColumn(4)->addField('DropDown','include_items')->setValueList(array('Selected'=>'Selected Only','All'=>'All Ordered Items'))->setEmptyText('Select Items Included in Invoice');
 		$c->addColumn(4)->addField('DropDown','payment')->setValueList(array('cheque'=>'Bank Account/Cheque','cash'=>'Cash'))->setEmptyText('Select Payment Mode');
 		$c->addColumn(4)->addField('DropDown','invoice_action')->setValueList(array('keep_open'=>'Keep Open','mark_processed'=>'Mark Processed'));//->setEmptyText('Select Invoice Action');
-		$c->addColumn(6)->addField('Money','amount');
-		$c->addColumn(6)->addField('Money','discount')->set($order['discount_voucher_amount']);
+		$c->addColumn(4)->addField('Money','amount');
+		$c->addColumn(4)->addField('Money','discount')->set($order['discount_voucher_amount']);
+		$c->addColumn(4)->addField('Money','shipping_charge');
 		$c->addColumn(4)->addField('line','bank_account_detail');
 		$c->addColumn(4)->addField('line','cheque_no');
 		$c->addColumn(4)->addField('DatePicker','cheque_date');
@@ -250,7 +251,7 @@ class Model_DispatchRequest extends \Model_Document {
 					}
 				}
 
-				$invoice = $this->order()->createInvoice($status='approved',$salesLedger=null, $orderitems_selected,$form['amount'],$form['discount']);
+				$invoice = $this->order()->createInvoice($status='approved',$salesLedger=null, $orderitems_selected,$form['amount'],$form['discount'],$form['shipping_charge']);
 
 
 				if($form['payment'] == "cash")

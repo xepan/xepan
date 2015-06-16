@@ -8,7 +8,7 @@ class Controller_Profiler extends \AbstractController{
 	private $last_time=null;
 	private $marks=array();
 
-	public $mute=false;
+	public $mute=true;
 
 	function init(){
 		parent::init();
