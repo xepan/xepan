@@ -456,6 +456,36 @@ $('#epan-editor-preview-mobile').click(function(event){
     $("<div>").append($("<iframe width='100%' height='100%' />")
         .attr("src", "index.php?preview=1"))
         .dialog({
+            width: 320,
+            height: 480,
+            modal: true
+        });
+});
+
+$('#epan-editor-preview-tablet').click(function(event){
+    $("<div>").append($("<iframe width='100%' height='100%' />")
+        .attr("src", "index.php?preview=1"))
+        .dialog({
+            width: 768,
+            height: 480,
+            modal: true
+        });
+});
+
+$('#epan-editor-preview-laptop').click(function(event){
+    $("<div>").append($("<iframe width='100%' height='100%' />")
+        .attr("src", "index.php?preview=1"))
+        .dialog({
+            width: 992,
+            height: 600,
+            modal: true
+        });
+});
+
+$('#epan-editor-preview-desktop').click(function(event){
+    $("<div>").append($("<iframe width='100%' height='100%' />")
+        .attr("src", "index.php?preview=1"))
+        .dialog({
             width: 1024,
             height: 768,
             modal: true
