@@ -239,6 +239,11 @@ class Model_SalesInvoice extends Model_Invoice{
 
 
 	function update_from_order_page($page){
+		if(!$this['sales_order_id']){
+			$page->add('View_Error')->set('Invoice Not Generated From Order');
+			return false;
+		}
+
 		$col = $page->add('Columns');
 		$col1 = $col->addColumn(6);
 		$col2 = $col->addColumn(6);
