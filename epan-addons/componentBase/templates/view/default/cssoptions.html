@@ -473,38 +473,47 @@
             <tbody>
               <tr>
                 <td width="20%">Rotate</td>
-                <td width="60%">
+                <td width="50%">
                   <div css-syntax="rotate" unit="deg" class="epan-component-transform epan-component-transform-rotate"></div>
                 </td>
-                <td width="20%">
+                <td width="30%">
                   <div rotate="(0deg)" class="epan-component-transform-rotate-value"></div>
                 </td>
               </tr>
               <tr>
                 <td width="20%">Scale</td>
-                <td width="60%">
-                  <div css-syntax="scale" unit="" class="epan-component-transform epan-component-transform-scale"></div>
+                <td width="50%">x
+                  <div css-syntax="scale" unit="" direction="x" class="epan-component-transform epan-component-transform-scale"></div>y
+                  <div css-syntax="scale" unit="" direction="y" class="epan-component-transform epan-component-transform-scale"></div>
                 </td>
-                <td width="20%">
+                <td width="30%">
                   <div scale="(1,1)" class="epan-component-transform-scale-value"></div>
+                  <div scale="1" class="epan-component-transform-scale-x-value"></div>
+                  <div scale="1" class="epan-component-transform-scale-y-value"></div>
                 </td>
               </tr>
               <tr>
                 <td width="20%">Skew</td>
-                <td width="60%">
-                  <div css-syntax="skew" unit="deg" class="epan-component-transform epan-component-transform-skew"></div>
+                <td width="50%">x
+                  <div css-syntax="skew" unit="deg" direction="x" class="epan-component-transform epan-component-transform-skew"></div>y
+                  <div css-syntax="skew" unit="deg" direction="y" class="epan-component-transform epan-component-transform-skew"></div>
                 </td>
-                <td width="20%">
+                <td width="30%">
                   <div skew="(0deg,0deg)" class="epan-component-transform-skew-value"></div>
+                  <div skew="0" class="epan-component-transform-skew-x-value"></div>
+                  <div skew="0" class="epan-component-transform-skew-y-value"></div>
                 </td>
               </tr>
               <tr>
                 <td width="20%">Translate</td>
-                <td width="60%">
-                  <div css-syntax="translate" unit="px" class="epan-component-transform epan-component-transform-translate"></div>
+                <td width="50%">x
+                  <div css-syntax="translate" unit="px" direction="x" class="epan-component-transform epan-component-transform-translate"></div>y
+                  <div css-syntax="translate" unit="px" direction="y" class="epan-component-transform epan-component-transform-translate"></div>
                 </td>
-                <td width="20%">
+                <td width="30%">
                   <div translate="(1px,1px)" class="epan-component-transform-translate-value"></div>
+                  <div translate="1" class="epan-component-transform-translate-x-value"></div>
+                  <div translate="1" class="epan-component-transform-translate-y-value"></div>
                 </td>
               </tr>
             </tbody>
@@ -709,19 +718,64 @@
         }
         
         if($(this).attr('css-syntax') == 'scale'){
-          var scale =  '('+ui.value+','+ui.value+')';
+          var x = $('.epan-component-transform-scale-x-value').attr('scale');
+          var y = $('.epan-component-transform-scale-y-value').attr('scale');
+  
+          if($(this).attr('direction') == 'x'){
+            x = ui.value;
+            $('.epan-component-transform-scale-x-value').html(x);
+            $('.epan-component-transform-scale-x-value').attr('scale',x);
+          }
+          
+          if($(this).attr('direction') == 'y'){
+            y = ui.value;
+            $('.epan-component-transform-scale-y-value').html(y);
+            $('.epan-component-transform-scale-y-value').attr('scale',y);
+          }
+  
+          var scale =  '('+x+','+y+')';
           $('.epan-component-transform-scale-value').html(scale);
           $('.epan-component-transform-scale-value').attr($(this).attr('css-syntax'),scale);
         }
   
         if($(this).attr('css-syntax') == 'skew'){
-          var skew =  '('+ui.value+'deg,'+ui.value+'deg)';
+          var x = $('.epan-component-transform-skew-x-value').attr('skew');
+          var y = $('.epan-component-transform-skew-y-value').attr('skew');
+  
+          if($(this).attr('direction') == 'x'){
+            x = ui.value;
+            $('.epan-component-transform-skew-x-value').html(x+'deg');
+            $('.epan-component-transform-skew-x-value').attr('skew',x);
+          }
+          
+          if($(this).attr('direction') == 'y'){
+            y = ui.value;
+            $('.epan-component-transform-skew-y-value').html(y+'deg');
+            $('.epan-component-transform-skew-y-value').attr('skew',y);
+          }
+  
+          var skew =  '('+x+'deg,'+y+'deg)';
           $('.epan-component-transform-skew-value').html(skew);
           $('.epan-component-transform-skew-value').attr($(this).attr('css-syntax'),skew);
         }
         
         if($(this).attr('css-syntax') == 'translate'){
-          var translate =  '('+ui.value+'px,'+ui.value+'px)';
+          var x = $('.epan-component-transform-translate-x-value').attr('translate');
+          var y = $('.epan-component-transform-translate-y-value').attr('translate');
+  
+          if($(this).attr('direction') == 'x'){
+            x = ui.value;
+            $('.epan-component-transform-translate-x-value').html(x+'px');
+            $('.epan-component-transform-translate-x-value').attr('translate',x);
+          }
+          
+          if($(this).attr('direction') == 'y'){
+            y = ui.value;
+            $('.epan-component-transform-translate-y-value').html(y+'px');
+            $('.epan-component-transform-translate-y-value').attr('translate',y);
+          }
+  
+          var translate =  '('+x+'px,'+y+'px)';
           $('.epan-component-transform-translate-value').html(translate);
           $('.epan-component-transform-translate-value').attr($(this).attr('css-syntax'),translate);
         }
@@ -899,29 +953,54 @@
   var regExp = /\(([^)]+)\)/g;
   var matches = tr.match(regExp);
   
-  for (var i = 0; i < matches.length; i++) {
-    var str = matches[i];
-      if(i==0){
-        $('.epan-component-transform-rotate-value').html(matches[i]);
-        //- var set_value_rotate = matches[0].match(/[-*]\d+/);
-        //- $('.epan-component-transform-rotate').slider('value',set_value_rotate[0]);
-      }else if(i==1){
-        $('.epan-component-transform-scale-value').html(matches[i]);
-        //- var set_value_scale = matches[0].match(/[-*]\d+/);
-        //- $('.epan-component-transform-scale').slider('value',set_value_scale[0]);
-      }else if(i==2){
-        $('.epan-component-transform-skew-value').html(matches[i]);
-        //- var set_value_skew = matches[0].match(/[-*]\d+/);
-        //- $('.epan-component-transform-skew').slider('value',set_value_skew[0]);
-      }else if(i==3){
-        $('.epan-component-transform-translate-value').html(matches[i]);
-        //- var set_value_translate = matches[0].match(/[-*]\d+/);
-        //- $('.epan-component-transform-translate').slider('value',set_value_translate[0]);
-      }
+  if( (matches != null) && matches.length > 0){//Check Condition for Just Dropped Component
   
-    
+    for (var i = 0; i < matches.length; i++) {
+      var str = matches[i];
+        if(i==0){ // SET ROTATE VALUE
+          $('.epan-component-transform-rotate-value').html(matches[i]);
+          var set_value_rotate = matches[0].match(/([-]*)\d+/gi);
+          $('.epan-component-transform-rotate').slider('value',set_value_rotate);
+        
+        }else if(i==1){//SET SCALE VALUE
+          $('.epan-component-transform-scale-value').html(matches[i]);
+          var array = matches[1].split(',');
+          var set_value_scale_x = array[0].match(/([-]*)\d+/gi);
+          var set_value_scale_y = array[1].match(/([-]*)\d+/gi);
+          //- console.log(set_value_scale_x+'y='+set_value_scale_y);
+          $('.epan-component-transform-scale[direction="x"]').slider('value',parseInt(set_value_scale_x));
+          $('.epan-component-transform-scale-x-value').html(set_value_scale_x);
+  
+          $('.epan-component-transform-scale[direction="y"]').slider('value',parseInt(set_value_scale_y));
+          $('.epan-component-transform-scale-y-value').html(set_value_scale_y);
+  
+        }else if(i==2){
+          $('.epan-component-transform-skew-value').html(matches[i]);
+          var array = matches[2].split(',');
+          var set_value_skew_x = array[0].match(/([-]*)\d+/gi);
+          var set_value_skew_y = array[1].match(/([-]*)\d+/gi);
+          //- console.log(set_value_skew_x+'y='+set_value_skew_y);
+          $('.epan-component-transform-skew[direction="x"]').slider('value',parseInt(set_value_skew_x));
+          $('.epan-component-transform-skew-x-value').html(set_value_skew_x);
+  
+          $('.epan-component-transform-skew[direction="y"]').slider('value',parseInt(set_value_skew_y));
+          $('.epan-component-transform-skew-y-value').html(set_value_skew_y);
+        
+        }else if(i==3){
+          $('.epan-component-transform-translate-value').html(matches[i]);
+          var array = matches[3].split(',');
+          var set_value_translate_x = array[0].match(/([-]*)\d+/gi);
+          var set_value_translate_y = array[1].match(/([-]*)\d+/gi);
+          console.log(set_value_translate_x+'y='+set_value_translate_y);
+          $('.epan-component-transform-translate[direction="x"]').slider('value',parseInt(set_value_translate_x));
+          $('.epan-component-transform-translate-x-value').html(set_value_translate_x);
+  
+          $('.epan-component-transform-translate[direction="y"]').slider('value',parseInt(set_value_translate_y));
+          $('.epan-component-transform-translate-y-value').html(set_value_translate_y);    
+        } 
+    }
+  
   }
-  //- $('.epan-component-transform-rotate').slider('value',parseInt($(current_selected_component)[0].style.marginTop));
   
   }
 </script>
