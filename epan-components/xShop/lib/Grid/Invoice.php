@@ -148,7 +148,6 @@ class Grid_Invoice extends \Grid{
 		$amount .= '</div>';
 
 		$this->current_row_html['total_amount'] = $amount;
-		
 		parent::formatRow();
 	}
 
