@@ -10,7 +10,7 @@ class page_owner_epantemplates extends page_base_owner {
 			$this->api->redirect($this->api->url('/',array('edit_template'=>$_GET['edit_template'])));
 		}
 
-		$crud = $this->app->layout->add('CRUD');
+		$crud = $this->add('CRUD');
 		$template_model = $this->add('Model_EpanTemplates');
 		$crud->setModel($template_model,array('name','css'),array('name','is_current'));
 
