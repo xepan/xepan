@@ -17,9 +17,17 @@ class Model_ItemMemberDesign extends \Model_Table {
 
 		$this->addField('is_dummy')->type('boolean')->defaultValue(false)->system(true);
 
+		$this->addHook('afterSave',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');
 
 		}
+
+	function afterSave(){
+		$item = $this->ref('item_id');
+		$item['is_publish']= false;
+		$item['is_party_publish']= false;
+		$item->save();
+	}
 
 	function setItemEmpty(){
 		if(!$this->loaded()) return;
