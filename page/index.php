@@ -9,9 +9,20 @@ class page_index extends Page {
 				// Remove div tag arrounf page template and to remove top-page class of the div to avoid repetation
 				$this->template->loadTemplateFromString('<?$Content?>');
 				$this->api->template->set('edit_template','true');
-				// $this->js()->_load('edit_template');
+				$this->api->template->set('current_page','(Template) '. $this->api->current_template['name']);
+				
+				$this->api->template->set('page_tempalte_frame_title','Templates');
+				$this->api->template->set('page_template_url',$this->api->url('owner_epantemplates',array('edit_template'=>false)));
+
+			}else{
+				$this->api->template->set('current_page',$this->api->page_requested);
+				$this->api->template->set('page_tempalte_frame_title','Pages ');
+				$this->api->template->set('page_template_url',$this->api->url('owner_epanpages'));
 			}
+			
 			$this->api->add('editingToolbar/View_FrontToolBar',null,'editor');
+		}else{
+			$this->api->template->del('editor_block');
 		}
 		
 		if(!$this->api->edit_template){
