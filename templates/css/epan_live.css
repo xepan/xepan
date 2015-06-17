@@ -107,6 +107,9 @@
 .epan-editor-top-panel .epan-editor-current-page:hover {
   color: #ffffff;
 }
+.epan-editor-top-panel input {
+  width: auto!important;
+}
 .epan-editor-left-panel {
   background-color: #4b4b4b;
   color: #a6a6a6;
