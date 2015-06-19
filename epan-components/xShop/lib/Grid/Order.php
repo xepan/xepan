@@ -97,7 +97,6 @@ class Grid_Order extends \Grid {
 		if($this->hasColumn('discount_voucher_amount'))$this->removeColumn('discount_voucher_amount');
 		if($this->hasColumn('total_amount'))$this->removeColumn('total_amount');
 		
-		$this->addPaginator($this->ipp);
 		if(!$fields)
 			$fields = $this->model->getActualFields();
 		$this->addQuickSearch($fields);

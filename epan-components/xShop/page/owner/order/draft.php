@@ -2,6 +2,14 @@
 class page_xShop_page_owner_order_draft extends page_xShop_page_owner_main{
 	Public $transaction;
 	function init(){
+		$grid = $this->add('Grid');
+		$grid->addPaginator(5);
+		$grid->setModel('xShop/Item');
+		$box = $this->add('View_Box');
+		// Move paginator from Grid into the Box
+		$box->add($grid->paginator);
+
+
 		$this->api->xpr->markPoint('Order Draft Init start');
 		parent::init();
 		$this->api->xpr->markPoint('Order Draft Parent  Init Done');
