@@ -235,9 +235,12 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 	setupCart: function(){
 		var self=this;
 		if(!self.options.show_cart) return;
-		original_rate = $('<div class="xshop-item-old-price"></div>').appendTo(self.element);
-		price_rate = $('<div class="xshop-item-price"></div>').appendTo(self.element);
-		this.cart = $('<div></div>').appendTo(self.element);
+		if(self.options.designer_mode) return;
+
+		cart_container = $('<div class="xepan-xshop-designer-cart-container"></div>').appendTo(self.element);
+		original_rate = $('<div class="xshop-item-old-price"></div>').appendTo(cart_container);
+		price_rate = $('<div class="xshop-item-price"></div>').appendTo(cart_container);
+		this.cart = $('<div></div>').appendTo(cart_container);
 		this.cart.xepan_xshop_addtocart(self.options.cart_options);
 	},
 

@@ -1,6 +1,20 @@
+@import "less/variables.less";
 @import "less/mixins.less";
+
 @padding-toolbar: 5px;
 @height-toolbar: 150px;
+@editor-base-color: #4b4b4b;
+@editor-text-color: lighten(@gray-darker,90%);
+
+@editor-top-height: 30px;
+@editor-left-width: 34px;
+@editor-right-width: 50px;
+@editor-bottom-height: @editor-top-height;
+
+@component-type-name-bg-color : #0095ff;
+
+@winheight:0px + '$(window).height()';
+
 
 .top-page {
 	min-height: 100px;
@@ -13,8 +27,17 @@
 	.drag-handler{
 		position: absolute;
 		top:0px;
-		left: 15px;
+		left: 0px;
 		cursor: move;
+		.component_type_name{
+			position: absolute;
+			top: 0px;
+			left: 20px;
+			word-wrap: none;
+			color: @editor-text-color;
+			background-color: @component-type-name-bg-color;
+			padding: 2px;
+		}
 	}
 	.remove_btn{
 		position: absolute;
@@ -25,6 +48,12 @@
 	.dragging-shorten{
 		width: 50px;
 		height: 50px;
+	}
+	&:hover.ui-selected {
+		outline: 2px dotted blue !important;
+	}
+	&:hover {
+		outline: 1px solid blue !important;
 	}
 }
 
@@ -41,40 +70,151 @@
 	outline: 1px dotted lightgray !important;
 }
 
+#epan-content-wrapper {
+	background-color: lighten(lightgray,20%);
+	margin-top: @editor-top-height + 5;
+	margin-bottom: @editor-bottom-height + 5;
+}
+
+.editor-block{
+	// #gradient > .vertical(@start-color: @editor-base-color; @end-color: lighten(@editor-base-color,20%));
+	background-color: @editor-base-color;
+	color: darken(@editor-text-color,35%);
+}
+
+.editor-tool-top {
+	border-right: 1px solid darken(@editor-base-color,15%);
+	padding: 5px 10px 5px 10px;
+	&:hover {
+		color: @editor-text-color;
+	}
+	cursor: pointer;
+}
+
+.editor-tool-left {
+	width: 100%;
+	&:hover {
+		color: @editor-text-color;
+	}	
+	border-bottom: 1px solid darken(@editor-base-color,15%);
+	cursor: pointer;
+}
+
+.editor-tool-right {
+	.editor-tool-left;	
+	cursor: pointer;
+}
+
+.editor-tool-bottom {
+	.editor-tool-left;	
+	cursor: pointer;
+}
+
+.epan-editor-top-panel {
+	.editor-block;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: @editor-top-height;
+	& > div {
+		.editor-tool-top;
+	}
+	.epan-editor-current-page{
+		color: 	darken(@editor-text-color,5%);
+		&:hover{
+			color: @editor-text-color;
+		}
+	}
+}
+
+.epan-editor-left-panel{
+	.editor-block;
+	position: fixed;
+	top: @editor-top-height;
+	left: 0;
+	width: @editor-left-width;
+	bottom: 0;
+	height: auto;
+	& > div {
+		.editor-tool-left;
+	}
+}
+
+.epan-editor-right-panel{
+	.editor-block;
+	position: fixed;
+	top: @editor-top-height;
+	right: 0;
+	width: @editor-right-width;
+	bottom: 0;
+	& > div {
+		.editor-tool-right;
+	}
+
+}
+
+.epan-editor-bottom-panel{
+	.editor-block;
+	position: fixed;
+	bottom: 0;
+	left: @editor-left-width;
+	right: @editor-right-width;
+	margin: 0 auto 0 auto;
+	& > div {
+		.editor-tool-bottom;
+	}
+}
+
+
+// OLD TO BE REMOVED
 
 .epan-frontend-editing-toolbar {
 	width: 100%;
 	height: @height-toolbar;
-	border-top: 3px solid orange;
-	border-bottom: 3px solid orange;
-	background-color: white;
+	border-top: 3px solid darken(@editor-base-color,15%);
+	border-bottom: 3px solid darken(@editor-base-color,15%);
+	background-color: @editor-base-color;
 	position: fixed;
 	bottom: 0;
 	margin: 0px;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	color: rgba(20, 20, 20, 1);
+	padding-top: 2px;
+	padding-bottom: 2px;
+	color: @editor-text-color;
 	left: 0;
 	z-index: 1000;
 	.components-section {
 		// width: 500px;
-		margin-left: 20px;
+		// margin-left: 20px;
 		height: 120px;
 		overflow-x: auto;
 		overflow-y: hidden;
 		// float: left;
+		.ui-tabs-panel{
+			height: 100px;
+			background-color: @editor-base-color;
+		}
 		.tools-panel{
-			width: 1150px;
+			width: 100%;
 			height: @height-toolbar -3;
+			ul.ui-tabs-nav li a.ui-tabs-anchor, ul.ui-tabs-nav li a.ui-tabs-anchor:visited{
+				color: darken(@editor-text-color,5%);
+				font-weight: normal;
+				font-size: 0.8em;
+				&:hover{
+					color: @editor-text-color;
+				}
+			}
+			ul.ui-tabs-nav li.ui-state-active.ui-tabs-active a, ul.ui-tabs-nav li.ui-state-active.ui-tabs-active a:visited{
+				color: @editor-base-color;
+			}
 			.epan-frontend-editing-tool {
 				width: 100px;
-				height: 50px;
 				text-align: center;
 				border-right: 1px solid gray;
-				position: relative;
+				
 				float: left;
 				&:hover{
-					// #gradient > .vertical(#ddd,#aaa);
+					#gradient > .vertical(#ddd,#aaa);
 					background-color: gray;
 				}
 
@@ -89,39 +229,20 @@
 					display: -webkit-box;
 					display: -moz-box;
 				}
-				
-				img.tool_shadow{
-					top:-5px;
-					position: absolute;
-					top: 28px;
-					left: 16px;
-				}
-				span.title{
+				.title{
 					font-size: 0.8em;
+					word-wrap: break-word;
+				}
+				img.tool-icon {
+					// position: absolute;
+				}
+				img.tool-shadow {
+					// position: absolute;
+					margin-top: -10px; 
 				}
 			}
 		}
 	}
-	
-	.actions{
-		// width: 36%;
-		// margin-left: 2%;
-		// margin-right: 2%;
-		// float: left;
-		.btn{
-			// float: left;
-			
-		}
-		.remove{
-		}
-		.option{
-		}
-		.property{
-		}
-		.save{
-		}
-	}
-
 }	
 
 .epan-place-holder {
@@ -132,11 +253,11 @@
 }
 
 .ui-selecting{
-	outline: 2px dashed lightblue;
+	outline: 2px dotted lightblue;
 }
 
 .ui-selected{
-	outline: 2px dashed blue;
+	outline: 2px dotted blue !important;
 }
 
 
@@ -149,16 +270,21 @@ body{
 	position: fixed;
 	top: 0;
 	right: 0;
-	width: 400px;
+	width: 350px;
 	border :1px solid lightgray;
 	color: rgba(20, 20, 20, 1);
 	z-index: 1000;
-	.border-top-radius(5px);
-	.border-bottom-radius(5px);
+
+	div.color-menu.dropdown-menu{
+		margin-left: -72px;
+	}
+
+	// .border-top-radius(5px);
+	// .border-bottom-radius(5px);
 
 	.option-drag-handler{
 		background-color: lightgray;
-		.border-bottom-radius(5px);
+		// .border-top-radius(5px);
 		padding-left: 20px;
 	}
 
@@ -166,8 +292,27 @@ body{
 		.epan-component-options{
 
 		}
-		.epan-css-options{
+	}
 
+	.epan-css-options{
+		max-height:450px;
+		overflow-y: scroll;
+
+		.panel-heading{
+			padding: 10px !important;
+			margin-bottom: 2px;
+			background-color: @editor-base-color;
+			border-top-left-radius:0px;
+			border-top-right-radius:0px;
+			border-bottom:2px solid darken(@editor-base-color,15%);
+			& a{
+			 	color:darken(@editor-text-color,15%); 
+				
+				&:hover{
+				 	color:@editor-text-color;
+				}
+			}
+			
 		}
 	}
 }
@@ -214,4 +359,17 @@ body{
 
 .panel-group .panel{
 	overflow: visible;
+}
+
+
+.icon-strikethrough:before {
+  content: '\e8ad';
+}
+
+.icon-list-ul:before {
+  content: '\e8ab';
+}
+/* '' */
+.icon-list-ol:before {
+  content: '\e8ac';
 }

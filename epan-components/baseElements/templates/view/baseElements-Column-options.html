@@ -39,6 +39,18 @@
 		show: function (){
 			$('#column-span-input').slider('value',$(current_selected_component).attr('span'));
 			$('.epan-component-column-size').html($(current_selected_component).attr('span'));
+		},
+		created: function(obj,parent){
+			if($(parent).attr('component_type') != 'Row'){
+				// create a row in parent first
+				var new_row = $('<div class="row" component_type="Row">dasd</div>');
+				new_row.appendTo(parent);
+				// make row sortable, selectable and movable
+				new_row.sortable(s);
+				makeSelectable(new_row);
+				// move obj in row
+				new_row.append(obj);
+			}
 		}
 	}
 

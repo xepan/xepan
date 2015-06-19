@@ -23,8 +23,8 @@ class page_xProduction_page_owner_task_processed extends page_xProduction_page_o
 		$emptask->addCondition('created_by_id',$this->api->current_employee->id);
 		$emp_crud=$right_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false,'allow_del'=>false,'grid_class'=>'xProduction/Grid_Task'));
 		$emp_crud->setModel($emptask);
-		$emp_crud->manageAction('approve');
 			$emp_crud->manageAction('activities');
+		$emp_crud->manageAction('approve');
 			$emp_crud->manageAction('cancel');
 		// $crud->add('xHR/Controller_Acl');
 	}
