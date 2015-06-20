@@ -78,7 +78,7 @@ class Grid_Order extends \Grid {
 		// } 
 		// if($this->hasColumn('last_action'))
 			// $this->addFormatter('last_action','view');
-		
+		$this->model->setOrder('id','desc');		
 		$this->addFormatter('name','Wrap');
 		$this->addFormatter('name','view');
 		$this->addFormatter('created_at','Wrap');
