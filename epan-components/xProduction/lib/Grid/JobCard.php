@@ -48,7 +48,7 @@ class Grid_JobCard extends \Grid{
 		$this->addFormatter('order_no','orderview');
 		$this->addFormatter('name','view');
 		$this->removeColumn('outsource_party');
-
+		$this->model->setOrder('id','desc');
 		$this->addPaginator($this->ipp);
 		$this->addQuickSearch(array('order_no','name','created_at','orderitem','from_department','outsource_party'));
 		return $m;
