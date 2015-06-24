@@ -78,7 +78,7 @@ class Grid_Order extends \Grid {
 		// } 
 		// if($this->hasColumn('last_action'))
 			// $this->addFormatter('last_action','view');
-		
+		$this->model->setOrder('id','desc');		
 		$this->addFormatter('name','Wrap');
 		$this->addFormatter('name','view');
 		$this->addFormatter('created_at','Wrap');
@@ -97,7 +97,6 @@ class Grid_Order extends \Grid {
 		if($this->hasColumn('discount_voucher_amount'))$this->removeColumn('discount_voucher_amount');
 		if($this->hasColumn('total_amount'))$this->removeColumn('total_amount');
 		
-		$this->addPaginator($this->ipp);
 		if(!$fields)
 			$fields = $this->model->getActualFields();
 		$this->addQuickSearch($fields);
