@@ -20,7 +20,7 @@ class Grid_DeliveryNote extends \Grid{
 				);
 		});
 
-		$this->addQuickSearch(array('order','warehouse'));
+		$this->addQuickSearch(array('order'));
 		$this->addPaginator($ipp=50);
 	}
 

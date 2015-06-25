@@ -179,7 +179,6 @@ class Model_Invoice extends \Model_Document{
 		$config_model->tryLoadAny();
 				
 		$email_body=$config_model['invoice_email_body']?:"Invoice Layout Is Empty";
-		
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);
 		$email_body = str_replace("{{customer_organization_name}}", $customer['organization_name'], $email_body);
