@@ -219,7 +219,7 @@ class Model_SalesInvoice extends Model_Invoice{
 			if(isset($new_transaction)){
 				$transcation_model->load($new_transaction->id);
 				$transcation_model->sendReceiptViaEmail($form['email_to']);
-			$this->createActivity('email',$subject,"Advanced Receipt Payment Voucher (".$this['name'].")",$from=null,$from_id=null, $to='Customer', $to_id=$this->customer()->id);
+				$this->createActivity('email',$subject,"Payment Receipt (".$this['name'].")",$from=null,$from_id=null, $to='Customer', $to_id=$this->customer()->id);
 			}
 			
 		}	
