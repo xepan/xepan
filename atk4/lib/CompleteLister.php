@@ -414,7 +414,7 @@ class CompleteLister extends Lister
         $sub_q = $m->dsql()->del('limit')->del('order');
 
         $q = $this->api->db->dsql();//->debug();
-        $q->table($sub_q->render(), 'grandTotals'); // alias is mandatory if you pass table as DSQL
+        $q->table($sub_q, 'grandTotals'); // alias is mandatory if you pass table as DSQL
         foreach ($fields as $field) {
             $q->field($q->sum($field), $field);
         }
