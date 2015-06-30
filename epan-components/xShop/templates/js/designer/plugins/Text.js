@@ -222,7 +222,7 @@ xShop_Text_Editor = function(parent){
 		}else{
 			$(this).addClass('active');
 		}
-		self.current_text_component.options.rotation_angle = angle_rotate-5;
+		self.current_text_component.options.rotation_angle = angle_rotate-90;
 		$('.xshop-designer-tool').xepan_xshopdesigner('check');
 		self.current_text_component.render();
 
@@ -237,7 +237,7 @@ xShop_Text_Editor = function(parent){
 		}else{
 			$(this).addClass('active');
 		}
-		self.current_text_component.options.rotation_angle = angle_rotate+5;
+		self.current_text_component.options.rotation_angle = angle_rotate+90;
 		$('.xshop-designer-tool').xepan_xshopdesigner('check');
 		self.current_text_component.render();		
 	});
@@ -437,7 +437,8 @@ Text_Component = function (params){
 	            self.designer_tool.current_selected_component = self;
 	            self.designer_tool.option_panel.css('z-index',70);
 	            self.designer_tool.option_panel.addClass('xshop-text-options');
-	            self.designer_tool.option_panel.css('top',event.clientY - event.currentTarget.clientHeight - 80);
+	            self.designer_tool.option_panel.css('top',0);
+	            self.designer_tool.option_panel.css('top',event.clientY - event.currentTarget.clientHeight - 90);
 	            self.designer_tool.option_panel.css('left',event.clientX - event.currentTarget.clientWidth);
 	            self.editor.setTextComponent(self);
 	            // console.log(event);
@@ -471,13 +472,13 @@ Text_Component = function (params){
 					bold: self.options.bold,
 					italic: self.options.italic,
 					underline:self.options.underline,
-					stokethrough:self.options.stokethrough,
 					rotation_angle:self.options.rotation_angle,
 					alignment_left:self.options.alignment_left,
 					alignment_right:self.options.alignment_right,
 					alignment_center:self.options.alignment_center,
 					alignment_justify:self.options.alignment_justify,
 					zoom: self.designer_tool.zoom,
+					stokethrough:self.options.stokethrough,
 					width: self.options.width
 					},
 		})

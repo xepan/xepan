@@ -240,7 +240,7 @@ Image_Component = function (params){
 	            self.designer_tool.current_selected_component = self;
 	            self.designer_tool.option_panel.css('z-index',70);
 	            self.designer_tool.option_panel.addClass('xshop-text-options');
-	            self.designer_tool.option_panel.css('top',event.clientY - event.currentTarget.clientHeight);
+	            self.designer_tool.option_panel.css('top',event.clientY - event.currentTarget.clientHeight + 30);
 	            self.designer_tool.option_panel.css('left',event.clientX - event.currentTarget.clientWidth);
 	            self.editor.setImageComponent(self);
 		        event.stopPropagation();
