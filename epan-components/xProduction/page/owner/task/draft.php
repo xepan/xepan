@@ -58,8 +58,8 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 		$left_crud=$right_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false,'allow_del'=>false,'grid_class'=>'xProduction/Grid_Task'));
 		$left_crud->setModel($assign_to_me_task);
 		$left_crud->manageAction('start_processing');
-		$left_crud->manageAction('reject_page');
-		$left_crud->manageAction('see_activities');
+		$left_crud->manageAction('reject');
+		$left_crud->manageAction('activities');
 		// $left_crud->add('xHR/Controller_Acl');
 
 	}
