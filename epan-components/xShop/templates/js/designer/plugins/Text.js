@@ -433,9 +433,15 @@ Text_Component = function (params){
 	            $(this).addClass('ui-selected');
 	            $('.xshop-options-editor').hide();
 	            self.editor.element.show();
-	            self.designer_tool.option_panel.show();
+	            self.designer_tool.option_panel.fadeIn(500);
 	            self.designer_tool.current_selected_component = self;
+	            self.designer_tool.option_panel.css('z-index',70);
+	            self.designer_tool.option_panel.addClass('xshop-text-options');
+	            self.designer_tool.option_panel.css('top',event.clientY - event.currentTarget.clientHeight - 80);
+	            self.designer_tool.option_panel.css('left',event.clientX - event.currentTarget.clientWidth);
 	            self.editor.setTextComponent(self);
+	            // console.log(event);
+	            // console.log(self.designer_tool.option_panel);
 	            if(self.designer_tool.options.designer_mode){
 		            self.designer_tool.freelancer_panel.FreeLancerComponentOptions.element.show();
 		            self.designer_tool.freelancer_panel.setComponent($(this).data('component'));

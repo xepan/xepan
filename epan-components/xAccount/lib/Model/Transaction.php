@@ -208,6 +208,7 @@ class Model_Transaction extends \Model_Document{
 		$email_body = str_replace('{{amount}}', $this->ref('xAccount/TransactionRow')->sum('amountCr'), $email_body);
 		$email_body = str_replace('{{pay_to}}', $order->customer()->get('customer_name'), $email_body);
 		$email_body = str_replace('{{approve_by}}', $order->searchActivity('approved'), $email_body);
+		$email_body = str_replace('{{transaction_type}}', $this['transaction_type'], $email_body);
 
 		if(strpos($this['transaction_type'],"CASH") !==false){
 			$email_body = str_replace('{{cash}}',"Yes", $email_body);
