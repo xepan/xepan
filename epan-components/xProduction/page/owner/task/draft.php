@@ -47,8 +47,8 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 			$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL($g->model['subject'],$g->api->url($task_vp->getURL(),array('task_id'=>$g->model->id))).'">'.substr(strip_tags($g->model['subject']),0,25).'</a>';
 		});
 		$crud->grid->addFormatter('subject','subject');
-
 		$crud->manageAction('assign');
+		$crud->manageAction('approve');
 		// $crud->grid->ipp=2;
 		// $crud->add('xHR/Controller_Acl',array('override'=>array('allow_add'=>true,'allow_edit'=>'Self Only','allow_del'=>'Self Only')));
 

@@ -56,8 +56,22 @@ class page_xAccount_page_owner_cashbook extends page_xAccount_page_owner_main{
 		$grid->addSno();
 		$grid->removeColumn('account');
 
-		// $grid->addTotals(array('amountCr','amountDr'));
+		$grid->addMethod('format_transaction_type',function($g,$f){
+			$g->current_row_html[$f]=$g->model['transaction_type']."::".$g->model->customer()->get('organization_name');
+		});
+		$grid->addFormatter('transaction_type','transaction_type');
 
+		$js=array(
+			$this->js()->_selector('.atk-cells-gutter-large')->parent()->parent()->toggle(),
+			$this->js()->_selector('.atk-box')->toggle(),
+			$this->js()->_selector('.navbar1')->toggle(),
+			// $this->js()->_selector('.atk-text-nowrap')->toggle(),
+			$this->js()->_selector('.atk-form')->toggle(),
+			);
+
+		$grid->js('click',$js);
+
+		// $grid->addTotals(array('amountCr','amountDr'));
 		if($form->isSubmitted()){
 			$grid->js()->reload(array('from_date'=>$form['from_date']?:0,'to_date'=>$form['to_date']?:0))->execute();
 		}

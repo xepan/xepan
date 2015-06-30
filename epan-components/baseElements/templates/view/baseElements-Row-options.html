@@ -3,14 +3,17 @@
 
 	<div class='xepan-collasp-header'>
 		<table class="table table-condensed table-hover">
-						<tbody>
-							<tr>
-								<td style="width:100%" class='text-center'>
-									<b>Rows Do Not Have Any Options<br/>(hint: always place only columns in any row)</b>
-								</td>
-							</tr>
-							</tbody>
-							</table>
+			<tbody>
+				<tr>
+					<td>
+						Insert Column
+					</td>
+					<td style="width:100%" class='text-center'>
+						<div id="epan-editor-columns-row-add-col-btn" class="btn btn-default btn-sm">Add Column</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 
 </div>
@@ -20,6 +23,24 @@
 // $(your_option_html_element).click(function(event,ui){
 // 		$(current_selected_component).what to do ???
 // }) 
+$('#epan-editor-columns-row-add-col-btn').click(function(event){
+	var new_col = $('<div component_type=\'Columns\' class=\'atk-col-3 epan-sortable-component epan-component\' span=\'3\'></div>');
+	new_col.appendTo(current_selected_component);
+	new_col.sortable(s);
+	makeSelectable(new_col);
+	$(new_col).hover(epan_component_hover_function, epan_component_hover_out_function);
+	if ($('#epan-component-border:checked').size() > 0) {
+        $(new_col).addClass('component-outline');
+   	}
+
+    if ($('#epan-component-extra-padding:checked').size() > 0) {
+        if($(new_col).hasClass('epan-sortable-component'))
+            $(new_col).addClass('epan-sortable-extra-padding');
+        $(new_col).find('.epan-sortable-component').addClass('epan-sortable-extra-padding');
+    }	
+});
+
+
 
 var {$component_type}_options = {
 	show: function (){

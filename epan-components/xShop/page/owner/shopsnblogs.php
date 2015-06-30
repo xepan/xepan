@@ -14,8 +14,6 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 
 	function page_shops(){
 
-
-
 		$crud= $this->add('CRUD',array('grid_class'=>'xShop/Grid_Shop'));
 		$crud->setModel('xShop/Shop');
 
@@ -26,11 +24,20 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 			$crud->grid->addColumn('expander','configuration',array("descr"=>"Configuration",'icon'=>'cog'));
 			$crud->grid->addColumn('expander','tax',array("descr"=>"Taxs",'icon'=>'money'));
 			$crud->grid->addColumn('expander','priority',array("descr"=>"Priority",'icon'=>'signal'));
+			$crud->grid->addColumn('expander','imagelibrary',array("descr"=>'Library'));
 		}
 
 		$crud->grid->addQuickSearch(array('name'));
 		$crud->grid->addPaginator($ipp=50);
         $crud->add('xHR/Controller_Acl');
+		
+	}
+	
+	function page_shops_imagelibrary(){
+		$this->add('View')->set('System Image Library');
+	    $item_images_lister = $this->add('xShop/View_Lister_DesignerItemImages');
+      	$item_images_lister->addClass('xshop-designer-image-lister');
+      	$item_images_lister->setModel($image_model);
 		
 	}
 

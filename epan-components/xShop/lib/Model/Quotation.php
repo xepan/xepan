@@ -129,8 +129,6 @@ class Model_Quotation extends \Model_Document{
 	}
 
 	function send_via_email_page($page){
-
-		echo "string";
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		$email_body = $this->parseEmailBody();
 		$customer = $this->customer();

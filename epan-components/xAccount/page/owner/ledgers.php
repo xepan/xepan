@@ -21,15 +21,15 @@ class page_xAccount_page_owner_ledgers extends page_xAccount_page_owner_main{
 				else
 					$g->current_row_html[$f] = '<div class="pull-left">'.abs($fig) . '</div><div class="pull-right">Cr</div>';
 			});
-
+			$group->setOrder('name','asc');
 			$crud->grid->addColumn('balance','balance');
 			$crud->grid->add_sno();
+			$crud->grid->addQuickSearch('name');
 			$crud->grid->removeColumn('CurrentBalanceDr');
 			$crud->grid->removeColumn('CurrentBalanceCr');
 			$crud->grid->removeColumn('OpeningBalanceCr');
 			$crud->grid->removeColumn('OpeningBalanceDr');
 		}
 
-		// $crud->add('xHR/Controller_Acl');
 	}
 }

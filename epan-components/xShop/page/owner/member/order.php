@@ -1,6 +1,6 @@
 <?php
 
-class page_xShop_page_member_order extends Page{
+class page_xShop_page_owner_member_order extends Page{
 	function page_index(){
 		
 		$member = $this->add('xShop/Model_MemberDetails');

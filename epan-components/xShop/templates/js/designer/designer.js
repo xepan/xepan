@@ -212,7 +212,7 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 
 	setupCanvas: function(){
 		var self = this;
-		this.canvas = $('<div class="xshop-desiner-tool-canvas atk-move-center" style="position:relative; z-index:100"></div>').appendTo(this.workplace);
+		this.canvas = $('<div class="xshop-desiner-tool-canvas atk-move-center" style="position:relative; z-index:50"></div>').appendTo(this.workplace);
 		
 		this.canvas.css('width',this.options.width + this.options.unit); // In given Unit
 		this.px_width = this.canvas.width(); // Save in pixel for actual should be width
@@ -235,9 +235,12 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 	setupCart: function(){
 		var self=this;
 		if(!self.options.show_cart) return;
-		original_rate = $('<div class="xshop-item-old-price"></div>').appendTo(self.element);
-		price_rate = $('<div class="xshop-item-price"></div>').appendTo(self.element);
-		this.cart = $('<div></div>').appendTo(self.element);
+		if(self.options.designer_mode) return;
+
+		cart_container = $('<div class="xepan-xshop-designer-cart-container"></div>').appendTo(self.element);
+		original_rate = $('<div class="xshop-item-old-price"></div>').appendTo(cart_container);
+		price_rate = $('<div class="xshop-item-price"></div>').appendTo(cart_container);
+		this.cart = $('<div></div>').appendTo(cart_container);
 		this.cart.xepan_xshop_addtocart(self.options.cart_options);
 	},
 

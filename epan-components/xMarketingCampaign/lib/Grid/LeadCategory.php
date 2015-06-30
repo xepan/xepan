@@ -12,13 +12,12 @@ class Grid_LeadCategory extends \Grid{
 		$self=$this;
 		$this->mail_vp = $this->add('VirtualPage')->set(function($p)use($self){
 			$cat_id=$this->api->StickyGET('leadcategory_id');
-			$cat_model=$p->add('xMarketingCampaign/Model_LeadCategory');
-			$cat_model->load($cat_id);
 			
 			$grid = $p->add('xMarketingCampaign/Grid_Lead');
 			$lead = $p->add('xMarketingCampaign/Model_Lead');
-				// $lead->addCondition('subscriber_id',$cat_id);
-			// echo "string".$lead;
+			$lead->leftJoin('xenquirynsubscription_subscatass.subscriber_id')
+                                ->addField('category_id');
+			$lead->addCondition('category_id',$cat_id);
 			$grid->setModel($lead);
 		});
 	}
