@@ -289,7 +289,7 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 						// $user_model->addCondition('username',$form['username']);
 						// $user_model->addCondition('password',$this->api->auth->encryptPassword($form['password']));
 						// $user_model->tryLoadAny();
-
+						$this->api->auth->model->allow_duplicate_email=true;
 						if(!($id = $this->api->auth->verifyCredentials($form['username'],$form['password'])))
 							$form->displayError('username','Wrong Credentials');
 
