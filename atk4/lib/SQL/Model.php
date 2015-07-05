@@ -260,8 +260,8 @@ class SQL_Model extends Model implements Serializable {
         return $this->getElement($name)->ref($load);
     }
     /** Returns Model with SQL join usable for subqueries. */
-    function refSQL($name){
-        return $this->getElement($name)->refSQL();
+    function refSQL($name,$load=null){
+        return $this->getElement($name)->refSQL($load);
     }
     /** @obsolete - return model referenced by a field. Use model name for one-to-many relations */
     function getRef($name,$load=null){
@@ -381,7 +381,7 @@ class SQL_Model extends Model implements Serializable {
 
         $f = $field->actual_field ?: $field->short_name;
 
-        if ($field->calculated()) {
+        if ($field instanceof Field_Expression) {
             // TODO: should we use expression in where?
 
             $dsql->where($field->getExpr(), $cond, $value);
@@ -555,7 +555,7 @@ class SQL_Model extends Model implements Serializable {
     function loadAny(){
         try{
             return $this->_load(null);
-        }catch(BaseException $e){
+        }catch(Exception_NoRecord $e){
             throw $this->exception('No matching records found',null,404);
         }
     }
@@ -646,7 +646,7 @@ class SQL_Model extends Model implements Serializable {
 
             if(@!$data){
                 if($ignore_missing)return $this; else {
-                    throw $this->exception('Record could not be loaded')
+                    throw $this->exception('Record could not be loaded','Exception_NoRecord')
                     ->addMoreInfo('model',$this)
                     ->addMoreInfo('id',$id)
                 ;
