@@ -1,15 +1,10 @@
-<<<<<<< HEAD
 <div id="{$_name}" class="atk-table atk-table-zebra atk-table-bordered {$class}" style="{$style}">{Pannel}
-=======
-
-<div id="{$_name}" class="atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
->>>>>>> 79454b52a276ea25b7e5f26971b335bdb01deaee
   <div class="atk-box-small {$pannel_class}">{$quick_search}
     <div class="atk-actions">{$grid_buttons}</div>
   </div>{/Pannel}
   <table>{header}
     <thead>{cols}{col}
-      <th id="{$sortid}"><a href="javascript:void(0)">
+      <th id="{$sortid}" {$thparam}><a href="javascript:void(0)">
           {$descr}
           {sort}<span class="{$sorticon}"></span>{/}</a></th>{/}{/}
     </thead>{/}
