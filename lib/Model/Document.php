@@ -136,7 +136,7 @@ class Model_Document extends Model_Table{
 	}
 
 	function defaultBeforeSave(){
-		$this['updated_at']= date('Y-m-d H:i:s');
+		$this['updated_at']= $this->api->now;
 
 		//Create Log entry
 	}
