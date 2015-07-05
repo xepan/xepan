@@ -43,6 +43,8 @@ class DB extends AbstractController
     /** Current depth of transaction */
     public $transaction_depth = 0;
 
+    public $dbname=null;
+
     /**
      * Connect will parse supplied DSN and connect to the database. Please be
      * aware that DSN may contain plaintext password and if you record backtrace
@@ -94,6 +96,8 @@ class DB extends AbstractController
                     $matches[4],
                     array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
                 );
+
+                $this->dbname = $matches[7];
             }
         }
 
