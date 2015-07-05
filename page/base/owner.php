@@ -481,11 +481,6 @@ class page_base_owner extends Page {
 	function recursiveRender(){
 		if($_GET['xnotifier'] or !$_GET['cut_page']){
 			// $this->add('View_Notification',array('update_seen_till'=>$_GET['see']));
-<<<<<<< HEAD
-			// $thismod->add('clippy/Agent');
-=======
-			// $this->add('clippy/Agent');
->>>>>>> 79454b52a276ea25b7e5f26971b335bdb01deaee
 		}
 
 		parent::recursiveRender();
