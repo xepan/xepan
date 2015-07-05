@@ -2,13 +2,13 @@
     {Pannel}
     .atk-box-small(class="{$pannel_class}") {$quick_search}
         .atk-actions {$grid_buttons}
-    {/}
+    {/Pannel}
 
     table
         {header}
         thead
             {cols}{col}
-            <th {$thparam} id="{$sortid}">
+            th(id="{$sortid}")
                 a(href="javascript:void(0)")
                     {$descr}
                     {sort}

@@ -87,6 +87,7 @@ class Model_SalesInvoice extends Model_Invoice{
 		
 
 		$transaction->execute();
+		return $transaction;
 	}
 
 	function payViaCheque($amount, $cheque_no,$cheque_date,$bank_account_no, $self_bank_account=null){
@@ -172,6 +173,7 @@ class Model_SalesInvoice extends Model_Invoice{
 		$form->addField('line','bank_account_detail');
 		$form->addField('line','cheque_no');
 		$form->addField('DatePicker','cheque_date');
+		$form->addField('Checkbox','send_receipt');
 		$form->addField('Checkbox','send_invoice_via_email');
 		$form->addField('line','email_to')->set($this->customer()->get('customer_email'));
 
@@ -202,12 +204,25 @@ class Model_SalesInvoice extends Model_Invoice{
 				}
 				
 				if($form['payment'] == "cash"){					
-					$invoice->payViaCash($form['amount']);
+					$new_transaction = $invoice->payViaCash($form['amount']);
 				}
 				elseif($form['payment'] == "cheque"){
 					$invoice->payViaCheque($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_detail'],$self_bank_account=null);
 				}
 			}
+
+		if($form['send_receipt']){
+			if(!$form['email_to'])
+				$form->displayError('email_to','Email Not Proper. ');
+
+			$transcation_model=$this->add('xAccount/Model_Transaction');
+			if(isset($new_transaction)){
+				$transcation_model->load($new_transaction->id);
+				$transcation_model->sendReceiptViaEmail($form['email_to']);
+				$this->createActivity('email',$subject,"Payment Receipt (".$this['name'].")",$from=null,$from_id=null, $to='Customer', $to_id=$this->customer()->id);
+			}
+			
+		}	
 
 		if($form['send_invoice_via_email']){
 			
@@ -229,9 +244,11 @@ class Model_SalesInvoice extends Model_Invoice{
 			$subject = $this->emailSubjectPrefix("");
 			$this->sendEmail($form['email_to'],$subject,$this->parseEmailBody());
 
+			$this->createActivity('email',$subject,"Advanced PAYMENT Invoice Paid (".$this['name'].")",$from=null,$from_id=null, $to='Customer', $to_id=$this->customer()->id);
 		}
 			$this->setStatus('completed');
 			return true;
+
 
 		}
 		

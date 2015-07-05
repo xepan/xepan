@@ -348,57 +348,6 @@ $.each({
 
         },null,true);
     },
-    bgajaxec: function(url,data,fn){
-        // Combination of ajax and exec. Will pull provided url and execute returned javascript.
-        region=this.jquery;
-
-        if(region.data('ajaxec_loading'))return this.successMessage('Please Wait');
-        region.data('ajaxec_loading',true);
-
-
-        if(data==true){
-            data={};
-            if(region.data()) {
-                $.each(region.data(), function(k, v) {
-                    if(typeof v !== "object") data[k]=v;
-                });
-            }
-
-        }
-
-        // ITS BG ajax calling, do not disturb user
-        // var cogs=$('<div id="banner-loader" class="atk-banner atk-cells atk-visible"><div class="atk-cell atk-align-center atk-valign-middle"><div class="atk-box atk-inline atk-size-zetta atk-banner-cogs"></div></div></div>');
-        // cogs.appendTo('body');
-
-
-        $.atk4.get(url,data,function(ret){
-            // cogs.remove();
-            region.data('ajaxec_loading',false);
-            /*
-            // error handling goes away from here
-            if(ret.substr(0,5)=='ERROR'){
-            $.univ().dialogOK('Error','There was error with your request. System maintainers have been notified.');
-            return;
-            }
-            */
-            if(!$.atk4._checkSession(ret))return;
-            try{
-                eval(ret);
-                if(fn)fn();
-            }catch(e){
-                w=window.open(null,null,'height=400,width=700,location=no,menubar=no,scrollbars=yes,status=no,titlebar=no,toolbar=no');
-                if(w){
-                    w.document.write('<h5>Error in AJAXec response: '+e+'</h5>');
-                    w.document.write(ret);
-                    w.document.write('<center><input type=button onclick="window.close()" value="Close"></center>');
-                }else{
-                    console.log("Error in ajaxec response", e,ret);
-                    showMessage("Error in AJAXec response: "+e+"\n"+ret);
-                }
-            }
-
-        },null,true);
-    },
     newWindow: function(url,name,options){
         window.open(url,name,options);
     },

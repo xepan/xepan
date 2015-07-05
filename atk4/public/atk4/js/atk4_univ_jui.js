@@ -6,7 +6,7 @@ $.each({
                         * work perfectly with it
                         */
         var dialog=$('<div class="dialog dialog_autosize" title="Untitled"><div style="min-height: 300px"></div>').appendTo('body');
-        // if(options.noAutoSizeHack)dialog.removeClass('dialog_autosize');
+        if(options.noAutoSizeHack)dialog.removeClass('dialog_autosize');
         dialog.dialog(options);
         if(options.customClass){
             dialog.parent().addClass(options.customClass);
@@ -55,8 +55,8 @@ $.each({
         return this.dialogPrepare($.extend({
             bgiframe: true,
             modal: true,
-            width: $(window).width()-100,
-            position: { my:'top',at:'top+10','of':window },
+            width: 1000,
+            position: { my:'top',at:'top+100','of':window },
             autoOpen:false,
             beforeClose: function(){
                 if($(this).is('.atk4_loader')){
@@ -67,7 +67,7 @@ $.each({
             open: function(x){
                 $("body").css({ overflow: 'hidden' })
                 .children('.atk-layout').addClass('visible-dialog');
-                $(x.target).css({'max-height': $(window).height()-80});
+                $(x.target).css({'max-height': $(window).height()-180});
             },
             close: function(){
                 $("body").css({ overflow: 'auto' })
@@ -152,10 +152,10 @@ $.each({
     </div>\
   </div>');
         this.message(msg,html);
-        setTimeout(function() { html.fadeOut();},5000);
+        setTimeout(function() { html.remove();},8000);
     },
     errorMessage: function(msg){
-        var html=$('<div class="atk-layout-row" style="position: relative; z-index: 1000; right: 10px; display:none">\
+        var html=$('<div class="atk-layout-row" style="position: fixed; z-index: 1000">\
     <div class="atk-swatch-red atk-cells atk-padding-small">\
       <div class="atk-cell atk-jackscrew"><i class="icon-attention"></i>&nbsp;<span>Agile Toolkit failed to automatically renew certificate.</span></div>\
       <div class="atk-cell"><a href="javascript: void()" class="do-close"><i class="icon-cancel"></i></a></div>\

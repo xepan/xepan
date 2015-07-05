@@ -149,7 +149,7 @@ class page_base_owner extends Page {
 			$exec_m->addItem(array('Start Grabbing Data','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_exec',array('department_id'=>$dept_model->id)));
 			$exec_m->addItem(array('Start Sending Mass Email','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_emailexec',array('department_id'=>$dept_model->id)));
 			$exec_m->addItem(array('Update Social Activities','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_updatesocialactivityexec',array('department_id'=>$dept_model->id)));
-			$exec_m->addItem(array('Scheduled Emails from Campaign','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_campaignexec',array('department_id'=>$dept_model->id)));
+			$exec_m->addItem(array('Scheduled Emails from Campaign','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_campaignexec',array('department_id'=>$dept_model->id)));
 		}
 
 
@@ -481,7 +481,11 @@ class page_base_owner extends Page {
 	function recursiveRender(){
 		if($_GET['xnotifier'] or !$_GET['cut_page']){
 			// $this->add('View_Notification',array('update_seen_till'=>$_GET['see']));
+<<<<<<< HEAD
 			// $thismod->add('clippy/Agent');
+=======
+			// $this->add('clippy/Agent');
+>>>>>>> 79454b52a276ea25b7e5f26971b335bdb01deaee
 		}
 
 		parent::recursiveRender();

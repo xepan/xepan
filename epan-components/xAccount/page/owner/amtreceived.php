@@ -32,7 +32,7 @@ class page_xAccount_page_owner_amtreceived extends page_xAccount_page_owner_main
 		if($form->isSubmitted()){
 
 			$transaction = $this->add('xAccount/Model_Transaction');
-			$transaction->createNewTransaction('CASH RECEIPT', null, $this->api->now, $form['narration']);
+			$transaction->createNewTransaction('CASH RECEIPT', null, $form['date'], $form['narration']);
 
 			$transaction->addDebitAccount($this->add('xAccount/Model_Account')->load($form['cash_account']),$form['amount']);
 			
@@ -68,7 +68,7 @@ class page_xAccount_page_owner_amtreceived extends page_xAccount_page_owner_main
 		if($form->isSubmitted()){
 
 			$transaction = $this->add('xAccount/Model_Transaction');
-			$transaction->createNewTransaction('BANK RECEIPT', null, $this->api->now, $form['narration']);
+			$transaction->createNewTransaction('BANK RECEIPT', null, $form['date'], $form['narration']);
 
 			$transaction->addDebitAccount($this->add('xAccount/Model_Account')->load($form['bank_account']),$form['amount']);
 			

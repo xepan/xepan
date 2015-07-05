@@ -172,7 +172,7 @@ class Frontend extends ApiFrontend{
 				$auth->model->save();
 			});
 
-			if($this->api->auth->isLoggedIn() AND $this->api->auth->model->ref('epan_id')->get('name')==$this->api->website_requested AND $this->api->auth->model['type'] >= 80 AND !$_GET['preview']){
+			if($this->api->auth->isLoggedIn() AND $this->api->auth->model->ref('epan_id')->get('name')==$this->api->website_requested AND $this->api->auth->model['type'] >= 80 AND !$this->stickyGET('preview')){
 				$this->edit_mode = true;
 			}
 
