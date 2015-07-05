@@ -8,10 +8,11 @@ class page_xCRM_page_owner_ticket extends page_componentBase_page_owner_main {
 
 		$tab = $this->add('Tabs');
 		$tab->addTabURL('xCRM/page/owner/ticket/draft','Draft '.$this->add('xCRM/Model_Ticket_Draft')->myCounts(true,false));
-		$tab->addTabURL('xCRM/page/owner/ticket_submitted','Submiited '.$this->add('xCRM/Model_Ticket_Submitted')->myCounts(true,false));
+		$tab->addTabURL('xCRM/page/owner/ticket_submitted','Submited/Open'.$this->add('xCRM/Model_Ticket_Submitted')->myCounts(true,false));
 		$tab->addTabURL('xCRM/page/owner/ticket_assigned','Assigned'.$this->add('xCRM/Model_Ticket_Assigned')->myCounts(true,false));
-		$tab->addTabURL('xCRM/page/owner/ticket_solved','Solved '.$this->add('xCRM/Model_Ticket_Solved')->myCounts(true,false));
-		$tab->addTabURL('xCRM/page/owner/ticket_canceled','Cancelled '.$this->add('xCRM/Model_Ticket_Canceled')->myCounts(true,false));
+		$tab->addTabURL('xCRM/page/owner/ticket_solved','Solved/Closed'.$this->add('xCRM/Model_Ticket_Solved')->myCounts(true,false));
+		$tab->addTabURL('xCRM/page/owner/ticket_canceled','Canceled '.$this->add('xCRM/Model_Ticket_Canceled')->myCounts(true,false));
+		$tab->addTabURL('xCRM/page/owner/ticket_junk','Junk '.$this->add('xCRM/Model_Ticket_Junk')->myCounts(true,false));
 		
 
 	}

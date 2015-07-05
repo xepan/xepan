@@ -10,9 +10,12 @@ class Filter_Lead extends \Filter_Base
         parent::init();
 
         $this->search_field = $this->addField('Line', 'q', '')->setAttr('placeholder','Search')->setNoSave();
-        $this->type_field = $this->addField('Dropdown', 'category', '')->setEmptyText('All Leads Category')->setNoSave()->setModel('xMarketingCampaign/LeadCategory');
         // $this->status_field = $this->addField('Dropdown', 'status', '')->setEmptyText('Any Status')->setValueList(array('active'=>'Active','inactive'=>'InActive'))->setNoSave();
+        $this->cat_field = $this->addField('MultiSelect', 'category', '');
+        $this->cat_field->setModel('xMarketingCampaign/Model_LeadCategory');
 
+        $this->cat_field->setAttr('multiple','multiple');
+        $this->cat_field->selectnemu_options=array('maxWidth'=>200);
     }
 
     /**
@@ -36,8 +39,9 @@ class Filter_Lead extends \Filter_Base
             return $this->view->model->addConditionLike($v, $this->fields);
         }
         if($this->view->model) {
-            $this->view->model->join('xenquirynsubscription_subscatass.subscriber_id')
+            $this->view->model->leftJoin('xenquirynsubscription_subscatass.subscriber_id')
                                 ->addField('category_id');
+            $this->view->model->_dsql()->group('subscriber_id');
             $q = $this->view->model->_dsql();
         } else {
             $q = $this->view->dq;

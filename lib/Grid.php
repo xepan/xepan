@@ -31,6 +31,7 @@ class Grid extends Grid_Advanced{
         } else {
             $this->dq->where('id', $id)->delete();
         }
+        if($this->api->db->inTransaction()) $this->api->db->commit();
     }
 
 	function add_sno(){

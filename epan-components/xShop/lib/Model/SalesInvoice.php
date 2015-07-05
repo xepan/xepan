@@ -5,10 +5,11 @@ class Model_SalesInvoice extends Model_Invoice{
 	public $root_document_name = 'xShop\SalesInvoice';
 	public $actions=array(
 			'can_view'=>array(),
-			'can_reject'=>array(),
-			'can_send_via_email'=>array(),
+			'can_send_via_email'=>array('caption'=>'E-mail'),
 			'allow_edit'=>array(),
-
+			'allow_del'=>array(),
+			'can_cancel'=>array(),
+			'update_from_order'=>array(),
 		);
 
 	function init(){
@@ -38,18 +39,35 @@ class Model_SalesInvoice extends Model_Invoice{
 		return $this->ref('customer_id');
 	}
 
-	function createVoucher($salesLedger=null,$taxLedger=null,$discountLedger=null){		
+	// function transaction(){
+	// 	$tr = $this->add('xAccount/Model_Transaction')->loadWhoseRelatedDocIs($this);
+	// 	if($tr and $tr->loaded()) return $tr;
+	// 	return false;
+	// }
+
+	function createVoucher($salesLedger=null,$taxLedger=null,$discountLedger=null,$roundLedger=null,$shippingLedger=null){
 		if(!$salesLedger) $salesLedger = $this->add('xAccount/Model_Account')->loadDefaultSalesAccount();
 		if(!$taxLedger) $taxLedger = $this->add('xAccount/Model_Account')->loadDefaultTaxAccount();
 		if(!$discountLedger) $discountLedger = $this->add('xAccount/Model_Account')->loadDefaultDiscountAccount();
+		if(!$roundLedger) $roundLedger = $this->add('xAccount/Model_Account')->loadDefaultRoundAccount();
+		if(!$shippingLedger) $shippingLedger = $this->add('xAccount/Model_Account')->loadDefaultShippingAccount();
+
 		$transaction = $this->add('xAccount/Model_Transaction');
-		$transaction->createNewTransaction('SALES INVOICE', $this, $transaction_date=$this->api->today, $Narration=null);
+		$transaction->createNewTransaction('SALES INVOICE', $this, $transaction_date=$this['created_at'], $Narration=null);
 
 		$transaction->addCreditAccount($salesLedger,$this['total_amount']);
 		$transaction->addCreditAccount($taxLedger,$this['tax']);
+		$transaction->addCreditAccount($shippingLedger,$this['shipping_charge']);
 		
 		$transaction->addDebitAccount($discountLedger,$this['discount']);
-		$transaction->addDebitAccount($this->customer()->account(),$this['net_amount']);
+		$transaction->addDebitAccount($this->customer()->account(),$this->round($this['gross_amount'] + $this['shipping_charge']- $this['discount']));
+		
+		$round_value = $this['net_amount'] - ( $this['gross_amount'] + $this['shipping_charge'] - $this['discount']);
+
+		if($round_value > 0)
+			$transaction->addCreditAccount($roundLedger,abs($round_value));
+		else
+			$transaction->addDebitAccount($roundLedger,abs($round_value));
 
 		$transaction->execute();
 		
@@ -69,6 +87,7 @@ class Model_SalesInvoice extends Model_Invoice{
 		
 
 		$transaction->execute();
+		return $transaction;
 	}
 
 	function payViaCheque($amount, $cheque_no,$cheque_date,$bank_account_no, $self_bank_account=null){
@@ -87,6 +106,16 @@ class Model_SalesInvoice extends Model_Invoice{
 		$this['transaction_reference'] =  $transaction_reference;
 	    $this['transaction_response_data'] = json_encode($transaction_reference_data);
 	    $this->save();
+
+	    if(!$self_bank_account) $self_bank_account = $this->add('xAccount/Model_Account')->loadDefaultBankAccount();
+
+	    $transaction = $this->add('xAccount/Model_Transaction');
+		$transaction->createNewTransaction('INVOICE ONLINE PAYMENT RECEIVED', $this, $transaction_date=$this->api->now, $Narration=null);
+		
+		$transaction->addCreditAccount($this->customer()->account(),$amount);
+		$transaction->addDebitAccount($self_bank_account ,$amount);
+		
+		$transaction->execute();
 	}
 
 	function submit(){
@@ -94,10 +123,22 @@ class Model_SalesInvoice extends Model_Invoice{
 	}
 
 	function approve(){
+		$this['created_at'] = date('Y-m-d H:i:s');
+		$this->save();
+
 		$this->createVoucher();
 		$this->setStatus('approved');
 	}
 
+	function transactions(){
+		$transaction = $this->add('xAccount/Model_Transaction');
+		if($tr=$transaction->loadWhoseRelatedDocIs($this)){
+			return $tr;
+		}
+
+		return false;	
+	}
+	
 	function cancel_page($p){
 		$transaction = $this->add('xAccount/Model_Transaction');
 		$form = $p->add('Form');
@@ -119,7 +160,10 @@ class Model_SalesInvoice extends Model_Invoice{
 	}
 
 	function cancel($reason){
-			$this->setStatus('canceled',$reason);
+		if($tr= $this->transaction()){
+			$tr->forceDelete();
+		}
+		$this->setStatus('canceled',$reason);
 	}
 
 	function mark_processed_page($p){
@@ -129,8 +173,9 @@ class Model_SalesInvoice extends Model_Invoice{
 		$form->addField('line','bank_account_detail');
 		$form->addField('line','cheque_no');
 		$form->addField('DatePicker','cheque_date');
+		$form->addField('Checkbox','send_receipt');
 		$form->addField('Checkbox','send_invoice_via_email');
-		$form->addField('line','email_to');
+		$form->addField('line','email_to')->set($this->customer()->get('customer_email'));
 
 
 
@@ -159,14 +204,28 @@ class Model_SalesInvoice extends Model_Invoice{
 				}
 				
 				if($form['payment'] == "cash"){					
-					$invoice->payViaCash($form['amount']);
+					$new_transaction = $invoice->payViaCash($form['amount']);
 				}
 				elseif($form['payment'] == "cheque"){
 					$invoice->payViaCheque($form['amount'],$form['cheque_no'],$form['cheque_date'],$form['bank_account_detail'],$self_bank_account=null);
 				}
 			}
 
+		if($form['send_receipt']){
+			if(!$form['email_to'])
+				$form->displayError('email_to','Email Not Proper. ');
+
+			$transcation_model=$this->add('xAccount/Model_Transaction');
+			if(isset($new_transaction)){
+				$transcation_model->load($new_transaction->id);
+				$transcation_model->sendReceiptViaEmail($form['email_to']);
+				$this->createActivity('email',$subject,"Payment Receipt (".$this['name'].")",$from=null,$from_id=null, $to='Customer', $to_id=$this->customer()->id);
+			}
+			
+		}	
+
 		if($form['send_invoice_via_email']){
+			
 			$inv = $this->order()->invoice();
 			
 			if(!$inv){
@@ -178,17 +237,88 @@ class Model_SalesInvoice extends Model_Invoice{
 
 			if(!$form['email_to'])
 				$form->displayError('email_to','Email Not Proper. ');
+			
 
-			$inv->send_via_email();
+			// $customer=$this->customer();
 
+			$subject = $this->emailSubjectPrefix("");
+			$this->sendEmail($form['email_to'],$subject,$this->parseEmailBody());
+
+			$this->createActivity('email',$subject,"Advanced PAYMENT Invoice Paid (".$this['name'].")",$from=null,$from_id=null, $to='Customer', $to_id=$this->customer()->id);
 		}
 			$this->setStatus('completed');
 			return true;
+
 
 		}
 		
 	}
 
 
+	function update_from_order_page($page){
+		if(!$this['sales_order_id']){
+			$page->add('View_Error')->set('Invoice Not Generated From Order');
+			return false;
+		}
+
+		$col = $page->add('Columns');
+		$col1 = $col->addColumn(6);
+		$col2 = $col->addColumn(6);
+		$col1->add('H3')->set('Order Items Not Included in Invoice')->addClass('atk-swatch-red atk-padding-small');
+		$col2->add('H3')->set('Items Included in Invoice')->addClass('atk-swatch-green atk-padding-small');
+		
+		$invoice_items = $this->itemrows();
+		if($order = $this->order()){
+			$order_items = $order->itemrows();
+			$order_items->addCondition('invoice_id',null);
+		}
+
+		$invoice_items_grid = $col2->add('Grid');
+		$order_items_grid = $col1->add('Grid');
+
+		$order_items_grid->setModel($order_items,array('name','qty','rate','amount','tax_per_sum','tax_amount','texted_amount'));
+		$invoice_items_grid->setModel($invoice_items,array('item','qty','rate','amount','tax_per_sum','tax_amount','texted_amount'));
+		
+		$form = $col1->add('Form');
+		$order_items_field = $form->addField('hidden','order_items');
+		$form->addSubmit('Update Invoice');
+		$order_items_grid->addSelectable($order_items_field);
+
+		if($form->isSubmitted()){
+			$js = array(
+					$invoice_items_grid->js()->reload(),
+					$order_items_grid->js()->reload()
+				);
+			$array = json_decode($form['order_items']);
+			if( !count($array))
+				$form->js(null,$js)->univ()->errorMessage('Select Order Items')->execute();
+			
+			$this->update_from_order($form['order_items']);
+			$form->js(null,$js)->univ()->successMessage('Invoice Updated')->execute();
+		}
+
+
+	}
+
+
+	function update_from_order($json){
+
+		$array = json_decode($json);
+			foreach ($array as $key => $value) {
+				$oi = $this->add('xShop/Model_OrderDetails')->load($value);				
+				$this->addItem(
+						$oi->item(),
+						$oi['qty'],
+						$oi['rate'],
+						$oi['amount'],
+						$oi['unit'],
+						$oi['narration'],
+						$oi['custom_fields'],
+						$oi['apply_tax'],
+						$oi['tax_id']
+					);
+				$oi->invoice($this);
+		}
+	}
 
 }

@@ -13,6 +13,12 @@ class View_PurchaseInvoiceDetail extends \CompleteLister{
 	function formatRow(){
 
 		$this->current_row_html['sno']=$this->sno;
+		$this->current_row_html['unit']=$this->model['unit'];
+		if($this->model['narration'])
+			$this->current_row_html['item_narration']="Narration: ".$this->model['narration'];
+		else
+			$this->current_row_html['item_narration']="";
+
 		$this->sno++;
 	}
 

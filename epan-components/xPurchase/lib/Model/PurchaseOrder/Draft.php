@@ -8,6 +8,7 @@ class Model_PurchaseOrder_Draft extends Model_PurchaseOrder{
 			'allow_add'=>array(),
 			'allow_del'=>array(),
 			'can_submit'=>array(),
+			'can_see_activities'=>array(),
 		);
 
 	function init(){

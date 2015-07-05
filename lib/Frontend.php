@@ -51,11 +51,17 @@ class Frontend extends ApiFrontend{
 
 	public $today;
 	public $now;
+	/*
+	* @var Model_xShop_Configuration
+	 */
+	public $current_xshop_configuration=null;
 
 	function init() {
 		parent::init();
+		
 		$this->requires( 'atk', '4.2.0' );
 		
+
 		$this->addLocation(array(
 			'js'=>'atk4/public/atk4/js'
 			))->setParent( $this->pathfinder->base_location );
@@ -63,6 +69,8 @@ class Frontend extends ApiFrontend{
 		$this->addLocation(array(
 				'addons'=>array( 'epan-addons', 'epan-components', 'atk4-addons' ))
 		)->setParent( $this->pathfinder->base_location );
+	
+		$this->add('performance/Controller_Profiler');
 
 		$this->addLocation(array(
             'page'=>array('epan-components','epan-addons'),
@@ -109,6 +117,7 @@ class Frontend extends ApiFrontend{
 				$this->stickyGET( $page_parameter );
 
 				$this->website_requested = $this->getConfig( 'default_site' );
+				$this->api->memorize('website_requested',$this->website_requested);
 				/**
 				 * $this->page_requested finds and gets the requested page
 				 * Always required in both multi site mode and single site mode
@@ -139,10 +148,6 @@ class Frontend extends ApiFrontend{
 
 				$this->add( 'Controller_EpanCMSApp' )->frontEnd();
 				
-				date_default_timezone_set($this->current_website['time_zone']?:'UTC');
-				$this->today = date('Y-m-d',strtotime($this->recall('current_date',date('Y-m-d'))));
-	        	$this->now = date('Y-m-d H:i:s',strtotime($this->recall('current_date',date('Y-m-d H:i:s'))));
-				$this->current_employee = $this->add('xHR/Model_Employee');
 				
 				// MULTISITE CONTROLER
 				// $this->load_plugins();
@@ -153,6 +158,11 @@ class Frontend extends ApiFrontend{
 				// 	$this->exec_plugins( 'website-page-loaded', $this->api->page_requested );
 
 			}
+			
+			date_default_timezone_set($this->current_website['time_zone']?:'UTC');
+			$this->today = date('Y-m-d',strtotime($this->recall('current_date',date('Y-m-d'))));
+        	$this->now = date('Y-m-d H:i:s',strtotime($this->recall('current_date',date('Y-m-d H:i:s'))));
+			$this->current_employee = $this->add('xHR/Model_Employee');
 
 			$auth=$this->add( 'BasicAuth' );
 			$auth->setModel( 'Users', 'username', 'password' );
@@ -162,11 +172,11 @@ class Frontend extends ApiFrontend{
 				$auth->model->save();
 			});
 
-			if($this->api->auth->isLoggedIn() AND $this->api->auth->model->ref('epan_id')->get('name')==$this->api->website_requested AND $this->api->auth->model['type'] >= 80){
+			if($this->api->auth->isLoggedIn() AND $this->api->auth->model->ref('epan_id')->get('name')==$this->api->website_requested AND $this->api->auth->model['type'] >= 80 AND !$this->stickyGET('preview')){
 				$this->edit_mode = true;
 			}
 
-			if($_GET['edit_template']){
+			if($this->edit_mode AND $_GET['edit_template']){
 				$this->edit_template = true;
 				// $this->api->template->appendHTML('js_include','\nsfjdhkj;\n');
 				$this->stickyGET('edit_template');
@@ -181,9 +191,9 @@ class Frontend extends ApiFrontend{
 				$this->exec_plugins('beforeTemplateInit',$temp);
 
 				if($this->edit_template){
-					$current_template = $this->add('Model_EpanTemplates')->load($_GET['edit_template']);
+					$this->current_template = $current_template = $this->add('Model_EpanTemplates')->load($_GET['edit_template']);
 				}else{
-					$current_template = $this->current_page->ref('template_id');
+					$this->current_template = $current_template = $this->current_page->ref('template_id');
 				}
 
 				if($current_template->loaded()){
@@ -261,6 +271,7 @@ class Frontend extends ApiFrontend{
 			;
 			
 			setlocale(LC_MONETARY, 'en_IN');
+			$this->xpr->markPoint('Front-end init Finished');
 		}
 	}
 

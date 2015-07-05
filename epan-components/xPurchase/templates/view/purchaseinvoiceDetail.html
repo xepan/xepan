@@ -1,6 +1,6 @@
 <div id="{$_name}">
 {$Content}
-<table width='100%' class='table' style="font-size:11px;vertical-align:top;" >
+<table width='100%' class='table' style="vertical-align:top;" >
 	<tbody class='table-striped'>
 		<tr>
 			<th align="left">Sno</th>
@@ -14,13 +14,13 @@
 		</tr>
 	{rows}
 	{row}
-		<tr>
+		<tr valign="top">
 			<td align="left">{$sno}</td>
-			<td align="left">
-				<h4>{$item_name}<br><small>{$departments}</small></h4>
+			<td align="left" width="400px;">
+				<p>{$item_name}<br><small>{$departments}{$item_narration}</small></p>
 			</td>
 			
-				<td align="right">{$qty}</td>
+				<td align="right">{$qty}&nbsp<small>{$unit}</small></td>
 			{order_amount_section}
 				<td align="right">{$rate}</td>
 				<!-- <td align="right">{$tax_amount}<br>@  {tax_per_sum}{/tax_per_sum}</td> -->

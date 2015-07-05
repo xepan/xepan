@@ -6,6 +6,7 @@ class Model_DeliveryNote_Submitted extends Model_DeliveryNote{
 			'allow_edit'=>array(),
 			'can_approve'=>array(),
 			'can_reject'=>array('icon'=>'cancel-circled'),
+			'can_see_activities'=>array('icon'=>'cancel-circled'),
 		);
 	function init(){
 		parent::init();

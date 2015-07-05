@@ -1,51 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>{page_title}Agile Toolkit{/}</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="shortcut icon" href="templates/images/favicon.ico" type="image/x-icon" />
-		<link rel="stylesheet" href="templates/css/epan.css">
-		<link rel="stylesheet" href="templates/css/compact.css">
-		<meta name="generator" content="xEpan! - Open Source Intelligent Business Management" />
-		{$js_include}
-		<!--[if IE 8]>
-			<link rel="stylesheet" type="text/css" href="templates/css/ie8.css"/>
-		<script type="text/javascript" src="templates/css/ie8.js"></script>
-		<![endif]-->
-		<script type="text/javascript">
-			$(function(){
-				edit_template={edit_template}false{/};
-				{$document_ready}
-			});
-			$(document).on('focusin', function(event) {
-				if ($(event.target).closest(".mce-window").length) {
-					event.stopImmediatePropagation();
-				}
-			});
-		</script>
-	</head>
-	<body style='{$style}' class='{$class} ' component_type='Body '>
-		<div id='epan-content-wrapper' class='epan-sortable-component ' component_type='Web Page'>
-			{$Content}
-		</div>
-		<div class='epan-editor-shared-div'>
-			{$editor}
-		</div>
-		<div id="atk-growl-holder" class="atk-growl"></div>
-	</body>
-	<style type="text/css">
-		{$extra_css}
-		{$template_css}
-	</style>
-	<script src="templates/js/bootstrap.min.js"></script>
-	<script type="text/javascript">
-		var bootstrapButton = $.fn.button.noConflict() // return $.fn.button to previously assigned value
-			$.fn.bootstrapBtn = bootstrapButton            // give $().bootstrapBtn the Bootstrap functionality
-			$.support.transition = (function(){
-				var thisBody = document.body || document.documentElement,
-				thisStyle = thisBody.style,
-				support = thisStyle.transition !== undefined || thisStyle.WebkitTransition !== undefined || thisStyle.MozTransition !== undefined || thisStyle.MsTransition !== undefined || thisStyle.OTransition !== undefined;
-				return support;
-			})();
-	</script>
+  <head>
+    <title>{page_title}xEpan{/}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="shortcut icon" href="templates/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="templates/css/epan.css">
+    <link rel="stylesheet" href="templates/css/compact.css">
+    <meta name="generator" content="xEpan! - Open Source Intelligent Business Management">		{$js_include}
+    <!--if IE 8
+    link(rel='stylesheet', type='text/css', href='templates/css/ie8.css')
+    script(type='text/javascript', src='templates/css/ie8.js')
+    -->
+    <script type="text/javascript">
+      $(function(){
+        edit_template={edit_template}false{/};
+        website_requested = '{$website_requested}';
+        current_website_id = '{$current_website_id}';
+        current_page_name = '{$current_page_name}';
+        current_page_id = '{$current_page_id}';
+        current_template_id = '{$current_template_id}';
+      {$document_ready}
+      });
+      $(document).on('focusin', function(event) {
+      if ($(event.target).closest(".mce-window").length) {
+      event.stopImmediatePropagation();
+      }
+      });
+    </script>
+  </head>
+  <body style="{$style}" component_type="Body " class="{$class}">
+    <div id="epan-content-wrapper" component_type="Web Page" class="epan-sortable-component">{$Content}</div>{editor_block}
+    <div id="epan-editor-top-panel" class="epan-editor-top-panel">
+      <div class="epan-editor-logo atk-move-left"><i class="icon-leaf"></i></div>
+      <div onclick="$.univ().frameURL('{$page_tempalte_frame_title}','{$page_template_url}');" class="epan-editor-current-page atk-move-left">Page: <span class='epan-editor-current-page'>{current_page}Current Page Here{/current_page}</span></div>
+      <div id="page-property-btn" title="Page Properties" class="atk-move-left editor-tooltip"><i class="icon-cog"></i></div>
+      <div id="save-as-snapshot" title="Save And Take Snapshot" class="atk-move-left editor-tooltip"><i class="icon-camera"></i></div>
+      <div id="epan-save-btn" title="Save" class="atk-move-left editor-tooltip atk-swatch-yellow"><i class="icon-floppy"></i></div>
+      <div id="epan-editor-preview" title="Preview" class="atk-move-left editor-tooltip"><i class="icon-eye"></i></div>
+      <div id="epan-editor-preview-desktop" class="atk-move-left"><i class="icon-desktop"></i></div>
+      <div id="epan-editor-preview-laptop" class="atk-move-left"><i class="icon-laptop"></i></div>
+      <div id="epan-editor-preview-tablet" class="atk-move-left"><i class="icon-tablet"></i></div>
+      <div id="epan-editor-preview-mobile" class="atk-move-left"><i class="icon-mobile"></i></div>
+      <div id="epan-editor-logout" class="atk-move-right atk-swatch-red"><a href="index.php?page=logout" title="Logout" class="editor-tooltip"><i class="icon-logout"></i></a></div>
+      <div id="dashboard-btn" title="Admin Dashboard" class="atk-move-right editor-tooltip"><i style="cursor:pointer" class="icon-home"></i></div>
+      <div id="epan-editcss-button" title="Common CSS File" class="atk-move-right editor-tooltip">CSS</div>
+      <div id="template-btn" title="Edit Template of this page" class="atk-move-right editor-tooltip">Template</div>
+      <div title="Show Border" class="atk-move-right editor-tooltip">
+        <input id="epan-component-border" type="checkbox" value="Border" style="margin: 0">
+        <label for="epan-component-border">Border</label>
+      </div>
+      <div title="Show Extra Space For Easy Drop" class="atk-move-right editor-tooltip">
+        <input id="epan-component-extra-padding" type="checkbox" value="Padding" style="margin: 0">
+        <label for="epan-component-extra-padding" title="Show Extra Space For Easy Drop">Easy Drop</label>
+      </div>
+    </div>
+    <div id="epan-editor-bottom-panel" class="epan-editor-bottom-panel">{$editor}</div>{/editor_block}
+    <div class="epan-editor-shared-div"></div>
+    <div id="atk-growl-holder" class="atk-growl"></div>
+  </body>
+  <style type="text/css">
+    {$extra_css}
+    {$template_css}
+  </style>
+  <script src="templates/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+    var bootstrapButton = $.fn.button.noConflict() // return $.fn.button to previously assigned value
+    $.fn.bootstrapBtn = bootstrapButton            // give $().bootstrapBtn the Bootstrap functionality
+    $.support.transition = (function(){
+    var thisBody = document.body || document.documentElement,
+    thisStyle = thisBody.style,
+    support = thisStyle.transition !== undefined || thisStyle.WebkitTransition !== undefined || thisStyle.MozTransition !== undefined || thisStyle.MsTransition !== undefined || thisStyle.OTransition !== undefined;
+    return support;
+    })();
+  </script>
 </html>

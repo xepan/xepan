@@ -14,8 +14,6 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 
 	function page_shops(){
 
-
-
 		$crud= $this->add('CRUD',array('grid_class'=>'xShop/Grid_Shop'));
 		$crud->setModel('xShop/Shop');
 
@@ -26,11 +24,20 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 			$crud->grid->addColumn('expander','configuration',array("descr"=>"Configuration",'icon'=>'cog'));
 			$crud->grid->addColumn('expander','tax',array("descr"=>"Taxs",'icon'=>'money'));
 			$crud->grid->addColumn('expander','priority',array("descr"=>"Priority",'icon'=>'signal'));
+			$crud->grid->addColumn('expander','imagelibrary',array("descr"=>'Library'));
 		}
 
 		$crud->grid->addQuickSearch(array('name'));
 		$crud->grid->addPaginator($ipp=50);
         $crud->add('xHR/Controller_Acl');
+		
+	}
+	
+	function page_shops_imagelibrary(){
+		$this->add('View')->set('System Image Library');
+	    $item_images_lister = $this->add('xShop/View_Lister_DesignerItemImages');
+      	$item_images_lister->addClass('xshop-designer-image-lister');
+      	$item_images_lister->setModel($image_model);
 		
 	}
 
@@ -134,7 +141,18 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 							$p_form->js(null,$p_form->js()->reload())->univ()->successMessage('Update Information')->execute();
 						}
 						$p_form->addClass('panel panel-default');
-						$p_form->addStyle('padding','20px');	
+						$p_form->addStyle('padding','20px');
+
+						$outsource_tab=$lay_tab->addTab('OutSource Party');
+						$o_form=$outsource_tab->add('Form_Stacked');
+						$o_form->setModel($config_model,array('outsource_email_subject','outsource_email_body'));
+						$o_form->addSubmit('Update');
+						if($o_form->Submitted()){
+							$o_form->Update();
+							$o_form->js(null,$o_form->js()->reload())->univ()->successMessage('Update Information')->execute();
+						}
+						$o_form->addClass('panel panel-default');
+						$o_form->addStyle('padding','20px');	
 
 					$cash_voucher_tab=$lay_tab->addTab('Cash Voucher');
 						$cash_form=$cash_voucher_tab->add('Form_Stacked');
@@ -146,6 +164,30 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 						}
 						$cash_form->addClass('panel panel-default');
 						$cash_form->addStyle('padding','20px');	
+
+			$number_tab=$tab->addTab('Starting Number');
+			$number_form = $number_tab->add('Form_Stacked');
+			$number_form->setModel($config_model,array('quotation_starting_number','sale_order_starting_number','purchase_order_starting_number','sale_invoice_starting_number','purchase_invoice_starting_number'));
+			$number_form->addSubmit('Update');
+			if($number_form->Submitted()){
+							$number_form->Update();
+							$number_form->js(null,$number_form->js()->reload())->univ()->successMessage('Updated')->execute();
+						}
+			$number_form->addClass('panel panel-default');
+			$number_form->addStyle('padding','20px');
+
+
+			$misc_tab=$tab->addTab('Misc Setting');
+			$misc_form = $misc_tab->add('Form_Stacked');
+			$misc_form->setModel($config_model,array('is_round_amount_calculation'));
+			$misc_form->addSubmit('Update');
+			if($misc_form->Submitted()){
+				$misc_form->update();
+				$misc_form->js(null,$misc_form->js()->reload())->univ()->successMessage('Updated')->execute();
+			}
+			$misc_form->addClass('panel panel-default');
+			$misc_form->addStyle('padding','20px');
+
 	}
 
 }

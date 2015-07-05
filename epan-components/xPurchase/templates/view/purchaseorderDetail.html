@@ -17,10 +17,10 @@
 		<tr>
 			<td align="left">{$sno}</td>
 			<td align="left">
-				<h4>{$item_name}<br><small>{$departments}</small></h4>
+				<h4>{$item_name}<br><small>{$departments}{$item_narration}</small></h4>
 			</td>
 			
-				<td align="right">{$qty}</td>
+				<td align="right">{$qty}&nbsp<small>{$unit}</small></td>
 			{order_amount_section}
 				<!-- <td align="right">{$rate}</td>
 				<td align="right">{$tax_amount}<br>@  {tax_per_sum}{/tax_per_sum}</td>

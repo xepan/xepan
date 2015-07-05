@@ -6,6 +6,8 @@ class Model_Invoice_Approved extends Model_PurchaseInvoice{
 			'can_cancel'=>array(),
 			'can_mark_processed'=>array(),
 			'can_send_via_email'=>array(),
+			'can_see_activities'=>array(),
+			'allow_edit'=>array(),
 		);
 	function init(){
 		parent::init();

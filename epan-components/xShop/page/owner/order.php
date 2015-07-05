@@ -3,7 +3,9 @@
 class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 
 	function init(){
+		$this->api->xpr->markPoint('page_xShop_page_owner_order Init Start');
 		parent::init();
+		$this->api->xpr->markPoint('page_xShop_page_owner_order Parent Init StarDone');
 		
 		$this->app->title=$this->api->current_department['name'] .': Orders';
 
@@ -16,8 +18,10 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 
 		$order_model = $this->add('xShop/Model_Order');
 		$order_model->title_field = 'search_phrase';
-
-		$cols = $this->app->layout->add('Columns',null,'page_title');
+		
+		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-dashboard icon-money"></i> Sales Orders');
+		
+		$cols = $this->add('Columns');
 		$lc= $cols->addColumn(8);
 		$rc= $cols->addColumn(4);
 		$lc->add('View')->setHTML('<i class="fa fa-users"></i> Sale Orders Management <small> Manage your sale Orders </small>');
@@ -42,6 +46,9 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 		$tab->addTabURL('xShop/page/owner/order_completed','Complete '.$this->add('xShop/Model_Order_Completed')->myCounts(true,false));
 		$tab->addTabURL('xShop/page/owner/order_cancelled','Cancel / Return '.$this->add('xShop/Model_Order_Cancelled')->myCounts(true,false));
 		$tab->addTabURL('xShop/page/owner/order_redesign','Redesign '.$this->add('xShop/Model_Order_Redesign')->myCounts(true,false));
+		$tab->addTabURL('xShop/page/owner/order_all','All '.$this->add('xShop/Model_Order')->myCounts(true,false));
+
+		$this->api->xpr->markPoint('page_xShop_page_owner_order Init Done');
     }
 
 }

@@ -13,6 +13,15 @@
 		      		<div class='xepan-collasp-header'>
 						<table class="table table-condensed table-hover">
 							<tr>
+								<td>
+									Edit CSS
+								</td>
+								<td colspan="2">
+									<div id="xshop-item-detail-editcss" class="btn btn-default btn-xs">Edit css</div>
+								</td>
+							</tr>
+
+							<tr>
 								<td colspan="3">
 									Show/Hide
 								</td>
@@ -235,7 +244,7 @@
 		</div>
 	</div><br>
 	<div>
-		<button id='xShopProductDetailServerSide'>Server Side</button>
+		<button id='xShopProductDetailServerSide'>Manage Item Details Page</button>
 	</div>
 </div>
 <script type="text/javascript">
@@ -244,6 +253,11 @@
 // $(your_option_html_element).click(function(event,ui){
 // 		$(current_selected_component).what to do ???
 // }) 
+
+$('#xshop-item-detail-editcss').click(function(event){
+	$(this).univ().frameURL('Edit CSS ( xShop item Detail Display Layout )','index.php?page=xShop_page_itemdetaillayoutcss&cut_page=1&xshop_item_detail_layout=xshop-item-detail');
+});
+
 $('#xShopProductDetailServerSide').click(function(event){
 	$('#epan-quick-component-options').toggle('slideup');
 	$.univ.frameURL('xShop Products Details','index.php?page=xShop_page_owner_main')

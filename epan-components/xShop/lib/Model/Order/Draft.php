@@ -9,6 +9,7 @@ class Model_Order_Draft extends Model_Order{
 			'can_submit'=>array(),
 			'allow_del'=>array(),
 			'can_manage_attachments'=>array(),
+			'can_see_activities'=>array(),
 		);
 
 	function init(){

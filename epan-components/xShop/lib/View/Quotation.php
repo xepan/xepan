@@ -22,13 +22,21 @@ class View_Quotation extends \CompleteLister{
 			$this->template->del('tandc_section');
 		else
 			$this->template->trySetHTML('termsandcondition_matter',$this->quotation->ref('termsandcondition_id')->get('terms_and_condition'));
+		
+		if($this->quotation['narration'])
+			$this->template->trySetHTML('narration',$this->quotation['narration']);
 
 		$this->setModel($this->quotation->itemrows());
 	}
 
 	function formatRow(){
+		// throw new \Exception($this->model['narration']);
+		
 		$this->current_row['sno']=$this->sno;
+		$this->current_row['sub_total']=$this->model['qty'] * $this->model['rate'];
 		$this->current_row['redable_custom_fields']=$this->model->item()->genericRedableCustomFieldAndValue($this->model['custom_fields']);
+		$this->current_row['unit']=$this->model['unit'];		
+		$this->current_row['item_narration']="Narration: ".$this->model['narration'];
 		$this->sno++;
 	}
 

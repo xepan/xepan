@@ -43,11 +43,14 @@ class Grid_JobCard extends \Grid{
 
 	function setModel($job_card_model){
 		$m=parent::setModel($job_card_model,array('order_no','name','created_at','orderitem','from_department','forwarded_to','outsource_party'));
+		
+		$this->addFormatter('order_no','wrap');
 		$this->addFormatter('order_no','orderview');
 		$this->addFormatter('name','view');
 		$this->removeColumn('outsource_party');
-
+		$this->model->setOrder('id','desc');
 		$this->addPaginator($this->ipp);
+		$this->addQuickSearch(array('order_no','name','created_at','orderitem','from_department','outsource_party'));
 		return $m;
 	}
 }

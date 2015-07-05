@@ -26,14 +26,17 @@ class Grid_Customer extends \Grid{
 		if($this->hasColumn('password')) $this->removeColumn('password');
 		if($this->hasColumn('user_account_activation')) $this->removeColumn('user_account_activation');
 		if($this->hasColumn('is_active')) $this->removeColumn('is_active');
+		if($this->hasColumn('pincode')) $this->removeColumn('pincode');
 		// if($this->hasColumn('address')) $this->removeColumn('address');
 
 		$this->addFormatter('customer_name','wrap');
+		$this->addFormatter('organization_name','wrap');
 		
 		$this->addFormatter('address','wrap');
 		$this->addFormatter('customer_email','wrap');
 		$this->addFormatter('mobile_number','wrap');
 		
+		// $this->fooHideAlways('city');
 		$this->fooHideAlways('state');
 		$this->fooHideAlways('country');
 		$this->fooHideAlways('billing_address');
@@ -43,7 +46,7 @@ class Grid_Customer extends \Grid{
 
 		if(!$fields)
 			$fields = $model->getActualFields();
-		$this->addQuickSearch($fields,null);
+		$this->addQuickSearch($fields,null,'xShop/Filter_Customer');
 
 		//Total Order Count
 		$this->addFormatter('total_sales_order','total_sales_order');
@@ -60,7 +63,7 @@ class Grid_Customer extends \Grid{
 			$this->setTDParam('customer_name','style/color','red');
 		else
 			$this->setTDParam('customer_name','style/color','');
-
+		$this->current_row_html['address']=$this->model['address']."  ".$this->model['pincode'];
 		parent::formatRow();
 	}
 }

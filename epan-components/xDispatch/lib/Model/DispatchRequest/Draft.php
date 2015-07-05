@@ -9,6 +9,7 @@ class Model_DispatchRequest_Draft extends Model_DispatchRequest{
 			'allow_add'=>array(),
 			'allow_del'=>array(),
 			'can_submit'=>array(),
+			'can_see_activities'=>array(),
 		);
 	function init(){
 		parent::init();

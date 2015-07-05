@@ -12,9 +12,10 @@ class Model_Document extends Model_Table{
 			'can_submit'=>'lock atk-swatch-red',
 			'can_manage_attachments'=>'attach',
 			'can_approve'=>'thumbs-up-alt atk-swatch-green',
-			'can_reject'=>'ccw atk-swatch-red',
-			'can_reject'=>'ccw atk-swatch-red',
 			'can_see_activities'=>'comment atk-swatch-blue',
+			'can_send_via_email'=>'mail atk-swatch-blue',
+			'can_reject'=>'cancel-circled atk-swatch-red',
+			'can_cancel'=>'cancel atk-swatch-red',
 		);
 
 	function init(){
@@ -39,15 +40,17 @@ class Model_Document extends Model_Table{
 			$this->actions = array_merge(array('can_view'=>array('caption'=>'Whose created Document you can see')),$this->actions);
 			
 			if(!$this instanceof \Model_Attachment){
-				$this->actions = array_merge(array('can_manage_attachments' => array()),$this->actions);
-				$this->actions = array_merge(array('can_see_activities' => array()),$this->actions);
+				if(!isset($this->actions['can_manage_attachments']))
+					$this->actions = array_merge(array('can_manage_attachments' => array()),$this->actions);
+				// if(!isset($this->actions['can_see_activities']))
+				// 	$this->actions = array_merge(array('can_see_activities' => array()),$this->actions);
 			}
 			
 		}
 
 		// set icons
 		foreach ($this->actions as $ac_view=>$details) {
-			if(!isset($details['icon']) and isset($this->default_icons[$ac_view]) and $this->actions[$ac_view] != false)
+			if(!isset($details['icon']) and isset($this->default_icons[$ac_view]) and $this->actions[$ac_view] !== false and $this->actions[$ac_view] !== null)
 				$this->actions[$ac_view]['icon'] = $this->default_icons[$ac_view];
 		}
 
@@ -115,7 +118,7 @@ class Model_Document extends Model_Table{
 				->addCondition('related_root_document_name',$this->root_document_name)
 				->addCondition('related_document_id',$this->id)
 		->each(function($obj){
-			$obj->delete();
+			$obj->forceDelete();
 		});
 	}
 
@@ -140,6 +143,11 @@ class Model_Document extends Model_Table{
 
 	function getSeries(){
 		return $this->root_document_name;
+	}
+
+	function getNextSeriesNumber($config_value=0){
+		$i = $this->add('xShop/Model_Invoice');
+		return $config_value + 1 + $i->dsql()->del('fields')->field('max(name)')->getOne();
 	}
 
 	function defaultAfterInsert($newobj,$id){
@@ -257,7 +265,7 @@ class Model_Document extends Model_Table{
 		}
 	}
 
-	function manage_attachments_page($page){
+	function attachments_page($page){
 		$crud = $page->add('CRUD');
 		$crud->setModel($this->ref('Attachments'),array('name','attachment_url_id'),array('name','attachment_url','updated_date'));
 
@@ -296,7 +304,7 @@ class Model_Document extends Model_Table{
 		return $activities;
 	}
 
-	function see_activities_page($page){
+	function activities_page($page){
 
 		$activities = $this->activities();
 
@@ -310,6 +318,11 @@ class Model_Document extends Model_Table{
 			$activities->getElement('action')->display(array('form'=>'Readonly'));
 		}
 
+		$crud->addHook('crud_form_submit',function($crud,$form){
+			$form->model->notify = true;
+			return true;
+		});
+
 		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to','attachment_id'));
 
 		if(!$crud->isEditing()){
@@ -320,6 +333,7 @@ class Model_Document extends Model_Table{
 					$v->setModel($g->model);
 					$g->current_row_html[$f]= $v->getHTML();
 				});
+			$g->addFormatter('action','Wrap');
 			$g->addFormatter('action','activity');
 
 			$g->removeColumn('created_at');
@@ -332,6 +346,8 @@ class Model_Document extends Model_Table{
 			$g->removeColumn('sms_to');
 			$g->removeColumn('attachment_id');
 
+			$g->addQuickSearch($g->model->getActualFields());
+			$g->addPaginator($ipp=10);
 		}
 
 
@@ -450,7 +466,7 @@ class Model_Document extends Model_Table{
 		$current_lastseen->save();
 	}
 
-	function sendEmail($email,$subject,$email_body,$cc=array(),$bcc=array(),$attachements=array(),$from_official_email=null){
+	function sendEmail($email,$subject,$email_body,$cc=array(),$bcc=array(),$attachements=array(),$from_official_email=array()){
 		$tm=$this->add( 'TMail_Transport_PHPMailer' ,array('email_settings'=>$from_official_email));	
 		try{
 			$tm->send($email, $email,$subject, $email_body ,false,$cc,$bcc,false,'',$attachements);
@@ -521,5 +537,130 @@ class Model_Document extends Model_Table{
 
 		return $this->add('xHR/Model_OfficialEmail')->load($form['department_send_from']);
 	}
+
+
+	function convert_number_to_words($number) {
+	    $hyphen      = '-';
+	    $conjunction = ' and ';
+	    $separator   = ', ';
+	    $negative    = 'negative ';
+	    $decimal     = ' point ';
+	    $dictionary  = array(
+	        0                   => 'zero',
+	        1                   => 'one',
+	        2                   => 'two',
+	        3                   => 'three',
+	        4                   => 'four',
+	        5                   => 'five',
+	        6                   => 'six',
+	        7                   => 'seven',
+	        8                   => 'eight',
+	        9                   => 'nine',
+	        10                  => 'ten',
+	        11                  => 'eleven',
+	        12                  => 'twelve',
+	        13                  => 'thirteen',
+	        14                  => 'fourteen',
+	        15                  => 'fifteen',
+	        16                  => 'sixteen',
+	        17                  => 'seventeen',
+	        18                  => 'eighteen',
+	        19                  => 'nineteen',
+	        20                  => 'twenty',
+	        30                  => 'thirty',
+	        40                  => 'fourty',
+	        50                  => 'fifty',
+	        60                  => 'sixty',
+	        70                  => 'seventy',
+	        80                  => 'eighty',
+	        90                  => 'ninety',
+	        100                 => 'hundred',
+	        1000                => 'thousand',
+	        1000000             => 'million',
+	        1000000000          => 'billion',
+	        1000000000000       => 'trillion',
+	        1000000000000000    => 'quadrillion',
+	        1000000000000000000 => 'quintillion'
+	    );
+
+	    if (!is_numeric($number)) {
+	        return false;
+	    }
+
+	    if (($number >= 0 && (int) $number < 0) || (int) $number < 0 - PHP_INT_MAX) {
+	        // overflow
+	        trigger_error(
+	            'convert_number_to_words only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX,
+	            E_USER_WARNING
+	        );
+	        return false;
+	    }
+
+	    if ($number < 0) {
+	        return $negative . $this->convert_number_to_words(abs($number));
+	    }
+
+	    $string = $fraction = null;
+
+	    if (strpos($number, '.') !== false) {
+	        list($number, $fraction) = explode('.', $number);
+	    }
+
+	    switch (true) {
+	        case $number < 21:
+	            $string = $dictionary[$number];
+	            break;
+	        case $number < 100:
+	            $tens   = ((int) ($number / 10)) * 10;
+	            $units  = $number % 10;
+	            $string = $dictionary[$tens];
+	            if ($units) {
+	                $string .= $hyphen . $dictionary[$units];
+	            }
+	            break;
+	        case $number < 1000:
+	            $hundreds  = $number / 100;
+	            $remainder = $number % 100;
+	            $string = $dictionary[$hundreds] . ' ' . $dictionary[100];
+	            if ($remainder) {
+	                $string .= $conjunction .$this->convert_number_to_words($remainder);
+	            }
+	            break;
+	        default:
+	            $baseUnit = pow(1000, floor(log($number, 1000)));
+	            $numBaseUnits = (int) ($number / $baseUnit);
+	            $remainder = $number % $baseUnit;
+	            $string = $this->convert_number_to_words($numBaseUnits) . ' ' . $dictionary[$baseUnit];
+	            if ($remainder) {
+	                $string .= $remainder < 100 ? $conjunction : $separator;
+	                $string .= $this->convert_number_to_words($remainder);
+	            }
+	            break;
+	    }
+
+	    if (null !== $fraction && is_numeric($fraction)) {
+	        $string .= $decimal;
+	        $words = array();
+	        foreach (str_split((string) $fraction) as $number) {
+	            $words[] = $dictionary[$number];
+	        }
+	        $string .= implode(' ', $words);
+	    }
+
+	    return $string;
+	}
+
+
+
+	function human_date($date=null){
+		if(!$date)
+			$date = $this['created_at'];
+		return $this->add('xDate')->diff(\Carbon::now(),$date);
+	}
+
+	function round($amount,$point=0){
+		return round($amount,$point);
+	}
+
 
 }

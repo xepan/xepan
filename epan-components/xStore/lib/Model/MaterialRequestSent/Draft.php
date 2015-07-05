@@ -7,6 +7,7 @@ class Model_MaterialRequestSent_Draft extends Model_MaterialRequestSent{
 			'allow_add'=>array(),
 			'allow_del'=>array(),
 			'can_submit'=>array(),
+			'can_see_activities'=>array(),
 		);
 
 	function init(){

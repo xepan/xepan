@@ -63,8 +63,12 @@ class Model_Epan extends Model_Table {
 		$this->addField('last_emailed_at')->type('datetime')->system(true);
 		$this->addField('email_sent_in_this_minute')->type('int')->system(true);
 
-		$f=$this->addField('return_path')->group('rp~12');
+		$this->addField('bounce_imap_email_host')->group('imap~4~<i class="glyphicon glyphicon-link "></i>Return Path / Bounce IMAP Settings')->caption('Host');
+		$this->addField('bounce_imap_email_port')->group('imap~2')->caption('Port');
+		$f=$this->addField('return_path')->group('imap~3')->Caption('Username / Email');
 		$f->icon ='fa fa-backward~blue';
+		$this->addField('bounce_imap_email_password')->type('password')->group('imap~3')->caption('Password');
+		$this->addField('bounce_imap_flags')->mandatory(true)->defaultValue('/imap/ssl/novalidate-cert')->group('imap~12')->caption('Flags');
 
 		$this->addField('time_zone')->enum(timezone_identifiers_list())->defaultValue(date_default_timezone_get());
 

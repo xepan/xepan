@@ -9,6 +9,7 @@ class Model_Order_Submitted extends Model_Order{
 			'can_approve'=>array(),
 			'can_reject'=>array(),
 			'can_cancel'=>array(),
+			'can_see_activities'=>array(),
 		);
 	
 	function init(){

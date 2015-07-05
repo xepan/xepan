@@ -14,6 +14,7 @@ class Model_Category extends \Model_Document{
 			'allow_edit'=>array('caption'=>'Whose created Quotation this post can edit'),
 			'allow_add'=>array('caption'=>'Can this post create new Quotation'),
 			'allow_del'=>array('caption'=>'Whose Created Quotation this post can delete'),
+			'can_see_activities'=>array(),
 		);
 
 	function init(){

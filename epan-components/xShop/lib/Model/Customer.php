@@ -12,6 +12,7 @@ class Model_Customer extends Model_MemberDetails{
 			'allow_edit'=>array(),
 			'allow_del'=>array(),
 			'can_start_processing'=>array('caption'=>'Create Opportunity'),
+			'can_see_activities'=>array(),
 			'can_manage_attachments'=>false
 		);
 
@@ -27,7 +28,7 @@ class Model_Customer extends Model_MemberDetails{
 		$user_j->addField('user_epan_id','epan_id');
 		$user_j->addField('username')->sortable(true)->group('b~6~Customer Login')->sortable(true);
 		$user_j->addField('password')->type('password')->group('b~6');
-		$user_j->addField('customer_name','name')->group('a~4~Basic Info')->mandatory(true);
+		$user_j->addField('customer_name','name')->group('a~4~Basic Info')->mandatory(true)->sortable(true);
 		$user_j->addField('customer_email','email')->sortable(true)->group('a~4');
 		$user_j->addField('type')->setValueList(array(100=>'SuperUser',80=>'BackEndUser',50=>'FrontEndUser'))->defaultValue(50)->group('a~6')->sortable(true)->mandatory(false);
 		$user_j->addField('user_account_activation','is_active')->type('boolean')->defaultValue(true)->group('a~6')->sortable(true)->mandatory(false)->caption('Login User Account Activated');
@@ -36,7 +37,7 @@ class Model_Customer extends Model_MemberDetails{
 		$this->addCondition('user_epan_id',$this->api->current_website->id);
 
 		$this->addExpression('customer_search_phrase')->set($this->dsql()->concat(
-				$this->getElement('customer_name'),
+				$this->getElement('organization_name'),
 				' :: ',
 				$this->getElement('customer_email'),
 				' :: ',
@@ -171,6 +172,7 @@ class Model_Customer extends Model_MemberDetails{
 		$self=$this;
 		$crud->addHook('crud_form_submit',function($crud,$form)use($self){
 			$form->model->relatedDocument($self);
+			$form->model->notify = true;
 			return true;
 		});
 		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to','attachment_id'));

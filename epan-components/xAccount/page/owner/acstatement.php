@@ -15,13 +15,15 @@ class page_xAccount_page_owner_acstatement extends page_xAccount_page_owner_main
 		$form->addSubmit('Get Statement');
 
 		$grid = $this->add('xAccount/Grid_AccountsBase');
+
 		$transactions = $this->add('xAccount/Model_TransactionRow');
 
 		if($_GET['account_id'] or $_GET['AccountNumber']){
-			$this->api->stickyGET('account_id');
+			$account_id = $this->api->stickyGET('account_id');
 			$this->api->stickyGET('AccountNumber');
 			$this->api->stickyGET('from_date');
 			$this->api->stickyGET('to_date');
+		
 			if($_GET['account_id']){
 				$transactions->addCondition('account_id',$_GET['account_id']);
 			}
@@ -55,6 +57,35 @@ class page_xAccount_page_owner_acstatement extends page_xAccount_page_owner_main
 			}
 			$grid->addOpeningBalance($opening_amount,$opening_column,array('Narration'=>$opening_narration),$opening_side);
 			$grid->addCurrentBalanceInEachRow();
+
+
+			$send_email_btn = $grid->addButton('Send E-mail');
+
+	/*Send Account Statement In mail to Customer*/
+			$mail_vp = $this->add('VirtualPage');
+			$mail_vp->set(function($p)use($transactions,$account_id){
+				
+				$account_model=$p->add('xAccount/Model_Account');
+				$acc=$account_model->load($account_id);
+				$email=$acc->customer()->get('customer_email');
+				
+				$vp_form=$p->add('Form');
+				$vp_form->addField('line','email_to')->set($email);
+				$vp_form->addField('line','subject');
+				$account_lister_view=$p->add('xAccount/View_Lister_AccountStatement',array('account_id'=>$account_id,'from_date'=>$_GET['from_date']));
+				$account_lister_view->setModel($transactions);
+								
+				$vp_form->addSubmit('send');
+				if($vp_form->isSubmitted()){
+					$account_model->sendEmail($vp_form['email_to'],$vp_form['subject'],$account_lister_view->getHtml(),$vp_form['message'],$ccs=array(),$bccs=array());
+					$vp_form->js(null,$vp_form->js()->univ()->closeDialog())->univ()->successMessage('Mail Send Successfully')->execute();
+				}
+			});
+
+			if($send_email_btn->isClicked()){
+				$this->js()->univ()->frameURL('Send Mail',$mail_vp->getURL(),array('account_id'=>$_GET['account_id']))->execute();
+				}
+
 		}else{
 			$transactions->addCondition('id',-1);
 		}
@@ -62,8 +93,10 @@ class page_xAccount_page_owner_acstatement extends page_xAccount_page_owner_main
 		$transactions->setOrder('created_at');
 		$grid->setModel($transactions,array('voucher_no','transaction_type','created_at','Narration','amountDr','amountCr'));
 		// $grid->addPaginator(10);
-
 		$grid->addSno();
+		
+
+
 
 		if($form->isSubmitted()){
 			

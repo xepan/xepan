@@ -10,6 +10,7 @@ class page_xProduction_page_owner_outsourceparties extends page_xProduction_page
 		$crud=$this->add('CRUD',array('grid_class'=>'xProduction/Grid_OutSourceParty'));
 		$outsource_model=$this->add('xProduction/Model_OutSourceParty');
 		$crud->setModel($outsource_model);
+		$crud->add('xHR/Controller_Acl');
 
 	}
 

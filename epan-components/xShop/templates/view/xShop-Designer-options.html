@@ -4,11 +4,12 @@
 		<table class="table table-condensed table-hover">
 			<tbody>
 				<tr>
-					<td class='text-center'>
-						Option Title</b>
-					</td>
 					<td>
-						<input type='text' value='' id='input_option_b' />
+						Edit CSS
+					</td>
+					<td colspan="2">
+						<div id="xshop-item-designer-editcss" class="btn btn-default btn-xs">Edit css
+						</div>
 					</td>
 				</tr>
 			</tbody>
@@ -21,9 +22,11 @@
 // $(your_option_html_element).click(function(event,ui){
 		// 		$(current_selected_component).what to do ???
 // })
-$('#input_option_b').change(function(event) {
-	$(current_selected_component).find('b').text($('#input_option_b').val());
+
+$('#xshop-item-designer-editcss').click(function(event){
+	$(this).univ().frameURL('Edit CSS ( xShop item Designer Display Layout )','index.php?page=xShop_page_itemdesignercss&cut_page=1&xshop_item_designer_layout=xshop-item-designer');
 });
+
 var {$component_type}_options = {
 show: function (){
 // ===== THIS CODE RUNS EVERY TIME YOU DOUBLE CLICK YOUR COMPONENT

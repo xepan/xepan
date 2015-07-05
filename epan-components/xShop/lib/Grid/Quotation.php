@@ -11,7 +11,7 @@ class Grid_Quotation extends \Grid{
 		
 		$this->vp=$this->add('VirtualPage')->set(function($p){
 			$p->api->stickyGET('quotation_clicked');
-			$p->add('xShop/View_Quotation',array('quotation'=>$p->add('xShop/Model_Quotation')->load($_GET['quotation_clicked'])));
+			$p->add('xShop/View_Quotation',array('quotation'=>$p->add('xShop/Model_Quotation')->load($_GET['quotation_clicked']),'show_customfield'=>true,'show_specification'=>true));
 		});
 
 		$print = $this->addColumn('Button','print');
@@ -23,6 +23,13 @@ class Grid_Quotation extends \Grid{
 	function format_view($field){
 		$to = $this->model['lead']? '(L) '.$this->model['lead']: '(C) '.$this->model['customer'];
 
+		if($this->model['quotationitem_count']==0){
+			$this->setTDParam($field, 'class', ' atk-swatch-yellow ');
+		}else{
+			$this->setTDParam($field, 'class', '');
+		}
+
+
 		$this->current_row_html[$field] = '<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Quotation', $this->api->url($this->vp->getURL(),array('quotation_clicked'=>$this->model->id))).'">'. $this->current_row[$field] ."</a>".'<br><small style="color:gray;">'.$to.'</small>';
 	}
 
@@ -33,7 +40,7 @@ class Grid_Quotation extends \Grid{
 	
 	function setModel($quotation_model,$field=array()){
 		if(empty($field))
-			$field = array('quotation_number','name','customer','lead','opportunity','total_amount','tax','gross_amount','discount_voucher_amount','net_amount');
+			$field = array('quotation_number','name','customer','lead','opportunity','total_amount','tax','gross_amount','discount_voucher_amount','net_amount','quotationitem_count','narration');
 		
 		$m=parent::setModel($quotation_model,$field);
 
@@ -43,8 +50,7 @@ class Grid_Quotation extends \Grid{
 		$this->addColumn('to','to');
 		$this->addColumn('expander','items',array('page'=>'xShop_page_owner_quotation_items','descr'=>'Items'));
 		
-		$this->addFormatter('name','view');
-		$this->addFormatter('name','Wrap');
+		$this->addFormatter('name','Wrap,view');
 		
 		if($this->hasColumn('customer'))$this->removeColumn('customer');
 		if($this->hasColumn('opportunity'))$this->removeColumn('opportunity');
@@ -55,6 +61,9 @@ class Grid_Quotation extends \Grid{
 		if($this->hasColumn('gross_amount'))$this->removeColumn('gross_amount');
 		if($this->hasColumn('discount_voucher_amount'))$this->removeColumn('discount_voucher_amount');
 		if($this->hasColumn('net_amount'))$this->removeColumn('net_amount');
+		if($this->hasColumn('quotationitem_count'))$this->removeColumn('quotationitem_count');
+		if($this->hasColumn('narration'))$this->removeColumn('narration');
+
 		return $m;
 	}
 

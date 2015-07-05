@@ -7,7 +7,8 @@ class Model_Supplier extends \Model_Document{
 	public $actions = array(
 				'allow_del'=>array(),
 				'allow_edit'=>array(),
-				'allow_add'=>array()
+				'allow_add'=>array(),
+				'can_see_activities'=>array()
 				);
 	public $title_field ='supplier_search_phrase';
 	public $root_document_name = 'xPurchase\Supplier';
@@ -125,5 +126,14 @@ class Model_Supplier extends \Model_Document{
 		
 		$this['email'] = $this['email'].', '.$email;
 		$this->save();
+	}
+
+	function deactivate(){
+		if(!$this->loaded())
+			return false;
+		
+		$this['is_active'] = false;
+		$this->save();
+		return true;
 	}
 }		

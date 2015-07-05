@@ -46,7 +46,6 @@ class Model_Users extends Model_Table {
 		$this->is(array(
 							'name|to_trim|required?type User name here',
 							'email|email',
-							'email|unique',
 							'username|to_trim|unique'
 						)
 				);
@@ -77,6 +76,7 @@ class Model_Users extends Model_Table {
 		if($this->dirty['type'] and $this['type'] == ""){
 			throw $this->exception('User Type Must be Defined','ValidityCheck')->setField('type');
 		}
+		
 		// Check username for THIS EPAN
 		$old_user = $this->add('Model_Users');
 		$old_user->addCondition('username',$this['username']);
@@ -90,6 +90,23 @@ class Model_Users extends Model_Table {
 		if($old_user->loaded()){
 			// throw $this->exception("This username is allready taken, Chose Another");
 			$this->api->js()->univ()->errorMessage('This username is already taken, Chose Another')->execute();
+		}
+
+		if(!isset($this->allow_duplicate_email)){
+			// Check username for THIS EPAN
+			$old_email = $this->add('Model_Users');
+			$old_email->addCondition('email',$this['email']);
+			
+			if(isset($this->api->current_website))
+				$old_user->addCondition('epan_id',$this->api->current_website->id);
+			if($this->loaded()){
+				$old_email->addCondition('id','<>',$this->id);
+			}
+			$old_email->tryLoadAny();
+			if($old_email->loaded()){
+				// throw $this->exception("This username is allready taken, Chose Another");
+				$this->api->js()->univ()->errorMessage('This Email is already taken, Chose Another')->execute();
+			}
 		}
 
 		if($this->isFrontEndUser()){

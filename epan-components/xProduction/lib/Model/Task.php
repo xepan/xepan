@@ -79,13 +79,24 @@ class Model_Task extends \Model_Document{
 		$this->setStatus('processed',$remark);
 	}
 
+	function approve_page($p){
+		$form = $p->add('Form_Stacked');
+		$form->addField('line','remark');
+		$form->addSubmit('Approved');
+
+		if($form->isSubmitted()){
+			$this->approve($form['remark']);
+			return true;
+		}
+	}
+
 	function approve($remark){
 		if($rd = $this->relatedDocument()){
 			if($rd->hasMethod('approve'))
 				$rd->approve($remark);
 		}
-
 		$this->setStatus('completed',$remark);
+
 	}
 
 	function assign_page($page){

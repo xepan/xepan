@@ -8,7 +8,8 @@ class Model_DispatchRequestItem extends \Model_Document{
 	public $root_document_name='xDispatch\DispatchRequestItem';
 
 	public $actions=array(
-		'can_receive'=>array()
+		'can_receive'=>array(),
+		'can_see_activities'=>array()
 		);
 
 	function init(){

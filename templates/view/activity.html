@@ -30,24 +30,21 @@
             </div>
             <div class="panel-body">
                 <div class="atk-row">
-                    <div class="atk-col-2">
+                    <div class="atk-col-1">
                         {$actor_img}
                     </div>
                     <div class="atk-col-10">
                         <p class="text-box">
                             <small class="atk-swatch-gray">Subject</small> <b>{$subject}</b>
                         </p>
-                        <p class="">
+                        <div style="max-height:300px;overflow-y:scroll;">
                             {$message}
-                        </p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="pull-right">
                 {notify_via_email}{/notify_via_email}
-                {attachments}{/attachments}
                 {notify_via_sms}{/notify_via_sms}
-            </div>
             {$attachments}
         </div>
         

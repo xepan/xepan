@@ -6,6 +6,7 @@ class Grid_Affiliate extends \Grid{
 
 	}
 
+
 	function setModel($model,$fields=null){
 		
 		$model->getElement('logo_url_id')->caption('Company');
@@ -35,7 +36,6 @@ class Grid_Affiliate extends \Grid{
 
 		if(!$fields)
 			$fields = $this->model->getActualFields();
-
 		$this->addQuickSearch($fields,null,'xShop/Filter_Affiliate');
 		$this->addPaginator($ipp=50);
 		$this->add_sno();
@@ -55,6 +55,7 @@ class Grid_Affiliate extends \Grid{
 	}
 
 	function formatRow(){
+
 		if($this->model['is_active'])
 			$this->setTDParam('company_name','class','');
 		else
@@ -80,6 +81,14 @@ class Grid_Affiliate extends \Grid{
 		}
 
 		$this->current_row_html['company_name']='<div class="atk-size-kilo">'.$this->model['company_name'].'</div>'.$this->model['name'].'<br/>'.$this->model['office_address'].'<br/>'.$this->model['city'].', '.$this->model['state'].', '.$this->model['country'].', '.$this->model['zip_code'].'<br/>'.$contact.$email.$website;
+	
+		$img_url ="";
+		if(!$this->model['logo_url']){
+		 	$img_url= "epan-components/xShop/templates/images/item_no_image.png";
+		}else{
+			$img_url=$this->model['logo_url'];
+		}
+		$this->current_row_html['logo_url']='<img style="max-width:70px;"  src="'.$img_url.'"></img>';
 
 		parent::formatRow();		
 	}
