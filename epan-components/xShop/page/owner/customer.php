@@ -63,7 +63,7 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 										'pincode','billing_address',
 										'shipping_address','user_account_activation','is_active'
 										),
-								array('customer_name','customer_email',
+								array('organization_name','customer_name','customer_email',
 										'mobile_number','address','city','state',
 										'country','pincode','user_account_activation','is_active')
 								);

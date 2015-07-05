@@ -22,7 +22,7 @@ class page_xProduction_page_owner_task_assigned extends page_xProduction_page_ow
 		$crud=$right_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false,'allow_del'=>false,'grid_class'=>'xProduction/Grid_Task'));
 		$crud->setModel($assign_by_me_task);
 		$crud->manageAction('cancel');
-		$crud->manageAction('see_activities');
+		$crud->manageAction('activities');
 		// $crud->add('xHR/Controller_Acl');
 
 		

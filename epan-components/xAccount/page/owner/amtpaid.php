@@ -33,7 +33,7 @@ class page_xAccount_page_owner_amtpaid extends page_xAccount_page_owner_main {
 		if($form->isSubmitted()){
 
 			$transaction = $this->add('xAccount/Model_Transaction');
-			$transaction->createNewTransaction('CASH PAYMENT', null, $this->api->now, $form['narration']);
+			$transaction->createNewTransaction('CASH PAYMENT', null, $form['date'], $form['narration']);
 
 			$transaction->addCreditAccount($this->add('xAccount/Model_Account')->load($form['cash_account']),$form['amount']);
 			
@@ -69,7 +69,7 @@ class page_xAccount_page_owner_amtpaid extends page_xAccount_page_owner_main {
 		if($form->isSubmitted()){
 
 			$transaction = $this->add('xAccount/Model_Transaction');
-			$transaction->createNewTransaction('BANK PAYMENT', null, $this->api->now, $form['narration']);
+			$transaction->createNewTransaction('BANK PAYMENT', null, $form['date'], $form['narration']);
 
 			$transaction->addCreditAccount($this->add('xAccount/Model_Account')->load($form['bank_account']),$form['amount']);
 			

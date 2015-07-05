@@ -45,7 +45,7 @@ class Model_Configuration extends \Model_Table {
 
 		// Sales Invoice Email Subject & Body
 		$f = $this->addField('invoice_email_subject')->group('e~12~<i class="fa fa-envelope"></i>Invoice Email Mail Subject ( Bill ) Email');
-		$f = $this->addField('invoice_email_body')->type('text')->caption('Sales Invoice Email Body')->hint('Invoice  Email Body : this Bill send to Customer who placed order, {{company_name}},{{owner_name}},{{mobile_number}},{{purchase_order_address}},{{supplier_email}},{{supplier_tin_no}},{{supplier_pan_no}},{{purchase_Order_no}},{{purchase_Order_date}},{{customer_organization_name}}')->group('e~11')->display(array('form'=>'RichText'));
+		$f = $this->addField('invoice_email_body')->type('text')->caption('Sales Invoice Email Body')->hint('Invoice  Email Body : this Bill send to Customer who placed order, {{customer_name}},{{customer_organization_name}},{{mobile_number}},{{city}},{{state}},{{country}},{{order_billing_address}},{{order_shipping_address}},{{customer_email}},{{customer_tin_no}},{{customer_pan_no}},{{invoice_details}},{{invoice_no}},{{invoice_date}},{{invoice_order_no}},{{order_invoice_date}},{{delivery_note}},{{dispatch_challan_no}},{{dispatch_challan_date}},{{terms_an_conditions}},{{invoice_narration}}')->group('e~11')->display(array('form'=>'RichText'));
 
 		// Purchase Invoice Email Subject & Body
 

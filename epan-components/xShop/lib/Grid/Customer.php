@@ -30,6 +30,7 @@ class Grid_Customer extends \Grid{
 		// if($this->hasColumn('address')) $this->removeColumn('address');
 
 		$this->addFormatter('customer_name','wrap');
+		$this->addFormatter('organization_name','wrap');
 		
 		$this->addFormatter('address','wrap');
 		$this->addFormatter('customer_email','wrap');

@@ -198,24 +198,26 @@ class Model_Transaction extends \Model_Document{
 
 		$config = $this->add('xShop/Model_Configuration')->tryLoadAny();
 		$subject = $config['cash_voucher_email_subject'];
-		$subject = str_replace('{order_no}', $order['name'], $subject);
-		$subject = str_replace('{voucher_no}', $this['name'], $subject);
+		$subject = str_replace('{{order_no}}', $order['name'], $subject);
+		$subject = str_replace('{{voucher_no}}', $this['name'], $subject);
 		$email_body = $config['cash_voucher_email_body'];
 		
-		$email_body = str_replace('{voucher_no}', $this['name'], $email_body);
-		$email_body = str_replace('{date}', $this['created_at'], $email_body);
-		$email_body = str_replace('{amount}', $this->ref('xAccount/TransactionRow')->sum('amountCr'), $email_body);
-		$email_body = str_replace('{pay_to}', $order['member'], $email_body);
-		$email_body = str_replace('{approve_by}', $order->searchActivity('approved'), $email_body);
+		$email_body = str_replace('{{voucher_no}}', $this['name'], $email_body);
+		$email_body = str_replace('{{order_no}}', $order['name'], $email_body);
+		$email_body = str_replace('{{date}}', $this['created_at'], $email_body);
+		$email_body = str_replace('{{amount}}', $this->ref('xAccount/TransactionRow')->sum('amountCr'), $email_body);
+		$email_body = str_replace('{{pay_to}}', $order->customer()->get('customer_name'), $email_body);
+		$email_body = str_replace('{{approve_by}}', $order->searchActivity('approved'), $email_body);
+		$email_body = str_replace('{{transaction_type}}', $this['transaction_type'], $email_body);
 
 		if(strpos($this['transaction_type'],"CASH") !==false){
-			$email_body = str_replace('{cash}',"Yes", $email_body);
-			$email_body = str_replace('{cheque}',"No", $email_body);
+			$email_body = str_replace('{{cash}}',"Yes", $email_body);
+			$email_body = str_replace('{{cheque}}',"No", $email_body);
 		}
 
 		if(strpos($this['transaction_type'],"BANK") !==false){
-			$email_body = str_replace('{cash}',"No", $email_body);
-			$email_body = str_replace('{cheque}',"Yes", $email_body);
+			$email_body = str_replace('{{cash}}',"No", $email_body);
+			$email_body = str_replace('{{cheque}}',"Yes", $email_body);
 		}
 
 		$customer = $this->customer();

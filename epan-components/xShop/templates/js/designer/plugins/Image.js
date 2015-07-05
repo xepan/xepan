@@ -6,15 +6,14 @@ xShop_Image_Editor = function(parent){
 	this.element = $('<div id="xshop-designer-image-editor" style="display:block" class="xshop-options-editor"></div>').appendTo(this.parent);
 	this.image_button_set = $('<div class="btn-group" role="group"></div>').appendTo(this.element);
 	// this.image_manager = $('<div class="btn "><span class="glyphicon glyphicon-film"></span></div>').appendTo(this.image_button_set);
-	this.image_crop_resize = $('<div class="btn "><span class="glyphicon glyphicon-">Crop</span></div>').appendTo(this.image_button_set);
-	// this.image_replace = $('<div class="btn "><span class="glyphicon glyphicon-">Replace</span></div>').appendTo(this.image_button_set);
+	this.image_edit = $('<div class="btn xshop-designer-image-edit-btn"><i class="icon-edit atk-size-tera"></i><br/><span class="atk-size-micro">Edit</span></div>').appendTo(this.image_button_set);
+	this.image_crop_resize = $('<div class="btn xshop-designer-image-crop-btn"><i class="icon-crop atk-size-tera"></i><br/><span class="atk-size-micro">Crop</span></div>').appendTo(this.image_button_set);
 	// this.image_duplicate = $('<div class="btn "><span class="glyphicon glyphicon-">Duplicate</span></div>').appendTo(this.image_button_set);
 	// this.image_manager = $('<div class="btn "><span class="glyphicon glyphicon-film"></span></div>').appendTo(this.image_button_set);
-	this.image_remove = $('<div class="btn"><span class="glyphicon glyphicon-empty">Remove</span></div>').appendTo(this.image_button_set);
-
+	this.image_remove = $('<div class="btn xshop-designer-image-remove-btn"><i class="icon-trash atk-size-tera"></i><br/><span class="atk-size-micro">Remove</span></div>').appendTo(this.image_button_set);
 	// this.image_manager.click(function(event){
 	// 	options ={modal:false,
-	// 				width:800	
+	// 				width:800
 	// 			};
 	// 	$.univ().frameURL('Add Images From...','index.php?page=xShop_page_designer_itemimages',options);
 	// });
@@ -90,13 +89,13 @@ xShop_Image_Editor = function(parent){
 		//TODO CROP and RESIZE The Image not No
 	});
 
-	// this.image_replace.click(function(event){
-	// 	options ={modal:false,
-	// 				width:800	
-	// 			};
-	// 	$.univ().frameURL('Add Images From...','index.php?page=xShop_page_designer_itemimages',options);
+	this.image_edit.click(function(event){
+		options ={modal:false,
+					width:800,
+				};
+		$.univ().frameURL('Add Images From...','index.php?page=xShop_page_designer_itemimages',options);
 
-	// });
+	});
 
 	// this.image_duplicate.click(function(event){
 	// 	//TODO CROP and RESIZE The Image not No
@@ -239,6 +238,10 @@ Image_Component = function (params){
 		            self.designer_tool.freelancer_panel.setComponent($(this).data('component'));
 	            }
 	            self.designer_tool.current_selected_component = self;
+	            self.designer_tool.option_panel.css('z-index',70);
+	            self.designer_tool.option_panel.addClass('xshop-text-options');
+	            self.designer_tool.option_panel.css('top',event.clientY - event.currentTarget.clientHeight + 30);
+	            self.designer_tool.option_panel.css('left',event.clientX - event.currentTarget.clientWidth);
 	            self.editor.setImageComponent(self);
 		        event.stopPropagation();
 			});

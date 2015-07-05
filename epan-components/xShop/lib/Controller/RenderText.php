@@ -52,12 +52,13 @@ class Controller_RenderText extends \AbstractController {
 	    // $p1->setAlignHorizontal('right');
 	    $p1->textBox($options['text'], array('width' => $new_width, 'x' => 0, 'y' => 0));
 
+		if($this->options['rotation_angle']){
+			$p1->xRotate($this->options['rotation_angle']);
+			// $p1->rotate($this->options['rotation_angle']);
+		}
 	    $this->phpimage = $p1;
 	    $this->new_height = $new_height;
 
-		if($this->options['rotation_angle']){
-			$p->rotate($this->options['rotation_angle']);
-		}
 	}
 
 	function show($type='png',$quality=3, $base64_encode=true, $return_data=false){

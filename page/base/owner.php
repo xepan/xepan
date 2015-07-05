@@ -149,7 +149,7 @@ class page_base_owner extends Page {
 			$exec_m->addItem(array('Start Grabbing Data','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_mrkt_dtgrb_exec',array('department_id'=>$dept_model->id)));
 			$exec_m->addItem(array('Start Sending Mass Email','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_emailexec',array('department_id'=>$dept_model->id)));
 			$exec_m->addItem(array('Update Social Activities','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_updatesocialactivityexec',array('department_id'=>$dept_model->id)));
-			$exec_m->addItem(array('Scheduled Emails from Campaign','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_campaignexec',array('department_id'=>$dept_model->id)));
+			$exec_m->addItem(array('Scheduled Emails from Campaign','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_campaignexec',array('department_id'=>$dept_model->id)));
 		}
 
 
