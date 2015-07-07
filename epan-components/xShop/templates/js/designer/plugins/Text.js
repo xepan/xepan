@@ -442,7 +442,8 @@ Text_Component = function (params){
 	            self.designer_tool.option_panel.css('left',event.clientX - event.currentTarget.clientWidth);
 	            self.editor.setTextComponent(self);
 	            // console.log(event);
-	            // console.log(self.designer_tool.option_panel);
+	            // console.log("this");
+	            // console.log($(this).options);
 	            if(self.designer_tool.options.designer_mode){
 		            self.designer_tool.freelancer_panel.FreeLancerComponentOptions.element.show();
 		            self.designer_tool.freelancer_panel.setComponent($(this).data('component'));
