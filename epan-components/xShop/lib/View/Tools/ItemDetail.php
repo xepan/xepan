@@ -184,14 +184,15 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 		$attachment_header = "";
 		if($item['is_attachment_allow'] and $this->html_attributes['show-item-attachment']){
 			$attachment_tab = $this;
+			
 			if($this->html_attributes['show-item-detail-in-tabs']){
 				$attachment_tab = $tabs->addTab($attachment_label);
 			}else{
 				$attachment_header = '<div class="xshop-item-detail-title xshop-item-attachment-label">'.$attachment_label.'</div>';
 			}
 
-			$attachment_model=$this->add('xShop/Model_Attachments');
-			$attachment_model->addCondition('item_id',$item->id);
+			$attachment_model=$this->add('xShop/Model_ItemAttachment');
+			// $attachment_model->addCondition('item_id',$item->id);
 			$html = "";
 			foreach ($attachment_model as $junk) {
 				$html .= '<div class="xshop-item-attachment-link"> <a target="_blank" href="'.$attachment_model['attachment_url'];

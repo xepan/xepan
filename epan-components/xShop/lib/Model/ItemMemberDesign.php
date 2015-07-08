@@ -18,9 +18,14 @@ class Model_ItemMemberDesign extends \Model_Table {
 		$this->addField('is_dummy')->type('boolean')->defaultValue(false)->system(true);
 
 		$this->addHook('afterSave',$this);
+		$this->addHook('beforeDelete',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');
 
 		}
+
+	function beforeDelete(){
+		$this->ref('item_id')->forceDelete();
+	}
 
 	function afterSave(){
 		$item = $this->ref('item_id');

@@ -118,6 +118,7 @@ class Model_Item extends \Model_Document{
 
 		//others
 		$this->addField('terms_condition')->type('text')->display(array('form'=>'RichText'));//->group('c~12');
+		$this->addField('duplicate_from_item_id');//->group('c~12');
 		
 		//Blog
 		$this->addField('is_blog')->type('boolean');
@@ -883,7 +884,6 @@ class Model_Item extends \Model_Document{
 	//Duplicate the Item
 	//$create_default_design_also Means when Freelancer duplicate the Item(is_template true) and also create new design in CustomerDesign Table
 	function duplicate($create_default_design_also=true){
-
 		$duplicate_template = $this->add('xShop/Model_Item');
 		$fields=$this->getActualFields();
 		$fields = array_diff($fields,array('id','sku','designer_id','created_at'));
@@ -901,6 +901,7 @@ class Model_Item extends \Model_Document{
 		$duplicate_template['sku'] = $this['sku'].'-' . $duplicate_template->id;
 		$duplicate_template['is_template'] = false;
 		$duplicate_template['is_publish'] = false;
+		$duplicate_template['duplicate_from_item_id'] = $this->id;
 		$duplicate_template->save();
 
 		if($create_default_design_also){
