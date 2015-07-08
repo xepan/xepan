@@ -78,6 +78,15 @@
 
 								<tr>
 									<td>
+										After Logout
+									</td>
+									<td>
+										<input id="user_panel_after_logout_page" placeholder='Redirect Url'/>
+									</td>
+								</tr>
+
+								<tr>
+									<td>
 										Login Link Click
 									</td>
 									<td>
@@ -285,6 +294,11 @@ $(current_selected_component).attr('user_panel_after_login_page',$(this).val());
 $(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
 
+$('#user_panel_after_logout_page').change(function(event){
+$(current_selected_component).attr('user_panel_after_logout_page',$(this).val());
+$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+});
+
 $('#user_panel_login_btn_css').change(function(event){
 $(current_selected_component).attr('user_panel_login_btn_css',$(this).val());
 $(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
@@ -312,6 +326,7 @@ $('#user_panel_username_placeholder').val($(current_selected_component).attr('us
 $('#user_panel_verify_btn_caption').val($(current_selected_component).attr('user_panel_btn_Verify_name'));
 $('#user_panel_show_logout_view').attr('checked',$(current_selected_component).attr("user_panel_show_logout_view")=='1'?true:false);
 $('#user_panel_after_login_page').val($(current_selected_component).attr("user_panel_after_login_page"));
+$('#user_panel_after_logout_page').val($(current_selected_component).attr("user_panel_after_logout_page"));
 $('#user_panel_login_btn_css').val($(current_selected_component).attr("user_panel_login_btn_css")?$(current_selected_component).attr("user_panel_login_btn_css"):"btn btn-success btn-block");
 
 }}
