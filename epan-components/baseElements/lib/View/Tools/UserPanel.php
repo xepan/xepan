@@ -310,20 +310,28 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 			}
 
 		}else{
+			if($this->html_attributes['user_panel_after_login_page']){
+				$this->api->redirect($this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_after_login_page'])));
+				// if($this->api->auth->model['is_active'])
+					// $this->js(true)->univ()->redirect($this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_after_login_page'])));
+			}
+
 			// create hello user panel
 			if($this->html_attributes['user_panel_show_logout_view']){
 				$cols=$this->add('Columns');
 				$leftcol=$cols->addColumn(10);
 				$rightcol=$cols->addColumn(2);
 				$leftcol->add('View')->set('Hello'." ".$this->api->auth->model['username']);
-				$rightcol->add('View')->set('Logout')->setElement('a')->setAttr('href','index.php?page=logout');
+				
+				$url = $this->html_attributes['user_panel_after_logout_page'];
+				if(strpos($url, "http://") !== false){
+					$logout_view = $rightcol->add('View')->set('Logout')->setElement('a')->setAttr('href','index.php?page=epanlogout&logout_url='.$this->html_attributes['user_panel_after_logout_page']);
+				}else
+					$logout_view = $rightcol->add('View')->set('Logout')->setElement('a')->setAttr('href','index.php?page=logout');
+				
+				
 			}
 
-			if($this->html_attributes['user_panel_after_login_page']){
-				$this->api->redirect($this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_after_login_page'])));
-				// if($this->api->auth->model['is_active'])
-					// $this->js(true)->univ()->redirect($this->api->url(null,array('subpage'=>$this->html_attributes['user_panel_after_login_page'])));
-			}				
 		}
 
 	}
