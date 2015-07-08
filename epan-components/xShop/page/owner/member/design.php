@@ -40,9 +40,10 @@ class page_xShop_page_owner_member_design extends Page {
 		$item_j->addField('is_party_publish')->caption('Sent for Publish')->type('boolean');
 		$item_j->addField('short_description')->type('text');
 		$item_j->addField('description')->type('text')->display(array('form'=>'RichText'))->group('z~12');
+		$item_j->addField('duplicate_from_item_id')->type('text');
 		$my_designs_model->addCondition('member_id',$designer->id);
 
-		$crud->setModel($my_designs_model,array('name','sku','short_description','description','is_party_publish'),array('name','sku','designs','is_ordered','is_party_publish'));
+		$crud->setModel($my_designs_model,array('name','sku','short_description','description','is_party_publish','duplicate_from_item_id'),array('name','sku','designs','is_ordered','is_party_publish'));
 
 		if(!$crud->isEditing()){
 			$g = $crud->grid;
