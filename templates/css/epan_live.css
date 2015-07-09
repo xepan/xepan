@@ -335,3 +335,6 @@ body {
 .icon-list-ol:before {
   content: '\e8ac';
 }
+tfoot td {
+  padding:0.23rem 0.45rem;
+}

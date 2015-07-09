@@ -50,7 +50,7 @@ class page_tests_05user extends page_tests_base {
     function prepare_repeatedEmailCheck(){
         $this->proper_responses['Test_repeatedEmailCheck']=array(
                 'repeated_email_exception'=>'Value "repeated@example.com" already exists',
-                'empty_email_exception'=>'Must be a valid email address',
+                'empty_email_exception'=>'Please input a valid email address',
             );
     }
 

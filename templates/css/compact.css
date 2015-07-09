@@ -7187,3 +7187,7 @@ a.atk-swatch-blue:not(.atk-text-inherit):hover,
     width: 100%;
   }
 }
+
+input[readonly], div.atk-form-field-readonly {
+  background: none !important;
+}

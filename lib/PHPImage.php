@@ -366,6 +366,22 @@ class PHPImage {
 		return $this;
 	}
 
+	public function xRotate($angle){
+		// $im = imagecreatefrompng( $this->img );
+		$im = $this->img;
+		// create a transparent "color" for the areas which will be new after rotation
+		// only quadratic images will not change dimensions
+		// r=0,b=0,g=0 ( black ), 127 = 100% transparency - we choose "invisible black"
+		$transparency = imagecolorallocatealpha( $im,0,0,0,127 );
+		$rotated = imagerotate( $im, $angle, $transparency, 1);
+		imagealphablending( $rotated, false );
+		imagesavealpha( $rotated, true );
+
+		$this->img = $rotated;
+		$this->afterUpdate();
+		return $this;
+	}
+
 	/**
 	 * Crop an image
 	 *

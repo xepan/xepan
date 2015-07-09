@@ -2,7 +2,8 @@
 
 class Grid extends Grid_Advanced{
 	public $order=null;
-	public $sno=1;
+    public $sno=1;
+	public $sno_caption='s_no';
 
     public $show_epan=false;
 
@@ -35,8 +36,8 @@ class Grid extends Grid_Advanced{
     }
 
 	function add_sno(){
-		$this->addColumn('sno','s_no');
-		$this->order->move('s_no','first');
+		$this->addColumn('sno',$this->sno_caption);
+		$this->order->move($this->sno_caption,'first');
         return $this;
 	}
 

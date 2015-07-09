@@ -1,4 +1,4 @@
-{Menu}
+<?Menu?>
 <script>
 $(document).ready(function(){
 	$('.atk-menu-horizontal>ul>li:first-child').addClass("ui-corner-left");
@@ -15,24 +15,24 @@ $(document).ready(function(){
 		
 });
 </script>
-<div id="{$_name}" class="atk-menu atk-menu-horizontal ui-widget">
+<div id="<?$_name?>" class="atk-menu atk-menu-horizontal ui-widget">
 <ul>
-    {Item}
-        {MenuItem}
-        <li id="{$id}" class="{$class}"><a href="{$href}">{label}MenuItem{/}</a></li>
-        {/MenuItem}
-    {/}
-    {$Content}
+    <?Item?>
+        <?MenuItem?>
+        <li id="<?$id?>" class="<?$class?>"><a href="<?$href?>"><?label?>MenuItem<?/?></a></li>
+        <?/MenuItem?>
+    <?/?>
+    <?$Content?>
 </ul>
 </div>
 
 
-{MenuSeparator}{/MenuSeparator}
-{/}
+<?MenuSeparator?><?/MenuSeparator?>
+<?/?>
 
 
 
-{MenuVertical}
+<?MenuVertical?>
 <script>
 $(document).ready(function(){
 	$('.atk-menu-horizontal>ul>li:first-child').addClass("ui-corner-left");
@@ -49,26 +49,26 @@ $(document).ready(function(){
 		
 });
 </script>
-<div id="{$_name}" class="atk-menu atk-menu-vertical ui-widget">
+<div id="<?$_name?>" class="atk-menu atk-menu-vertical ui-widget">
 <ul>
-    {Item}
-        {MenuItem}
-        <li class="{$class}"><a href="{$href}">{label}MenuItem{/}</a></li>
-        {/MenuItem}
-    {/}
+    <?Item?>
+        <?MenuItem?>
+        <li class="<?$class?>"><a href="<?$href?>"><?label?>MenuItem<?/?></a></li>
+        <?/MenuItem?>
+    <?/?>
 </ul>
 </div>
-{MenuSeparator}{/MenuSeparator}
-{/}
+<?MenuSeparator?><?/MenuSeparator?>
+<?/?>
 
-{MenujUI}
-<ul id="{$_name}" class="{$class}" style="{$style}">
-    {Item}
-        {MenuItem}
-        <li id="{$id}" class="{$class}"><a href="{$href}">{label}MenuItem{/}</a></li>
-        {/MenuItem}
-    {/}
-    {$Content}
+<?MenujUI?>
+<ul id="<?$_name?>" class="<?$class?>" style="<?$style?>">
+    <?Item?>
+        <?MenuItem?>
+        <li id="<?$id?>" class="<?$class?>"><a href="<?$href?>"><?label?>MenuItem<?/?></a></li>
+        <?/MenuItem?>
+    <?/?>
+    <?$Content?>
 </ul>
-{MenuSeparator}{/MenuSeparator}
-{/}
+<?MenuSeparator?><?/MenuSeparator?>
+<?/?>

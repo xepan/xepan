@@ -66,8 +66,8 @@ class Model_Document extends Model_Table{
 		$this->addField('related_root_document_name')->system(true);
 		$this->addField('related_document_name')->system(true);
 		
-		$this->addField('created_at')->type('datetime')->system(true)->defaultValue(date('Y-m-d H:i:s'))->sortable(true);
-		$this->addField('updated_at')->type('datetime')->system(true)->defaultValue(date('Y-m-d H:i:s'));
+		$this->addField('created_at')->type('datetime')->system(true)->defaultValue($this->api->now)->sortable(true);
+		$this->addField('updated_at')->type('datetime')->system(true)->defaultValue($this->api->now);
 		
 		$this->hasOne('xHR/Employee','created_by_id')->defaultValue($this->api->current_employee->id)->system(true);
 		$this->hasMany('xProduction/Task','related_document_id');
@@ -136,7 +136,7 @@ class Model_Document extends Model_Table{
 	}
 
 	function defaultBeforeSave(){
-		$this['updated_at']= date('Y-m-d H:i:s');
+		$this['updated_at']= $this->api->now;
 
 		//Create Log entry
 	}
