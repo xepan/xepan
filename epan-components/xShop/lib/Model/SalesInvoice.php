@@ -14,7 +14,7 @@ class Model_SalesInvoice extends Model_Invoice{
 
 	function init(){
 		parent::init();
-
+		$this->getElement('created_at')->system(false)->visible(true)->editable(true);
 		$this->hasMany('xShop/OrderDetails','invoice_id',null,'UsedInOrderDetails');
 
 		$this->addCondition('type','salesInvoice');
