@@ -3,11 +3,11 @@
 	<div class="xshop-designer-itemimageslister row">
 	{rows}
 		{row}
-		<figure class="xshop-designer-item-images col-md-3 col-sm-3">
-			<img src="{image}{/}" class="xshop-designer-item-images thumbnail">
+		<figure class="xshop-designer-item-images col-md-3 col-sm-3" >
+			<img src="{image}{/}" class="xshop-designer-item-images thumbnail"></img>
        		 <figcaption class="xshop-designer-add-replace">
             	<div class="xshop-designer-add-replace-button btn btn-primary" selectedimagesrc="{$image}" data-image-id="{$id}">Add/Replace</div>
-            	<div id="xshop-designer-remove-member-image-button" class="btn btn-primary" >Remove</div>
+            	<div class="xshop-designer-remove-member-image-button btn btn-primary" data-image-id="{$id}" img-no-of-time-used="{$img_used_no_of_time}">Remove</div>
         	</figcaption>
     	</figure>
 		{/}	
@@ -102,9 +102,15 @@
 				
 			});
 			
-			$('#xshop-designer-remove-member-image-button').click(function(event) {
-				alert('Mr. Rakesh do something with my css please');
-				alert('Only delete if not in use by search url like in item designs');
+			$('.xshop-designer-remove-member-image-button').click(function(event) {
+				var count = parseInt($(this).attr('img-no-of-time-used'));
+				var img_id = $(this).attr('data-image-id');
+				var granted = true;
+				if(count > 0){
+					if(!confirm('Are You Sure this image used in '+count+' Design\'s')){granted = false;
+					}
+				}
+				// alert('Only delete if not in use by search url like in item designs');
 			});
 	
 		});

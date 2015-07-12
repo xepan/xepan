@@ -127,6 +127,8 @@ class page_xShop_page_owner_member_design extends Page {
 						$g->current_row_html[$f] = '<img style="height:40px;max-height:40px;" src="'.$g->current_row[$f].'"/>';
 					});
 					$g->addFormatter('item_image','image_thumbnail');
+					$g->addFormatter('alt_text','Wrap');
+					$g->addFormatter('title','Wrap');
 					$g->addPaginator($ipp=50);
 				}
 

@@ -6,7 +6,7 @@ class page_xShop_page_designer_itemimages extends Page {
 		// parent::init();  
        // $this->add('View')->set('Member Images');
        $tabs = $this->add('Tabs');
-       $tabs->addTabUrl('./upload','My Computer');
+       $tabs->addTabUrl('./upload','Your Library');
        // $tabs->addTabUrl('./previous_upload','Previuos Upload');
        $tabs->addTabUrl('./image_library','Image Library');
 	}
