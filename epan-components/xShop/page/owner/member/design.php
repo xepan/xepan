@@ -103,11 +103,66 @@ class page_xShop_page_owner_member_design extends Page {
 					$g->current_row_html[$f]= $g->current_row_html[$f];
 			});		
 			$g->addFormatter('delete','delete1');
+			// $g->addColumn('Expander','Images');
 
+			$g->add('VirtualPage')->addColumn('Images','Images',array('icon'=>'icon-users','descr'=>'image'),$g)->set(function($p)use($g){
+				$image_design_id = $p->id;
+				$item_member_design = $p->add('xShop/Model_ItemMemberDesign')->load($image_design_id);
+				$item_model = $item_member_design->ref('item_id');
+
+				// $p->add('View_Info')->set("Images".$_GET['xshop_item_member_designs_id']);
+				$item_id = $item_model->id;
+				if(!$item_id){
+					$this->add('View_Warning')->set('Item Model Not Loaded');
+					return;
+				}
+
+				$item_images_model = $p->add('xShop/Model_ItemImages')->addCondition('item_id',$item_id)->addCondition('customefieldvalue_id',null);
+				$item_images_model->setOrder('id','desc');
+				$crud = $p->add('CRUD');
+				$crud->setModel($item_images_model,array('item_image_id','alt_text','title'),array('item_image','alt_text','title'));
+				if(!$crud->isEditing()){
+					$g = $crud->grid;
+					$g->addMethod('format_image_thumbnail',function($g,$f){
+						$g->current_row_html[$f] = '<img style="height:40px;max-height:40px;" src="'.$g->current_row[$f].'"/>';
+					});
+					$g->addFormatter('item_image','image_thumbnail');
+					$g->addPaginator($ipp=50);
+				}
+
+			});
 
 			$g->removeColumn('designs');
 		}
 		
 
 	}
+
+	// function page_Images(){
+	// 	$image_design_id = $this->api->stickyGET('xshop_item_member_designs_id');
+		
+	// 	$item_member_design = $this->add('xShop/Model_ItemMemberDesign')->load($image_design_id);
+	// 	$item_model = $item_member_design->ref('item_id');
+
+	// 	$this->add('View_Info')->set("Images".$_GET['xshop_item_member_designs_id']);
+
+	// 	$item_id = $item_model->id;
+	// 	if(!$item_id){
+	// 		$this->add('View_Warning')->set('Item Model Not Loaded');
+	// 		return;
+	// 	}
+
+	// 	$item_images_model = $this->add('xShop/Model_ItemImages')->addCondition('item_id',$item_id)->addCondition('customefieldvalue_id',null);
+	// 	$item_images_model->setOrder('id','desc');
+	// 	$crud = $this->add('CRUD');
+	// 	$crud->setModel($item_images_model,array('item_image_id','alt_text','title'),array('item_image','alt_text','title'));
+	// 	if(!$crud->isEditing()){
+	// 		$g = $crud->grid;
+	// 		$g->addMethod('format_image_thumbnail',function($g,$f){
+	// 			$g->current_row_html[$f] = '<img style="height:40px;max-height:40px;" src="'.$g->current_row[$f].'"/>';
+	// 		});
+	// 		$g->addFormatter('item_image','image_thumbnail');
+	// 		$g->addPaginator($ipp=50);
+	// 	}
+	// }
 }
