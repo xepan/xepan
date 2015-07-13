@@ -107,9 +107,6 @@
 .epan-editor-top-panel .epan-editor-current-page:hover {
   color: #ffffff;
 }
-.epan-editor-top-panel input {
-  width: auto!important;
-}
 .epan-editor-left-panel {
   background-color: #4b4b4b;
   color: #a6a6a6;
@@ -268,11 +265,14 @@ body {
   background-color: lightgray;
   padding-left: 20px;
 }
-#epan-quick-component-options .epan-css-options {
-  max-height: 450px;
+#epan-quick-component-options #common-options-div {
+  max-height: 550px;
   overflow-y: scroll;
 }
-#epan-quick-component-options .epan-css-options .panel-heading {
+#epan-quick-component-options #common-options-div .epan-css-options .panel-heading,
+#epan-quick-component-options #common-options-div .epan-component-options .panel-heading,
+#epan-quick-component-options #common-options-div .epan-css-options > h3,
+#epan-quick-component-options #common-options-div .epan-component-options > h3 {
   padding: 10px !important;
   margin-bottom: 2px;
   background-color: #4b4b4b;
@@ -280,10 +280,16 @@ body {
   border-top-right-radius: 0px;
   border-bottom: 2px solid #252525;
 }
-#epan-quick-component-options .epan-css-options .panel-heading a {
+#epan-quick-component-options #common-options-div .epan-css-options .panel-heading a,
+#epan-quick-component-options #common-options-div .epan-component-options .panel-heading a,
+#epan-quick-component-options #common-options-div .epan-css-options > h3 a,
+#epan-quick-component-options #common-options-div .epan-component-options > h3 a {
   color: #d9d9d9;
 }
-#epan-quick-component-options .epan-css-options .panel-heading a:hover {
+#epan-quick-component-options #common-options-div .epan-css-options .panel-heading a:hover,
+#epan-quick-component-options #common-options-div .epan-component-options .panel-heading a:hover,
+#epan-quick-component-options #common-options-div .epan-css-options > h3 a:hover,
+#epan-quick-component-options #common-options-div .epan-component-options > h3 a:hover {
   color: #ffffff;
 }
 #overlay {
@@ -334,7 +340,4 @@ body {
 /* '' */
 .icon-list-ol:before {
   content: '\e8ac';
-}
-tfoot td {
-  padding:0.23rem 0.45rem;
 }
