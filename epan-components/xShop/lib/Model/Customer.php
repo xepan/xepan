@@ -75,6 +75,8 @@ class Model_Customer extends Model_MemberDetails{
 		if($old_user->loaded()){
 			throw $this->exception("This username is allready taken, Chose Another",'ValidityCheck')->setField('username');
 		}
+
+		$this->account();
 	}
 
 	function arrangeFields(){
