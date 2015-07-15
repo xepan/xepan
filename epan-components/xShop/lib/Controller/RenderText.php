@@ -3,10 +3,61 @@
 namespace xShop;
 
 class Controller_RenderText extends \AbstractController {
-	public $options =array();
+	public $options = array();
 	public $phpimage;
 
 	function init(){
+		parent::init();
+		$options = $this->options;
+		
+		$p = new \PHPImage($options['desired_width'],10);
+		$this->phpimage = $p;
+		
+		$box = new \GDText\Box($this->phpimage);
+		
+		//GET Font Path
+		if($options['bold'] and !$options['italic']){
+			if(file_exists(getcwd().'/epan-components/xShop/templates/fonts/'.$options['font'].'-Bold.ttf'))
+				$options['font'] = $options['font'].'-Bold';
+			// else
+				// $draw->setFontWeight(700);
+		}
+
+		if($options['italic'] and !$options['bold']){
+			if(file_exists(getcwd().'/epan-components/xShop/templates/fonts/'.$options['font'].'-Italic.ttf'))
+				$options['font'] = $options['font'].'-Italic';
+			else
+				$options['font'] = $options['font'].'-Regular';
+		}
+
+		if($options['italic'] and $options['bold']){
+			if(file_exists(getcwd().'/epan-components/xShop/templates/fonts/'.$options['font'].'-BoldItalic.ttf'))
+				$options['font'] = $options['font'].'-BoldItalic';
+			else
+				$options['font'] = $options['font'].'-Regular';
+		}
+		if(!$options['bold'] and !$options['italic'])
+			$options['font'] = $options['font'] .'-Regular';
+
+		$font_path = getcwd().'/epan-components/xShop/templates/fonts/'.$options['font'].'.ttf';
+
+		$box->setFontFace($font_path);
+		$box->setFontColor(new \GDText\Color(255, 75, 140));
+		$box->setTextShadow(new \GDText\Color(0, 0, 0, 50), 2, 2);
+		$box->setFontSize(8);
+		$box->setLineHeight(1.5);
+		$box->enableDebug();
+		$box->setBox(20, 20, 460, 460);
+		$box->setTextAlign('left', 'top');
+		$box->draw(
+		    "    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eleifend congue auctor. Nullam eget blandit magna. Fusce posuere lacus at orci blandit auctor. Aliquam erat volutpat. Cras pharetra aliquet leo. Cras tristique tellus sit amet vestibulum ullamcorper. Aenean quam erat, ullamcorper quis blandit id, sollicitudin lobortis orci. In non varius metus. Aenean varius porttitor augue, sit amet suscipit est posuere a. In mi leo, fermentum nec diam ut, lacinia laoreet enim. Fusce augue justo, tristique at elit ultricies, tincidunt bibendum erat.\n\n    Aenean feugiat dignissim dui non scelerisque. Cras vitae rhoncus sapien. Suspendisse sed ante elit. Duis id dolor metus. Vivamus congue metus nunc, ut consequat arcu dapibus vel. Ut sed ipsum sollicitudin, rutrum quam ac, fringilla risus. Phasellus non tincidunt leo, sodales venenatis nisl. Duis lorem odio, porta quis laoreet ut, tristique a justo. Morbi dictum dictum est ut facilisis. Duis suscipit sem ligula, at commodo risus pulvinar vehicula. Sed quis quam ac quam scelerisque dapibus id non justo. Sed mollis enim id neque tempus, a congue nulla blandit. Aliquam congue convallis lacinia. Aliquam commodo eleifend nisl a consectetur.\n\n    Maecenas sem nisl, adipiscing nec ante sed, sodales facilisis lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut bibendum malesuada ipsum eget vestibulum. Pellentesque interdum tempor libero eu sagittis. Suspendisse luctus nisi ante, eget tempus erat tristique sed. Duis nec pretium velit. Praesent ornare, tortor non sagittis sollicitudin, dolor quam scelerisque risus, eu consequat magna tellus id diam. Fusce auctor ultricies arcu, vel ullamcorper dui condimentum nec. Maecenas tempus, odio non ullamcorper dignissim, tellus eros elementum turpis, quis luctus ante libero et nisi.\n\n    Phasellus sed mauris vel lorem tristique tempor. Pellentesque ornare purus quis ullamcorper fermentum. Curabitur tortor mauris, semper ut erat vitae, venenatis congue eros. Ut imperdiet arcu risus, id dapibus lacus bibendum posuere. Etiam ac volutpat lectus. Vivamus in magna accumsan, dictum erat in, vehicula sem. Donec elementum lacinia fringilla. Vivamus luctus felis quis sollicitudin eleifend. Sed elementum, mi et interdum facilisis, nunc eros suscipit leo, eget convallis arcu nunc eget lectus. Quisque bibendum urna sit amet varius aliquam. In mollis ante sit amet luctus tincidunt."
+		);
+		
+
+	}
+
+
+	function init_old(){
 		parent::init();
 		$options = $this->options;
 		// print_r($options);
