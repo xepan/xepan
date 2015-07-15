@@ -222,7 +222,7 @@ xShop_Text_Editor = function(parent){
 		}else{
 			$(this).addClass('active');
 		}
-		self.current_text_component.options.rotation_angle = angle_rotate-90;
+		self.current_text_component.options.rotation_angle = angle_rotate-5;
 		$('.xshop-designer-tool').xepan_xshopdesigner('check');
 		self.current_text_component.render();
 
@@ -237,7 +237,7 @@ xShop_Text_Editor = function(parent){
 		}else{
 			$(this).addClass('active');
 		}
-		self.current_text_component.options.rotation_angle = angle_rotate+90;
+		self.current_text_component.options.rotation_angle = angle_rotate+5;
 		$('.xshop-designer-tool').xepan_xshopdesigner('check');
 		self.current_text_component.render();		
 	});

@@ -10,50 +10,27 @@ class Controller_RenderText extends \AbstractController {
 		parent::init();
 		$options = $this->options;
 		
-		$p = new \PHPImage($options['desired_width'],10);
-		$this->phpimage = $p;
+		$font_path = $this->getFontPath();
+		$text = $this->wrap($options['font_size'],$options['rotation_angle'],$font_path,$options['text'],$options['desired_width']);
+		$width_height = $this->getTextBoxWidthHeight($text,$font_path);
+
+		//CREATING DEFAULT IMAGES
+		$im = imagecreatetruecolor( $options['desired_width'],$width_height['height']);
+		imagesavealpha($im,true);
+		$backgroundColor = imagecolorallocatealpha($im, 255, 255, 255,127);
+
+		imagefill($im, 0, 0, $backgroundColor);
+		$this->phpimage = $im;
 		
 		$box = new \GDText\Box($this->phpimage);
-		
-		//GET Font Path
-		if($options['bold'] and !$options['italic']){
-			if(file_exists(getcwd().'/epan-components/xShop/templates/fonts/'.$options['font'].'-Bold.ttf'))
-				$options['font'] = $options['font'].'-Bold';
-			// else
-				// $draw->setFontWeight(700);
-		}
-
-		if($options['italic'] and !$options['bold']){
-			if(file_exists(getcwd().'/epan-components/xShop/templates/fonts/'.$options['font'].'-Italic.ttf'))
-				$options['font'] = $options['font'].'-Italic';
-			else
-				$options['font'] = $options['font'].'-Regular';
-		}
-
-		if($options['italic'] and $options['bold']){
-			if(file_exists(getcwd().'/epan-components/xShop/templates/fonts/'.$options['font'].'-BoldItalic.ttf'))
-				$options['font'] = $options['font'].'-BoldItalic';
-			else
-				$options['font'] = $options['font'].'-Regular';
-		}
-		if(!$options['bold'] and !$options['italic'])
-			$options['font'] = $options['font'] .'-Regular';
-
-		$font_path = getcwd().'/epan-components/xShop/templates/fonts/'.$options['font'].'.ttf';
-
 		$box->setFontFace($font_path);
-		$box->setFontColor(new \GDText\Color(255, 75, 140));
-		$box->setTextShadow(new \GDText\Color(0, 0, 0, 50), 2, 2);
-		$box->setFontSize(8);
-		$box->setLineHeight(1.5);
-		$box->enableDebug();
-		$box->setBox(20, 20, 460, 460);
-		$box->setTextAlign('left', 'top');
-		$box->draw(
-		    "    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eleifend congue auctor. Nullam eget blandit magna. Fusce posuere lacus at orci blandit auctor. Aliquam erat volutpat. Cras pharetra aliquet leo. Cras tristique tellus sit amet vestibulum ullamcorper. Aenean quam erat, ullamcorper quis blandit id, sollicitudin lobortis orci. In non varius metus. Aenean varius porttitor augue, sit amet suscipit est posuere a. In mi leo, fermentum nec diam ut, lacinia laoreet enim. Fusce augue justo, tristique at elit ultricies, tincidunt bibendum erat.\n\n    Aenean feugiat dignissim dui non scelerisque. Cras vitae rhoncus sapien. Suspendisse sed ante elit. Duis id dolor metus. Vivamus congue metus nunc, ut consequat arcu dapibus vel. Ut sed ipsum sollicitudin, rutrum quam ac, fringilla risus. Phasellus non tincidunt leo, sodales venenatis nisl. Duis lorem odio, porta quis laoreet ut, tristique a justo. Morbi dictum dictum est ut facilisis. Duis suscipit sem ligula, at commodo risus pulvinar vehicula. Sed quis quam ac quam scelerisque dapibus id non justo. Sed mollis enim id neque tempus, a congue nulla blandit. Aliquam congue convallis lacinia. Aliquam commodo eleifend nisl a consectetur.\n\n    Maecenas sem nisl, adipiscing nec ante sed, sodales facilisis lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut bibendum malesuada ipsum eget vestibulum. Pellentesque interdum tempor libero eu sagittis. Suspendisse luctus nisi ante, eget tempus erat tristique sed. Duis nec pretium velit. Praesent ornare, tortor non sagittis sollicitudin, dolor quam scelerisque risus, eu consequat magna tellus id diam. Fusce auctor ultricies arcu, vel ullamcorper dui condimentum nec. Maecenas tempus, odio non ullamcorper dignissim, tellus eros elementum turpis, quis luctus ante libero et nisi.\n\n    Phasellus sed mauris vel lorem tristique tempor. Pellentesque ornare purus quis ullamcorper fermentum. Curabitur tortor mauris, semper ut erat vitae, venenatis congue eros. Ut imperdiet arcu risus, id dapibus lacus bibendum posuere. Etiam ac volutpat lectus. Vivamus in magna accumsan, dictum erat in, vehicula sem. Donec elementum lacinia fringilla. Vivamus luctus felis quis sollicitudin eleifend. Sed elementum, mi et interdum facilisis, nunc eros suscipit leo, eget convallis arcu nunc eget lectus. Quisque bibendum urna sit amet varius aliquam. In mollis ante sit amet luctus tincidunt."
-		);
-		
-
+		$rgb_color_array = $this->hex2rgb($options['text_color']);
+		$box->setFontColor(new \GDText\Color($rgb_color_array[0],$rgb_color_array[1],$rgb_color_array[2]));
+		// $box->setTextShadow(new \GDText\Color(0, 0, 0, 50), 2, 2);
+		$box->setFontSize($options['font_size']);
+		$box->setBox(0, 0, $options['desired_width'], 4);
+		$box->setTextAlign($options['halign'], 'top');
+		$box->draw($text);
 	}
 
 
@@ -112,8 +89,108 @@ class Controller_RenderText extends \AbstractController {
 
 	}
 
-	function show($type='png',$quality=3, $base64_encode=true, $return_data=false){
+	function show_old($type='png',$quality=3, $base64_encode=true, $return_data=false){
 		$this->phpimage->setOutput('png',3);
 		return $this->phpimage->show($base64_encode,$return_data);
 	}
+
+	function show(){
+		ob_start();
+		imagepng($this->phpimage, null,9,PNG_ALL_FILTERS);
+		$imageData = ob_get_contents();
+		ob_clean();
+		$this->cleanup();
+		$imageData = base64_encode($imageData);
+
+		header('Cache-Control: no-store, no-cache, must-revalidate');
+		header('Cache-Control: post-check=0, pre-check=0', false);
+		header('Pragma: no-cache');
+		header("Content-type: image/png");
+		// imagepng($this->phpimage, null, 9, PNG_ALL_FILTERS);
+		echo $imageData;
+		die();
+	}
+
+	public function cleanup(){
+		imagedestroy($this->phpimage);
+	}
+
+	public function hex2rgb($hex) {
+       $hex = str_replace("#", "", $hex);
+
+       if(strlen($hex) == 3) {
+          $r = hexdec(substr($hex,0,1).substr($hex,0,1));
+          $g = hexdec(substr($hex,1,1).substr($hex,1,1));
+          $b = hexdec(substr($hex,2,1).substr($hex,2,1));
+       } else {
+          $r = hexdec(substr($hex,0,2));
+          $g = hexdec(substr($hex,2,2));
+          $b = hexdec(substr($hex,4,2));
+       }
+       $rgb = array($r, $g, $b);
+       // return implode(",", $rgb); // returns the rgb values separated by commas
+       return $rgb; // returns an array with the rgb values
+    }
+
+    function getFontPath(){
+    	$options = $this->options;
+    	//GET Font Path
+		if($options['bold'] and !$options['italic']){
+			if(file_exists(getcwd().'/epan-components/xShop/templates/fonts/'.$options['font'].'-Bold.ttf'))
+				$options['font'] = $options['font'].'-Bold';
+			// else
+				// $draw->setFontWeight(700);
+		}
+
+		if($options['italic'] and !$options['bold']){
+			if(file_exists(getcwd().'/epan-components/xShop/templates/fonts/'.$options['font'].'-Italic.ttf'))
+				$options['font'] = $options['font'].'-Italic';
+			else
+				$options['font'] = $options['font'].'-Regular';
+		}
+
+		if($options['italic'] and $options['bold']){
+			if(file_exists(getcwd().'/epan-components/xShop/templates/fonts/'.$options['font'].'-BoldItalic.ttf'))
+				$options['font'] = $options['font'].'-BoldItalic';
+			else
+				$options['font'] = $options['font'].'-Regular';
+		}
+		if(!$options['bold'] and !$options['italic'])
+			$options['font'] = $options['font'] .'-Regular';
+
+		$font_path = getcwd().'/epan-components/xShop/templates/fonts/'.$options['font'].'.ttf';
+
+		return $font_path;
+    }
+
+
+    function getTextBoxWidthHeight($text,$font_path=null){
+    	$options = $this->options;
+    	if(!$font_path){
+    		$font_path = $this->getFontPath();
+    	}
+
+    	$bbox   = imageftbbox($options['font_size'], 0,$font_path, $text);
+		$width  = $bbox[2] - $bbox[6];
+		$height = $bbox[3] - $bbox[7];
+
+		return array('width'=>$width,'Width'=>$width,'height'=>$height,'Height'=>$height);
+
+    }
+
+    function wrap($fontSize, $angle=0, $fontFace, $string, $width){
+	    $ret = "";
+	    $arr = explode(' ', $string);
+	    foreach ( $arr as $word ){
+	        $teststring = $ret.' '.$word;
+	        $testbox = imagettfbbox($fontSize, $angle, $fontFace, $teststring);
+	        if ( $testbox[2] > $width ){
+	            $ret.=($ret==""?"":"\n").$word;
+	        } else {
+	            $ret.=($ret==""?"":' ').$word;
+	        }
+	    }
+	    return $ret;
+	}
+
 }
