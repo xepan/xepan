@@ -57,7 +57,10 @@ class page_xAccount_page_owner_cashbook extends page_xAccount_page_owner_main{
 		$grid->removeColumn('account');
 
 		$grid->addMethod('format_transaction_type',function($g,$f){
-			$g->current_row_html[$f]=$g->model['transaction_type']."::".$g->model->customer()->get('organization_name');
+			if($g->model->customer()){
+				$g->current_row_html[$f]=$g->model['transaction_type']."::".$g->model->customer()->get('organization_name');
+			}else
+				$g->current_row_html[$f]=$g->model['transaction_type'];
 		});
 		$grid->addFormatter('transaction_type','transaction_type');
 
