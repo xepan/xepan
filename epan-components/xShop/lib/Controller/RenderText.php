@@ -101,19 +101,24 @@ class Controller_RenderText extends \AbstractController {
 		return $this->phpimage->show($base64_encode,$return_data);
 	}
 
-	function show(){
+	function show($type="png",$quality=3,$base64_encode=true, $return_data=false){
 		ob_start();
 		imagepng($this->phpimage, null,9,PNG_ALL_FILTERS);
 		$imageData = ob_get_contents();
 		ob_clean();
 		$this->cleanup();
-		$imageData = base64_encode($imageData);
+		if($base64_encode)
+			$imageData = base64_encode($imageData);
 
 		header('Cache-Control: no-store, no-cache, must-revalidate');
 		header('Cache-Control: post-check=0, pre-check=0', false);
 		header('Pragma: no-cache');
-		header("Content-type: image/png");
+		if($type="png")
+			header("Content-type: image/png");
 		// imagepng($this->phpimage, null, 9, PNG_ALL_FILTERS);
+		if($return_data)
+			return $imageData;
+		
 		echo $imageData;
 		die();
 	}

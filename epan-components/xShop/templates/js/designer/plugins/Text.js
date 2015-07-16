@@ -438,8 +438,15 @@ Text_Component = function (params){
 	            self.designer_tool.option_panel.css('z-index',70);
 	            self.designer_tool.option_panel.addClass('xshop-text-options');
 	            self.designer_tool.option_panel.css('top',0);
-	            self.designer_tool.option_panel.css('top',event.clientY - event.currentTarget.clientHeight - 90);
-	            self.designer_tool.option_panel.css('left',event.clientX - event.currentTarget.clientWidth);
+
+				// console.log("pageY="+event.pageY);
+				// console.log("clientY="+event.clientY);
+				// console.log("clientHeight="+event.currentTarget.clientHeight);
+				// console.log("position="+$(this).position());
+				console.log("top="+event.pageY - event.currentTarget.clientHeight);
+
+	            self.designer_tool.option_panel.css('top',event.pageY - event.currentTarget.clientHeight - 90);
+	            self.designer_tool.option_panel.css('left',event.pageX - event.currentTarget.clientWidth);
 	            self.editor.setTextComponent(self);
 	            // console.log(event);
 	            // console.log("this");
