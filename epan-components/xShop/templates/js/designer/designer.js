@@ -354,14 +354,22 @@ $.ui.plugin.add("draggable", "smartguides", {
         $(".guidey").css({"display":"none"});
             var x1 = ui.offset.left, x2 = x1 + inst.helperProportions.width,
                 y1 = ui.offset.top, y2 = y1 + inst.helperProportions.height;
+            	xc = (x1 + x2) /2, yc = (y1 + y2) / 2;
             for (var i = inst.elements.length - 1; i >= 0; i--){
                 var l = inst.elements[i].left, r = l + inst.elements[i].width,
                     t = inst.elements[i].top, b = t + inst.elements[i].height;
+                    
+                    hc = (l + r) / 2, vc = (t + b) / 2;
+
                     var ls = Math.abs(l - x2) <= d;
                     var lss = Math.abs(l - x1) <= d;
                     var rs = Math.abs(r - x1) <= d;
                     var ts = Math.abs(t - y2) <= d;
                     var bs = Math.abs(b - y1) <= d;
+                	var hs = Math.abs(hc - xc) <= d;
+                    var vs = Math.abs(vc - yc) <= d;
+                    var rr = Math.abs(r - x2) <=d;
+
                 if(lss){
                     ui.position.left = inst._convertPositionTo("relative", { top: 0, left: l }).left - inst.margins.left;
                     $(".guidex").css({"left":l-d+4,"display":"block"});
@@ -382,6 +390,18 @@ $.ui.plugin.add("draggable", "smartguides", {
                 if(bs) {
                     ui.position.top = inst._convertPositionTo("relative", { top: b, left: 0 }).top - inst.margins.top;
                     $(".guidey").css({"top":b-d+4,"display":"block"});
+                }
+                if(rr){
+	                ui.position.left = inst._convertPositionTo("relative", { top: 0, left: r - inst.helperProportions.width}).left - inst.margins.left;
+                    $(".guidex").css({"left":r-d+4,"display":"block"});
+                }
+                if(hs) {
+                    ui.position.left = inst._convertPositionTo("relative", { top: 0, left: hc - inst.helperProportions.width/2 }).left - inst.margins.left;
+                     $(".guidex").css({"left":hc-d+4,"display":"block"});
+                }
+                if(vs) {
+                    ui.position.top = inst._convertPositionTo("relative", { top: vc - inst.helperProportions.height/2, left: 0 }).top - inst.margins.top;
+                    $(".guidey").css({"top":vc-d+8,"display":"block"});
                 }
             };
         },
