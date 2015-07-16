@@ -14,11 +14,11 @@ class Controller_RenderText extends \AbstractController {
 		$text = $this->wrap($options['font_size'],$options['rotation_angle'],$font_path,$options['text'],$options['desired_width']);
 		$width_height = $this->getTextBoxWidthHeight($text,$font_path);
 
+		// throw new \Exception(print_r($width_height));
 		//CREATING DEFAULT IMAGES
 		$im = imagecreatetruecolor( $options['desired_width'],$width_height['height']);
 		imagesavealpha($im,true);
 		$backgroundColor = imagecolorallocatealpha($im, 255, 255, 255,127);
-
 		imagefill($im, 0, 0, $backgroundColor);
 		$this->phpimage = $im;
 		
@@ -28,9 +28,16 @@ class Controller_RenderText extends \AbstractController {
 		$box->setFontColor(new \GDText\Color($rgb_color_array[0],$rgb_color_array[1],$rgb_color_array[2]));
 		// $box->setTextShadow(new \GDText\Color(0, 0, 0, 50), 2, 2);
 		$box->setFontSize($options['font_size']);
-		$box->setBox(0, 0, $options['desired_width'], 4);
+		$box->setBox(0, 0, $options['desired_width'], $width_height['height']);
 		$box->setTextAlign($options['halign'], 'top');
 		$box->draw($text);
+
+		if($options['rotation_angle']){
+		    $this->phpimage = imagerotate($this->phpimage, $options['rotation_angle'], imageColorAllocateAlpha($im, 255, 255, 255, 127));
+		    imagealphablending($this->phpimage, false);
+		    imagesavealpha($this->phpimage, true);
+		}
+
 	}
 
 
@@ -163,18 +170,31 @@ class Controller_RenderText extends \AbstractController {
 		return $font_path;
     }
 
-
     function getTextBoxWidthHeight($text,$font_path=null){
     	$options = $this->options;
     	if(!$font_path){
     		$font_path = $this->getFontPath();
     	}
 
-    	$bbox   = imageftbbox($options['font_size'], 0,$font_path, $text);
-		$width  = $bbox[2] - $bbox[6];
-		$height = $bbox[3] - $bbox[7];
+    	$rect = imageftbbox($options['font_size'], $options['rotation_angle'],$font_path, $text);
+	    $minX = min(array($rect[0],$rect[2],$rect[4],$rect[6]));
+	    $maxX = max(array($rect[0],$rect[2],$rect[4],$rect[6]));
+	    $minY = min(array($rect[1],$rect[3],$rect[5],$rect[7]));
+	    $maxY = max(array($rect[1],$rect[3],$rect[5],$rect[7]));
 
-		return array('width'=>$width,'Width'=>$width,'height'=>$height,'Height'=>$height);
+		// $width  = $bbox[2] - $bbox[6];
+		// $height = $bbox[3] - $bbox[7];
+	    $width = $maxX - $minX;
+	    $height = $maxY - $minY;
+		return array(
+				"left"   => abs($minX) - 1,
+			    "top"    => abs($minY) - 1,
+				'width'  => $width,
+				'Width'	 => $width,
+				'height' => $height,
+				'Height' => $height,
+				"box"    => $rect
+				);
 
     }
 
