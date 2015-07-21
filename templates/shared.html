@@ -4,8 +4,8 @@
     <title>{page_title}xEpan{/}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="shortcut icon" href="templates/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="templates/css/bootstrap.css">
     <link rel="stylesheet" href="templates/css/epan.css">
-    <link rel="stylesheet" href="templates/css/compact.css">
     <meta name="generator" content="xEpan! - Open Source Intelligent Business Management">		{$js_include}
     <!--if IE 8
     link(rel='stylesheet', type='text/css', href='templates/css/ie8.css')
@@ -30,32 +30,7 @@
   </head>
   <body style="{$style}" component_type="Body " class="{$class}">
     <div id="epan-content-wrapper" component_type="Web Page" class="epan-sortable-component">{$Content}</div>{editor_block}
-    <div id="epan-editor-top-panel" class="epan-editor-top-panel">
-      <div class="epan-editor-logo atk-move-left"><i class="icon-leaf"></i></div>
-      <div onclick="$.univ().frameURL('{$page_tempalte_frame_title}','{$page_template_url}');" class="epan-editor-current-page atk-move-left">Page: <span class='epan-editor-current-page'>{current_page}Current Page Here{/current_page}</span></div>
-      <div id="page-property-btn" title="Page Properties" class="atk-move-left editor-tooltip"><i class="icon-cog"></i></div>
-      <div id="save-as-snapshot" title="Save And Take Snapshot" class="atk-move-left editor-tooltip"><i class="icon-camera"></i></div>
-      <div id="epan-save-btn" title="Save" class="atk-move-left editor-tooltip atk-swatch-yellow"><i class="icon-floppy"></i></div>
-      <div id="epan-editor-preview" title="Preview" class="atk-move-left editor-tooltip"><i class="icon-eye"></i></div>
-      <div id="epan-editor-preview-desktop" class="atk-move-left"><i class="icon-desktop"></i></div>
-      <div id="epan-editor-preview-laptop" class="atk-move-left"><i class="icon-laptop"></i></div>
-      <div id="epan-editor-preview-tablet" class="atk-move-left"><i class="icon-tablet"></i></div>
-      <div id="epan-editor-preview-mobile" class="atk-move-left"><i class="icon-mobile"></i></div>
-      <div id="epan-editor-logout" class="atk-move-right atk-swatch-red"><a href="index.php?page=logout" title="Logout" class="editor-tooltip"><i class="icon-logout"></i></a></div>
-      <div id="dashboard-btn" title="Admin Dashboard" class="atk-move-right editor-tooltip"><i style="cursor:pointer" class="icon-home"></i></div>
-      <div id="epan-editcss-button" title="Common CSS File" class="atk-move-right editor-tooltip">CSS</div>
-      <div id="template-btn" title="Edit Template of this page" class="atk-move-right editor-tooltip">Template</div>
-      <div title="Show Border" class="atk-move-right editor-tooltip">
-        <input id="epan-component-border" type="checkbox" value="Border" style="margin: 0">
-        <label for="epan-component-border">Border</label>
-      </div>
-      <div title="Show Extra Space For Easy Drop" class="atk-move-right editor-tooltip">
-        <input id="epan-component-extra-padding" type="checkbox" value="Padding" style="margin: 0">
-        <label for="epan-component-extra-padding" title="Show Extra Space For Easy Drop">Easy Drop</label>
-      </div>
-    </div>
-    <div id="epan-editor-bottom-panel" class="epan-editor-bottom-panel">{$editor}</div>{/editor_block}
-    <div class="epan-editor-shared-div"></div>
+    {/editor_block}
     <div id="atk-growl-holder" class="atk-growl"></div>
   </body>
   <style type="text/css">

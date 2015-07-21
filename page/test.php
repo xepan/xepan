@@ -4,13 +4,7 @@
 class page_test extends Page {
 
 	function page_index(){
-		$email = $this->add('xCRM/Model_Email')
-			->addCondition('id',array(339,340))
-			->each(function($obj){
-				$obj->guessDocumentAndCreateActivityOrTicket();
-			});
-
-		// print_r(timezone_identifiers_list());
+		$this->add('Button')->set('clickme')->js('click')->univ()->successMessage("SDSDS");
 	}
 
 	function page_cst_organization_name_update(){
