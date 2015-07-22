@@ -23,9 +23,30 @@ class Form_Field_Markdown extends \Form_Field_Text {
 
     protected $config;
 
+    function initializeTemplate(){
+
+		$this->app->pathfinder->base_location->addRelativeLocation(
+		    'epan-addons/'.__NAMESPACE__, array(
+		        'php'=>'lib',
+		        'template'=>'templates',
+		        'css'=>'templates/css',
+		        'js'=>'templates/js',
+		    )
+		);
+
+		// $l = $this->api->locate('addons',__NAMESPACE__,'location');
+		// $addon_location = $this->api->locate('addons',__NAMESPACE__);
+		// $this->api->pathfinder->addLocation($addon_location,array(
+		// 	'js'=>'js',
+		// 	'css'=>'css',
+		// 	'template'=>'templates'
+		// ))->setParent($l);
+		parent::initializeTemplate();
+	}
+
     function init() {
         parent::init();
-        Initiator::getInstance()->addLocation($this->app);
+        // Initiator::getInstance()->addLocation($this->app);
         $this->config = Config::getInstance($this->app);
 
         $this->checkImageUpload();

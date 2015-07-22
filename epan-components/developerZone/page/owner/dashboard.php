@@ -8,9 +8,9 @@ class page_developerZone_page_owner_dashboard extends page_developerZone_page_ow
 			$grid = $this->app->layout->add('Grid');
 			$grid->setModel('MarketPlace',array('namespace','type','name','is_system','has_toolbar_tools','has_owner_modules','has_plugins','has_live_edit_app_page'));
 
-			// $btn=$grid->add('Button',null,'top_1')->set('New Component');
-			// $btn->setIcon('ui-icon-plusthick');
-			// $btn->js('click',$this->js()->univ()->redirect($this->api->url('developerZone_page_owner_component_new')));
+			$btn=$grid->add('Button',null,'grid_buttons')->set('New Component');
+			$btn->setIcon('ui-icon-plusthick');
+			$btn->js('click',$this->js()->univ()->frameURL("New Component",$this->api->url('developerZone_page_owner_component_new')));
 
 			$grid->setFormatter('namespace','template')->setTemplate('<a href="?page=developerZone_page_owner_component_edit&component=<?$namespace?>"><?$namespace?></a>');
 
