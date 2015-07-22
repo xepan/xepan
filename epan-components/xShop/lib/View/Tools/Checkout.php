@@ -49,7 +49,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 
 		// ================================= PAYMENT MANAGEMENT =======================
 		if($_GET['pay_now']=='true'){
-			// create gateway 
+			// create gateway
 			$gateway = GatewayFactory::create($order['paymentgateway']);
 			
 			$gateway_parameters = $order->ref('paymentgateway_id')->get('parameters');
@@ -61,6 +61,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 				$fn ="set".$param;
 				$gateway->$fn($value);
 			}
+
 			// create params for purchase ... no card prepare now (may be for next version of xepan)
 
 			// ---- No Cards for now 
@@ -74,15 +75,30 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			// $card = new \Omnipay\Common\CreditCard($formInputData);
 
 			$params = array(
-			    'amount' => round($order['net_amount'],2),
-			    'currency' => 'USD',
+			    'amount' => $order['net_amount'],
+			    'currency' => 'INR',
 			    'description' => 'Invoice Against Order Payment',
 			    'transactionId' => $order->id, // invoice no 
-			    // 'card'=>$card, // If creadit card information sending
 			    'headerImageUrl' => 'http://xavoc.com/logo.png',
 			    // 'transactionReference' => '1236Ref',
 			    'returnUrl' => 'http://'.$_SERVER['HTTP_HOST'].$this->api->url(null,array('paid'=>'true','pay_now'=>'true'))->getURL(),
-			    'cancelUrl' => 'http://'.$_SERVER['HTTP_HOST'].$this->api->url(null,array('canceled'=>'true','pay_now'=>'true'))->getURL()
+			    'cancelUrl' => 'http://'.$_SERVER['HTTP_HOST'].$this->api->url(null,array('canceled'=>'true','pay_now'=>'true'))->getURL(),
+				'language' => 'EN',
+				'billing_name' => $order['member'],
+				'billing_address' => $order['billing_address'],
+				'billing_city' => $order['billing_city'],
+				'billing_state' => $order['billing_state'],
+				'billing_country' => $order['billing_country'],
+				'billing_zip' => $order['billing_zip'],
+				'billing_tel' => $order['billing_tel'],
+				'billing_email' => $order['billing_email'],
+				'delivery_address' => $order['shipping_address'],
+				'delivery_city' => $order['shipping_city'],
+				'delivery_state' => $order['shipping_state'],
+				'delivery_country' => $order['shipping_country'],
+				'delivery_zip' => $order['shipping_zip'],
+				'delivery_tel' => $order['shipping_tel'],
+				'delivery_email' => $order['shipping_email']
 		 	);
 
 			// Step 2. if got returned from gateway ... manage ..
@@ -114,6 +130,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			        exit($response->getMessage());
 			    }
 			} catch (\Exception $e) {
+				throw $e;
 			    // internal error, log exception and display a generic message to the customer
 			    exit('Sorry, there was an error processing your payment. Please try again later.'. $e->getMessage(). " ". get_class($e));
 			}
@@ -155,7 +172,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			$member->tryLoadAny();
 		}
 
-		$form->setModel($member,array('address','landmark','city','state','country','pincode'));
+		$form->setModel($member,array('address','landmark','city','state','country','pincode','mobile_number'));
 
 		$b_a=$form->getElement('address');
 		$b_a->setCaption('Billing Address')->js(true)->closest('div.atk-form-row')->appendTo($colleft);
@@ -169,6 +186,10 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		$b_country->js(true)->closest('div.atk-form-row')->appendTo($colleft);
 		$b_p=$form->getElement('pincode');
 		$b_p->js(true)->closest('div.atk-form-row')->appendTo($colleft);
+		$b_t= $form->getElement('mobile_number');
+		$b_t->js(true)->closest('div.atk-form-row')->appendTo($colleft);
+		$b_e= $form->addField('line','email');
+		$b_e->js(true)->closest('div.atk-form-row')->appendTo($colleft);
 		$form->addField('Checkbox','i_read',"I have Read All trems & Conditions")->validateNotNull()->js(true)->closest('div.atk-form-row')->appendTo($colleft);
 		
 		$s_a=$form->addField('text','shipping_address')->validateNotNull(true);
@@ -182,12 +203,16 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		$s_country=$form->addField('line','s_country','Country')->validateNotNull(true);
 		$s_country->js(true)->closest('div.atk-form-row')->appendTo($colright);
 		$s_p=$form->addField('Number','s_pincode','Pincode')->validateNotNull(true);
-		$s_p->js(true)->closest('div.atk-form-row')->appendTo($colright);		
+		$s_p->js(true)->closest('div.atk-form-row')->appendTo($colright);
+		$s_t=$form->addField('line','s_mobile_number','Mobile Number')->validateNotNull(true);
+		$s_t->js(true)->closest('div.atk-form-row')->appendTo($colright);
+		$s_e=$form->addField('line','s_email','Email')->validateNotNull(true);
+		$s_e->js(true)->closest('div.atk-form-row')->appendTo($colright);
 		$shipping=$form->addButton('Copy Address');
 		$shipping->js(true)->appendTo($colright);
 		
-		// Copy billing Address to shipping address		
-		$shipping->js('click')->univ()->copyBillingAddress($b_a,$b_l,$b_c,$b_s,$b_country,$b_p,$s_a,$s_l,$s_c,$s_s,$s_country,$s_p);
+		// Copy billing Address to shipping address
+		$shipping->js('click')->univ()->copyBillingAddress($b_a,$b_l,$b_c,$b_s,$b_country,$b_p,$b_t,$b_e,$s_a,$s_l,$s_c,$s_s,$s_country,$s_p,$s_t,$s_e);
 
 		// add all active payment gateways
 		$pay_gate_field = $form->addField('DropDown','payment_gateway_selected')->setEmptyText('Please Select Your Payment Method')->validateNotNull(true);
@@ -207,6 +232,23 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			// Update order with shipping and billing details
 			// Update order with Payment Gateway selected
 			$order['paymentgateway_id'] = $form['payment_gateway_selected'];
+			$order['billing_landmark'] = $form['billing_address'];
+			$order['billing_address'] = $form['billing_address'];
+			$order['billing_city'] = $form['city'];
+			$order['billing_state'] = $form['state'];
+			$order['billing_zip'] = $form['pincode'];
+			$order['billing_country'] = $form['country'];
+			$order['billing_tel'] = $form['mobile_number'];
+			$order['billing_email'] = $form['email'];
+
+			$order['shipping_landmark'] = $form['s_landmark'];
+			$order['shipping_address'] = $form['shipping_address'];
+			$order['shipping_city'] = $form['s_city'];
+			$order['shipping_state'] = $form['s_state'];
+			$order['shipping_zip'] = $form['s_pincode'];
+			$order['shipping_country'] = $form['s_country'];
+			$order['shipping_tel'] = $form['s_mobile_number'];
+			$order['shipping_email'] = $form['s_email'];
 			// save order :)
 			$order->save();
 			// Update order in session :: checkout_order																
