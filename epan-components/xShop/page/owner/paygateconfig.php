@@ -56,7 +56,7 @@ class page_xShop_page_owner_paygateconfig extends page_xShop_page_owner_main {
 					$pg_model['processing'] = $pg_model['processing']?: "OffSite";
 					$pg_model->saveAndUnload();
  				} catch (Exception $e) {
- 					throw $e;
+ 					// throw $e;
  				}
 
 			}

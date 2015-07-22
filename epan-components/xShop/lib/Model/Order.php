@@ -46,6 +46,23 @@ class Model_Order extends \Model_Document{
 		$f = $this->addField('shipping_address')->mandatory(true)->group('x~6');	
 		$f = $this->addField('order_summary')->type('text')->group('y~12');
 		$f = $this->addField('delivery_date')->type('date')->group('z~6');
+		
+		$f = $this->addField('billing_landmark');
+		$f = $this->addField('billing_city');
+		$f = $this->addField('billing_state');
+		$f = $this->addField('billing_country');
+		$f = $this->addField('billing_zip');
+		$f = $this->addField('billing_tel');
+		$f = $this->addField('billing_email');
+
+		$f = $this->addField('shipping_landmark');
+		$f = $this->addField('shipping_city');
+		$f = $this->addField('shipping_state');
+		$f = $this->addField('shipping_country');
+		$f = $this->addField('shipping_zip');
+		$f = $this->addField('shipping_tel');
+		$f = $this->addField('shipping_email');
+
 
 		// Payment GateWay related Info
 		$this->addField('transaction_reference');
