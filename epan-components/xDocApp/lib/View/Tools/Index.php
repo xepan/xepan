@@ -8,7 +8,8 @@ class View_Tools_Index extends \componentBase\View_Component{
 	public $html_attributes=array(); // ONLY Available in server side components
 	function init(){
 		parent::init();
-		$my_html = MarkdownExtra::defaultTransform("## hi");
+
+		$my_html = MarkdownExtra::defaultTransform(file_get_contents(getcwd().DS.'xepan-doc'.DS.'_Sidebar.md'));
 		$this->add('View')->setHTML($my_html);
 
 	}
