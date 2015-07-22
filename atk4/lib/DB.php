@@ -43,7 +43,6 @@ class DB extends AbstractController
     /** Current depth of transaction */
     public $transaction_depth = 0;
 
-    
     public $dbname=null;
 
     /**
@@ -323,7 +322,6 @@ class DB extends AbstractController
      */
     public function rollBack()
     {
-        if(!$this->inTransaction()) return;
         $this->transaction_depth = 0;
         return $this->dbh->rollBack();
     }
