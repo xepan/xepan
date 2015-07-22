@@ -108,7 +108,9 @@ class page_owner_users extends page_base_owner {
 		$crud = $this->add('CRUD');
 		$crud->setModel($usercustomfield_model);
 		// $crud->add('Controller_FormBeautifier');
+	}
 
-
+	function defaultTemplate(){
+		return ['page/owner/user'];
 	}
 }

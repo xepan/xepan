@@ -14,15 +14,14 @@ class page_index extends Page {
 				$this->api->template->set('page_tempalte_frame_title','Templates');
 				$this->api->template->set('page_template_url',$this->api->url('owner_epantemplates',array('edit_template'=>false)));
 
-			}else{
-				$this->api->template->set('current_page',$this->api->page_requested);
-				$this->api->template->set('page_tempalte_frame_title','Pages ');
-				$this->api->template->set('page_template_url',$this->api->url('owner_epanpages'));
 			}
+
+			$v= $this->api->add('View',null,'editor_block',['view/editor']);
+			$v->template->set('current_page',$this->api->page_requested);
+			$v->template->set('page_tempalte_frame_title','Pages ');
+			$v->template->set('page_template_url',$this->api->url('owner_epanpages'));
 			
-			$this->api->add('editingToolbar/View_FrontToolBar',null,'editor');
-		}else{
-			$this->api->template->del('editor_block');
+			$v->add('editingToolbar/View_FrontToolBar',null,'editor');
 		}
 		
 		if(!$this->api->edit_template){

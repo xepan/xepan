@@ -180,6 +180,7 @@ class Form_Field_Upload extends Form_Field {
         echo "<html><head><script>window.top.$('#".
             $_GET[$this->name.'_upload_action']."').atk4_uploader('uploadComplete',".
             json_encode($data).");</script></head></html>";
+        if($this->api->db->inTransaction()) $this->api->db->commit();
         exit;
     }
     function uploadFailed($message){

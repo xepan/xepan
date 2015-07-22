@@ -261,7 +261,7 @@ class Frontend extends ApiFrontend{
 			// $this->add( 'jUI' );
 
 			if(in_array('owner', $this->defaultTemplate())){
-				$l=$this->add('Layout_Fluid');
+				$l=$this->add('Layout_Fluid',null,null,['layout/admin']);
 			}
 
 			// A lot of the functionality in Agile Toolkit requires jUI
