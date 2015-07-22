@@ -12,7 +12,7 @@ ToDo
 upload/*
 composer.lock
 composer.phar
-vendor/*
+vendor
 *.sublime-workspace
 todo
 /*.sql

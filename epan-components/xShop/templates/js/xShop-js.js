@@ -54,13 +54,15 @@ $.each({
             console.log("complete");
           });
   	},
-    copyBillingAddress:function(b_a,b_l,b_c,b_s,b_country,b_p,s_a,s_l,s_c,s_s,s_country,s_p){
+    copyBillingAddress:function(b_a,b_l,b_c,b_s,b_country,b_p,b_t,b_e,s_a,s_l,s_c,s_s,s_country,s_p,s_t,s_e){
       $(s_a).val($(b_a).val());
       $(s_s).val($(b_s).val());
       $(s_l).val($(b_l).val());
       $(s_c).val($(b_c).val());
       $(s_country).val($(b_country).val());
       $(s_p).val($(b_p).val());
+      $(s_t).val($(b_t).val());
+      $(s_e).val($(b_e).val());
     }
 },$.univ._import);
 
