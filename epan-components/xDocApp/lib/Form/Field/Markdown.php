@@ -6,10 +6,7 @@
  * Time: 19:27
  */
 
-namespace markdown;
-
-use Intervention\Image\ImageManagerStatic as Image;
-
+namespace xDocApp;
 
 class Form_Field_Markdown extends \Form_Field_Text {
 
@@ -26,7 +23,7 @@ class Form_Field_Markdown extends \Form_Field_Text {
     function initializeTemplate(){
 
 		$this->app->pathfinder->base_location->addRelativeLocation(
-		    'epan-addons/'.__NAMESPACE__, array(
+		    'epan-components/'.__NAMESPACE__, array(
 		        'php'=>'lib',
 		        'template'=>'templates',
 		        'css'=>'templates/css',
@@ -188,12 +185,16 @@ class Form_Field_Markdown extends \Form_Field_Text {
             $file = $_FILES['file'];
 
             $path = $this->config->getUploadPath();
+            if(!file_exists($this->sanitizeFilename($path))){
+                mkdir($this->sanitizeFilename($path));
+            }
             $name = substr(md5(microtime()),0,8) . '_' . $this->sanitizeFilename($file['name']);
             $full_path = $path . '/' . $name;
 
-            Image::configure(array('driver' => 'gd'));
-            $image = Image::make($file['tmp_name']);
-            $image->save($full_path);
+            move_uploaded_file($file['tmp_name'], $full_path);
+            // Image::configure(array('driver' => 'gd'));
+            // $image = Image::make($file['tmp_name']);
+            // $image->save($full_path);
 
             $data = [
                 'path' => $this->config->getUploadURL() . '/' . $name,

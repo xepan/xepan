@@ -6,7 +6,7 @@
  * Time: 20:22
  */
 
-namespace markdown;
+namespace xDocApp;
 
 class Config {
 
@@ -66,7 +66,7 @@ class Config {
     }
     public function getUploadPath() {
         if (!$this->upload_path) {
-            $this->upload_path = getcwd() . '/upload/atk4_markdown';
+            $this->upload_path = getcwd() . '/xepan-doc/'.($_GET['topic']?:"");
         }
         return $this->upload_path;
     }
