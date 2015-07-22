@@ -2,7 +2,7 @@
 
 namespace xDocApp;
 
-class View_Tools_Index extends \componentBase\View_Component{
+class View_Tools_DocumentPage extends \componentBase\View_Component{
 	public $html_attributes=array(); // ONLY Available in server side components
 	function init(){
 		parent::init();
