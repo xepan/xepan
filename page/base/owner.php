@@ -195,6 +195,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Sales Stock Management","url"=>$this->api->url('xShop_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Terms and Conditions","url"=>$this->api->url('xShop_page_owner_termsandcondition',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Configurations","url"=>$this->api->url('xShop_page_owner_shopsnblogs',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Designer Fonts","url"=>$this->api->url('xShop_page_owner_font',array('department_id'=>$dept_model->id)));
 
 		}
 

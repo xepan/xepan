@@ -54,6 +54,7 @@ class Model_Customer extends Model_MemberDetails{
 		})->sortable(true);
 
 		$this->addHook('beforeSave',array($this,'beforeCustomerSave'));
+		$this->addHook('afterSave',array($this,'afterCustomerSave'));
 
 		$this->arrangeFields();		
 	}
@@ -75,6 +76,11 @@ class Model_Customer extends Model_MemberDetails{
 		if($old_user->loaded()){
 			throw $this->exception("This username is allready taken, Chose Another",'ValidityCheck')->setField('username');
 		}
+
+	}
+
+	function afterCustomerSave(){
+		$this->account();
 	}
 
 	function arrangeFields(){
@@ -93,7 +99,11 @@ class Model_Customer extends Model_MemberDetails{
 				->addCondition('customer_id',$this->id)
 				->addCondition('group_id',$this->add('xAccount/Model_Group')->loadSundryDebtor()->get('id'));
 		$acc->tryLoadAny();
+		// or $this->dirty['mobile_number'] or $this->dirty['customer_email']
 		if(!$acc->loaded()){
+			$acc['name'] = $this['customer_search_phrase'];
+			$acc->save();
+		}elseif($acc['name'] != $this['customer_search_phrase']){
 			$acc['name'] = $this['customer_search_phrase'];
 			$acc->save();
 		}

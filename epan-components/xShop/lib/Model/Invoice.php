@@ -182,6 +182,7 @@ class Model_Invoice extends \Model_Document{
 		//REPLACING VALUE INTO ORDER DETAIL TEMPLATES
 		$email_body = str_replace("{{customer_name}}", $customer['customer_name'], $email_body);
 		$email_body = str_replace("{{customer_organization_name}}", $customer['organization_name'], $email_body);
+		$email_body = str_replace("{{customer_billing_address}}", $customer['billing_address']?$customer['billing_address']:"", $email_body);
 		$email_body = str_replace("{{mobile_number}}", $customer['mobile_number']?$customer['mobile_number']:" ", $email_body);
 		$email_body = str_replace("{{city}}", $customer['city']?$customer['city']:" ", $email_body);
 		$email_body = str_replace("{{state}}", $customer['state']?$customer['state']:" ", $email_body);
