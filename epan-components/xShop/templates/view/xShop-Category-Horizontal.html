@@ -1,6 +1,25 @@
-<div id="{$_id}">
+<div id="{$_name}" class="xshop-category-main-container">
 <!-- TODO ADDING SKY MEGA MENU CSS FILES -->
 	<link rel="stylesheet" href="epan-components/xShop/templates/css/sky-mega-menu.css">
 	{$Content}
 
+	<script type="text/javascript">
+		function swapfixed(){
+	 		obj = $('#{$_name}').parent();
+	 		body = $('body');
+	 		var category_height = parseInt(obj.height());
+	 		if(obj.hasClass('navbar-fixed-top')){
+	 			var body_margin = parseInt(body.css('margin-top'));
+	 			body.css('margin-top',body_margin - category_height);
+		 		console.log(body_margin - category_height);
+	 			obj.removeClass('navbar-fixed-top');
+	 		}
+	 		else{
+	 			obj.addClass('navbar-fixed-top');
+		 		var body_margin = parseInt(body.css('margin-top'));
+	 			body.css('margin-top',category_height+body_margin);
+		 		console.log(category_height+body_margin);
+	 		}
+		}
+	</script>
 </div>

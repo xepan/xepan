@@ -90,6 +90,9 @@ class View_Tools_Category extends \componentBase\View_Component{
 			$output .= "</ul>";
 			$output .= "</div>";
 			$output .= "</li>";
+
+			$output .= '<li class="pull-right"><a onclick="swapfixed();"><i class="icon-pin"></i>Pin/Unpin';
+			$output .= "</li>";
 		}else{
 			// throw new \Exception($category['id'], 1);
 			if($this->html_attributes['xshop_category_layout']=='Thumbnail'){
