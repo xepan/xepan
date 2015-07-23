@@ -184,13 +184,13 @@ class Form_Field_Markdown extends \Form_Field_Text {
 
             $file = $_FILES['file'];
 
-            $path = $this->config->getUploadPath();
-            if(!file_exists($this->sanitizeFilename($path))){
-                mkdir($this->sanitizeFilename($path));
+            $path = $this->config->getUploadPath();            
+            if(!file_exists($path)){
+                mkdir($path);
+                chmod("$path", 0775);
             }
             $name = substr(md5(microtime()),0,8) . '_' . $this->sanitizeFilename($file['name']);
             $full_path = $path . '/' . $name;
-
             move_uploaded_file($file['tmp_name'], $full_path);
             // Image::configure(array('driver' => 'gd'));
             // $image = Image::make($file['tmp_name']);

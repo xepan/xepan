@@ -978,3 +978,7 @@ code, tt {
     left: -8px;
     border-width: 10px 8px 10px 0;
 }
+
+.atk-cells-group{
+	width: 100%;
+}

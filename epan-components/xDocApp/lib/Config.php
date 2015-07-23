@@ -92,7 +92,7 @@ class Config {
     public function getUploadURL() {
         if (!$this->upload_url) {
             $this->upload_url = $this->app->getConfig('atk4-markdown/upload_url',
-                $this->app->getBaseURL() . 'upload/atk4_markdown'
+                $this->app->getBaseURL() . '/xepan-doc/'.($_GET['topic']?:"")
             );
         }
         return $this->upload_url;
