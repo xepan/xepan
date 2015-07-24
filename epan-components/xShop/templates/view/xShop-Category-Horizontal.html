@@ -4,22 +4,23 @@
 	{$Content}
 
 	<script type="text/javascript">
-		function swapfixed(){
+		function swapfixed(event){
 	 		obj = $('#{$_name}').parent();
 	 		body = $('body');
 	 		var category_height = parseInt(obj.height());
 	 		if(obj.hasClass('navbar-fixed-top')){
 	 			var body_margin = parseInt(body.css('margin-top'));
 	 			body.css('margin-top',body_margin - category_height);
-		 		console.log(body_margin - category_height);
 	 			obj.removeClass('navbar-fixed-top');
+	 			$(event.originalTarget).text('Pin');
 	 		}
 	 		else{
 	 			obj.addClass('navbar-fixed-top');
 		 		var body_margin = parseInt(body.css('margin-top'));
 	 			body.css('margin-top',category_height+body_margin);
-		 		console.log(category_height+body_margin);
+	 			$(event.originalTarget).text('Unpin');
 	 		}
+	 		// console.log(event.target);
 		}
 	</script>
 </div>

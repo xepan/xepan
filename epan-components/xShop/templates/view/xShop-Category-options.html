@@ -94,6 +94,32 @@
 								</select>
 								</td>
 							</tr>
+
+							<tr >
+								<td>
+									Show Pin/Unpin
+								</td>
+								<td>
+									<input type='checkbox' id='xshop_category_add_pin'/>
+								</td>
+							</tr>
+							<tr class="xshop-category-pin-unpin">
+								<td>
+									Pin Label
+								</td>
+								<td>
+									<input type='text' value="Pin" class="xshop-category-pin-unpin-label" data-attr="xshop-category-pin-label" placeHolder="Pin"/>
+								</td>
+							</tr>
+							<tr class="xshop-category-pin-unpin">
+								<td>
+									Unpin Label
+								</td>
+								<td>
+									<input type='text' value="Unpin" class="xshop-category-pin-unpin-label" data-attr="xshop-category-unpin-label" placeHolder="Unpin"/>
+								</td>
+							</tr>
+
 								</table>
 							</div>
 						</div>
@@ -140,6 +166,18 @@ $('#xshop-category-show-price').change(function(event){
 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
 
+$('#xshop_category_add_pin').change(function(event){
+	if($('#xshop_category_add_pin').is(':checked')){
+		$(current_selected_component).attr('xshop-category-add-pin','1');
+		$('.xshop-category-pin-unpin').show();
+	}else{
+		$(current_selected_component).attr('xshop-category-add-pin','0');
+		$('.xshop-category-pin-unpin').hide();
+	}
+
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+});
+
 $('#xshop-category-grid-column').change(function(event){
 	$(current_selected_component).attr('xshop-category-grid-column',$(this).val());
 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
@@ -157,6 +195,11 @@ $('#xshop_category_url_page_{$id}').change(function(event){
 $('.xshop-general-bind').change(function(event){
 	$(current_selected_component).attr($(this).attr('data-attr'),$(this).val());
 	$(current_selected_component).children('div:first').trigger('reload');
+});
+
+$('.xshop-category-pin-unpin-label').change(function(event){
+	$(current_selected_component).attr($(this).attr('data-attr'),$(this).val());
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
 
 var {$component_type}_options = {
@@ -191,10 +234,15 @@ var {$component_type}_options = {
 		
 		// $('#xshop-category-show-price').val($(current_selected_component).attr('xshop-category-show-price')?$(current_selected_component).attr('xshop-category-show-price'):0);
 		$('#xshop-category-show-price').attr('checked',$(current_selected_component).attr("xshop-category-show-price")=='1'?true:false);
+		$('#xshop_category_add_pin').attr('checked',$(current_selected_component).attr("xshop-category-add-pin")=='1'?true:false);
 
 		$('.xshop-general-bind').each(function(index,value){
 			$(this).val($(current_selected_component).attr($(this).attr('data-attr')));
 		});
+		$('.xshop-category-pin-unpin-label').each(function(index,value){
+			$(this).val($(current_selected_component).attr($(this).attr('data-attr')));
+		});
+
 	}
 }
 </script>
