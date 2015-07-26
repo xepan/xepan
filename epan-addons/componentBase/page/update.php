@@ -68,6 +68,8 @@ class page_componentBase_page_update extends page_base_owner{
 	            
 	            foreach ($lst as $item){
 	            	if (filetype($dir."/".$item) == "dir") continue;
+	            	if(strpos($item, ".orig")!==false) continue;
+	            	
 	            	$item = str_replace(".php", "", $item);
 	            	$model_array[] = $this->component_namespace .'/'.'Model_'.$item;
 	            }
