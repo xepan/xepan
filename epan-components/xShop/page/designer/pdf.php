@@ -122,7 +122,7 @@ class page_xShop_page_designer_pdf extends Page {
 
 	function addImage($options, $pdf){
 		if($options['url']){
-			$options['url'] = dirname(getcwd()).$options['url'];
+			$options['url'] = getcwd().$options['url'];
 			$options['width'] = $options['width'] * $this->print_ratio;
 			$options['height'] = $options['height'] * $this->print_ratio;
 			$options['x'] = $options['x'] * $this->print_ratio;

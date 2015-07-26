@@ -14,6 +14,10 @@ class Controller_RenderText extends \AbstractController {
 		$text = $this->wrap($options['font_size'],$options['rotation_angle'],$font_path,$options['text'],$options['desired_width']);
 		$width_height = $this->getTextBoxWidthHeight($text,$font_path);
 
+		$this->new_height = $width_height['height'];
+		
+		$options['halign'] = ($options['alignment_center']==true)?'center':($options['alignment_right'] == 'right'?'right':'left');
+
 		// throw new \Exception(print_r($width_height));
 		//CREATING DEFAULT IMAGES
 		$im = imagecreatetruecolor( $options['desired_width'],$width_height['height']);
