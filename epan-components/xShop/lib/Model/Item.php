@@ -1037,7 +1037,7 @@ class Model_Item extends \Model_Document{
 
 	function updateFirstImageFromDesign(){
 		$item = $target= $this;
-
+			
 		$design = $target['designs'];
 		if(!$design) return;
 		
@@ -1045,11 +1045,12 @@ class Model_Item extends \Model_Document{
 		$cont = $this->add('xShop/Controller_DesignTemplate',array('item'=>$item,'design'=>$design,'page_name'=>$_GET['page_name']?:'Front Page','layout'=>$_GET['layout_name']?:'Main Layout'));
 		$image_data =  $cont->show($type='png',$quality=3, $base64_encode=false, $return_data=true);
 
-		$item_image = $this->ref('xShop/ItemImages')->tryLoadAny();
+		$item_image = $this->ref('xShop/ItemImages')->tryLoadAny();		
 		$destination = $item_image['item_image_id'];
-		$destination = getcwd().DS.$this->add('filestore/Model_File')->tryLoad($destination)->getPath();
+
+		if($item_image->count()->getOne())
+			$destination = getcwd().DS.$this->add('filestore/Model_File')->tryLoad($destination)->getPath();
 		
-		// throw new \Exception($destination, 1);
 		
 		if(file_exists($destination) AND !is_dir($destination)){
 			$fd = fopen($destination, 'w');
