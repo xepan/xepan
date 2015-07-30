@@ -25,6 +25,14 @@
 						<input type='text' id='xepan-image-option-class'/>
 					</td>
 				</tr>
+				<tr>
+					<td>
+						Link
+					</td>
+					<td colspan="2">
+						<input type='text' id='xepan-image-link' PlaceHolder/>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>
@@ -45,6 +53,13 @@ $('#xepan-image-option-class').change(function(event) {
 	$(current_selected_component).find('img').attr('data-extra-classes',$(this).val());
 	$(current_selected_component).find('img').addClass($(this).val());
 });
+
+$('#xepan-image-link').change(function(event) {
+	$(current_selected_component).attr('xepan-image-link',$(this).val());
+	$(current_selected_component).find('a').attr('href',$(this).val());
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+});
+
 $('#xepan-image-option-select').click(function(event) {
 	var fm = $('<div/>').dialogelfinder({
 						url : 'elfinder/php/connector.php',
@@ -71,6 +86,7 @@ $('#xepan-image-option-select').click(function(event) {
 	//
 	// $(your_option_html_element).text($(current_selected_component).css('border'));
 	$('#xepan-image-option-src').val($(current_selected_component).find('img').attr('src'));
+	$('#xepan-image-link').val($(current_selected_component).find('a').attr('href'));
 	}
 	}
 	</script>
