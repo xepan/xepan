@@ -424,7 +424,8 @@ $('#xshop-item-customize-order-name').change(function(event){
 
 $('.xshop-general-bind').change(function(event){
 	$(current_selected_component).attr($(this).attr('data-attr'),$(this).val());
-	$(current_selected_component).children('div:first').trigger('reload');
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+	// $(current_selected_component).children('div:first').trigger('reload');
 });
 
 
