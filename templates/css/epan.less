@@ -211,3 +211,17 @@ input[type=checkbox].css-checkbox {
 tfoot td {
 	padding:0.23rem 0.45rem;
 }
+
+// Override Menu 
+ul[class*=atk-menu] {
+    & > li:hover {
+        & > ul[class*=atk-menu] {
+            display: block !important;
+        }
+    }
+    & > li {
+        & > ul[class*=atk-menu] {
+            display: none !important;
+        }
+    }
+}
