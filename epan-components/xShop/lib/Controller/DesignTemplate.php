@@ -12,7 +12,6 @@ class Controller_DesignTemplate extends \AbstractController{
 	function init(){
 		parent::init();
 		// print_r($this->design);
-
 		if(!is_array($this->design)) $this->design = json_decode($this->design,true);
 		$this->px_width = $this->design['px_width'] ;
 		
@@ -73,8 +72,8 @@ class Controller_DesignTemplate extends \AbstractController{
 	}
 
 	function addImage($options, $img){
-		if($options['url']){
-			$options['url'] = getcwd().$options['url'];
+		if($options['url'] AND file_exists(getcwd().DS.$options['url'])){
+			$options['url'] = getcwd().DS.$options['url'];
 			$options['width'] = $options['width'] * $this->print_ratio;
 			$options['height'] = $options['height'] * $this->print_ratio;
 			$options['x'] = $options['x'] * $this->print_ratio;
