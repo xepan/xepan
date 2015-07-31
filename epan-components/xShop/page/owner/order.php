@@ -47,6 +47,7 @@ class page_xShop_page_owner_order extends page_xShop_page_owner_main{
 		$tab->addTabURL('xShop/page/owner/order_cancelled','Cancel / Return '.$this->add('xShop/Model_Order_Cancelled')->myCounts(true,false));
 		$tab->addTabURL('xShop/page/owner/order_redesign','Redesign '.$this->add('xShop/Model_Order_Redesign')->myCounts(true,false));
 		$tab->addTabURL('xShop/page/owner/order_all','All '.$this->add('xShop/Model_Order')->myCounts(true,false));
+		$tab->addTabURL('xShop/page/owner/order_onlineunpaid','Online Unpaid '.$this->add('xShop/Model_Order_OnlineUnpaid')->myCounts(true,false));
 
 		$this->api->xpr->markPoint('page_xShop_page_owner_order Init Done');
     }
