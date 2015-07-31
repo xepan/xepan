@@ -53,10 +53,13 @@ class View_Lister_Item extends \CompleteLister{
 							$this->html_attributes['order-image']
 							);
 
+		//Load From the PHP Image
 		// if($this->model['is_designable']){
 		// 	$img_url = 'index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id='.$this->model['id']?:"epan-components/xShop/templates/images/item_no_image.png"."&width=".$this->html_attributes['item-image-width']."&height=".$this->html_attributes['item-image-height'];
 		// }else
-			$img_url = 'index.php?page=image&image='.($this->model->ref('xShop/ItemImages')->tryLoadAny()->get('item_image')?:"epan-components/xShop/templates/images/item_no_image.png")."&width=".$this->html_attributes['item-image-width']."&height=".$this->html_attributes['item-image-height'];
+			// $img_url = 'index.php?page=image&image='.($this->model->ref('xShop/ItemImages')->tryLoadAny()->get('item_image')?:"epan-components/xShop/templates/images/item_no_image.png")."&width=".$this->html_attributes['item-image-width']."&height=".$this->html_attributes['item-image-height'];
+
+		$img_url = ($this->model->ref('xShop/ItemImages')->tryLoadAny()->get('item_image')?:"epan-components/xShop/templates/images/item_no_image.png");//."&width=".$this->html_attributes['item-image-width']."&height=".$this->html_attributes['item-image-height'];
 
 		$this->addSectionIF(
 			$this->html_attributes['show-image'],
