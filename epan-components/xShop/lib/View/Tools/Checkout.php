@@ -111,6 +111,8 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			        throw new \Exception($response->getMessage());
 			    }
 			    $order->invoice()->PayViaOnline($response->getTransactionReference(),$response->getData());
+				//Change Order Status onlineUnPaid to Submitted
+				$order->setStatus('submitted');
 			    $this->api->forget('checkout_order');
 			    $this->api->redirect($this->api->url(null,array('subpage'=>'home')));
 			    exit;
