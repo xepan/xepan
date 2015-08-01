@@ -296,9 +296,7 @@ div.xshop-designer-pagebtn,
   height: 20px;
 }
 .xshop-item-custom-field {
-  /*clear: both;*/
-  width: 50% !important;
-  float: left !important;
+  clear: both;
 }
 .xshop-item-custom-field,
 .xshop-add-to-cart-qty,
@@ -307,7 +305,7 @@ div.xshop-designer-pagebtn,
   display: inline-block;
 }
 .xshop-add-to-cart-qty {
-  width: 20% !important;
+  /*width: 20% !important;*/
 }
 .xshop-item-offer-supplier-shipping {
   border-left: 1px solid #f2f2f2;
