@@ -9,6 +9,7 @@ class View_Lister_Item extends \CompleteLister{
 	public $order_count = 0;
 
 	function setModel($model,$fields=null){
+		$model->setOrder('name');
 		parent::setModel($model,$fields);
 		if($this->model->count()->getOne() > 0){
 			$this->template->tryDel('no_record_found');
