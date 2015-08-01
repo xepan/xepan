@@ -238,9 +238,9 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 		if(self.options.designer_mode) return;
 
 		cart_container = $('<div class="xepan-xshop-designer-cart-container"></div>').appendTo(self.element);
-		original_rate = $('<div class="xshop-item-old-price"></div>').appendTo(cart_container);
-		price_rate = $('<div class="xshop-item-price"></div>').appendTo(cart_container);
-		this.cart = $('<div></div>').appendTo(cart_container);
+		original_rate = $('<div class="xshop-item-old-price">0</div>').appendTo(cart_container);
+		price_rate = $('<div class="xshop-item-price">0</div>').appendTo(cart_container);
+		this.cart = $('<div class="xshop-designer-item-custom-field-container"></div>').appendTo(cart_container);
 		this.cart.xepan_xshop_addtocart(self.options.cart_options);
 	},
 
