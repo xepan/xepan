@@ -110,7 +110,18 @@ class page_test extends Page {
 		}
 	}
 
-	function page_owner_layout(){
+
+	function page_createImageFromDesign(){
+
+		$items = $this->add('xShop/Model_Item');
+		$items->addCondition('duplicate_from_item_id','>',0);
+		
+		foreach ($items as $item){
+			$item->updateFirstImageFromDesign();
+		}
+
+	}
+function page_owner_layout(){
 
 		$this->js(true)->_load('jquery.sparkline.min')->_selector('.sparklines')->sparkline('html',['enableTagOptions'=>true]);
 

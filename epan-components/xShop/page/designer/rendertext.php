@@ -23,15 +23,8 @@ class page_xShop_page_designer_rendertext extends Page {
 		$options['rotation_angle'] = $_GET['rotation_angle'];
 		$options['stokethrough'] = $_GET['stokethrough']=='true'?true:false;
 
-		$options['halign'] = 'left';
-		if($_GET['alignment_left'] == 'true'){
-			$options['halign'] = 'left';
-		}elseif($_GET['alignment_right'] == 'true'){
-			$options['halign'] = 'right';
-		}elseif($_GET['alignment_center'] == 'true'){
-			$options['halign'] = 'center';
-		}
 		$cont = $this->add('xShop/Controller_RenderText',array('options'=>$options));
+		// var_dump($options);
 		$cont->show('png',3,true,false); // exiting as well
 
 	}

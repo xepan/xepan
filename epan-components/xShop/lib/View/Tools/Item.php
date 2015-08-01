@@ -60,14 +60,14 @@ class View_Tools_Item extends \componentBase\View_ServerSideComponent{
 		$item_model->_dsql()->having('item_id','<>',null); 
 		$item_model->setOrder('created_at','desc');
 		
-		// if($item_model->count()->getOne() != 0)
-			// $item_lister_view->template->del('no_record_found');
+		if($item_model->count()->getOne() != 0)
+			$item_lister_view->template->del('no_record_found');
 
 		$item_lister_view->setModel($item_model);
 		
 		// Add Painator to item List
-		// $paginator = $item_lister_view->add('Paginator');
-		// $paginator->ipp($this->html_attributes['xshop_item_paginator']?:12);
+		$paginator = $item_lister_view->add('Paginator')->addClass('xshop-item-paginator');
+		$paginator->ipp($this->html_attributes['xshop_item_paginator']?:16);
 		// ------------------------------------------
 
 		//loading custom CSS file

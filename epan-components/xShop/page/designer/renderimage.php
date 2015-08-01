@@ -26,7 +26,7 @@ class page_xShop_page_designer_renderimage extends Page {
 
 		// echo $_GET['url'];
 		// exit;
-		$options['url'] = dirname(getcwd()).$_GET['url'];
+		$options['url'] = getcwd().$_GET['url'];
 		if(!file_exists($options['url'])) return;
 
 		$zoom = $options['zoom'] = $_GET['zoom'];
@@ -46,7 +46,6 @@ class page_xShop_page_designer_renderimage extends Page {
 
 		$cont = $this->add('xShop/Controller_RenderImage',array('options'=>$options));
 		$cont->show('png',3,true,false); // exiting as well
-		
 		return;
 	}
 }

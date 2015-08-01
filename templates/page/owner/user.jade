@@ -1,6 +1,45 @@
-.atk-rows
-	.atk-col-4
-		i.fa.fa-users
-		| User Management
-hr
+.atk-row
+	.atk-col-1
+		.atk-box.atk-align-center
+			a(href='#') All 
+			br
+			.atk-size-micro.atk-text-dimmed
+				| Reset
+	.atk-col-3
+		.atk-box.atk-align-center
+			a(href='#') Customers 
+			span.atk-effect-success [480] 
+			span.atk-effect-danger [48] 
+			span.sparklines(sparkType="line", sparkBarColor="green")
+				| 1,2,3,4,1,3,6,8,5,3,6,2,5,1,1,2,5
+			br
+			.atk-size-micro.atk-text-dimmed
+				| Customers/Freelancers and all Frontend Users
+	.atk-col-3
+		.atk-box.atk-align-center 
+			a(href='#')
+				| Staff 
+				span.atk-effect-success[40]
+			br
+			.atk-size-micro.atk-text-dimmed
+				| Backend Users excluding Super Users
+	.atk-col-3
+		.atk-box.atk-align-center 
+			a(href='#') Super Users [1]
+			br
+			.atk-size-micro.atk-text-dimmed
+				| All Privillages as default
+	.atk-col-2
+		.atk-row
+			.atk-col-12
+				.atk-box-xsmall.atk-align-center.atk-swatch-gray
+					a(href='#') All 
+		.atk-row
+			.atk-col-6
+				.atk-box-xsmall.atk-align-center.atk-swatch-gray
+					a(href='#') Active 
+			.atk-col-6
+				.atk-box-xsmall.atk-align-center.atk-swatch-gray
+					a(href='#') In Active 
+
 {$Content}

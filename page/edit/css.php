@@ -10,7 +10,7 @@ class page_edit_css extends Page {
 
 
 		$form = $this->add('Form');
-		$form->addField('text','css')->set($css_content);
+		$form->addField('text','css')->set($css_content)->addClass('xepan-customcss');
 		$form->addSubmit('UPDATE');
 
 		if($form->isSubmitted()){

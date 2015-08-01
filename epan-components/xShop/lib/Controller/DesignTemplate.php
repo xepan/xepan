@@ -12,9 +12,7 @@ class Controller_DesignTemplate extends \AbstractController{
 	function init(){
 		parent::init();
 		// print_r($this->design);
-
 		if(!is_array($this->design)) $this->design = json_decode($this->design,true);
-
 		$this->px_width = $this->design['px_width'] ;
 		
 		$design=$this->design['design'];
@@ -74,8 +72,8 @@ class Controller_DesignTemplate extends \AbstractController{
 	}
 
 	function addImage($options, $img){
-		if($options['url']){
-			$options['url'] = dirname(getcwd()).$options['url'];
+		if($options['url'] AND file_exists(getcwd().DS.$options['url'])){
+			$options['url'] = getcwd().DS.$options['url'];
 			$options['width'] = $options['width'] * $this->print_ratio;
 			$options['height'] = $options['height'] * $this->print_ratio;
 			$options['x'] = $options['x'] * $this->print_ratio;
@@ -95,12 +93,7 @@ class Controller_DesignTemplate extends \AbstractController{
 			$options['y'] = $options['y'] * $this->print_ratio;
 			$options['font_size'] = $options['font_size'] * ($this->print_ratio / 1.328352013);
 			$options['text_color'] = $options['color_formatted'];
-
-			// echo "<pre>";
-			// print_r($options);
-			// echo "</pre>";
-			// exit;
-
+			
 			$cont = $this->add('xShop/Controller_RenderText',array('options'=>$options));
 			$options['height'] = $cont->new_height /  $this->print_ratio;
 

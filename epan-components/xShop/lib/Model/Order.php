@@ -5,7 +5,7 @@ namespace xShop;
 class Model_Order extends \Model_Document{
 	public $table='xshop_orders';
 	public $status = array('draft','submitted','approved','processing','processed','dispatched',
-							'complete','cancel','return','redesign');
+							'complete','cancel','return','redesign','onlineunpaid');
 	public $root_document_name = 'xShop\Order';
 
 	function init(){
@@ -228,7 +228,7 @@ class Model_Order extends \Model_Document{
 
 		$cart_items=$this->add('xShop/Model_Cart');
 		$this['member_id'] = $member->id;
-		$this['status'] = "submitted";
+		$this['status'] = "onlineUnpaid";
 		$this['order_from'] = "online";
 		// $this['billing_address'] = $billing_address;
 		// $this['shipping_address'] = $shipping_address;		

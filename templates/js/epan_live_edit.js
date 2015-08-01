@@ -449,7 +449,12 @@ $('#front-app-launcher').click(function(event) {
 });
 
 $('#epan-editcss-button').click(function(event) {
-    $(this).univ().frameURL('Edit CSS','index.php?page=edit_css&cut_page=1');
+    var options ={
+                    width:600,
+                    height:540
+                };
+
+    $(this).univ().frameURL('Edit CSS','index.php?page=edit_css&cut_page=1',options);
 });
 
 $('#epan-editor-preview-mobile').click(function(event){

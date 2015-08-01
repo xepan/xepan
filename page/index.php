@@ -5,21 +5,27 @@ class page_index extends Page {
 		parent::init();
 
 		if($this->api->edit_mode){
+			$v= $this->api->add('View',null,'editor_block',['view/editor']);
+			
+			$editing_page = $this->api->page_requested;
+			$editing_page_url = $this->api->url('owner_epanpages');
+			$pages_template_frame_title = "Pages";
 			if($this->api->edit_template){
 				// Remove div tag arrounf page template and to remove top-page class of the div to avoid repetation
 				$this->template->loadTemplateFromString('<?$Content?>');
 				$this->api->template->set('edit_template','true');
-				$this->api->template->set('current_page','(Template) '. $this->api->current_template['name']);
+				$editing_page = "(Template) ". $this->api->current_template['name'];
+				$editing_page_url = $this->api->url('owner_epantemplates',array('edit_template'=>false));
+				$pages_template_frame_title = "Templates";
 				
-				$this->api->template->set('page_tempalte_frame_title','Templates');
-				$this->api->template->set('page_template_url',$this->api->url('owner_epantemplates',array('edit_template'=>false)));
+				// $this->api->template->set('page_tempalte_frame_title','Templates');
+				// $this->api->template->set('page_template_url',$this->api->url('owner_epantemplates',array('edit_template'=>false)));
 
 			}
 
-			$v= $this->api->add('View',null,'editor_block',['view/editor']);
-			$v->template->set('current_page',$this->api->page_requested);
-			$v->template->set('page_tempalte_frame_title','Pages ');
-			$v->template->set('page_template_url',$this->api->url('owner_epanpages'));
+			$v->template->set('current_page', $editing_page);
+			$v->template->set('page_tempalte_frame_title',$pages_template_frame_title);
+			$v->template->set('page_template_url',$editing_page_url);
 			
 			$v->add('editingToolbar/View_FrontToolBar',null,'editor');
 		}

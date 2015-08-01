@@ -212,7 +212,7 @@ class Grid_Item extends \Grid{
 		$img_url = "epan-components/xShop/templates/images/item_no_image.png";
 		$item_images=$this->model->images()->setLimit(1)->tryLoadAny();
 		if($item_images->loaded()){
-			$img_url = $item_images->ref('item_image_id')->ref('thumb_file_id')->get('url');
+			$img_url = $item_images->ref('item_image_id')->getPath();//;->ref('thumb_file_id')->get('url');
 		}
 
 		$this->setTDParam('image','style','width:100px;');

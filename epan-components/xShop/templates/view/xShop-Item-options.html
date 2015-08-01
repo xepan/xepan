@@ -8,7 +8,7 @@
 				</a>
 				</h3>
 			</div>
-			<div id="collapse-xshop-item" class="panel-collapse collapse">
+			<div id="collapse-xshop-item" class="panel-collapse collapse in">
 				<div class="panel-body">
 					<div class='xepan-collasp-header'>
 						<table class="table table-condensed table-hover">
@@ -389,7 +389,11 @@ $(current_selected_component).univ().errorMessage('Save and reload Page to see c
 });
 
 $('#xshop-item-editcss').click(function(event){
-	$(this).univ().frameURL('Edit CSS ( xShop item Display Layout )','index.php?page=xShop_page_itemlayoutcss&cut_page=1&xshop_item_layout='+$(current_selected_component).attr('xshop_itemlayout'));
+	var options = {
+					width:600,
+					height:540
+				};
+	$(this).univ().frameURL('Edit CSS ( xShop item Display Layout )','index.php?page=xShop_page_itemlayoutcss&cut_page=1&xshop_item_layout='+$(current_selected_component).attr('xshop_itemlayout'),options);
 });
 
 $('#xshop_item_fancy_box').change(function(event) {
@@ -424,7 +428,8 @@ $('#xshop-item-customize-order-name').change(function(event){
 
 $('.xshop-general-bind').change(function(event){
 	$(current_selected_component).attr($(this).attr('data-attr'),$(this).val());
-	$(current_selected_component).children('div:first').trigger('reload');
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+	// $(current_selected_component).children('div:first').trigger('reload');
 });
 
 
