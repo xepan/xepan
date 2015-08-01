@@ -110,4 +110,22 @@ class page_test extends Page {
 		}
 	}
 
+	function page_owner_layout(){
+
+		$this->js(true)->_load('jquery.sparkline.min')->_selector('.sparklines')->sparkline('html',['enableTagOptions'=>true]);
+
+		if($_GET['name']){
+			$this->template->loadTemplate($_GET['name']);
+		}
+
+		if($_GET['title'])
+			$this->app->layout->template->trySetHTML('page_title',"<i class='".$_GET['icon']."'></i> " . $_GET['title']);
+	}
+
+	function page_layout(){
+		if($_GET['name']){
+			$this->template->loadTemplate($_GET['name']);
+		}
+	}
+
 }
