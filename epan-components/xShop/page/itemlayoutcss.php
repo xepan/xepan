@@ -17,7 +17,7 @@ class page_xShop_page_itemlayoutcss extends Page {
 		$css_content = file_get_contents($css_file);
 
 		$form = $this->add('Form');
-		$form->addField('text','css')->addClass('item-customcss')->set($css_content);
+		$form->addField('text','css')->addClass('item-customcss xepan-customcss')->set($css_content);
 		$form->addSubmit('UPDATE');
 
 		if($form->isSubmitted()){
