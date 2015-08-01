@@ -17,6 +17,7 @@ class View_SalesInvoiceDetail extends \CompleteLister{
 		$this->current_row_html['sub_total']=$this->model['qty']*$this->model['rate'];
 		$this->current_row_html['unit']= $this->model['unit'];
 		$this->current_row_html['tax_amount'] = round($this->model['tax_amount']);
+		$this->current_row_html['texted_amount'] = round($this->model['texted_amount']);
 		if($this->model['narration'])
 			$this->current_row_html['item_narration'] = "<br/>Narration: ".$this->model['narration'];
 		$this->sno++;
