@@ -232,7 +232,8 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 			else{
 				// create login form
 				if($this->html_attributes['login_view']){
-					$this->add('View')->set('Login')->setElement('a')->setAttr('href','index.php?subpage='.$this->html_attributes['user_panel_redirect_page']);
+					$v = $this->add('View')->set('Login')->addClass('xepan-user-login-link');
+					$v->setElement('a')->setAttr('href','index.php?subpage='.$this->html_attributes['user_panel_redirect_page']);
 				}else{
 					$form=$this->add('Form');
 					if($this->html_attributes['form_stacked_on'])
