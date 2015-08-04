@@ -146,7 +146,7 @@ jQuery.widget("ui.xepan_xshop_addtocart",{
 			});
 		}else{
 			// add input box with spinner may be ...
-			qty_field = $('<input class="xshop-add-to-cart-qty" value="1" type="number"/>').appendTo(self.element);
+			qty_field = $('<input id="xshop-add-to-cart-qty" class="xshop-add-to-cart-qty" value="1" type="number" placeHolder="Quantity"/>').appendTo(self.element);
 			qty_field.univ().numericField();
 		}
 		// add unique class under the self.element to read qty

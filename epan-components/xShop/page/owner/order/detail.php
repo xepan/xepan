@@ -38,6 +38,12 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
             $grid->removeColumn('item');
             $grid->removeColumn('custom_fields');
             $grid->removeColumn('tax_id');
+
+            $export_ = $grid->addColumn('Button','ExportDesign','Export Design');
+            if($_GET['ExportDesign']){
+               // xShop_page_designer_pdf&department_id=4&xshop_orders_id=1124&item_id=not-available&item_member_design_id=0&cut_page=0                                                                                                         
+                $grid->js()->univ()->newWindow($this->api->url('xShop_page_designer_pdf',array('item_id'=>'not-available','item_member_design_id'=>$order_detail->itemMemberDesignId(),'xsnb_design_template'=>false,'cut_page'=>0)))->execute();
+            }
             // $grid->addColumn('expander','attachment',array('page'=>'xShop_page_owner_attachment','descr'=>'Attachments'));
         }
 

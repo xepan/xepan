@@ -48,6 +48,11 @@ class Model_Cart extends \Model{
 	}
 
 	function getItemCount(){
+		return $this->count()?:0;
+	}
+
+	//Return 
+	function getItemQtyCount(){
 		
 		$item_count=0;
 		foreach ($this as $junk) {
