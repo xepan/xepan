@@ -274,7 +274,7 @@ xShop_Text_Editor = function(parent){
 		});
 	});
 
-	div = $('<div class="xshop-designer-text-input-outer-div"></div>').appendTo(this.element);
+	div = $('<div class="xshop-designer-text-input-outer-div" ></div>').appendTo(this.element);
 	this.text_input = $('<textarea class="xshop-designer-text-input" rows="1"></textarea>').appendTo(div);
 
 	$(this.text_input).delayKeyup(function(el){
@@ -434,6 +434,8 @@ Text_Component = function (params){
 	            $('.xshop-options-editor').hide();
 	            self.editor.element.show();
 	            self.designer_tool.option_panel.fadeIn(500);
+	            //For Auto Select Text Box
+	            $('.xshop-designer-text-input').select();
 	            self.designer_tool.current_selected_component = self;
 	            self.designer_tool.option_panel.css('z-index',70);
 	            self.designer_tool.option_panel.addClass('xshop-text-options');
@@ -443,7 +445,7 @@ Text_Component = function (params){
 				// console.log("clientY="+event.clientY);
 				// console.log("clientHeight="+event.currentTarget.clientHeight);
 				// console.log("position="+$(this).position());
-				console.log("top="+event.pageY - event.currentTarget.clientHeight);
+				// console.log("top="+event.pageY - event.currentTarget.clientHeight);
 
 	            self.designer_tool.option_panel.css('top',event.pageY - event.currentTarget.clientHeight - 90);
 	            self.designer_tool.option_panel.css('left',event.pageX - event.currentTarget.clientWidth);

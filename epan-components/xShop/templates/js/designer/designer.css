@@ -134,6 +134,18 @@ div.xshop-designer-pagebtn,
 .xshop-designer-layoutbtn h3 {
   margin-top: 20px;
 }
+img.xdesigner-page-layout-thumbnail{
+  width:150px;
+}
+
+.xshop-designer-layoutbtn{
+  width: 150px;
+}
+
+.xshop-designer-layout{
+  margin:20px;
+}
+
 .xshop-designer-tool-topbar-buttonset {
   min-width: 50%;
 }

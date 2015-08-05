@@ -7,8 +7,10 @@ Layout_Tool = function(parent){
 		self.canvas = canvas;
 		self.page_tool = page_tool;
 
+		$('.xshop-designer-layout').remove();
 		if(this.parent == undefined)
 			this.parent = $('<div class="xshop-designer-layout clearfix"></div>').appendTo($.find(".xshop-designer-tool-bottombar"));
+			//Make Layout Scroller
 	}
 
 	this.renderTool = function(page_name){
@@ -19,9 +21,10 @@ Layout_Tool = function(parent){
 			//display the page button
 			$('.xshop-designer-show-page').show();
 			//hide page button view
-			$('.xshop-designer-pagelayout').hide();
+			// $('.xshop-designer-pagelayout').hide();
 			//add new Layout of current selected page
-			layout_btn = $('<div class="xshop-designer-layoutbtn clearfix"><h3 class="xshop-designer-layout-name">'+index+'</h3><i class="glyphicon glyphicon-ok btn btn-small-xs" > Print</i></div>').appendTo($.find('.xshop-designer-layout')).data('layout',index);
+			img = '<img class="xdesigner-page-layout-thumbnail" src="index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id=202&page_name='+page_name+'&layout_name='+index+'" alt="'+index+'"';
+			layout_btn = $('<div class="xshop-designer-layoutbtn clearfix">'+img+'<h3 class="xshop-designer-layout-name">'+index+'</h3><i class="glyphicon glyphicon-ok btn btn-small-xs" > Print</i></div>').appendTo($.find('.xshop-designer-layout')).data('layout',index);
 				layout_btn.click(function(){
 					self.designer_tool.current_page = page_name;
 					self.designer_tool.current_layout = $(this).data('layout');
@@ -90,7 +93,7 @@ PageLayout_Component = function (params){
 		page_layout_toolbar = $('<div class="xshop-designer-pagelayout clearfix"></div>').appendTo($.find(".xshop-designer-tool-bottombar"));
 		// <img src="index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id=147" style="width:100px;"/>
 		$.each(self.designer_tool.pages_and_layouts,function(index,page){
-			page_btn = $('<div class="xshop-designer-pagebtn"><h3 class="xshop-designer-page-name">'+index+'</h3></div>').appendTo(page_layout_toolbar).data('page',index);
+			page_btn = $('<div class="xshop-designer-pagebtn"><h3 class="xshop-designer-page-name" style="color:black;">'+index+'</h3></div>').appendTo(page_layout_toolbar).data('page',index);
 			page_btn.click(function(event){
 				layout = new Layout_Tool();
 				layout.init(self.designer_tool,self.canvas,self);
