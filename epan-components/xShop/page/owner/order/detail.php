@@ -39,11 +39,15 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
             $grid->removeColumn('custom_fields');
             $grid->removeColumn('tax_id');
 
-            $export_ = $grid->addColumn('Button','ExportDesign','Export Design');
-            if($_GET['ExportDesign']){
-               // xShop_page_designer_pdf&department_id=4&xshop_orders_id=1124&item_id=not-available&item_member_design_id=0&cut_page=0                                                                                                         
-                $grid->js()->univ()->newWindow($this->api->url('xShop_page_designer_pdf',array('item_id'=>'not-available','item_member_design_id'=>$order_detail->itemMemberDesignId(),'xsnb_design_template'=>false,'cut_page'=>0)))->execute();
-            }
+            //Export as PDF of Design
+            $grid->addMethod('format_exportdesign',function($g,$f){
+                $url =  $this->api->url('xShop_page_designer_pdf',array('item_id'=>'not-available','item_member_design_id'=>$g->model->itemMemberDesignId(),'xsnb_design_template'=>false,'print_ratio'=>10,'cut_page'=>0));
+                $g->current_row_html[$f] = '<a class="atk-box-small atk-swatch-ink" href="'.$url.'" target="_blank">Export Design</a>';
+            });
+            $grid->addColumn('exportdesign','ExportDesign');
+
+            // if($_GET['ExportDesign']){
+            // }
             // $grid->addColumn('expander','attachment',array('page'=>'xShop_page_owner_attachment','descr'=>'Attachments'));
         }
 
