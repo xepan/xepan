@@ -8,7 +8,9 @@ class page_xShop_page_designer_pdf extends Page {
 	function init(){
 		parent::init();
 
-
+		if($_GET['print_ratio'])
+			$this->print_ratio = $_GET['print_ratio'];
+		
 		$item_id = $_GET['item_id']?:false;
 		$item_member_design_id = !in_array($_GET['item_member_design_id'], $this->false_array) ? $_GET['item_member_design_id']:false;
 		$xsnb_design_template = $_GET['xsnb_design_template']=='true'?true:false;
@@ -44,14 +46,17 @@ class page_xShop_page_designer_pdf extends Page {
 			$item = $target;
 		}
 
-		if($xsnb_design_template and $target['designer_id'] != $member->id){
-			echo "You are not allowed to take the template preview";
-			exit;
-		}
+		if( !$member->user()->isBackEndUser()){
 
-		if(!$xsnb_design_template and $target['member_id'] != $member->id){
-			echo "You are not allowed to take the design preview";
-			exit;
+			if($xsnb_design_template and $target['designer_id'] != $member->id){
+				echo "You are not allowed to take the template preview";
+				exit;
+			}
+
+			if( !$xsnb_design_template and $target['member_id'] != $member->id){
+				echo "You are not allowed to take the design preview";
+				exit;
+			}
 		}
 
 		// $design = json_decode($this->item['designs'],true);

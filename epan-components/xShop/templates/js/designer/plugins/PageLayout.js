@@ -7,8 +7,10 @@ Layout_Tool = function(parent){
 		self.canvas = canvas;
 		self.page_tool = page_tool;
 
+		$('.xshop-designer-layout').remove();
 		if(this.parent == undefined)
-			this.parent = $('<div class="xshop-designer-layout clearfix"></div>').appendTo($.find(".xshop-designer-tool-bottombar"));
+			this.parent = $('<div class="xshop-designer-layout clearfix"></div>').insertAfter($.find(".xshop-designer-tool-bottombar"));
+			//Make Layout Scroller
 	}
 
 	this.renderTool = function(page_name){
@@ -19,9 +21,10 @@ Layout_Tool = function(parent){
 			//display the page button
 			$('.xshop-designer-show-page').show();
 			//hide page button view
-			$('.xshop-designer-pagelayout').hide();
+			// $('.xshop-designer-pagelayout').hide();
 			//add new Layout of current selected page
-			layout_btn = $('<div class="xshop-designer-layoutbtn clearfix"><h3 class="xshop-designer-layout-name">'+index+'</h3><i class="glyphicon glyphicon-ok btn btn-small-xs" > Print</i></div>').appendTo($.find('.xshop-designer-layout')).data('layout',index);
+			img = '<img class="xdesigner-page-layout-thumbnail" src="index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id='+self.designer_tool.options.item_id+'&page_name='+page_name+'&layout_name='+index+'" alt="'+index+'"/>';
+			layout_btn = $('<div class="xshop-designer-layoutbtn clearfix">'+img+'<p class="xshop-designer-layout-name">'+index+'</p><i class="glyphicon glyphicon-ok btn btn-small-xs" > Print</i></div>').appendTo($.find('.xshop-designer-layout')).data('layout',index);
 				layout_btn.click(function(){
 					self.designer_tool.current_page = page_name;
 					self.designer_tool.current_layout = $(this).data('layout');
@@ -71,7 +74,7 @@ PageLayout_Component = function (params){
 	
 	this.updateBreadcrumb = function(parent){
 		$('.xshop-designer-show-page').remove();
-		this.breadcrumb = $('<ol class="xshop-designer-show-page breadcrumb"></ol>').prependTo(parent);
+		this.breadcrumb = $('<ol class="xshop-designer-show-page breadcrumb"></ol>').insertAfter(parent);
 		this.home_breadcrumb = $('<li><a href="#home">Home</a></li>').appendTo(this.breadcrumb);
 		this.home_breadcrumb.click(function(){
 			$('.xshop-designer-pagelayout').show();
@@ -88,9 +91,12 @@ PageLayout_Component = function (params){
 		$('.xshop-designer-pagelayout').show();
 		$('.xshop-designer-pagebtn').remove();
 		page_layout_toolbar = $('<div class="xshop-designer-pagelayout clearfix"></div>').appendTo($.find(".xshop-designer-tool-bottombar"));
-		// <img src="index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id=147" style="width:100px;"/>
 		$.each(self.designer_tool.pages_and_layouts,function(index,page){
-			page_btn = $('<div class="xshop-designer-pagebtn"><h3 class="xshop-designer-page-name">'+index+'</h3></div>').appendTo(page_layout_toolbar).data('page',index);
+
+			layout = self.designer_tool.layout_finalized;	
+			// console.log(layout[index]);
+			img = '<img class="xdesigner-page-layout-thumbnail" src="index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id='+self.designer_tool.options.item_id+'&page_name='+index+'&layout_name='+layout[index]+'" alt="'+index+'"/>';
+			page_btn = $('<div class="xshop-designer-pagebtn">'+img+'<p class="xshop-designer-page-name" style="color:black;">'+index+'</p></div>').appendTo(page_layout_toolbar).data('page',index);
 			page_btn.click(function(event){
 				layout = new Layout_Tool();
 				layout.init(self.designer_tool,self.canvas,self);

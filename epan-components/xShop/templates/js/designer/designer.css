@@ -1,8 +1,16 @@
+h3.xshop-designer-layout-name{
+  color: black;
+}
+
+.xshop-designer-layout,.xdesigner-page-layout-thumbnail{
+  opacity: 1 !important;
+}
+
 .xshop-designer-tool {
   /*outline: 1px solid black !important;*/
   width: 100%;
   margin: 0 auto;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+  /*box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);*/
 }
 .xshop-designer-tool-topbar {
   height: auto;
@@ -11,10 +19,12 @@
   margin: 0px 0 20px 0;
   background: linear-gradient(to bottom, #fefefe, #f0f2f3) repeat scroll 0 0 rgba(0, 0, 0, 0);
   border: 1px solid #b5babf;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
 }
 .xepan-xshop-designer-cart-container {
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
   padding: 5px;
+  display: none;
 }
 .xshop-designer-tool-topbar-button {
   width: 4em;
@@ -104,9 +114,10 @@
   background-color: gray;
 }
 .xshop-designer-pagelayout {
-  margin: 10px 0px 0px 0px;
+  margin: 10px auto 0px auto;
   position: relative;
-  width: 100%;
+  width:600px;
+  max-width: auto;
 }
 .xshop-designer-pagelayout > div.ui-selected {
   /*background-color: red;*/
@@ -117,11 +128,11 @@
 div.xshop-designer-pagebtn,
 .xshop-designer-layoutbtn {
   min-height: 60px;
-  width: 100px;
-  float: left;
-  opacity: 0.5;
+  max-width: 180px;
   text-align: center;
   cursor: pointer;
+  text-align: center;
+  float: left;
   /*background-color: gray;*/
   margin: 0 1% 0 1% ;
   box-shadow: 0 10px 6px -6px #777777;
@@ -129,11 +140,28 @@ div.xshop-designer-pagebtn,
   border: 1px solid #b5babf;
   -webkit-box-shadow: 0 10px 6px -6px #777777;
   -moz-box-shadow: 0 10px 6px -6px #777777;
+  padding: 3px;
 }
 .xshop-designer-pagebtn h3,
 .xshop-designer-layoutbtn h3 {
-  margin-top: 20px;
+  /*margin-top: 20px;*/
 }
+
+img.xdesigner-page-layout-thumbnail{
+  width:130px;
+  padding: 3px;
+}
+
+.xshop-designer-layoutbtn{
+  width: 150px;
+}
+
+.xshop-designer-layout{
+  width:100%;
+  margin-bottom: 20px;
+  /*overflow-x:scroll; */
+}
+
 .xshop-designer-tool-topbar-buttonset {
   min-width: 50%;
 }
