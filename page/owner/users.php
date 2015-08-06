@@ -9,7 +9,7 @@ class page_owner_users extends page_base_owner {
 	}
 
 	function page_index(){
-
+		$this->template->loadTemplate('page/owner/user');
 		$this->app->layout->template->trySetHTML('page_title',"<i class='fa fa-users'></i> User Management <small>Manage your website / applications registered users</small>");
 		
 		//User Badges
@@ -110,7 +110,7 @@ class page_owner_users extends page_base_owner {
 		// $crud->add('Controller_FormBeautifier');
 	}
 
-	function defaultTemplate(){
-		return ['page/owner/user'];
-	}
+	// function defaultTemplate(){
+	// 	return ['page/owner/user'];
+	// }
 }
