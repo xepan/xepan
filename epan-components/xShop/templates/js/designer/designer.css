@@ -24,7 +24,6 @@ h3.xshop-designer-layout-name{
 .xepan-xshop-designer-cart-container {
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
   padding: 5px;
-  display: none;
 }
 .xshop-designer-tool-topbar-button {
   width: 4em;
@@ -383,4 +382,11 @@ img.xdesigner-page-layout-thumbnail{
 }
 .xshop-desiner-tool-safe-zone{
   
+}
+
+.xshop-designer-top-bar-stick {
+    position: fixed;
+    top: 20px;
+    z-index: 10000;
+    width:100%;
 }
