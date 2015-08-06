@@ -10,28 +10,28 @@ class page_owner_users extends page_base_owner {
 
 	function page_index(){
 		$this->template->loadTemplate('page/owner/user');
-		$this->app->layout->template->trySetHTML('page_title',"<i class='fa fa-users'></i> User Management <small>Manage your website / applications registered users</small>");
+		// $this->app->layout->template->trySetHTML('page_title',"<i class='fa fa-users'></i> User Management <small>Manage your website / applications registered users</small>");
 		
 		//User Badges
-		$bg=$this->add('View_BadgeGroup');
-		$data=$this->add('Model_Users')->count()->getOne();
-		$v=$bg->add('View_Badge')->set('Total Users')->setCount($data)->setCountSwatch('ink');
+		// $bg=$this->add('View_BadgeGroup');
+		// $data=$this->add('Model_Users')->count()->getOne();
+		// $v=$bg->add('View_Badge')->set('Total Users')->setCount($data)->setCountSwatch('ink');
 		
-		$data=$this->add('Model_Users')->addCondition('type',50)->count()->getOne();
-		if($data!= 0)
-			$v=$bg->add('View_Badge')->set('Total Front End Users')->setCount($data)->setCountSwatch('ink');
+		// $data=$this->add('Model_Users')->addCondition('type',50)->count()->getOne();
+		// if($data!= 0)
+		// 	$v=$bg->add('View_Badge')->set('Total Front End Users')->setCount($data)->setCountSwatch('ink');
 		
-		$data=$this->add('Model_Users')->addCondition('type',80)->count()->getOne();
-		if($data!= 0)
-			$v=$bg->add('View_Badge')->set('Total Back End Users')->setCount($data)->setCountSwatch('ink');
+		// $data=$this->add('Model_Users')->addCondition('type',80)->count()->getOne();
+		// if($data!= 0)
+		// 	$v=$bg->add('View_Badge')->set('Total Back End Users')->setCount($data)->setCountSwatch('ink');
 		
-		$data=$this->add('Model_Users')->addCondition('type',100)->count()->getOne();
-		if($data!= 0)
-			$v=$bg->add('View_Badge')->set('Total Super Users')->setCount($data)->setCountSwatch('ink');
+		// $data=$this->add('Model_Users')->addCondition('type',100)->count()->getOne();
+		// if($data!= 0)
+		// 	$v=$bg->add('View_Badge')->set('Total Super Users')->setCount($data)->setCountSwatch('ink');
 		
-		$data=$this->add('Model_Users')->addCondition('is_active',false)->count()->getOne();
-		if($data!= 0)
-			$v=$bg->add('View_Badge')->set('Total In-active Users')->setCount($data)->setCountSwatch('red');
+		// $data=$this->add('Model_Users')->addCondition('is_active',false)->count()->getOne();
+		// if($data!= 0)
+		// 	$v=$bg->add('View_Badge')->set('Total In-active Users')->setCount($data)->setCountSwatch('red');
 
 		//end of Badges
 
@@ -42,11 +42,11 @@ class page_owner_users extends page_base_owner {
 		$usr->getElement('epan')->destroy();
 		$crud->setModel($usr,array('name','type','username','password','email','is_active','user_management','general_settings','application_management','website_designing','last_login_date'),array());
 
-		if(!$crud->isEditing()){
-			$crud->grid->js('reload',$bg->js()->reload());
-		}
+		// if(!$crud->isEditing()){
+		// 	$crud->grid->js('reload',$bg->js()->reload());
+		// }
 
-		$crud->js('reload',$bg->js()->reload());
+		// $crud->js('reload',$bg->js()->reload());
 
 	}
 
