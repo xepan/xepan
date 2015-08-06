@@ -4,6 +4,7 @@
 class Controller_FormBeautifier extends AbstractController{
 	public $param=array();
 	public $form=false;
+	public $layout_group_identifier='group';
 
 	public $header_type='panel';
 	public $modifier='default';
@@ -55,7 +56,7 @@ class Controller_FormBeautifier extends AbstractController{
 				$model_field = $this->related_model->getElement($field->short_name);
 		}
 
-		$group = $model_field->setterGetter('group');
+		$group = $model_field->setterGetter($this->layout_group_identifier);
 		$group_details = explode("~", $group);
 		if(count($group_details)==1){
 			// if($this->running_group)
