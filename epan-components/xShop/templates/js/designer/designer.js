@@ -242,6 +242,24 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 		price_rate = $('<div class="xshop-item-price">0</div>').appendTo(cart_container);
 		this.cart = $('<div class="xshop-designer-item-custom-field-container"></div>').appendTo(cart_container);
 		this.cart.xepan_xshop_addtocart(self.options.cart_options);
+
+		cart_container.hide();
+		
+		//Adding Next and Previous Button
+		next_btn = $('<div class="atk-swatch-ink atk-padding-small pull-right">Next</div>').insertAfter($.find('.xshop-designer-tool-workplace'));
+		$(next_btn).click(function(event){
+			if($(this).text()=="Next")
+				$(this).text('Previous');
+			else
+				$(this).text('Next');
+
+			$(cart_container).toggle('slow');
+			$('html,body').animate({
+            	scrollTop: $(cart_container).offset().top - 200},
+            'slow');
+
+		});
+
 	},
 
 	render: function(param){
@@ -411,3 +429,22 @@ $.ui.plugin.add("draggable", "smartguides", {
         	$(".guidey").hide();
         }
 });
+
+
+// Sticky the Designer Tool Top Bar
+function sticky_relocate() {
+    var window_top = $(window).scrollTop();
+    if($('.xshop-designer-tool-topbar').length > 0){
+	    var div_top = $('.xshop-designer-tool-topbar').offset().top;
+	    if (window_top > 5) {
+	        $('.xshop-designer-tool-topbar').addClass('xshop-designer-top-bar-stick');
+	    } else {
+	        $('.xshop-designer-tool-topbar').removeClass('xshop-designer-top-bar-stick');
+	    }
+    }
+}
+
+// $(function () {
+//     $(window).scroll(sticky_relocate);
+//     sticky_relocate();
+// });
