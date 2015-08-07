@@ -143,7 +143,7 @@ class View_Tools_xCart extends \componentBase\View_Component{
 		if($this->html_attributes['show-cart-total-estimate-bar']){
 
 			$str = '<div class="xshop-cart-detail-estimate-container"><div class="xshop-cart-total-saving-amount">Total Discount <div class="xshop-cart-total-saving-amount-figure">'. $cart_model->getTotalDiscount() .'</div></div>';
-			$str.= '<div class="xshop-cart-total-amount">Estimated Total Amount <div class="xshop-cart-total-amount-figure">'.$cart_model->getTotalAmount().'</div></div>';
+			$str.= '<div class="xshop-cart-total-amount">Estimated Total Amount <span class="xshop-cart-total-amount-figure">'.$cart_model->getTotalAmount().'</span></div>';
 			$str.= "</div>";
 			$this->template->SetHTML('xshop_cart_estimate',$str);
 		}else{
