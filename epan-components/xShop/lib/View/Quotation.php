@@ -17,6 +17,7 @@ class View_Quotation extends \CompleteLister{
 		$this->template->trySetHtml('gross_amount',$this->quotation['gross_amount']?:'0.00');
 		$this->template->trySetHtml('discount_voucher_amount',$this->quotation['discount_voucher_amount']?:'0.00');
 		$this->template->trySetHtml('net_amount',$this->quotation['net_amount']?:'.00');
+		$this->template->trySetHtml('currency',$this->quotation->currency());
 		
 		if(!$this->quotation['termsandcondition_id'])
 			$this->template->del('tandc_section');
