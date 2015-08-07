@@ -1,9 +1,13 @@
 .zoomWrapper{
+	width: 100%;
+	overflow: hidden;
 }
-.zoomwrapper-img{
-	width:100% !important;
-	position:relative;
-	height: auto;
+
+.zoomwrapper-img, .zoomWrapper img{
+	max-width:100%; 
+	max-height:100%;
+	margin:auto;
+	display:block;
 }
 
 .zoom3-small-image-container{
@@ -12,11 +16,23 @@
 
 .xshop-item-image-list{
 	width: 100%;
+	z-index: 10px;
 }
+
+.zoomContainer{
+height: auto !important;
+}
+
+.zoomTint,.zoomLens img{
+	border: 3px solid red;
+}
+
 .xshop-item-image-block{
 	width:20%;
-	position: relative;
+	padding: 3px;
+	outline: 1px solid black !important;
 	float: left;
+	margin-left:4px; 
 }
 
 .zoom3-small-image{
