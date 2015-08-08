@@ -319,17 +319,17 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 
 			// create hello user panel
 			if($this->html_attributes['user_panel_show_logout_view']){
-				$cols=$this->add('Columns');
-				$leftcol=$cols->addColumn(10);
-				$rightcol=$cols->addColumn(2);
-				$leftcol->add('View')->set('Hello'." ".$this->api->auth->model['username']);
-				
+				// $cols=$this->add('Columns');
+				// $leftcol=$cols->addColumn(10);
+				// $rightcol=$cols->addColumn(2);
+				$str = "";
 				$url = $this->html_attributes['user_panel_after_logout_page'];
 				if(strpos($url, "http://") !== false){
-					$logout_view = $rightcol->add('View')->set('Logout')->setElement('a')->setAttr('href','index.php?page=epanlogout&logout_url='.$this->html_attributes['user_panel_after_logout_page']);
+					$str .= '<a href="index.php?page=epanlogout&logout_url='.$this->html_attributes['user_panel_after_logout_page'].'"> Logout</a>';
 				}else
-					$logout_view = $rightcol->add('View')->set('Logout')->setElement('a')->setAttr('href','index.php?page=logout');
+					$str .= '<a href="index.php?page=logout"> Logout</a>';
 				
+				$this->add('View')->setHTML('Hello '.$this->api->auth->model['username'].$str);
 				
 			}
 
