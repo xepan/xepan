@@ -142,7 +142,7 @@ class View_Tools_xCart extends \componentBase\View_Component{
 		//Total and total Discount
 		if($this->html_attributes['show-cart-total-estimate-bar']){
 
-			$str = '<div class="xshop-cart-detail-estimate-container"><div class="xshop-cart-total-saving-amount">Total Discount <div class="xshop-cart-total-saving-amount-figure">'. $cart_model->getTotalDiscount() .'</div></div>';
+			$str = '<div class="xshop-cart-detail-estimate-container"><div class="xshop-cart-total-saving-amount">Total Discount <span class="xshop-cart-total-saving-amount-figure">'.$cart_model->getTotalDiscount().'</span></div>';
 			$str.= '<div class="xshop-cart-total-amount">Estimated Total Amount <span class="xshop-cart-total-amount-figure">'.$cart_model->getTotalAmount().'</span></div>';
 			$str.= "</div>";
 			$this->template->SetHTML('xshop_cart_estimate',$str);
@@ -161,7 +161,7 @@ class View_Tools_xCart extends \componentBase\View_Component{
 
 		//loading custom CSS file	
 		$cart_css = 'epans/'.$this->api->current_website['name'].'/xshopcart.css';
-		$this->api->template->appendHTML('js_include','<link id="xshop-cart-customcss-link" type="text/css" href="'.$cart_css.'" rel="stylesheet" />'."\n");		
+		$this->api->template->appendHTML('js_include','<link id="xshop-cart-customcss-link" type="text/css" href="'.$cart_css.'" rel="stylesheet" />'."\n");
 	}	
 
 
