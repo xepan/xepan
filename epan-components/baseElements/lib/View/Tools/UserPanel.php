@@ -325,9 +325,9 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 				$str = "";
 				$url = $this->html_attributes['user_panel_after_logout_page'];
 				if(strpos($url, "http://") !== false){
-					$str .= '<a href="index.php?page=epanlogout&logout_url='.$this->html_attributes['user_panel_after_logout_page'].'"> Logout</a>';
+					$str .= '<a class="xepan-user-logout-bth" href="index.php?page=epanlogout&logout_url='.$this->html_attributes['user_panel_after_logout_page'].'"> Logout</a>';
 				}else
-					$str .= '<a href="index.php?page=logout"> Logout</a>';
+					$str .= '<a class="xepan-user-logout-bth" href="index.php?page=logout"> Logout</a>';
 				
 				$this->add('View')->setHTML('Hello '.$this->api->auth->model['username'].$str);
 				
