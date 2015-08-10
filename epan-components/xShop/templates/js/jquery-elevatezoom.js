@@ -128,7 +128,7 @@ if ( typeof Object.create !== 'function' ) {
 				//CrossFade Wrappe
 				if(self.options.imageCrossfade){
 					self.zoomWrap = self.$elem.wrap('<div style="height:'+self.nzHeight+'px;width:'+self.nzWidth+'px;" class="zoomWrapper" />');        
-					self.$elem.css('position', 'absolute'); 
+					self.$elem.css('position', 'unset'); 
 				}
 
 				self.zoomLock = 1;
@@ -210,7 +210,7 @@ if ( typeof Object.create !== 'function' ) {
 					+ "-webkit-transform: translateZ(0);"               
 					+ "opacity:"+(self.options.lensOpacity)+";filter: alpha(opacity = "+(self.options.lensOpacity*100)+"); zoom:1;"
 					+ "width:"+lensWidth+"px;"
-					+ "height:"+lensHeight+"px;"
+					+ "height:auto;"
 					+ "background-color:"+(self.options.lensColour)+";"					
 					+ "cursor:"+(self.options.cursor)+";"
 					+ "border: "+(self.options.lensBorderSize)+"px" +
@@ -225,7 +225,7 @@ if ( typeof Object.create !== 'function' ) {
 					+ "filter:alpha(opacity=0);"		
 					+ "opacity: 0;"	
 					+ "width: " + self.nzWidth + "px;"
-					+ "height: " + self.nzHeight + "px;"
+					+ "height: auto;"
 
 					;
 
@@ -238,7 +238,7 @@ if ( typeof Object.create !== 'function' ) {
 						+ "float: left;display: none;"
 						+ "border: " + String(self.options.borderSize) + "px solid " + self.options.borderColour+";"
 						+ "width:"+ String(self.options.lensSize) +"px;"
-						+ "height:"+ String(self.options.lensSize)+"px;"
+						+ "height:auto;"
 						+ "background-repeat: no-repeat;position: absolute;";
 
 
@@ -257,7 +257,7 @@ if ( typeof Object.create !== 'function' ) {
 				//create the div's                                                + ""
 				//self.zoomContainer = $('<div/>').addClass('zoomContainer').css({"position":"relative", "height":self.nzHeight, "width":self.nzWidth});
 
-				self.zoomContainer = $('<div class="zoomContainer" style="-webkit-transform: translateZ(0);position:absolute;left:'+self.nzOffset.left+'px;top:'+self.nzOffset.top+'px;height:'+self.nzHeight+'px;width:'+self.nzWidth+'px;"></div>');
+				self.zoomContainer = $('<div class="zoomContainer" style="-webkit-transform: translateZ(0);position:absolute;left:'+self.nzOffset.left+'px;top:'+self.nzOffset.top+'px;height:'+self.nzHeight+'px;width:auto;"></div>');
 				$('body').append(self.zoomContainer);	
 
 
@@ -266,7 +266,7 @@ if ( typeof Object.create !== 'function' ) {
 					self.zoomContainer.css("overflow", "hidden");
 				}
 				if(self.options.zoomType != "inner") {
-					self.zoomLens = $("<div class='zoomLens' style='" + self.lensStyle + self.lensRound +"'>&nbsp;</div>")
+					self.zoomLens = $("<div class='zoomLens' style='" + self.lensStyle + self.lensRound +"'>&nbsp;<p class='atk-align-center xshop-img-zoom-text' style='z-index:99999;position:relative;'>Click to Zoom</p></div>")
 					.appendTo(self.zoomContainer)
 					.click(function () {
 						self.$elem.trigger('click');
@@ -285,7 +285,7 @@ if ( typeof Object.create !== 'function' ) {
 
 						//if tint enabled - set an image to show over the tint
 
-						self.zoomTintImage = $('<img style="position: absolute; left: 0px; top: 0px; max-width: none; width: '+self.nzWidth+'px; height: '+self.nzHeight+'px;" src="'+self.imageSrc+'">')
+						self.zoomTintImage = $('<img style="position: absolute; left: 0px; top: 0px; max-width: none; width: '+self.nzWidth+'px; height: auto;" src="'+self.imageSrc+'">')
 						.appendTo(self.zoomLens)
 						.click(function () {
 
@@ -1257,7 +1257,7 @@ if ( typeof Object.create !== 'function' ) {
 						self.zoomTint.css({ width: self.$elem.width()});
 					}    
 
-					self.zoomContainer.css("height", self.$elem.height());
+					self.zoomContainer.css("height", 'auto');
 					self.zoomContainer.css("width", self.$elem.width());
 
 					if(self.options.zoomType == "inner"){ 
@@ -1286,7 +1286,7 @@ if ( typeof Object.create !== 'function' ) {
 						self.zoomTint.css({ height: self.$elem.height()});
 
 					}
-					self.zoomContainer.css("height", self.$elem.height());
+					self.zoomContainer.css("height", 'auto');
 					self.zoomContainer.css("width", self.$elem.width());
 
 					if(self.options.imageCrossfade){  
@@ -1299,7 +1299,7 @@ if ( typeof Object.create !== 'function' ) {
 					//This will contrain the image proportions
 					if(self.options.constrainType == "height"){ 
 
-						self.zoomContainer.css("height", self.options.constrainSize);
+						self.zoomContainer.css("height","auto");
 						self.zoomContainer.css("width", "auto");
 
 						if(self.options.imageCrossfade){  
@@ -1325,7 +1325,7 @@ if ( typeof Object.create !== 'function' ) {
 						if(self.options.tint){
 							self.tintContainer.css("height", self.options.constrainSize);
 							self.tintContainer.css("width", self.constwidth);
-							self.zoomTint.css("height", self.options.constrainSize);
+							self.zoomTint.css("height", "auto");
 							self.zoomTint.css("width", self.constwidth);
 							self.zoomTintImage.css("height", self.options.constrainSize);
 							self.zoomTintImage.css("width", self.constwidth); 

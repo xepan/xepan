@@ -26,6 +26,7 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 			$crud->grid->addColumn('expander','priority',array("descr"=>"Priority",'icon'=>'signal'));
 			$crud->grid->addColumn('expander','imagelibrary',array("descr"=>'Library'));
 			$crud->grid->addColumn('expander','fonts',array("descr"=>'fonts','page'=>$this->api->url('xShop_page_owner_font')));
+			$crud->grid->addColumn('expander','currency');
 		}
 
 		$crud->grid->addQuickSearch(array('name'));
@@ -68,6 +69,12 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 		$priority = $this->add('xShop/Model_Priority');
 		$crud = $this->add('CRUD');
 		$crud->setModel($priority,array('name','value'));
+	}
+
+	function page_shops_currency(){
+		$currency = $this->add('xShop/Model_Currency');
+		$crud = $this->add('CRUD');
+		$crud->setModel($currency);
 	}
 
 	function page_blogs_configuration(){
