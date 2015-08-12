@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.10deb1
+-- version 3.4.10.1deb1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 19, 2015 at 12:20 PM
--- Server version: 5.5.40-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.6
+-- Generation Time: Aug 12, 2015 at 02:15 PM
+-- Server version: 5.5.43
+-- PHP Version: 5.5.26-1+deb.sury.org~precise+1
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `xavoc_demo`
+-- Database: `erp`
 --
 
 -- --------------------------------------------------------
@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `alerts` (
   `is_read` tinyint(1) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
   `sender_signature` varchar(255) DEFAULT NULL,
+  `sender_namespace` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -51,13 +52,14 @@ CREATE TABLE IF NOT EXISTS `attachments` (
   `related_document_name` varchar(255) DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `attachment_url_id` int(10) unsigned DEFAULT NULL,
+  `attachment_url_id` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
   KEY `fk_attachment_url_id` (`attachment_url_id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -133,14 +135,15 @@ CREATE TABLE IF NOT EXISTS `developerzone_entities` (
   `table_name` varchar(255) DEFAULT NULL,
   `parent_class` varchar(255) DEFAULT NULL,
   `owner_id` int(11) DEFAULT NULL,
-  `is_class` tinyint(4) DEFAULT NULL,
+  `is_class` tinyint(1) DEFAULT NULL,
   `instance_ports` text,
-  `is_framework_class` tinyint(4) DEFAULT NULL,
+  `is_framework_class` tinyint(1) DEFAULT NULL,
   `js_widget` varchar(255) DEFAULT NULL,
   `css_class` varchar(255) DEFAULT NULL,
   `code_structure` text,
   PRIMARY KEY (`id`),
-  KEY `fk_component_id` (`component_id`)
+  KEY `fk_component_id` (`component_id`),
+  KEY `fk_owner_id` (`owner_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
 
 --
@@ -175,12 +178,12 @@ INSERT INTO `developerzone_entities` (`id`, `component_id`, `name`, `type`, `tab
 
 CREATE TABLE IF NOT EXISTS `developerzone_entity_attributes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `developerZone_entities_id` int(11) DEFAULT NULL,
   `attribute_type` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `value` varchar(255) DEFAULT NULL,
+  `developerzone_entities_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_developerZone_entities_id` (`developerZone_entities_id`)
+  KEY `fk_developerZone_entities_id` (`developerzone_entities_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -191,126 +194,126 @@ CREATE TABLE IF NOT EXISTS `developerzone_entity_attributes` (
 
 CREATE TABLE IF NOT EXISTS `developerzone_entity_methods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `developerZone_entities_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `method_type` varchar(255) DEFAULT NULL,
   `properties` varchar(255) DEFAULT NULL,
   `default_ports` text,
+  `developerzone_entities_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_developerZone_entities_id` (`developerZone_entities_id`)
+  KEY `fk_developerZone_entities_id` (`developerzone_entities_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=847 ;
 
 --
 -- Dumping data for table `developerzone_entity_methods`
 --
 
-INSERT INTO `developerzone_entity_methods` (`id`, `developerZone_entities_id`, `name`, `method_type`, `properties`, `default_ports`) VALUES
-(206, 1, 'destroy', 'public', NULL, '[{"type":"In","name":"recursive","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"true"}]'),
-(207, 1, 'removeElement', 'public', NULL, '[{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(208, 1, 'getElement', 'public', NULL, '[{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(209, 1, 'hasElement', 'public', NULL, '[{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(210, 1, 'rename', 'public', NULL, '[{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(211, 1, 'setModel', 'public', NULL, '[{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(212, 1, 'memorize', 'public', NULL, '[{"type":"In","name":"key","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"value","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"value","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(213, 1, 'recall', 'public', NULL, '[{"type":"In","name":"key","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"default","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(217, 3, 'setModel', 'public', NULL, '[{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"actual_fields","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(218, 3, 'getHTML', 'public', NULL, '[{"type":"In","name":"destroy","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"true"},{"type":"In","name":"execute_js","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"true"},{"type":"Out","name":"html","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(219, 3, 'js', 'public', NULL, '[{"type":"In","name":"when","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"code","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"instance","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"jQuery_Chain","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(297, 7, 'setElement', 'public', NULL, '[{"type":"In","name":"element","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(298, 7, 'setAttr', 'public', NULL, '[{"type":"In","name":"attribute","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"value","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(299, 7, 'setClass', 'public', NULL, '[{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(300, 7, 'addClass', 'public', NULL, '[{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(301, 7, 'setStyle', 'public', NULL, '[{"type":"In","name":"property","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"style","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(302, 7, 'addStyle', 'public', NULL, '[{"type":"In","name":"property","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"style","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(303, 7, 'set', 'public', NULL, '[{"type":"In","name":"text","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(304, 7, 'setText', 'public', NULL, '[{"type":"In","name":"text","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(305, 7, 'setHTML', 'public', NULL, '[{"type":"In","name":"html","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(377, 9, 'setSource', 'public', NULL, '[{"type":"In","name":"source","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"fields","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(463, 11, 'addTitle', 'public', NULL, '[{"type":"In","name":"title","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Menu_Advanced_Title"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(464, 11, 'addItem', 'public', NULL, '[{"type":"In","name":"title","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"action","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Menu_Advanced_Item"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(465, 11, 'addMenu', 'public', NULL, '[{"type":"In","name":"title","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"options","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"array()"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(466, 11, 'addMenuItem', 'public', NULL, '[{"type":"In","name":"page","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"label","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(503, 8, 'addField', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"alias","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(504, 8, 'addExpression', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"expression","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"field_class","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(505, 8, 'set', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"value","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"mix","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(506, 8, 'get', 'public', NULL, '[{"type":"In","name":"name","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"data","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(507, 8, 'getGroupField', 'public', NULL, '[{"type":"In","name":"group","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"all"},{"type":"Out","name":"array","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(508, 8, 'setActualFields', 'public', NULL, '[{"type":"In","name":"group","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"array the actual fields","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(509, 8, 'getActualFields', 'public', NULL, '[{"type":"Out","name":"array the actual fields","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(510, 8, 'getTitleField', 'public', NULL, '[{"type":"Out","name":"string the title field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(511, 8, 'setDirty', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(512, 8, 'isDirty', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"bool","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(513, 8, 'setSource', 'public', NULL, '[{"type":"In","name":"controller","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"table","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"id","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(514, 8, 'load', 'public', NULL, '[{"type":"In","name":"id","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(515, 8, 'tryLoad', 'public', NULL, '[{"type":"In","name":"id","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(516, 8, 'loadAny', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(517, 8, 'tryLoadAny', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(518, 8, 'loadBy', 'public', NULL, '[{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"cond","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"value","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(519, 8, 'tryLoadBy', 'public', NULL, '[{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"cond","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"In","name":"value","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(520, 8, 'loaded', 'public', NULL, '[{"type":"Out","name":"boolean","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(521, 8, 'unload', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(522, 8, 'reset', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(523, 8, 'save', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(524, 8, 'saveAndUnload', 'public', NULL, '[{"type":"In","name":"id","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"undefined"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(525, 8, 'delete', 'public', NULL, '[{"type":"In","name":"id","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(526, 8, 'deleteAll', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(527, 8, 'reload', 'public', NULL, '[{"type":"Out","name":"current record id","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(528, 8, 'addCondition', 'public', NULL, '[{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"operator","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"In","name":"value","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(529, 8, 'setLimit', 'public', NULL, '[{"type":"In","name":"count","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"offset","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(530, 8, 'setOrder', 'public', NULL, '[{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"desc","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(531, 8, 'count', 'public', NULL, '[{"type":"In","name":"alias","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"integer","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(532, 8, 'getRows', 'public', NULL, '[{"type":"In","name":"fields","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"array","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(533, 8, 'hasField', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(534, 8, 'getField', 'public', NULL, '[{"type":"In","name":"f","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(535, 8, 'hasOne', 'public', NULL, '[{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"our_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"In","name":"field_class","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"expr","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(536, 8, 'hasMany', 'public', NULL, '[{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"their_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"In","name":"our_field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"In","name":"reference_name","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"null","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(537, 8, 'ref', 'public', NULL, '[{"type":"In","name":"ref1","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"type","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(538, 8, 'debug', 'public', NULL, '[{"type":"In","name":"debug","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"true"},{"type":"Out","name":"debug","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(544, 12, 'addColumn', 'public', NULL, '[{"type":"In","name":"width","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"auto"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(568, 15, 'setCount', 'public', NULL, '[{"type":"In","name":"count","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(569, 15, 'setCountSwatch', 'public', NULL, '[{"type":"In","name":"swatch","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(570, 15, 'setBadgeSwatch', 'public', NULL, '[{"type":"In","name":"swatch","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(577, 16, 'connect', 'public', NULL, '[{"type":"In","name":"dsn","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(578, 16, 'dsql', 'public', NULL, '[{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(579, 16, 'query', 'public', NULL, '[{"type":"In","name":"query","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"params","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"array()"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(690, 14, 'addIcon', 'public', NULL, '[{"type":"In","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(691, 14, 'addButton', 'public', NULL, '[{"type":"In","name":"label","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Continue"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(714, 13, 'addField', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"actual_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(715, 13, '_dsql', 'public', NULL, '[{"type":"Out","name":"dsql","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(716, 13, 'dsql', 'public', NULL, '[{"type":"Out","name":"_dsql","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(717, 13, 'selectQuery', 'public', NULL, '[{"type":"In","name":"fields","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"_selectQuery","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(718, 13, 'fieldQuery', 'public', NULL, '[{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"query","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(719, 13, 'titleQuery', 'public', NULL, '[{"type":"Out","name":"query","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(720, 13, 'addExpression', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"expression","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"expression","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(721, 13, 'join', 'public', NULL, '[{"type":"In","name":"foreign_table","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"master_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"join_kind","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"$_foreign_alias","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"relation","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(722, 13, 'leftJoin', 'public', NULL, '[{"type":"In","name":"foreign_table","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"master_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"join_kind","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"_foreign_alias","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"relation","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"join","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(723, 13, 'hasOne', 'public', NULL, '[{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"our_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"display_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"as_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"Field_Reference","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(724, 13, 'hasMany', 'public', NULL, '[{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"their_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"our_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"as_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"SQL_Many","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(725, 13, 'ref', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"load","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(726, 13, 'refSQL', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(727, 13, 'getRef', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"load","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"ref (name, load )","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(728, 13, 'addCondition', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"cond","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"undefined"},{"type":"In","name":"value","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"undefined"},{"type":"In","name":"dsql","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"}]'),
-(729, 13, 'sum', 'public', NULL, '[{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"dsql","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(730, 13, '_load', 'public', NULL, '[{"type":"In","name":"id","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"ignore_missing","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"false"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(731, 13, 'loadData', 'public', NULL, '[{"type":"In","name":"id","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(732, 13, 'saveAndUnload', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(733, 13, 'update', 'public', NULL, '[{"type":"In","name":"data","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"array"},{"type":"Out","name":"save","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(734, 13, 'tryDelete', 'public', NULL, '[{"type":"In","name":"id","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(735, 13, 'setActualFields', 'public', NULL, '[{"type":"In","name":"array","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"fields","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(831, 10, 'addField', 'public', NULL, '[{"type":"In","name":"type","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"options","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"caption","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"attr","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(832, 10, 'set', 'public', NULL, '[{"type":"In","name":"field_or_array","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"value","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"undefined"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(833, 10, 'getAllFields', 'public', NULL, '[{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(834, 10, 'addSubmit', 'public', NULL, '[{"type":"In","name":"label","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Save"},{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"submit","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(835, 10, 'addButton', 'public', NULL, '[{"type":"In","name":"label","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Button"},{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"button","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(836, 10, 'update', 'public', NULL, '[{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(837, 10, 'save', 'public', NULL, '[{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(838, 10, 'submitted', 'public', NULL, '[{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(839, 10, 'isSubmitted', 'public', NULL, '[{"type":"Out","name":"result","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(840, 10, 'onSubmit', 'public', NULL, '[{"type":"In","name":"callback","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(841, 10, 'hasField', 'public', NULL, '[{"type":"In","name":"","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(842, 10, 'isClicked', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(843, 10, 'addClass', 'public', NULL, '[{"type":"Out","name":"$_POST","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]'),
-(846, 2, 'init', 'public', NULL, '[]');
+INSERT INTO `developerzone_entity_methods` (`id`, `name`, `method_type`, `properties`, `default_ports`, `developerzone_entities_id`) VALUES
+(206, 'destroy', 'public', NULL, '[{"type":"In","name":"recursive","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"true"}]', NULL),
+(207, 'removeElement', 'public', NULL, '[{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(208, 'getElement', 'public', NULL, '[{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(209, 'hasElement', 'public', NULL, '[{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(210, 'rename', 'public', NULL, '[{"type":"In","name":"short_name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(211, 'setModel', 'public', NULL, '[{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(212, 'memorize', 'public', NULL, '[{"type":"In","name":"key","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"value","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"value","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(213, 'recall', 'public', NULL, '[{"type":"In","name":"key","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"default","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(217, 'setModel', 'public', NULL, '[{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"actual_fields","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(218, 'getHTML', 'public', NULL, '[{"type":"In","name":"destroy","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"true"},{"type":"In","name":"execute_js","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"true"},{"type":"Out","name":"html","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(219, 'js', 'public', NULL, '[{"type":"In","name":"when","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"code","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"instance","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"jQuery_Chain","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(297, 'setElement', 'public', NULL, '[{"type":"In","name":"element","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(298, 'setAttr', 'public', NULL, '[{"type":"In","name":"attribute","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"value","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(299, 'setClass', 'public', NULL, '[{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(300, 'addClass', 'public', NULL, '[{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(301, 'setStyle', 'public', NULL, '[{"type":"In","name":"property","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"style","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(302, 'addStyle', 'public', NULL, '[{"type":"In","name":"property","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"style","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(303, 'set', 'public', NULL, '[{"type":"In","name":"text","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(304, 'setText', 'public', NULL, '[{"type":"In","name":"text","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(305, 'setHTML', 'public', NULL, '[{"type":"In","name":"html","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(377, 'setSource', 'public', NULL, '[{"type":"In","name":"source","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"fields","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(463, 'addTitle', 'public', NULL, '[{"type":"In","name":"title","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Menu_Advanced_Title"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(464, 'addItem', 'public', NULL, '[{"type":"In","name":"title","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"action","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Menu_Advanced_Item"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(465, 'addMenu', 'public', NULL, '[{"type":"In","name":"title","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"options","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"array()"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(466, 'addMenuItem', 'public', NULL, '[{"type":"In","name":"page","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"label","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(503, 'addField', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"alias","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(504, 'addExpression', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"expression","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"field_class","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(505, 'set', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"value","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"mix","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(506, 'get', 'public', NULL, '[{"type":"In","name":"name","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"data","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(507, 'getGroupField', 'public', NULL, '[{"type":"In","name":"group","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"all"},{"type":"Out","name":"array","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(508, 'setActualFields', 'public', NULL, '[{"type":"In","name":"group","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"array the actual fields","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(509, 'getActualFields', 'public', NULL, '[{"type":"Out","name":"array the actual fields","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(510, 'getTitleField', 'public', NULL, '[{"type":"Out","name":"string the title field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(511, 'setDirty', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(512, 'isDirty', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"bool","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(513, 'setSource', 'public', NULL, '[{"type":"In","name":"controller","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"table","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"id","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(514, 'load', 'public', NULL, '[{"type":"In","name":"id","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(515, 'tryLoad', 'public', NULL, '[{"type":"In","name":"id","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(516, 'loadAny', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(517, 'tryLoadAny', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(518, 'loadBy', 'public', NULL, '[{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"cond","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"value","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(519, 'tryLoadBy', 'public', NULL, '[{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"cond","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"In","name":"value","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(520, 'loaded', 'public', NULL, '[{"type":"Out","name":"boolean","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(521, 'unload', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(522, 'reset', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(523, 'save', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(524, 'saveAndUnload', 'public', NULL, '[{"type":"In","name":"id","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"undefined"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(525, 'delete', 'public', NULL, '[{"type":"In","name":"id","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(526, 'deleteAll', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(527, 'reload', 'public', NULL, '[{"type":"Out","name":"current record id","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(528, 'addCondition', 'public', NULL, '[{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"operator","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"In","name":"value","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(529, 'setLimit', 'public', NULL, '[{"type":"In","name":"count","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"offset","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(530, 'setOrder', 'public', NULL, '[{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"desc","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(531, 'count', 'public', NULL, '[{"type":"In","name":"alias","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"integer","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(532, 'getRows', 'public', NULL, '[{"type":"In","name":"fields","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"array","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(533, 'hasField', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(534, 'getField', 'public', NULL, '[{"type":"In","name":"f","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(535, 'hasOne', 'public', NULL, '[{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"our_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"In","name":"field_class","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"Out","name":"expr","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(536, 'hasMany', 'public', NULL, '[{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"their_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"In","name":"our_field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"UNDEFINED"},{"type":"In","name":"reference_name","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"null","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(537, 'ref', 'public', NULL, '[{"type":"In","name":"ref1","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"type","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(538, 'debug', 'public', NULL, '[{"type":"In","name":"debug","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"true"},{"type":"Out","name":"debug","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(544, 'addColumn', 'public', NULL, '[{"type":"In","name":"width","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"auto"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(568, 'setCount', 'public', NULL, '[{"type":"In","name":"count","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(569, 'setCountSwatch', 'public', NULL, '[{"type":"In","name":"swatch","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(570, 'setBadgeSwatch', 'public', NULL, '[{"type":"In","name":"swatch","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(577, 'connect', 'public', NULL, '[{"type":"In","name":"dsn","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(578, 'dsql', 'public', NULL, '[{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(579, 'query', 'public', NULL, '[{"type":"In","name":"query","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"params","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"array()"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(690, 'addIcon', 'public', NULL, '[{"type":"In","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(691, 'addButton', 'public', NULL, '[{"type":"In","name":"label","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Continue"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(714, 'addField', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"actual_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(715, '_dsql', 'public', NULL, '[{"type":"Out","name":"dsql","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(716, 'dsql', 'public', NULL, '[{"type":"Out","name":"_dsql","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(717, 'selectQuery', 'public', NULL, '[{"type":"In","name":"fields","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"_selectQuery","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(718, 'fieldQuery', 'public', NULL, '[{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"query","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(719, 'titleQuery', 'public', NULL, '[{"type":"Out","name":"query","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(720, 'addExpression', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"expression","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"expression","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(721, 'join', 'public', NULL, '[{"type":"In","name":"foreign_table","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"master_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"join_kind","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"$_foreign_alias","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"relation","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(722, 'leftJoin', 'public', NULL, '[{"type":"In","name":"foreign_table","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"master_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"join_kind","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"_foreign_alias","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"relation","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"join","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(723, 'hasOne', 'public', NULL, '[{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"our_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"display_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"as_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"Field_Reference","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(724, 'hasMany', 'public', NULL, '[{"type":"In","name":"model","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"their_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"our_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"as_field","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"SQL_Many","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(725, 'ref', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"load","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(726, 'refSQL', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(727, 'getRef', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"load","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"ref (name, load )","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(728, 'addCondition', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"cond","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"undefined"},{"type":"In","name":"value","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"undefined"},{"type":"In","name":"dsql","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"}]', NULL),
+(729, 'sum', 'public', NULL, '[{"type":"In","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"dsql","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(730, '_load', 'public', NULL, '[{"type":"In","name":"id","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"ignore_missing","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"false"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(731, 'loadData', 'public', NULL, '[{"type":"In","name":"id","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(732, 'saveAndUnload', 'public', NULL, '[{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(733, 'update', 'public', NULL, '[{"type":"In","name":"data","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"array"},{"type":"Out","name":"save","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(734, 'tryDelete', 'public', NULL, '[{"type":"In","name":"id","mandatory":false,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(735, 'setActualFields', 'public', NULL, '[{"type":"In","name":"array","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"fields","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"this","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(831, 'addField', 'public', NULL, '[{"type":"In","name":"type","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"options","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"caption","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"In","name":"attr","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"field","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(832, 'set', 'public', NULL, '[{"type":"In","name":"field_or_array","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"value","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"undefined"},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(833, 'getAllFields', 'public', NULL, '[{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(834, 'addSubmit', 'public', NULL, '[{"type":"In","name":"label","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Save"},{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"submit","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(835, 'addButton', 'public', NULL, '[{"type":"In","name":"label","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"Button"},{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":"null"},{"type":"Out","name":"button","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(836, 'update', 'public', NULL, '[{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(837, 'save', 'public', NULL, '[{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(838, 'submitted', 'public', NULL, '[{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(839, 'isSubmitted', 'public', NULL, '[{"type":"Out","name":"result","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(840, 'onSubmit', 'public', NULL, '[{"type":"In","name":"callback","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(841, 'hasField', 'public', NULL, '[{"type":"In","name":"","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"Out","name":"object","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(842, 'isClicked', 'public', NULL, '[{"type":"In","name":"name","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(843, 'addClass', 'public', NULL, '[{"type":"Out","name":"$_POST","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""},{"type":"In","name":"class","mandatory":true,"is_singlaton":true,"left":0,"top":0,"creates_block":false,"default_value":""}]', NULL),
+(846, 'init', 'public', NULL, '[]', NULL);
 
 -- --------------------------------------------------------
 
@@ -320,12 +323,12 @@ INSERT INTO `developerzone_entity_methods` (`id`, `developerZone_entities_id`, `
 
 CREATE TABLE IF NOT EXISTS `developerzone_events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `developerZone_entities_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `condition` varchar(255) DEFAULT NULL,
   `fire_spot` varchar(255) DEFAULT NULL,
+  `developerzone_entities_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_developerZone_entities_id` (`developerZone_entities_id`)
+  KEY `fk_developerZone_entities_id` (`developerzone_entities_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -336,8 +339,6 @@ CREATE TABLE IF NOT EXISTS `developerzone_events` (
 
 CREATE TABLE IF NOT EXISTS `developerzone_method_nodes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `developerZone_entity_methods_id` int(11) DEFAULT NULL,
-  `developerZone_entities_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `inputs` varchar(255) DEFAULT NULL,
   `outputs` varchar(255) DEFAULT NULL,
@@ -348,23 +349,25 @@ CREATE TABLE IF NOT EXISTS `developerzone_method_nodes` (
   `branch` varchar(255) DEFAULT NULL,
   `total_ins` varchar(255) DEFAULT NULL,
   `input_resolved_for_branch` varchar(255) DEFAULT NULL,
+  `developerzone_entity_methods_id` int(11) DEFAULT NULL,
+  `developerzone_entities_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_developerZone_entity_methods_id` (`developerZone_entity_methods_id`),
-  KEY `fk_developerZone_entities_id` (`developerZone_entities_id`)
+  KEY `fk_developerZone_entity_methods_id` (`developerzone_entity_methods_id`),
+  KEY `fk_developerZone_entities_id` (`developerzone_entities_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `developerzone_method_nodes`
 --
 
-INSERT INTO `developerzone_method_nodes` (`id`, `developerZone_entity_methods_id`, `developerZone_entities_id`, `name`, `inputs`, `outputs`, `reference_obj`, `action`, `is_processed`, `parent_node_id`, `branch`, `total_ins`, `input_resolved_for_branch`) VALUES
-(1, 2, NULL, 'Draft Quotations', NULL, NULL, NULL, 'Block', 1, NULL, NULL, NULL, NULL),
-(2, 2, 2, 'Model Quotation', NULL, NULL, NULL, 'Add', 1, NULL, NULL, NULL, NULL),
-(3, 2, NULL, 'status', 'status', NULL, NULL, 'Variable', 1, NULL, NULL, NULL, NULL),
-(4, 2, NULL, 'draft', 'draft', NULL, NULL, 'Variable', 1, NULL, NULL, NULL, NULL),
-(5, 2, NULL, 'addCondition', NULL, NULL, '2', 'methodCall', 0, NULL, NULL, NULL, NULL),
-(6, 2, 5, 'CRUD', NULL, NULL, NULL, 'Add', NULL, NULL, NULL, NULL, NULL),
-(7, 2, NULL, 'setModel', NULL, NULL, '6', 'methodCall', 0, NULL, NULL, NULL, NULL);
+INSERT INTO `developerzone_method_nodes` (`id`, `name`, `inputs`, `outputs`, `reference_obj`, `action`, `is_processed`, `parent_node_id`, `branch`, `total_ins`, `input_resolved_for_branch`, `developerzone_entity_methods_id`, `developerzone_entities_id`) VALUES
+(1, 'Draft Quotations', NULL, NULL, NULL, 'Block', 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 'Model Quotation', NULL, NULL, NULL, 'Add', 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 'status', 'status', NULL, NULL, 'Variable', 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 'draft', 'draft', NULL, NULL, 'Variable', 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'addCondition', NULL, NULL, '2', 'methodCall', 0, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'CRUD', NULL, NULL, NULL, 'Add', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'setModel', NULL, NULL, '6', 'methodCall', 0, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -449,6 +452,7 @@ CREATE TABLE IF NOT EXISTS `epan` (
   `city` varchar(255) DEFAULT NULL,
   `state` varchar(255) DEFAULT NULL,
   `country` varchar(255) DEFAULT NULL,
+  `pin_code` varchar(255) DEFAULT NULL,
   `email_id` varchar(255) DEFAULT NULL,
   `keywords` text,
   `description` text,
@@ -487,18 +491,25 @@ CREATE TABLE IF NOT EXISTS `epan` (
   `sms_password_qs_param` varchar(255) DEFAULT NULL,
   `sms_number_qs_param` varchar(255) DEFAULT NULL,
   `sm_message_qs_param` varchar(255) DEFAULT NULL,
+  `sms_prefix` varchar(255) DEFAULT NULL,
+  `sms_postfix` varchar(255) DEFAULT NULL,
+  `time_zone` varchar(255) DEFAULT NULL,
+  `bounce_imap_email_host` varchar(255) DEFAULT NULL,
+  `bounce_imap_email_port` varchar(255) DEFAULT NULL,
+  `bounce_imap_email_password` varchar(255) DEFAULT NULL,
+  `bounce_imap_flags` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_staff1` (`staff_id`),
   KEY `fk_epan_epan_categories1` (`category_id`),
-  FULLTEXT KEY `tags_description_full_text` (`keywords`,`description`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+  KEY `fk_branch_id` (`branch_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `epan`
 --
 
-INSERT INTO `epan` (`id`, `name`, `staff_id`, `branch_id`, `password`, `fund_alloted`, `created_at`, `category_id`, `company_name`, `contact_person_name`, `mobile_no`, `address`, `city`, `state`, `country`, `email_id`, `keywords`, `description`, `website`, `is_active`, `is_approved`, `last_email_sent`, `allowed_aliases`, `parked_domain`, `email_host`, `email_port`, `email_username`, `email_password`, `email_reply_to`, `email_reply_to_name`, `user_activation`, `email_threshold`, `user_registration_email_subject`, `user_registration_email_message_body`, `email_transport`, `encryption`, `from_email`, `from_name`, `sender_email`, `sender_name`, `return_path`, `smtp_auto_reconnect`, `emails_in_BCC`, `last_emailed_at`, `email_sent_in_this_minute`, `is_frontend_registration_allowed`, `gateway_url`, `sms_password`, `sms_username`, `sms_user_name_qs_param`, `sms_password_qs_param`, `sms_number_qs_param`, `sm_message_qs_param`) VALUES
-(1, 'web', 1, 1, NULL, '5000000', '2014-01-26', 1, 'Xavoc Technocrats Pvt. Ltd.', 'Xavoc Admin', '+91 8875191258', '18/436, Gayatri marg, Kanji Ka hata, Udaipur, Rajasthan , India', 'Udaipur', 'Rajasthan', 'India', '', 'xEpan CMS, an innovative approach towards Drag And Drop CMS.', 'World''s best and easiest cms :)', 'http://www.xavoc.com', 1, 1, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'self_activated', 200, '', '', 'SmtpTransport', 'ssl', NULL, NULL, NULL, NULL, NULL, 100, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `epan` (`id`, `name`, `staff_id`, `branch_id`, `password`, `fund_alloted`, `created_at`, `category_id`, `company_name`, `contact_person_name`, `mobile_no`, `address`, `city`, `state`, `country`, `pin_code`, `email_id`, `keywords`, `description`, `website`, `is_active`, `is_approved`, `last_email_sent`, `allowed_aliases`, `parked_domain`, `email_host`, `email_port`, `email_username`, `email_password`, `email_reply_to`, `email_reply_to_name`, `user_activation`, `email_threshold`, `user_registration_email_subject`, `user_registration_email_message_body`, `email_transport`, `encryption`, `from_email`, `from_name`, `sender_email`, `sender_name`, `return_path`, `smtp_auto_reconnect`, `emails_in_BCC`, `last_emailed_at`, `email_sent_in_this_minute`, `is_frontend_registration_allowed`, `gateway_url`, `sms_password`, `sms_username`, `sms_user_name_qs_param`, `sms_password_qs_param`, `sms_number_qs_param`, `sm_message_qs_param`, `sms_prefix`, `sms_postfix`, `time_zone`, `bounce_imap_email_host`, `bounce_imap_email_port`, `bounce_imap_email_password`, `bounce_imap_flags`) VALUES
+(1, 'web', NULL, NULL, NULL, '5000000', '2014-01-26', 1, 'Xavoc Technocrats Pvt. Ltd.', 'Gowrav Vishwakarma', '+91 8875191258', '18/436, Gayatri marg, Kanji Ka hata, Udaipur, Rajasthan , India', 'Udaipur', 'Rajasthan', 'India', '313001', 'info@xavoc.com', 'PHP development, Web, Online, Android, development company, xepan, cms developer, drag and drop website builder developer, ERP developer, Developers tools developer, Artificial Intelligent application/software developer.', 'Xavoc is a world class company providing cutting edge technology to next generation, Xavoc works in developing new tools for web and mobile like Artificial Intelligent website builder or cms like xEpan. Developer of xCIDeveloper, A tool to let you write Joomla components in CodeIgniter. Developer of xJDataMapper, a ruby style ORM for JAVA. Contributor in spreading agiletoolkit, a great PHP framework. In Short, Not just another IT Company in town.', 'http://www.xavoc.com', 1, 1, NULL, 1, NULL, 'mail.xavoc.com', '465', 'info@xavoc.com', 'Gowrav@123', 'info@xavoc.com', 'XTPL :: Xavoc Technocrats Pvt. Ltd.', 'self_activated', 3, '', '', 'SmtpTransport', 'ssl', 'info@xavoc.com', 'XTPL :: Xavoc Technocrats Pvt. Ltd.', 'info@xavoc.com', 'XTPL :: Xavoc Technocrats Pvt. Ltd.', 'bounce@xavoc.com', 100, NULL, NULL, 1, NULL, 'http://enterprise.smsgupshup.com/GatewayAPI/rest?method=SendMessage&v=1.1&format=text&msg_type=TEXT', 'ant55', '2000059879', 'userid', 'password', 'send_to', 'msg', '', '-Xavoc', 'Asia/Kolkata', 'sun.rightdns.com', '993', 'Gowrav@123', '/imap/ssl/novalidate-cert\r\n');
 
 -- --------------------------------------------------------
 
@@ -536,7 +547,7 @@ CREATE TABLE IF NOT EXISTS `epan_categories` (
 --
 
 INSERT INTO `epan_categories` (`id`, `name`, `description`, `parent_category_id`) VALUES
-(1, 'Default', 'Default', 0);
+(1, 'Default', 'Default', NULL);
 
 -- --------------------------------------------------------
 
@@ -581,13 +592,12 @@ INSERT INTO `epan_components_marketplace` (`id`, `name`, `allowed_children`, `sp
 (76, 'Menus', '0', '0', 'xMenus', 'application', 0, '0', 1, 1, 0, NULL, 0, '0', 0, NULL),
 (77, 'xShop', '0', '0', 'xShop', 'application', 0, '0', 1, 1, 0, NULL, 0, 'https://github.com/xepan/xShop', 1, NULL),
 (78, 'Human Resource Management', '0', '0', 'xHR', 'application', 0, '0', 1, 0, 0, NULL, 1, 'https://github.com/xepan/xHR.git', 1, NULL),
-(79, 'xFlow Visual Language', NULL, NULL, 'xFlow', 'application', 0, NULL, 1, 0, 0, 1, 1, 'https://github.com/xepan/xFlow.git', 1, NULL),
 (80, 'Production Management', '0', '0', 'xProduction', 'application', 0, '0', 1, 0, 0, NULL, 0, 'https://github.com/xepan/xProduction.git', 1, NULL),
-(81, 'Customer Relation Management', NULL, NULL, 'xCRM', 'application', 0, NULL, 1, 0, 0, 1, 0, 'https://github.com/xepan/xCRM.git', 1, NULL),
-(82, 'Accounts Mangement Application', NULL, NULL, 'xAccount', 'application', 0, NULL, 1, 0, 0, 1, 0, 'https://github.com/xepan/xAccount.git', 1, NULL),
-(83, 'Stock Mangement Application', NULL, NULL, 'xStore', 'application', 0, NULL, 1, 0, 0, 1, 0, 'https://github.com/xepan/xStore.git', 1, NULL),
-(84, 'Purchase Management Application', NULL, NULL, 'xPurchase', 'application', 0, NULL, 1, 0, 0, 1, 0, 'https://github.com/xepan/xPurchase.git', 1, NULL),
-(85, 'Dispatch Management Application', NULL, NULL, 'xDispatch', 'application', 0, NULL, 1, 0, 0, 1, 0, 'https://github.com/xepan/xDispatch.git', 1, NULL);
+(81, 'Customer Relation Management', '0', '0', 'xCRM', 'application', 0, '0', 1, 0, 0, NULL, 0, 'https://github.com/xepan/xCRM.git', 1, NULL),
+(82, 'Accounts Mangement Application', '0', '0', 'xAccount', 'application', 0, '0', 1, 0, 0, NULL, 0, 'https://github.com/xepan/xAccount.git', 1, NULL),
+(83, 'Stock Mangement Application', '0', '0', 'xStore', 'application', 0, '0', 1, 0, 0, NULL, 0, 'https://github.com/xepan/xStore.git', 1, NULL),
+(84, 'Purchase Management Application', '0', '0', 'xPurchase', 'application', 0, '0', 1, 1, 0, NULL, 0, 'https://github.com/xepan/xPurchase.git', 1, NULL),
+(85, 'Dispatch Management Application', '0', '0', 'xDispatch', 'application', 0, '0', 1, 0, 0, NULL, 0, 'https://github.com/xepan/xDispatch.git', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -604,20 +614,36 @@ CREATE TABLE IF NOT EXISTS `epan_components_plugins` (
   `is_system` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_component_id` (`component_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=81 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=442 ;
 
 --
 -- Dumping data for table `epan_components_plugins`
 --
 
 INSERT INTO `epan_components_plugins` (`id`, `component_id`, `name`, `event`, `params`, `is_system`) VALUES
-(61, 51, 'RemoveContentEditable', 'content-fetched', '$page', 1),
-(62, 51, 'RunServerSideComponent', 'content-fetched', '$page', 1),
-(65, 70, 'BeforeSaveIBlockExtract', 'epan-page-before-save', '$page', 0),
-(66, 70, 'ImplementIntelligence', 'beforeTemplateInit', '$page', 0),
-(68, 75, 'Newsletter Delete', 'xenq_n_subs_newletter_before_delete', '$newsletter', 0),
-(79, 77, 'userRegistration', 'new_user_registered', '$user_model', 0),
-(80, 77, 'Register Event', 'register-event', '$events_array', 0);
+(387, 78, 'epanDeleted', 'epan_before_delete', '$epan', 1),
+(388, 78, 'epanCreated', 'epan_after_created', '$epan', 1),
+(389, 80, 'epanDelete', 'epanDeleted', '#epan', 1),
+(390, 81, 'epanDelete', 'epanDeleted', '$epan', 1),
+(391, 82, 'epanDelete', 'epan_before_delete', '$epan', 1),
+(392, 82, 'epanCreated', 'epan_after_created', '$epan', 1),
+(393, 83, 'epanDelete', 'epanDeleted', '$epan', 1),
+(395, 85, 'epanDelete', 'epanDeleted', '$epan', 1),
+(420, 84, 'epanDelete', 'epanDeleted', '$epan', 1),
+(424, 69, 'epanDeleted', 'epan_before_delete', '$epan', 1),
+(425, 70, 'BeforeSaveIBlockExtract', 'epan-page-before-save', '$page', 0),
+(426, 70, 'ImplementIntelligence', 'beforeTemplateInit', '$page', 0),
+(427, 74, 'epanDelete', 'epanDeleted', '$epan', 1),
+(428, 75, 'Newsletter Delete', 'xenq_n_subs_newletter_before_delete', '$newsletter', 0),
+(429, 75, 'epanDelete', 'epan_before_delete', '$epan', 1),
+(430, 75, 'epanCreated', 'epan_after_created', '$epan', 1),
+(435, 51, 'RunServerSideComponent', 'content-fetched', '$page', 1),
+(436, 51, 'RemoveContentEditable', 'content-fetched', '$page', 1),
+(437, 51, 'RegisterEvent', 'register-event', '$events_obj', 0),
+(438, 77, 'userRegistration', 'new_user_registered', '$user_model', 0),
+(439, 77, 'Register Event', 'register-event', '$events_array', 0),
+(440, 77, 'epanDeleted', 'epan_before_delete', '$epan', 1),
+(441, 77, 'epanCreated', 'epan_after_created', '$epan', 1);
 
 -- --------------------------------------------------------
 
@@ -636,48 +662,76 @@ CREATE TABLE IF NOT EXISTS `epan_components_tools` (
   `order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_component_id` (`component_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=411 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1166 ;
 
 --
 -- Dumping data for table `epan_components_tools`
 --
 
 INSERT INTO `epan_components_tools` (`id`, `component_id`, `name`, `is_serverside`, `is_sortable`, `is_resizable`, `display_name`, `order`) VALUES
-(277, 51, 'Row', 0, 1, 0, '', 0),
-(278, 51, 'Container', 0, 1, 0, '', 0),
-(279, 51, 'Image', 0, 0, 0, '', 0),
-(280, 51, 'Title', 0, 0, 0, '', 0),
-(281, 51, 'Text', 0, 0, 0, '', 0),
-(282, 51, 'Html Block', 0, 0, 0, '', 0),
-(283, 51, 'User Panel', 1, 0, 0, '', 0),
-(284, 51, 'Column', 0, 1, 0, '', 0),
-(285, 51, 'Template Content Region', 0, 1, 0, '', 0),
-(288, 71, 'Marquee', 0, 1, 0, '', 1),
-(289, 71, 'PopupTooltip', 0, 0, 0, 'Popup Window', 2),
-(292, 73, 'xSVG', 0, 0, 0, '', 0),
-(293, 73, 'Image With Description 1', 0, 0, 0, '', 0),
-(309, 72, 'ThumbnailSlider', 1, 0, 0, '', 0),
-(310, 72, 'AwesomeSlider', 1, 0, 0, '', 0),
-(311, 72, 'BootStrap Carousel', 0, 0, 0, '', 0),
-(312, 72, 'WaterWheelCarousel', 1, 0, 0, '', 0),
-(313, 72, 'TransformGallery', 1, 0, 0, '3D transforms', 0),
-(315, 70, 'IntelligentBlock', 0, 1, 0, 'IBlock', 0),
-(336, 69, 'CustomeForm', 1, 0, 0, '', 2),
-(337, 69, 'SubscriptionModule', 1, 0, 0, '', 3),
-(338, 69, 'EnquiryForm', 0, 0, 0, '', 1),
-(339, 69, 'unSubscribe', 1, 0, 0, 'Un Subscriber', 4),
-(341, 74, 'GoogleImageGallery', 1, 0, 0, '', 0),
-(343, 76, 'Bootstrap Menus', 0, 0, 0, '', 0),
-(401, 77, 'Add Block', 1, 0, 0, '', 8),
-(402, 77, 'Member Account', 1, 0, 0, '', 7),
-(403, 77, 'Checkout', 1, 0, 0, '', 6),
-(404, 77, 'Search', 1, 0, 0, '', 5),
-(405, 77, 'xCart', 1, 0, 0, '', 4),
-(406, 77, 'Category', 1, 0, 0, '', 1),
-(407, 77, 'Item', 1, 0, 0, '', 2),
-(408, 77, 'ItemDetail', 1, 0, 0, '', 3),
-(409, 77, 'Designer', 1, 0, 0, 'Designer', 9),
-(410, 77, 'ItemImages', 1, 0, 0, 'Item Images', 0);
+(1120, 69, 'CustomeForm', 1, 0, 0, '', 2),
+(1121, 69, 'SubscriptionModule', 1, 0, 0, '', 3),
+(1122, 69, 'EnquiryForm', 0, 0, 0, '', 1),
+(1123, 69, 'unSubscribe', 1, 0, 0, 'Un Subscriber', 4),
+(1124, 70, 'IntelligentBlock', 0, 1, 0, 'IBlock', 0),
+(1125, 71, 'Marquee', 0, 1, 0, '', 1),
+(1126, 71, 'PopupTooltip', 0, 0, 0, 'Popup Window', 2),
+(1127, 72, 'ThumbnailSlider', 1, 0, 0, '', 0),
+(1128, 72, 'AwesomeSlider', 1, 0, 0, '', 0),
+(1129, 72, 'BootStrap Carousel', 0, 0, 0, '', 0),
+(1130, 72, 'WaterWheelCarousel', 1, 0, 0, '', 0),
+(1131, 72, 'TransformGallery', 1, 0, 0, '3D transforms', 0),
+(1132, 73, 'xSVG', 0, 0, 0, '', 0),
+(1133, 73, 'Image With Description 1', 0, 0, 0, '', 0),
+(1134, 74, 'GoogleImageGallery', 1, 0, 0, '', 0),
+(1135, 76, 'Bootstrap Menus', 0, 0, 0, '', 0),
+(1147, 51, 'Template Content Region', 0, 1, 0, '', 0),
+(1148, 51, 'User Panel', 1, 0, 0, '', 7),
+(1149, 51, 'Html Block', 0, 0, 0, '', 6),
+(1150, 51, 'Text', 0, 0, 0, '', 4),
+(1151, 51, 'Title', 0, 0, 0, '', 3),
+(1152, 51, 'Image', 0, 0, 0, '', 5),
+(1153, 51, 'Container', 0, 1, 0, '', 1),
+(1154, 51, 'Columns', 0, 0, 0, 'Columns', 2),
+(1155, 77, 'Add Block', 1, 0, 0, '', 8),
+(1156, 77, 'Member Account', 1, 0, 0, '', 7),
+(1157, 77, 'Checkout', 1, 0, 0, '', 6),
+(1158, 77, 'Search', 1, 0, 0, '', 5),
+(1159, 77, 'xCart', 1, 0, 0, '', 4),
+(1160, 77, 'Category', 1, 0, 0, '', 1),
+(1161, 77, 'Item', 1, 0, 0, '', 2),
+(1162, 77, 'ItemDetail', 1, 0, 0, '', 3),
+(1163, 77, 'Designer', 1, 0, 0, 'Designer', 9),
+(1164, 77, 'ItemImages', 1, 0, 0, 'Item Images', 0),
+(1165, 77, 'Blog', 1, 0, 0, 'Blog', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `epan_guide`
+--
+
+CREATE TABLE IF NOT EXISTS `epan_guide` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `epan_guide_steps`
+--
+
+CREATE TABLE IF NOT EXISTS `epan_guide_steps` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `guide_id` int(11) DEFAULT NULL,
+  `selector` varchar(255) DEFAULT NULL,
+  `intro` text,
+  `order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_guide_id` (`guide_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -692,7 +746,9 @@ CREATE TABLE IF NOT EXISTS `epan_installed_components` (
   `enabled` tinyint(1) DEFAULT NULL,
   `params` varchar(255) DEFAULT NULL,
   `installed_on` date DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_component_id` (`component_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=41 ;
 
 --
@@ -721,6 +777,20 @@ INSERT INTO `epan_installed_components` (`id`, `epan_id`, `component_id`, `enabl
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `epan_layout`
+--
+
+CREATE TABLE IF NOT EXISTS `epan_layout` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `content` text,
+  `is_user_created` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `epan_page`
 --
 
@@ -742,7 +812,8 @@ CREATE TABLE IF NOT EXISTS `epan_page` (
   `template_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_page_epan1` (`epan_id`),
-  KEY `fk_template_id` (`template_id`)
+  KEY `fk_template_id` (`template_id`),
+  KEY `fk_parent_page_id` (`parent_page_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
@@ -750,7 +821,7 @@ CREATE TABLE IF NOT EXISTS `epan_page` (
 --
 
 INSERT INTO `epan_page` (`id`, `parent_page_id`, `name`, `menu_caption`, `epan_id`, `is_template`, `title`, `description`, `keywords`, `content`, `body_attributes`, `created_on`, `updated_on`, `access_level`, `template_id`) VALUES
-(1, NULL, 'home', 'Home', 1, 0, 'xEpan CMS, an innovative approach towards Drag And Drop CMS.', 'World''s best and easiest cms :)', 'xEpan CMS, an innovative approach towards Drag And Drop CMS.', NULL, 'cursor: default; overflow: auto; background-image: url("epans/web/untitled%20folder%201/body-bg.gif");; cursor: default; overflow: auto; background-image: url("epans/web/untitled%20folder%201/body-bg.gif");', NULL, '2015-01-29 13:22:03', '0', 4);
+(1, NULL, 'home', 'Home', 1, 0, 'XTPL :: PHP development, Web, Online, Android, development company, xepan, cms developer, drag and drop website builder developer, ERP developer, Developers tools developer, Artificial Intelligent application/software developer.', 'Xavoc is a world class company providing cutting edge technology to next generation, Xavoc works in developing new tools for web and mobile like Artificial Intelligent website builder or cms like xEpan. Developer of xCIDeveloper, A tool to let you write Joomla components in CodeIgniter. Developer of xJDataMapper, a ruby style ORM for JAVA. Contributor in spreading agiletoolkit, a great PHP framework. In Short, Not just another IT Company in town.', 'PHP development, Web, Online, Android, development company, xepan, cms developer, drag and drop website builder developer, ERP developer, Developers tools developer, Artificial Intelligent application/software developer.', '', 'cursor: default; overflow: hidden;; cursor: default; overflow: auto; background-image: none;', NULL, '2015-08-11 11:40:28', '0', 1);
 
 -- --------------------------------------------------------
 
@@ -769,7 +840,8 @@ CREATE TABLE IF NOT EXISTS `epan_page_snapshots` (
   `body_attributes` text,
   `content` text,
   `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `fk_epan_page_id` (`epan_page_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -795,7 +867,7 @@ CREATE TABLE IF NOT EXISTS `epan_templates` (
 --
 
 INSERT INTO `epan_templates` (`id`, `epan_id`, `name`, `body_attributes`, `content`, `is_current`, `css`) VALUES
-(1, 1, 'default', 'cursor: default;', '<div id="6b9c7e51-526c-41f1-c404-66b136b60a83" component_namespace="baseElements" component_type="TemplateContentRegion" class="epan-sortable-component epan-component  ui-sortable" style="display: block; opacity: 1; margin-bottom: 5px; height: auto;" contenteditable="false">~~Content~~</div>', 1, NULL);
+(1, 1, 'default', 'cursor: default; overflow: hidden;', '<div id="78b495fd-6ba5-4a73-97b0-2c7ca59b4e12" component_namespace="baseElements" component_type="Container" class="epan-container  epan-sortable-component epan-component  ui-sortable" style=" "> 	 <nav id="c074b09e-5613-4d95-b711-6603d6d27606" component_namespace="xMenus" component_type="BootstrapMenus" class="navbar navbar-default epan-component" style=" " role="navigation"> 		<!-- Brand and toggle get grouped for better mobile display --> 		<div class="navbar-header"> 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"> 				<span class="sr-only">Toggle navigation</span> 				<span class="icon-bar"></span> 				<span class="icon-bar"></span> 				<span class="icon-bar"></span> 			</button> 			<div class="epan-component epan-sortable-component editor navbar-brand ui-sortable editor-attached" component_type="Container" component_namespace="baseElements" contenteditable="true">Xavoc Technocrats Pvt. Ltd (5.0)<br></div> 		</div> 	 		<!-- Collect the nav links, forms, and other content for toggling --> 		<div class="collapse navbar-collapse navbar-ex1-collapse"> 			<ul id="xMenu-boostrap-ul" class="nav navbar-nav ui-sortable"><li><a href="index.php?subpage=home">Home</a></li></ul> 			<div style="" class="epan-sortable-component epan-component navbar-form navbar-left ui-sortable" component_type="Container" component_namespace="baseElements"> 				 			</div> 			 		</div><!-- /.navbar-collapse --> 		 </nav><div id="4e8497e5-4537-43b8-8b67-1bb6b0a33096" component_namespace="baseElements" component_type="TemplateContentRegion" class="epan-sortable-component epan-component  ui-sortable" style="" contenteditable="false">~~Content~~</div><div id="c77477ec-160c-446a-adad-4983c09d515e" component_namespace="baseElements" component_type="Row" class="row  epan-sortable-component epan-component  ui-sortable" style=" "> 	 <div id="957c9311-1232-4eb5-e7b4-5928012a5709" component_namespace="baseElements" component_type="Column" class="col-md-4  epan-sortable-component epan-component  ui-sortable" span="4" style=" "> 	 <div data-extra-classes="atk-swatch-red text-center atk-box" id="01c79907-f1c5-4099-e2fe-4c39dd0694a3" component_namespace="baseElements" component_type="Title" class="epan-component atk-swatch-red text-center atk-box" style=" "> 	<h3 class="editor editor-attached" contenteditable="true">xEpan</h3> </div></div><div id="f73b23b8-5cc0-4364-f516-2d7326b5f9e1" component_namespace="baseElements" component_type="Column" class="col-md-4  epan-sortable-component epan-component  ui-sortable" span="4" style=" "> 	 <div data-extra-classes="atk-swatch-green text-center atk-box" id="7ffb30cf-b8fd-44a9-d8a3-f290a9d4a597" component_namespace="baseElements" component_type="Title" class="epan-component atk-swatch-green text-center atk-box" style=" "> 	<h3 class="editor editor-attached" contenteditable="true">xCIDeveloper</h3> </div></div><div id="5cdc46ad-7451-4e22-8438-21453345bbcb" component_namespace="baseElements" component_type="Column" class="col-md-4  epan-sortable-component epan-component  ui-sortable" span="4" style=" "> 	 <div data-extra-classes="atk-swatch-blue text-center atk-box" id="5dc75b65-f1a8-43a1-e936-e9329ac2d12a" component_namespace="baseElements" component_type="Title" class="epan-component atk-swatch-blue text-center atk-box" style=" "> 	<h3 class="editor editor-attached" contenteditable="true">Agiletoolkit</h3> </div></div></div></div>', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -812,9 +884,9 @@ CREATE TABLE IF NOT EXISTS `filestore_file` (
   `filesize` int(11) NOT NULL DEFAULT '0' COMMENT 'File size',
   `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Deleted file',
   PRIMARY KEY (`id`),
-  KEY `fk_filestore_file_filestore_type1_idx` (`filestore_type_id`) USING BTREE,
-  KEY `fk_filestore_file_filestore_volume1_idx` (`filestore_volume_id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+  KEY `fk_filestore_file_filestore_type1_idx` (`filestore_type_id`),
+  KEY `fk_filestore_file_filestore_volume1_idx` (`filestore_volume_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=75 ;
 
 -- --------------------------------------------------------
 
@@ -827,9 +899,9 @@ CREATE TABLE IF NOT EXISTS `filestore_image` (
   `original_file_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'Original File',
   `thumb_file_id` int(10) unsigned DEFAULT NULL COMMENT 'Thumbnail file',
   PRIMARY KEY (`id`),
-  KEY `fk_filestore_image_filestore_file1_idx` (`original_file_id`) USING BTREE,
-  KEY `fk_filestore_image_filestore_file2_idx` (`thumb_file_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+  KEY `fk_filestore_image_filestore_file1_idx` (`original_file_id`),
+  KEY `fk_filestore_image_filestore_file2_idx` (`thumb_file_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -844,7 +916,30 @@ CREATE TABLE IF NOT EXISTS `filestore_type` (
   `extension` varchar(5) NOT NULL DEFAULT '' COMMENT 'Filename extension',
   `allow` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+
+--
+-- Dumping data for table `filestore_type`
+--
+
+INSERT INTO `filestore_type` (`id`, `name`, `mime_type`, `extension`, `allow`) VALUES
+(1, 'png', 'image/png', 'png', 1),
+(2, 'jpeg', 'image/jpeg', 'jpg', 1),
+(3, 'gif', 'image/gif', 'gif', 1),
+(4, 'pdf', 'application/pdf', 'pdf', 1),
+(5, 'doc', 'application/doc', 'doc', 1),
+(6, 'xls', 'application/xls', 'xls', 1),
+(7, 'txt', 'text/plain', 'txt', 1),
+(8, 'application/zip', 'application/zip', '', 1),
+(9, 'text/html', 'text/html', '', 1),
+(10, 'application/msword', 'application/msword', '', 1),
+(11, 'application/vnd.ms-excel', 'application/vnd.ms-excel', '', 1),
+(12, 'text/rtf', 'text/rtf', '', 1),
+(13, 'application/vnd.openxmlformats-officedocument.wordprocessingml.d', 'application/vnd.openxmlformats-officedocument.wordprocessingml.d', '', 1),
+(14, 'application/vnd.oasis.opendocument.spreadsheet', 'application/vnd.oasis.opendocument.spreadsheet', '', 1),
+(15, 'application/vnd.ms-office', 'application/vnd.ms-office', '', 1),
+(16, 'application/x-rar', 'application/x-rar', '', 1),
+(17, 'application/vnd.openxmlformats-officedocument.wordprocessingml.d', 'application/vnd.openxmlformats-officedocument.wordprocessingml.d', '', 1);
 
 -- --------------------------------------------------------
 
@@ -861,7 +956,14 @@ CREATE TABLE IF NOT EXISTS `filestore_volume` (
   `stored_files_cnt` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'Approximate count of stored files',
   `enabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Volume enabled?',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `filestore_volume`
+--
+
+INSERT INTO `filestore_volume` (`id`, `name`, `dirname`, `total_space`, `used_space`, `stored_files_cnt`, `enabled`) VALUES
+(1, 'upload', 'upload', 1000000000, 0, 67, 1);
 
 -- --------------------------------------------------------
 
@@ -876,9 +978,11 @@ CREATE TABLE IF NOT EXISTS `last_seen_updates` (
   `related_root_document_name` varchar(255) DEFAULT NULL,
   `related_document_name` varchar(255) DEFAULT NULL,
   `seen_till` datetime DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_employee_id` (`employee_id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+  KEY `fk_employee_id` (`employee_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -957,7 +1061,7 @@ CREATE TABLE IF NOT EXISTS `slideshows_thumbnailslidergallery` (
   `is_publish` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -1081,30 +1185,7 @@ CREATE TABLE IF NOT EXISTS `userappaccess` (
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_user_id` (`user_id`),
   KEY `fk_installed_app_id` (`installed_app_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=37 ;
-
---
--- Dumping data for table `userappaccess`
---
-
-INSERT INTO `userappaccess` (`id`, `epan_id`, `user_id`, `installed_app_id`, `created_at`, `is_allowed`) VALUES
-(6, 1, 1, 23, '2014-12-18 10:15:35', 1),
-(7, 1, 1, 25, '2014-12-18 10:15:35', 1),
-(8, 1, 1, 26, '2014-12-18 10:15:35', 1),
-(9, 1, 1, 27, '2014-12-18 10:15:35', 1),
-(10, 1, 1, 28, '2014-12-18 10:15:35', 1),
-(11, 1, 1, 29, '2014-12-18 10:15:35', 1),
-(12, 1, 1, 30, '2014-12-18 10:15:35', 1),
-(13, 1, 1, 31, '2014-12-18 10:15:35', 1),
-(14, 1, 1, 32, '2014-12-18 10:15:35', 1),
-(15, 1, 1, 33, '2014-12-18 10:15:35', 1),
-(16, 1, 1, 34, '2014-12-18 10:15:35', 1),
-(18, 1, 1, 35, '2015-02-14 04:53:25', 1),
-(30, 1, 1, 36, '2015-02-16 09:50:18', 1),
-(31, 1, 1, 37, '2015-02-16 10:45:44', 1),
-(32, 1, 1, 38, '2015-02-16 10:46:25', 1),
-(33, 1, 1, 39, '2015-02-16 10:46:35', 1),
-(36, 1, 1, 40, '2015-02-16 10:46:35', 1);
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1123,14 +1204,14 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` varchar(255) DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT NULL,
   `activation_code` varchar(255) DEFAULT NULL,
-  `last_login_date` date DEFAULT NULL,
+  `last_login_date` datetime DEFAULT NULL,
   `user_management` tinyint(1) DEFAULT NULL,
   `general_settings` tinyint(1) DEFAULT NULL,
   `application_management` tinyint(1) DEFAULT NULL,
   `website_designing` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=88 ;
 
 -- --------------------------------------------------------
 
@@ -1150,6 +1231,24 @@ CREATE TABLE IF NOT EXISTS `user_custom_fields` (
   `is_editable` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_custom_field_value`
+--
+
+CREATE TABLE IF NOT EXISTS `user_custom_field_value` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `epan_id` int(11) DEFAULT NULL,
+  `usercustomefield_id` int(11) DEFAULT NULL,
+  `users_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_usercustomefield_id` (`usercustomefield_id`),
+  KEY `fk_users_id` (`users_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1180,13 +1279,16 @@ CREATE TABLE IF NOT EXISTS `xaccount_account` (
   `is_active` tinyint(1) DEFAULT NULL,
   `CurrentBalanceDr` decimal(14,2) DEFAULT NULL,
   `CurrentBalanceCr` decimal(14,2) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_supplier_id` (`supplier_id`) USING BTREE,
   KEY `fk_out_source_party_id` (`out_source_party_id`) USING BTREE,
   KEY `fk_group_id` (`group_id`) USING BTREE,
   KEY `fk_employee_id` (`employee_id`) USING BTREE,
-  KEY `fk_created_by_id` (`created_by_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_customer_id` (`customer_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=25 ;
 
 -- --------------------------------------------------------
 
@@ -1208,24 +1310,26 @@ CREATE TABLE IF NOT EXISTS `xaccount_balance_sheet` (
   `related_document_name` varchar(255) DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_created_by_id` (`created_by_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `xaccount_balance_sheet`
 --
 
-INSERT INTO `xaccount_balance_sheet` (`id`, `name`, `created_at`, `positive_side`, `is_pandl`, `show_sub`, `subtract_from`, `order`, `related_document_id`, `related_root_document_name`, `related_document_name`, `updated_at`, `created_by_id`) VALUES
-(1, 'Deposits - Liabilities', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 'Current Assets', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(3, 'Capital Account', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 'Expenses', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(5, 'Income', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(6, 'Suspence Account', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(7, 'Fixed Assets', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(8, 'Branch/Divisions', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(9, 'Current Liabilities', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `xaccount_balance_sheet` (`id`, `name`, `created_at`, `positive_side`, `is_pandl`, `show_sub`, `subtract_from`, `order`, `related_document_id`, `related_root_document_name`, `related_document_name`, `updated_at`, `created_by_id`, `epan_id`) VALUES
+(1, 'Deposits - Liabilities', '0000-00-00 00:00:00', '', NULL, '', '', '', '', '', '', '0000-00-00 00:00:00', NULL, 1),
+(2, 'Current Assets', '0000-00-00 00:00:00', '', NULL, '', '', '', '', '', '', '0000-00-00 00:00:00', NULL, 1),
+(4, 'Expenses', '0000-00-00 00:00:00', '', NULL, '', '', '', '', '', '', '0000-00-00 00:00:00', NULL, 1),
+(5, 'Income', '0000-00-00 00:00:00', '', NULL, '', '', '', '', '', '', '0000-00-00 00:00:00', NULL, 1),
+(6, 'Suspence Account', '0000-00-00 00:00:00', '', NULL, '', '', '', '', '', '', '0000-00-00 00:00:00', NULL, 1),
+(7, 'Fixed Assets', '0000-00-00 00:00:00', '', NULL, '', '', '', '', '', '', '0000-00-00 00:00:00', NULL, 1),
+(8, 'Branch/Divisions', '0000-00-00 00:00:00', '', NULL, '', '', '', '', '', '', '0000-00-00 00:00:00', NULL, 1),
+(9, 'Current Liabilities', '0000-00-00 00:00:00', '', NULL, '', '', '', '', '', '', '0000-00-00 00:00:00', NULL, 1),
+(10, 'Duties & Taxes', '0000-00-00 00:00:00', '', NULL, '', '', '', '', '', '', '0000-00-00 00:00:00', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1238,9 +1342,23 @@ CREATE TABLE IF NOT EXISTS `xaccount_group` (
   `name` varchar(255) DEFAULT NULL,
   `created_at` date DEFAULT NULL,
   `balance_sheet_id` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_balance_sheet_id` (`balance_sheet_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+  KEY `fk_balance_sheet_id` (`balance_sheet_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `xaccount_group`
+--
+
+INSERT INTO `xaccount_group` (`id`, `name`, `created_at`, `balance_sheet_id`, `epan_id`) VALUES
+(2, 'Direct Income', '2015-04-10', 5, 1),
+(3, 'Duties & Taxes', '2015-04-10', 10, 1),
+(4, 'Direct Expenses', '2015-04-10', 4, 1),
+(5, 'Sundry Debtor', '2015-04-10', 2, 1),
+(6, 'Cash Account', '2015-04-15', 2, 1),
+(7, 'Bank Accounts', '2015-04-15', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -1258,17 +1376,13 @@ CREATE TABLE IF NOT EXISTS `xaccount_transaction` (
   `updated_at` datetime DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
   `transaction_type_id` int(11) DEFAULT NULL,
-  `reference_account_id` int(11) DEFAULT NULL,
-  `employee_id` int(11) DEFAULT NULL,
-  `voucher_no_original` int(11) DEFAULT NULL,
-  `voucher_no` int(11) DEFAULT NULL,
   `Narration` text,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
   KEY `fk_transaction_type_id` (`transaction_type_id`) USING BTREE,
-  KEY `fk_reference_account_id` (`reference_account_id`) USING BTREE,
-  KEY `fk_employee_id` (`employee_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=39 ;
 
 -- --------------------------------------------------------
 
@@ -1280,13 +1394,15 @@ CREATE TABLE IF NOT EXISTS `xaccount_transaction_row` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `transaction_id` int(11) DEFAULT NULL,
   `account_id` int(11) DEFAULT NULL,
-  `amountDr` decimal(10,2) DEFAULT NULL,
-  `amountCr` decimal(10,2) DEFAULT NULL,
+  `amountDr` decimal(14,2) DEFAULT NULL,
+  `amountCr` decimal(14,2) DEFAULT NULL,
   `side` varchar(255) DEFAULT NULL,
   `accounts_in_side` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_transaction_id` (`transaction_id`) USING BTREE,
-  KEY `fk_account_id` (`account_id`) USING BTREE
+  KEY `fk_account_id` (`account_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1301,8 +1417,10 @@ CREATE TABLE IF NOT EXISTS `xaccount_transaction_types` (
   `FromAC` varchar(255) DEFAULT NULL,
   `ToAC` varchar(255) DEFAULT NULL,
   `Default_Narration` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+  `epan_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=9 ;
 
 -- --------------------------------------------------------
 
@@ -1350,30 +1468,7 @@ CREATE TABLE IF NOT EXISTS `xai_data` (
   `name` text,
   PRIMARY KEY (`id`),
   KEY `fk_session_id` (`session_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
-
---
--- Dumping data for table `xai_data`
---
-
-INSERT INTO `xai_data` (`id`, `session_id`, `name`) VALUES
-(1, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(2, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(3, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(4, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(5, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(6, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(7, 2, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(8, 2, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(9, 2, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(10, 2, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(11, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(12, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(13, 3, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(14, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(15, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(16, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}'),
-(17, 1, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"1","value":"RUN"}}}');
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=296 ;
 
 -- --------------------------------------------------------
 
@@ -1453,49 +1548,7 @@ CREATE TABLE IF NOT EXISTS `xai_meta_data` (
   `description` text,
   `action` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=37 ;
-
---
--- Dumping data for table `xai_meta_data`
---
-
-INSERT INTO `xai_meta_data` (`id`, `from`, `name`, `last_value`, `description`, `action`) VALUES
-(1, 'ALWAYS', 'ALWAYS', 'RUN', NULL, '2'),
-(2, 'SERVER', 'HTTP_HOST', 'localhost', NULL, '-1'),
-(3, 'SERVER', 'HTTP_USER_AGENT', 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:32.0) Gecko/20100101 Firefox/32.0', NULL, '-1'),
-(4, 'SERVER', 'HTTP_ACCEPT', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', NULL, '-1'),
-(5, 'SERVER', 'HTTP_ACCEPT_LANGUAGE', 'en-US,en;q=0.5', NULL, '-1'),
-(6, 'SERVER', 'HTTP_ACCEPT_ENCODING', 'gzip, deflate', NULL, '-1'),
-(7, 'SERVER', 'HTTP_REFERER', 'http://localhost/xavoc_demo/?page=xShop_page_owner_shopsnblogs', NULL, '-1'),
-(8, 'SERVER', 'HTTP_CONNECTION', 'keep-alive', NULL, '-1'),
-(9, 'SERVER', 'PATH', '/usr/local/bin:/usr/bin:/bin', NULL, '-1'),
-(10, 'SERVER', 'SERVER_SIGNATURE', '<address>Apache/2.2.22 (Ubuntu) Server at localhost Port 80</address>\n', NULL, '-1'),
-(11, 'SERVER', 'SERVER_SOFTWARE', 'Apache/2.2.22 (Ubuntu)', NULL, '-1'),
-(12, 'SERVER', 'SERVER_NAME', 'localhost', NULL, '-1'),
-(13, 'SERVER', 'SERVER_ADDR', '127.0.0.1', NULL, '-1'),
-(14, 'SERVER', 'SERVER_PORT', '80', NULL, '-1'),
-(15, 'SERVER', 'REMOTE_ADDR', '127.0.0.1', NULL, '-1'),
-(16, 'SERVER', 'DOCUMENT_ROOT', '/var/www', NULL, '-1'),
-(17, 'SERVER', 'SERVER_ADMIN', 'webmaster@localhost', NULL, '-1'),
-(18, 'SERVER', 'SCRIPT_FILENAME', '/var/www/xavoc_demo/index.php', NULL, '-1'),
-(19, 'SERVER', 'REMOTE_PORT', '47051', NULL, '-1'),
-(20, 'SERVER', 'GATEWAY_INTERFACE', 'CGI/1.1', NULL, '-1'),
-(21, 'SERVER', 'SERVER_PROTOCOL', 'HTTP/1.1', NULL, '-1'),
-(22, 'SERVER', 'REQUEST_METHOD', 'GET', NULL, '-1'),
-(23, 'SERVER', 'QUERY_STRING', '', NULL, '-1'),
-(24, 'SERVER', 'REQUEST_URI', '/xavoc_demo/', NULL, '-1'),
-(25, 'SERVER', 'SCRIPT_NAME', '/xavoc_demo/index.php', NULL, '-1'),
-(26, 'SERVER', 'PHP_SELF', '/xavoc_demo/index.php', NULL, '-1'),
-(27, 'SERVER', 'REQUEST_TIME', '1425276825', NULL, '-1'),
-(28, 'SERVER', 'REQUEST_SCHEME', 'http', NULL, '-1'),
-(29, 'SERVER', 'CONTEXT_PREFIX', '', NULL, '-1'),
-(30, 'SERVER', 'CONTEXT_DOCUMENT_ROOT', '/var/www/html', NULL, '-1'),
-(31, 'SERVER', 'REQUEST_TIME_FLOAT', '1425285720.196', NULL, '-1'),
-(32, 'SERVER', 'HTTP_VIA', '1.1 www.deshvikas.com (squid/3.3.8)', NULL, '-1'),
-(33, 'SERVER', 'HTTP_X_FORWARDED_FOR', '192.168.1.105', NULL, '-1'),
-(34, 'SERVER', 'HTTP_CACHE_CONTROL', 'max-age=259200', NULL, '-1'),
-(35, 'SERVER', 'HTTP_COOKIE', 'web=k1noecm9tuo7tuk35sibmv07k1', NULL, '-1'),
-(36, 'COOKIE', 'web', 'k1noecm9tuo7tuk35sibmv07k1', NULL, '-1');
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
 
 -- --------------------------------------------------------
 
@@ -1536,7 +1589,7 @@ CREATE TABLE IF NOT EXISTS `xai_session` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50 ;
 
 -- --------------------------------------------------------
 
@@ -1629,10 +1682,12 @@ CREATE TABLE IF NOT EXISTS `xcrm_document_activities` (
   `notify_via_email` tinyint(1) DEFAULT NULL,
   `notify_via_sms` tinyint(1) DEFAULT NULL,
   `attachment_id` int(10) unsigned DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
-  KEY `fk_attachment_id` (`attachment_id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+  KEY `fk_attachment_id` (`attachment_id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1649,6 +1704,7 @@ CREATE TABLE IF NOT EXISTS `xcrm_emails` (
   `updated_at` datetime DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
   `from` varchar(255) DEFAULT NULL,
+  `from_name` varchar(255) DEFAULT NULL,
   `from_id` varchar(255) DEFAULT NULL,
   `to` varchar(255) DEFAULT NULL,
   `to_id` varchar(255) DEFAULT NULL,
@@ -1660,10 +1716,18 @@ CREATE TABLE IF NOT EXISTS `xcrm_emails` (
   `to_email` varchar(255) DEFAULT NULL,
   `read_by_employee_id` int(11) DEFAULT NULL,
   `uid` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
+  `attachments` text,
+  `direction` varchar(255) DEFAULT NULL,
+  `keep_unread` tinyint(1) DEFAULT NULL,
+  `task_status` varchar(255) DEFAULT NULL,
+  `task_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
-  KEY `fk_read_by_employee_id` (`read_by_employee_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_read_by_employee_id` (`read_by_employee_id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_task_id` (`task_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1682,9 +1746,50 @@ CREATE TABLE IF NOT EXISTS `xcrm_smses` (
   `name` text,
   `message` varchar(255) DEFAULT NULL,
   `return` text,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_created_by_id` (`created_by_id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xcrm_tickets`
+--
+
+CREATE TABLE IF NOT EXISTS `xcrm_tickets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` varchar(255) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `uid` varchar(255) DEFAULT NULL,
+  `from` varchar(255) DEFAULT NULL,
+  `from_id` varchar(255) DEFAULT NULL,
+  `from_email` varchar(255) DEFAULT NULL,
+  `from_name` varchar(255) DEFAULT NULL,
+  `to` varchar(255) DEFAULT NULL,
+  `to_id` varchar(255) DEFAULT NULL,
+  `to_email` varchar(255) DEFAULT NULL,
+  `cc` text,
+  `bcc` text,
+  `subject` varchar(255) DEFAULT NULL,
+  `message` text,
+  `priority` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_customer_id` (`customer_id`),
+  KEY `fk_order_id` (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1715,6 +1820,7 @@ CREATE TABLE IF NOT EXISTS `xdispatch_delivery_note` (
   `updated_at` datetime DEFAULT NULL,
   `shipping_via` text,
   `docket_no` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
   KEY `fk_orderitem_id` (`orderitem_id`) USING BTREE,
@@ -1724,8 +1830,9 @@ CREATE TABLE IF NOT EXISTS `xdispatch_delivery_note` (
   KEY `fk_orderitem_departmental_status_id` (`orderitem_departmental_status_id`) USING BTREE,
   KEY `fk_order_id` (`order_id`) USING BTREE,
   KEY `fk_to_memberdetails_id` (`to_memberdetails_id`) USING BTREE,
-  KEY `fk_warehouse_id` (`warehouse_id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+  KEY `fk_warehouse_id` (`warehouse_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1745,9 +1852,12 @@ CREATE TABLE IF NOT EXISTS `xdispatch_delivery_note_items` (
   `delivery_note_id` int(11) DEFAULT NULL,
   `qty` varchar(255) DEFAULT NULL,
   `unit` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
-  KEY `fk_orderitem_id` (`orderitem_id`) USING BTREE
+  KEY `fk_orderitem_id` (`orderitem_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_delivery_note_id` (`delivery_note_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -1773,6 +1883,7 @@ CREATE TABLE IF NOT EXISTS `xdispatch_dispatch_request` (
   `order_id` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
   KEY `fk_orderitem_id` (`orderitem_id`) USING BTREE,
@@ -1780,8 +1891,9 @@ CREATE TABLE IF NOT EXISTS `xdispatch_dispatch_request` (
   KEY `fk_from_department_id` (`from_department_id`) USING BTREE,
   KEY `fk_dispatch_to_warehouse_id` (`dispatch_to_warehouse_id`) USING BTREE,
   KEY `fk_orderitem_departmental_status_id` (`orderitem_departmental_status_id`) USING BTREE,
-  KEY `fk_order_id` (`order_id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+  KEY `fk_order_id` (`order_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1805,12 +1917,15 @@ CREATE TABLE IF NOT EXISTS `xdispatch_dispatch_request_items` (
   `deliverynote_id` int(11) DEFAULT NULL,
   `custom_fields` varchar(255) DEFAULT NULL,
   `orderitem_id` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
   KEY `fk_dispatch_request_id` (`dispatch_request_id`) USING BTREE,
   KEY `fk_item_id` (`item_id`) USING BTREE,
-  KEY `fk_deliverynote_id` (`deliverynote_id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+  KEY `fk_deliverynote_id` (`deliverynote_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_orderitem_id` (`orderitem_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1878,7 +1993,7 @@ CREATE TABLE IF NOT EXISTS `xenquirynsubscription_customform_forms` (
   `button_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -1892,9 +2007,11 @@ CREATE TABLE IF NOT EXISTS `xenquirynsubscription_emailjobs` (
   `job_posted_at` datetime DEFAULT NULL,
   `processed_on` datetime DEFAULT NULL,
   `process_via` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_newsletter_id` (`newsletter_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_newsletter_id` (`newsletter_id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=53 ;
 
 -- --------------------------------------------------------
 
@@ -1960,14 +2077,19 @@ CREATE TABLE IF NOT EXISTS `xenquirynsubscription_newsletter` (
   `email_subject` varchar(255) DEFAULT NULL,
   `matter` text,
   `created_at` datetime DEFAULT NULL,
-  `created_by` varchar(255) DEFAULT NULL,
   `category_id` int(11) DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `created_by_app` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`),
-  KEY `fk_category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_category_id` (`category_id`),
+  KEY `fk_created_by_id` (`created_by_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 -- --------------------------------------------------------
 
@@ -1979,16 +2101,39 @@ CREATE TABLE IF NOT EXISTS `xenquirynsubscription_newslettercategory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_created_by_id` (`created_by_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xenquirynsubscription_newsletter_templates`
+--
+
+CREATE TABLE IF NOT EXISTS `xenquirynsubscription_newsletter_templates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `description` text,
+  `content` text,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`),
   KEY `fk_epan_id` (`epan_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `xenquirynsubscription_newslettercategory`
---
-
-INSERT INTO `xenquirynsubscription_newslettercategory` (`id`, `epan_id`, `name`) VALUES
-(1, 1, 'school');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2036,12 +2181,12 @@ CREATE TABLE IF NOT EXISTS `xenquirynsubscription_subscription` (
   `phone` varchar(255) DEFAULT NULL,
   `mobile_no` varchar(255) DEFAULT NULL,
   `fax` varchar(255) DEFAULT NULL,
-  `leadcategory_id` int(11) DEFAULT NULL,
+  `remark` text,
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`) USING BTREE,
   KEY `from_id` (`from_id`) USING BTREE,
-  KEY `fk_created_by_id` (`created_by_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+  KEY `fk_created_by_id` (`created_by_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=601 ;
 
 -- --------------------------------------------------------
 
@@ -2054,9 +2199,16 @@ CREATE TABLE IF NOT EXISTS `xenquirynsubscription_subscription_categories` (
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_epan_id` (`epan_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_created_by_id` (`created_by_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 -- --------------------------------------------------------
 
@@ -2084,6 +2236,52 @@ CREATE TABLE IF NOT EXISTS `xenquirynsubscription_subscription_config` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `xepan_generic_documents`
+--
+
+CREATE TABLE IF NOT EXISTS `xepan_generic_documents` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` varchar(255) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `content` text,
+  `epan_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `generic_doc_category_id` int(11) DEFAULT NULL,
+  `is_template` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_generic_doc_category_id` (`generic_doc_category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xepan_generic_documents_category`
+--
+
+CREATE TABLE IF NOT EXISTS `xepan_generic_documents_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `xhr_departments`
 --
 
@@ -2102,24 +2300,26 @@ CREATE TABLE IF NOT EXISTS `xhr_departments` (
   `is_system` tinyint(1) DEFAULT NULL,
   `jobcard_document` varchar(255) DEFAULT NULL,
   `production_level` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_branch_id` (`branch_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+  KEY `fk_branch_id` (`branch_id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `xhr_departments`
 --
 
-INSERT INTO `xhr_departments` (`id`, `branch_id`, `name`, `proceed_after_previous_department`, `internal_approved`, `acl_approved`, `jobcard_assign_required`, `is_production_department`, `related_application_namespace`, `is_active`, `is_outsourced`, `is_system`, `jobcard_document`, `production_level`) VALUES
-(1, NULL, 'Company', NULL, NULL, NULL, NULL, 0, '', 1, NULL, 1, 'JobCard', NULL),
-(2, NULL, 'HR', NULL, NULL, NULL, NULL, 0, 'xHR', 1, NULL, 1, 'JobCard', NULL),
-(3, NULL, 'Marketing', NULL, NULL, NULL, NULL, 0, 'xMarketingCampaign', 1, NULL, 1, 'JobCard', NULL),
-(4, NULL, 'Sales', NULL, NULL, NULL, NULL, 0, 'xShop', 1, NULL, 1, 'JobCard', NULL),
-(5, NULL, 'Purchase', NULL, NULL, NULL, NULL, 1, 'xStore', 1, NULL, 1, 'MaterialRequest', -2),
-(7, NULL, 'Accounts', NULL, NULL, NULL, NULL, 0, 'xAccount', 1, NULL, 1, 'JobCard', NULL),
-(8, NULL, 'CRM', NULL, NULL, NULL, NULL, 0, 'xCRM', 1, NULL, 1, 'JobCard', NULL),
-(9, NULL, 'Store', NULL, NULL, NULL, NULL, 1, 'xStore', 1, NULL, 1, 'MaterialRequest', -1),
-(12, NULL, 'Dispatch And Delivery', NULL, NULL, NULL, NULL, 1, 'xDispatch', 1, NULL, 1, 'DispatchRequest', 100000);
+INSERT INTO `xhr_departments` (`id`, `branch_id`, `name`, `proceed_after_previous_department`, `internal_approved`, `acl_approved`, `jobcard_assign_required`, `is_production_department`, `related_application_namespace`, `is_active`, `is_outsourced`, `is_system`, `jobcard_document`, `production_level`, `epan_id`) VALUES
+(1, NULL, 'Company', NULL, NULL, NULL, NULL, 0, '', 1, NULL, 1, 'xProduction\\Model_JobCard', NULL, 1),
+(2, NULL, 'HR', NULL, NULL, NULL, NULL, 0, 'xHR', 1, NULL, 1, 'xProduction\\Model_JobCard', NULL, 1),
+(3, NULL, 'Marketing', NULL, NULL, NULL, NULL, 0, 'xMarketingCampaign', 1, NULL, 1, 'xProduction\\Model_JobCard', NULL, 1),
+(4, NULL, 'Sales', NULL, NULL, NULL, NULL, 0, 'xShop', 1, NULL, 1, 'xProduction\\Model_JobCard', NULL, 1),
+(5, NULL, 'Purchase', NULL, NULL, NULL, NULL, 1, 'xStore', 1, NULL, 1, 'xStore\\Model_MaterialRequest', -2, 1),
+(7, NULL, 'Accounts', NULL, NULL, NULL, NULL, 0, 'xAccount', 1, NULL, 1, 'xProduction\\Model_JobCard', NULL, 1),
+(8, NULL, 'CRM', NULL, NULL, NULL, NULL, 0, 'xCRM', 1, NULL, 1, 'xProduction\\Model_JobCard', NULL, 1),
+(9, NULL, 'Store', NULL, NULL, NULL, NULL, 1, 'xStore', 1, NULL, 1, 'xStore\\Model_MaterialRequest', -1, 1),
+(12, NULL, 'Dispatch And Delivery', NULL, NULL, NULL, NULL, 1, 'xDispatch', 1, NULL, 1, 'xDispatch\\Model_DispatchRequest', 100000, 1);
 
 -- --------------------------------------------------------
 
@@ -2156,9 +2356,11 @@ CREATE TABLE IF NOT EXISTS `xhr_departments_acl` (
   `can_forcedelete` varchar(255) DEFAULT NULL,
   `can_create_activity` tinyint(1) DEFAULT NULL,
   `can_create_ticket` tinyint(1) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_document_id` (`document_id`),
-  KEY `fk_post_id` (`post_id`)
+  KEY `fk_post_id` (`post_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2171,9 +2373,11 @@ CREATE TABLE IF NOT EXISTS `xhr_documents` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `department_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_department_id` (`department_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_department_id` (`department_id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=177 ;
 
 -- --------------------------------------------------------
 
@@ -2230,11 +2434,14 @@ CREATE TABLE IF NOT EXISTS `xhr_employees` (
   `pre_reason_of_resignation` text,
   `is_active` tinyint(1) DEFAULT NULL,
   `seen_till` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_post_id` (`post_id`),
   KEY `fk_department_id` (`department_id`),
-  KEY `fk_user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_user_id` (`user_id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_empolyee_image_id` (`empolyee_image_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -2244,8 +2451,13 @@ CREATE TABLE IF NOT EXISTS `xhr_employees` (
 
 CREATE TABLE IF NOT EXISTS `xhr_employee_attendence` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `epan_id` int(11) DEFAULT NULL,
+  `employee_id` int(11) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_employee_id` (`employee_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2256,8 +2468,17 @@ CREATE TABLE IF NOT EXISTS `xhr_employee_attendence` (
 
 CREATE TABLE IF NOT EXISTS `xhr_employee_leave` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `epan_id` int(11) DEFAULT NULL,
+  `employee_id` int(11) DEFAULT NULL,
+  `leave_type_id` int(11) DEFAULT NULL,
+  `from_date` datetime DEFAULT NULL,
+  `to_date` datetime DEFAULT NULL,
+  `reason` text,
+  `half_day` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_employee_id` (`employee_id`),
+  KEY `fk_leave_type_id` (`leave_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2270,8 +2491,28 @@ CREATE TABLE IF NOT EXISTS `xhr_holiday_blocks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `department_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_department_id` (`department_id`)
+  KEY `fk_department_id` (`department_id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xhr_leave_types`
+--
+
+CREATE TABLE IF NOT EXISTS `xhr_leave_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `epan_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `max_day_allow` int(11) DEFAULT NULL,
+  `is_carry_forward` tinyint(1) DEFAULT NULL,
+  `is_lwp` tinyint(1) DEFAULT NULL,
+  `allow_negative_balance` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2302,11 +2543,20 @@ CREATE TABLE IF NOT EXISTS `xhr_official_emails` (
   `imap_email_username` varchar(255) DEFAULT NULL,
   `imap_email_password` varchar(255) DEFAULT NULL,
   `imap_flags` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
+  `is_support_email` tinyint(1) DEFAULT NULL,
+  `auto_reply` tinyint(1) DEFAULT NULL,
+  `email_subject` varchar(255) DEFAULT NULL,
+  `email_body` text,
+  `footer` text,
+  `denied_email_subject` varchar(255) DEFAULT NULL,
+  `denied_email_body` text,
   PRIMARY KEY (`id`),
-  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
-  KEY `fk_department_id` (`department_id`) USING BTREE,
-  KEY `fk_employee_id` (`employee_id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_department_id` (`department_id`),
+  KEY `fk_employee_id` (`employee_id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2321,16 +2571,19 @@ CREATE TABLE IF NOT EXISTS `xhr_posts` (
   `is_active` tinyint(1) DEFAULT NULL,
   `parent_post_id` int(11) DEFAULT NULL,
   `can_create_team` tinyint(1) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_department_id` (`department_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+  KEY `fk_department_id` (`department_id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_parent_post_id` (`parent_post_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `xhr_posts`
 --
 
-INSERT INTO `xhr_posts` (`id`, `department_id`, `name`, `is_active`, `parent_post_id`, `can_create_team`) VALUES
-(1, 1, 'Director', 1, NULL, 1);
+INSERT INTO `xhr_posts` (`id`, `department_id`, `name`, `is_active`, `parent_post_id`, `can_create_team`, `epan_id`) VALUES
+(1, 1, 'Director', 1, NULL, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2344,10 +2597,12 @@ CREATE TABLE IF NOT EXISTS `xhr_salary` (
   `salary_type_id` int(11) DEFAULT NULL,
   `amount` varchar(255) DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_employee_id` (`employee_id`),
   KEY `fk_salary_type_id` (`salary_type_id`),
-  KEY `fk_created_by_id` (`created_by_id`)
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2361,9 +2616,11 @@ CREATE TABLE IF NOT EXISTS `xhr_salary_templates` (
   `name` varchar(255) DEFAULT NULL,
   `department_id` int(11) DEFAULT NULL,
   `post_id` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_department_id` (`department_id`),
-  KEY `fk_post_id` (`post_id`)
+  KEY `fk_post_id` (`post_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2374,10 +2631,10 @@ CREATE TABLE IF NOT EXISTS `xhr_salary_templates` (
 
 CREATE TABLE IF NOT EXISTS `xhr_salary_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `salary_template_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_salary_template_id` (`salary_template_id`)
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2391,9 +2648,11 @@ CREATE TABLE IF NOT EXISTS `xhr_template_salary` (
   `salary_template_id` int(11) DEFAULT NULL,
   `salary_type_id` int(11) DEFAULT NULL,
   `amount` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_salary_template_id` (`salary_template_id`),
-  KEY `fk_salary_type_id` (`salary_type_id`)
+  KEY `fk_salary_type_id` (`salary_type_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2463,7 +2722,7 @@ CREATE TABLE IF NOT EXISTS `xmarketingcampaign_campaigns` (
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -2501,7 +2760,7 @@ CREATE TABLE IF NOT EXISTS `xmarketingcampaign_campaigns_categories` (
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -2564,7 +2823,6 @@ CREATE TABLE IF NOT EXISTS `xmarketingcampaign_cp_sub_cat` (
   `epan_id` int(11) DEFAULT NULL,
   `campaign_id` int(11) DEFAULT NULL,
   `category_id` int(11) DEFAULT NULL,
-  `is_associate` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_campaign_id` (`campaign_id`),
@@ -2600,15 +2858,6 @@ CREATE TABLE IF NOT EXISTS `xmarketingcampaign_data_grabber` (
   KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
---
--- Dumping data for table `xmarketingcampaign_data_grabber`
---
-
-INSERT INTO `xmarketingcampaign_data_grabber` (`id`, `epan_id`, `name`, `site_url`, `query_parameter`, `paginator_parameter`, `paginator_initial_value`, `records_per_page`, `paginator_based_on`, `extra_url_parameters`, `required_pause_between_hits`, `result_selector`, `result_format`, `json_url_key`, `reg_ex_on_href`, `created_at`, `last_run_at`, `is_active`) VALUES
-(1, 1, 'http://www.bing.com', 'http://www.bing.com', 'q', 'first', '1', '10', 'records', '', '30', 'li.b_algo', 'HTML', '', '', '2014-10-25 09:55:21', '2014-10-25 09:55:21', 1),
-(2, 1, 'Google Ajax (Limited to max 64 records)', 'http://ajax.googleapis.com/ajax/services/search/web', 'q', 'start', '0', '8', 'records', 'v=1.0&rsz=8', '10', '', 'JSON', 'unescapedUrl', '', '2014-10-25 09:56:51', '2014-10-25 09:56:51', 1),
-(3, 1, 'Google.com', 'http://www.google.co.in/search', 'q', 'start', '0', '10', 'records', '', '10', '#ires li.g h3', 'HTML', '', '^\\/url\\?q=(.*)&sa=(.*)$', '2014-10-25 09:57:58', '2014-11-18 17:50:25', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -2620,7 +2869,7 @@ CREATE TABLE IF NOT EXISTS `xmarketingcampaign_data_search_phrase` (
   `data_grabber_id` int(11) DEFAULT NULL,
   `subscription_category_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `content_provided` longtext,
+  `content_provided` varchar(255) DEFAULT NULL,
   `max_record_visit` varchar(255) DEFAULT NULL,
   `max_domain_depth` varchar(255) DEFAULT NULL,
   `max_page_depth` varchar(255) DEFAULT NULL,
@@ -2628,9 +2877,11 @@ CREATE TABLE IF NOT EXISTS `xmarketingcampaign_data_search_phrase` (
   `page_parameter_max_value` varchar(255) DEFAULT NULL,
   `last_page_checked_at` datetime DEFAULT NULL,
   `is_grabbed` tinyint(1) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_data_grabber_id` (`data_grabber_id`),
-  KEY `fk_subscription_category_id` (`subscription_category_id`)
+  KEY `fk_subscription_category_id` (`subscription_category_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2670,15 +2921,17 @@ CREATE TABLE IF NOT EXISTS `xmarketingcampaign_googlebloggerconfig` (
   `blogid` varchar(255) DEFAULT NULL,
   `access_token_secret` text,
   `is_active` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `epan_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `xmarketingcampaign_googlebloggerconfig`
 --
 
-INSERT INTO `xmarketingcampaign_googlebloggerconfig` (`id`, `name`, `userid`, `userid_returned`, `appId`, `secret`, `access_token`, `is_access_token_valid`, `refresh_token`, `blogid`, `access_token_secret`, `is_active`) VALUES
-(1, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, 1);
+INSERT INTO `xmarketingcampaign_googlebloggerconfig` (`id`, `name`, `userid`, `userid_returned`, `appId`, `secret`, `access_token`, `is_access_token_valid`, `refresh_token`, `blogid`, `access_token_secret`, `is_active`, `epan_id`) VALUES
+(1, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2727,9 +2980,9 @@ CREATE TABLE IF NOT EXISTS `xmarketingcampaign_lead_categories` (
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
-  KEY `fk_epan_id` (`epan_id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -2761,7 +3014,9 @@ CREATE TABLE IF NOT EXISTS `xmarketingcampaign_socialconfig` (
   `secret` text,
   `post_in_groups` tinyint(1) DEFAULT NULL,
   `filter_repeated_posts` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `epan_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2835,7 +3090,7 @@ CREATE TABLE IF NOT EXISTS `xmarketingcampaign_socialposts` (
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -2849,7 +3104,7 @@ CREATE TABLE IF NOT EXISTS `xmarketingcampaign_socialpost_categories` (
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -2910,14 +3165,16 @@ CREATE TABLE IF NOT EXISTS `xproduction_jobcard` (
   `to_department_id` int(11) DEFAULT NULL,
   `dispatch_to_warehouse_id` int(11) DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_orderitem_id` (`orderitem_id`),
   KEY `fk_orderitem_departmental_status_id` (`orderitem_departmental_status_id`),
   KEY `fk_created_by_id` (`created_by_id`),
   KEY `fk_from_department_id` (`from_department_id`),
   KEY `fk_to_department_id` (`to_department_id`) USING BTREE,
-  KEY `fk_dispatch_to_warehouse_id` (`dispatch_to_warehouse_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_dispatch_to_warehouse_id` (`dispatch_to_warehouse_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -2948,6 +3205,32 @@ CREATE TABLE IF NOT EXISTS `xproduction_material_requirment` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `xproduction_material_requirment_DELETE`
+--
+
+CREATE TABLE IF NOT EXISTS `xproduction_material_requirment_DELETE` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` varchar(255) DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `jobcard_id` int(11) DEFAULT NULL,
+  `orderitem_id` int(11) DEFAULT NULL,
+  `department_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `qty` varchar(255) DEFAULT NULL,
+  `narration` varchar(255) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_jobcard_id` (`jobcard_id`) USING BTREE,
+  KEY `fk_orderitem_id` (`orderitem_id`) USING BTREE,
+  KEY `fk_department_id` (`department_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `xproduction_outsource_party_dept_associations`
 --
 
@@ -2955,9 +3238,11 @@ CREATE TABLE IF NOT EXISTS `xproduction_outsource_party_dept_associations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `department_id` int(11) DEFAULT NULL,
   `out_source_party_id` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_department_id` (`department_id`),
-  KEY `fk_out_source_party_id` (`out_source_party_id`)
+  KEY `fk_out_source_party_id` (`out_source_party_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2971,9 +3256,16 @@ CREATE TABLE IF NOT EXISTS `xproduction_out_source_parties` (
   `name` varchar(255) DEFAULT NULL,
   `code` varchar(255) DEFAULT NULL,
   `maintain_stock` tinyint(1) DEFAULT NULL,
-  `contact_no` int(11) NOT NULL,
-  `address` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  `contact_no` varchar(255) DEFAULT NULL,
+  `address` text,
+  `epan_id` int(11) DEFAULT NULL,
+  `contact_person` varchar(255) DEFAULT NULL,
+  `email_id` varchar(255) DEFAULT NULL,
+  `bank_detail` text,
+  `pan_it_no` varchar(255) DEFAULT NULL,
+  `tin_no` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -2986,9 +3278,6 @@ CREATE TABLE IF NOT EXISTS `xproduction_tasks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `status` varchar(255) DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
-  `root_document_name` varchar(255) DEFAULT NULL,
-  `document_name` varchar(255) DEFAULT NULL,
-  `document_id` varchar(255) DEFAULT NULL,
   `team_id` int(11) DEFAULT NULL,
   `employee_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -3003,11 +3292,13 @@ CREATE TABLE IF NOT EXISTS `xproduction_tasks` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `subject` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`),
   KEY `fk_team_id` (`team_id`),
-  KEY `fk_employee_id` (`employee_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_employee_id` (`employee_id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
 
 -- --------------------------------------------------------
 
@@ -3019,8 +3310,10 @@ CREATE TABLE IF NOT EXISTS `xproduction_teams` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `department_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_department_id` (`department_id`)
+  KEY `fk_department_id` (`department_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3030,6 +3323,28 @@ CREATE TABLE IF NOT EXISTS `xproduction_teams` (
 --
 
 CREATE TABLE IF NOT EXISTS `xpurcahse_material_request` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `from_department_id` int(11) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_from_department_id` (`from_department_id`) USING BTREE,
+  KEY `fk_order_id` (`order_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `xpurcahse_material_request_DELETE`
+--
+
+CREATE TABLE IF NOT EXISTS `xpurcahse_material_request_DELETE` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
@@ -3064,6 +3379,22 @@ CREATE TABLE IF NOT EXISTS `xpurchase_purchase_material_request_items` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `xpurchase_purchase_material_request_items_DELETE`
+--
+
+CREATE TABLE IF NOT EXISTS `xpurchase_purchase_material_request_items_DELETE` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `purchase_material_request_id` int(11) DEFAULT NULL,
+  `item_id` int(11) DEFAULT NULL,
+  `qty` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_purchase_material_request_id` (`purchase_material_request_id`) USING BTREE,
+  KEY `fk_item_id` (`item_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `xpurchase_purchase_order`
 --
 
@@ -3081,12 +3412,18 @@ CREATE TABLE IF NOT EXISTS `xpurchase_purchase_order` (
   `priority_id` int(11) DEFAULT NULL,
   `order_summary` text,
   `order_date` datetime DEFAULT NULL,
-  `total_amount` decimal(10,2) DEFAULT NULL,
-  `tax` decimal(10,2) DEFAULT NULL,
-  `net_amount` decimal(10,2) DEFAULT NULL,
+  `total_amount` decimal(14,2) DEFAULT NULL,
+  `tax` decimal(14,2) DEFAULT NULL,
+  `net_amount` decimal(14,2) DEFAULT NULL,
+  `delivery_to` text,
+  `epan_id` int(11) DEFAULT NULL,
+  `termsandcondition_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`),
-  KEY `fk_xpurchase_supplier_id` (`supplier_id`) USING BTREE
+  KEY `fk_xpurchase_supplier_id` (`supplier_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_priority_id` (`priority_id`),
+  KEY `fk_termsandcondition_id` (`termsandcondition_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3100,11 +3437,10 @@ CREATE TABLE IF NOT EXISTS `xpurchase_purchase_order_item` (
   `item_id` int(11) DEFAULT NULL,
   `custom_fields` text,
   `po_id` int(11) DEFAULT NULL,
-  `qty` varchar(255) DEFAULT NULL,
-  `unit` varchar(255) DEFAULT NULL,
-  `narration` varchar(255) DEFAULT NULL,
-  `rate` varchar(255) DEFAULT NULL,
-  `amount` varchar(255) DEFAULT NULL,
+  `qty` int(11) DEFAULT NULL,
+  `narration` text,
+  `rate` decimal(14,2) DEFAULT NULL,
+  `amount` decimal(14,2) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
@@ -3113,9 +3449,14 @@ CREATE TABLE IF NOT EXISTS `xpurchase_purchase_order_item` (
   `related_document_name` varchar(255) DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `invoice_id` int(11) DEFAULT NULL,
+  `received_qty` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_item_id` (`item_id`),
-  KEY `fk_po_id` (`po_id`)
+  KEY `fk_po_id` (`po_id`),
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_invoice_id` (`invoice_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3145,8 +3486,10 @@ CREATE TABLE IF NOT EXISTS `xpurchase_supplier` (
   `accounts_person_name` varchar(255) DEFAULT NULL,
   `contact_person_name` varchar(255) DEFAULT NULL,
   `tin_no` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_created_by_id` (`created_by_id`) USING BTREE
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3187,13 +3530,20 @@ CREATE TABLE IF NOT EXISTS `xshop_affiliate` (
   `zip_code` varchar(255) DEFAULT NULL,
   `description` text,
   `application_id` int(11) DEFAULT NULL,
-  `logo_url_id` int(11) DEFAULT NULL,
+  `logo_url_id` int(10) unsigned DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_affiliatetype_id` (`affiliatetype_id`),
   KEY `fk_application_id` (`application_id`),
-  KEY `fk_logo_url_id` (`logo_url_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_logo_url_id` (`logo_url_id`),
+  KEY `fk_created_by_id` (`created_by_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -3206,10 +3556,17 @@ CREATE TABLE IF NOT EXISTS `xshop_affiliatetype` (
   `epan_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `application_id` int(11) DEFAULT NULL,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`),
-  KEY `fk_application_id` (`application_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_application_id` (`application_id`),
+  KEY `fk_created_by_id` (`created_by_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -3229,15 +3586,9 @@ CREATE TABLE IF NOT EXISTS `xshop_application` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_epan_id` (`epan_id`)
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_created_by_id` (`created_by_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `xshop_application`
---
-
-INSERT INTO `xshop_application` (`id`, `epan_id`, `name`, `type`, `created_by_id`, `related_document_id`, `related_root_document_name`, `related_document_name`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Xavoc technocrats Pvt. Ltd.', 'Shop', 2, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3271,8 +3622,10 @@ CREATE TABLE IF NOT EXISTS `xshop_blockimages` (
   `alt_text` varchar(255) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `link` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_block_id` (`block_id`)
+  KEY `fk_block_id` (`block_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3290,7 +3643,7 @@ CREATE TABLE IF NOT EXISTS `xshop_categories` (
   `order_no` int(11) DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT NULL,
   `description` text,
-  `image_url_id` int(11) DEFAULT NULL,
+  `image_url_id` int(10) unsigned DEFAULT NULL,
   `alt_text` varchar(255) DEFAULT NULL,
   `meta_title` varchar(255) DEFAULT NULL,
   `meta_description` text,
@@ -3301,8 +3654,13 @@ CREATE TABLE IF NOT EXISTS `xshop_categories` (
   `related_document_name` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  PRIMARY KEY (`id`),
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_application_id` (`application_id`),
+  KEY `fk_parent_id` (`parent_id`),
+  KEY `fk_image_url_id` (`image_url_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -3362,17 +3720,34 @@ CREATE TABLE IF NOT EXISTS `xshop_configuration` (
   `purchase_invoice_email_body` text,
   `cash_voucher_email_subject` varchar(255) DEFAULT NULL,
   `cash_voucher_email_body` text,
+  `quotation_starting_number` varchar(255) DEFAULT NULL,
+  `sale_order_starting_number` varchar(255) DEFAULT NULL,
+  `purchase_order_starting_number` varchar(255) DEFAULT NULL,
+  `sale_invoice_starting_number` varchar(255) DEFAULT NULL,
+  `purchase_invoice_starting_number` varchar(255) DEFAULT NULL,
+  `outsource_email_subject` varchar(255) DEFAULT NULL,
+  `outsource_email_body` text,
+  `is_round_amount_calculation` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_application_id` (`application_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `xshop_configuration`
+-- Table structure for table `xshop_currency`
 --
 
-INSERT INTO `xshop_configuration` (`id`, `epan_id`, `subject`, `message`, `disqus_code`, `add_custom_button`, `custom_button_text`, `custom_button_url`, `order_detail_email_subject`, `order_detail_email_body`, `application_id`, `purchase_order_detail_email_subject`, `purchase_order_detail_email_body`, `quotation_email_subject`, `quotation_email_body`, `invoice_email_subject`, `invoice_email_body`, `purchase_invoice_email_subject`, `purchase_invoice_email_body`, `cash_voucher_email_subject`, `cash_voucher_email_body`) VALUES
-(1, 1, NULL, NULL, NULL, NULL, NULL, NULL, '', '<table style="height: 112px; border-color: #000000;" border="true" width="864">\r\n<tbody>\r\n<tr>\r\n<td style="width: 40%;"><img style="display: block; margin-left: auto; margin-right: auto;" src="templates/images/logo.png" alt="" width="200" height="116" /></td>\r\n<td>\r\n<h2 style="text-align: center;"><strong>Your Company Name Here<br /></strong></h2>\r\n<h5 style="text-align: center;">Your company address, city, state, country<br /> Contact No.&nbsp; : <strong>+91 1234567890, +91 1234567899</strong><br />Website :- www.xepan.org, E-mail : info@xepan.org, support@xepan.org</h5>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td style="text-align: center;" colspan="2">\r\n<h3><strong>Sale Order/Proforma Invoice<br /></strong></h3>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td style="vertical-align: top;">\r\n<table width="100%">\r\n<tbody>\r\n<tr>\r\n<td style="vertical-align: top;">\r\n<p>Order/PI No.:{{order_no}}</p>\r\n</td>\r\n<td style="text-align: right; vertical-align: top;">\r\n<p style="text-align: left;">Date :{{order_date}}</p>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td style="vertical-align: top;">\r\n<p><strong>Our Bankers:</strong><strong><br /></strong>XYZ Bank<br />City, Branch</p>\r\n</td>\r\n<td style="text-align: right; vertical-align: top;">\r\n<p style="text-align: left;"><strong>A/c No</strong>:-<br />xxxxxxxxxxxxx<br />NEFT IFSC Code: xxxxx</p>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n<td style="vertical-align: top;">To,\r\n<h3>{{customer_name}}</h3>\r\n<p>{{order_billing_address}}<br />{{mobile_number}}<br />{{customer_email}}</p>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td colspan="2">{{sale_order_details}}</td>\r\n</tr>\r\n<tr>\r\n<td style="vertical-align: bottom; text-align: justify;">\r\n<h4>For Your Company Name<br /><br /><br /><br /></h4>\r\n<table style="height: 30px; width: 100%;">\r\n<tbody>\r\n<tr>\r\n<td style="text-align: left;">Customer''s Signature</td>\r\n<td style="text-align: right;">&nbsp;&nbsp;Auth. Signatory</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n<p style="text-align: center;"><sub>Computer generated Invoice</sub></p>\r\n</td>\r\n<td style="vertical-align: top;">\r\n<h4>Terms and Conditions</h4>\r\n<p>{{terms_and_conditions}}</p>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n<p>&nbsp;</p>', 1, NULL, NULL, NULL, NULL, '', '<table style="height: 112px; border-color: #000000;" border="true" width="864">\r\n<tbody>\r\n<tr>\r\n<td style="width: 40%;"><img style="display: block; margin-left: auto; margin-right: auto;" src="templates/images/logo.png" alt="" width="200" height="116" /></td>\r\n<td>\r\n<h2 style="text-align: center;"><strong>Your Company Name Here<br /></strong></h2>\r\n<h5 style="text-align: center;">Your company address, city, state, country<br /> Contact No.&nbsp; : <strong>+91 1234567890, +91 1234567899</strong><br />Website :- www.xepan.org, E-mail : info@xepan.org, support@xepan.org</h5>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td style="text-align: center;" colspan="2">\r\n<h3><strong>INVOICE</strong></h3>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td style="vertical-align: top;">\r\n<table width="100%">\r\n<tbody>\r\n<tr>\r\n<td style="vertical-align: top;">\r\n<p>&nbsp;Invoice No.:{{invoice_order_no}}</p>\r\n</td>\r\n<td style="text-align: right; vertical-align: top;">\r\n<p style="text-align: left;">Date :-{{invoice_date}}</p>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td style="vertical-align: top;">\r\n<p><strong>Our Bankers:</strong><strong><br /></strong>XYZ Bank<br />City, Branch</p>\r\n</td>\r\n<td style="text-align: right; vertical-align: top;">\r\n<p style="text-align: left;"><strong>A/c No</strong>:-<br />xxxxxxxxxxxxx<br />NEFT IFSC Code: xxxxx</p>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n<td style="vertical-align: top;">To,\r\n<h3>{{customer_name}}</h3>\r\n<p>{{order_billing_address}} <br />{{mobile_number}}&nbsp; {{city}} {{state}} {{country}}</p>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td colspan="2">{{invoice_details}}</td>\r\n</tr>\r\n<tr>\r\n<td style="vertical-align: top; text-align: justify;">\r\n<h4 style="text-align: right;">For Your Company Name Here<br /><br /><br /><br /></h4>\r\n<table style="height: 30px; width: 100%;">\r\n<tbody>\r\n<tr>\r\n<td style="text-align: left;">Customer''s Signature</td>\r\n<td style="text-align: right;">&nbsp;&nbsp;Auth. Signatory</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n<p style="text-align: center;"><sub>Computer generated Invoice</sub></p>\r\n</td>\r\n<td style="vertical-align: top;">&nbsp;{{terms_an_conditions}}</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n<p>&nbsp;</p>', NULL, NULL, '{voucher_no} : Against {order_no}', '<table style="border: 1px solid #f5f6f7;" width="900px">\r\n<tbody>\r\n<tr>\r\n<td>\r\n<table width="100%">\r\n<tbody>\r\n<tr>\r\n<td style="width: 60%;" valign="top">\r\n<h3>VOUCHER</h3>\r\n</td>\r\n<td style="width: 40%;">\r\n<table style="width: 100%;">\r\n<tbody>\r\n<tr>\r\n<td style="background-color: #f5f6f7; padding: 2px;" valign="top">No.&nbsp;</td>\r\n<td>{voucher_no}</td>\r\n</tr>\r\n<tr>\r\n<td style="background-color: #f5f6f7; padding: 2px;" valign="top">Date.&nbsp;</td>\r\n<td>{date}</td>\r\n</tr>\r\n<tr>\r\n<td style="background-color: #f5f6f7; padding: 2px;" valign="top">Ruppess&nbsp;</td>\r\n<td>{amount}</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td>\r\n<p>Pay to {pay_to}</p>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td>\r\n<p>Rupees ( In Words ) {amount_in_words}</p>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td>\r\n<p>Being {being}</p>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td style="text-align: center; border-bottom: 1px solid #f5f6f7;">\r\n<p>DEBIT / CREDIT</p>\r\n</td>\r\n</tr>\r\n<tr>\r\n<td>&nbsp;\r\n<table style="width: 100%;">\r\n<tbody>\r\n<tr>\r\n<td style="width: 50%; height: 100px;">\r\n<h5 style="border: 1px solid black; height: 50px;"><span style="background-color: #f5f6f7;">&nbsp;Approved By <br /></span> {approved_by}</h5>\r\n<h5 style="border: 1px solid black; height: 50px;"><span style="background-color: #f5f6f7;">&nbsp; Drawn On &nbsp;</span>{drawn_on}</h5>\r\n</td>\r\n<td style="height: 100px;">\r\n<table style="width: 100%;">\r\n<tbody>\r\n<tr>\r\n<td style="width: 30%;" valign="bottom">\r\n<p>&nbsp;Paid By</p>\r\n<table style="height: 37px; border: 1px solid black;" border="true" width="200">\r\n<tbody>\r\n<tr>\r\n<td>CASH {cash}</td>\r\n</tr>\r\n<tr>\r\n<td>CHEQUE {cheque}</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n<td style="width: 70%; text-align: right;" valign="bottom">&nbsp;Receiver''s Signature</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>');
+CREATE TABLE IF NOT EXISTS `xshop_currency` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `epan_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `Value` varchar(255) DEFAULT NULL,
+  `is_default` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -3386,10 +3761,12 @@ CREATE TABLE IF NOT EXISTS `xshop_customfiledvalue_filter_ass` (
   `customfield_id` int(11) DEFAULT NULL,
   `customefieldvalue_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_item_id` (`item_id`),
   KEY `fk_customfield_id` (`customfield_id`),
-  KEY `fk_customefieldvalue_id` (`customefieldvalue_id`)
+  KEY `fk_customefieldvalue_id` (`customefieldvalue_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3422,7 +3799,7 @@ CREATE TABLE IF NOT EXISTS `xshop_custom_fields` (
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_application_id` (`application_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 -- --------------------------------------------------------
 
@@ -3438,11 +3815,13 @@ CREATE TABLE IF NOT EXISTS `xshop_custom_fields_value` (
   `is_active` tinyint(1) DEFAULT NULL,
   `customfield_id` int(11) DEFAULT NULL,
   `item_id` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_itemcustomfiledasso_id` (`itemcustomfiledasso_id`),
   KEY `fk_customfield_id` (`customfield_id`),
-  KEY `fk_item_id` (`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_item_id` (`item_id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -3465,7 +3844,8 @@ CREATE TABLE IF NOT EXISTS `xshop_discount_vouchers` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_epan_id` (`epan_id`)
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_created_by_id` (`created_by_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3501,6 +3881,20 @@ CREATE TABLE IF NOT EXISTS `xshop_group` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `xshop_image_library_category`
+--
+
+CREATE TABLE IF NOT EXISTS `xshop_image_library_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `epan_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `xshop_invoices`
 --
 
@@ -3516,27 +3910,32 @@ CREATE TABLE IF NOT EXISTS `xshop_invoices` (
   `sales_order_id` int(11) DEFAULT NULL,
   `po_id` int(11) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
-  `discount` decimal(10,2) DEFAULT NULL,
-  `tax` decimal(10,2) DEFAULT NULL,
-  `net_amount` decimal(10,2) DEFAULT NULL,
+  `discount` decimal(14,2) DEFAULT NULL,
+  `tax` decimal(14,2) DEFAULT NULL,
+  `net_amount` decimal(14,2) DEFAULT NULL,
   `billing_address` text,
   `orderitem_id` int(11) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
+  `name` int(11) DEFAULT NULL,
   `customer_id` int(11) DEFAULT NULL,
   `supplier_id` int(11) DEFAULT NULL,
-  `total_amount` decimal(10,2) DEFAULT NULL,
+  `total_amount` decimal(14,2) DEFAULT NULL,
   `transaction_reference` text,
   `transaction_response_data` text,
   `termsandcondition_id` int(11) DEFAULT NULL,
-  `gross_amount` decimal(10,2) DEFAULT NULL,
+  `gross_amount` decimal(14,2) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
+  `shipping_charge` decimal(14,2) DEFAULT NULL,
+  `narration` text,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
   KEY `fk_po_id` (`po_id`) USING BTREE,
   KEY `fk_sales_order_id` (`sales_order_id`) USING BTREE,
   KEY `fk_orderitem_id` (`orderitem_id`) USING BTREE,
   KEY `fk_customer_id` (`customer_id`) USING BTREE,
-  KEY `fk_termsandcondition_id` (`termsandcondition_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+  KEY `fk_termsandcondition_id` (`termsandcondition_id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_supplier_id` (`supplier_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=17 ;
 
 -- --------------------------------------------------------
 
@@ -3558,15 +3957,19 @@ CREATE TABLE IF NOT EXISTS `xshop_invoice_item` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
-  `rate` decimal(10,2) DEFAULT NULL,
+  `rate` decimal(14,2) DEFAULT NULL,
   `orderitem_id` int(11) DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL,
+  `amount` decimal(14,2) DEFAULT NULL,
   `apply_tax` tinyint(1) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
+  `tax_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_invoice_id` (`invoice_id`) USING BTREE,
   KEY `fk_item_id` (`item_id`) USING BTREE,
   KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
-  KEY `fk_orderitem_id` (`orderitem_id`) USING BTREE
+  KEY `fk_orderitem_id` (`orderitem_id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_tax_id` (`tax_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3600,11 +4003,13 @@ CREATE TABLE IF NOT EXISTS `xshop_itemenquiry` (
 CREATE TABLE IF NOT EXISTS `xshop_itemoffers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
-  `offer_image_id` int(11) DEFAULT NULL,
+  `offer_image_id` int(10) unsigned DEFAULT NULL,
   `application_id` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_offer_image_id` (`offer_image_id`),
-  KEY `fk_application_id` (`application_id`)
+  KEY `fk_application_id` (`application_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3621,10 +4026,10 @@ CREATE TABLE IF NOT EXISTS `xshop_items` (
   `sku` varchar(255) DEFAULT NULL,
   `is_publish` tinyint(1) DEFAULT NULL,
   `short_description` text,
-  `original_price` decimal(10,2) DEFAULT NULL,
-  `sale_price` decimal(10,2) DEFAULT NULL,
+  `original_price` decimal(14,2) DEFAULT NULL,
+  `sale_price` decimal(14,2) DEFAULT NULL,
   `rank_weight` varchar(255) DEFAULT NULL,
-  `created_at` date DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
   `expiry_date` date DEFAULT NULL,
   `description` text,
   `search_string` text,
@@ -3663,29 +4068,35 @@ CREATE TABLE IF NOT EXISTS `xshop_items` (
   `offer_id` int(11) DEFAULT NULL,
   `offer_position` varchar(255) DEFAULT NULL,
   `enquiry_send_to_admin` tinyint(1) DEFAULT NULL,
-  `watermark_image_id` int(11) DEFAULT NULL,
+  `watermark_image_id` int(10) unsigned DEFAULT NULL,
   `watermark_text` text,
   `watermark_position` varchar(255) DEFAULT NULL,
   `watermark_opacity` varchar(255) DEFAULT NULL,
   `qty_from_set_only` tinyint(1) DEFAULT NULL,
   `custom_button_label` varchar(255) DEFAULT NULL,
-  `quotation_id` int(11) DEFAULT NULL,
   `is_servicable` tinyint(1) DEFAULT NULL,
   `is_purchasable` tinyint(1) DEFAULT NULL,
   `mantain_inventory` tinyint(1) DEFAULT NULL,
   `website_display` tinyint(1) DEFAULT NULL,
   `allow_negative_stock` tinyint(1) DEFAULT NULL,
   `is_productionable` tinyint(1) DEFAULT NULL,
-  `warrenty_days` varchar(255) DEFAULT NULL,
+  `warrenty_days` int(11) DEFAULT NULL,
   `terms_condition` text,
+  `related_document_id` varchar(255) DEFAULT NULL,
+  `related_root_document_name` varchar(255) DEFAULT NULL,
+  `related_document_name` varchar(255) DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `is_blog` tinyint(1) DEFAULT NULL,
+  `duplicate_from_item_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_application_id` (`application_id`),
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_designer_id` (`designer_id`),
   KEY `fk_offer_id` (`offer_id`),
   KEY `fk_watermark_image_id` (`watermark_image_id`),
-  KEY `fk_quotation_id` (`quotation_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_created_by_id` (`created_by_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
@@ -3722,10 +4133,12 @@ CREATE TABLE IF NOT EXISTS `xshop_item_affiliate_ass` (
   `affiliate_id` int(11) DEFAULT NULL,
   `affiliatetype_id` int(11) DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_item_id` (`item_id`),
   KEY `fk_affiliate_id` (`affiliate_id`),
-  KEY `fk_affiliatetype_id` (`affiliatetype_id`)
+  KEY `fk_affiliatetype_id` (`affiliatetype_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3742,10 +4155,12 @@ CREATE TABLE IF NOT EXISTS `xshop_item_compositions` (
   `department_id` int(11) DEFAULT NULL,
   `unit` varchar(255) DEFAULT NULL,
   `custom_fields` text,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_item_id` (`item_id`),
   KEY `fk_composition_item_id` (`composition_item_id`),
-  KEY `fk_department_id` (`department_id`)
+  KEY `fk_department_id` (`department_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3768,7 +4183,7 @@ CREATE TABLE IF NOT EXISTS `xshop_item_customfields_assos` (
   KEY `fk_customfield_id` (`customfield_id`),
   KEY `fk_item_id` (`item_id`),
   KEY `fk_department_phase_id` (`department_phase_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 -- --------------------------------------------------------
 
@@ -3781,9 +4196,11 @@ CREATE TABLE IF NOT EXISTS `xshop_item_custom_rates` (
   `item_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `qty` varchar(255) DEFAULT NULL,
-  `price` varchar(255) DEFAULT NULL,
+  `price` decimal(14,2) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_item_id` (`item_id`)
+  KEY `fk_item_id` (`item_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3813,13 +4230,16 @@ CREATE TABLE IF NOT EXISTS `xshop_item_department_asso` (
 CREATE TABLE IF NOT EXISTS `xshop_item_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `item_id` int(11) DEFAULT NULL,
-  `item_image_id` int(11) DEFAULT NULL,
+  `item_image_id` int(10) unsigned DEFAULT NULL,
   `alt_text` varchar(255) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `customefieldvalue_id` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_item_id` (`item_id`),
-  KEY `fk_customefieldvalue_id` (`customefieldvalue_id`)
+  KEY `fk_customefieldvalue_id` (`customefieldvalue_id`),
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_item_image_id` (`item_image_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3854,12 +4274,12 @@ CREATE TABLE IF NOT EXISTS `xshop_item_quantity_sets` (
   `item_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `qty` varchar(255) DEFAULT NULL,
-  `price` decimal(10,2) DEFAULT NULL,
-  `old_price` decimal(10,2) DEFAULT NULL,
+  `price` decimal(14,2) DEFAULT NULL,
+  `old_price` decimal(14,2) DEFAULT NULL,
   `is_default` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_item_id` (`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
@@ -3878,7 +4298,8 @@ CREATE TABLE IF NOT EXISTS `xshop_item_quantity_set_conditions` (
   KEY `fk_quantityset_id` (`quantityset_id`),
   KEY `fk_custom_field_value_id` (`custom_field_value_id`),
   KEY `fk_item_id` (`item_id`),
-  KEY `fk_customfield_id` (`customfield_id`)
+  KEY `fk_customfield_id` (`customfield_id`),
+  KEY `fk_department_phase_id` (`department_phase_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3908,8 +4329,10 @@ CREATE TABLE IF NOT EXISTS `xshop_item_reviews` (
   `item_id` int(11) DEFAULT NULL,
   `rating` varchar(255) DEFAULT NULL,
   `review` text,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_item_id` (`item_id`)
+  KEY `fk_item_id` (`item_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -3964,6 +4387,7 @@ CREATE TABLE IF NOT EXISTS `xshop_manufacturer` (
 CREATE TABLE IF NOT EXISTS `xshop_memberdetails` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `users_id` int(11) DEFAULT NULL,
+  `organization_name` varchar(255) DEFAULT NULL,
   `address` text,
   `billing_address` text,
   `shipping_address` text,
@@ -3972,7 +4396,7 @@ CREATE TABLE IF NOT EXISTS `xshop_memberdetails` (
   `state` varchar(255) DEFAULT NULL,
   `country` varchar(255) DEFAULT NULL,
   `mobile_number` varchar(255) DEFAULT NULL,
-  `pincode` varchar(255) DEFAULT NULL,
+  `pincode` int(11) DEFAULT NULL,
   `epan_id` int(11) DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
@@ -3983,11 +4407,13 @@ CREATE TABLE IF NOT EXISTS `xshop_memberdetails` (
   `updated_at` datetime DEFAULT NULL,
   `tin_no` varchar(255) DEFAULT NULL,
   `pan_no` varchar(255) DEFAULT NULL,
+  `other_emails` text,
+  `website` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_users_id` (`users_id`),
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_created_by_id` (`created_by_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=83 ;
 
 -- --------------------------------------------------------
 
@@ -3997,13 +4423,15 @@ CREATE TABLE IF NOT EXISTS `xshop_memberdetails` (
 
 CREATE TABLE IF NOT EXISTS `xshop_member_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `image_id` int(11) DEFAULT NULL,
+  `image_id` int(10) unsigned DEFAULT NULL,
   `alt_text` varchar(255) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `member_id` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_image_id` (`image_id`),
-  KEY `fk_member_id` (`member_id`)
+  KEY `fk_member_id` (`member_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -4015,9 +4443,7 @@ CREATE TABLE IF NOT EXISTS `xshop_member_images` (
 CREATE TABLE IF NOT EXISTS `xshop_opportunity` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `lead_id` int(11) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
   `customer_id` int(11) DEFAULT NULL,
-  `employee_id` int(11) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
   `related_document_id` varchar(255) DEFAULT NULL,
@@ -4025,26 +4451,27 @@ CREATE TABLE IF NOT EXISTS `xshop_opportunity` (
   `related_document_name` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
+  `opportunity` text,
   PRIMARY KEY (`id`),
   KEY `fk_lead_id` (`lead_id`) USING BTREE,
   KEY `fk_customer_id` (`customer_id`) USING BTREE,
-  KEY `fk_employee_id` (`employee_id`) USING BTREE,
-  KEY `fk_created_by_id` (`created_by_id`) USING BTREE
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `xshop_orderDetails`
+-- Table structure for table `xshop_orderdetails`
 --
 
-CREATE TABLE IF NOT EXISTS `xshop_orderDetails` (
+CREATE TABLE IF NOT EXISTS `xshop_orderdetails` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) DEFAULT NULL,
-  `qty` decimal(10,2) DEFAULT NULL,
-  `unit` varchar(255) DEFAULT NULL,
-  `rate` decimal(10,2) DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL,
+  `qty` varchar(255) DEFAULT NULL,
+  `rate` decimal(14,2) DEFAULT NULL,
+  `amount` decimal(14,2) DEFAULT NULL,
   `epan_id` int(11) DEFAULT NULL,
   `item_id` int(11) DEFAULT NULL,
   `custom_fields` text,
@@ -4056,13 +4483,16 @@ CREATE TABLE IF NOT EXISTS `xshop_orderDetails` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `invoice_id` int(11) DEFAULT NULL,
-  `apply_tax` tinyint(4) DEFAULT NULL,
+  `apply_tax` tinyint(1) DEFAULT NULL,
+  `tax_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_order_id` (`order_id`),
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_item_id` (`item_id`),
-  KEY `fk_created_by_id` (`created_by_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_invoice_id` (`invoice_id`),
+  KEY `fk_tax_id` (`tax_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 
@@ -4081,7 +4511,7 @@ CREATE TABLE IF NOT EXISTS `xshop_orderitem_departmental_status` (
   KEY `fk_orderitem_id` (`orderitem_id`),
   KEY `fk_department_id` (`department_id`),
   KEY `fk_outsource_party_id` (`outsource_party_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=28 ;
 
 -- --------------------------------------------------------
 
@@ -4093,11 +4523,11 @@ CREATE TABLE IF NOT EXISTS `xshop_orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `total_amount` decimal(10,2) DEFAULT NULL,
+  `total_amount` decimal(14,2) DEFAULT NULL,
   `discount_voucher` varchar(255) DEFAULT NULL,
   `discount_voucher_amount` varchar(255) DEFAULT NULL,
-  `tax` decimal(10,2) DEFAULT NULL,
-  `net_amount` decimal(10,2) DEFAULT NULL,
+  `tax` decimal(14,2) DEFAULT NULL,
+  `net_amount` decimal(14,2) DEFAULT NULL,
   `order_summary` text,
   `billing_address` varchar(255) DEFAULT NULL,
   `shipping_address` varchar(255) DEFAULT NULL,
@@ -4118,13 +4548,31 @@ CREATE TABLE IF NOT EXISTS `xshop_orders` (
   `termsandcondition_id` int(11) DEFAULT NULL,
   `priority_id` int(11) DEFAULT NULL,
   `delivery_date` date DEFAULT NULL,
-  `gross_amount` decimal(10,2) DEFAULT NULL,
+  `gross_amount` decimal(14,2) DEFAULT NULL,
+  `billing_landmark` varchar(255) DEFAULT NULL,
+  `billing_city` varchar(255) DEFAULT NULL,
+  `billing_state` varchar(255) DEFAULT NULL,
+  `billing_country` varchar(255) DEFAULT NULL,
+  `billing_zip` varchar(255) DEFAULT NULL,
+  `billing_tel` varchar(255) DEFAULT NULL,
+  `billing_email` varchar(255) DEFAULT NULL,
+  `shipping_landmark` varchar(255) DEFAULT NULL,
+  `shipping_city` varchar(255) DEFAULT NULL,
+  `shipping_state` varchar(255) DEFAULT NULL,
+  `shipping_country` varchar(255) DEFAULT NULL,
+  `shipping_zip` varchar(255) DEFAULT NULL,
+  `shipping_tel` varchar(255) DEFAULT NULL,
+  `shipping_email` varchar(255) DEFAULT NULL,
+  `currency_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_member_id` (`member_id`),
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_created_by_id` (`created_by_id`),
-  KEY `fk_termsandcondition_id` (`termsandcondition_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_termsandcondition_id` (`termsandcondition_id`) USING BTREE,
+  KEY `fk_paymentgateway_id` (`paymentgateway_id`),
+  KEY `fk_priority_id` (`priority_id`),
+  KEY `fk_currency_id` (`currency_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -4182,9 +4630,45 @@ CREATE TABLE IF NOT EXISTS `xshop_payment_gateways` (
   `processing` varchar(255) DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT NULL,
   `default_parameters` text,
+  `gateway_image_id` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_epan_id` (`epan_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_gateway_image_id` (`gateway_image_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
+
+--
+-- Dumping data for table `xshop_payment_gateways`
+--
+
+INSERT INTO `xshop_payment_gateways` (`id`, `epan_id`, `name`, `parameters`, `processing`, `is_active`, `default_parameters`, `gateway_image_id`) VALUES
+(1, 1, 'AuthorizeNet_AIM', NULL, 'OffSite', 1, '{"apiLoginId":"","transactionKey":"","testMode":false,"developerMode":false}', NULL),
+(2, 1, 'AuthorizeNet_SIM', NULL, 'OffSite', 1, '{"apiLoginId":"","transactionKey":"","testMode":false,"developerMode":false,"hashSecret":""}', NULL),
+(3, 1, 'Buckaroo_Ideal', NULL, 'OffSite', 1, '{"websiteKey":"","secretKey":"","testMode":false}', NULL),
+(4, 1, 'Buckaroo_PayPal', NULL, 'OffSite', 1, '{"websiteKey":"","secretKey":"","testMode":false}', NULL),
+(5, 1, 'CardSave', NULL, 'OffSite', 1, '{"merchantId":"","password":""}', NULL),
+(6, 1, 'Coinbase', NULL, 'OffSite', 1, '{"apiKey":"","secret":"","accountId":""}', NULL),
+(7, 1, 'Dummy', NULL, 'OffSite', 1, '[]', NULL),
+(8, 1, 'Eway_Rapid', NULL, 'OffSite', 1, '{"apiKey":"","password":"","testMode":false}', NULL),
+(9, 1, 'FirstData_Connect', NULL, 'OffSite', 1, '{"storeId":"","sharedSecret":"","testMode":false}', NULL),
+(10, 1, 'GoCardless', NULL, 'OffSite', 1, '{"appId":"","appSecret":"","merchantId":"","accessToken":"","testMode":false}', NULL),
+(11, 1, 'Manual', NULL, 'OffSite', 1, '[]', NULL),
+(12, 1, 'Migs_ThreeParty', NULL, 'OffSite', 1, '{"merchantId":"","merchantAccessCode":"","secureHash":""}', NULL),
+(13, 1, 'Migs_TwoParty', NULL, 'OffSite', 1, '{"merchantId":"","merchantAccessCode":"","secureHash":""}', NULL),
+(14, 1, 'Mollie', NULL, 'OffSite', 1, '{"apiKey":""}', NULL),
+(15, 1, 'MultiSafepay', NULL, 'OffSite', 1, '{"accountId":"","siteId":"","siteCode":"","testMode":false}', NULL),
+(16, 1, 'Netaxept', NULL, 'OffSite', 1, '{"merchantId":"","password":"","testMode":false}', NULL),
+(17, 1, 'NetBanx', NULL, 'OffSite', 1, '{"accountNumber":"","storeId":"","storePassword":"","testMode":false}', NULL),
+(18, 1, 'PayFast', NULL, 'OffSite', 1, '{"merchantId":"","merchantKey":"","pdtKey":"","testMode":false}', NULL),
+(19, 1, 'Payflow_Pro', NULL, 'OffSite', 1, '{"username":"","password":"","vendor":"","partner":"","testMode":false}', NULL),
+(20, 1, 'PaymentExpress_PxPay', NULL, 'OffSite', 1, '{"username":"","password":""}', NULL),
+(21, 1, 'PaymentExpress_PxPost', NULL, 'OffSite', 1, '{"username":"","password":""}', NULL),
+(22, 1, 'PayPal_Express', NULL, 'OffSite', 1, '{"username":"","password":"","signature":"","testMode":false,"solutionType":["Sole","Mark"],"landingPage":["Billing","Login"],"brandName":"","headerImageUrl":"","logoImageUrl":"","borderColor":""}', NULL),
+(23, 1, 'PayPal_Pro', NULL, 'OffSite', 1, '{"username":"","password":"","signature":"","testMode":false}', NULL),
+(24, 1, 'SagePay_Direct', NULL, 'OffSite', 1, '{"vendor":"","testMode":false,"simulatorMode":false}', NULL),
+(25, 1, 'SagePay_Server', NULL, 'OffSite', 1, '{"vendor":"","testMode":false,"simulatorMode":false}', NULL),
+(26, 1, 'Stripe', NULL, 'OffSite', 1, '{"apiKey":""}', NULL),
+(27, 1, 'TwoCheckout', NULL, 'OffSite', 1, '{"accountNumber":"","secretWord":"","testMode":false}', NULL),
+(28, 1, 'WorldPay', NULL, 'OffSite', 1, '{"installationId":"","accountId":"","secretWord":"","callbackPassword":"","testMode":false}', NULL);
 
 -- --------------------------------------------------------
 
@@ -4201,9 +4685,11 @@ CREATE TABLE IF NOT EXISTS `xshop_priorities` (
   `updated_at` datetime DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_created_by_id` (`created_by_id`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -4226,59 +4712,6 @@ CREATE TABLE IF NOT EXISTS `xshop_productenquiry` (
   KEY `fk_epan_id` (`epan_id`) USING BTREE,
   KEY `fk_product_id` (`product_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `xshop_products`
---
-
-CREATE TABLE IF NOT EXISTS `xshop_products` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `sku` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text,
-  `original_price` varchar(255) DEFAULT NULL,
-  `sale_price` int(11) DEFAULT NULL,
-  `created_at` date DEFAULT NULL,
-  `expiry_date` date DEFAULT NULL,
-  `is_publish` tinyint(1) DEFAULT NULL,
-  `search_string` text,
-  `show_offer` tinyint(1) DEFAULT NULL,
-  `allow_saleable` tinyint(1) DEFAULT NULL,
-  `short_description` text,
-  `meta_title` varchar(255) DEFAULT NULL,
-  `meta_description` text,
-  `new` tinyint(1) DEFAULT NULL,
-  `feature` tinyint(1) DEFAULT NULL,
-  `latest` tinyint(1) DEFAULT NULL,
-  `mostviewed` tinyint(1) DEFAULT NULL,
-  `supplier_id` int(11) DEFAULT NULL,
-  `manufacturer_id` int(11) DEFAULT NULL,
-  `epan_id` int(11) DEFAULT NULL,
-  `tags` text,
-  `show_price` tinyint(1) DEFAULT NULL,
-  `enquiry_send_to_self` tinyint(1) DEFAULT NULL,
-  `enquiry_send_to_supplier` tinyint(1) DEFAULT NULL,
-  `enquiry_send_to_manufacturer` tinyint(1) DEFAULT NULL,
-  `product_enquiry_auto_reply` tinyint(1) DEFAULT NULL,
-  `allow_comments` tinyint(1) DEFAULT NULL,
-  `rank_weight` varchar(255) DEFAULT NULL,
-  `comment_api` varchar(255) DEFAULT NULL,
-  `show_manufacturer_detail` tinyint(1) DEFAULT NULL,
-  `show_supplier_detail` tinyint(1) DEFAULT NULL,
-  `show_detail` tinyint(1) DEFAULT NULL,
-  `allow_attachment` tinyint(1) DEFAULT NULL,
-  `allow_enquiry` tinyint(1) DEFAULT NULL,
-  `add_custom_button` tinyint(1) DEFAULT NULL,
-  `custom_button_text` varchar(255) DEFAULT NULL,
-  `custom_button_url` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_supplier_id` (`supplier_id`) USING BTREE,
-  KEY `fk_manufacturer_id` (`manufacturer_id`) USING BTREE,
-  KEY `fk_epan_id` (`epan_id`) USING BTREE,
-  FULLTEXT KEY `search_string` (`search_string`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -4316,19 +4749,23 @@ CREATE TABLE IF NOT EXISTS `xshop_quotation` (
   `related_document_name` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `total_amount` decimal(10,2) DEFAULT NULL,
-  `gross_amount` decimal(10,2) DEFAULT NULL,
-  `discount_voucher` varchar(255) DEFAULT NULL,
+  `total_amount` decimal(14,2) DEFAULT NULL,
+  `gross_amount` decimal(14,2) DEFAULT NULL,
   `discount_voucher_amount` varchar(255) DEFAULT NULL,
-  `tax` decimal(10,2) DEFAULT NULL,
-  `net_amount` decimal(10,2) DEFAULT NULL,
+  `tax` decimal(14,2) DEFAULT NULL,
+  `net_amount` decimal(14,2) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
+  `narration` text,
+  `currency_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_lead_id` (`lead_id`),
   KEY `fk_termsandcondition_id` (`termsandcondition_id`),
   KEY `fk_customer_id` (`customer_id`),
   KEY `fk_created_by_id` (`created_by_id`),
-  KEY `fk_oppertunity_id` (`opportunity_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_oppertunity_id` (`opportunity_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_currency_id` (`currency_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -4347,15 +4784,17 @@ CREATE TABLE IF NOT EXISTS `xshop_quotation_item` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `qty` varchar(255) DEFAULT NULL,
-  `rate` decimal(10,2) DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL,
+  `rate` decimal(14,2) DEFAULT NULL,
+  `amount` decimal(14,2) DEFAULT NULL,
   `narration` text,
   `custom_fields` text,
   `apply_tax` tinyint(1) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_quotation_id` (`quotation_id`),
   KEY `fk_item_id` (`item_id`),
-  KEY `fk_created_by_id` (`created_by_id`)
+  KEY `fk_created_by_id` (`created_by_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -4415,10 +4854,11 @@ CREATE TABLE IF NOT EXISTS `xshop_taxs` (
   `created_by_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `value` varchar(255) DEFAULT NULL,
-  `tax_account_id` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_created_by_id` (`created_by_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=1 ;
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -4436,9 +4876,11 @@ CREATE TABLE IF NOT EXISTS `xshop_termsandcondition` (
   `updated_at` datetime DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_created_by_id` (`created_by_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_created_by_id` (`created_by_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -4462,14 +4904,16 @@ CREATE TABLE IF NOT EXISTS `xstore_material_request` (
   `name` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`),
   KEY `fk_from_department_id` (`from_department_id`),
   KEY `fk_to_department_id` (`to_department_id`),
   KEY `fk_orderitem_id` (`orderitem_id`),
   KEY `fk_dispatch_to_warehouse_id` (`dispatch_to_warehouse_id`),
-  KEY `fk_orderitem_departmental_status_id` (`orderitem_departmental_status_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_orderitem_departmental_status_id` (`orderitem_departmental_status_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -4487,14 +4931,16 @@ CREATE TABLE IF NOT EXISTS `xstore_material_request_items` (
   `created_by_id` int(11) DEFAULT NULL,
   `unit` varchar(255) DEFAULT NULL,
   `material_request_jobcard_id` int(11) DEFAULT NULL,
-  `narration` varchar(255) DEFAULT NULL,
+  `narration` text,
   `custom_fields` text,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_item_id` (`item_id`),
   KEY `fk_created_by_id` (`created_by_id`),
-  KEY `fk_material_request_jobcard_id` (`material_request_jobcard_id`) USING BTREE
+  KEY `fk_material_request_jobcard_id` (`material_request_jobcard_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -4509,9 +4955,11 @@ CREATE TABLE IF NOT EXISTS `xstore_stock` (
   `warehouse_id` int(11) DEFAULT NULL,
   `qty` varchar(255) DEFAULT NULL,
   `custom_fields` text,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_item_id` (`item_id`),
-  KEY `fk_warehouse_id` (`warehouse_id`)
+  KEY `fk_warehouse_id` (`warehouse_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -4525,11 +4973,12 @@ CREATE TABLE IF NOT EXISTS `xstore_stock_movement_items` (
   `stock_movement_id` int(11) DEFAULT NULL,
   `item_id` int(11) DEFAULT NULL,
   `qty` varchar(255) DEFAULT NULL,
-  `unit` varchar(255) DEFAULT NULL,
   `custom_fields` text,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_stock_movement_id` (`stock_movement_id`),
-  KEY `fk_item_id` (`item_id`)
+  KEY `fk_item_id` (`item_id`),
+  KEY `fk_epan_id` (`epan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -4559,6 +5008,7 @@ CREATE TABLE IF NOT EXISTS `xstore_stock_movement_master` (
   `dispatch_request_id` int(11) DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_created_by_id` (`created_by_id`),
   KEY `fk_from_supplier_id` (`from_supplier_id`),
@@ -4569,7 +5019,9 @@ CREATE TABLE IF NOT EXISTS `xstore_stock_movement_master` (
   KEY `fk_to_warehouse_id` (`to_warehouse_id`),
   KEY `fk_po_id` (`po_id`),
   KEY `fk_jobcard_id` (`jobcard_id`),
-  KEY `fk_material_request_jobcard_id` (`material_request_jobcard_id`) USING BTREE
+  KEY `fk_material_request_jobcard_id` (`material_request_jobcard_id`) USING BTREE,
+  KEY `fk_epan_id` (`epan_id`),
+  KEY `fk_dispatch_request_id` (`dispatch_request_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -4583,142 +5035,1242 @@ CREATE TABLE IF NOT EXISTS `xstore_warehouse` (
   `name` varchar(255) DEFAULT NULL,
   `department_id` int(11) DEFAULT NULL,
   `out_source_party_id` int(11) DEFAULT NULL,
+  `epan_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_department_id` (`department_id`),
-  KEY `fk_out_source_party_id` (`out_source_party_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `fk_out_source_party_id` (`out_source_party_id`),
+  KEY `fk_epan_id` (`epan_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Constraints for dumped tables
 --
 
 --
+-- Constraints for table `alerts`
+--
+ALTER TABLE `alerts`
+  ADD CONSTRAINT `alerts_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `developerzone_entities`
+--
+ALTER TABLE `developerzone_entities`
+  ADD CONSTRAINT `developerzone_entities_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `epan_components_marketplace` (`id`),
+  ADD CONSTRAINT `developerzone_entities_ibfk_2` FOREIGN KEY (`owner_id`) REFERENCES `developerzone_entities` (`id`);
+
+--
+-- Constraints for table `developerzone_entity_attributes`
+--
+ALTER TABLE `developerzone_entity_attributes`
+  ADD CONSTRAINT `developerzone_entity_attributes_ibfk_1` FOREIGN KEY (`developerzone_entities_id`) REFERENCES `developerzone_entities` (`id`);
+
+--
+-- Constraints for table `developerzone_entity_methods`
+--
+ALTER TABLE `developerzone_entity_methods`
+  ADD CONSTRAINT `developerzone_entity_methods_ibfk_1` FOREIGN KEY (`developerzone_entities_id`) REFERENCES `developerzone_entities` (`id`);
+
+--
+-- Constraints for table `developerzone_events`
+--
+ALTER TABLE `developerzone_events`
+  ADD CONSTRAINT `developerzone_events_ibfk_1` FOREIGN KEY (`developerzone_entities_id`) REFERENCES `developerzone_entities` (`id`);
+
+--
+-- Constraints for table `developerzone_method_nodes`
+--
+ALTER TABLE `developerzone_method_nodes`
+  ADD CONSTRAINT `developerzone_method_nodes_ibfk_1` FOREIGN KEY (`developerzone_entity_methods_id`) REFERENCES `developerzone_entity_methods` (`id`),
+  ADD CONSTRAINT `developerzone_method_nodes_ibfk_2` FOREIGN KEY (`developerzone_entities_id`) REFERENCES `developerzone_entities` (`id`);
+
+--
+-- Constraints for table `developerzone_method_nodes_connections`
+--
+ALTER TABLE `developerzone_method_nodes_connections`
+  ADD CONSTRAINT `developerzone_method_nodes_connections_ibfk_1` FOREIGN KEY (`from_port_id`) REFERENCES `developerzone_method_node_ports` (`id`),
+  ADD CONSTRAINT `developerzone_method_nodes_connections_ibfk_2` FOREIGN KEY (`to_port_id`) REFERENCES `developerzone_method_node_ports` (`id`);
+
+--
+-- Constraints for table `developerzone_method_node_ports`
+--
+ALTER TABLE `developerzone_method_node_ports`
+  ADD CONSTRAINT `developerzone_method_node_ports_ibfk_1` FOREIGN KEY (`node_id`) REFERENCES `developerzone_method_nodes` (`id`);
+
+--
+-- Constraints for table `epan`
+--
+ALTER TABLE `epan`
+  ADD CONSTRAINT `epan_ibfk_1` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`),
+  ADD CONSTRAINT `epan_ibfk_2` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`id`),
+  ADD CONSTRAINT `epan_ibfk_3` FOREIGN KEY (`category_id`) REFERENCES `epan_categories` (`id`);
+
+--
+-- Constraints for table `epan_aliases`
+--
+ALTER TABLE `epan_aliases`
+  ADD CONSTRAINT `epan_aliases_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `epan_categories`
+--
+ALTER TABLE `epan_categories`
+  ADD CONSTRAINT `epan_categories_ibfk_1` FOREIGN KEY (`parent_category_id`) REFERENCES `epan_categories` (`id`);
+
+--
+-- Constraints for table `epan_components_plugins`
+--
+ALTER TABLE `epan_components_plugins`
+  ADD CONSTRAINT `epan_components_plugins_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `epan_components_marketplace` (`id`);
+
+--
+-- Constraints for table `epan_components_tools`
+--
+ALTER TABLE `epan_components_tools`
+  ADD CONSTRAINT `epan_components_tools_ibfk_1` FOREIGN KEY (`component_id`) REFERENCES `epan_components_marketplace` (`id`);
+
+--
+-- Constraints for table `epan_guide_steps`
+--
+ALTER TABLE `epan_guide_steps`
+  ADD CONSTRAINT `epan_guide_steps_ibfk_1` FOREIGN KEY (`guide_id`) REFERENCES `epan_guide` (`id`);
+
+--
+-- Constraints for table `epan_installed_components`
+--
+ALTER TABLE `epan_installed_components`
+  ADD CONSTRAINT `epan_installed_components_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `epan_installed_components_ibfk_2` FOREIGN KEY (`component_id`) REFERENCES `epan_components_marketplace` (`id`);
+
+--
+-- Constraints for table `epan_page`
+--
+ALTER TABLE `epan_page`
+  ADD CONSTRAINT `epan_page_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `epan_page_ibfk_2` FOREIGN KEY (`parent_page_id`) REFERENCES `epan_page` (`id`),
+  ADD CONSTRAINT `epan_page_ibfk_3` FOREIGN KEY (`template_id`) REFERENCES `epan_templates` (`id`);
+
+--
+-- Constraints for table `epan_page_snapshots`
+--
+ALTER TABLE `epan_page_snapshots`
+  ADD CONSTRAINT `epan_page_snapshots_ibfk_1` FOREIGN KEY (`epan_page_id`) REFERENCES `epan_page` (`id`);
+
+--
+-- Constraints for table `epan_templates`
+--
+ALTER TABLE `epan_templates`
+  ADD CONSTRAINT `epan_templates_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `last_seen_updates`
+--
+ALTER TABLE `last_seen_updates`
+  ADD CONSTRAINT `last_seen_updates_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `last_seen_updates_ibfk_2` FOREIGN KEY (`employee_id`) REFERENCES `xhr_employees` (`id`);
+
+--
+-- Constraints for table `messages`
+--
+ALTER TABLE `messages`
+  ADD CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `slideshows_awesomeimages`
+--
+ALTER TABLE `slideshows_awesomeimages`
+  ADD CONSTRAINT `slideshows_awesomeimages_ibfk_1` FOREIGN KEY (`gallery_id`) REFERENCES `slideshows_awesomeslider` (`id`);
+
+--
+-- Constraints for table `slideshows_awesomeslider`
+--
+ALTER TABLE `slideshows_awesomeslider`
+  ADD CONSTRAINT `slideshows_awesomeslider_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `slideshows_thumbnailslidergallery`
+--
+ALTER TABLE `slideshows_thumbnailslidergallery`
+  ADD CONSTRAINT `slideshows_thumbnailslidergallery_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `slideshows_thumbnailsliderimages`
+--
+ALTER TABLE `slideshows_thumbnailsliderimages`
+  ADD CONSTRAINT `slideshows_thumbnailsliderimages_ibfk_1` FOREIGN KEY (`gallery_id`) REFERENCES `slideshows_thumbnailslidergallery` (`id`);
+
+--
+-- Constraints for table `slideshows_transformgallery`
+--
+ALTER TABLE `slideshows_transformgallery`
+  ADD CONSTRAINT `slideshows_transformgallery_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `slideshows_transformgalleryimages`
+--
+ALTER TABLE `slideshows_transformgalleryimages`
+  ADD CONSTRAINT `slideshows_transformgalleryimages_ibfk_1` FOREIGN KEY (`gallery_id`) REFERENCES `slideshows_transformgallery` (`id`);
+
+--
+-- Constraints for table `slideshows_waterwheelgallery`
+--
+ALTER TABLE `slideshows_waterwheelgallery`
+  ADD CONSTRAINT `slideshows_waterwheelgallery_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `slideshows_waterwheelimages`
+--
+ALTER TABLE `slideshows_waterwheelimages`
+  ADD CONSTRAINT `slideshows_waterwheelimages_ibfk_1` FOREIGN KEY (`gallery_id`) REFERENCES `slideshows_waterwheelgallery` (`id`);
+
+--
+-- Constraints for table `staff`
+--
+ALTER TABLE `staff`
+  ADD CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`id`);
+
+--
+-- Constraints for table `userappaccess`
+--
+ALTER TABLE `userappaccess`
+  ADD CONSTRAINT `userappaccess_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `userappaccess_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `userappaccess_ibfk_3` FOREIGN KEY (`installed_app_id`) REFERENCES `epan_installed_components` (`id`);
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `user_custom_fields`
+--
+ALTER TABLE `user_custom_fields`
+  ADD CONSTRAINT `user_custom_fields_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `user_custom_field_value`
+--
+ALTER TABLE `user_custom_field_value`
+  ADD CONSTRAINT `user_custom_field_value_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `user_custom_field_value_ibfk_2` FOREIGN KEY (`usercustomefield_id`) REFERENCES `user_custom_fields` (`id`),
+  ADD CONSTRAINT `user_custom_field_value_ibfk_3` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`);
+
+--
 -- Constraints for table `xaccount_account`
 --
 ALTER TABLE `xaccount_account`
-  ADD CONSTRAINT `xaccount_account_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `xpurchase_supplier` (`id`),
-  ADD CONSTRAINT `xaccount_account_ibfk_2` FOREIGN KEY (`out_source_party_id`) REFERENCES `xproduction_out_source_parties` (`id`),
-  ADD CONSTRAINT `xaccount_account_ibfk_4` FOREIGN KEY (`group_id`) REFERENCES `xaccount_group` (`id`),
-  ADD CONSTRAINT `xaccount_account_ibfk_5` FOREIGN KEY (`employee_id`) REFERENCES `xhr_employees` (`id`),
-  ADD CONSTRAINT `xaccount_account_ibfk_6` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
+  ADD CONSTRAINT `xaccount_account_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xaccount_account_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xaccount_account_ibfk_3` FOREIGN KEY (`supplier_id`) REFERENCES `xpurchase_supplier` (`id`),
+  ADD CONSTRAINT `xaccount_account_ibfk_4` FOREIGN KEY (`out_source_party_id`) REFERENCES `xproduction_out_source_parties` (`id`),
+  ADD CONSTRAINT `xaccount_account_ibfk_5` FOREIGN KEY (`customer_id`) REFERENCES `xshop_memberdetails` (`id`),
+  ADD CONSTRAINT `xaccount_account_ibfk_6` FOREIGN KEY (`employee_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xaccount_account_ibfk_7` FOREIGN KEY (`group_id`) REFERENCES `xaccount_group` (`id`);
 
 --
 -- Constraints for table `xaccount_balance_sheet`
 --
 ALTER TABLE `xaccount_balance_sheet`
-  ADD CONSTRAINT `xaccount_balance_sheet_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
+  ADD CONSTRAINT `xaccount_balance_sheet_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xaccount_balance_sheet_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
 
 --
 -- Constraints for table `xaccount_group`
 --
 ALTER TABLE `xaccount_group`
-  ADD CONSTRAINT `xaccount_group_ibfk_1` FOREIGN KEY (`balance_sheet_id`) REFERENCES `xaccount_balance_sheet` (`id`);
+  ADD CONSTRAINT `xaccount_group_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xaccount_group_ibfk_2` FOREIGN KEY (`balance_sheet_id`) REFERENCES `xaccount_balance_sheet` (`id`);
 
 --
 -- Constraints for table `xaccount_transaction`
 --
 ALTER TABLE `xaccount_transaction`
   ADD CONSTRAINT `xaccount_transaction_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
-  ADD CONSTRAINT `xaccount_transaction_ibfk_2` FOREIGN KEY (`transaction_type_id`) REFERENCES `xaccount_transaction_types` (`id`),
-  ADD CONSTRAINT `xaccount_transaction_ibfk_3` FOREIGN KEY (`reference_account_id`) REFERENCES `xaccount_account` (`id`),
-  ADD CONSTRAINT `xaccount_transaction_ibfk_4` FOREIGN KEY (`employee_id`) REFERENCES `xhr_employees` (`id`);
+  ADD CONSTRAINT `xaccount_transaction_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xaccount_transaction_ibfk_3` FOREIGN KEY (`transaction_type_id`) REFERENCES `xaccount_transaction_types` (`id`);
 
 --
 -- Constraints for table `xaccount_transaction_row`
 --
 ALTER TABLE `xaccount_transaction_row`
-  ADD CONSTRAINT `xaccount_transaction_row_ibfk_2` FOREIGN KEY (`account_id`) REFERENCES `xaccount_account` (`id`);
+  ADD CONSTRAINT `xaccount_transaction_row_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xaccount_transaction_row_ibfk_2` FOREIGN KEY (`transaction_id`) REFERENCES `xaccount_transaction` (`id`),
+  ADD CONSTRAINT `xaccount_transaction_row_ibfk_3` FOREIGN KEY (`account_id`) REFERENCES `xaccount_account` (`id`);
+
+--
+-- Constraints for table `xaccount_transaction_types`
+--
+ALTER TABLE `xaccount_transaction_types`
+  ADD CONSTRAINT `xaccount_transaction_types_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xai_blocks`
+--
+ALTER TABLE `xai_blocks`
+  ADD CONSTRAINT `xai_blocks_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xai_blocks_ibfk_2` FOREIGN KEY (`dimension_id`) REFERENCES `xai_dimension` (`id`);
+
+--
+-- Constraints for table `xai_config`
+--
+ALTER TABLE `xai_config`
+  ADD CONSTRAINT `xai_config_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xai_data`
+--
+ALTER TABLE `xai_data`
+  ADD CONSTRAINT `xai_data_ibfk_1` FOREIGN KEY (`session_id`) REFERENCES `xai_session` (`id`);
+
+--
+-- Constraints for table `xai_dimension`
+--
+ALTER TABLE `xai_dimension`
+  ADD CONSTRAINT `xai_dimension_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xai_information`
+--
+ALTER TABLE `xai_information`
+  ADD CONSTRAINT `xai_information_ibfk_1` FOREIGN KEY (`session_id`) REFERENCES `xai_session` (`id`),
+  ADD CONSTRAINT `xai_information_ibfk_2` FOREIGN KEY (`data_id`) REFERENCES `xai_data` (`id`),
+  ADD CONSTRAINT `xai_information_ibfk_3` FOREIGN KEY (`meta_information_id`) REFERENCES `xai_meta_information` (`id`);
+
+--
+-- Constraints for table `xai_informationextractor`
+--
+ALTER TABLE `xai_informationextractor`
+  ADD CONSTRAINT `xai_informationextractor_ibfk_1` FOREIGN KEY (`meta_data_id`) REFERENCES `xai_meta_data` (`id`);
+
+--
+-- Constraints for table `xcrm_document_activities`
+--
+ALTER TABLE `xcrm_document_activities`
+  ADD CONSTRAINT `xcrm_document_activities_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xcrm_document_activities_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xcrm_document_activities_ibfk_3` FOREIGN KEY (`attachment_id`) REFERENCES `filestore_file` (`id`);
 
 --
 -- Constraints for table `xcrm_emails`
 --
 ALTER TABLE `xcrm_emails`
-  ADD CONSTRAINT `xcrm_emails_ibfk_2` FOREIGN KEY (`read_by_employee_id`) REFERENCES `xhr_employees` (`id`),
-  ADD CONSTRAINT `xcrm_emails_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
+  ADD CONSTRAINT `xcrm_emails_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xcrm_emails_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xcrm_emails_ibfk_3` FOREIGN KEY (`task_id`) REFERENCES `xproduction_tasks` (`id`),
+  ADD CONSTRAINT `xcrm_emails_ibfk_4` FOREIGN KEY (`read_by_employee_id`) REFERENCES `xhr_employees` (`id`);
+
+--
+-- Constraints for table `xcrm_smses`
+--
+ALTER TABLE `xcrm_smses`
+  ADD CONSTRAINT `xcrm_smses_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xcrm_smses_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xcrm_tickets`
+--
+ALTER TABLE `xcrm_tickets`
+  ADD CONSTRAINT `xcrm_tickets_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xcrm_tickets_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xcrm_tickets_ibfk_3` FOREIGN KEY (`customer_id`) REFERENCES `xshop_memberdetails` (`id`),
+  ADD CONSTRAINT `xcrm_tickets_ibfk_4` FOREIGN KEY (`order_id`) REFERENCES `xshop_orders` (`id`);
+
+--
+-- Constraints for table `xdispatch_delivery_note`
+--
+ALTER TABLE `xdispatch_delivery_note`
+  ADD CONSTRAINT `xdispatch_delivery_note_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xdispatch_delivery_note_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `xstore_warehouse` (`id`),
+  ADD CONSTRAINT `xdispatch_delivery_note_ibfk_3` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xdispatch_delivery_note_ibfk_4` FOREIGN KEY (`orderitem_id`) REFERENCES `xshop_orderdetails` (`id`),
+  ADD CONSTRAINT `xdispatch_delivery_note_ibfk_5` FOREIGN KEY (`to_department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xdispatch_delivery_note_ibfk_6` FOREIGN KEY (`from_department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xdispatch_delivery_note_ibfk_7` FOREIGN KEY (`dispatch_to_warehouse_id`) REFERENCES `xstore_warehouse` (`id`),
+  ADD CONSTRAINT `xdispatch_delivery_note_ibfk_8` FOREIGN KEY (`orderitem_departmental_status_id`) REFERENCES `xshop_orderitem_departmental_status` (`id`),
+  ADD CONSTRAINT `xdispatch_delivery_note_ibfk_9` FOREIGN KEY (`order_id`) REFERENCES `xshop_orders` (`id`),
+  ADD CONSTRAINT `xdispatch_delivery_note_ibfk_10` FOREIGN KEY (`to_memberdetails_id`) REFERENCES `xshop_memberdetails` (`id`);
 
 --
 -- Constraints for table `xdispatch_delivery_note_items`
 --
 ALTER TABLE `xdispatch_delivery_note_items`
   ADD CONSTRAINT `xdispatch_delivery_note_items_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
-  ADD CONSTRAINT `xdispatch_delivery_note_items_ibfk_2` FOREIGN KEY (`orderitem_id`) REFERENCES `xshop_orderDetails` (`id`);
+  ADD CONSTRAINT `xdispatch_delivery_note_items_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xdispatch_delivery_note_items_ibfk_3` FOREIGN KEY (`orderitem_id`) REFERENCES `xshop_orderdetails` (`id`),
+  ADD CONSTRAINT `xdispatch_delivery_note_items_ibfk_4` FOREIGN KEY (`delivery_note_id`) REFERENCES `xdispatch_delivery_note` (`id`);
+
+--
+-- Constraints for table `xdispatch_dispatch_request`
+--
+ALTER TABLE `xdispatch_dispatch_request`
+  ADD CONSTRAINT `xdispatch_dispatch_request_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xdispatch_dispatch_request_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xdispatch_dispatch_request_ibfk_3` FOREIGN KEY (`orderitem_id`) REFERENCES `xshop_orderdetails` (`id`),
+  ADD CONSTRAINT `xdispatch_dispatch_request_ibfk_4` FOREIGN KEY (`to_department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xdispatch_dispatch_request_ibfk_5` FOREIGN KEY (`from_department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xdispatch_dispatch_request_ibfk_6` FOREIGN KEY (`dispatch_to_warehouse_id`) REFERENCES `xstore_warehouse` (`id`),
+  ADD CONSTRAINT `xdispatch_dispatch_request_ibfk_7` FOREIGN KEY (`orderitem_departmental_status_id`) REFERENCES `xshop_orderitem_departmental_status` (`id`),
+  ADD CONSTRAINT `xdispatch_dispatch_request_ibfk_8` FOREIGN KEY (`order_id`) REFERENCES `xshop_orders` (`id`);
+
+--
+-- Constraints for table `xdispatch_dispatch_request_items`
+--
+ALTER TABLE `xdispatch_dispatch_request_items`
+  ADD CONSTRAINT `xdispatch_dispatch_request_items_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xdispatch_dispatch_request_items_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xdispatch_dispatch_request_items_ibfk_3` FOREIGN KEY (`orderitem_id`) REFERENCES `xshop_orderdetails` (`id`),
+  ADD CONSTRAINT `xdispatch_dispatch_request_items_ibfk_4` FOREIGN KEY (`deliverynote_id`) REFERENCES `xdispatch_delivery_note` (`id`),
+  ADD CONSTRAINT `xdispatch_dispatch_request_items_ibfk_5` FOREIGN KEY (`dispatch_request_id`) REFERENCES `xdispatch_dispatch_request` (`id`),
+  ADD CONSTRAINT `xdispatch_dispatch_request_items_ibfk_6` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
+
+--
+-- Constraints for table `xenquirynsubscription_config`
+--
+ALTER TABLE `xenquirynsubscription_config`
+  ADD CONSTRAINT `xenquirynsubscription_config_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xenquirynsubscription_custome_customfields`
+--
+ALTER TABLE `xenquirynsubscription_custome_customfields`
+  ADD CONSTRAINT `xenquirynsubscription_custome_customfields_ibfk_1` FOREIGN KEY (`forms_id`) REFERENCES `xenquirynsubscription_customform_forms` (`id`);
+
+--
+-- Constraints for table `xenquirynsubscription_customformentry`
+--
+ALTER TABLE `xenquirynsubscription_customformentry`
+  ADD CONSTRAINT `xenquirynsubscription_customformentry_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xenquirynsubscription_customformentry_ibfk_2` FOREIGN KEY (`forms_id`) REFERENCES `xenquirynsubscription_customform_forms` (`id`);
+
+--
+-- Constraints for table `xenquirynsubscription_customform_forms`
+--
+ALTER TABLE `xenquirynsubscription_customform_forms`
+  ADD CONSTRAINT `xenquirynsubscription_customform_forms_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xenquirynsubscription_emailjobs`
+--
+ALTER TABLE `xenquirynsubscription_emailjobs`
+  ADD CONSTRAINT `xenquirynsubscription_emailjobs_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xenquirynsubscription_emailjobs_ibfk_2` FOREIGN KEY (`newsletter_id`) REFERENCES `xenquirynsubscription_newsletter` (`id`);
+
+--
+-- Constraints for table `xenquirynsubscription_emailqueue`
+--
+ALTER TABLE `xenquirynsubscription_emailqueue`
+  ADD CONSTRAINT `xenquirynsubscription_emailqueue_ibfk_1` FOREIGN KEY (`emailjobs_id`) REFERENCES `xenquirynsubscription_emailjobs` (`id`),
+  ADD CONSTRAINT `xenquirynsubscription_emailqueue_ibfk_2` FOREIGN KEY (`subscriber_id`) REFERENCES `xenquirynsubscription_subscription` (`id`);
+
+--
+-- Constraints for table `xenquirynsubscription_hosts_touched`
+--
+ALTER TABLE `xenquirynsubscription_hosts_touched`
+  ADD CONSTRAINT `xenquirynsubscription_hosts_touched_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `xenquirynsubscription_subscription_categories` (`id`);
+
+--
+-- Constraints for table `xenquirynsubscription_massemailconfiguration`
+--
+ALTER TABLE `xenquirynsubscription_massemailconfiguration`
+  ADD CONSTRAINT `xenquirynsubscription_massemailconfiguration_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xenquirynsubscription_newsletter`
+--
+ALTER TABLE `xenquirynsubscription_newsletter`
+  ADD CONSTRAINT `xenquirynsubscription_newsletter_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xenquirynsubscription_newsletter_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xenquirynsubscription_newsletter_ibfk_3` FOREIGN KEY (`category_id`) REFERENCES `xenquirynsubscription_newslettercategory` (`id`);
+
+--
+-- Constraints for table `xenquirynsubscription_newslettercategory`
+--
+ALTER TABLE `xenquirynsubscription_newslettercategory`
+  ADD CONSTRAINT `xenquirynsubscription_newslettercategory_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xenquirynsubscription_newslettercategory_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xenquirynsubscription_newsletter_templates`
+--
+ALTER TABLE `xenquirynsubscription_newsletter_templates`
+  ADD CONSTRAINT `xenquirynsubscription_newsletter_templates_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xenquirynsubscription_newsletter_templates_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xenquirynsubscription_subscatass`
+--
+ALTER TABLE `xenquirynsubscription_subscatass`
+  ADD CONSTRAINT `xenquirynsubscription_subscatass_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `xenquirynsubscription_subscription_categories` (`id`),
+  ADD CONSTRAINT `xenquirynsubscription_subscatass_ibfk_2` FOREIGN KEY (`subscriber_id`) REFERENCES `xenquirynsubscription_subscription` (`id`);
 
 --
 -- Constraints for table `xenquirynsubscription_subscription`
 --
 ALTER TABLE `xenquirynsubscription_subscription`
-  ADD CONSTRAINT `xenquirynsubscription_subscription_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
+  ADD CONSTRAINT `xenquirynsubscription_subscription_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xenquirynsubscription_subscription_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xenquirynsubscription_subscription_categories`
+--
+ALTER TABLE `xenquirynsubscription_subscription_categories`
+  ADD CONSTRAINT `xenquirynsubscription_subscription_categories_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xenquirynsubscription_subscription_categories_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xenquirynsubscription_subscription_config`
+--
+ALTER TABLE `xenquirynsubscription_subscription_config`
+  ADD CONSTRAINT `xenquirynsubscription_subscription_config_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `xenquirynsubscription_subscription_categories` (`id`);
+
+--
+-- Constraints for table `xepan_generic_documents`
+--
+ALTER TABLE `xepan_generic_documents`
+  ADD CONSTRAINT `xepan_generic_documents_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xepan_generic_documents_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xepan_generic_documents_ibfk_3` FOREIGN KEY (`generic_doc_category_id`) REFERENCES `xepan_generic_documents_category` (`id`);
+
+--
+-- Constraints for table `xepan_generic_documents_category`
+--
+ALTER TABLE `xepan_generic_documents_category`
+  ADD CONSTRAINT `xepan_generic_documents_category_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
+
+--
+-- Constraints for table `xhr_departments`
+--
+ALTER TABLE `xhr_departments`
+  ADD CONSTRAINT `xhr_departments_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xhr_departments_ibfk_2` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`id`);
+
+--
+-- Constraints for table `xhr_departments_acl`
+--
+ALTER TABLE `xhr_departments_acl`
+  ADD CONSTRAINT `xhr_departments_acl_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xhr_departments_acl_ibfk_2` FOREIGN KEY (`document_id`) REFERENCES `xhr_documents` (`id`),
+  ADD CONSTRAINT `xhr_departments_acl_ibfk_3` FOREIGN KEY (`post_id`) REFERENCES `xhr_posts` (`id`);
+
+--
+-- Constraints for table `xhr_documents`
+--
+ALTER TABLE `xhr_documents`
+  ADD CONSTRAINT `xhr_documents_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xhr_documents_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `xhr_departments` (`id`);
+
+--
+-- Constraints for table `xhr_employees`
+--
+ALTER TABLE `xhr_employees`
+  ADD CONSTRAINT `xhr_employees_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xhr_employees_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `xhr_posts` (`id`),
+  ADD CONSTRAINT `xhr_employees_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `xhr_employees_ibfk_4` FOREIGN KEY (`department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xhr_employees_ibfk_5` FOREIGN KEY (`empolyee_image_id`) REFERENCES `filestore_file` (`id`);
+
+--
+-- Constraints for table `xhr_employee_attendence`
+--
+ALTER TABLE `xhr_employee_attendence`
+  ADD CONSTRAINT `xhr_employee_attendence_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xhr_employee_attendence_ibfk_2` FOREIGN KEY (`employee_id`) REFERENCES `xhr_employees` (`id`);
+
+--
+-- Constraints for table `xhr_employee_leave`
+--
+ALTER TABLE `xhr_employee_leave`
+  ADD CONSTRAINT `xhr_employee_leave_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xhr_employee_leave_ibfk_2` FOREIGN KEY (`employee_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xhr_employee_leave_ibfk_3` FOREIGN KEY (`leave_type_id`) REFERENCES `xhr_leave_types` (`id`);
+
+--
+-- Constraints for table `xhr_holiday_blocks`
+--
+ALTER TABLE `xhr_holiday_blocks`
+  ADD CONSTRAINT `xhr_holiday_blocks_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xhr_holiday_blocks_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `xhr_departments` (`id`);
+
+--
+-- Constraints for table `xhr_leave_types`
+--
+ALTER TABLE `xhr_leave_types`
+  ADD CONSTRAINT `xhr_leave_types_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xhr_official_emails`
+--
+ALTER TABLE `xhr_official_emails`
+  ADD CONSTRAINT `xhr_official_emails_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xhr_official_emails_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xhr_official_emails_ibfk_3` FOREIGN KEY (`department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xhr_official_emails_ibfk_4` FOREIGN KEY (`employee_id`) REFERENCES `xhr_employees` (`id`);
+
+--
+-- Constraints for table `xhr_posts`
+--
+ALTER TABLE `xhr_posts`
+  ADD CONSTRAINT `xhr_posts_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xhr_posts_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xhr_posts_ibfk_3` FOREIGN KEY (`parent_post_id`) REFERENCES `xhr_posts` (`id`);
+
+--
+-- Constraints for table `xhr_salary`
+--
+ALTER TABLE `xhr_salary`
+  ADD CONSTRAINT `xhr_salary_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xhr_salary_ibfk_2` FOREIGN KEY (`employee_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xhr_salary_ibfk_3` FOREIGN KEY (`salary_type_id`) REFERENCES `xhr_salary_types` (`id`),
+  ADD CONSTRAINT `xhr_salary_ibfk_4` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
+
+--
+-- Constraints for table `xhr_salary_templates`
+--
+ALTER TABLE `xhr_salary_templates`
+  ADD CONSTRAINT `xhr_salary_templates_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xhr_salary_templates_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xhr_salary_templates_ibfk_3` FOREIGN KEY (`post_id`) REFERENCES `xhr_posts` (`id`);
+
+--
+-- Constraints for table `xhr_salary_types`
+--
+ALTER TABLE `xhr_salary_types`
+  ADD CONSTRAINT `xhr_salary_types_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xhr_template_salary`
+--
+ALTER TABLE `xhr_template_salary`
+  ADD CONSTRAINT `xhr_template_salary_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xhr_template_salary_ibfk_2` FOREIGN KEY (`salary_template_id`) REFERENCES `xhr_salary_templates` (`id`),
+  ADD CONSTRAINT `xhr_template_salary_ibfk_3` FOREIGN KEY (`salary_type_id`) REFERENCES `xhr_salary_types` (`id`);
+
+--
+-- Constraints for table `ximagegallery_gallery`
+--
+ALTER TABLE `ximagegallery_gallery`
+  ADD CONSTRAINT `ximagegallery_gallery_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `ximagegallery_images`
+--
+ALTER TABLE `ximagegallery_images`
+  ADD CONSTRAINT `ximagegallery_images_ibfk_1` FOREIGN KEY (`gallery_id`) REFERENCES `ximagegallery_gallery` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_campaignnewsletter`
+--
+ALTER TABLE `xmarketingcampaign_campaignnewsletter`
+  ADD CONSTRAINT `xmarketingcampaign_campaignnewsletter_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xmarketingcampaign_campaignnewsletter_ibfk_2` FOREIGN KEY (`campaign_id`) REFERENCES `xmarketingcampaign_campaigns` (`id`),
+  ADD CONSTRAINT `xmarketingcampaign_campaignnewsletter_ibfk_3` FOREIGN KEY (`newsletter_id`) REFERENCES `xenquirynsubscription_newsletter` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_campaigns`
+--
+ALTER TABLE `xmarketingcampaign_campaigns`
+  ADD CONSTRAINT `xmarketingcampaign_campaigns_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xmarketingcampaign_campaigns_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `xmarketingcampaign_campaigns_categories` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_campaignsocialposts`
+--
+ALTER TABLE `xmarketingcampaign_campaignsocialposts`
+  ADD CONSTRAINT `xmarketingcampaign_campaignsocialposts_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xmarketingcampaign_campaignsocialposts_ibfk_2` FOREIGN KEY (`campaign_id`) REFERENCES `xmarketingcampaign_campaigns` (`id`),
+  ADD CONSTRAINT `xmarketingcampaign_campaignsocialposts_ibfk_3` FOREIGN KEY (`socialpost_id`) REFERENCES `xmarketingcampaign_socialposts` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_campaigns_categories`
+--
+ALTER TABLE `xmarketingcampaign_campaigns_categories`
+  ADD CONSTRAINT `xmarketingcampaign_campaigns_categories_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_config`
+--
+ALTER TABLE `xmarketingcampaign_config`
+  ADD CONSTRAINT `xmarketingcampaign_config_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_cp_socialuser_cat`
+--
+ALTER TABLE `xmarketingcampaign_cp_socialuser_cat`
+  ADD CONSTRAINT `xmarketingcampaign_cp_socialuser_cat_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xmarketingcampaign_cp_socialuser_cat_ibfk_2` FOREIGN KEY (`campaign_id`) REFERENCES `xmarketingcampaign_campaigns` (`id`),
+  ADD CONSTRAINT `xmarketingcampaign_cp_socialuser_cat_ibfk_3` FOREIGN KEY (`socialuser_id`) REFERENCES `xmarketingcampaign_socialusers` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_cp_sub_cat`
+--
+ALTER TABLE `xmarketingcampaign_cp_sub_cat`
+  ADD CONSTRAINT `xmarketingcampaign_cp_sub_cat_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xmarketingcampaign_cp_sub_cat_ibfk_2` FOREIGN KEY (`campaign_id`) REFERENCES `xmarketingcampaign_campaigns` (`id`),
+  ADD CONSTRAINT `xmarketingcampaign_cp_sub_cat_ibfk_3` FOREIGN KEY (`category_id`) REFERENCES `xenquirynsubscription_subscription_categories` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_data_grabber`
+--
+ALTER TABLE `xmarketingcampaign_data_grabber`
+  ADD CONSTRAINT `xmarketingcampaign_data_grabber_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_data_search_phrase`
+--
+ALTER TABLE `xmarketingcampaign_data_search_phrase`
+  ADD CONSTRAINT `xmarketingcampaign_data_search_phrase_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xmarketingcampaign_data_search_phrase_ibfk_2` FOREIGN KEY (`data_grabber_id`) REFERENCES `xmarketingcampaign_data_grabber` (`id`),
+  ADD CONSTRAINT `xmarketingcampaign_data_search_phrase_ibfk_3` FOREIGN KEY (`subscription_category_id`) REFERENCES `xenquirynsubscription_subscription_categories` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_googlebloggerconfig`
+--
+ALTER TABLE `xmarketingcampaign_googlebloggerconfig`
+  ADD CONSTRAINT `xmarketingcampaign_googlebloggerconfig_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_socialconfig`
+--
+ALTER TABLE `xmarketingcampaign_socialconfig`
+  ADD CONSTRAINT `xmarketingcampaign_socialconfig_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_socialpostings`
+--
+ALTER TABLE `xmarketingcampaign_socialpostings`
+  ADD CONSTRAINT `xmarketingcampaign_socialpostings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `xmarketingcampaign_socialusers` (`id`),
+  ADD CONSTRAINT `xmarketingcampaign_socialpostings_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `xmarketingcampaign_socialposts` (`id`),
+  ADD CONSTRAINT `xmarketingcampaign_socialpostings_ibfk_3` FOREIGN KEY (`campaign_id`) REFERENCES `xmarketingcampaign_campaigns` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_socialpostings_activities`
+--
+ALTER TABLE `xmarketingcampaign_socialpostings_activities`
+  ADD CONSTRAINT `xmarketingcampaign_socialpostings_activities_ibfk_1` FOREIGN KEY (`posting_id`) REFERENCES `xmarketingcampaign_socialpostings` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_socialposts`
+--
+ALTER TABLE `xmarketingcampaign_socialposts`
+  ADD CONSTRAINT `xmarketingcampaign_socialposts_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xmarketingcampaign_socialposts_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `xmarketingcampaign_socialpost_categories` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_socialpost_categories`
+--
+ALTER TABLE `xmarketingcampaign_socialpost_categories`
+  ADD CONSTRAINT `xmarketingcampaign_socialpost_categories_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xmarketingcampaign_socialusers`
+--
+ALTER TABLE `xmarketingcampaign_socialusers`
+  ADD CONSTRAINT `xmarketingcampaign_socialusers_ibfk_1` FOREIGN KEY (`config_id`) REFERENCES `xmarketingcampaign_socialconfig` (`id`);
+
+--
+-- Constraints for table `xproduction_employee_team_associations`
+--
+ALTER TABLE `xproduction_employee_team_associations`
+  ADD CONSTRAINT `xproduction_employee_team_associations_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `xproduction_teams` (`id`),
+  ADD CONSTRAINT `xproduction_employee_team_associations_ibfk_2` FOREIGN KEY (`employee_id`) REFERENCES `xhr_employees` (`id`);
 
 --
 -- Constraints for table `xproduction_jobcard`
 --
 ALTER TABLE `xproduction_jobcard`
-  ADD CONSTRAINT `xproduction_jobcard_ibfk_1` FOREIGN KEY (`to_department_id`) REFERENCES `xhr_departments` (`id`),
-  ADD CONSTRAINT `xproduction_jobcard_ibfk_2` FOREIGN KEY (`dispatch_to_warehouse_id`) REFERENCES `xstore_warehouse` (`id`);
+  ADD CONSTRAINT `xproduction_jobcard_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xproduction_jobcard_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xproduction_jobcard_ibfk_3` FOREIGN KEY (`orderitem_id`) REFERENCES `xshop_orderdetails` (`id`),
+  ADD CONSTRAINT `xproduction_jobcard_ibfk_4` FOREIGN KEY (`to_department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xproduction_jobcard_ibfk_5` FOREIGN KEY (`from_department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xproduction_jobcard_ibfk_6` FOREIGN KEY (`dispatch_to_warehouse_id`) REFERENCES `xstore_warehouse` (`id`),
+  ADD CONSTRAINT `xproduction_jobcard_ibfk_7` FOREIGN KEY (`orderitem_departmental_status_id`) REFERENCES `xshop_orderitem_departmental_status` (`id`);
+
+--
+-- Constraints for table `xproduction_outsource_party_dept_associations`
+--
+ALTER TABLE `xproduction_outsource_party_dept_associations`
+  ADD CONSTRAINT `xproduction_outsource_party_dept_associations_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xproduction_outsource_party_dept_associations_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xproduction_outsource_party_dept_associations_ibfk_3` FOREIGN KEY (`out_source_party_id`) REFERENCES `xproduction_out_source_parties` (`id`);
+
+--
+-- Constraints for table `xproduction_out_source_parties`
+--
+ALTER TABLE `xproduction_out_source_parties`
+  ADD CONSTRAINT `xproduction_out_source_parties_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xproduction_tasks`
+--
+ALTER TABLE `xproduction_tasks`
+  ADD CONSTRAINT `xproduction_tasks_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xproduction_tasks_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xproduction_tasks_ibfk_3` FOREIGN KEY (`team_id`) REFERENCES `xproduction_teams` (`id`),
+  ADD CONSTRAINT `xproduction_tasks_ibfk_4` FOREIGN KEY (`employee_id`) REFERENCES `xhr_employees` (`id`);
+
+--
+-- Constraints for table `xproduction_teams`
+--
+ALTER TABLE `xproduction_teams`
+  ADD CONSTRAINT `xproduction_teams_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xproduction_teams_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `xhr_departments` (`id`);
+
+--
+-- Constraints for table `xpurchase_purchase_order`
+--
+ALTER TABLE `xpurchase_purchase_order`
+  ADD CONSTRAINT `xpurchase_purchase_order_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xpurchase_purchase_order_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xpurchase_purchase_order_ibfk_3` FOREIGN KEY (`termsandcondition_id`) REFERENCES `xshop_termsandcondition` (`id`),
+  ADD CONSTRAINT `xpurchase_purchase_order_ibfk_4` FOREIGN KEY (`supplier_id`) REFERENCES `xpurchase_supplier` (`id`),
+  ADD CONSTRAINT `xpurchase_purchase_order_ibfk_5` FOREIGN KEY (`priority_id`) REFERENCES `xshop_priorities` (`id`);
+
+--
+-- Constraints for table `xpurchase_purchase_order_item`
+--
+ALTER TABLE `xpurchase_purchase_order_item`
+  ADD CONSTRAINT `xpurchase_purchase_order_item_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xpurchase_purchase_order_item_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xpurchase_purchase_order_item_ibfk_3` FOREIGN KEY (`po_id`) REFERENCES `xpurchase_purchase_order` (`id`),
+  ADD CONSTRAINT `xpurchase_purchase_order_item_ibfk_4` FOREIGN KEY (`invoice_id`) REFERENCES `xshop_invoices` (`id`),
+  ADD CONSTRAINT `xpurchase_purchase_order_item_ibfk_5` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
 
 --
 -- Constraints for table `xpurchase_supplier`
 --
 ALTER TABLE `xpurchase_supplier`
-  ADD CONSTRAINT `xpurchase_supplier_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
+  ADD CONSTRAINT `xpurchase_supplier_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xpurchase_supplier_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xshop_addblock`
+--
+ALTER TABLE `xshop_addblock`
+  ADD CONSTRAINT `xshop_addblock_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xshop_affiliate`
+--
+ALTER TABLE `xshop_affiliate`
+  ADD CONSTRAINT `xshop_affiliate_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_affiliate_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_affiliate_ibfk_3` FOREIGN KEY (`application_id`) REFERENCES `xshop_application` (`id`),
+  ADD CONSTRAINT `xshop_affiliate_ibfk_4` FOREIGN KEY (`affiliatetype_id`) REFERENCES `xshop_affiliatetype` (`id`),
+  ADD CONSTRAINT `xshop_affiliate_ibfk_5` FOREIGN KEY (`logo_url_id`) REFERENCES `filestore_file` (`id`);
+
+--
+-- Constraints for table `xshop_affiliatetype`
+--
+ALTER TABLE `xshop_affiliatetype`
+  ADD CONSTRAINT `xshop_affiliatetype_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_affiliatetype_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_affiliatetype_ibfk_3` FOREIGN KEY (`application_id`) REFERENCES `xshop_application` (`id`);
+
+--
+-- Constraints for table `xshop_application`
+--
+ALTER TABLE `xshop_application`
+  ADD CONSTRAINT `xshop_application_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_application_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xshop_blockimages`
+--
+ALTER TABLE `xshop_blockimages`
+  ADD CONSTRAINT `xshop_blockimages_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_blockimages_ibfk_2` FOREIGN KEY (`block_id`) REFERENCES `xshop_addblock` (`id`);
+
+--
+-- Constraints for table `xshop_categories`
+--
+ALTER TABLE `xshop_categories`
+  ADD CONSTRAINT `xshop_categories_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_categories_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_categories_ibfk_3` FOREIGN KEY (`application_id`) REFERENCES `xshop_application` (`id`),
+  ADD CONSTRAINT `xshop_categories_ibfk_4` FOREIGN KEY (`parent_id`) REFERENCES `xshop_categories` (`id`),
+  ADD CONSTRAINT `xshop_categories_ibfk_5` FOREIGN KEY (`image_url_id`) REFERENCES `filestore_file` (`id`);
+
+--
+-- Constraints for table `xshop_category_item`
+--
+ALTER TABLE `xshop_category_item`
+  ADD CONSTRAINT `xshop_category_item_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `xshop_categories` (`id`),
+  ADD CONSTRAINT `xshop_category_item_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
+
+--
+-- Constraints for table `xshop_configuration`
+--
+ALTER TABLE `xshop_configuration`
+  ADD CONSTRAINT `xshop_configuration_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_configuration_ibfk_2` FOREIGN KEY (`application_id`) REFERENCES `xshop_application` (`id`);
+
+--
+-- Constraints for table `xshop_customfiledvalue_filter_ass`
+--
+ALTER TABLE `xshop_customfiledvalue_filter_ass`
+  ADD CONSTRAINT `xshop_customfiledvalue_filter_ass_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_customfiledvalue_filter_ass_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`),
+  ADD CONSTRAINT `xshop_customfiledvalue_filter_ass_ibfk_3` FOREIGN KEY (`customfield_id`) REFERENCES `xshop_custom_fields` (`id`),
+  ADD CONSTRAINT `xshop_customfiledvalue_filter_ass_ibfk_4` FOREIGN KEY (`customefieldvalue_id`) REFERENCES `xshop_custom_fields_value` (`id`);
+
+--
+-- Constraints for table `xshop_customrate_custome_value_conditions`
+--
+ALTER TABLE `xshop_customrate_custome_value_conditions`
+  ADD CONSTRAINT `xshop_customrate_custome_value_conditions_ibfk_1` FOREIGN KEY (`custom_rate_id`) REFERENCES `xshop_item_custom_rates` (`id`),
+  ADD CONSTRAINT `xshop_customrate_custome_value_conditions_ibfk_2` FOREIGN KEY (`custom_field_value_id`) REFERENCES `xshop_custom_fields_value` (`id`);
+
+--
+-- Constraints for table `xshop_custom_fields`
+--
+ALTER TABLE `xshop_custom_fields`
+  ADD CONSTRAINT `xshop_custom_fields_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_custom_fields_ibfk_2` FOREIGN KEY (`application_id`) REFERENCES `xshop_application` (`id`);
+
+--
+-- Constraints for table `xshop_custom_fields_value`
+--
+ALTER TABLE `xshop_custom_fields_value`
+  ADD CONSTRAINT `xshop_custom_fields_value_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_custom_fields_value_ibfk_2` FOREIGN KEY (`itemcustomfiledasso_id`) REFERENCES `xshop_item_customfields_assos` (`id`),
+  ADD CONSTRAINT `xshop_custom_fields_value_ibfk_3` FOREIGN KEY (`customfield_id`) REFERENCES `xshop_custom_fields` (`id`),
+  ADD CONSTRAINT `xshop_custom_fields_value_ibfk_4` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
+
+--
+-- Constraints for table `xshop_discount_vouchers`
+--
+ALTER TABLE `xshop_discount_vouchers`
+  ADD CONSTRAINT `xshop_discount_vouchers_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_discount_vouchers_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xshop_discount_vouchers_used`
+--
+ALTER TABLE `xshop_discount_vouchers_used`
+  ADD CONSTRAINT `xshop_discount_vouchers_used_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_discount_vouchers_used_ibfk_2` FOREIGN KEY (`discountvoucher_id`) REFERENCES `xshop_discount_vouchers` (`id`),
+  ADD CONSTRAINT `xshop_discount_vouchers_used_ibfk_3` FOREIGN KEY (`member_id`) REFERENCES `xshop_memberdetails` (`id`);
+
+--
+-- Constraints for table `xshop_image_library_category`
+--
+ALTER TABLE `xshop_image_library_category`
+  ADD CONSTRAINT `xshop_image_library_category_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
 
 --
 -- Constraints for table `xshop_invoices`
 --
 ALTER TABLE `xshop_invoices`
   ADD CONSTRAINT `xshop_invoices_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
-  ADD CONSTRAINT `xshop_invoices_ibfk_2` FOREIGN KEY (`sales_order_id`) REFERENCES `xshop_orders` (`id`),
-  ADD CONSTRAINT `xshop_invoices_ibfk_3` FOREIGN KEY (`po_id`) REFERENCES `xpurchase_purchase_order` (`id`),
-  ADD CONSTRAINT `xshop_invoices_ibfk_4` FOREIGN KEY (`orderitem_id`) REFERENCES `xshop_orderDetails` (`id`),
-  ADD CONSTRAINT `xshop_invoices_ibfk_5` FOREIGN KEY (`customer_id`) REFERENCES `xshop_memberdetails` (`id`),
-  ADD CONSTRAINT `xshop_invoices_ibfk_6` FOREIGN KEY (`termsandcondition_id`) REFERENCES `xshop_termsandcondition` (`id`);
+  ADD CONSTRAINT `xshop_invoices_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_invoices_ibfk_3` FOREIGN KEY (`orderitem_id`) REFERENCES `xshop_orderdetails` (`id`),
+  ADD CONSTRAINT `xshop_invoices_ibfk_4` FOREIGN KEY (`customer_id`) REFERENCES `xshop_memberdetails` (`id`),
+  ADD CONSTRAINT `xshop_invoices_ibfk_5` FOREIGN KEY (`supplier_id`) REFERENCES `xpurchase_supplier` (`id`),
+  ADD CONSTRAINT `xshop_invoices_ibfk_6` FOREIGN KEY (`sales_order_id`) REFERENCES `xshop_orders` (`id`),
+  ADD CONSTRAINT `xshop_invoices_ibfk_7` FOREIGN KEY (`po_id`) REFERENCES `xpurchase_purchase_order` (`id`),
+  ADD CONSTRAINT `xshop_invoices_ibfk_8` FOREIGN KEY (`termsandcondition_id`) REFERENCES `xshop_termsandcondition` (`id`);
 
 --
 -- Constraints for table `xshop_invoice_item`
 --
 ALTER TABLE `xshop_invoice_item`
-  ADD CONSTRAINT `xshop_invoice_item_ibfk_1` FOREIGN KEY (`invoice_id`) REFERENCES `xshop_invoices` (`id`),
-  ADD CONSTRAINT `xshop_invoice_item_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`),
-  ADD CONSTRAINT `xshop_invoice_item_ibfk_3` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
-  ADD CONSTRAINT `xshop_invoice_item_ibfk_4` FOREIGN KEY (`orderitem_id`) REFERENCES `xshop_orderDetails` (`id`);
+  ADD CONSTRAINT `xshop_invoice_item_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_invoice_item_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_invoice_item_ibfk_3` FOREIGN KEY (`invoice_id`) REFERENCES `xshop_invoices` (`id`),
+  ADD CONSTRAINT `xshop_invoice_item_ibfk_4` FOREIGN KEY (`orderitem_id`) REFERENCES `xshop_orderdetails` (`id`),
+  ADD CONSTRAINT `xshop_invoice_item_ibfk_5` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`),
+  ADD CONSTRAINT `xshop_invoice_item_ibfk_6` FOREIGN KEY (`tax_id`) REFERENCES `xshop_taxs` (`id`);
 
 --
--- Constraints for table `xshop_itemtaxasso`
+-- Constraints for table `xshop_itemenquiry`
 --
-ALTER TABLE `xshop_itemtaxasso`
-  ADD CONSTRAINT `xshop_itemtaxasso_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
-  ADD CONSTRAINT `xshop_itemtaxasso_ibfk_2` FOREIGN KEY (`tax_id`) REFERENCES `xshop_taxs` (`id`),
-  ADD CONSTRAINT `xshop_itemtaxasso_ibfk_3` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
+ALTER TABLE `xshop_itemenquiry`
+  ADD CONSTRAINT `xshop_itemenquiry_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_itemenquiry_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
+
+--
+-- Constraints for table `xshop_itemoffers`
+--
+ALTER TABLE `xshop_itemoffers`
+  ADD CONSTRAINT `xshop_itemoffers_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_itemoffers_ibfk_2` FOREIGN KEY (`application_id`) REFERENCES `xshop_application` (`id`),
+  ADD CONSTRAINT `xshop_itemoffers_ibfk_3` FOREIGN KEY (`offer_image_id`) REFERENCES `filestore_file` (`id`);
+
+--
+-- Constraints for table `xshop_items`
+--
+ALTER TABLE `xshop_items`
+  ADD CONSTRAINT `xshop_items_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_items_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_items_ibfk_3` FOREIGN KEY (`application_id`) REFERENCES `xshop_application` (`id`),
+  ADD CONSTRAINT `xshop_items_ibfk_4` FOREIGN KEY (`designer_id`) REFERENCES `xshop_memberdetails` (`id`),
+  ADD CONSTRAINT `xshop_items_ibfk_5` FOREIGN KEY (`offer_id`) REFERENCES `xshop_itemoffers` (`id`),
+  ADD CONSTRAINT `xshop_items_ibfk_6` FOREIGN KEY (`watermark_image_id`) REFERENCES `filestore_file` (`id`);
+
+--
+-- Constraints for table `xshop_item_affiliate_ass`
+--
+ALTER TABLE `xshop_item_affiliate_ass`
+  ADD CONSTRAINT `xshop_item_affiliate_ass_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_item_affiliate_ass_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`),
+  ADD CONSTRAINT `xshop_item_affiliate_ass_ibfk_3` FOREIGN KEY (`affiliatetype_id`) REFERENCES `xshop_affiliatetype` (`id`),
+  ADD CONSTRAINT `xshop_item_affiliate_ass_ibfk_4` FOREIGN KEY (`affiliate_id`) REFERENCES `xshop_affiliate` (`id`);
+
+--
+-- Constraints for table `xshop_item_compositions`
+--
+ALTER TABLE `xshop_item_compositions`
+  ADD CONSTRAINT `xshop_item_compositions_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_item_compositions_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`),
+  ADD CONSTRAINT `xshop_item_compositions_ibfk_3` FOREIGN KEY (`department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xshop_item_compositions_ibfk_4` FOREIGN KEY (`composition_item_id`) REFERENCES `xshop_items` (`id`);
+
+--
+-- Constraints for table `xshop_item_customfields_assos`
+--
+ALTER TABLE `xshop_item_customfields_assos`
+  ADD CONSTRAINT `xshop_item_customfields_assos_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_item_customfields_assos_ibfk_2` FOREIGN KEY (`customfield_id`) REFERENCES `xshop_custom_fields` (`id`),
+  ADD CONSTRAINT `xshop_item_customfields_assos_ibfk_3` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`),
+  ADD CONSTRAINT `xshop_item_customfields_assos_ibfk_4` FOREIGN KEY (`department_phase_id`) REFERENCES `xhr_departments` (`id`);
+
+--
+-- Constraints for table `xshop_item_custom_rates`
+--
+ALTER TABLE `xshop_item_custom_rates`
+  ADD CONSTRAINT `xshop_item_custom_rates_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_item_custom_rates_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
+
+--
+-- Constraints for table `xshop_item_department_asso`
+--
+ALTER TABLE `xshop_item_department_asso`
+  ADD CONSTRAINT `xshop_item_department_asso_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`),
+  ADD CONSTRAINT `xshop_item_department_asso_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `xhr_departments` (`id`);
+
+--
+-- Constraints for table `xshop_item_images`
+--
+ALTER TABLE `xshop_item_images`
+  ADD CONSTRAINT `xshop_item_images_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_item_images_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`),
+  ADD CONSTRAINT `xshop_item_images_ibfk_3` FOREIGN KEY (`customefieldvalue_id`) REFERENCES `xshop_custom_fields_value` (`id`),
+  ADD CONSTRAINT `xshop_item_images_ibfk_4` FOREIGN KEY (`item_image_id`) REFERENCES `filestore_file` (`id`);
+
+--
+-- Constraints for table `xshop_item_member_designs`
+--
+ALTER TABLE `xshop_item_member_designs`
+  ADD CONSTRAINT `xshop_item_member_designs_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_item_member_designs_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`),
+  ADD CONSTRAINT `xshop_item_member_designs_ibfk_3` FOREIGN KEY (`member_id`) REFERENCES `xshop_memberdetails` (`id`);
+
+--
+-- Constraints for table `xshop_item_quantity_sets`
+--
+ALTER TABLE `xshop_item_quantity_sets`
+  ADD CONSTRAINT `xshop_item_quantity_sets_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
+
+--
+-- Constraints for table `xshop_item_quantity_set_conditions`
+--
+ALTER TABLE `xshop_item_quantity_set_conditions`
+  ADD CONSTRAINT `xshop_item_quantity_set_conditions_ibfk_1` FOREIGN KEY (`department_phase_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xshop_item_quantity_set_conditions_ibfk_2` FOREIGN KEY (`quantityset_id`) REFERENCES `xshop_item_quantity_sets` (`id`),
+  ADD CONSTRAINT `xshop_item_quantity_set_conditions_ibfk_3` FOREIGN KEY (`custom_field_value_id`) REFERENCES `xshop_custom_fields_value` (`id`),
+  ADD CONSTRAINT `xshop_item_quantity_set_conditions_ibfk_4` FOREIGN KEY (`customfield_id`) REFERENCES `xshop_custom_fields` (`id`),
+  ADD CONSTRAINT `xshop_item_quantity_set_conditions_ibfk_5` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
+
+--
+-- Constraints for table `xshop_item_reviews`
+--
+ALTER TABLE `xshop_item_reviews`
+  ADD CONSTRAINT `xshop_item_reviews_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_item_reviews_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
+
+--
+-- Constraints for table `xshop_item_spec_ass`
+--
+ALTER TABLE `xshop_item_spec_ass`
+  ADD CONSTRAINT `xshop_item_spec_ass_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`),
+  ADD CONSTRAINT `xshop_item_spec_ass_ibfk_2` FOREIGN KEY (`specification_id`) REFERENCES `xshop_specifications` (`id`);
+
+--
+-- Constraints for table `xshop_memberdetails`
+--
+ALTER TABLE `xshop_memberdetails`
+  ADD CONSTRAINT `xshop_memberdetails_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_memberdetails_ibfk_2` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `xshop_memberdetails_ibfk_3` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xshop_member_images`
+--
+ALTER TABLE `xshop_member_images`
+  ADD CONSTRAINT `xshop_member_images_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_member_images_ibfk_2` FOREIGN KEY (`member_id`) REFERENCES `xshop_memberdetails` (`id`),
+  ADD CONSTRAINT `xshop_member_images_ibfk_3` FOREIGN KEY (`image_id`) REFERENCES `filestore_file` (`id`);
+
+--
+-- Constraints for table `xshop_opportunity`
+--
+ALTER TABLE `xshop_opportunity`
+  ADD CONSTRAINT `xshop_opportunity_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_opportunity_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_opportunity_ibfk_3` FOREIGN KEY (`lead_id`) REFERENCES `xenquirynsubscription_subscription` (`id`),
+  ADD CONSTRAINT `xshop_opportunity_ibfk_4` FOREIGN KEY (`customer_id`) REFERENCES `xshop_memberdetails` (`id`);
+
+--
+-- Constraints for table `xshop_orderdetails`
+--
+ALTER TABLE `xshop_orderdetails`
+  ADD CONSTRAINT `xshop_orderdetails_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_orderdetails_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_orderdetails_ibfk_3` FOREIGN KEY (`order_id`) REFERENCES `xshop_orders` (`id`),
+  ADD CONSTRAINT `xshop_orderdetails_ibfk_4` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`),
+  ADD CONSTRAINT `xshop_orderdetails_ibfk_5` FOREIGN KEY (`invoice_id`) REFERENCES `xshop_invoices` (`id`),
+  ADD CONSTRAINT `xshop_orderdetails_ibfk_6` FOREIGN KEY (`tax_id`) REFERENCES `xshop_taxs` (`id`);
+
+--
+-- Constraints for table `xshop_orderitem_departmental_status`
+--
+ALTER TABLE `xshop_orderitem_departmental_status`
+  ADD CONSTRAINT `xshop_orderitem_departmental_status_ibfk_1` FOREIGN KEY (`orderitem_id`) REFERENCES `xshop_orderdetails` (`id`),
+  ADD CONSTRAINT `xshop_orderitem_departmental_status_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xshop_orderitem_departmental_status_ibfk_3` FOREIGN KEY (`outsource_party_id`) REFERENCES `xproduction_out_source_parties` (`id`);
 
 --
 -- Constraints for table `xshop_orders`
 --
 ALTER TABLE `xshop_orders`
-  ADD CONSTRAINT `xshop_orders_ibfk_1` FOREIGN KEY (`termsandcondition_id`) REFERENCES `xshop_termsandcondition` (`id`);
+  ADD CONSTRAINT `xshop_orders_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_orders_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_orders_ibfk_3` FOREIGN KEY (`paymentgateway_id`) REFERENCES `xshop_payment_gateways` (`id`),
+  ADD CONSTRAINT `xshop_orders_ibfk_4` FOREIGN KEY (`termsandcondition_id`) REFERENCES `xshop_termsandcondition` (`id`),
+  ADD CONSTRAINT `xshop_orders_ibfk_5` FOREIGN KEY (`priority_id`) REFERENCES `xshop_priorities` (`id`),
+  ADD CONSTRAINT `xshop_orders_ibfk_6` FOREIGN KEY (`member_id`) REFERENCES `xshop_memberdetails` (`id`),
+  ADD CONSTRAINT `xshop_orders_ibfk_7` FOREIGN KEY (`currency_id`) REFERENCES `xshop_currency` (`id`);
+
+--
+-- Constraints for table `xshop_payment_gateways`
+--
+ALTER TABLE `xshop_payment_gateways`
+  ADD CONSTRAINT `xshop_payment_gateways_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_payment_gateways_ibfk_2` FOREIGN KEY (`gateway_image_id`) REFERENCES `filestore_file` (`id`);
+
+--
+-- Constraints for table `xshop_priorities`
+--
+ALTER TABLE `xshop_priorities`
+  ADD CONSTRAINT `xshop_priorities_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_priorities_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xshop_quotation`
+--
+ALTER TABLE `xshop_quotation`
+  ADD CONSTRAINT `xshop_quotation_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_quotation_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_quotation_ibfk_3` FOREIGN KEY (`lead_id`) REFERENCES `xenquirynsubscription_subscription` (`id`),
+  ADD CONSTRAINT `xshop_quotation_ibfk_4` FOREIGN KEY (`opportunity_id`) REFERENCES `xshop_opportunity` (`id`),
+  ADD CONSTRAINT `xshop_quotation_ibfk_5` FOREIGN KEY (`customer_id`) REFERENCES `xshop_memberdetails` (`id`),
+  ADD CONSTRAINT `xshop_quotation_ibfk_6` FOREIGN KEY (`termsandcondition_id`) REFERENCES `xshop_termsandcondition` (`id`),
+  ADD CONSTRAINT `xshop_quotation_ibfk_7` FOREIGN KEY (`currency_id`) REFERENCES `xshop_currency` (`id`);
+
+--
+-- Constraints for table `xshop_quotation_item`
+--
+ALTER TABLE `xshop_quotation_item`
+  ADD CONSTRAINT `xshop_quotation_item_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_quotation_item_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_quotation_item_ibfk_3` FOREIGN KEY (`quotation_id`) REFERENCES `xshop_quotation` (`id`),
+  ADD CONSTRAINT `xshop_quotation_item_ibfk_4` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
+
+--
+-- Constraints for table `xshop_specifications`
+--
+ALTER TABLE `xshop_specifications`
+  ADD CONSTRAINT `xshop_specifications_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xshop_specifications_ibfk_2` FOREIGN KEY (`application_id`) REFERENCES `xshop_application` (`id`);
 
 --
 -- Constraints for table `xshop_taxs`
 --
 ALTER TABLE `xshop_taxs`
-  ADD CONSTRAINT `xshop_taxs_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
+  ADD CONSTRAINT `xshop_taxs_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_taxs_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
 
 --
 -- Constraints for table `xshop_termsandcondition`
 --
 ALTER TABLE `xshop_termsandcondition`
-  ADD CONSTRAINT `xshop_termsandcondition_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`);
+  ADD CONSTRAINT `xshop_termsandcondition_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xshop_termsandcondition_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`);
+
+--
+-- Constraints for table `xstore_material_request`
+--
+ALTER TABLE `xstore_material_request`
+  ADD CONSTRAINT `xstore_material_request_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xstore_material_request_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xstore_material_request_ibfk_3` FOREIGN KEY (`orderitem_id`) REFERENCES `xshop_orderdetails` (`id`),
+  ADD CONSTRAINT `xstore_material_request_ibfk_4` FOREIGN KEY (`to_department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xstore_material_request_ibfk_5` FOREIGN KEY (`from_department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xstore_material_request_ibfk_6` FOREIGN KEY (`dispatch_to_warehouse_id`) REFERENCES `xstore_warehouse` (`id`),
+  ADD CONSTRAINT `xstore_material_request_ibfk_7` FOREIGN KEY (`orderitem_departmental_status_id`) REFERENCES `xshop_orderitem_departmental_status` (`id`);
 
 --
 -- Constraints for table `xstore_material_request_items`
 --
 ALTER TABLE `xstore_material_request_items`
-  ADD CONSTRAINT `xstore_material_request_items_ibfk_1` FOREIGN KEY (`material_request_jobcard_id`) REFERENCES `xstore_material_request` (`id`);
+  ADD CONSTRAINT `xstore_material_request_items_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xstore_material_request_items_ibfk_2` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xstore_material_request_items_ibfk_3` FOREIGN KEY (`material_request_jobcard_id`) REFERENCES `xstore_material_request` (`id`),
+  ADD CONSTRAINT `xstore_material_request_items_ibfk_4` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
+
+--
+-- Constraints for table `xstore_stock`
+--
+ALTER TABLE `xstore_stock`
+  ADD CONSTRAINT `xstore_stock_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xstore_stock_ibfk_2` FOREIGN KEY (`warehouse_id`) REFERENCES `xstore_warehouse` (`id`),
+  ADD CONSTRAINT `xstore_stock_ibfk_3` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
+
+--
+-- Constraints for table `xstore_stock_movement_items`
+--
+ALTER TABLE `xstore_stock_movement_items`
+  ADD CONSTRAINT `xstore_stock_movement_items_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xstore_stock_movement_items_ibfk_2` FOREIGN KEY (`stock_movement_id`) REFERENCES `xstore_stock_movement_master` (`id`),
+  ADD CONSTRAINT `xstore_stock_movement_items_ibfk_3` FOREIGN KEY (`item_id`) REFERENCES `xshop_items` (`id`);
 
 --
 -- Constraints for table `xstore_stock_movement_master`
 --
 ALTER TABLE `xstore_stock_movement_master`
-  ADD CONSTRAINT `xstore_stock_movement_master_ibfk_1` FOREIGN KEY (`material_request_jobcard_id`) REFERENCES `xstore_material_request` (`id`);
+  ADD CONSTRAINT `xstore_stock_movement_master_ibfk_1` FOREIGN KEY (`created_by_id`) REFERENCES `xhr_employees` (`id`),
+  ADD CONSTRAINT `xstore_stock_movement_master_ibfk_2` FOREIGN KEY (`jobcard_id`) REFERENCES `xproduction_jobcard` (`id`),
+  ADD CONSTRAINT `xstore_stock_movement_master_ibfk_3` FOREIGN KEY (`po_id`) REFERENCES `xpurchase_purchase_order` (`id`),
+  ADD CONSTRAINT `xstore_stock_movement_master_ibfk_4` FOREIGN KEY (`dispatch_request_id`) REFERENCES `xdispatch_dispatch_request` (`id`),
+  ADD CONSTRAINT `xstore_stock_movement_master_ibfk_5` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xstore_stock_movement_master_ibfk_6` FOREIGN KEY (`from_warehouse_id`) REFERENCES `xstore_warehouse` (`id`),
+  ADD CONSTRAINT `xstore_stock_movement_master_ibfk_7` FOREIGN KEY (`to_warehouse_id`) REFERENCES `xstore_warehouse` (`id`),
+  ADD CONSTRAINT `xstore_stock_movement_master_ibfk_8` FOREIGN KEY (`from_supplier_id`) REFERENCES `xpurchase_supplier` (`id`),
+  ADD CONSTRAINT `xstore_stock_movement_master_ibfk_9` FOREIGN KEY (`to_supplier_id`) REFERENCES `xpurchase_supplier` (`id`),
+  ADD CONSTRAINT `xstore_stock_movement_master_ibfk_10` FOREIGN KEY (`from_memberdetails_id`) REFERENCES `xshop_memberdetails` (`id`),
+  ADD CONSTRAINT `xstore_stock_movement_master_ibfk_11` FOREIGN KEY (`to_memberdetails_id`) REFERENCES `xshop_memberdetails` (`id`),
+  ADD CONSTRAINT `xstore_stock_movement_master_ibfk_12` FOREIGN KEY (`material_request_jobcard_id`) REFERENCES `xstore_material_request` (`id`);
+
+--
+-- Constraints for table `xstore_warehouse`
+--
+ALTER TABLE `xstore_warehouse`
+  ADD CONSTRAINT `xstore_warehouse_ibfk_1` FOREIGN KEY (`epan_id`) REFERENCES `epan` (`id`),
+  ADD CONSTRAINT `xstore_warehouse_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `xhr_departments` (`id`),
+  ADD CONSTRAINT `xstore_warehouse_ibfk_3` FOREIGN KEY (`out_source_party_id`) REFERENCES `xproduction_out_source_parties` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
