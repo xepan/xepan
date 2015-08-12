@@ -24,7 +24,7 @@ Layout_Tool = function(parent){
 			// $('.xshop-designer-pagelayout').hide();
 			//add new Layout of current selected page
 			img = '<img class="xdesigner-page-layout-thumbnail" src="index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id='+self.designer_tool.options.item_id+'&page_name='+page_name+'&layout_name='+index+'" alt="'+index+'"/>';
-			layout_btn = $('<div class="xshop-designer-layoutbtn clearfix">'+img+'<p class="xshop-designer-layout-name">'+index+'</p><i class="glyphicon glyphicon-ok btn btn-small-xs" > Print</i></div>').appendTo($.find('.xshop-designer-layout')).data('layout',index);
+			layout_btn = $('<div class="xshop-designer-layoutbtn clearfix" xdesigner_item_page_name="'+page_name+'" >'+img+'<p class="xshop-designer-layout-name">'+index+'</p><i class="glyphicon glyphicon-ok btn btn-small-xs" > Print</i></div>').appendTo($.find('.xshop-designer-layout')).data('layout',index);
 				layout_btn.click(function(){
 					self.designer_tool.current_page = page_name;
 					self.designer_tool.current_layout = $(this).data('layout');
@@ -41,6 +41,14 @@ Layout_Tool = function(parent){
 					$('.xshop-designer-layout').find('i').removeClass('btn-success');
 					// make self green
 					$(this).addClass('btn-success');
+					print_layout_src = $(this).siblings('img.xdesigner-page-layout-thumbnail').attr('src');
+					page_name_attr = $(this).parent().attr('xdesigner_item_page_name');
+					
+					console.log("Hello == "+page_name_attr);
+					// console.log($('.xshop-designer-pagelayout > .xshop-designer-pagebtn[xdesigner_item_page_name="'+page_name_attr+'"]'));
+					page_thumbnail_view = $('.xshop-designer-pagelayout > .xshop-designer-pagebtn[xdesigner_item_page_name="'+page_name_attr+'"]');					
+					if(page_thumbnail_view.length > 0)
+						$(page_thumbnail_view).find('img.xdesigner-page-layout-thumbnail').attr('src',print_layout_src);
 				});
 
 			if(index == self.designer_tool.layout_finalized[page_name]){
@@ -96,7 +104,7 @@ PageLayout_Component = function (params){
 			layout = self.designer_tool.layout_finalized;	
 			// console.log(layout[index]);
 			img = '<img class="xdesigner-page-layout-thumbnail" src="index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id='+self.designer_tool.options.item_id+'&page_name='+index+'&layout_name='+layout[index]+'" alt="'+index+'"/>';
-			page_btn = $('<div class="xshop-designer-pagebtn">'+img+'<p class="xshop-designer-page-name" style="color:black;">'+index+'</p></div>').appendTo(page_layout_toolbar).data('page',index);
+			page_btn = $('<div class="xshop-designer-pagebtn" xdesigner_item_page_name="'+index+'" >'+img+'<p class="xshop-designer-page-name" style="color:black;">'+index+'</p></div>').appendTo(page_layout_toolbar).data('page',index);
 			page_btn.click(function(event){
 				layout = new Layout_Tool();
 				layout.init(self.designer_tool,self.canvas,self);

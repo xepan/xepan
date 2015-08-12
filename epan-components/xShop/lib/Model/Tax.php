@@ -64,5 +64,12 @@ class Model_Tax extends \Model_Document{
 		});
 		$this->delete();
 	}
+	function account(){
+		$acc = $this->add('xAccount/Model_Account');
+		$acc->addCondition('group_id',$this->add('xAccount/Model_Group')->loadDutiesAndTaxes()->fieldQuery('id'));
+		$acc->addCondition('name',$this['name']);
+		$acc->tryLoadAny();
+		return $acc ;
+	}
 	
 }
