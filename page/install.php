@@ -99,6 +99,8 @@ class page_install extends Page {
 			$epan->add('dynamic_model/Controller_AutoCreator');
 			$epan->tryLoadAny();
 
+			$this->api->current_website = $epan;
+
 			$user=$this->add('Model_Users');
 			$user['epan_id']=$epan->id;
 			$user['name']=$form['owner_name'];
@@ -112,6 +114,11 @@ class page_install extends Page {
 			$user['is_active']=true;
 			$user['email']="support@xepan.org";
 			$user->save();
+
+			$installed_components = $this->add('Model_InstalledComponents')->getRows();
+			foreach ($installed_components as $data) {
+				$user->allowApp($data['id']);
+			}
 			
 			$form->js(null,$form->js()->univ()->successMessage("Installed Successfully"))->univ()->redirect($this->api->url(null,array('step'=>2)))->execute();
 		}
