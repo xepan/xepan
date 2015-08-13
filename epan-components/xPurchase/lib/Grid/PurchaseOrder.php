@@ -38,7 +38,8 @@ class Grid_PurchaseOrder extends \Grid {
 		}
 
 		$m=parent::setModel($purchase_order_model,$fields);
-	
+		$this->addColumn('expander','details',array('page'=>'xPurchase_page_owner_purchaseorder_purchaseorderitem','descr'=>'Details'));
+		
 		$this->removeColumn('orderitem_count');
 		$this->addFormatter('name','purchaseorder');
 		$this->addPaginator(100);
