@@ -11,7 +11,7 @@ class Model_PaymentGateway extends \SQL_Model {
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
-		$this->addField('name');
+		$this->addField('name')->mandatory(true);
 		$this->addField('default_parameters')->type('text');
 		$this->addField('parameters')->type('text');
 

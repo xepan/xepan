@@ -9,6 +9,7 @@ use Omnipay\Common\Message\RequestInterface;
  */
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
+    //secure
     protected $liveEndpoint = 'https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction';
     protected $testEndpoint = 'https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction';
     protected $endpoint = '';

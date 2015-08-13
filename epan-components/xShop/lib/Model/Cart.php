@@ -85,7 +85,7 @@ class Model_Cart extends \Model{
 			}
 		}
 
-		return $total_amount - $original_total_amount;
+		return 0;//$total_amount - $original_total_amount;
 
 	}
 

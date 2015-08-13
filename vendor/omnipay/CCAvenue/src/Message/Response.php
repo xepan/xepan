@@ -44,8 +44,8 @@ class Response extends AbstractResponse implements RedirectResponseInterface
         } elseif ('POST' === $this->getRedirectMethod()) {
             $hiddenFields = '';
             $merchant_data='';
-            $working_key=$this->data['working_key'];//'500DE1635C1AC8016EC4EAC182FD720FB';//Shared by CCAVENUES
-            $access_code=$this->data['access_key'];//'AVUuN02BI52AU59NUUA';//Shared by CCAVENUES
+            $working_key=$this->data['working_key'];//Shared by CCAVENUES
+            $access_code=$this->data['access_key'];//Shared by CCAVENUES
             foreach ($this->getRedirectData() as $key => $value){
                 // echo $key."= ".$value.'<br/>';
                 $merchant_data.=$key.'='.urlencode($value).'&';
