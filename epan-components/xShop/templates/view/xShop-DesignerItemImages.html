@@ -17,7 +17,6 @@
 		$( function() {
 			//Load Designer Tool
 			designer = $(".xshop-designer-tool").data("ui-xepan_xshopdesigner");
-			// console.log(o);
 			//Image Hover add or replace 
 			$('.xshop-designer-item-images').hover( function(){
 				$(this).find('.xshop-designer-add-replace').fadeIn(300);
@@ -26,6 +25,7 @@
 			});
 
 			$(".xshop-designer-add-replace-button").click(function(){
+				var self = this;
 				image_src = $(this).attr('selectedimagesrc');
 				image_id = $(this).data('image-id');
 				
@@ -34,7 +34,26 @@
 				if(opener.designer_tool.current_selected_component == undefined){
 					opener.addImage(image_src);
 					$(this).closest('.dialog').dialog('close');
-				}else{
+				}else if(opener.designer_tool.current_selected_component.options.add_mask){
+					var current_image_option = opener.designer_tool.current_selected_component.options;
+					var current_image = opener.designer_tool.current_selected_component.element;
+					
+					// Add New Images
+					mask_image = opener.addImage(image_src);
+					mask_image.options.is_mask_image = true;
+					//Append Mask Image to Current Selected Image
+					$(mask_image.element).appendTo(current_image);
+					$(mask_image.element).css('top',0);
+					$(mask_image.element).draggable({
+						containment: current_image
+					});
+					//Close the Dialog Box
+					$(this).closest('.dialog').dialog('close');
+					//Add Mask Options to Current Selected Image
+					current_image_option.mask.url = image_src;
+
+				}
+				else{
 					opener.designer_tool.current_selected_component.options.replace_image = true;
 					opener.designer_tool.current_selected_component.options.crop = false;
 					opener.designer_tool.current_selected_component.options.url = image_src;
