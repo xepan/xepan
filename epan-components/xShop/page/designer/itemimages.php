@@ -18,7 +18,7 @@ class page_xShop_page_designer_itemimages extends Page {
 
       $image_model = $this->add('xShop/Model_MemberImages');
       $image_model->addCondition('member_id',$member->id);
-
+      $image_model->setOrder('id','desc');
       //Form
       $form = $this->add('Form');
       $form->addSubmit('upload');
