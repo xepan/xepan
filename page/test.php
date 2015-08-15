@@ -140,34 +140,34 @@ function page_owner_layout(){
 	}
 
 	function page_mask(){
-		// // Set image path
+		// Set image path
 
-		// // Create new objects from png's
-		// $source = new Imagick($path . 'source.png');
-		// $mask = new Imagick($path . 'mask.png');
+		// Create new objects from png's
+		$path = '/home/adam/Pictures/';
+		$dude = new Imagick($path . 'U0R4F.png');
+		$mask = new Imagick($path . 'mask.png');
 
-		// // IMPORTANT! Must activate the opacity channel
-		// // See: http://www.php.net/manual/en/function.imagick-setimagematte.php
+		// IMPORTANT! Must activate the opacity channel
+		// See: http://www.php.net/manual/en/function.imagick-setimagematte.php
 		// $dude->setImageMatte(1); 
 
-		// // Create composite of two images using DSTIN
-		// // See: http://www.imagemagick.org/Usage/compose/#dstin
+		// Create composite of two images using DSTIN
+		// See: http://www.imagemagick.org/Usage/compose/#dstin
 		// $dude->resizeImage(274, 275, Imagick::FILTER_LANCZOS, 1);
-		// $dude->compositeImage($mask, Imagick::COMPOSITE_DSTIN, 0, 0);
+		$dude->compositeImage($mask, Imagick::COMPOSITE_DSTIN, 0, 0);
+		// $dude->radialBlurImage(20);
+		// Write image to a file.
+		// $dude->writeImage($path . 'newimage.png');
 
-		// // Write image to a file.
-		// // $dude->writeImage($path . 'newimage.png');
+		// And/or output image directly to browser
+		header("Content-Type: image/png");
+		echo $dude;
 
-		// // And/or output image directly to browser
-		// header("Content-Type: image/png");
-		// echo $dude;
-
-		$path = '/var/www/xerp/upload/0/';
-		$source = imagecreatefrompng( '/var/www/xerp/upload/0/source.png' );
-		$mask = imagecreatefrompng( '/var/www/xerp/upload/0/mask.png' );
-		$this->magealphamask( $source, $mask );
-		header( "Content-type: image/png");
-		imagepng( $source );
+		// $source = imagecreatefrompng( '/var/www/xerp/upload/0/source.png' );
+		// $mask = imagecreatefrompng( '/var/www/xerp/upload/0/mask.png' );
+		// $this->magealphamask( $source, $mask );
+		// header( "Content-type: image/png");
+		// imagepng( $source );
 	
 	}
 

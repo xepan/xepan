@@ -39,18 +39,18 @@
 					var current_image = opener.designer_tool.current_selected_component.element;
 					
 					// Add New Images
-					mask_image = opener.addImage(image_src, true);
+					mask_image = current_image_option.mask_options.url = image_src;
+					opener.designer_tool.current_selected_component.updateMask();
 					// mask_image.options.is_mask_image = true;
 					//Append Mask Image to Current Selected Image
-					$(mask_image.element).appendTo(current_image);
-					$(mask_image.element).css('top',0);
-					$(mask_image.element).draggable({
-						containment: current_image
-					});
+					// $(mask_image.element).appendTo(current_image);
+					// $(mask_image.element).css('top',0);
+					// $(mask_image.element).draggable({
+					// 	containment: current_image
+					// });
 					//Close the Dialog Box
 					$(this).closest('.dialog').dialog('close');
 					//Add Mask Options to Current Selected Image
-					current_image_option.mask.url = image_src;
 
 				}
 				else{

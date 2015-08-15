@@ -552,20 +552,20 @@ class PHPImage {
 	}
 
 	public function showImagick($as_base64_encode=true,$return_data=false){
-		ob_start();
-		$this->imagick_img->getImageBlob();
-		$imageData = ob_get_contents();
-		ob_clean(); 
+		// ob_start();
+		// header("Content-Type: image/png");
+		$imageData = $this->imagick_img;
+		// ob_clean(); 
+		// $this->cleanup();
 
-		$this->cleanup();
+		// if($as_base64_encode){
+		// 	$imageData = base64_encode($imageData);
+		// }
 
-		if($as_base64_encode){
-			// $imageData = base64_encode($imageData);
-		}
+		// if($return_data){
+		// 	return $imageData;	
+		// } 
 
-		if($return_data){
-			return $imageData;	
-		} 
 		header('Expires: Wed, 1 Jan 1997 00:00:00 GMT');
 		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 		header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -593,7 +593,7 @@ class PHPImage {
 		}
 		$imageData = ob_get_contents();
 		ob_clean(); 
-		$this->cleanup();
+		// $this->cleanup();
 
 		if($as_base64_encode){
 			$imageData = base64_encode($imageData);
@@ -616,7 +616,7 @@ class PHPImage {
 	 * Cleanup
 	 */
 	public function cleanup(){
-		// imagedestroy($this->img);
+		imagedestroy($this->img);
 	}
 
 	/**
@@ -1307,6 +1307,7 @@ class PHPImage {
 	}
 
 	function mask($mask_details){
+		$this->show(false,false);
 		// // Create new objects from png's
 		// $dude = new Imagick($path . 'source.png');
 		// $mask = new Imagick($path . 'mask.png');
@@ -1326,7 +1327,8 @@ class PHPImage {
 		// // And/or output image directly to browser
 		// header("Content-Type: image/png");
 		// echo $dude;
-
+		// echo $this->showGD(true,true);
+		// die();
 		// $this->imagick_img = $source = new Imagick(); 
 		// $source->readImageBlob($this->showGD(false,true));
 
@@ -1340,8 +1342,8 @@ class PHPImage {
 
 		// $mask = new Imagick($url);
 
-		// $source->setImageMatte(1);
-		// $source->compositeImage($mask, Imagick::COMPOSITE_DSTIN, 0, 0);
+		// // $this->imagick_img->setImageMatte(1);
+		// $this->imagick_img->compositeImage($mask, Imagick::COMPOSITE_COPYOPACITY, 0, 0);
 
 
 	}

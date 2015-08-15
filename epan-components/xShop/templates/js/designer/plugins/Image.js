@@ -16,7 +16,7 @@ xShop_Image_Editor = function(parent){
 	this.image_remove = $('<div class="btn xshop-designer-image-remove-btn"><i class="icon-trash atk-size-tera"></i><br/><span class="atk-size-micro">Remove</span></div>').appendTo(this.image_button_set);
 	
 	this.image_mask.click(function(event){
-		self.current_image_component.options.mask_added = true;
+		self.current_image_component.options.mask_added=true;
 		options ={modal:false,
 					width:800
 				};
@@ -131,6 +131,7 @@ Image_Component = function (params){
 	this.element = undefined;
 	this.editor = undefined;
 	this.xhr = undefined;
+	this.mask = undefined
 
 	this.options = {
 		x:0,
@@ -154,7 +155,6 @@ Image_Component = function (params){
 		colorable: true,
 		editable: true,
 		default_url:'templates/images/logo.png',
-		url:undefined,
 		z_index:0,
 		resizable: true,
 		auto_fit: false,
@@ -167,39 +167,7 @@ Image_Component = function (params){
 		is_mask_image: false,
 		mask_added: false,
 		apply_mask: false,
-		mask:{
-				x:0,
-				y:0,
-				width:'0',
-				height:'0',
-				url:'templates/images/logo.png',
-				crop_x: false,
-				crop_y:false,
-				crop_width:false,
-				crop_height:false,
-				crop:false,
-				replace_image: false,
-				rotation_angle:0,
-				locked: false,
-				alignment_left:false,
-				alignment_center:false,
-				alignment_right:false,
-				// Designer properties
-				movable: true,
-				colorable: true,
-				editable: true,
-				default_url:'templates/images/logo.png',
-				url:undefined,
-				z_index:0,
-				resizable: true,
-				auto_fit: false,
-				frontside:true,
-				backside:false,
-				multiline: false,
-				// System properties
-				type: 'Image'
-				
-			}
+		mask_options: {},
 	};
 
 	this.init = function(designer,canvas, editor){
@@ -230,6 +198,43 @@ Image_Component = function (params){
 		self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].components.push(new_image);
 		new_image.render(true);
 		return new_image;
+	}
+
+	this.isMaskOptionsAdded = function(){
+		var self=this;
+		return self.options.mask_added && self.options.mask_options.url;
+	},
+
+	this.isMaskAppended = function(){
+		var self=this;
+		return self.element.find('img[is_mask_image=1]').length;
+	},
+
+	this.updateMask = function(){
+		var self=this;
+		if(self.isMaskOptionsAdded() && !self.isMaskAppended()){
+			//create new ImageComponent type object
+			var mask_image = new Image_Component();
+			mask_image.init(self.designer_tool,self.canvas, self.editor);
+			// feed default values for its parameters
+			//Set Options
+			mask_image.options.url = self.options.mask_options.url;
+			mask_image.options = self.options.mask_options;
+			mask_image.options.is_mask_image = true;
+			mask_image.render(true);
+			self.mask = mask_image;	
+			self.options.mask_added = true;
+
+			$(mask_image.element).appendTo(self.element);
+			mask_image.render();
+
+			$(mask_image.element).draggable("option", "containment", self.element);
+			return mask_image;
+		}
+
+		self.mask.render();
+
+		return mask_image;
 	}
 
 	this.renderTool = function(parent){
@@ -348,7 +353,7 @@ Image_Component = function (params){
 					max_width: self.designer_tool.safe_zone.width()/1.5,
 					max_height: self.designer_tool.safe_zone.height()/1.5,
 					auto_fit: is_new_image===true,
-					mask:self.options.mask,
+					mask:self.options.mask_options,
 					mask_added:self.options.mask_added,
 					apply_mask:self.options.apply_mask,
 					is_mask_image:self.options.is_mask_image
@@ -376,6 +381,8 @@ Image_Component = function (params){
 		.always(function() {
 			console.log("complete");
 		});	
+
+		if(self.options.mask_added) self.updateMask();
 
 		// this.element.text(this.text);
 		// this.element.css('left',this.x);
