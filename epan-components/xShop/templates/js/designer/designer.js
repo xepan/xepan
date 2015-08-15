@@ -126,8 +126,8 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 		if(self.options.selected_layouts_for_print=="" || !self.options.selected_layouts_for_print || self.options.selected_layouts_for_print ==null || self.options.selected_layouts_for_print ==undefined){
 
 		}else{
-			console.log('check me');
-			console.log(self.options.selected_layouts_for_print);
+			// console.log('check me');
+			// console.log(self.options.selected_layouts_for_print);
 			$.each(self.options.selected_layouts_for_print,function(page,layout){
 				self.layout_finalized[page] = layout;
 			});

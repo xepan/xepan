@@ -8,15 +8,28 @@ xShop_Image_Editor = function(parent){
 	// this.image_manager = $('<div class="btn "><span class="glyphicon glyphicon-film"></span></div>').appendTo(this.image_button_set);
 	this.image_edit = $('<div class="btn xshop-designer-image-edit-btn"><i class="icon-edit atk-size-tera"></i><br/><span class="atk-size-micro">Edit</span></div>').appendTo(this.image_button_set);
 	this.image_crop_resize = $('<div class="btn xshop-designer-image-crop-btn"><i class="icon-crop atk-size-tera"></i><br/><span class="atk-size-micro">Crop</span></div>').appendTo(this.image_button_set);
+	this.image_mask = $('<div class="btn xshop-designer-image-mask-btn"><i class="glyphicon glyphicon-picture atk-size-tera"></i><br/><span class="atk-size-micro">Mask</span></div>').appendTo(this.image_button_set);
+	this.image_mask_apply = $('<div class="btn xshop-designer-image-mask-apply-btn"><i class="glyphicon glyphicon-picture atk-size-tera"></i><br/><span class="atk-size-micro">Apply Mask</span></div>').appendTo(this.image_button_set);
+	this.image_mask_edit = $('<div class="btn xshop-designer-image-mask-edit-btn"><i class="glyphicon glyphicon-picture atk-size-tera"></i><br/><span class="atk-size-micro">Edit Mask</span></div>').appendTo(this.image_button_set);
 	// this.image_duplicate = $('<div class="btn "><span class="glyphicon glyphicon-">Duplicate</span></div>').appendTo(this.image_button_set);
 	// this.image_manager = $('<div class="btn "><span class="glyphicon glyphicon-film"></span></div>').appendTo(this.image_button_set);
 	this.image_remove = $('<div class="btn xshop-designer-image-remove-btn"><i class="icon-trash atk-size-tera"></i><br/><span class="atk-size-micro">Remove</span></div>').appendTo(this.image_button_set);
-	// this.image_manager.click(function(event){
-	// 	options ={modal:false,
-	// 				width:800
-	// 			};
-	// 	$.univ().frameURL('Add Images From...','index.php?page=xShop_page_designer_itemimages',options);
-	// });
+	
+	this.image_mask.click(function(event){
+		self.current_image_component.options.add_mask = true;
+		options ={modal:false,
+					width:800
+				};
+		$.univ().frameURL('Add Mask Images From...','index.php?page=xShop_page_designer_itemimages',options);
+	});
+
+	this.image_mask_apply.click(function(event){
+		// console.log(self);
+		// console.log(self.current_image_component);
+		// console.log(self.current_image_component.render());
+		self.current_image_component.render();
+	});
+
 	this.image_remove.click(function(){
 		dt  = self.current_image_component.designer_tool;
 		$.each(dt.pages_and_layouts[dt.current_page][dt.current_layout].components, function(index,cmp){
@@ -144,7 +157,43 @@ Image_Component = function (params){
 		backside:false,
 		multiline: false,
 		// System properties
-		type: 'Image'
+		type: 'Image',
+		//Mask the image
+		is_mask_image: false,
+		add_mask: false,
+		mask:{
+				x:0,
+				y:0,
+				width:'0',
+				height:'0',
+				url:'templates/images/logo.png',
+				crop_x: false,
+				crop_y:false,
+				crop_width:false,
+				crop_height:false,
+				crop:false,
+				replace_image: false,
+				rotation_angle:0,
+				locked: false,
+				alignment_left:false,
+				alignment_center:false,
+				alignment_right:false,
+				// Designer properties
+				movable: true,
+				colorable: true,
+				editable: true,
+				default_url:'templates/images/logo.png',
+				url:undefined,
+				z_index:0,
+				resizable: true,
+				auto_fit: false,
+				frontside:true,
+				backside:false,
+				multiline: false,
+				// System properties
+				type: 'Image'
+				
+			}
 	};
 
 	this.init = function(designer,canvas, editor){
@@ -173,6 +222,7 @@ Image_Component = function (params){
 		// console.log(self.designer_tool.current_page);
 		self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].components.push(new_image);
 		new_image.render(true);
+		return new_image;
 	}
 
 	this.renderTool = function(parent){
@@ -201,7 +251,7 @@ Image_Component = function (params){
 			
 			// self.options.width = self.designer_tool.px_width / 2;
 
-			this.element = $('<div style="position:absolute" class="xshop-designer-component"><span><img></img></span></div>').appendTo(this.canvas);
+			this.element = $('<div style="position:absolute" class="xshop-designer-component"><span class="xepan-designer-dropped-image"><img></img></span></div>').appendTo(this.canvas);
 			this.element.draggable({
 				containment: self.designer_tool.safe_zone,
 				smartguides:".xshop-designer-component",
@@ -290,7 +340,10 @@ Image_Component = function (params){
 					height:self.options.height,
 					max_width: self.designer_tool.safe_zone.width()/1.5,
 					max_height: self.designer_tool.safe_zone.height()/1.5,
-					auto_fit: is_new_image===true
+					auto_fit: is_new_image===true,
+					mask:self.options.mask,
+					add_mask:self.options.add_mask,
+					is_mask_image:self.options.is_mask_image
 				},
 		})
 		.done(function(ret) {

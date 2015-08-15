@@ -367,7 +367,9 @@ img.xdesigner-page-layout-thumbnail{
 }
 
 #xshop-designer-image-editor{
-  width:180px;
+  min-width:240px;
+  width: 360px;
+  max-width:360px; 
 }
 
 #xshop-designer-image-editor .btn{
@@ -389,4 +391,8 @@ img.xdesigner-page-layout-thumbnail{
     top: 20px;
     z-index: 10000;
     width:100%;
+}
+
+.xepan-designer-dropped-image{
+  width: auto;
 }
