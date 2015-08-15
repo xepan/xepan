@@ -16,7 +16,7 @@ xShop_Image_Editor = function(parent){
 	this.image_remove = $('<div class="btn xshop-designer-image-remove-btn"><i class="icon-trash atk-size-tera"></i><br/><span class="atk-size-micro">Remove</span></div>').appendTo(this.image_button_set);
 	
 	this.image_mask.click(function(event){
-		self.current_image_component.options.add_mask = true;
+		self.current_image_component.options.mask_added = true;
 		options ={modal:false,
 					width:800
 				};
@@ -24,9 +24,14 @@ xShop_Image_Editor = function(parent){
 	});
 
 	this.image_mask_apply.click(function(event){
-		// console.log(self);
-		// console.log(self.current_image_component);
-		// console.log(self.current_image_component.render());
+		self.current_image_component.options.apply_mask=true;
+		$(self.current_image_component.element).find('img[is_mask_image=1]').hide();
+		self.current_image_component.render();
+	});
+
+	this.image_mask_edit.click(function(event){
+		self.current_image_component.options.apply_mask=false;
+		$(self.current_image_component.element).find('img[is_mask_image=1]').show();
 		self.current_image_component.render();
 	});
 
@@ -160,7 +165,8 @@ Image_Component = function (params){
 		type: 'Image',
 		//Mask the image
 		is_mask_image: false,
-		add_mask: false,
+		mask_added: false,
+		apply_mask: false,
 		mask:{
 				x:0,
 				y:0,
@@ -207,7 +213,7 @@ Image_Component = function (params){
 		// alert('Hi called');
 	}
 
-	this.addImage = function(image_url){
+	this.addImage = function(image_url, is_masked){
 		var self=this;
 		//create new ImageComponent type object
 		var new_image = new Image_Component();
@@ -217,6 +223,7 @@ Image_Component = function (params){
 		new_image.options.x=0;
 		new_image.options.y=0;
 		new_image.options.url = image_url;
+		if(is_masked === true) new_image.options.is_mask_image = true;
 		// console.log(new_image);
 		// add this Object to canvas components array
 		// console.log(self.designer_tool.current_page);
@@ -251,7 +258,7 @@ Image_Component = function (params){
 			
 			// self.options.width = self.designer_tool.px_width / 2;
 
-			this.element = $('<div style="position:absolute" class="xshop-designer-component"><span class="xepan-designer-dropped-image"><img></img></span></div>').appendTo(this.canvas);
+			this.element = $('<div style="position:absolute" class="xshop-designer-component"><span class="xepan-designer-dropped-image"><img is_mask_image="'+(self.options.is_mask_image==true?'1':'0')+'"></img></span></div>').appendTo(this.canvas);
 			this.element.draggable({
 				containment: self.designer_tool.safe_zone,
 				smartguides:".xshop-designer-component",
@@ -342,12 +349,17 @@ Image_Component = function (params){
 					max_height: self.designer_tool.safe_zone.height()/1.5,
 					auto_fit: is_new_image===true,
 					mask:self.options.mask,
-					add_mask:self.options.add_mask,
+					mask_added:self.options.mask_added,
+					apply_mask:self.options.apply_mask,
 					is_mask_image:self.options.is_mask_image
 				},
 		})
 		.done(function(ret) {
-			self.element.find('img').attr('src','data:image/jpg;base64, '+ ret);
+			if(self.options.is_mask_image)
+				self.element.find('img[is_mask_image=1]').attr('src','data:image/jpg;base64, '+ ret);
+			else
+				self.element.find('img[is_mask_image=0]').attr('src','data:image/jpg;base64, '+ ret);
+
 			if(is_new_image===true){
 				window.setTimeout(function(){
 					self.options.width = self.designer_tool.screen2option(self.element.find('img').width());

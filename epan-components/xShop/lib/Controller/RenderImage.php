@@ -23,9 +23,8 @@ class Controller_RenderImage extends \AbstractController {
 
 		$p->resize($this->options['width'],$this->options['height'],false,false,false);
 		
-		if($this->options['add_mask']){
-			$mask = new \PHPImage($this->options['mask']['url']);
-			$this->phpimage->mask($mask);
+		if($this->options['mask_added'] && $this->options['apply_mask']){
+			$this->phpimage->mask($this->options['mask']);
 		}
 
 		// if($this->options['rotation_angle']){

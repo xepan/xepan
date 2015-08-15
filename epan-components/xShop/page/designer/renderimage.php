@@ -25,9 +25,13 @@ class page_xShop_page_designer_renderimage extends Page {
 		$options=array();
 
 		
-		$options['url'] = "/var/www/".$_GET['url'];
-
-		if(!file_exists($options['url'])) return;
+		$options['url'] = getcwd().$_GET['url'];
+		if(!file_exists($options['url'])){
+			$options['url'] = dirname(getcwd()).$_GET['url'];
+			if(!file_exists($options['url'])){
+				return;
+			}
+		}
 
 		$zoom = $options['zoom'] = $_GET['zoom'];
 		$options['width'] = $_GET['width'] * $zoom ;
@@ -45,7 +49,8 @@ class page_xShop_page_designer_renderimage extends Page {
 		$options['rotation_angle'] = $_GET['rotation_angle'];
 		
 		$options['mask'] = $_GET['mask'];
-		$options['add_mask'] = $_GET['add_mask'];
+		$options['mask_added'] = $_GET['mask_added']=='true';
+		$options['apply_mask'] = $_GET['apply_mask']=='true';
 		$options['is_mask_image'] = $_GET['is_mask_image'];
 
 		$cont = $this->add('xShop/Controller_RenderImage',array('options'=>$options));

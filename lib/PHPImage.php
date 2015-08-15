@@ -46,6 +46,7 @@ class PHPImage {
 	 * @var resource
 	 */
 	protected $img;
+	protected $imagick_img=null;
 
 	/**
 	 * Canvas resource
@@ -543,10 +544,41 @@ class PHPImage {
 		return $this;
 	}
 
+	public function show($as_base64_encode=true,$return_data=false){
+		if($this->imagick_img !==null) 
+			return $this->showImagick($as_base64_encode,$return_data);
+		else
+			return $this->showGD($as_base64_encode,$return_data);
+	}
+
+	public function showImagick($as_base64_encode=true,$return_data=false){
+		ob_start();
+		$this->imagick_img->getImageBlob();
+		$imageData = ob_get_contents();
+		ob_clean(); 
+
+		$this->cleanup();
+
+		if($as_base64_encode){
+			// $imageData = base64_encode($imageData);
+		}
+
+		if($return_data){
+			return $imageData;	
+		} 
+		header('Expires: Wed, 1 Jan 1997 00:00:00 GMT');
+		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+		header('Cache-Control: no-store, no-cache, must-revalidate');
+		header('Cache-Control: post-check=0, pre-check=0', false);
+		header('Pragma: no-cache');
+		header('Content-type: image/png');
+		echo $imageData;
+		die();
+	}
 	/**
 	 * Shows the resulting image
 	 */
-	public function show($as_base64_encode=true,$return_data=false){
+	public function showGD($as_base64_encode=true,$return_data=false){
 		ob_start();
 		switch($this->type){
 			case IMAGETYPE_GIF:
@@ -584,7 +616,7 @@ class PHPImage {
 	 * Cleanup
 	 */
 	public function cleanup(){
-		imagedestroy($this->img);
+		// imagedestroy($this->img);
 	}
 
 	/**
@@ -1272,6 +1304,46 @@ class PHPImage {
 		$src_h=imagesy($im);
 		imagecopyresized ( $this->getResource() , $im , $x , $y , 0 , 0 , $width , $height , $src_w , $src_h );
 		// imagecopy ( $this->getResource() , $im , $x , $y , 0 , 0 , $width , $height );
+	}
+
+	function mask($mask_details){
+		// // Create new objects from png's
+		// $dude = new Imagick($path . 'source.png');
+		// $mask = new Imagick($path . 'mask.png');
+
+		// // IMPORTANT! Must activate the opacity channel
+		// // See: http://www.php.net/manual/en/function.imagick-setimagematte.php
+		// $dude->setImageMatte(1); 
+
+		// // Create composite of two images using DSTIN
+		// // See: http://www.imagemagick.org/Usage/compose/#dstin
+		// $dude->resizeImage(274, 275, Imagick::FILTER_LANCZOS, 1);
+		// $dude->compositeImage($mask, Imagick::COMPOSITE_DSTIN, 0, 0);
+
+		// // Write image to a file.
+		// // $dude->writeImage($path . 'newimage.png');
+
+		// // And/or output image directly to browser
+		// header("Content-Type: image/png");
+		// echo $dude;
+
+		// $this->imagick_img = $source = new Imagick(); 
+		// $source->readImageBlob($this->showGD(false,true));
+
+		// $url = getcwd().$mask_details['url'];
+		// if(!file_exists($url)){
+		// 	$url = dirname(getcwd()).$mask_details['url'];
+		// 	if(!file_exists($url)){
+		// 		return;
+		// 	}
+		// }
+
+		// $mask = new Imagick($url);
+
+		// $source->setImageMatte(1);
+		// $source->compositeImage($mask, Imagick::COMPOSITE_DSTIN, 0, 0);
+
+
 	}
 
 }
