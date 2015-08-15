@@ -139,4 +139,60 @@ function page_owner_layout(){
 		}
 	}
 
+	function page_mask(){
+		// // Set image path
+
+		// // Create new objects from png's
+		// $source = new Imagick($path . 'source.png');
+		// $mask = new Imagick($path . 'mask.png');
+
+		// // IMPORTANT! Must activate the opacity channel
+		// // See: http://www.php.net/manual/en/function.imagick-setimagematte.php
+		// $dude->setImageMatte(1); 
+
+		// // Create composite of two images using DSTIN
+		// // See: http://www.imagemagick.org/Usage/compose/#dstin
+		// $dude->resizeImage(274, 275, Imagick::FILTER_LANCZOS, 1);
+		// $dude->compositeImage($mask, Imagick::COMPOSITE_DSTIN, 0, 0);
+
+		// // Write image to a file.
+		// // $dude->writeImage($path . 'newimage.png');
+
+		// // And/or output image directly to browser
+		// header("Content-Type: image/png");
+		// echo $dude;
+
+		$path = '/var/www/xerp/upload/0/';
+		$source = imagecreatefrompng( '/var/www/xerp/upload/0/source.png' );
+		$mask = imagecreatefrompng( '/var/www/xerp/upload/0/mask.png' );
+		$this->magealphamask( $source, $mask );
+		header( "Content-type: image/png");
+		imagepng( $source );
+	
+	}
+
+	function magealphamask(&$merged, $mask){
+		$xSize = imagesx( $merged );
+	    $ySize = imagesy( $merged );
+	    $newPicture = imagecreatetruecolor( $xSize, $ySize );
+	    imagesavealpha( $newPicture, true );
+	    imagefill( $newPicture, 0, 0, imagecolorallocatealpha( $newPicture, 0, 0, 0, 127 ) );
+	    if( $xSize != imagesx( $mask ) || $ySize != imagesy( $mask ) ) {
+	        $tempPic = imagecreatetruecolor( $xSize, $ySize );
+	        imagecopyresampled( $tempPic, $mask, 0, 0, 0, 0, $xSize, $ySize, imagesx( $mask ), imagesy( $mask ) );
+	        imagedestroy( $mask );
+	        $mask = $tempPic;
+	    }
+	    for( $x = 0; $x < $xSize; $x++ ) {
+	        for( $y = 0; $y < $ySize; $y++ ) {
+	            $alpha = imagecolorsforindex( $mask, imagecolorat( $mask, $x, $y ) );
+	            $alpha = 127 - floor( $alpha[ 'red' ] / 2 );
+	            $color = imagecolorsforindex( $merged, imagecolorat( $merged, $x, $y ) );
+	            imagesetpixel( $newPicture, $x, $y, imagecolorallocatealpha( $newPicture, $color[ 'red' ], $color[ 'green' ], $color[ 'blue' ], $alpha ) );
+	        }
+	    }
+	    imagedestroy($merged);
+	    $merged = $newPicture;
+	}
+
 }
