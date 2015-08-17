@@ -1307,45 +1307,64 @@ class PHPImage {
 	}
 
 	function mask($mask_details){
-		$this->show(false,false);
-		// // Create new objects from png's
-		// $dude = new Imagick($path . 'source.png');
-		// $mask = new Imagick($path . 'mask.png');
+		$url = getcwd().$mask_details['url'];
+		if(!file_exists($url)){
+			$url = dirname(getcwd()).$mask_details['url'];
+			if(!file_exists($url)){
+				return;
+			}
+		}
 
-		// // IMPORTANT! Must activate the opacity channel
-		// // See: http://www.php.net/manual/en/function.imagick-setimagematte.php
-		// $dude->setImageMatte(1); 
+		$mask = new PHPImage($url);
+		$this->imagealphamask($this->getResource(),$mask->getResource());
+	}
 
-		// // Create composite of two images using DSTIN
-		// // See: http://www.imagemagick.org/Usage/compose/#dstin
-		// $dude->resizeImage(274, 275, Imagick::FILTER_LANCZOS, 1);
-		// $dude->compositeImage($mask, Imagick::COMPOSITE_DSTIN, 0, 0);
+	function imagealphamask( &$picture, $mask ) {
+		// Get sizes and set up new picture
+		$xSize = imagesx( $picture );
+		$ySize = imagesy( $picture );
+		$newPicture = imagecreatetruecolor( $xSize, $ySize );
+		imagesavealpha( $newPicture, true );
+		imagefill( $newPicture, 0, 0, imagecolorallocatealpha( $newPicture, 0, 0, 0, 127 ) );
 
-		// // Write image to a file.
-		// // $dude->writeImage($path . 'newimage.png');
+		// Resize mask if necessary
+		if( $xSize != imagesx( $mask ) || $ySize != imagesy( $mask ) ) {
+		    $tempPic = imagecreatetruecolor( $xSize, $ySize );
+		    imagecopyresampled( $tempPic, $mask, 0, 0, 0, 0, $xSize, $ySize, imagesx( $mask ), imagesy( $mask ) );
+		    imagedestroy( $mask );
+		    $mask = $tempPic;
+		}
 
-		// // And/or output image directly to browser
-		// header("Content-Type: image/png");
-		// echo $dude;
-		// echo $this->showGD(true,true);
-		// die();
-		// $this->imagick_img = $source = new Imagick(); 
-		// $source->readImageBlob($this->showGD(false,true));
+		// Perform pixel-based alpha map application
+		for( $x = 0; $x < $xSize; $x++ ) {
+		    for( $y = 0; $y < $ySize; $y++ ) {
+		        $alpha = imagecolorsforindex( $mask, imagecolorat( $mask, $x, $y ) );
 
-		// $url = getcwd().$mask_details['url'];
-		// if(!file_exists($url)){
-		// 	$url = dirname(getcwd()).$mask_details['url'];
-		// 	if(!file_exists($url)){
-		// 		return;
-		// 	}
-		// }
+		            if(($alpha['red'] == 0) && ($alpha['green'] == 0) && ($alpha['blue'] == 0) && ($alpha['alpha'] == 0))
+		            {
+		                // It's a black part of the mask
+		                imagesetpixel( $newPicture, $x, $y, imagecolorallocatealpha( $newPicture, 0, 0, 0, 127 ) ); // Stick a black, but totally transparent, pixel in.
+		            }
+		            else
+		            {
 
-		// $mask = new Imagick($url);
+		                // Check the alpha state of the corresponding pixel of the image we're dealing with.    
+		                $alphaSource = imagecolorsforindex( $picture, imagecolorat( $picture, $x, $y ) );
 
-		// // $this->imagick_img->setImageMatte(1);
-		// $this->imagick_img->compositeImage($mask, Imagick::COMPOSITE_COPYOPACITY, 0, 0);
+		                if(($alphaSource['alpha'] == 127))
+		                {
+		                    imagesetpixel( $newPicture, $x, $y, imagecolorallocatealpha( $newPicture, 0, 0, 0, 127 ) ); // Stick a black, but totally transparent, pixel in.
+		                } 
+		                else
+		                {
+		                    $color = imagecolorsforindex( $picture, imagecolorat( $picture, $x, $y ) );
+		                    imagesetpixel( $newPicture, $x, $y, imagecolorallocatealpha( $newPicture, $color[ 'red' ], $color[ 'green' ], $color[ 'blue' ], $color['alpha'] ) ); // Stick the pixel from the source image in
+		                }
 
 
+		            }
+		    }
+		}
 	}
 
 }
