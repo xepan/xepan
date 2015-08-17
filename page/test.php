@@ -143,56 +143,71 @@ function page_owner_layout(){
 		// Set image path
 
 		// Create new objects from png's
-		$path = '/home/adam/Pictures/';
-		$dude = new Imagick($path . 'U0R4F.png');
-		$mask = new Imagick($path . 'mask.png');
+		// $path = '/home/adam/Pictures/';
+		// $dude = new Imagick($path . 'U0R4F.png');
+		// $mask = new Imagick($path . 'mask.png');
 
-		// IMPORTANT! Must activate the opacity channel
-		// See: http://www.php.net/manual/en/function.imagick-setimagematte.php
-		// $dude->setImageMatte(1); 
+		// // IMPORTANT! Must activate the opacity channel
+		// // See: http://www.php.net/manual/en/function.imagick-setimagematte.php
+		// // $dude->setImageMatte(1); 
 
-		// Create composite of two images using DSTIN
-		// See: http://www.imagemagick.org/Usage/compose/#dstin
-		// $dude->resizeImage(274, 275, Imagick::FILTER_LANCZOS, 1);
-		$dude->compositeImage($mask, Imagick::COMPOSITE_DSTIN, 0, 0);
-		// $dude->radialBlurImage(20);
-		// Write image to a file.
-		// $dude->writeImage($path . 'newimage.png');
+		// // Create composite of two images using DSTIN
+		// // See: http://www.imagemagick.org/Usage/compose/#dstin
+		// // $dude->resizeImage(274, 275, Imagick::FILTER_LANCZOS, 1);
+		// $dude->compositeImage($mask, Imagick::COMPOSITE_DSTIN, 0, 0);
+		// // $dude->radialBlurImage(20);
+		// // Write image to a file.
+		// // $dude->writeImage($path . 'newimage.png');
 
-		// And/or output image directly to browser
-		header("Content-Type: image/png");
-		echo $dude;
+		// // And/or output image directly to browser
+		// header("Content-Type: image/png");
+		// echo $dude;
 
-		// $source = imagecreatefrompng( '/var/www/xerp/upload/0/source.png' );
-		// $mask = imagecreatefrompng( '/var/www/xerp/upload/0/mask.png' );
-		// $this->magealphamask( $source, $mask );
-		// header( "Content-type: image/png");
-		// imagepng( $source );
+		$source = imagecreatefrompng( '/var/www/xerp/upload/0/source.png' );
+		$mask = imagecreatefrompng( '/var/www/xerp/upload/0/mask.png' );
+		$this->magealphamask( $source, $mask );
+		header( "Content-type: image/png");
+		imagepng( $source );
 	
 	}
 
-	function magealphamask(&$merged, $mask){
-		$xSize = imagesx( $merged );
-	    $ySize = imagesy( $merged );
-	    $newPicture = imagecreatetruecolor( $xSize, $ySize );
-	    imagesavealpha( $newPicture, true );
-	    imagefill( $newPicture, 0, 0, imagecolorallocatealpha( $newPicture, 0, 0, 0, 127 ) );
-	    if( $xSize != imagesx( $mask ) || $ySize != imagesy( $mask ) ) {
-	        $tempPic = imagecreatetruecolor( $xSize, $ySize );
-	        imagecopyresampled( $tempPic, $mask, 0, 0, 0, 0, $xSize, $ySize, imagesx( $mask ), imagesy( $mask ) );
-	        imagedestroy( $mask );
-	        $mask = $tempPic;
-	    }
-	    for( $x = 0; $x < $xSize; $x++ ) {
-	        for( $y = 0; $y < $ySize; $y++ ) {
-	            $alpha = imagecolorsforindex( $mask, imagecolorat( $mask, $x, $y ) );
-	            $alpha = 127 - floor( $alpha[ 'red' ] / 2 );
-	            $color = imagecolorsforindex( $merged, imagecolorat( $merged, $x, $y ) );
-	            imagesetpixel( $newPicture, $x, $y, imagecolorallocatealpha( $newPicture, $color[ 'red' ], $color[ 'green' ], $color[ 'blue' ], $alpha ) );
-	        }
-	    }
-	    imagedestroy($merged);
-	    $merged = $newPicture;
+	function magealphamask(&$picture, $mask){
+		//Get With and Height of Merged Image
+		$xSize = imagesx( $picture );
+	    $ySize = imagesy( $picture );
+
+	    $posX = 0;
+	    $posY = 0;
+
+		//Step 1
+			// Create a new Temp image having width and height same as original picture 
+		    $newPicture = imagecreatetruecolor( $xSize, $ySize );
+		    imagealphablending($newPicture, false);
+	    	//and having background color transparent
+		    imagefill( $newPicture, 0, 0, imagecolorallocatealpha( $newPicture, 0, 0, 0, 127 ) );
+		    imagesavealpha($newPicture, true);
+		//Step 2
+			// Merge mask image to Temp Image, according to x and y cordinates width
+			imagecopymerge($newPicture, $mask, $posX, $posY, 0, 0, $xSize,$ySize, 100);
+			// and Result will be temp image
+		    // $picture = $newPicture;
+		    // return;
+		//Step 3
+			// In a FOR Loop of original picture widtha and height
+			for( $x = 0; $x < $xSize; $x++ ) {
+		    	for( $y = 0; $y < $ySize; $y++ ) {
+		    		//if pixel of temp image at x and y is white
+					$alpha = imagecolorsforindex( $newPicture, imagecolorat( $newPicture, $x, $y ) );
+					if(($alpha['red'] == 255) && ($alpha['green'] == 255) && ($alpha['blue'] == 255) && ($alpha['alpha'] == 0)){
+						// Make the background transparent
+						$transparency = imagecolorallocatealpha($picture, 0, 0, 0, 127);
+		                imagesetpixel( $picture, $x, $y, $transparency); // Stick a black, but totally transparent, pixel in.
+		    			//then set transparent pixel of original picture at same x and y
+		            }
+		    	}
+		    }
+		// Destroying the new created image
+	    imagedestroy($newPicture);
 	}
 
 }
