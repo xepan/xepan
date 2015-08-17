@@ -23,7 +23,7 @@ class Controller_RenderImage extends \AbstractController {
 
 		$p->resize($this->options['width'],$this->options['height'],false,false,false);
 		
-		if($this->options['mask_added'] && $this->options['apply_mask']){
+		if($this->options['mask_added'] == "true" && $this->options['apply_mask'] == "true"){			
 			$this->phpimage->mask($this->options['mask']);
 		}
 
@@ -34,6 +34,6 @@ class Controller_RenderImage extends \AbstractController {
 
 	function show($type='png',$quality=3, $base64_encode=true, $return_data=false){
 		$this->phpimage->setOutput('png',3);
-		return $this->phpimage->show($base64_encode=false,$return_data);
+		return $this->phpimage->show($base64_encode,$return_data);
 	}
 }

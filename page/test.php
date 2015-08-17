@@ -146,14 +146,26 @@ function page_owner_layout(){
 		$this->add('View')->setElement('img')->setAttr('src',$this->api->url(null,['img'=>1]));
 
 		if($_GET['img']){
-			$source = imagecreatefrompng( '/home/adam/Pictures/source.png' );
-			$mask = imagecreatefrompng( '/home/adam/Pictures/checkerboard.png' );
-			$picture_temp = imagecreatetruecolor( 100, 100 );
+
+			$source = imagecreatefrompng( '/var/www/xerp/upload/0/source.png' );
+			$xSize = imagesx( $source );
+		    $ySize = imagesy( $source );
+			
+			$newPicture = imagecreatetruecolor( $xSize, $ySize );
+		    imagealphablending($newPicture, false);
+		    imagefill( $newPicture, 0, 0, imagecolorallocatealpha( $newPicture, 255, 255, 255, 0 ) );
+		    imagesavealpha($newPicture, true);
+
+			$mask = imagecreatefrompng( '/var/www/xerp/upload/0/checker.png' );
+			imagecopymerge($newPicture, $mask, 0, 0, 0, 0, $xSize , $ySize, 100);
+			$mask = $newPicture;
+			
+			$picture_temp = imagecreatetruecolor( $xSize, $ySize );
 		    imagefill( $picture_temp, 0, 0, imagecolorallocatealpha( $picture_temp, 255, 255, 255, 127 ) );
 		    imagealphablending($picture_temp, false);
 		    imagesavealpha($picture_temp, true);
-		    for($x=20;$x<=80;$x++)
-			    for($y=20;$y<=80;$y++){
+		    for($x=0;$x< $xSize;$x++)
+			    for($y=0;$y< $ySize;$y++){
 			    	$mcolor=imagecolorsforindex( $mask, imagecolorat( $mask, $x, $y ) );
 			    	if($mcolor['red']==255 && $mcolor['green']==255 && $mcolor['blue']==255){
 				    	$color=imagecolorsforindex( $source, imagecolorat( $source, $x, $y ) );
@@ -165,6 +177,7 @@ function page_owner_layout(){
 			header( "Content-type: image/png");
 			imagepng( $picture_temp );
 			exit;
+
 		}
 
 		if($_GET['img']){
