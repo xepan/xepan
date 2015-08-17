@@ -15,6 +15,7 @@ xShop_Image_Editor = function(parent){
 	// this.image_manager = $('<div class="btn "><span class="glyphicon glyphicon-film"></span></div>').appendTo(this.image_button_set);
 	this.image_remove = $('<div class="btn xshop-designer-image-remove-btn"><i class="icon-trash atk-size-tera"></i><br/><span class="atk-size-micro">Remove</span></div>').appendTo(this.image_button_set);
 	
+
 	this.image_mask.click(function(event){
 		self.current_image_component.options.mask_added=true;
 		options ={modal:false,
@@ -47,6 +48,12 @@ xShop_Image_Editor = function(parent){
 			}
 		});
 	});
+
+
+	//Hide Default Mask Edit and Apply option
+	this.image_mask_apply.hide();
+	this.image_mask_edit.hide();
+
 
 	this.image_crop_resize.click(function(event){
 		// var self =this;
@@ -290,11 +297,29 @@ Image_Component = function (params){
 			$(this.element).data('component',this);
 		
 			$(this.element).click(function(event) {
+
 	            $('.ui-selected').removeClass('ui-selected');
 	            $(this).addClass('ui-selected');
 	            $('.xshop-options-editor').hide();
 	            self.editor.element.show();
-	            self.designer_tool.option_panel.show();
+	            //using callback function for hide and show the apply and edit mask option
+	            self.designer_tool.option_panel.show('fast',function(event){
+	            	if(self.options.mask_added == true && self.options.mask_options.url != undefined){
+	            		$('div.xshop-designer-image-mask-apply-btn').show();
+	            		$('div.xshop-designer-image-mask-edit-btn').show();
+	            	}else{
+	            		$('div.xshop-designer-image-mask-apply-btn').hide();
+	            		$('div.xshop-designer-image-mask-edit-btn').hide();
+	            	}
+
+	            	if(self.options.mask_added == true || self.options.is_mask_image){
+	            		$('div.xshop-designer-image-mask-btn').hide();
+	            	}else{
+	            		$('div.xshop-designer-image-mask-btn').show();
+
+	            	}
+	            });
+
 	            if(self.designer_tool.options.designer_mode){
 		            self.designer_tool.freelancer_panel.FreeLancerComponentOptions.element.show();
 		            self.designer_tool.freelancer_panel.setComponent($(this).data('component'));
