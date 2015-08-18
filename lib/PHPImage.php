@@ -1316,10 +1316,11 @@ class PHPImage {
 		}
 
 		$mask = new PHPImage($url);
-		$this->imagealphamask($this->getResource(),$mask->getResource());
+		// $mask->resize($mask_details['width'],$mask_details['height'],false,false,false);
+		$this->imagealphamask($this->getResource(),$mask->getResource(),$mask_details);
 	}
 
-	function imagealphamask( &$source, $mask ) {
+	function imagealphamask( &$source, $mask,$mask_details=null ) {
 		
 		//Getting Source Image  Size
 		$xSize = imagesx( $source );
@@ -1333,7 +1334,7 @@ class PHPImage {
 
 	    //Merge NewPicture with Mask Image
 		// $mask = imagecreatefrompng( '/var/www/xerp/upload/0/checker.png' );
-		imagecopymerge($newPicture, $mask, 0, 0, 0, 0, $xSize , $ySize, 100);
+		imagecopymerge($newPicture, $mask, $mask_details['x'], $mask_details['y'], 0, 0, $xSize , $ySize, 100);
 		$mask = $newPicture;
 		
 		// Creating Temporary Masked PHPImage

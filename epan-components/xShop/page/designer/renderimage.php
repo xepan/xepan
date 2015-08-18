@@ -24,7 +24,6 @@ class page_xShop_page_designer_renderimage extends Page {
 		parent::init();
 		$options=array();
 
-		
 		$options['url'] = getcwd().$_GET['url'];
 		if(!file_exists($options['url'])){
 			$options['url'] = dirname(getcwd()).$_GET['url'];
@@ -32,12 +31,13 @@ class page_xShop_page_designer_renderimage extends Page {
 				return;
 			}
 		}
-
 		$zoom = $options['zoom'] = $_GET['zoom'];
 		$options['width'] = $_GET['width'] * $zoom ;
 		$options['height'] = $_GET['height'] * $zoom;
 		$options['max_width'] = $_GET['max_width'];
 		$options['max_height'] = $_GET['max_height'];
+		$options['x'] = $_GET['x'];
+		$options['y'] = $_GET['y'];
 
 		$options['crop'] = $_GET['crop'] =='true';
 		$options['crop_x'] = $_GET['crop_x'];
@@ -51,8 +51,8 @@ class page_xShop_page_designer_renderimage extends Page {
 		$options['mask'] = $_GET['mask'];
 		$options['mask_added'] = $_GET['mask_added']=='true';
 		$options['apply_mask'] = $_GET['apply_mask']=='true';
-		$options['is_mask_image'] = $_GET['is_mask_image'];
-
+		$options['is_mask_image'] = $_GET['is_mask_image'];		
+		
 		$cont = $this->add('xShop/Controller_RenderImage',array('options'=>$options));
 		$cont->show('png',3,true,false); // exiting as well
 		return;

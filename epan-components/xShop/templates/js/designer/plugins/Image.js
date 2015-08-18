@@ -228,6 +228,8 @@ Image_Component = function (params){
 			mask_image.options.url = self.options.mask_options.url;
 			mask_image.options = self.options.mask_options;
 			mask_image.options.is_mask_image = true;
+			mask_image.options.x = 0;
+			mask_image.options.y = 0;
 			mask_image.render(true);
 			self.mask = mask_image;	
 			self.options.mask_added = true;
@@ -327,21 +329,13 @@ Image_Component = function (params){
 	            self.designer_tool.current_selected_component = self;
 	            self.designer_tool.option_panel.css('z-index',70);
 	            self.designer_tool.option_panel.addClass('xshop-text-options');
-	            
-	   //          console.log("Position Left"+$(this).position().left);
-	   //          console.log("Position Right"+$(this).position().right);
-	   //          console.log("Position Top"+$(this).position().top);
-	   //          console.log("Position Bottom"+$(this).position().bottom);
-	   //          console.log("pageX="+event.pageX);
-				// console.log("clientX="+event.clientX);
-				// console.log("clientWidth="+event.currentTarget.clientWidth);
-				// console.log("clientHeight="+event.currentTarget.clientHeight);
 
+	            // current_image_position = self.element.position();
+	            // self.designer_tool.option_panel.css('top', current_image_position.top);
+	            // self.designer_tool.option_panel.css('left',current_image_position.left);
 	            self.designer_tool.option_panel.css('top',event.pageY - (event.currentTarget.clientHeight/2));
-	            self.designer_tool.option_panel.css('left',event.pageX - (event.currentTarget.clientWidth/2));
+-	            self.designer_tool.option_panel.css('left',event.pageX - (event.currentTarget.clientWidth/2));
 
-	            // self.designer_tool.option_panel.css('top',event.clientY - event.currentTarget.clientHeight + 30);
-	            // self.designer_tool.option_panel.css('left',event.clientX - event.currentTarget.clientWidth);
 	            self.editor.setImageComponent(self);
 		        event.stopPropagation();
 			});
@@ -381,7 +375,9 @@ Image_Component = function (params){
 					mask:self.options.mask_options,
 					mask_added:self.options.mask_added,
 					apply_mask:self.options.apply_mask,
-					is_mask_image:self.options.is_mask_image
+					is_mask_image:self.options.is_mask_image,
+					x: self.options.x,
+					y: self.options.y
 				},
 		})
 		.done(function(ret) {
@@ -394,7 +390,7 @@ Image_Component = function (params){
 				window.setTimeout(function(){
 					self.options.width = self.designer_tool.screen2option(self.element.find('img').width());
 					self.options.height = self.designer_tool.screen2option(self.element.find('img').height());
-					console.log(self.element.find('img').width());
+					// console.log(self.element.find('img').width());
 				},200);
 			}
 			self.xhr=undefined;
