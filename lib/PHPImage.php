@@ -1316,55 +1316,47 @@ class PHPImage {
 		}
 
 		$mask = new PHPImage($url);
-		$this->imagealphamask($this->getResource(),$mask->getResource());
+		$mask->resize($mask_details['width'],$mask_details['height'],false,false,false);
+		$this->imagealphamask($this->getResource(),$mask->getResource(),$mask_details);
 	}
 
-	function imagealphamask( &$picture, $mask ) {
-		// Get sizes and set up new picture
-		$xSize = imagesx( $picture );
-		$ySize = imagesy( $picture );
+	function imagealphamask( &$source, $mask,$mask_details=null ) {
+		
+		//Getting Source Image  Size
+		$xSize = imagesx( $source );
+	    $ySize = imagesy( $source );
+		
+		// Creating New PHPImage for Merge
 		$newPicture = imagecreatetruecolor( $xSize, $ySize );
-		imagesavealpha( $newPicture, true );
-		imagefill( $newPicture, 0, 0, imagecolorallocatealpha( $newPicture, 0, 0, 0, 127 ) );
+	    imagealphablending($newPicture, false);
+	    imagefill( $newPicture, 0, 0, imagecolorallocatealpha( $newPicture, 255, 255, 255, 0 ) );
+	    imagesavealpha($newPicture, true);
 
-		// Resize mask if necessary
-		if( $xSize != imagesx( $mask ) || $ySize != imagesy( $mask ) ) {
-		    $tempPic = imagecreatetruecolor( $xSize, $ySize );
-		    imagecopyresampled( $tempPic, $mask, 0, 0, 0, 0, $xSize, $ySize, imagesx( $mask ), imagesy( $mask ) );
-		    imagedestroy( $mask );
-		    $mask = $tempPic;
-		}
-
-		// Perform pixel-based alpha map application
-		for( $x = 0; $x < $xSize; $x++ ) {
-		    for( $y = 0; $y < $ySize; $y++ ) {
-		        $alpha = imagecolorsforindex( $mask, imagecolorat( $mask, $x, $y ) );
-
-		            if(($alpha['red'] == 0) && ($alpha['green'] == 0) && ($alpha['blue'] == 0) && ($alpha['alpha'] == 0))
-		            {
-		                // It's a black part of the mask
-		                imagesetpixel( $newPicture, $x, $y, imagecolorallocatealpha( $newPicture, 0, 0, 0, 127 ) ); // Stick a black, but totally transparent, pixel in.
-		            }
-		            else
-		            {
-
-		                // Check the alpha state of the corresponding pixel of the image we're dealing with.    
-		                $alphaSource = imagecolorsforindex( $picture, imagecolorat( $picture, $x, $y ) );
-
-		                if(($alphaSource['alpha'] == 127))
-		                {
-		                    imagesetpixel( $newPicture, $x, $y, imagecolorallocatealpha( $newPicture, 0, 0, 0, 127 ) ); // Stick a black, but totally transparent, pixel in.
-		                } 
-		                else
-		                {
-		                    $color = imagecolorsforindex( $picture, imagecolorat( $picture, $x, $y ) );
-		                    imagesetpixel( $newPicture, $x, $y, imagecolorallocatealpha( $newPicture, $color[ 'red' ], $color[ 'green' ], $color[ 'blue' ], $color['alpha'] ) ); // Stick the pixel from the source image in
-		                }
-
-
-		            }
+	    //Merge NewPicture with Mask Image
+		// $mask = imagecreatefrompng( '/var/www/xerp/upload/0/checker.png' );
+		imagecopymerge($newPicture, $mask, $mask_details['x'], $mask_details['y'], 0, 0, $xSize , $ySize, 100);
+		$mask = $newPicture;
+		
+		// Creating Temporary Masked PHPImage
+		$picture_temp = imagecreatetruecolor( $xSize, $ySize );
+	    imagefill( $picture_temp, 0, 0, imagecolorallocatealpha( $picture_temp, 255, 255, 255, 127 ) );
+	    imagealphablending($picture_temp, false);
+	    imagesavealpha($picture_temp, true);
+	    for($x=0;$x< $xSize;$x++)
+		    for($y=0;$y< $ySize;$y++){
+		    	$mcolor=imagecolorsforindex( $mask, imagecolorat( $mask, $x, $y ) );
+		    	if($mcolor['red']==255 && $mcolor['green']==255 && $mcolor['blue']==255){
+			    	$color=imagecolorsforindex( $source, imagecolorat( $source, $x, $y ) );
+				    $red = imagecolorallocate($picture_temp, $color['red'], $color['green'], $color['blue']); 
+			    	imagesetpixel($picture_temp, $x, $y, $red);
+		    	}
 		    }
-		}
+
+		$source = $picture_temp;
+		$this->img = $source;
+		// header( "Content-type: image/png");
+		// imagepng( $picture_temp );
+		// exit;
 	}
 
 }

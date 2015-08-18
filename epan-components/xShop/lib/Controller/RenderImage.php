@@ -23,7 +23,7 @@ class Controller_RenderImage extends \AbstractController {
 
 		$p->resize($this->options['width'],$this->options['height'],false,false,false);
 		
-		if($this->options['mask_added'] && $this->options['apply_mask']){
+		if($this->options['mask_added'] == "true" && $this->options['apply_mask'] == "true"){			
 			$this->phpimage->mask($this->options['mask']);
 		}
 
