@@ -52,6 +52,11 @@ class page_xShop_page_designer_renderimage extends Page {
 		$options['mask_added'] = $_GET['mask_added']=='true';
 		$options['apply_mask'] = $_GET['apply_mask']=='true';
 		$options['is_mask_image'] = $_GET['is_mask_image'];		
+
+		$options['mask']['x'] = $zoom * $options['mask']['x'];
+		$options['mask']['y'] = $zoom * $options['mask']['y'];
+		$options['mask']['width'] = $zoom * $options['mask']['width'];
+		$options['mask']['height'] = $zoom * $options['mask']['height'];
 		
 		$cont = $this->add('xShop/Controller_RenderImage',array('options'=>$options));
 		$cont->show('png',3,true,false); // exiting as well

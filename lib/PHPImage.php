@@ -1316,7 +1316,7 @@ class PHPImage {
 		}
 
 		$mask = new PHPImage($url);
-		// $mask->resize($mask_details['width'],$mask_details['height'],false,false,false);
+		$mask->resize($mask_details['width'],$mask_details['height'],false,false,false);
 		$this->imagealphamask($this->getResource(),$mask->getResource(),$mask_details);
 	}
 
