@@ -334,7 +334,7 @@ Image_Component = function (params){
 	            // self.designer_tool.option_panel.css('top', current_image_position.top);
 	            // self.designer_tool.option_panel.css('left',current_image_position.left);
 	            self.designer_tool.option_panel.css('top',event.pageY - (event.currentTarget.clientHeight/2));
--	            self.designer_tool.option_panel.css('left',event.pageX - (event.currentTarget.clientWidth/2));
+	            self.designer_tool.option_panel.css('left',event.pageX - (event.currentTarget.clientWidth/2));
 
 	            self.editor.setImageComponent(self);
 		        event.stopPropagation();

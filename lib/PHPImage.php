@@ -1316,40 +1316,44 @@ class PHPImage {
 		}
 
 		$mask = new PHPImage($url);
-		$mask->resize($mask_details['width'],$mask_details['height'],false,false,false);
+		$mask->resize($mask_details['width'],$mask_details['height'],false,true,false);
 		$this->imagealphamask($this->getResource(),$mask->getResource(),$mask_details);
 	}
 
 	function imagealphamask( &$source, $mask,$mask_details=null ) {
 		
-		//Getting Source Image  Size
+	//Getting Source Image  Size
 		$xSize = imagesx( $source );
 	    $ySize = imagesy( $source );
 		
-		// Creating New PHPImage for Merge
-		$newPicture = imagecreatetruecolor( $xSize, $ySize );
-	    imagealphablending($newPicture, false);
-	    imagefill( $newPicture, 0, 0, imagecolorallocatealpha( $newPicture, 255, 255, 255, 0 ) );
-	    imagesavealpha($newPicture, true);
+	// Creating New PHPImage for Merge
+		$newPicture = imagecreatetruecolor($this->width, $this->height);
+		// Set the flag to save full alpha channel information
+		imagesavealpha($newPicture, true);
+		// Turn off transparency blending (temporarily)
+		imagealphablending($newPicture, false);
+		// Completely fill the background with transparent color
+		imagefilledrectangle($newPicture, 0, 0, $xSize, $ySize, imagecolorallocatealpha($newPicture, 0, 0, 0, 127));
+		// Restore transparency blending
+		imagealphablending($newPicture, true);
 
-	    //Merge NewPicture with Mask Image
-		// $mask = imagecreatefrompng( '/var/www/xerp/upload/0/checker.png' );
+	//Merge NewPicture with Mask Image
 		imagecopymerge($newPicture, $mask, $mask_details['x'], $mask_details['y'], 0, 0, $xSize , $ySize, 100);
 		$mask = $newPicture;
 		
-		// Creating Temporary Masked PHPImage
+	// Creating Temporary Masked PHPImage
 		$picture_temp = imagecreatetruecolor( $xSize, $ySize );
 	    imagefill( $picture_temp, 0, 0, imagecolorallocatealpha( $picture_temp, 255, 255, 255, 127 ) );
-	    imagealphablending($picture_temp, false);
 	    imagesavealpha($picture_temp, true);
+	    imagealphablending($picture_temp, false);
 	    for($x=0;$x< $xSize;$x++)
 		    for($y=0;$y< $ySize;$y++){
 		    	$mcolor=imagecolorsforindex( $mask, imagecolorat( $mask, $x, $y ) );
-		    	if($mcolor['red']==255 && $mcolor['green']==255 && $mcolor['blue']==255){
+		    	// if($mcolor['red']==255 && $mcolor['green']==255 && $mcolor['blue']==255){
 			    	$color=imagecolorsforindex( $source, imagecolorat( $source, $x, $y ) );
-				    $red = imagecolorallocate($picture_temp, $color['red'], $color['green'], $color['blue']); 
+				    $red = imagecolorallocatealpha($picture_temp, $color['red'], $color['green'], $color['blue'],(765-($mcolor['red'] + $mcolor['green'] + $mcolor['blue']))/765 * 127 );
 			    	imagesetpixel($picture_temp, $x, $y, $red);
-		    	}
+		    	// }
 		    }
 
 		$source = $picture_temp;
