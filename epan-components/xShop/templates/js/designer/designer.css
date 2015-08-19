@@ -396,3 +396,19 @@ img.xdesigner-page-layout-thumbnail{
 .xepan-designer-dropped-image{
   width: auto;
 }
+
+.xepan-designer-lock-component{
+  pointer-events:none;
+}
+
+.xepan-designer-image-unlock-btn{
+  top:0;
+  left:0;
+  position: absolute;
+  box-shadow:2px 2px 5px #800000;
+}
+
+.xepan-designer-unlock-component,.xepan-designer-image-unlock-btn{
+  pointer-events:auto;
+  cursor:pointer;
+}

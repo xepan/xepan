@@ -14,6 +14,7 @@ xShop_Image_Editor = function(parent){
 	// this.image_duplicate = $('<div class="btn "><span class="glyphicon glyphicon-">Duplicate</span></div>').appendTo(this.image_button_set);
 	// this.image_manager = $('<div class="btn "><span class="glyphicon glyphicon-film"></span></div>').appendTo(this.image_button_set);
 	this.image_remove = $('<div class="btn xshop-designer-image-remove-btn"><i class="icon-trash atk-size-tera"></i><br/><span class="atk-size-micro">Remove</span></div>').appendTo(this.image_button_set);
+	this.image_lock = $('<div class="btn xshop-designer-image-lock-btn"><i class="icon-lock atk-size-tera"></i><br/><span class="atk-size-micro">Lock</span></div>').appendTo(this.image_button_set);
 	
 
 	this.image_mask.click(function(event){
@@ -49,6 +50,22 @@ xShop_Image_Editor = function(parent){
 		});
 	});
 
+	//Lock the Image 
+	this.image_lock.click(function(){
+		current_image = $(self.current_image_component.element);		
+		if(current_image.hasClass('xepan-designer-lock-component')){
+			$('.xepan-designer-image-unlock-btn').remove();
+			current_image.removeClass('xepan-designer-lock-component');
+		}else{
+			current_image.addClass('xepan-designer-lock-component');
+			unlock = $('<div class="xepan-designer-image-unlock-btn atk-label atk-size-mega atk-swatch-blue" title="Click here to unlock the image"><i class="icon-lock-open"></i></div>').appendTo(current_image);
+			unlock.click(function(){
+				$('.xepan-designer-image-unlock-btn').remove();
+				current_image.removeClass('xepan-designer-lock-component');	
+			});		
+		}
+		
+	});
 
 	//Hide Default Mask Edit and Apply option
 	this.image_mask_apply.hide();
