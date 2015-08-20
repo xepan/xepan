@@ -242,6 +242,43 @@ xShop_Text_Editor = function(parent){
 		self.current_text_component.render();		
 	});
 
+	//Send to Back and Bring to Front
+	this.text_up_down = $('<div class="btn xshop-designer-text-up-down-btn"></div>').appendTo(this.element);
+	this.text_up = $('<span class="xshop-designer-text-up-btn icon-angle-circled-up atk-size-mega xshop-designer-text-up-btn" title="Bring to Front" ></span>').appendTo(this.text_up_down);
+	this.text_down = $('<span class="xshop-designer-text-down-btn icon-angle-circled-down atk-size-mega xshop-designer-text-up-btn" title="Send to Back" ></span>').appendTo(this.text_up_down);
+	
+	//Bring To Front
+	this.text_up.click(function(){
+		current_text = $(self.current_text_component.element);
+		current_zindex = current_text.css('z-index');
+		if( current_zindex == 'auto'){
+			current_zindex = 0;
+		}
+		current_text.css('z-index', parseInt(current_zindex)+1);
+		self.current_text_component.options.z_index = current_text.css('z-index');
+		if($('span.xshop-designer-text-down-btn').hasClass('xepan-designer-button-disable')){
+			$('span.xshop-designer-text-down-btn').removeClass('xepan-designer-button-disable');
+		}
+	});
+
+	//Send to Back
+	this.text_down.click(function(){
+		current_text = $(self.current_text_component.element);
+		current_zindex = current_text.css('z-index');
+		if( current_zindex == 'auto' || (parseInt(current_zindex)-1) < 0){
+			current_zindex = 0;
+		}else 
+			current_zindex = (parseInt(current_zindex)-1);
+
+		current_text.css('z-index', current_zindex);
+		self.current_text_component.options.z_index = current_zindex;
+		if(current_zindex == 0 ){
+			console.log($('span.xshop-designer-text-down-btn'));
+			$('span.xshop-designer-text-down-btn').addClass('xepan-designer-button-disable');
+		}
+	});
+
+
 	// Color
 	this.text_color_picker = $('<input id="xshop-colorpicker-full" type="text" style="display:block">').appendTo(this.element);
 	$(this.text_color_picker).colorpicker({
@@ -260,7 +297,7 @@ xShop_Text_Editor = function(parent){
 	});
 	
 	//Remove BTN
-	this.text_remove = $('<div class="btn"><span class="glyphicon glyphicon-empty">Remove</span></div>').appendTo(this.element);
+	this.text_remove = $('<div class="btn"><span class="glyphicon glyphicon-trash"></span></div>').appendTo(this.element);
 	this.text_remove.click(function(){
 		dt  = self.current_text_component.designer_tool;
 		$.each(dt.pages_and_layouts[dt.current_page][dt.current_layout].components, function(index,cmp){
@@ -458,6 +495,12 @@ Text_Component = function (params){
 		            self.designer_tool.freelancer_panel.setComponent($(this).data('component'));
 	            }
 		        event.stopPropagation();
+	        	
+	        	//check For the Z-index
+            	if(self.options.z_index == 0){
+            		$('span.xshop-designer-text-down-btn').addClass('xepan-designer-button-disable');
+            	}else
+            		$('span.xshop-designer-text-down-btn').removeClass('xepan-designer-button-disable');
 			});
 		}else{
 			this.element.show();
@@ -489,7 +532,8 @@ Text_Component = function (params){
 					alignment_justify:self.options.alignment_justify,
 					zoom: self.designer_tool.zoom,
 					stokethrough:self.options.stokethrough,
-					width: self.options.width
+					width: self.options.width,
+					z_index:self.options.z_index
 					},
 		})
 		.done(function(ret) {
