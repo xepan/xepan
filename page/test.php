@@ -131,6 +131,8 @@ function page_owner_layout(){
 
 		if($_GET['title'])
 			$this->app->layout->template->trySetHTML('page_title',"<i class='".$_GET['icon']."'></i> " . $_GET['title']);
+		else
+			$this->app->layout->template->tryDel('page_title');
 	}
 
 	function page_layout(){
