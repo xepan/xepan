@@ -412,3 +412,9 @@ img.xdesigner-page-layout-thumbnail{
   pointer-events:auto;
   cursor:pointer;
 }
+
+.xepan-designer-button-disable{
+  background-color: rgb(0, 0, 0, .5);
+  color:gray;
+  cursor:default;
+}
