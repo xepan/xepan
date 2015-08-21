@@ -45,6 +45,7 @@ class Grid_Email extends \Grid{
 		//Check for Email is Incomening or OutGoing
 		$snr = "";
 		$from = "";
+
 		if($this->model['direction']=="received"){
 			$this->setTDParam('subject','style','box-shadow:3px 0px 0px 0px green inset;');
 			$snr .= '<span class="atk-swatch-green glyphicon glyphicon-import" title="Received E-Mail"></span>';
@@ -52,8 +53,9 @@ class Grid_Email extends \Grid{
 			//Form Email
 			$from.= '<div class="atk-col-2" title="'.$this->model['from_email'].'" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
 			$from.= $snr;
-			if($this->model->fromMemberName())
-				$from.=$this->model->fromMemberName().'<br/>';
+			$from .= "<b style='border: 2px solid red'>".$this->model['from_detail']."</b>";
+			// if($this->model->fromMemberName())
+				// $from.=$this->model->fromMemberName().'<br/>';
 			if($this->model['from_name'])
 				$from.=$this->model['from_name'].'<br/>';
 			$from.= $this->model['from_email'].'</div>';

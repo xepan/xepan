@@ -56,6 +56,28 @@ class Model_Email extends \Model_Document{
 
 		$this->setOrder('created_at','desc');
 
+		$this->addExpression('from_detail')->set(function($m,$q){
+			return $q->expr("
+					CASE [0]
+						WHEN 'Customer' THEN [1]
+						WHEN 'Supplier' THEN [2]
+						WHEN 'Employee' THEN [3]
+						WHEN 'Affiliate' THEN [4]
+						ELSE
+							'Others'
+					END
+				",
+				[
+					$m->getElement('from'),
+					$m->add('xShop/Model_Customer')->addCondition('id',$q->getField('from_id'))->fieldQuery('customer_name'),
+					$m->add('xPurchase/Model_Supplier')->addCondition('id',$q->getField('from_id'))->fieldQuery('name'),
+					$m->add('xHR/Model_Employee')->addCondition('id',$q->getField('from_id'))->fieldQuery('name'),
+					$m->add('xShop/Model_Affiliate')->addCondition('id',$q->getField('from_id'))->fieldQuery('name'),
+
+				]);
+		});
+
+
 	//	$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
