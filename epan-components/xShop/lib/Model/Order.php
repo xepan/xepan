@@ -17,6 +17,7 @@ class Model_Order extends \Model_Document{
 		$this->hasOne('xShop/PaymentGateway','paymentgateway_id');
 		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->display(array('form'=>'autocomplete/Basic'))->caption('Terms & Cond.');
 		$this->hasOne('xShop/Priority','priority_id')->group('z~6')->mandatory(true);//->defaultValue($this->add('xShop/Model_Priority')->addCondition('name','Medium')->fieldQuery('id'));
+		$this->hasOne('xShop/Currency','currency_id')->sortable(true)->mandatory(true);//->display(array('form'=>'autocomplete/Basic'));
 
 		$f = $this->hasOne('xShop/Customer','member_id')->group('a~3')->sortable(true)->display(array('form'=>'autocomplete/Plus'))->caption('Customer')->mandatory(true);
 		$f->icon = "fa fa-user~red";
@@ -98,7 +99,7 @@ class Model_Order extends \Model_Document{
 		$this->addHook('afterSave',$this);
 		$this->addHook('beforeDelete',$this);
 		$this->setOrder('id','desc');
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function afterSave(){
@@ -331,7 +332,6 @@ class Model_Order extends \Model_Document{
 
 		$customer = $this->customer();
 		$customer_email=$customer->get('customer_email');
-
 		$config_model=$this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
 
@@ -347,6 +347,7 @@ class Model_Order extends \Model_Document{
 		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no'], $email_body);
 		$email_body = str_replace("{{order_no}}", $this['name'], $email_body);
 		$email_body = str_replace("{{order_date}}", $this['created_date'], $email_body);
+		$email_body = str_replace("{{order_deliver_date}}", date('d-m-Y',strtotime($this['delivery_date'])), $email_body);
 		$email_body = str_replace("{{sale_order_details}}", $order_detail_html, $email_body);
 		$email_body = str_replace("{{terms_and_conditions}}", $tnc?$tnc:"", $email_body);
 		// if($config_model['show_narration'])
@@ -354,6 +355,13 @@ class Model_Order extends \Model_Document{
 
 
 		return $email_body;
+	}
+	//Model Return Currency name or Model
+	function currency($name=1){
+		if($name)
+			return $this->ref('currency_id')->get('name');
+		
+		return $this->ref('currency_id');
 	}
 
 	function send_via_email_page($p){

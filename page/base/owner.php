@@ -453,25 +453,28 @@ class page_base_owner extends Page {
 			$admin_badge=$unread_alerts + $unread_messages;
 		}
 
+		$web_designing_menu = $m->addMenu('WebSite');
+		$web_designing_menu->addItem(array('Epan Pages','icon'=>'gauge-1'),'owner/epanpages');		
+		$web_designing_menu->addItem(array('Epan Templates','icon'=>'gauge-1'),'owner/epantemplates');		
+		$web_designing_menu->addItem(array('Menus','icon'=>'right-hand'),'xMenus_page_owner_dashboard');
+		$web_designing_menu->addItem(array('Enquiries & Subscriptions','icon'=>'right-hand'),'xEnquiryNSubscription_page_owner_dashboard');
+		$web_designing_menu->addItem(array('Extended Elements','icon'=>'right-hand'),'ExtendedElement_page_owner_dashboard');
+		$web_designing_menu->addItem(array('Slide Shows','icon'=>'right-hand'),'slideShows_page_owner_dashboard');
+		$web_designing_menu->addItem(array('Extended Images','icon'=>'right-hand'),'extendedImages_page_owner_dashboard');
+		$web_designing_menu->addItem(array('Image Gallaries','icon'=>'right-hand'),'xImageGallery_page_owner_dashboard');
+		$web_designing_menu->addItem(array('Blog','icon'=>'right-hand'),'xShop_page_owner_blog');
+		
+		$this->app->layout->add('View',null,'UserMenu')
+			->setHTML($this->api->auth->model['name'] . '<br/><span class="atk-text-dimmed atk-size-micro">('.$this->api->current_employee->department()->get('name').'/'.$this->api->current_employee->post()->get('name').')</span>');
+		
 		if($this->app->layout->user_menu){
-			
-			$web_designing_menu = $this->app->layout->user_menu->addMenu('WebSite');
-			$web_designing_menu->addItem(array('Epan Pages','icon'=>'gauge-1'),'owner/epanpages');		
-			$web_designing_menu->addItem(array('Epan Templates','icon'=>'gauge-1'),'owner/epantemplates');		
-			$web_designing_menu->addItem(array('Menus','icon'=>'right-hand'),'xMenus_page_owner_dashboard');
-			$web_designing_menu->addItem(array('Enquiries & Subscriptions','icon'=>'right-hand'),'xEnquiryNSubscription_page_owner_dashboard');
-			$web_designing_menu->addItem(array('Extended Elements','icon'=>'right-hand'),'ExtendedElement_page_owner_dashboard');
-			$web_designing_menu->addItem(array('Slide Shows','icon'=>'right-hand'),'slideShows_page_owner_dashboard');
-			$web_designing_menu->addItem(array('Extended Images','icon'=>'right-hand'),'extendedImages_page_owner_dashboard');
-			$web_designing_menu->addItem(array('Image Gallaries','icon'=>'right-hand'),'xImageGallery_page_owner_dashboard');
-			$web_designing_menu->addItem(array('Blog','icon'=>'right-hand'),'xShop_page_owner_blog');
-
-			$menu=$this->app->layout->user_menu->addMenu(array($this->api->auth->model['name'] . '('.$this->api->current_employee->department()->get('name').'/'.$this->api->current_employee->post()->get('name').')','icon'=>'user'));
-			$menu->addItem(array_merge(array('Alert'),$alert_badge),'/owner/alert');
-			$menu->addItem(array_merge(array('Message'),$msg_badge),'/owner/message');
-			$menu->addItem('Logout','logout');
-
+			// $menu=$this->app->layout->user_menu->addMenu(array($this->api->auth->model['name'] . '('.$this->api->current_employee->department()->get('name').'/'.$this->api->current_employee->post()->get('name').')','icon'=>'user'));
+			// $menu->addItem(array_merge(array('Alert'),$alert_badge),'/owner/alert');
+			// $menu->addItem(array_merge(array('Message'),$msg_badge),'/owner/message');
+			// $menu->addItem('Logout','logout');
+			$this->app->layout->user_menu->destroy();
 		}
+
 		$menu=array($this->api->top_menu);
 		$this->api->event('menu-created',$menu);
 
@@ -483,6 +486,8 @@ class page_base_owner extends Page {
 		if($_GET['xnotifier'] or !$_GET['cut_page']){
 			// $this->add('View_Notification',array('update_seen_till'=>$_GET['see']));
 		}
+
+		if($this->app->layout->template->get('page_title')[0] == 'Page Title') $this->app->layout->template->del('page_title');
 
 		parent::recursiveRender();
 	}
