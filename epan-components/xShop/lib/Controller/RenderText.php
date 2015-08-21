@@ -113,6 +113,9 @@ class Controller_RenderText extends \AbstractController {
 		$this->cleanup();
 		if($base64_encode)
 			$imageData = base64_encode($imageData);
+		
+		if($return_data)
+			return $imageData;
 
 		header('Cache-Control: no-store, no-cache, must-revalidate');
 		header('Cache-Control: post-check=0, pre-check=0', false);
@@ -120,8 +123,6 @@ class Controller_RenderText extends \AbstractController {
 		if($type="png")
 			header("Content-type: image/png");
 		// imagepng($this->phpimage, null, 9, PNG_ALL_FILTERS);
-		if($return_data)
-			return $imageData;
 		
 		echo $imageData;
 		die();

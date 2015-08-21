@@ -14,8 +14,11 @@ xShop_Image_Editor = function(parent){
 	// this.image_duplicate = $('<div class="btn "><span class="glyphicon glyphicon-">Duplicate</span></div>').appendTo(this.image_button_set);
 	// this.image_manager = $('<div class="btn "><span class="glyphicon glyphicon-film"></span></div>').appendTo(this.image_button_set);
 	this.image_remove = $('<div class="btn xshop-designer-image-remove-btn"><i class="icon-trash atk-size-tera"></i><br/><span class="atk-size-micro">Remove</span></div>').appendTo(this.image_button_set);
+	this.image_lock = $('<div class="btn xshop-designer-image-lock-btn"><i class="icon-lock atk-size-tera"></i><br/><span class="atk-size-micro">Lock</span></div>').appendTo(this.image_button_set);
+	this.image_up_down = $('<div class="btn xshop-designer-image-up-down-btn"></div>').appendTo(this.image_button_set);
+	this.image_up = $('<div class="xshop-designer-image-up-btn icon-angle-circled-up atk-size-mega xshop-designer-image-up-btn" title="Bring to Front" ></div>').appendTo(this.image_up_down);
+	this.image_down = $('<div class="xshop-designer-image-down-btn icon-angle-circled-down atk-size-mega xshop-designer-image-up-btn" title="Send to Back" ></div>').appendTo(this.image_up_down);
 	
-
 	this.image_mask.click(function(event){
 		self.current_image_component.options.mask_added=true;
 		options ={modal:false,
@@ -49,6 +52,52 @@ xShop_Image_Editor = function(parent){
 		});
 	});
 
+	//Lock the Image 
+	this.image_lock.click(function(){
+		current_image = $(self.current_image_component.element);		
+		if(current_image.hasClass('xepan-designer-lock-component')){
+			$('.xepan-designer-image-unlock-btn').remove();
+			current_image.removeClass('xepan-designer-lock-component');
+		}else{
+			current_image.addClass('xepan-designer-lock-component');
+			unlock = $('<div class="xepan-designer-image-unlock-btn atk-label atk-size-mega atk-swatch-blue" title="Click here to unlock the image"><i class="icon-lock-open"></i></div>').appendTo(current_image);
+			unlock.click(function(){
+				$('.xepan-designer-image-unlock-btn').remove();
+				current_image.removeClass('xepan-designer-lock-component');	
+			});		
+		}
+		
+	});
+
+	//Bring To Front
+	this.image_up.click(function(){
+		current_image = $(self.current_image_component.element);
+		current_zindex = current_image.css('z-index');
+		if( current_zindex == 'auto'){
+			current_zindex = 0;
+		}
+		current_image.css('z-index', parseInt(current_zindex)+1);
+		self.current_image_component.options.z_index = current_image.css('z-index');
+		if($('div.xshop-designer-image-down-btn').hasClass('xepan-designer-button-disable')){
+			$('div.xshop-designer-image-down-btn').removeClass('xepan-designer-button-disable');
+		}
+	});
+
+	//Send to Back
+	this.image_down.click(function(){
+		current_image = $(self.current_image_component.element);
+		current_zindex = current_image.css('z-index');
+		if( current_zindex == 'auto' || (parseInt(current_zindex)-1) < 0){
+			current_zindex = 0;
+		}else 
+			current_zindex = (parseInt(current_zindex)-1);
+
+		current_image.css('z-index', current_zindex);
+		self.current_image_component.options.z_index = current_zindex;
+		if(current_zindex == 0 ){
+			$('div.xshop-designer-image-down-btn').addClass('xepan-designer-button-disable');
+		}
+	});
 
 	//Hide Default Mask Edit and Apply option
 	this.image_mask_apply.hide();
@@ -320,6 +369,12 @@ Image_Component = function (params){
 	            		$('div.xshop-designer-image-mask-btn').show();
 
 	            	}
+
+	            	//check For the Z-index
+	            	if(self.options.z_index == 0){
+	            		$('div.xshop-designer-image-down-btn').addClass('xepan-designer-button-disable');
+	            	}else
+	            		$('div.xshop-designer-image-down-btn').removeClass('xepan-designer-button-disable');
 	            });
 
 	            if(self.designer_tool.options.designer_mode){
@@ -334,7 +389,7 @@ Image_Component = function (params){
 	            // self.designer_tool.option_panel.css('top', current_image_position.top);
 	            // self.designer_tool.option_panel.css('left',current_image_position.left);
 	            self.designer_tool.option_panel.css('top',event.pageY - (event.currentTarget.clientHeight/2));
--	            self.designer_tool.option_panel.css('left',event.pageX - (event.currentTarget.clientWidth/2));
+	            self.designer_tool.option_panel.css('left',event.pageX - (event.currentTarget.clientWidth/2));
 
 	            self.editor.setImageComponent(self);
 		        event.stopPropagation();
@@ -377,7 +432,8 @@ Image_Component = function (params){
 					apply_mask:self.options.apply_mask,
 					is_mask_image:self.options.is_mask_image,
 					x: self.options.x,
-					y: self.options.y
+					y: self.options.y,
+					z_index:self.options.z_index
 				},
 		})
 		.done(function(ret) {
