@@ -392,6 +392,9 @@ class Model_Employee extends \Model_Table{
 	function updateEmail($email){
 		if(!$this->loaded()) return false;
 		
+		if(strlen(strstr($this['personal_email'],$email)) > 0)
+			return false;
+		
 		$this['personal_email'] = $this['personal_email'].', '.$email;
 		$this->save();
 	}

@@ -146,9 +146,13 @@ class Model_Customer extends Model_MemberDetails{
 	
 	function updateEmail($email){
 		if(!$this->loaded()) return false;
-		
+
+		if(strlen(strstr($this['customer_email'],$email)) > 0)
+			return false;
+
 		$this['customer_email'] = $this['customer_email'].', '.$email;
 		$this->save();
+
 	}
 
 	function see_activities_page($page){
