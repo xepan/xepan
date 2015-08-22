@@ -61,7 +61,7 @@ class Grid_Affiliate extends \Grid{
 		else
 			$this->setTDParam('company_name','class','');
 		//Logo
-		$this->current_row_html['logo_url'] = '<img src="'.$this->model->ref('logo_url_id')->ref('thumb_file_id')->get('url').'"/>';
+		// $this->current_row_html['logo_url'] = '<img src="'.$this->model->ref('logo_url_id')->ref('thumb_file_id')->get('url').'"/>';
 
 		$contact ="";
 		if($this->model['phone_no'])
