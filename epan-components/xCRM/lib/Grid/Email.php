@@ -171,7 +171,7 @@ class Grid_Email extends \Grid{
 			$f=$this->add('Form',null,'grid_buttons');
 			$field=$f->addField('Hidden','selected_emails','');
 			$f->template->del('form_buttons');
-			$this->addSelectable($field,'Select/All/None');
+			$this->addSelectable($field,'<center>Select<br>All/None</center>');
 
 			$this->addButton(array('','icon'=>'ok'))
 				->js('click',array($f->js()->submit(),$this->js()->find('tr input:checked')->closest('tr')->find('td.atk-text-bold')->removeClass('atk-text-bold')));
