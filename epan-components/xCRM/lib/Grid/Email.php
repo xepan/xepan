@@ -52,7 +52,7 @@ class Grid_Email extends \Grid{
 			$this->setTDParam('subject','class','atk-text-normal');
 		
 		//Check for Email is Incomeing or OutGoing
-		$snr = "";
+		$snr = "";//send and receive icon
 		$from = "";
 
 		if($this->model['direction']=="received"){
@@ -63,8 +63,12 @@ class Grid_Email extends \Grid{
 			$from.= '<div class="atk-col-2" title="'.$this->model['from_email'].'" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
 			$from.= $snr;
 			$from_member_name = $this->model->fromMemberName();
-			if($from_member_name)
-				$from.=$from_member_name.'<br/>';
+			if($from_member_name){
+				//Filter Emails when click on it
+				$param_name = $this->model['from']?strtolower($this->model['from'].'_id'):'';
+				$js = $this->js()->reload(array($param_name=>$this->model['from_id'],'associate_filter'=>1,'member_name'=>$from_member_name,'member_type'=>$this->model['from'],'param'=>$param_name));
+				$from.='<a class="xepan-xmail-name-filter" onclick="'.$js.'">'.$from_member_name.'</a><br/>';
+			}
 			if($this->model['from_name'])
 				$from.=$this->model['from_name'].'<br/>';
 			$from.= $this->model['from_email'].'</div>';
@@ -79,8 +83,12 @@ class Grid_Email extends \Grid{
 			$from.= '<div class="atk-col-2" title="'.$this->model['to_email'].'" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
 			$from.= $snr;
 			$to_member_name = $this->model->toMemberName();
-			if($to_member_name)
-				$from.=$to_member_name.'<br/>';
+			if($to_member_name){
+				$param_name = $this->model['to']?strtolower($this->model['to'].'_id'):'';
+				$js = $this->js()->reload(array($param_name=>$this->model['to_id'],'associate_filter'=>1,'member_name'=>$to_member_name,'member_type'=>$this->model['to'],'param'=>$param_name));
+				$from.='<a class="xepan-xmail-name-filter" onclick="'.$js.'">'.$to_member_name.'</a><br/>';
+				// $from.=$to_member_name.'<br/>';
+			}
 			$from.= $this->model['to_email'];
 			$from.= "<div class='atk-text-dimmed'> -- from : ".$this->model['from_detail'].'</div></div>';
 		}
@@ -173,6 +181,24 @@ class Grid_Email extends \Grid{
 
 				$f->js()->univ()->successMessage('Done')->execute();
 			}
+
+			//Filter Box 
+			if($this->api->stickyGET('associate_filter') && $this->api->stickyGET('param')){
+				$filter_box = $this->add('View_Box',null,'grid_buttons')->addClass('atk-swatch-expander col-md-2');
+				$filter_box->set($this->api->stickyGET('member_type').': '.$this->api->stickyGET('member_name'));
+				$param = $this->api->stickyGET('param');
+				$close = $filter_box->add('Icon',null,'Button')			
+		            ->addComponents(array('size'=>'mega'))
+		            ->set('cancel-1')
+		            ->addStyle(array('cursor'=>'pointer'));
+		           //  ->on('click',function($js) use($filter_box,$param) {
+		           //      $filter_box->owner->api->stickyForget('associate_filter');
+		           //      $filter_box->owner->api->stickyForget('param');
+		           //      $filter_box->owner->api->stickyForget($param);
+		           //      $filter_box->js(null,$filter_box->owner->js()->reload())->hide();
+            	// });
+			}
+
 
 			// Mark Read Email Form
 			$f=$this->add('Form',null,'grid_buttons');
