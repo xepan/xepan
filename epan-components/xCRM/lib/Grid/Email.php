@@ -52,7 +52,7 @@ class Grid_Email extends \Grid{
 			$this->setTDParam('subject','class','atk-text-normal');
 		
 		//Check for Email is Incomeing or OutGoing
-		$snr = "";
+		$snr = "";//send and receive icon
 		$from = "";
 
 		if($this->model['direction']=="received"){
@@ -63,8 +63,11 @@ class Grid_Email extends \Grid{
 			$from.= '<div class="atk-col-2" title="'.$this->model['from_email'].'" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
 			$from.= $snr;
 			$from_member_name = $this->model->fromMemberName();
-			if($from_member_name)
-				$from.=$from_member_name.'<br/>';
+			if($from_member_name){
+				//Filter Emails when click on it
+				$js = $this->js()->reload();
+				$from.='<a class="xepan-xmail-name-filter" onclick="'.$js.'">'.$from_member_name.'</a><br/>';
+			}
 			if($this->model['from_name'])
 				$from.=$this->model['from_name'].'<br/>';
 			$from.= $this->model['from_email'].'</div>';
