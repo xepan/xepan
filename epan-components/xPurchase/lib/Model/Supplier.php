@@ -1,4 +1,4 @@
-\<?php
+<?php
 namespace xPurchase;
 
 class Model_Supplier extends \Model_Document{
