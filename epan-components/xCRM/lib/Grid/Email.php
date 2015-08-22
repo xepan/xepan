@@ -91,15 +91,18 @@ class Grid_Email extends \Grid{
 		//Subject
 		$str.= '<div class="atk-col-7" style="overflow:hidden; display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.$task_html.'<a href="javascript:void(0)" onclick="'.$this->js(null,$this->js()->_selectorThis()->closest('td')->removeClass('atk-text-bold'))->univ()->frameURL('E-mail',$this->api->url($this->message_vp->getURL(),array('xcrm_email_id'=>$this->model->id))).'">'.$this->model['subject'].'</a> - ';
 		//Message
-		$str.= substr(strip_tags($this->model['message']),0,200).'</div>';
+		$str.= substr(strip_tags($this->model['message']),0,50).'</div>';
 		//Attachments
 		if($this->model->attachment()->count()->getOne())
 			$str.= '<div class="atk-col-1"><i class="icon-attach"></i></div>';
 		else
 			$str.= '<div class="atk-col-1 text-right"></div>';
 		//Date Fields
-		$str.= '<div class="atk-col-2 atk-size-micro">'.$this->add('xDate')->diff(\Carbon::now(),$this->model['created_at']).'<br/>'.$this->model['created_at'].'</div>';
-
+		$str.= '<div class="atk-col-2 atk-size-micro">'.$this->add('xDate')->diff(\Carbon::now(),$this->model['created_at']).'<br/>'.$this->model['created_at'];
+		if($this->model['read_by_employee'])
+			$str .= "<div class='atk-text-dimmed'>read by: ".$this->model['read_by_employee']."</div>";
+		$str .='</div>';
+		// End Date Field
 		$str.= '</div>';
 		
 		$this->current_row_html['subject'] = $str;
@@ -143,6 +146,7 @@ class Grid_Email extends \Grid{
 			$this->removeColumn('to');
 			$this->removeColumn('to_id');
 			$this->removeColumn('from_detail');
+			$this->removeColumn('read_by_employee');
 
 			// Compose Button
 			$this->addButton(array('Compose','icon'=>'plus'))

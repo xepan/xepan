@@ -247,8 +247,8 @@ class page_base_owner extends Page {
 			$crm_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 			
 			if($dept_model->officialEmails()->count()->getOne()){				
-				$crm_m->addItem(array('X Mail','icon'=>'gauge-1'),$this->api->url('xHR_page_owner_xmail',array('department_id'=>$dept_model->id)));
-				$this->shorcut_menus[]=array("page"=>"CRM X Mail","url"=>$this->api->url('xHR_page_owner_xmail',array('department_id'=>$dept_model->id)));
+				$crm_m->addItem(array('X Mail','icon'=>'gauge-1'),$this->api->url('xCRM_page_owner_xmail',array('department_id'=>$dept_model->id)));
+				$this->shorcut_menus[]=array("page"=>"CRM X Mail","url"=>$this->api->url('xCRM_page_owner_xmail',array('department_id'=>$dept_model->id)));
 			}
 
 			$this->shorcut_menus[]=array("page"=>"CRM Dashboard","url"=>$this->api->url('xCRM_page_owner_dashboard',array('department_id'=>$dept_model->id)));

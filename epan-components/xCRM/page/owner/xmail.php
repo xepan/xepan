@@ -1,10 +1,10 @@
 <?php
-class page_xMarketingCampaign_page_owner_xmail extends page_xMarketingCampaign_page_owner_main{
+class page_xCRM_page_owner_xmail extends page_xCRM_page_owner_main{
 	
 	function init(){
 		parent::init();
 		
-		$this->app->title='x-Mail';
+		$this->app->title='xEpan CRM x-Mail';
 
 		$dept = $this->api->current_department;
 		$official_email_array = $dept->getOfficialEmails();
@@ -17,7 +17,6 @@ class page_xMarketingCampaign_page_owner_xmail extends page_xMarketingCampaign_p
 
 //Emails--------------------------------------------------------------------------------------
 		$email_view = $this->add('xCRM/View_Email')->addClass('xcrm-memberforemail');
-
 //CUSTOMER SECTION----------------------------------------------------------------------
 		// $left_col->add('xCRM/View_MemberForEmail',array('model'=>$this->add('xShop/Model_CustomerForEmail'),'member_type'=>'Customer','panel_open'=>"on",'email_view'=>$email_view));
 

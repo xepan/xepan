@@ -55,14 +55,6 @@ class Model_Email extends \Model_Document{
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id',null,'Attachments');
 
-		$this->addExpression('to_member_name')->set(function(){
-			return '"to_member_1111"';
-		});
-
-		// $this->addExpression('from_member_name')->set(function(){
-		// 	return '"from_member_1111"';
-		// });
-
 		$this->setOrder('created_at','desc');
 
 		$this->addExpression('from_detail')->set(function($m,$q){

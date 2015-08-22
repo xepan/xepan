@@ -4,7 +4,7 @@ class page_xHR_page_owner_xmail extends page_xHR_page_owner_main{
 	function init(){
 		parent::init();
 		
-		$this->app->title='xEpan CRM x-Mail';
+		$this->app->title='xEpan HR x-Mail';
 
 		$dept = $this->api->current_department;
 		$official_email_array = $dept->getOfficialEmails();
