@@ -98,6 +98,20 @@ class Grid extends Grid_Advanced{
         $this->current_row_html[$field]='<img class="img-thumbnail xepan-img-thumbnail" src="'.$url.'"></img>';
     }
 
+    function addSelectable($field, $options=[])
+    {
+        $this->js_widget = null;
+        $this->js(true)
+            ->_load('ui.atk4_checkboxes')
+            ->atk4_checkboxes(array('dst_field' => $field));
+        $this->addColumn('checkbox', 'selected', $options);
+
+        $this->addOrder()
+            ->useArray($this->columns)
+            ->move('selected', 'first')
+            ->now();
+    }
+
 	function recursiveRender(){
 		if($this->hasColumn('edit'))
 			$this->order->move('edit','last');

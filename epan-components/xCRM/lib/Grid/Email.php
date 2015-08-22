@@ -171,9 +171,9 @@ class Grid_Email extends \Grid{
 			$f=$this->add('Form',null,'grid_buttons');
 			$field=$f->addField('Hidden','selected_emails','');
 			$f->template->del('form_buttons');
-			$this->addSelectable($field);
+			$this->addSelectable($field,'Select/All/None');
 
-			$this->addButton(array('','icon'=>'doc'))
+			$this->addButton(array('','icon'=>'ok'))
 				->js('click',array($f->js()->submit(),$this->js()->find('tr input:checked')->closest('tr')->find('td.atk-text-bold')->removeClass('atk-text-bold')));
 			;
 
@@ -185,7 +185,7 @@ class Grid_Email extends \Grid{
 						$obj->markRead();
 					});
 
-				$f->js()->univ()->successMessage('Done')->execute();
+				$f->js()->univ()->successMessage('Marked as read')->execute();
 			}
 
 
@@ -231,5 +231,18 @@ class Grid_Email extends \Grid{
 			break;
 		}
 		return '<span title="'.$title.'" class="icon-text-width '.$class.'"> </span>';
+	}
+
+	function render(){
+		$this->js('click',
+			$this->js()->
+			IF($this->js()->hasClass('all'))
+				->removeClass('all')->addClass('none')->atk4_checkboxes('unselect_all')
+			->ELSE()
+				->removeClass('none')->addClass('all')->atk4_checkboxes('select_all')
+			->ENDIF()
+			)
+		->_selector('th:contains("Select")');
+		parent::render();
 	}
 }
