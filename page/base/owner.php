@@ -3,6 +3,7 @@ class page_base_owner extends Page {
 	public $page_heading;
 	public $page_subheading;
 	public $menu;
+	public $shortcut_menus=null;
 	
 	function init(){
 		parent::init();
@@ -16,12 +17,6 @@ class page_base_owner extends Page {
 		});
 		$this->api->auth->check();
 		
-		$this->shorcut_menus = array();
-		
-		// Looks like you are called from update page
-		if(isset($this->git_path)) return;
-
-		// Load Current Department :: Accessible to all children pages
 		$this->api->current_department = new Dummy();
 		if($_GET['department_id']){
 			$id = $this->api->stickyGET('department_id');
@@ -34,23 +29,29 @@ class page_base_owner extends Page {
 
 		$this->api->current_xshop_configuration = $this->add('xShop/Model_Configuration')->tryLoadAny();
 
-		// $this->api->current_website = $this->api->auth->model->ref('epan_id');
-		// $this->api->current_page = $this->api->current_website->ref('EpanPage');
-		// $this->api->memorize('website_requested',$this->api->current_website['name']);
-		// $this->api->load_plugins();
-
-		// Setup current employee
 		$this->app->current_employee = $this->add('xHR/Model_Employee');
 		$this->app->current_employee->loadFromLogin();
+
+		$this->app->top_menu =  $m = $this->app->layout->add('Menu_Horizontal',null,'Top_Menu');
+
+		$this->api->xpr->markPoint("ownermain init done");
+	}
+
+	function recursiveRender(){
+		$this->api->xpr->markPoint("ownermain rec-render start");
 		
-		// if($this->app->isAjaxOutput() or $_GET['cut_page']){
-		// 	$this->app->layout = $this;
-		// 	return;
-		// }
-		// $l=$this->app->add('Layout_Fluid'); // Usermanu is added in here
+		$this->shorcut_menus = array();
+		
+		// Looks like you are called from update page
+		if(isset($this->git_path)) return;
+
+		if($this->app->isAjaxOutput() or $_GET['cut_page']){
+			$this->api->xpr->markPoint("ownermain rec-render done by cut");
+			return parent::recursiveRender();
+		}
 
 		$dept_model = $this->add('xHR/Model_Department');
-		$this->app->top_menu =  $m=$this->app->layout->add('Menu_Horizontal',null,'Top_Menu');
+		$m = $this->app->top_menu;
 
         $admin_m = $m->addMenu('Company');
         
@@ -477,18 +478,13 @@ class page_base_owner extends Page {
 
 		$menu=array($this->api->top_menu);
 		$this->api->event('menu-created',$menu);
-
-
-		$this->api->xpr->markPoint("ownermain init done");
-	}
-
-	function recursiveRender(){
 		if($_GET['xnotifier'] or !$_GET['cut_page']){
 			// $this->add('View_Notification',array('update_seen_till'=>$_GET['see']));
 		}
 
 		if($this->app->layout->template->get('page_title')[0] == 'Page Title') $this->app->layout->template->del('page_title');
 
+		$this->api->xpr->markPoint("ownermain (page only) rec-render done : Now components render time");
 		parent::recursiveRender();
 	}
 
