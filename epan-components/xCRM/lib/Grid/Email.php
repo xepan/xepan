@@ -26,7 +26,7 @@ class Grid_Email extends \Grid{
 		// });
 
 		$this->compose_vp = $this->add('VirtualPage')->set(function($p){
-			$p->add('View')->set('Compose your Email here');
+			$p->add('xCRM/View_EmailCompose');
 		});
 
 		$this->addPaginator($ipp=50);
