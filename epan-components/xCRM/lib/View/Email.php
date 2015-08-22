@@ -7,6 +7,11 @@ class View_Email extends \View{
 	function init(){
 		parent::init();
 		
+		if($this->api->stickyGET('associate_filter'))
+			$box = $this->add('View_Box')->set('Filter');
+
+		$this->addClass('xepan-xmail-email-view');
+		
 		$tab = $this->add('Tabs');
 		$associate_tab = $tab->addTab('Associate')->addClass('atk-box');
 		$other_tab = $tab->addTab('Other')->addClass('atk-box');

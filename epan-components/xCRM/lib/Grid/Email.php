@@ -65,7 +65,8 @@ class Grid_Email extends \Grid{
 			$from_member_name = $this->model->fromMemberName();
 			if($from_member_name){
 				//Filter Emails when click on it
-				$js = $this->js()->reload();
+				$param_name = $this->model['from']?strtolower($this->model['from'].'_id'):'';
+				$js = $this->js()->reload(array($param_name=>$this->model['from_id'],'associate_filter'=>1,'member_name'=>$from_member_name,'member_type'=>$this->model['from'],'param'=>$param_name));
 				$from.='<a class="xepan-xmail-name-filter" onclick="'.$js.'">'.$from_member_name.'</a><br/>';
 			}
 			if($this->model['from_name'])
@@ -82,8 +83,12 @@ class Grid_Email extends \Grid{
 			$from.= '<div class="atk-col-2" title="'.$this->model['to_email'].'" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
 			$from.= $snr;
 			$to_member_name = $this->model->toMemberName();
-			if($to_member_name)
-				$from.=$to_member_name.'<br/>';
+			if($to_member_name){
+				$param_name = $this->model['to']?strtolower($this->model['to'].'_id'):'';
+				$js = $this->js()->reload(array($param_name=>$this->model['to_id'],'associate_filter'=>1,'member_name'=>$to_member_name,'member_type'=>$this->model['to'],'param'=>$param_name));
+				$from.='<a class="xepan-xmail-name-filter" onclick="'.$js.'">'.$to_member_name.'</a><br/>';
+				// $from.=$to_member_name.'<br/>';
+			}
 			$from.= $this->model['to_email'];
 			$from.= "<div class='atk-text-dimmed'> -- from : ".$this->model['from_detail'].'</div></div>';
 		}
@@ -94,7 +99,7 @@ class Grid_Email extends \Grid{
 		//Subject
 		$str.= '<div class="atk-col-7" style="overflow:hidden; display:inline-block;  text-overflow: ellipsis; white-space: nowrap;" >'.$task_html.'<a href="javascript:void(0)" onclick="'.$this->js(null,$this->js()->_selectorThis()->closest('td')->removeClass('atk-text-bold'))->univ()->frameURL('E-mail',$this->api->url($this->message_vp->getURL(),array('xcrm_email_id'=>$this->model->id))).'">'.$this->model['subject'].'</a> - ';
 		//Message
-		$str.= substr(strip_tags($this->model['message']),0,200).'</div>';
+		$str.= substr(strip_tags($this->model['message']),0,50).'</div>';
 		//Attachments
 		if($this->model->attachment()->count()->getOne())
 			$str.= '<div class="atk-col-1"><i class="icon-attach"></i></div>';
@@ -172,6 +177,24 @@ class Grid_Email extends \Grid{
 
 				$f->js()->univ()->successMessage('Done')->execute();
 			}
+
+			//Filter Box 
+			if($this->api->stickyGET('associate_filter') && $this->api->stickyGET('param')){
+				$filter_box = $this->add('View_Box',null,'grid_buttons')->addClass('atk-swatch-expander col-md-2');
+				$filter_box->set($this->api->stickyGET('member_type').': '.$this->api->stickyGET('member_name'));
+				$param = $this->api->stickyGET('param');
+				$close = $filter_box->add('Icon',null,'Button')			
+		            ->addComponents(array('size'=>'mega'))
+		            ->set('cancel-1')
+		            ->addStyle(array('cursor'=>'pointer'));
+		           //  ->on('click',function($js) use($filter_box,$param) {
+		           //      $filter_box->owner->api->stickyForget('associate_filter');
+		           //      $filter_box->owner->api->stickyForget('param');
+		           //      $filter_box->owner->api->stickyForget($param);
+		           //      $filter_box->js(null,$filter_box->owner->js()->reload())->hide();
+            	// });
+			}
+
 
 			// Mark Read Email Form
 			$f=$this->add('Form',null,'grid_buttons');
