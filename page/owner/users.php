@@ -15,11 +15,29 @@ class page_owner_users extends page_base_owner {
 		$usr->addCondition('epan_id',$this->api->current_website->id);
 
 		$usr->getElement('epan')->destroy();
+		//Total Users
 		$usr->addExpression('total_count')->set($usr->count());
 		$usr->addExpression('total_active')->set($usr->newInstance()->addCondition('is_active',true)->count());
 		$usr->addExpression('total_inactive')->set($usr->newInstance()->addCondition('is_active',false)->count());
+
+		//Total Customers
+		$usr->addExpression('total_customer')->set($usr->newInstance()->addcondition('type',50)->count());
+		$usr->addExpression('total_active_customer')->set($usr->newInstance()->addcondition('type',50)->addCondition('is_active',true)->count());
+		$usr->addExpression('total_inactive_customer')->set($usr->newInstance()->addcondition('type',50)->addCondition('is_active',false)->count());
+
+		//Total Staff
+		$usr->addExpression('total_staff')->set($usr->newInstance()->addcondition('type',80)->count());
+		$usr->addExpression('total_active_staff')->set($usr->newInstance()->addcondition('type',80)->addCondition('is_active',true)->count());
+		$usr->addExpression('total_inactive_staff')->set($usr->newInstance()->addcondition('type',80)->addCondition('is_active',false)->count());
+
+		//Total Superuser
+		$usr->addExpression('total_superuser')->set($usr->newInstance()->addcondition('type',100)->count());
+		$usr->addExpression('total_active_superuser')->set($usr->newInstance()->addcondition('type',100)->addCondition('is_active',true)->count());
+		$usr->addExpression('total_inactive_superuser')->set($usr->newInstance()->addcondition('type',100)->addCondition('is_active',false)->count());
+
 		$usr->setOrder('last_login_date','desc');
 		$usr->tryLoadAny();
+
 
 		$this->template->set($usr->get());
 
@@ -30,7 +48,7 @@ class page_owner_users extends page_base_owner {
 
 	function page_xyz(){
 		$container = $this->add('View');
-        $container->addClass('atk-section atk-box atk-padding-large atk-shapre-rounded');
+        $container->addClass('atk-section atk-box atk-swatch-expander atk-padding-large atk-shapre-rounded');
         $col=$container->add('Columns');
         $col1=$col->addColumn(6);
 		$this->api->stickyGET('users_id');

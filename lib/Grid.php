@@ -90,6 +90,13 @@ class Grid extends Grid_Advanced{
     function format_image($field){
         $this->current_row_html[$field]='<a href="'.$this->current_row[$field].'" target="_blank">'.$this->current_row['name'].'</a>';
     }
+    
+    function format_imageThumbnail($field){
+        $url = 'epan-components/xShop/templates/images/item_no_image.png';
+        if($this->current_row[$field])
+            $url = $this->current_row[$field];
+        $this->current_row_html[$field]='<img class="img-thumbnail xepan-img-thumbnail" src="'.$url.'"></img>';
+    }
 
 	function recursiveRender(){
 		if($this->hasColumn('edit'))
