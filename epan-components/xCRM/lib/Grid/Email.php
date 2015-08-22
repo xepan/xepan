@@ -183,7 +183,7 @@ class Grid_Email extends \Grid{
 			}
 
 			//Filter Box 
-			if($this->api->stickyGET('associate_filter') && $this->api->stickyGET('param')){
+			if($this->api->stickyGET('associate_filter')){
 				$filter_box = $this->add('View_Box',null,'grid_buttons')->addClass('atk-swatch-yellow col-md-2');
 				$filter_box->set($this->api->stickyGET('member_type').': '.$this->api->stickyGET('member_name'));
 				$param = $this->api->stickyGET('param');
