@@ -72,6 +72,9 @@ class Model_Affiliate extends \Model_Document {
 	function updateEmail($email){
 		if(!$this->loaded()) return false;
 		
+		if(strlen(strstr($this['email_id'],$email)) > 0)
+			return false;
+
 		$this['email_id'] = $this['email_id'].', '.$email;
 		$this->save();
 	}

@@ -21,9 +21,9 @@ class Grid_Email extends \Grid{
 			$p->add('xCRM/View_EmailReply',array('email_id'=>$email_id));
 		});
 
-		$this->task_vp = $this->add('VirtualPage')->set(function($p){
-			$p->add('View')->set('Create task from here');
-		});
+		// $this->task_vp = $this->add('VirtualPage')->set(function($p){
+		// 	$p->add('View')->set('Create task from here');
+		// });
 
 		$this->compose_vp = $this->add('VirtualPage')->set(function($p){
 			$p->add('View')->set('Compose your Email here');
@@ -115,13 +115,14 @@ class Grid_Email extends \Grid{
 
 		$this->current_row_html['task'] = $task_html;
 	}
+	
 	function recursiveRender(){
 
 			$this->addFormatter('subject','subject');
-
+			
 			//REPLY FORMATTER
-			$this->addColumn('task');
-			$this->addFormatter('task','task');
+			// $this->addColumn('task');
+			// $this->addFormatter('task','task');
 
 			$this->addColumn('reply');
 			$this->addFormatter('reply','reply');
