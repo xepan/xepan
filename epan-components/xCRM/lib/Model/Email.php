@@ -54,12 +54,12 @@ class Model_Email extends \Model_Document{
 
 		$this->hasMany('xCRM/EmailAttachment','related_document_id',null,'Attachments');
 
-		// $this->addExpression('to_member_name')->set(function(){
-		// 	return 'to_member_1111';
-		// });
+		$this->addExpression('to_member_name')->set(function(){
+			return '"to_member_1111"';
+		});
 
 		// $this->addExpression('from_member_name')->set(function(){
-		// 	return 'from_member_1111';
+		// 	return '"from_member_1111"';
 		// });
 
 		$this->setOrder('created_at','desc');
@@ -661,28 +661,7 @@ class Model_Email extends \Model_Document{
 	function fromMemberName(){
 		
 		if(!$this->loaded()) return;
-		switch ($this['from']) {
-			case 'Customer':
-				$c = $this->add('xShop/Model_Customer')->addCondition('id',$this['from_id'])->tryLoadAny();
-				if($c->loaded())					
-					return $c['customer_name'];
-			break;			
-			case 'Supplier':
-				$s = $this->add('xPurchase/Model_Supplier')->addCondition('id',$this['from_id'])->tryLoadAny();
-				if($s->loaded())
-					return $s['name'];
-			break;
-			case 'Employee':
-				$e = $this->add('xHR/Model_Employee')->addCondition('id',$this['from_id'])->tryLoadAny();
-				if($e->loaded())
-					return $e['name'];
-			break;
-			case 'Affiliate':
-				$e = $this->add('xShop/Model_Affiliate')->addCondition('id',$this['from_id'])->tryLoadAny();
-				if($e->loaded())
-					return $e['name'];
-			break;
-		}
+		return $this['from_detail'];
 	}
 
 	function toMemberName(){
