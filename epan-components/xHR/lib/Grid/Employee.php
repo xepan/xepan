@@ -62,18 +62,25 @@ class Grid_Employee extends \Grid{
 		$this->fooHideAlways('pre_resignation_letter_date');
 		$this->fooHideAlways('pre_relieving_date');
 		$this->fooHideAlways('pre_reason_of_resignation');
+		$this->fooHideAlways('gender');
+		$this->fooHideAlways('is_active');
 
 
 		if($this->hasColumn('user_id'))$this->removeColumn('user_id');
 		if($this->hasColumn('department_id'))$this->removeColumn('department_id');
 		if($this->hasColumn('post_id'))$this->removeColumn('post_id');
+		if($this->hasColumn('from_date'))$this->removeColumn('from_date');
+
+		$this->addFormatter('empolyee_image','imageThumbnail');
 
 		return $m;
 	}
 
 
 	function formatRow(){
-		// $this->current_row_html['name']=$this->model['name']." ".$this->model['gender'];
+		
+		$class = $this->model['is_active']?'atk-effect-success':'atk-effect-danger';
+		$this->current_row_html['name'] = '<div class="'.$class.'">'.$this->model['name'].'</div>';
 		parent::formatRow();
 	}
 

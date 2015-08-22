@@ -6,7 +6,7 @@ class Grid_Email extends \Grid{
 
 		$this->message_vp = $this->add('VirtualPage')->set(function($p){
 			$email_id = $p->api->stickyGET('xcrm_email_id');
-			$m = $p->add('xCRM/Model_Email')->tryLoad($email_id);			
+			$m = $p->add('xCRM/Model_Email')->tryLoad($email_id);
 			//Mark Read Email
 			$m->markRead();
 			$email_view=$p->add('xHR/View_Email');
@@ -21,6 +21,15 @@ class Grid_Email extends \Grid{
 			$p->add('xCRM/View_EmailReply',array('email_id'=>$email_id));
 		});
 
+		$this->task_vp = $this->add('VirtualPage')->set(function($p){
+			$p->add('View')->set('Create task from here');
+		});
+
+		$this->compose_vp = $this->add('VirtualPage')->set(function($p){
+			$p->add('View')->set('Compose your Email here');
+		});
+
+		$this->addPaginator($ipp=50);
 		
 	}
 
@@ -42,7 +51,7 @@ class Grid_Email extends \Grid{
 		else
 			$this->setTDParam('subject','class','atk-text-normal');
 		
-		//Check for Email is Incomening or OutGoing
+		//Check for Email is Incomeing or OutGoing
 		$snr = "";
 		$from = "";
 
@@ -53,9 +62,9 @@ class Grid_Email extends \Grid{
 			//Form Email
 			$from.= '<div class="atk-col-2" title="'.$this->model['from_email'].'" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
 			$from.= $snr;
-			$from .= "<b style='border: 2px solid red'>".$this->model['from_detail']."</b>";
-			// if($this->model->fromMemberName())
-				// $from.=$this->model->fromMemberName().'<br/>';
+			$from_member_name = $this->model->fromMemberName();
+			if($from_member_name)
+				$from.=$from_member_name.'<br/>';
 			if($this->model['from_name'])
 				$from.=$this->model['from_name'].'<br/>';
 			$from.= $this->model['from_email'].'</div>';
@@ -69,12 +78,13 @@ class Grid_Email extends \Grid{
 			$from = " ";
 			$from.= '<div class="atk-col-2" title="'.$this->model['to_email'].'" style="overflow:hidden;   display:inline-block;  text-overflow: ellipsis; white-space: nowrap;">';
 			$from.= $snr;
-			if($this->model->toMemberName())
-				$from.=$this->model->toMemberName().'<br/>';
+			$to_member_name = $this->model->toMemberName();
+			if($to_member_name)
+				$from.=$to_member_name.'<br/>';
 			$from.= $this->model['to_email'].'</div>';
 		}
 
-		$str = '<div  class="atk-row">';
+		$str = '<div  class="atk-row xepan-padding">';
 		//From Email
 		$str.= $from;
 		//Subject
@@ -100,11 +110,19 @@ class Grid_Email extends \Grid{
 		$this->current_row_html['reply'] = $reply_html;
 	}
 
+	function format_task(){
+		$task_html = '<a href="javascript:void(0)" onclick="'.$this->js()->univ()->frameURL('Create Task',$this->api->url($this->task_vp->getURL(),array('xcrm_email_id'=>$this->model->id))).'"><i class="icon-pencil"></i></a>';
+
+		$this->current_row_html['task'] = $task_html;
+	}
 	function recursiveRender(){
 
 			$this->addFormatter('subject','subject');
 
 			//REPLY FORMATTER
+			$this->addColumn('task');
+			$this->addFormatter('task','task');
+
 			$this->addColumn('reply');
 			$this->addFormatter('reply','reply');
 
@@ -122,6 +140,11 @@ class Grid_Email extends \Grid{
 			$this->removeColumn('task_status');
 			$this->removeColumn('to');
 			$this->removeColumn('to_id');
+
+			// Compose Button
+			$this->addButton(array('Compose','icon'=>'plus'))
+				->js('click',$this->js()->univ()->frameURL('Compose E-mail',$this->api->url($this->compose_vp->getURL())))
+			;
 
 			// Delete Email Form
 			$f=$this->add('Form',null,'grid_buttons');
@@ -164,6 +187,8 @@ class Grid_Email extends \Grid{
 
 				$f->js()->univ()->successMessage('Done')->execute();
 			}
+
+
 
 		$reload_btn = $this->addButton('FETCH');
 		if( !($reload_btn instanceof \Dummy) and $reload_btn->isClicked()){

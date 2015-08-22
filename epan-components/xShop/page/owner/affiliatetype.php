@@ -9,7 +9,7 @@ class page_xShop_page_owner_affiliatetype extends page_xShop_page_owner_main{
 		$afflilate_type_model->addCondition('application_id',$application_id);
 		$type_crud=$this->add('CRUD',array('grid_class'=>'xShop/Grid_AffiliateType'));
 
-		$type_crud->setModel($afflilate_type_model);//,array('name'));
+		$type_crud->setModel($afflilate_type_model,array('name'));
 		$type_crud->add('xHR/Controller_Acl');
 	}
 }
