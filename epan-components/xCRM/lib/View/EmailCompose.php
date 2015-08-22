@@ -8,10 +8,15 @@ class View_EmailCompose extends \View{
 
 			$tab = $this->add('Tabs');
 			$customer_tab = $tab->addTab('Customer');
+			$customer_form=$customer_tab->add('Form');
+			$cf =$customer_form->addField('autocomplete/Basic','customer');
+			$cf->setModel('xShop/Model_Customer');
+			$cf->other_field->on('blur',$customer_form->js()->submit());
+
 			$supplier_tab = $tab->addTab('Supplier');
 			$affiliate_tab = $tab->addTab('Affiliate');
-			$other_tab = $tab->addTab('Other');
 
+			$this->add('HR');
 			$department = $this->add('xHR/Model_Department')->tryload($_GET['department_id']);
 			$official_email = $department->officialEmails();
 
@@ -20,10 +25,7 @@ class View_EmailCompose extends \View{
 			$attachments_array = array();
 
 			$form = $this->add('Form_Stacked');
-			$form->addField('autocomplete/Basic','to_customer','to');
-			$form->addField('autocomplete/Basic','to_supplier','to');
-			$form->addField('autocomplete/Basic','to_affiliate','to');
-			$form->addField('line','to_other','to');
+			$to_f = $form->addField('line','to_other','to');
 
 			$form->addField('line','cc');
 			$form->addField('line','bcc');
@@ -72,7 +74,9 @@ class View_EmailCompose extends \View{
 				$form->js(null,$this->js()->univ()->closeDialog())->univ()->successMessage('Email Send Successfully')->execute();
 			}
 		 
-
+			$customer_form->onSubmit(function($f)use($to_f){
+				return $to_f->js()->val('123');
+			});
 
 		// $this->js(true)->_selector('.xcrm-emailreply')->xtooltip();
 	}
