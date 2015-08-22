@@ -24,7 +24,7 @@ class View_Email extends \View{
 		}
 
 		//SHOW ONLY CUSTOMER EMAILS
-		if($_GET['customer_id']){
+		if($this->api->stickyGET('customer_id')){
 			$emails->addCondition(
 				$emails->dsql()->orExpr()
 							->where(
@@ -41,7 +41,7 @@ class View_Email extends \View{
 
 		}
 
-		if($_GET['supplier_id']){
+		if($this->api->stickyGET('supplier_id')){
 
 			$emails->addCondition(
 				$emails->dsql()->orExpr()
@@ -58,7 +58,7 @@ class View_Email extends \View{
 					);			
 		}
 
-		if($_GET['affiliate_id']){
+		if($this->api->stickyGET('affiliate_id')){
 
 			$emails->addCondition(
 				$emails->dsql()->orExpr()

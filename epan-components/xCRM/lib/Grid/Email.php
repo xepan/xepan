@@ -184,19 +184,15 @@ class Grid_Email extends \Grid{
 
 			//Filter Box 
 			if($this->api->stickyGET('associate_filter') && $this->api->stickyGET('param')){
-				$filter_box = $this->add('View_Box',null,'grid_buttons')->addClass('atk-swatch-expander col-md-2');
+				$filter_box = $this->add('View_Box',null,'grid_buttons')->addClass('atk-swatch-yellow col-md-2');
 				$filter_box->set($this->api->stickyGET('member_type').': '.$this->api->stickyGET('member_name'));
 				$param = $this->api->stickyGET('param');
+				$self= $this;
 				$close = $filter_box->add('Icon',null,'Button')			
 		            ->addComponents(array('size'=>'mega'))
 		            ->set('cancel-1')
-		            ->addStyle(array('cursor'=>'pointer'));
-		           //  ->on('click',function($js) use($filter_box,$param) {
-		           //      $filter_box->owner->api->stickyForget('associate_filter');
-		           //      $filter_box->owner->api->stickyForget('param');
-		           //      $filter_box->owner->api->stickyForget($param);
-		           //      $filter_box->js(null,$filter_box->owner->js()->reload())->hide();
-            	// });
+		            ->addStyle(array('cursor'=>'pointer'))
+		            ->on('click',$this->js()->reload(['associate_filter'=>0,$param=>0]));
 			}
 
 
