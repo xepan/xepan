@@ -71,10 +71,12 @@ class View_EmailCompose extends \View{
 				$email['to_email'] = $form['to'];
 				$email['direction'] = "sent";
 				
-				$to_type = explode('_',explode('/', $form['type']));
+				$to_type = explode('/',$form['type']);
+				$to_type =  explode('_',$to_type[1]);
+				$to_type = $to_type[1];
 
 				$model = $this->add($form['type'])->load($form['to_id']);
-				$model->createActivity('email',$subject,$email_body,null,null, $to_type[1], $form['to_id'],$form['to'],true);
+				$model->createActivity('email',$subject,$email_body,null,null, $to_type, $form['to_id'],$form['to'],true);
 				$email->save();
 				$form->js(null,$this->js()->univ()->closeDialog())->univ()->successMessage('Email Send Successfully')->execute();
 			}
