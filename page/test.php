@@ -4,7 +4,41 @@
 class page_test extends Page {
 
 	function page_index(){
-		$this->add('Button')->set('clickme')->js('click')->univ()->successMessage("SDSDS");
+		$l = $this->api->locate('addons', 'autocomplete', 'location');
+        $addon_location = $this->api->locate('addons', 'autocomplete');
+
+        $this->api->pathfinder->addLocation(array(
+            'js'=>'js',
+            'css'=>'templates/css'
+            ))
+            ->setBasePath($this->api->pathfinder->base_location->base_path.'/'.$addon_location)
+            ->setBaseURL($this->api->pm->base_path.'/'.$addon_location);
+        ;
+
+		$form = $this->add('Form');
+
+		$field = $form->addField('line','abcd');
+
+		$m = $this->add('Model');
+		$m->addField('id');
+		$m->addField('name');
+
+		$m->setSource('Array',[
+				['id'=>1,'name'=>'ramlal'],
+				['id'=>2,'name'=>'shyamlal'],
+				['id'=>2,'name'=>'ghanshaymlal']
+			]
+		);
+
+		$field->setModel($m);
+
+		$field->js(true)
+            ->_load('autocomplete_univ6')
+            ->_css('autocomplete')
+            ->univ()
+            ->myautocomplete($this->api->url(), $field, [], 'id', 'name');
+
+
 	}
 
 	function page_cst_organization_name_update(){
