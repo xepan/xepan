@@ -42,7 +42,7 @@ class CRUD extends View_CRUD{
         return $js;
     }
 
-	function manageAction($action_name,$icon='target'){
+	function manageAction($action_name,$icon='target',$caption=null){
 		
 		if(!$this->model)
 			throw $this->exception('Must be called after setModel');
@@ -58,6 +58,8 @@ class CRUD extends View_CRUD{
 			}
 
 			$title = implode(" ", $title);
+
+			if($caption) $title = $caption;
 
 			$p = $this->addFrame(ucwords($title),array('icon'=>$icon));
 			if($p and $this->isEditing('fr_'.$this->api->normalizeName(ucwords($title)))){

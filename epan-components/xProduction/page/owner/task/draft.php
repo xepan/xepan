@@ -48,7 +48,7 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 		});
 		$crud->grid->addFormatter('subject','subject');
 		$crud->manageAction('assign');
-		$crud->manageAction('approve');
+		$crud->manageAction('approve','target','Complete');
 		// $crud->grid->ipp=2;
 		// $crud->add('xHR/Controller_Acl',array('override'=>array('allow_add'=>true,'allow_edit'=>'Self Only','allow_del'=>'Self Only')));
 
