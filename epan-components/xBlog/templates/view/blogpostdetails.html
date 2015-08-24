@@ -1,20 +1,16 @@
 <div id="{$_name}" class="xblog-blog" style="" >
 <link rel="stylesheet" type="text/css" href="epan-components/xBlog/templates/css/xblog-custom-detail.css">
 	{$Content}
-	{rows}
-	{row}
-
-		<div class="well">
-			<div class="xblog-blog-posted-date">
-				<span class="">Created Date : {$post_date}</span>&nbsp;&nbsp;
-			</div>
-			<h2 class=" xblog-blog-name">{$name} </h2>
-			<div class="xblog-blog-description"  >{$description} </div>
-			<div class="xblog-blog-description">{$container}</div>
-			<div class="xblog-blog-author">
-				<span class="">Posted By : {$author}</span> 
-			</div>
+	<div class="well">
+		<div class="xblog-blog-posted-date">
+			<span class="">Created Date : {$post_date}</span>&nbsp;&nbsp;
 		</div>
-	{/row}
-	{/rows}
+		<h2 class=" xblog-blog-name">{$name} </h2>
+		<div class="xblog-blog-description"  >{$description} </div>
+		<div class="xblog-blog-description">{$container}</div>
+		<div class="xblog-blog-author">
+			<span class="">Posted By : {$author}</span> 
+		</div>
+	</div>
+	{$xshop_item_discus}
 </div>

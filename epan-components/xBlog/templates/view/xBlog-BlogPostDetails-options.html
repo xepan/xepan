@@ -1,36 +1,93 @@
 <div id='{$_name}' class='epan-component-options' component_type="{$component_type}">
-	<h3>{$component_type_name}</h3>
-	<div class='xepan-collasp-header'>
-		<table class="table table-condensed table-hover">
-			<tbody>
-				<tr>
-					<td style="width:100%" class='text-center'>
-						Option Title</b>
-					</td>
-					<td>
-						<input type='text' value='' id='input_option_b' />
-					</td>
-				</tr>
-			</tbody>
-		</table>
+	<div class="panel-group" id="accordion">
+		<div class="xepan-collasp-header component-header">
+		 	<div class="panel-heading">
+		      	<h3 class="panel-title">
+		        	<a data-toggle="collapse" data-parent="#accordion"	href="#collapse-xblog-post-detail">
+						{$component_type_name}
+		        	</a> 
+		      	</h3>
+		   	</div>
+		 	<div id="collapse-xblog-post-detail" class="panel-collapse collapse in">
+		      	<div class="panel-body">
+		      		<div class='xepan-collasp-header'>
+						<table class="table table-condensed table-hover">
+							<tr>
+								<td>
+									Edit CSS
+								</td>
+								<td colspan="2">
+									<div id="xblog-post-detail-editcss" class="btn btn-default btn-xs">Edit css</div>
+								</td>
+							</tr>
+
+							<tr>
+								<td colspan="3">
+									Show/Hide
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">Comment Section</td>
+									<td>
+										<select id='xblog-show-post-comment' data-attr="show-post-comment" class="xshop-general-bind" >
+											<option value="0">Hide</option>
+											<option value="1">Show</option>
+										</select>
+									</td>
+									<!-- <td><input type='number' id='xshop-order-add-to-cart' data-attr="order-add-to-cart" class="xshop-general-bind"/></td> -->
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><br>
+	<div>
+		<button id='xblogpostdetails'>Manage post Details Page</button>
 	</div>
 </div>
 <script type="text/javascript">
 // ========== OPTION TO COMPONENT EFFECT ==============
-//
+// 
 // $(your_option_html_element).click(function(event,ui){
-		// 		$(current_selected_component).what to do ???
-// })
-$('#input_option_b').change(function(event) {
-	$(current_selected_component).find('b').text($('#input_option_b').val());
+// 		$(current_selected_component).what to do ???
+// }) 
+
+$('#xblog-post-detail-editcss').click(function(event){
+	$(this).univ().frameURL('Edit CSS ( xBlog Post Detail Display Layout )','index.php?page=xBlog_page_blogpostdetaillayoutcss&cut_page=1&blog_post_detail_layout=xblog-post-detail');
 });
+
+$('#xblogpostdetails').click(function(event){
+	$('#epan-quick-component-options').toggle('slideup');
+	$.univ.frameURL('xShop Products Details','index.php?page=xShop_page_owner_main')
+});
+	
+$('.xshop-general-bind').change(function(event){
+	$(current_selected_component).attr($(this).attr('data-attr'),$(this).val());
+	//calling hide other option
+	if($(this).attr('hide-class') != undefined){
+		$('.'+$(this).attr('hide-class')).hide();
+		if($(this).val() > 0)
+			$('.'+$(this).attr('hide-class')).show();
+	}
+
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+	// $(current_selected_component).children('div:first').trigger('reload');
+});
+
+
 var {$component_type}_options = {
-show: function (){
-// ===== THIS CODE RUNS EVERY TIME YOU DOUBLE CLICK YOUR COMPONENT
-// TO TAKE VALUES FROM COMPONENT AND FILL OPTIONS
-//
-// $(your_option_html_element).text($(current_selected_component).css('border'));
-$('#input_option_b').val($(current_selected_component).find('b').text());
-}
+	show: function (){
+		// ===== THIS CODE RUNS EVERY TIME YOU DOUBLE CLICK YOUR COMPONENT
+		// TO TAKE VALUES FROM COMPONENT AND FILL OPTIONS
+		// 
+		// $(your_option_html_element).text($(current_selected_component).css('border'));
+		
+		//General Binding
+		$('.xshop-general-bind').each(function(index,value){
+			$(this).val($(current_selected_component).attr($(this).attr('data-attr')));
+		});
+		
+	}
 }
 </script>
