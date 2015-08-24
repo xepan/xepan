@@ -17,13 +17,14 @@ class View_EmailCompose extends \View{
 				$cf =$customer_form->addField('autocomplete/Basic','customer');
 				$cf->setModel('xShop/Model_Customer');
 				$cf->other_field->on('blur',$customer_form->js()->submit());
-
+				$cf->addClass('ignore_changes');
 				//Supplier Tab
 				$supplier_tab = $tab->addTab('Supplier');
 				$supplier_form = $supplier_tab->add('Form');
 				$sf = $supplier_form->addField('autocomplete/Basic','supplier');
 				$sf->setModel('xPurchase/Model_Supplier');
 				$sf->other_field->on('blur',$supplier_form->js()->submit());
+				$sf->addClass('ignore_changes');
 
 				//Affiliate Tab
 				$affiliate_tab = $tab->addTab('Affiliate');
@@ -31,6 +32,7 @@ class View_EmailCompose extends \View{
 				$af = $affiliate_form->addField('autocomplete/Basic','affiliate');
 				$af->setModel('xShop/Model_Affiliate');
 				$af->other_field->on('blur',$affiliate_form->js()->submit());
+				$af->addClass('ignore_changes');
 			}
 
 
@@ -46,6 +48,7 @@ class View_EmailCompose extends \View{
 
 			//Email Form and Fields
 			$form = $this->add('Form_Stacked');
+			$form->addClass('ignore_changes');
 			$to_f = $form->addField('line','to');
 			$cc_f = $form->addField('line','cc');
 			$bcc_f = $form->addField('line','bcc');
@@ -97,7 +100,7 @@ class View_EmailCompose extends \View{
 			}
 
 
-			if($form->isSubmitted()){												
+			if($form->isSubmitted()){
 				$official_email_model = $this->add('xHR/Model_OfficialEmail');
 				$official_email_model->load($form['from_email']);
 				$footer = $official_email_model['footer'];
@@ -135,12 +138,12 @@ class View_EmailCompose extends \View{
 					$to_type = explode('/',$form['type']);
 					$to_type =  explode('_',$to_type[1]);
 					$to_type = $to_type[1];
-
+					
 					$model = $this->add($form['type'])->load($form['to_id']);
-					$model->createActivity('email',$subject,$email_body,null,null, $to_type, $form['to_id'],$email_to,true,false,$form['attachment'],$official_email_model->get());
+					$model->createActivity('email',$subject,$email_body,null,null, $to_type, $form['to_id'],$email_to,true,false,$form['attachment'],$official_email_model);
 				}
 
-				$js_action = array($form->js()->reload(),$this->js()->univ()->closeDialog());
+				$js_action = array($this->js()->univ()->closeDialog());
 				$form->js(null,$js_action)->univ()->successMessage('Email Send Successfully')->execute();
 			}
 		 	
