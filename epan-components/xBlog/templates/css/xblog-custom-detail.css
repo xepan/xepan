@@ -1,0 +1,19 @@
+.xblog-blog{
+	width: 100%;
+}
+.xblog-blog-name{
+	text-transform: capitalize;
+	font-weight: bold;
+}
+.xblog-blog-description{
+	text-align: justify;
+}
+.xblog-blog-author{
+	text-transform: capitalize;
+	font-weight: bold;
+	text-align: right;	
+}
+.xblog-blog-posted-date{
+	text-align: right;
+	font-weight: bold;
+}
