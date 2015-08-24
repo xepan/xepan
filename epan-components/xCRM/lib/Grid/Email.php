@@ -18,7 +18,7 @@ class Grid_Email extends \Grid{
 
 		$this->reply_vp = $this->add('VirtualPage')->set(function($p){
 			$email_id = $p->api->stickyGET('xcrm_email_id');
-			$p->add('xCRM/View_EmailReply',array('email_id'=>$email_id));
+			$p->add('xCRM/View_EmailCompose',array('email_id'=>$email_id,'compose_email'=>false));
 		});
 
 		// $this->task_vp = $this->add('VirtualPage')->set(function($p){
