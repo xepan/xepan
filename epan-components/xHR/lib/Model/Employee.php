@@ -27,7 +27,7 @@ class Model_Employee extends \Model_Table{
 		$this->addField('name')->Caption('Full Name')->group('a~5~Basic Info')->sortable(true)->mandatory(true);
 		$this->addField('dob')->type('date')->Caption('Date Of Birth')->group('a~3');
 		$this->addField('gender')->enum(array('male','female'))->group('a~2')->mandatory(true);
-		$this->add('filestore/Field_Image','empolyee_image_id');
+		$this->add('filestore/Field_Image','empolyee_image_id')->caption('Employee Image');
 		$this->addField('is_active')->type('boolean')->defaultValue(true)->group('a~2');
 		
 
@@ -391,6 +391,9 @@ class Model_Employee extends \Model_Table{
 
 	function updateEmail($email){
 		if(!$this->loaded()) return false;
+		
+		if(strlen(strstr($this['personal_email'],$email)) > 0)
+			return false;
 		
 		$this['personal_email'] = $this['personal_email'].', '.$email;
 		$this->save();

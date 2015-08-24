@@ -13,7 +13,8 @@ class Model_Email extends \Model_Document{
 			// 'allow_del'=>array(),
 			'can_create_activity'=>array('caption'=>'Action'),
 			'can_see_activities'=>false,
-			'can_manage_attachments'=>false
+			'can_manage_attachments'=>false,
+			'can_create_task'=>array('caption'=>'Task')
 		);	
 
 	function init(){
@@ -55,6 +56,28 @@ class Model_Email extends \Model_Document{
 		$this->hasMany('xCRM/EmailAttachment','related_document_id',null,'Attachments');
 
 		$this->setOrder('created_at','desc');
+
+		$this->addExpression('from_detail')->set(function($m,$q){
+			return $q->expr("
+					CASE [0]
+						WHEN 'Customer' THEN [1]
+						WHEN 'Supplier' THEN [2]
+						WHEN 'Employee' THEN [3]
+						WHEN 'Affiliate' THEN [4]
+						ELSE
+							'Others'
+					END
+				",
+				[
+					$m->getElement('from'),
+					$m->add('xShop/Model_Customer')->addCondition('id',$q->getField('from_id'))->fieldQuery('customer_name'),
+					$m->add('xPurchase/Model_Supplier')->addCondition('id',$q->getField('from_id'))->fieldQuery('name'),
+					$m->add('xHR/Model_Employee')->addCondition('id',$q->getField('from_id'))->fieldQuery('name'),
+					$m->add('xShop/Model_Affiliate')->addCondition('id',$q->getField('from_id'))->fieldQuery('name'),
+
+				]);
+		});
+
 
 	//	$this->add('dynamic_model/Controller_AutoCreator');
 	}
@@ -152,14 +175,43 @@ class Model_Email extends \Model_Document{
 		return $attach_arry;
 	}
 
+	function create_task_page($page){
+		$employee_model = $page->add('xHR/Model_Employee');
+
+		//Task_________________________________
+		
+		$page->add('H4')->set('Create Task')->addClass('atk-swatch-ink atk-padding-small');
+		$task_form = $page->add('Form_Stacked');
+		$narration_field = $task_form->addField('text','narration')->set($this['subject']);
+		$employee_field = $task_form->addField('autocomplete/Basic','employee','Assign To Employee');
+		$employee_field->setModel($employee_model);
+
+		$task_end_date_field = $task_form->addField('DatePicker','expected_end_date');
+		$task_priority_field = $task_form->addField('DropDown','priority')->setValueList(array('Low'=>'Low','Medium'=>'Medium','High'=>'High','Urgent'=>'Urgent'))->set('Medium');
+		$task_form->addSubmit('Create Task & Assign');
+		
+		$pre_task = $this->task();
+		if($pre_task->loaded()){
+			$narration_field->set($pre_task['subject']);
+			$employee_field->set($pre_task['employee_id']);
+			$task_end_date_field->set($pre_task['expected_end_date']);
+			$task_priority_field->set($pre_task['Priority']);
+		}
+
+		if($task_form->isSubmitted()){
+			$this->createTask($task_form['narration'],$task_form['employee'],$task_form['expected_end_date'],$task_form['priority']);
+			return true;
+		}
+
+	}
 
 	function create_Activity_page($page){
 	
 		$col = $page->add('Columns');
-		$col_left = $col->addColumn(3);
-		$col_midleft = $col->addColumn(3);
-		$col_midright = $col->addColumn(3);
-		$col_right = $col->addColumn(3);
+		$col_left = $col->addColumn(4);
+		$col_midleft = $col->addColumn(4);
+		$col_midright = $col->addColumn(4);
+		// $col_right = $col->addColumn(4);
 		
 		//Model____________________________	
 		$customer_model = $page->add('xShop/Model_Customer');
@@ -188,7 +240,7 @@ class Model_Email extends \Model_Document{
 		$from_employee_field = $from_form->addField('autocomplete/Basic','from_employee');
 		$from_employee_field->setModel($employee_model);
 
-		$from_form->addField('Checkbox','store_email');
+		$from_form->addField('Checkbox','store_email')->set(true);
 		$from_form->addSubmit('Set From');
 		
 		if($this['from']){
@@ -275,7 +327,7 @@ class Model_Email extends \Model_Document{
 		$to_employee_field = $to_form->addField('autocomplete/Basic','to_employee');
 		$to_employee_field->setModel($employee_model);
 		
-		$to_form->addField('Checkbox','store_email');
+		$to_form->addField('Checkbox','store_email')->set(true);
 		$to_form->addSubmit('Set To');
 		
 		if($this['to']){
@@ -356,30 +408,6 @@ class Model_Email extends \Model_Document{
 		$document_form->addSubmit('Set Document');
 		if($document_form->isSubmitted()){
 
-		}
-
-		//Task_______________________________________________
-
-		$col_right->add('H4')->set('Create Task')->addClass('atk-swatch-ink atk-padding-small');
-		$task_form = $col_right->add('Form_Stacked');
-		$narration_field = $task_form->addField('text','narration')->set($this['subject']);
-		$employee_field = $task_form->addField('autocomplete/Basic','employee','Assign To Employee');
-		$employee_field->setModel($employee_model);
-		$task_end_date_field = $task_form->addField('DatePicker','expected_end_date');
-		$task_priority_field = $task_form->addField('DropDown','priority')->setValueList(array('Low'=>'Low','Medium'=>'Medium','High'=>'High','Urgent'=>'Urgent'))->set('Medium');
-		$task_form->addSubmit('Create Task & Assign');
-		
-		$pre_task = $this->task();
-		if($pre_task->loaded()){
-			$narration_field->set($pre_task['subject']);
-			$employee_field->set($pre_task['employee_id']);
-			$task_end_date_field->set($pre_task['expected_end_date']);
-			$task_priority_field->set($pre_task['Priority']);
-		}
-
-		if($task_form->isSubmitted()){
-			$this->createTask($task_form['narration'],$task_form['employee'],$task_form['expected_end_date'],$task_form['priority']);
-			return true;
 		}
 
 	}	
@@ -631,28 +659,7 @@ class Model_Email extends \Model_Document{
 	function fromMemberName(){
 		
 		if(!$this->loaded()) return;
-		switch ($this['from']) {
-			case 'Customer':
-				$c = $this->add('xShop/Model_Customer')->addCondition('id',$this['from_id'])->tryLoadAny();
-				if($c->loaded())					
-					return $c['customer_name'];
-			break;			
-			case 'Supplier':
-				$s = $this->add('xPurchase/Model_Supplier')->addCondition('id',$this['from_id'])->tryLoadAny();
-				if($s->loaded())
-					return $s['name'];
-			break;
-			case 'Employee':
-				$e = $this->add('xHR/Model_Employee')->addCondition('id',$this['from_id'])->tryLoadAny();
-				if($e->loaded())
-					return $e['name'];
-			break;
-			case 'Affiliate':
-				$e = $this->add('xShop/Model_Affiliate')->addCondition('id',$this['from_id'])->tryLoadAny();
-				if($e->loaded())
-					return $e['name'];
-			break;
-		}
+		return $this['from_detail'];
 	}
 
 	function toMemberName(){

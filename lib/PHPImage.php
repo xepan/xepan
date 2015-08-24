@@ -46,6 +46,7 @@ class PHPImage {
 	 * @var resource
 	 */
 	protected $img;
+	protected $imagick_img=null;
 
 	/**
 	 * Canvas resource
@@ -570,6 +571,7 @@ class PHPImage {
 		if($return_data){
 			return $imageData;	
 		} 
+		
 		header('Expires: Wed, 1 Jan 1997 00:00:00 GMT');
 		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 		header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -1272,6 +1274,63 @@ class PHPImage {
 		$src_h=imagesy($im);
 		imagecopyresized ( $this->getResource() , $im , $x , $y , 0 , 0 , $width , $height , $src_w , $src_h );
 		// imagecopy ( $this->getResource() , $im , $x , $y , 0 , 0 , $width , $height );
+	}
+
+	function mask($mask_details){
+		$url = getcwd().$mask_details['url'];
+		if(!file_exists($url)){
+			$url = dirname(getcwd()).$mask_details['url'];
+			if(!file_exists($url)){
+				return;
+			}
+		}
+
+		$mask = new PHPImage($url);
+		$mask->resize($mask_details['width'],$mask_details['height'],false,true,false);
+		$this->imagealphamask($this->getResource(),$mask->getResource(),$mask_details);
+	}
+
+	function imagealphamask( &$source, $mask,$mask_details=null ) {
+		
+	//Getting Source Image  Size
+		$xSize = imagesx( $source );
+	    $ySize = imagesy( $source );
+		
+	// Creating New PHPImage for Merge
+		$newPicture = imagecreatetruecolor($this->width, $this->height);
+		// Set the flag to save full alpha channel information
+		imagesavealpha($newPicture, true);
+		// Turn off transparency blending (temporarily)
+		imagealphablending($newPicture, false);
+		// Completely fill the background with transparent color
+		imagefilledrectangle($newPicture, 0, 0, $xSize, $ySize, imagecolorallocatealpha($newPicture, 0, 0, 0, 127));
+		// Restore transparency blending
+		imagealphablending($newPicture, true);
+
+	//Merge NewPicture with Mask Image
+		imagecopymerge($newPicture, $mask, $mask_details['x'], $mask_details['y'], 0, 0, $xSize , $ySize, 100);
+		$mask = $newPicture;
+		
+	// Creating Temporary Masked PHPImage
+		$picture_temp = imagecreatetruecolor( $xSize, $ySize );
+	    imagefill( $picture_temp, 0, 0, imagecolorallocatealpha( $picture_temp, 255, 255, 255, 127 ) );
+	    imagesavealpha($picture_temp, true);
+	    imagealphablending($picture_temp, false);
+	    for($x=0;$x< $xSize;$x++)
+		    for($y=0;$y< $ySize;$y++){
+		    	$mcolor=imagecolorsforindex( $mask, imagecolorat( $mask, $x, $y ) );
+		    	// if($mcolor['red']==255 && $mcolor['green']==255 && $mcolor['blue']==255){
+			    	$color=imagecolorsforindex( $source, imagecolorat( $source, $x, $y ) );
+				    $red = imagecolorallocatealpha($picture_temp, $color['red'], $color['green'], $color['blue'],(765-($mcolor['red'] + $mcolor['green'] + $mcolor['blue']))/765 * 127 );
+			    	imagesetpixel($picture_temp, $x, $y, $red);
+		    	// }
+		    }
+
+		$source = $picture_temp;
+		$this->img = $source;
+		// header( "Content-type: image/png");
+		// imagepng( $picture_temp );
+		// exit;
 	}
 
 }

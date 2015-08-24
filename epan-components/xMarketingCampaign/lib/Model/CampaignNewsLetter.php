@@ -27,10 +27,12 @@ class Model_CampaignNewsLetter extends \Model_Table {
 		$this->addExpression('posting_date')->set(function($m,$q){
 			$td=$m->add('xMarketingCampaign/Model_Campaign',array('table_alias'=>'td'));
 			$td->addCondition('id',$q->getField('campaign_id'));
-			$td->_dsql()->del('field');
-			$td->_dsql()->field('starting_date');
+			// $td->_dsql()->del('field');
+			// $td->_dsql()->field('starting_date');
 
-    		return 'DATE_ADD(('.$td->_dsql()->render().'),INTERVAL duration DAY)';
+			return $q->expr("DATE_ADD([0], INTERVAL [1] DAY)",[$td->fieldQuery('starting_date'),$m->getElement('duration')]);
+    		// return 'DATE_ADD(('.$td->_dsql()->render().'),INTERVAL duration DAY)';
+
    		})->type('datetime');
 		$this->addHook('beforeSave',$this);
 	

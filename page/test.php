@@ -4,7 +4,41 @@
 class page_test extends Page {
 
 	function page_index(){
-		$this->add('Button')->set('clickme')->js('click')->univ()->successMessage("SDSDS");
+		$l = $this->api->locate('addons', 'autocomplete', 'location');
+        $addon_location = $this->api->locate('addons', 'autocomplete');
+
+        $this->api->pathfinder->addLocation(array(
+            'js'=>'js',
+            'css'=>'templates/css'
+            ))
+            ->setBasePath($this->api->pathfinder->base_location->base_path.'/'.$addon_location)
+            ->setBaseURL($this->api->pm->base_path.'/'.$addon_location);
+        ;
+
+		$form = $this->add('Form');
+
+		$field = $form->addField('line','abcd');
+
+		$m = $this->add('Model');
+		$m->addField('id');
+		$m->addField('name');
+
+		$m->setSource('Array',[
+				['id'=>1,'name'=>'ramlal'],
+				['id'=>2,'name'=>'shyamlal'],
+				['id'=>2,'name'=>'ghanshaymlal']
+			]
+		);
+
+		$field->setModel($m);
+
+		$field->js(true)
+            ->_load('autocomplete_univ6')
+            ->_css('autocomplete')
+            ->univ()
+            ->myautocomplete($this->api->url(), $field, [], 'id', 'name');
+
+
 	}
 
 	function page_cst_organization_name_update(){
@@ -131,12 +165,108 @@ function page_owner_layout(){
 
 		if($_GET['title'])
 			$this->app->layout->template->trySetHTML('page_title',"<i class='".$_GET['icon']."'></i> " . $_GET['title']);
+		else
+			$this->app->layout->template->tryDel('page_title');
 	}
 
 	function page_layout(){
 		if($_GET['name']){
 			$this->template->loadTemplate($_GET['name']);
 		}
+	}
+
+	function page_mask(){
+		
+		$this->template->loadTemplate('page/temp');
+
+		$this->add('View')->setElement('img')->setAttr('src',$this->api->url(null,['img'=>1]));
+
+		if($_GET['img']){
+
+			$source = imagecreatefrompng( '/var/www/xerp/upload/0/source.png' );
+			$xSize = imagesx( $source );
+		    $ySize = imagesy( $source );
+			
+			$newPicture = imagecreatetruecolor( $xSize, $ySize );
+		    imagealphablending($newPicture, false);
+		    imagefill( $newPicture, 0, 0, imagecolorallocatealpha( $newPicture, 255, 255, 255, 0 ) );
+		    imagesavealpha($newPicture, true);
+
+			$mask = imagecreatefrompng( '/var/www/xerp/upload/0/checker.png' );
+			imagecopymerge($newPicture, $mask, 0, 0, 0, 0, $xSize , $ySize, 100);
+			$mask = $newPicture;
+			
+			$picture_temp = imagecreatetruecolor( $xSize, $ySize );
+		    imagefill( $picture_temp, 0, 0, imagecolorallocatealpha( $picture_temp, 255, 255, 255, 127 ) );
+		    imagealphablending($picture_temp, false);
+		    imagesavealpha($picture_temp, true);
+		    for($x=0;$x< $xSize;$x++)
+			    for($y=0;$y< $ySize;$y++){
+			    	$mcolor=imagecolorsforindex( $mask, imagecolorat( $mask, $x, $y ) );
+			    	if($mcolor['red']==255 && $mcolor['green']==255 && $mcolor['blue']==255){
+				    	$color=imagecolorsforindex( $source, imagecolorat( $source, $x, $y ) );
+					    $red = imagecolorallocate($picture_temp, $color['red'], $color['green'], $color['blue']); 
+				    	imagesetpixel($picture_temp, $x, $y, $red);
+			    	}
+			    }
+
+			header( "Content-type: image/png");
+			imagepng( $picture_temp );
+			exit;
+
+		}
+
+		if($_GET['img']){
+			$source = imagecreatefrompng( '/home/adam/Pictures/source.png' );
+			$this->magealphamask( $source, $mask );
+			header( "Content-type: image/png");
+			imagepng( $source );
+			exit;
+		}
+	}
+
+	function magealphamask(&$picture, $mask){
+		//Get With and Height of Merged Image
+		$xSize = imagesx( $picture );
+	    $ySize = imagesy( $picture );
+
+	    $posX = 0;
+	    $posY = 0;
+
+	    // Step 0 .. create a alpha channel image
+	    $picture_temp = imagecreatetruecolor( $xSize, $ySize );
+	    imagealphablending($picture_temp, false);
+	    imagesavealpha($picture_temp, true);
+
+		//Step 1
+			// Create a new Temp image having width and height same as original picture 
+		    $newPicture = imagecreatetruecolor( $xSize, $ySize );
+		    imagealphablending($newPicture, false);
+	    	//and having background color transparent
+		    imagefill( $newPicture, 0, 0, imagecolorallocatealpha( $newPicture, 255, 255, 255, 0 ) );
+		    imagesavealpha($newPicture, true);
+		//Step 2
+			// Merge mask image to Temp Image, according to x and y cordinates width
+		    imagealphablending($newPicture, true);
+			imagecopymerge($newPicture, $mask, 0, 0, 0, 0, $xSize , $ySize, 100);
+			// and Result will be temp image
+		//Step 3
+			// In a FOR Loop of original picture widtha and height
+			for( $x = 0; $x < $xSize; $x++ ) {
+		    	for( $y = 0; $y < $ySize; $y++ ) {
+		    		//if pixel of temp image at x and y is white
+					$alpha = imagecolorsforindex( $newPicture, imagecolorat( $newPicture, $x, $y ) );
+					$orig = imagecolorsforindex( $picture, imagecolorat( $picture, $x, $y ) );
+					$transparency = imagecolorallocatealpha($picture, $orig['red'],$orig['green'],$orig['blue'], (765-($alpha['red'] + $alpha['green'] + $alpha['blue']))/765 * 127);
+					// Make the background transparent
+	                imagesetpixel( $picture_temp, $x, $y, $transparency); // Stick a black, but totally transparent, pixel in.
+	    			//then set transparent pixel of original picture at same x and y
+		    	}
+		    }
+
+		// Destroying the new created image
+		    $picture = $picture_temp;
+	    imagedestroy($newPicture);
 	}
 
 }

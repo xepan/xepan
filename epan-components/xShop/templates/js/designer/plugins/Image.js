@@ -8,15 +8,37 @@ xShop_Image_Editor = function(parent){
 	// this.image_manager = $('<div class="btn "><span class="glyphicon glyphicon-film"></span></div>').appendTo(this.image_button_set);
 	this.image_edit = $('<div class="btn xshop-designer-image-edit-btn"><i class="icon-edit atk-size-tera"></i><br/><span class="atk-size-micro">Edit</span></div>').appendTo(this.image_button_set);
 	this.image_crop_resize = $('<div class="btn xshop-designer-image-crop-btn"><i class="icon-crop atk-size-tera"></i><br/><span class="atk-size-micro">Crop</span></div>').appendTo(this.image_button_set);
+	this.image_mask = $('<div class="btn xshop-designer-image-mask-btn"><i class="glyphicon glyphicon-picture atk-size-tera"></i><br/><span class="atk-size-micro">Mask</span></div>').appendTo(this.image_button_set);
+	this.image_mask_apply = $('<div class="btn xshop-designer-image-mask-apply-btn"><i class="glyphicon glyphicon-picture atk-size-tera"></i><br/><span class="atk-size-micro">Apply Mask</span></div>').appendTo(this.image_button_set);
+	this.image_mask_edit = $('<div class="btn xshop-designer-image-mask-edit-btn"><i class="glyphicon glyphicon-picture atk-size-tera"></i><br/><span class="atk-size-micro">Edit Mask</span></div>').appendTo(this.image_button_set);
 	// this.image_duplicate = $('<div class="btn "><span class="glyphicon glyphicon-">Duplicate</span></div>').appendTo(this.image_button_set);
 	// this.image_manager = $('<div class="btn "><span class="glyphicon glyphicon-film"></span></div>').appendTo(this.image_button_set);
 	this.image_remove = $('<div class="btn xshop-designer-image-remove-btn"><i class="icon-trash atk-size-tera"></i><br/><span class="atk-size-micro">Remove</span></div>').appendTo(this.image_button_set);
-	// this.image_manager.click(function(event){
-	// 	options ={modal:false,
-	// 				width:800
-	// 			};
-	// 	$.univ().frameURL('Add Images From...','index.php?page=xShop_page_designer_itemimages',options);
-	// });
+	this.image_lock = $('<div class="btn xshop-designer-image-lock-btn"><i class="icon-lock atk-size-tera"></i><br/><span class="atk-size-micro">Lock</span></div>').appendTo(this.image_button_set);
+	this.image_up_down = $('<div class="btn xshop-designer-image-up-down-btn"></div>').appendTo(this.image_button_set);
+	this.image_up = $('<div class="xshop-designer-image-up-btn icon-angle-circled-up atk-size-mega xshop-designer-image-up-btn" title="Bring to Front" ></div>').appendTo(this.image_up_down);
+	this.image_down = $('<div class="xshop-designer-image-down-btn icon-angle-circled-down atk-size-mega xshop-designer-image-up-btn" title="Send to Back" ></div>').appendTo(this.image_up_down);
+	
+	this.image_mask.click(function(event){
+		self.current_image_component.options.mask_added=true;
+		options ={modal:false,
+					width:800
+				};
+		$.univ().frameURL('Add Mask Images From...','index.php?page=xShop_page_designer_itemimages',options);
+	});
+
+	this.image_mask_apply.click(function(event){
+		self.current_image_component.options.apply_mask=true;
+		$(self.current_image_component.element).find('img[is_mask_image=1]').hide();
+		self.current_image_component.render();
+	});
+
+	this.image_mask_edit.click(function(event){
+		self.current_image_component.options.apply_mask=false;
+		$(self.current_image_component.element).find('img[is_mask_image=1]').show();
+		self.current_image_component.render();
+	});
+
 	this.image_remove.click(function(){
 		dt  = self.current_image_component.designer_tool;
 		$.each(dt.pages_and_layouts[dt.current_page][dt.current_layout].components, function(index,cmp){
@@ -29,6 +51,58 @@ xShop_Image_Editor = function(parent){
 			}
 		});
 	});
+
+	//Lock the Image 
+	this.image_lock.click(function(){
+		current_image = $(self.current_image_component.element);		
+		if(current_image.hasClass('xepan-designer-lock-component')){
+			$('.xepan-designer-image-unlock-btn').remove();
+			current_image.removeClass('xepan-designer-lock-component');
+		}else{
+			current_image.addClass('xepan-designer-lock-component');
+			unlock = $('<div class="xepan-designer-image-unlock-btn atk-label atk-size-mega atk-swatch-blue" title="Click here to unlock the image"><i class="icon-lock-open"></i></div>').appendTo(current_image);
+			unlock.click(function(){
+				$('.xepan-designer-image-unlock-btn').remove();
+				current_image.removeClass('xepan-designer-lock-component');	
+			});		
+		}
+		
+	});
+
+	//Bring To Front
+	this.image_up.click(function(){
+		current_image = $(self.current_image_component.element);
+		current_zindex = current_image.css('z-index');
+		if( current_zindex == 'auto'){
+			current_zindex = 0;
+		}
+		current_image.css('z-index', parseInt(current_zindex)+1);
+		self.current_image_component.options.z_index = current_image.css('z-index');
+		if($('div.xshop-designer-image-down-btn').hasClass('xepan-designer-button-disable')){
+			$('div.xshop-designer-image-down-btn').removeClass('xepan-designer-button-disable');
+		}
+	});
+
+	//Send to Back
+	this.image_down.click(function(){
+		current_image = $(self.current_image_component.element);
+		current_zindex = current_image.css('z-index');
+		if( current_zindex == 'auto' || (parseInt(current_zindex)-1) < 0){
+			current_zindex = 0;
+		}else 
+			current_zindex = (parseInt(current_zindex)-1);
+
+		current_image.css('z-index', current_zindex);
+		self.current_image_component.options.z_index = current_zindex;
+		if(current_zindex == 0 ){
+			$('div.xshop-designer-image-down-btn').addClass('xepan-designer-button-disable');
+		}
+	});
+
+	//Hide Default Mask Edit and Apply option
+	this.image_mask_apply.hide();
+	this.image_mask_edit.hide();
+
 
 	this.image_crop_resize.click(function(event){
 		// var self =this;
@@ -113,6 +187,7 @@ Image_Component = function (params){
 	this.element = undefined;
 	this.editor = undefined;
 	this.xhr = undefined;
+	this.mask = undefined
 
 	this.options = {
 		x:0,
@@ -136,7 +211,6 @@ Image_Component = function (params){
 		colorable: true,
 		editable: true,
 		default_url:'templates/images/logo.png',
-		url:undefined,
 		z_index:0,
 		resizable: true,
 		auto_fit: false,
@@ -144,7 +218,12 @@ Image_Component = function (params){
 		backside:false,
 		multiline: false,
 		// System properties
-		type: 'Image'
+		type: 'Image',
+		//Mask the image
+		is_mask_image: false,
+		mask_added: false,
+		apply_mask: false,
+		mask_options: {},
 	};
 
 	this.init = function(designer,canvas, editor){
@@ -158,7 +237,7 @@ Image_Component = function (params){
 		// alert('Hi called');
 	}
 
-	this.addImage = function(image_url){
+	this.addImage = function(image_url, is_masked){
 		var self=this;
 		//create new ImageComponent type object
 		var new_image = new Image_Component();
@@ -168,11 +247,52 @@ Image_Component = function (params){
 		new_image.options.x=0;
 		new_image.options.y=0;
 		new_image.options.url = image_url;
+		if(is_masked === true) new_image.options.is_mask_image = true;
 		// console.log(new_image);
 		// add this Object to canvas components array
 		// console.log(self.designer_tool.current_page);
 		self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].components.push(new_image);
 		new_image.render(true);
+		return new_image;
+	}
+
+	this.isMaskOptionsAdded = function(){
+		var self=this;
+		return self.options.mask_added && self.options.mask_options.url;
+	},
+
+	this.isMaskAppended = function(){
+		var self=this;
+		return self.element.find('img[is_mask_image=1]').length;
+	},
+
+	this.updateMask = function(){
+		var self=this;
+		if(self.isMaskOptionsAdded() && !self.isMaskAppended()){
+			//create new ImageComponent type object
+			var mask_image = new Image_Component();
+			mask_image.init(self.designer_tool,self.canvas, self.editor);
+			// feed default values for its parameters
+			//Set Options
+			mask_image.options.url = self.options.mask_options.url;
+			mask_image.options = self.options.mask_options;
+			mask_image.options.is_mask_image = true;
+			mask_image.options.x = 0;
+			mask_image.options.y = 0;
+			mask_image.render(true);
+			self.mask = mask_image;	
+			self.options.mask_added = true;
+
+			$(mask_image.element).appendTo(self.element);
+			mask_image.render();
+
+			$(mask_image.element).draggable("option", "containment", self.element);
+			return mask_image;
+		}
+
+		self.mask.render();
+
+		return mask_image;
 	}
 
 	this.renderTool = function(parent){
@@ -201,7 +321,7 @@ Image_Component = function (params){
 			
 			// self.options.width = self.designer_tool.px_width / 2;
 
-			this.element = $('<div style="position:absolute" class="xshop-designer-component"><span><img></img></span></div>').appendTo(this.canvas);
+			this.element = $('<div style="position:absolute" class="xshop-designer-component"><span class="xepan-designer-dropped-image"><img is_mask_image="'+(self.options.is_mask_image==true?'1':'0')+'"></img></span></div>').appendTo(this.canvas);
 			this.element.draggable({
 				containment: self.designer_tool.safe_zone,
 				smartguides:".xshop-designer-component",
@@ -228,11 +348,35 @@ Image_Component = function (params){
 			$(this.element).data('component',this);
 		
 			$(this.element).click(function(event) {
+
 	            $('.ui-selected').removeClass('ui-selected');
 	            $(this).addClass('ui-selected');
 	            $('.xshop-options-editor').hide();
 	            self.editor.element.show();
-	            self.designer_tool.option_panel.show();
+	            //using callback function for hide and show the apply and edit mask option
+	            self.designer_tool.option_panel.show('fast',function(event){
+	            	if(self.options.mask_added == true && self.options.mask_options.url != undefined){
+	            		$('div.xshop-designer-image-mask-apply-btn').show();
+	            		$('div.xshop-designer-image-mask-edit-btn').show();
+	            	}else{
+	            		$('div.xshop-designer-image-mask-apply-btn').hide();
+	            		$('div.xshop-designer-image-mask-edit-btn').hide();
+	            	}
+
+	            	if(self.options.mask_added == true || self.options.is_mask_image){
+	            		$('div.xshop-designer-image-mask-btn').hide();
+	            	}else{
+	            		$('div.xshop-designer-image-mask-btn').show();
+
+	            	}
+
+	            	//check For the Z-index
+	            	if(self.options.z_index == 0){
+	            		$('div.xshop-designer-image-down-btn').addClass('xepan-designer-button-disable');
+	            	}else
+	            		$('div.xshop-designer-image-down-btn').removeClass('xepan-designer-button-disable');
+	            });
+
 	            if(self.designer_tool.options.designer_mode){
 		            self.designer_tool.freelancer_panel.FreeLancerComponentOptions.element.show();
 		            self.designer_tool.freelancer_panel.setComponent($(this).data('component'));
@@ -240,21 +384,13 @@ Image_Component = function (params){
 	            self.designer_tool.current_selected_component = self;
 	            self.designer_tool.option_panel.css('z-index',70);
 	            self.designer_tool.option_panel.addClass('xshop-text-options');
-	            
-	   //          console.log("Position Left"+$(this).position().left);
-	   //          console.log("Position Right"+$(this).position().right);
-	   //          console.log("Position Top"+$(this).position().top);
-	   //          console.log("Position Bottom"+$(this).position().bottom);
-	   //          console.log("pageX="+event.pageX);
-				// console.log("clientX="+event.clientX);
-				// console.log("clientWidth="+event.currentTarget.clientWidth);
-				// console.log("clientHeight="+event.currentTarget.clientHeight);
 
+	            // current_image_position = self.element.position();
+	            // self.designer_tool.option_panel.css('top', current_image_position.top);
+	            // self.designer_tool.option_panel.css('left',current_image_position.left);
 	            self.designer_tool.option_panel.css('top',event.pageY - (event.currentTarget.clientHeight/2));
 	            self.designer_tool.option_panel.css('left',event.pageX - (event.currentTarget.clientWidth/2));
 
-	            // self.designer_tool.option_panel.css('top',event.clientY - event.currentTarget.clientHeight + 30);
-	            // self.designer_tool.option_panel.css('left',event.clientX - event.currentTarget.clientWidth);
 	            self.editor.setImageComponent(self);
 		        event.stopPropagation();
 			});
@@ -290,16 +426,27 @@ Image_Component = function (params){
 					height:self.options.height,
 					max_width: self.designer_tool.safe_zone.width()/1.5,
 					max_height: self.designer_tool.safe_zone.height()/1.5,
-					auto_fit: is_new_image===true
+					auto_fit: is_new_image===true,
+					mask:self.options.mask_options,
+					mask_added:self.options.mask_added,
+					apply_mask:self.options.apply_mask,
+					is_mask_image:self.options.is_mask_image,
+					x: self.options.x,
+					y: self.options.y,
+					z_index:self.options.z_index
 				},
 		})
 		.done(function(ret) {
-			self.element.find('img').attr('src','data:image/jpg;base64, '+ ret);
+			if(self.options.is_mask_image)
+				self.element.find('img[is_mask_image=1]').attr('src','data:image/jpg;base64, '+ ret);
+			else
+				self.element.find('img[is_mask_image=0]').attr('src','data:image/jpg;base64, '+ ret);
+
 			if(is_new_image===true){
 				window.setTimeout(function(){
 					self.options.width = self.designer_tool.screen2option(self.element.find('img').width());
 					self.options.height = self.designer_tool.screen2option(self.element.find('img').height());
-					console.log(self.element.find('img').width());
+					// console.log(self.element.find('img').width());
 				},200);
 			}
 			self.xhr=undefined;
@@ -311,6 +458,8 @@ Image_Component = function (params){
 		.always(function() {
 			console.log("complete");
 		});	
+
+		if(self.options.mask_added) self.updateMask();
 
 		// this.element.text(this.text);
 		// this.element.css('left',this.x);

@@ -26,8 +26,13 @@ class Grid_Affiliate extends \Grid{
 		if($this->hasColumn('mobile_no')) $this->removeColumn('mobile_no');
 		if($this->hasColumn('email_id')) $this->removeColumn('email_id');
 		if($this->hasColumn('website_url')) $this->removeColumn('website_url');
+		if($this->hasColumn('item_name')) $this->removeColumn('item_name');
+		if($this->hasColumn('created_by')) $this->removeColumn('created_by');
+		if($this->hasColumn('related_document')) $this->removeColumn('related_document');
+		if($this->hasColumn('created_date')) $this->removeColumn('created_date');
+		if($this->hasColumn('updated_date')) $this->removeColumn('updated_date');
 		
-		$this->fooHideAlways('description');
+		// $this->fooHideAlways('description');
 		// $this->fooHideAlways('website_url');
 		// $this->fooHideAlways('office_address');
 		// $this->fooHideAlways('city');
@@ -61,7 +66,7 @@ class Grid_Affiliate extends \Grid{
 		else
 			$this->setTDParam('company_name','class','');
 		//Logo
-		$this->current_row_html['logo_url'] = '<img src="'.$this->model->ref('logo_url_id')->ref('thumb_file_id')->get('url').'"/>';
+		// $this->current_row_html['logo_url'] = '<img src="'.$this->model->ref('logo_url_id')->ref('thumb_file_id')->get('url').'"/>';
 
 		$contact ="";
 		if($this->model['phone_no'])
@@ -90,6 +95,7 @@ class Grid_Affiliate extends \Grid{
 		}
 		$this->current_row_html['logo_url']='<img style="max-width:70px;"  src="'.$img_url.'"></img>';
 
+		$this->current_row_html['description']= $this->model['description'];
 		parent::formatRow();		
 	}
 

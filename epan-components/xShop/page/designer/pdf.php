@@ -24,7 +24,7 @@ class page_xShop_page_designer_pdf extends Page {
 		$member_logged_in = $member->loadLoggedIn();
 
 		if(!$member_logged_in){
-			echo "Must be called from a valid loggedn in xShop Member";
+			echo "Must be called from a valid logged in xShop Member";
 			exit;
 		}
 
@@ -64,16 +64,13 @@ class page_xShop_page_designer_pdf extends Page {
 		// $design = json_encode($design);
 
 		$design = $target['designs'];
-		$design = json_decode($design,true);
 		
+		$design = json_decode($design,true);
+
 		$this->px_width = $design['px_width'] * $this->print_ratio;
 
 		$selected_layouts_for_print = $design['selected_layouts_for_print'];
 		$design=$design['design'];
-		// echo "<pre>";
-		// print_r($design);
-		// echo "</pre>";
-
 		// foreach ($design as $page_name => $layouts) {
 		// 	foreach ($layouts as $layout_name => $content) {
 		// 		echo $page_name .' ' . $layout_name . ' <br/>';
@@ -127,7 +124,12 @@ class page_xShop_page_designer_pdf extends Page {
 
 	function addImage($options, $pdf){
 		if($options['url']){
-			$options['url'] = getcwd().$options['url'];
+			$url = getcwd().$options['url'];
+			if(!file_exists($url)) {
+				$url = dirname(getcwd()).'/'.$options['url'];
+			}
+			$options['url']= $url;
+			
 			$options['width'] = $options['width'] * $this->print_ratio;
 			$options['height'] = $options['height'] * $this->print_ratio;
 			$options['x'] = $options['x'] * $this->print_ratio;
