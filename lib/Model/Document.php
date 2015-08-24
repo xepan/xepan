@@ -398,7 +398,7 @@ class Model_Document extends Model_Table{
 		return $this->saveAs($this->getRootClass());
 	}
 
-	function createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null,$notify_via_email=false, $notify_via_sms=false,$single_attachment=null){
+	function createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null,$notify_via_email=false, $notify_via_sms=false,$single_attachment=null,$from_official_email=[]){
 		if(!$from){
 			$from = 'Employee';
 			$from_id = $this->api->current_employee->id;
@@ -419,6 +419,7 @@ class Model_Document extends Model_Table{
 		}
 		if($email_to){
 			$new_activity['email_to'] = $email_to;
+			$new_activity->from_official_email = $from_official_email;
 		}
 
 		$new_activity['subject']= $subject;
