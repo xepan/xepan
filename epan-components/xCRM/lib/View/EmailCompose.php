@@ -112,7 +112,7 @@ class View_EmailCompose extends \View{
 					//if this(Email) ka Related Document he to
 					if( !($related_document instanceof \Dummy)){
 						//Create karo Related Document Ki Activity
-						$related_document->createActivity('email',$subject,$email_body,$reply_against_email['from'],$reply_against_email['from_id'], $reply_against_email['to'], $reply_against_email['to_id'],$email_to,true,true,$form['attachment']);
+						$related_document->createActivity('email',$subject,$email_body,$reply_against_email['from'],$reply_against_email['from_id'], $reply_against_email['to'], $reply_against_email['to_id'],$email_to,true,true,$form['attachment'],$official_email_model->get());
 					}else{//Create Karo Email
 						$email = $this->add('xCRM/Model_Email');
 						$email['from'] = "Employee";
@@ -137,7 +137,7 @@ class View_EmailCompose extends \View{
 					$to_type = $to_type[1];
 
 					$model = $this->add($form['type'])->load($form['to_id']);
-					$model->createActivity('email',$subject,$email_body,null,null, $to_type, $form['to_id'],$email_to,true,false,$form['attachment']);
+					$model->createActivity('email',$subject,$email_body,null,null, $to_type, $form['to_id'],$email_to,true,false,$form['attachment'],$official_email_model->get());
 				}
 
 				$js_action = array($form->js()->reload(),$this->js()->univ()->closeDialog());

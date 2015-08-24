@@ -145,14 +145,14 @@ class Model_Email extends \Model_Document{
 		return $attach;
 	}
 
-	function send(){		
+	function send($from_official_email=[]){		
 		$attachments_array = array();
 		foreach ($this->attachment() as $attach) {
 			$file_model = $this->add('filestore/Model_File')->tryLoad($attach['attachment_url_id']);
 			$attachments_array[$file_model['filename']] = getcwd().'/upload/'.$file_model['filename'];
 		}
 		
-		$this->sendEmail($this['to_email'],$this['subject'],$this['message'],explode(",",$this['cc']),$this['bcc']?explode(",",$this['bcc']):array(),$attachments_array);
+		$this->sendEmail($this['to_email'],$this['subject'],$this['message'],explode(",",$this['cc']),$this['bcc']?explode(",",$this['bcc']):array(),$attachments_array,$from_official_email);
 	}	
 
 	function attachment(){

@@ -6,13 +6,14 @@ class Model_Activity extends \Model_Document{
 	public $status=array();
 	public $table="xcrm_document_activities";
 	public $root_document_name= 'xCRM\Activity';
-
-		public $actions=array(
-			'can_view'=>array('caption'=>'Whose created Quotation(draft) this post can see'),
-			'allow_edit'=>array('caption'=>'Whose created Quotation this post can edit'),
-			'allow_add'=>array('caption'=>'Can this post create new Quotation'),
-			'allow_del'=>array('caption'=>'Whose Created Quotation this post can delete'),
-		);
+	public $from_official_email=[];
+	
+	public $actions=array(
+		'can_view'=>array('caption'=>'Whose created Quotation(draft) this post can see'),
+		'allow_edit'=>array('caption'=>'Whose created Quotation this post can edit'),
+		'allow_add'=>array('caption'=>'Can this post create new Quotation'),
+		'allow_del'=>array('caption'=>'Whose Created Quotation this post can delete'),
+	);
 
 	function init(){
 		parent::init();
@@ -204,7 +205,7 @@ class Model_Activity extends \Model_Document{
 		$this->save();
 
 		$email_created = $this->add('xCRM/Model_Email')->createFromActivity($this);
-		$email_created->send();
+		$email_created->send($this->from_official_email);
 	}
 
 	function notifyViaSMS(){
