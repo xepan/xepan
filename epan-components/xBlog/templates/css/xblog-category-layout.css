@@ -1,0 +1,8 @@
+.xblog-category-li{
+	list-style-type:none;
+}
+.xblog-category-name{
+	font-size: 20px;
+	text-transform: capitalize;
+	width: 100%
+}
