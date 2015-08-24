@@ -16,7 +16,7 @@ class Model_BlogPost extends \Model_Document{
 
 		$this->hasMany('xBlog/PostDetail','post_id');
 		
-		$this->add('dynamic_model/Controller_AutoCreator');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function updateContent($id,$content){

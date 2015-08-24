@@ -1,10 +1,10 @@
 <?php
 
-class page_xBlog_page_blogpostdetaillayoutcss extends Page {
+class page_xBlog_page_blogpostlayoutcss extends Page {
 	function init(){
 		parent::init();
 		
-		$css_name = $this->api->stickyGET('blog_post_detail_layout').".css";
+		$css_name = $this->api->stickyGET('xblog_post_layout').".css";
 		$css_file = getcwd().DS.'epans'.DS.$this->api->current_website['name'].DS.$css_name;
 		$css_file_orig = getcwd().DS.'epan-components'.DS.'xBlog'.DS.'templates'.DS.'css'.DS.$css_name;
 		

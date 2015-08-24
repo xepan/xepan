@@ -7,9 +7,9 @@ class Model_BlogCategory extends \Model_Document{
 
 	function init(){
 		parent::init();
-		$this->hasOne('xBlog/ParentBlogCategory','parent_category_id')->mandatory(true);
+		$this->hasOne('xBlog/ParentBlogCategory','parent_category_id');//->mandatory(true);
 		$this->addField('name')->mandatory(true);
-		$this->addField('is_acitve')->type('boolean');
+		$this->addField('is_active')->type('boolean');
 
 		$this->hasMany('xBlog/BlogPost','category_id');
 		$this->hasMany('xBlog/BlogCategory','parent_category_id',null,'SubCategories');

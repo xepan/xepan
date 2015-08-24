@@ -1,10 +1,10 @@
 <?php
 
-class page_xBlog_page_blogpostdetaillayoutcss extends Page {
+class page_xBlog_page_blogcategorylayoutcss extends Page {
 	function init(){
 		parent::init();
 		
-		$css_name = $this->api->stickyGET('blog_post_detail_layout').".css";
+		$css_name = $this->api->stickyGET('blog_category_layout').".css";
 		$css_file = getcwd().DS.'epans'.DS.$this->api->current_website['name'].DS.$css_name;
 		$css_file_orig = getcwd().DS.'epan-components'.DS.'xBlog'.DS.'templates'.DS.'css'.DS.$css_name;
 		
@@ -26,7 +26,7 @@ class page_xBlog_page_blogpostdetaillayoutcss extends Page {
 			file_put_contents($user_css, $new_css_content);
 			$form->js(
 				null,
-				$form->js()->_selector('#xblog-post-customcss-link')->attr('href',$user_css."?".rand(1000,9999))
+				$form->js()->_selector('#xblog-category-customcss-link')->attr('href',$user_css."?".rand(1000,9999))
 				)->univ()->closeDialog()->execute();
 		}
 
