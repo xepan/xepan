@@ -49,7 +49,7 @@ class View_EmailCompose extends \View{
 			$to_f = $form->addField('line','to');
 			$cc_f = $form->addField('line','cc');
 			$bcc_f = $form->addField('line','bcc');
-			$from_email_f = $form->addField('dropdown','from_email')->setEmptyText('Please Select');
+			$from_email_f = $form->addField('dropdown','from_email')->setEmptyText('Please Select')->validateNotNull();
 			$from_email_f->setModel($official_email);
 
 			$type_f = $form->addField('hidden','type');
@@ -97,8 +97,7 @@ class View_EmailCompose extends \View{
 			}
 
 
-			if($form->isSubmitted()){
-				
+			if($form->isSubmitted()){												
 				$official_email_model = $this->add('xHR/Model_OfficialEmail');
 				$official_email_model->load($form['from_email']);
 				$footer = $official_email_model['footer'];
