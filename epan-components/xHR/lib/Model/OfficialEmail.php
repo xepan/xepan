@@ -5,6 +5,7 @@ class Model_OfficialEmail extends \Model_Document{
 	public $table="xhr_official_emails";
 	public $status=array('active','deactive');
 	public $root_document_name = "xHR\OfficialEmail";
+	public $title_field="email_username";
 	public $actions=array(
 			'can_view'=>array(),
 			'allow_add'=>array(),
@@ -47,6 +48,8 @@ class Model_OfficialEmail extends \Model_Document{
 		$this->addField('denied_email_body')->type('text')->display(array('form'=>'RichText'))->group('ar~12')->hint('{{from_name}},{{from_email}}');
 
 		$this->addField('footer')->type('text')->display(array('form'=>'RichText'))->group('e~12~Email Footer');
+		
+		// $this->addExpression('name')->set(function(){});
 		// $this->addHook('beforeDelete',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}

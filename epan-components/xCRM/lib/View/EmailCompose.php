@@ -31,45 +31,62 @@ class View_EmailCompose extends \View{
 
 
 			$this->add('HR');
+			//Official Email 
 			$department = $this->add('xHR/Model_Department')->tryload($_GET['department_id']);
 			$official_email = $department->officialEmails();
 
-			$footer ="";
-			$from_official_email ="";
+			$this->footer = "";
+			$from_official_email = "";
 			$attachments_array = array();
 
+			//Email Form 
 			$form = $this->add('Form_Stacked');
 			$to_f = $form->addField('line','to');
 			$cc_f = $form->addField('line','cc');
 			$bcc_f = $form->addField('line','bcc');
-			$from_email_f = $form->addField('dropdown','from_email');
+			$from_email_f = $form->addField('dropdown','from_email')->setEmptyText('Please Select');
 			$from_email_f->setModel($official_email);
 
 			$type_f = $form->addField('hidden','type');
 			$id_f = $form->addField('hidden','to_id');
 
 			$form->addField('line','subject');
-			$form->addField('RichText','message');
-			$form->addSubmit('Send');	
+			$message_f = $form->addField('RichText','message');
+			//Submit Button
+			$form->addSubmit('Send');
+
+			$official_email_model = $this->add('xHR/Model_OfficialEmail');
+			$footer_view = $form->add('View');
+
+			//Form Field Chage Event
+			$from_email_f->on('change',$footer_view->js()->reload(array('selected_from_email'=>$from_email_f->js()->val())));
+			
+			if(isset($_GET['selected_from_email']) && $_GET['selected_from_email']){
+				$official_email_model->load($_GET['selected_from_email']);
+				$footer_view->setHtml($official_email_model['footer']);
+			}
 
 			if($form->isSubmitted()){
+				$official_email_model = $this->add('xHR/Model_OfficialEmail');
+				$official_email_model->load($_GET['selected_from_email']);
+				$footer = $official_email_model['footer'];
 
 				$subject = $form['subject'];
-				$email_body = $form['message'] . $footer;	
+				$email_body = $form['message'].$footer;
 
-				$email = $this->add('xCRM/Model_Email');
-				$email['from'] = "Employee";
-				$email['from_name'] = $this->api->current_employee['name'];
-				$email['from_id'] = $this->api->current_employee->id;
-				$email['to_id'] = $form['to'];
-				$email['to'] = $form['to'];
-				$email['cc'] = $form['cc'];
-				$email['bcc'] = $form['bcc'];
-				$email['subject'] = $subject;
-				$email['message'] = $email_body;
-				$email['from_email'] = $from_official_email; 
-				$email['to_email'] = $form['to'];
-				$email['direction'] = "sent";
+				// $email = $this->add('xCRM/Model_Email');
+				// $email['from'] = "Employee";
+				// $email['from_name'] = $this->api->current_employee['name'];
+				// $email['from_id'] = $this->api->current_employee->id;
+				// $email['to_id'] = $form['to'];
+				// $email['to'] = $form['to'];
+				// $email['cc'] = $form['cc'];
+				// $email['bcc'] = $form['bcc'];
+				// $email['subject'] = $subject;
+				// $email['message'] = $email_body;
+				// $email['from_email'] = $from_official_email; 
+				// $email['to_email'] = $form['to'];
+				// $email['direction'] = "sent";
 				
 				$to_type = explode('/',$form['type']);
 				$to_type =  explode('_',$to_type[1]);
@@ -77,7 +94,7 @@ class View_EmailCompose extends \View{
 
 				$model = $this->add($form['type'])->load($form['to_id']);
 				$model->createActivity('email',$subject,$email_body,null,null, $to_type, $form['to_id'],$form['to'],true);
-				$email->save();
+				// $email->save();
 				$form->js(null,$this->js()->univ()->closeDialog())->univ()->successMessage('Email Send Successfully')->execute();
 			}
 		 
