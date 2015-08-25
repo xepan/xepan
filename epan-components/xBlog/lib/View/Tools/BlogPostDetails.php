@@ -24,13 +24,13 @@ class View_Tools_BlogPostDetails extends \componentBase\View_Component{
 		
 		if( $this->api->edit_mode == true ){
 			$this->js(true)->_load('xblogContentUpdate1');
-			$str = '<div class="epan-container epan-sortable-component epan-component  ui-sortable component-outline epan-sortable-extra-padding ui-selected xblog-post-detail-content-live-edit" component_type="Container" contenteditable="true"  id="xblog_post_detail_content_live_edit_'.$post_model['id'].'">';
+			$str = '<div class=" xBlog-epan-container epan-container epan-sortable-component epan-component  ui-sortable component-outline epan-sortable-extra-padding ui-selected xblog-post-detail-content-live-edit" component_type="Container" contenteditable="true"  id="xblog_post_detail_content_live_edit_'.$post_model['id'].'">';
 			$str.= $post_description;
 			$str.="</div>";
 									
 			$btn = 'onclick="javascript:$(this).univ().blogPostDetailUpdate(';
 			$btn.= '\'xblog_post_detail_content_live_edit_'.$post_model['id'].'\' , \''.$post_model['id'].'\')"';
-			$str.='<div id="xblog_post_detail_live_edit_update" class="btn btn-danger pull-right btn-block" '.$btn.'>Update</div>';
+			$str.='<div id="xblog_post_detail_live_edit_update" class="btn btn-danger xBlog-post-detail-button  btn-block" '.$btn.'>Update</div>';
 			$post_description = $str;
 		}
 		

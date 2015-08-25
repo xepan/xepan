@@ -1,0 +1,30 @@
+.xblog-blog-details{
+	width: 100%;
+}
+.xblog-blog-detail-name{
+	text-transform: capitalize;
+	font-weight: bold;
+	font-size: 26px;
+}
+.xblog-blog-detail-description{
+	text-align: justify;
+
+}
+.xblog-blog-detail-description p{
+	text-align: justify;
+	padding-bottom: 10px;
+}
+.xblog-blog-details-author{
+	text-transform: capitalize;
+	font-weight: bold;
+	text-align: right;	
+}
+.xblog-blog-details-posted-date{
+	text-align: right;
+	font-weight: bold;
+}
+.xBlog-post-detail-button{
+}
+.xBlog-epan-container{
+	width: 100%;
+}
