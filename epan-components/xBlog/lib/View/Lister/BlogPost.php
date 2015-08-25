@@ -16,11 +16,13 @@ class View_Lister_BlogPost extends \CompleteLister{
 		// throw new \Exception($detail_url, 1);
 		
 		$this->current_row_html['xblog-post-anchor_page']=$detail_url;
+		$this->current_row_html['xblog-post-details']=$detail_url;
 
 		$this->current_row_html['name']=$this->model['name'];
 		$this->current_row_html['post_date']=date('d-m-Y',strtotime($this->model['created_at']));
 		$this->current_row_html['author']=$this->model['author'];
 		$this->current_row_html['description']=$this->model['description'];
+		$this->current_row_html['details']=$this->model['description'];
 		parent::formatRow();
 	} 
 
