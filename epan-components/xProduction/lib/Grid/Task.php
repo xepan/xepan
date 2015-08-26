@@ -2,7 +2,7 @@
 namespace xProduction;
 
 class Grid_Task extends \Grid{
-	public $ipp=10;
+	public $ipp=100;
 	function init(){
 		parent::init();
 		$this->task_vp = $this->add('VirtualPage');
@@ -45,7 +45,7 @@ class Grid_Task extends \Grid{
 
 		$this->addFormatter('name','wrap');
 		$this->addPaginator($this->ipp);
-
+		
 		return $m;
 	}
 
