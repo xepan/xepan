@@ -57,7 +57,7 @@ class CRUD extends View_CRUD{
 
 		if($this->model->hasMethod($action_name.'_page')){
 			$action_page_function = $action_name.'_page';
-			if($this->isEditing($title)){
+			if($this->isEditing($this->api->normalizeName($title))){
 				$this->model->tryLoad($this->id);
 				if($this->model->loaded()){
 					try{
@@ -85,9 +85,9 @@ class CRUD extends View_CRUD{
 					}
 				}
 			}elseif(!$this->isEditing()){
-				$p = $this
-		                ->virtual_page
-		                ->addColumn($title, $title,  array('descr'=>$title,'icon'=>$icon), $this->grid);
+				$this
+	                ->virtual_page
+	                ->addColumn($this->api->normalizeName($title), $title,  array('descr'=>$title,'icon'=>$icon), $this->grid);
 			}
 		}elseif($this->model->hasMethod($action_name)){
 			try{
