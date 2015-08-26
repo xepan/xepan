@@ -104,7 +104,7 @@ class Model_Task extends \Model_Document{
 		$col=$cols->addColumn(6);
 		$form = $col->add('Form_Stacked');
 		$form->addField('dropdown','assign_to_employee')->setEmptyText("Select Employee")->setModel('xHR/Model_Employee');
-		$form->addField('dropdown','assign_to_team')->setEmptyText("Select Team")->setModel('xProduction/Model_Team');
+		// $form->addField('dropdown','assign_to_team')->setEmptyText("Select Team")->setModel('xProduction/Model_Team');
 		$form->addSubmit('Assign');
 			
 		if($form->isSubmitted()){
@@ -123,11 +123,11 @@ class Model_Task extends \Model_Document{
 				return true;
 			}
 
-			if($form['assign_to_team']){
-				$this['team_id']=$form['assign_to_team'];
-				$this->setStatus('assigned',null,'Task :'.$this['subject'],null,null,'Team',$this['team_id']);
-				return true;
-			}
+			// if($form['assign_to_team']){
+			// 	$this['team_id']=$form['assign_to_team'];
+			// 	$this->setStatus('assigned',null,'Task :'.$this['subject'],null,null,'Team',$this['team_id']);
+			// 	return true;
+			// }
 		}
 	}
 			// $form->js(null,$form->js()->univ()->closeDialog())->univ()->successMessage('Assigned Successfully')->reload()->execute();
