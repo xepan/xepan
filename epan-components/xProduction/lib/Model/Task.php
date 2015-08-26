@@ -23,7 +23,7 @@ class Model_Task extends \Model_Document{
 		$this->addField('name');
 		$this->addField('subject');
 		$this->addField('content')->type('text')->display(array('form'=>'RichText'));
-		$this->addField('Priority')->enum(array('Low','Medium','High','Urgent'))->defaultValue('Medium');
+		$this->addField('priority')->enum(array('Low','Medium','High','Urgent'))->defaultValue('Medium');
 
 		$this->addField('is_default_jobcard_task')->type('boolean')->defaultValue(false)->system(true);
 
@@ -118,9 +118,7 @@ class Model_Task extends \Model_Document{
 			}			
 
 			if($form['assign_to_employee']){
-				$this['employee_id']=$form['assign_to_employee'];
-				$this->setStatus('assigned',null,'Task :'.$this['subject'],null,null,'Employee',$this['employee_id']);
-				return true;
+				return $this->assign($form['assign_to_employee']);
 			}
 
 			// if($form['assign_to_team']){
@@ -131,6 +129,15 @@ class Model_Task extends \Model_Document{
 		}
 	}
 			// $form->js(null,$form->js()->univ()->closeDialog())->univ()->successMessage('Assigned Successfully')->reload()->execute();
+	function assign($employee_id){
+
+		if(!$employee_id and $employee_id==NULL)
+			return false;
+
+		$this['employee_id']=$employee_id;
+		$this->setStatus('assigned',null,'Task :'.$this['subject'],null,null,'Employee',$this['employee_id']);
+		return true;
+	}
 
 	function reject_page($page){
 		$form= $page->add('Form_Stacked');

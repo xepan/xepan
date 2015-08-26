@@ -145,11 +145,15 @@ $.atk4(function(){
 	});
 
 	shortcut.add("Ctrl+right", function(event) {
+		$.univ().frameURL('xEpan To Do/ Task','index.php?page=xProduction_page_owner_task_shortmenu');
+
+		return;
+		
 		if(right_shortcut_on) return;
 		right_shortcut_on=true;
 		var inp = $('<input type="text"/>');
 
-		var outer = $('<div>');
+		var outer = $('<div class="xepan-shortmenu-outer-div">');
 		$(outer)
 			.append($('<div><i class="glyphicon glyphicon-leaf"> xEpan </i> TO DO / Note </div>').addClass('label label-warning'))
 			.append(inp)
