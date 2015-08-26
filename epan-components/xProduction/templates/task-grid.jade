@@ -1,0 +1,57 @@
+.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
+    {Pannel}
+    .atk-box-small(class="{$pannel_class}") {$quick_search}
+        .atk-actions {$grid_buttons}
+    {/Pannel}
+
+    div
+        {header}
+        div
+            {cols}{col}
+            div(id="{$sortid}")
+                a(href="javascript:void(0)")
+                    {$descr}
+                    {sort}
+                    span(class="{$sorticon}")
+                    {/}
+            {/}{/}
+        {/}
+        {$subheader}
+
+        div
+            {rows}{row}
+            div(class="{$odd_even}" data-id="{$row_id}")
+                {cols}
+                .atk-row.atk-swatch-yellow
+                    .atk-col-6
+                        p(style="{$tdparam_name}")|Task No.{$name}
+                        p(style="{$tdparam_name}")|Date
+                        p(style="{$tdparam_name}")|Created By
+                        p(style="{$tdparam_name}")|Starting Date
+                    .atk-col-6
+                        p(style="{$tdparam_name}")|Subject: {$subject}
+                        p(style="{$tdparam_name}")|Assign To
+                        p(style="{$tdparam_name}")|Ending Date
+                .atk-xgrid-buttons
+                    {$edit}
+                    {$delete}
+
+                {/}
+            {/}{/}
+            {not_found}
+            div
+                div.atk-padding-large.atk-align-center
+                    span.atk-label.atk-effect-warning
+                        span.icon-attention &nbsp;{$not_found_message}
+            {/}
+
+        {totals}
+        div
+            div(class="totals")
+                {cols}{col}
+                <div {$tdparam}>
+                {$content}
+                </div>
+                {/}{/}
+        {/}
+    {$Paginator}

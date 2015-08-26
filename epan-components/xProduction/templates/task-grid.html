@@ -1,0 +1,48 @@
+
+<div id="{$_name}" class="atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
+  <div class="atk-box-small {$pannel_class}">{$quick_search}
+    <div class="atk-actions">{$grid_buttons}</div>
+  </div>{/Pannel}
+  <div>{header}
+    <div>{cols}{col}
+      <div id="{$sortid}"><a href="javascript:void(0)">
+          {$descr}
+          {sort}<span class="{$sorticon}"></span>{/}</a></div>{/}{/}
+    </div>{/}
+    {$subheader}
+    <div>{rows}{row}
+      <div data-id="{$row_id}" class="{$odd_even}">{cols}
+        <div class="atk-row atk-swatch-yellow">
+          <div class="atk-col-6">
+            <p style="{$tdparam_name}">Task No.{$name}</p>
+            <p style="{$tdparam_name}">Date</p>
+            <p style="{$tdparam_name}">Created By</p>
+            <p style="{$tdparam_name}">Starting Date</p>
+          </div>
+          <div class="atk-col-6">
+            <p style="{$tdparam_name}">Subject: {$subject}</p>
+            <p style="{$tdparam_name}">Assign To</p>
+            <p style="{$tdparam_name}">Ending Date</p>
+          </div>
+        </div>
+        <div class="atk-xgrid-buttons">
+          {$edit}
+          {$delete}
+        </div>{/}
+      </div>{/}{/}
+      {not_found}
+      <div>
+        <div class="atk-padding-large atk-align-center"><span class="atk-label atk-effect-warning"><span class="icon-attention">&nbsp;{$not_found_message}</span></span></div>
+      </div>{/}
+    </div>{totals}
+    <div>
+      <div class="totals">
+        {cols}{col}
+        <div {$tdparam}>
+        {$content}
+        </div>
+        {/}{/}
+      </div>
+    </div>{/}
+  </div>{$Paginator}
+</div>

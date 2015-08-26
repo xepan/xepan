@@ -1,7 +1,7 @@
 <?php
 namespace xProduction;
 
-class Grid_Task extends \Grid{
+class Grid_Task extends \xGrid{
 	public $ipp=100;
 	function init(){
 		parent::init();
@@ -55,4 +55,10 @@ class Grid_Task extends \Grid{
 		$this->current_row_html['name']=$task_v->getHtml();
 		parent::formatRow();		
 	}
+
+	function defaultTemplate(){
+
+		return array('task-grid');
+	}
+
 }

@@ -58,7 +58,7 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 		$right_col->add('View_Info')->set('Assign To Me');
 		$assign_to_me_task = $right_col->add('xProduction/Model_Task_Assigned');
 		$assign_to_me_task->addCondition('employee_id',$this->api->current_employee->id);
-		$left_crud=$right_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false,'allow_del'=>false,'grid_class'=>'xProduction/Grid_Task'));
+		$left_crud=$right_col->add('CRUD',array('grid_class'=>'xProduction/Grid_Task'));
 		$left_crud->setModel($assign_to_me_task);
 		$left_crud->manageAction('start_processing');
 		$left_crud->manageAction('reject');
