@@ -20,7 +20,7 @@
 
         div
             {rows}{row}
-            div(class="{$odd_even}" data-id="{$row_id}")
+            div(class="{$odd_even}" data-id="{$id}")
                 {cols}
                 .atk-row.atk-swatch-yellow
                     .atk-col-6
@@ -35,6 +35,7 @@
                 .atk-xgrid-buttons
                     {$edit}
                     {$delete}
+                    {$start_processing}
 
                 {/}
             {/}{/}

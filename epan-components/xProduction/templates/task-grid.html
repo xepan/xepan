@@ -11,7 +11,7 @@
     </div>{/}
     {$subheader}
     <div>{rows}{row}
-      <div data-id="{$row_id}" class="{$odd_even}">{cols}
+      <div data-id="{$id}" class="{$odd_even}">{cols}
         <div class="atk-row atk-swatch-yellow">
           <div class="atk-col-6">
             <p style="{$tdparam_name}">Task No.{$name}</p>
@@ -28,6 +28,7 @@
         <div class="atk-xgrid-buttons">
           {$edit}
           {$delete}
+          {$start_processing}
         </div>{/}
       </div>{/}{/}
       {not_found}
