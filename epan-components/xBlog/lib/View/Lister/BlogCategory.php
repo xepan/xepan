@@ -14,9 +14,12 @@ class View_Lister_BlogCategory extends \CompleteLister{
 	function formatRow(){
 		$detail_url = $this->app->url(null,array('category_id'=>$this->model->id,'?subpage'=>$this->html_attributes['category-post-page']))->getURL();
 		// throw new \Exception($detail_url, 1);
-		
+		$count=$this->model->ref('xBlog/BlogPost')->count()->getOne();
+
 		$this->current_row_html['xblog-category-anchor_page']=$detail_url;
 		$this->current_row_html['cat_name']=$this->model['name'];
+		$this->current_row_html['cat_post_count']=$count;
+
 		parent::formatRow();
 	} 
 
