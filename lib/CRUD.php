@@ -42,7 +42,7 @@ class CRUD extends View_CRUD{
         return $js;
     }
 
-	function manageAction($action_name,$icon='target'){
+	function manageAction($action_name,$icon='target',$caption=null){
 		if(!$this->model)
 			throw $this->exception('Must be called after setModel');
 
@@ -54,7 +54,8 @@ class CRUD extends View_CRUD{
 		}
 
 		$title = implode(" ", $title);
-
+		if($caption) $title  = $caption;
+		
 		if($this->model->hasMethod($action_name.'_page')){
 			$action_page_function = $action_name.'_page';
 			if($this->isEditing($this->api->normalizeName($title))){
