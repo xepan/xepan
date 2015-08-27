@@ -31,7 +31,7 @@ class Grid_Task extends \xGrid{
 
 	function setModel($task_model){
 		$task_model->getField('name')->caption('Task');
-		$m=parent::setModel($task_model,array('created_by','employee_id','employee','subject','content','created_at','name','Priority','expected_start_date','expected_end_date'));
+		$m=parent::setModel($task_model,array('created_by','employee_id','employee','subject','content','created_at','name','Priority','expected_start_date','expected_end_date','priority'));
 		if($this->hasColumn('employee_id')) $this->removeColumn('employee_id');
 		if($this->hasColumn('team_id'))  $this->removeColumn('team_id');
 		if($this->hasColumn('subject'))  $this->removeColumn('subject');
@@ -50,9 +50,32 @@ class Grid_Task extends \xGrid{
 	}
 
 	function formatRow(){
-		$task_v=$this->api->add('xProduction/View_Task',array('task_vp'=>$this->task_vp));
-		$task_v->setModel($this->model);
-		$this->current_row_html['name']=$task_v->getHtml();
+		// $task_v=$this->api->add('xProduction/View_Task',array('task_vp'=>$this->task_vp));
+		// $task_v->setModel($this->model);
+		// $this->current_row_html['name']=$task_v->getHtml();
+		$this->current_row_html['task_subject'] = '<a href="javascript:void(0)" onclick="'.$this->js()->univ()->frameURL($this->model['subject'],$this->api->url($this->task_vp->getURL(),array('task_id'=>$this->model->id))).'">'.substr(strip_tags($this->model['subject']),0,40).'</a>';
+		
+		$this->template->trySetHtml('created_at',$this->add('xDate')->diff(\Carbon::now(),$this->model['created_at']));
+
+		$icon_html = "";
+		switch ($this->model['priority']) {
+			case 'low':
+				$icon_html = '<i class="atk-effect-warning>'.$this->model['priority'].'</i>';
+				break;
+
+			case 'Medium':
+				$icon_html = '<i class="">'.$this->model['priority'].'</i>';
+				break;
+			case 'High':
+				$icon_html = '<i class="atk-effect-info">'.$this->model['priority'].'</i>';
+				break;
+
+			case 'Urgent':
+				$icon_html = '<i class="atk-effect-danger">'.$this->model['priority'].'</i>';
+				break;
+		}
+				
+		$this->current_row_html['priority_icon']  = $icon_html;
 		parent::formatRow();		
 	}
 

@@ -1,5 +1,6 @@
 
-<div id="{$_name}" class="atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
+<div id="{$_name}" class="atk-table atk-table-zebra atk-table-bordered {$class}">
+  <link rel="stylesheet" type="text/css" href="epan-components/xProduction/templates/css/task.css"/>{Pannel}
   <div class="atk-box-small {$pannel_class}">{$quick_search}
     <div class="atk-actions">{$grid_buttons}</div>
   </div>{/Pannel}
@@ -12,23 +13,36 @@
     {$subheader}
     <div>{rows}{row}
       <div data-id="{$id}" class="{$odd_even}">{cols}
-        <div class="atk-row atk-swatch-yellow">
-          <div class="atk-col-6">
-            <p style="{$tdparam_name}">Task No.{$name}</p>
-            <p style="{$tdparam_name}">Date</p>
-            <p style="{$tdparam_name}">Created By</p>
-            <p style="{$tdparam_name}">Starting Date</p>
+        <div class="xsticky atk-size-micro yellow atk-padding">
+          <div class="atk-row"> 
+            <div class="atk-col-5">
+              <p {$tdparam_name}="{$tdparam_name}">Task No.: {$name}&nbsp;&nbsp;<b>{$priority_icon}</b><br/>{$created_at}&nbsp;{$task_created_att}</p>
+            </div>
+            <div class="atk-col-7 atk-size-kilo">{$task_subject}</div>
           </div>
-          <div class="atk-col-6">
-            <p style="{$tdparam_name}">Subject: {$subject}</p>
-            <p style="{$tdparam_name}">Assign To</p>
-            <p style="{$tdparam_name}">Ending Date</p>
+          <div class="atk-row">
+            <div class="atk-col-6">
+              <p>Created By.:- <b>{$created_by}</b></p>
+            </div>
+            <div class="atk-col-6">
+              <p>Assign to.:- <b>{$employee}</b></p>
+            </div>
+            <div class="atk-col-6">
+              <p>Starting Date.:- {$expected_start_date}</p>
+            </div>
+            <div class="atk-col-6">
+              <p>Ending Date.:- {$expected_end_date}</p>
+            </div>
           </div>
-        </div>
-        <div class="atk-xgrid-buttons">
-          {$edit}
-          {$delete}
-          {$start_processing}
+          <div class="atk-buttonset">
+            {$approve}
+            {$start_processing}
+            {$assign}
+            {$mark_processed}
+            {$activities}
+            {$cancel}
+            {$reject}
+          </div>
         </div>{/}
       </div>{/}{/}
       {not_found}

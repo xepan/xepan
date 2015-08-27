@@ -14,23 +14,24 @@ class View_Task extends \View{
 		$this->template->trySetHtml('created_at',$this->add('xDate')->diff(\Carbon::now(),$model['created_at']));
 
 		$icon_html = "";
-		switch ($model['Priority']) {
+		switch ($model['priority']) {
 			case 'low':
-				$icon_html = '<i class="atk-effect-warning>'.$model['Priority'].'</i>';
+				$icon_html = '<i class="atk-effect-warning>'.$model['priority'].'</i>';
 				break;
 
 			case 'Medium':
-				$icon_html = '<i class="">'.$model['Priority'].'</i>';
+				$icon_html = '<i class="">'.$model['priority'].'</i>';
 				break;
 			case 'High':
-				$icon_html = '<i class="atk-effect-info">'.$model['Priority'].'</i>';
+				$icon_html = '<i class="atk-effect-info">'.$model['priority'].'</i>';
 				break;
 
 			case 'Urgent':
-				$icon_html = '<i class="atk-effect-danger">'.$model['Priority'].'</i>';
+				$icon_html = '<i class="atk-effect-danger">'.$model['priority'].'</i>';
 				break;
-		}		
-		$this->template->trySetHtml('priority',$icon_html);	
+		}
+				
+		$this->template->trySetHtml('priority_icon',$icon_html);
 
 		$this->template->trySetHtml('task_subject','<a href="javascript:void(0)" onclick="'.$this->js()->univ()->frameURL($model['subject'],$this->api->url($this->task_vp->getURL(),array('task_id'=>$model->id))).'">'.substr(strip_tags($model['subject']),0,40).'</a>');
 		parent::setModel($model);
