@@ -40,6 +40,8 @@ class page_base_owner extends Page {
 	function recursiveRender(){
 		$this->api->xpr->markPoint("ownermain rec-render start");
 		
+		$this->add('Controller_NotificationSystem')->setUpMain();
+
 		$this->shorcut_menus = array();
 		
 		// Looks like you are called from update page

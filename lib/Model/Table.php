@@ -5,6 +5,10 @@ class Model_Table extends SQL_Model {
 	function init(){
 		parent::init();
 
+		$this->addHook('afterLoad',function($obj){
+			$obj->data_original = $obj->data;
+		});
+
 		$this->addHook('afterSave',function($obj){
 			if($obj->recall('CachedData',false)) $obj->forget("CachedData");
 		});
