@@ -148,6 +148,7 @@ class VirtualPage extends AbstractController
                     // exception occured possibly due to a nested page. We
                     // are already executing from post-init, so
                     // it's fine to ignore it.
+                    throw $e;
                 }
 
                 //Imants: most likely forgetting is not needed, because we stop execution anyway
@@ -231,7 +232,7 @@ class VirtualPage extends AbstractController
         $t=$this->type;
         $grid->js('click')->_selector('#'.$grid->name.' .pb_'.$name)->univ()
             ->$t($title, array($this->getURL($name),
-                $this->name.'_id'=>$grid->js()->_selectorThis()->closest('tr')->attr('data-id')
+                $this->name.'_id'=>$grid->js()->_selectorThis()->closest('[data-id]')->attr('data-id')
             ), $this->frame_options);
         return $this;
     }

@@ -1,0 +1,69 @@
+.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
+    link(rel='stylesheet', type='text/css', href='epan-components/xProduction/templates/css/task.css')
+    {Pannel}
+    .atk-box-small(class="{$pannel_class}") {$quick_search}
+        .atk-actions {$grid_buttons}
+    {/Pannel}
+    div
+        {header}
+        div
+            {cols}{col}
+            div(id="{$sortid}")
+                a(href="javascript:void(0)")
+                    {$descr}
+                    {sort}
+                    span(class="{$sorticon}")
+                    {/}
+            {/}{/}
+        {/}
+        {$subheader}
+        div
+            {rows}{row}
+            div(class="{$odd_even}" data-id="{$id}")
+                {cols}
+                .xsticky.atk-size-micro.yellow.atk-padding
+                    .atk-row 
+                        .atk-col-5
+                            p({$tdparam_name})|Task No.: {$name}&nbsp;&nbsp;
+                                b {$priority_icon}
+                                br
+                                {$created_at}&nbsp;{$task_created_att}
+                        .atk-col-7.atk-size-kilo
+                            {$task_subject}
+                    .atk-row
+                        .atk-col-6
+                            p|Created By.:- <b>{$created_by}</b>
+                        .atk-col-6
+                            p|Assign to.:- <b>{$employee}</b>
+                        .atk-col-6
+                            p|Starting Date.:- {$expected_start_date}
+                        .atk-col-6
+                            p|Ending Date.:- {$expected_end_date}
+                    .atk-buttonset
+                        {$approve}
+                        {$start_processing}
+                        {$assign}
+                        {$mark_processed}
+                        {$activities}
+                        {$cancel}
+                        {$reject}
+
+                {/}
+            {/}{/}
+            {not_found}
+            div
+                div.atk-padding-large.atk-align-center
+                    span.atk-label.atk-effect-warning
+                        span.icon-attention &nbsp;{$not_found_message}
+            {/}
+
+        {totals}
+        div
+            div(class="totals")
+                {cols}{col}
+                <div {$tdparam}>
+                {$content}
+                </div>
+                {/}{/}
+        {/}
+    {$Paginator}

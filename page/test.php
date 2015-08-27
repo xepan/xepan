@@ -4,7 +4,16 @@
 class page_test extends Page {
 
 	function page_index(){
-		$this->add('Button')->set('clickme')->js('click')->univ()->successMessage("SDSDS");
+		$this->js(true)
+			->_load('pnotify.custom.min')
+			->_load('xepan.pnotify')
+			->_css('pnotify.custom.min')
+			->_library('PNotify.desktop')->permission();
+
+		$this->add('Button')
+			->set('Notify')
+			->js('click')->univ()->notify("Heading","this is a message for notification",'success',true,$this->js()->alert('Clicked')->_enclose());
+
 	}
 
 	function page_cst_organization_name_update(){
@@ -131,6 +140,8 @@ function page_owner_layout(){
 
 		if($_GET['title'])
 			$this->app->layout->template->trySetHTML('page_title',"<i class='".$_GET['icon']."'></i> " . $_GET['title']);
+		else
+			$this->app->layout->template->tryDel('page_title');
 	}
 
 	function page_layout(){

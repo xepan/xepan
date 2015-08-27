@@ -1,38 +1,28 @@
 
-<div class="atk-row">
-  <div class="atk-col-1">
-    <div class="atk-box atk-align-center"><a href="#">All <span class="atk-effect-success">[540]</span> <span class="atk-effect-danger">[230]</span></a><br/>
-      <div class="atk-size-micro atk-text-dimmed">Reset</div>
+<div class="atk-cells">
+  <h2><i class="icon-users"></i> Users</h2>
+</div>
+<div class="atk-row atk-push">
+  <div class="atk-col-3">
+    <div class="atk-box atk-align-center"><a href="#">All <span class="atk-effect-success">[{total_active}540{/}]</span><span class="atk-effect-danger">[{total_inactive}230{/}]</span></a><br/>
+      <div class="atk-size-micro atk-text-dimmed">{$total_count}</div>
     </div>
   </div>
   <div class="atk-col-3">
-    <div class="atk-box atk-align-center"><a href="#">Customers <span class="atk-effect-success">[480]</span> <span class="atk-effect-danger">[48]</span></a><br/>
+    <div class="atk-box atk-align-center"><a href="#">Customers <span class="atk-effect-success">[{$total_active_customer}]</span> <span class="atk-effect-danger">[{$total_inactive_customer}]</span> <span class="atk-size-micro atk-text-dimmed">{$total_customer}</span></a><br/>
       <div class="atk-size-micro atk-text-dimmed">Customers/Freelancers and all Frontend Users</div>
     </div>
   </div>
   <div class="atk-col-3">
-    <div class="atk-box atk-align-center"> <a href="#">Staff <span class="atk-effect-success">[40]</span> <span class="atk-effect-danger">[10]</span></a><br/>
+    <div class="atk-box atk-align-center"> <a href="#">Staff <span class="atk-effect-success">[{$total_active_staff}]</span> <span class="atk-effect-danger">[{$total_inactive_staff}]</span> <span class="atk-size-micro atk-text-dimmed">{$total_staff}</span></a><br/>
       <div class="atk-size-micro atk-text-dimmed">Backend Users excluding Super Users</div>
     </div>
   </div>
   <div class="atk-col-3">
-    <div class="atk-box atk-align-center"> <a href="#">Super Users [1]</a><br/>
+    <div class="atk-box atk-align-center"> <a href="#">Super Users <span class="atk-effect-success">[{$total_active_superuser}]</span> <span class="atk-effect-danger">[{$total_inactive_superuser}]</span> <span class="atk-size-micro atk-text-dimmed">{$total_superuser}</span></a><br/>
       <div class="atk-size-micro atk-text-dimmed">All Privillages as default</div>
     </div>
   </div>
-  <div class="atk-col-2">
-    <div class="atk-row">
-      <div class="atk-col-12">
-        <div class="atk-box-xsmall atk-align-center atk-swatch-gray"><a href="#">All </a></div>
-      </div>
-    </div>
-    <div class="atk-row">
-      <div class="atk-col-6">
-        <div class="atk-box-xsmall atk-align-center atk-swatch-gray"><a href="#">Active </a></div>
-      </div>
-      <div class="atk-col-6">
-        <div class="atk-box-xsmall atk-align-center atk-swatch-gray"><a href="#">In Active </a></div>
-      </div>
-    </div>
-  </div>
-</div>{$Content}
+</div>
+<div class="atk-clear-fix"></div>
+<div class="atk-push">{$Content}</div>

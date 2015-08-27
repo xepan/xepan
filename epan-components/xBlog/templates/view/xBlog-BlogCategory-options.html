@@ -1,0 +1,84 @@
+<div id='{$_name}' class='epan-component-options' component_type="{$component_type}">
+	<div class="panel-group" id="accordion">
+		<div class="xepan-collasp-header component-header">
+		 	<div class="panel-heading">
+		      	<h3 class="panel-title">
+		        	<a data-toggle="collapse" data-parent="#accordion"	 href="#collapse-xblog-category">
+						{$component_type_name}
+		        	</a> 
+		      	</h3>
+		   	</div>
+		 	<div id="collapse-xblog-category" class="panel-collapse collapse">
+		      	<div class="panel-body">
+		      		<div class='xepan-collasp-header'>
+						<table class="table table-condensed table-hover">
+						<!-- DEfine options -->
+						<tr>
+								<td>
+									Edit CSS
+								</td>
+								<td colspan="2">
+									<div id="xblog-category-editcss" class="btn btn-default btn-xs">Edit css</div>
+								</td>
+							</tr>
+						<tr>
+							<td>Blog Detail Page</td>
+							<td>
+								<input id='category-post-page' data-attr="category-post-page" Placeholder="Blog Category Detail Page" class="xblog-general-bind"/>
+							</td>	
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><br>
+
+	<div><button id='xblogServerSide'>Blog Pages</button></div>
+
+</div>
+<script type="text/javascript">
+// ========== OPTION TO COMPONENT EFFECT ==============
+// 
+// $(your_option_html_element).click(function(event,ui){
+// 		$(current_selected_component).what to do ???
+// }) 
+$('#xblogServerSide').click(function(event){
+	$('#epan-quick-component-options').toggle('slideup');
+	$.univ.frameURL('xBlog Post ','index.php?page=xBlog_page_owner_main')
+});
+
+$('#xblog-category-editcss').click(function(event){
+	$(this).univ().frameURL('Edit CSS ( xBlog Category  Display Layout )','index.php?page=xBlog_page_blogcategorylayoutcss&cut_page=1&blog_category_layout=xblog-category-layout');
+});
+
+$('.xblog-general-bind').change(function(event){
+	$(current_selected_component).attr($(this).attr('data-attr'),$(this).val());
+	//calling hide other option
+	if($(this).attr('hide-class') != undefined){
+		$('.'+$(this).attr('hide-class')).hide();
+		if($(this).val() > 0)
+			$('.'+$(this).attr('hide-class')).show();
+	}
+	$(current_selected_component).children('div:first').trigger('reload');
+});
+
+var {$component_type}_options = {
+	show: function (){
+		// ===== THIS CODE RUNS EVERY TIME YOU DOUBLE CLICK YOUR COMPONENT
+		// TO TAKE VALUES FROM COMPONENT AND FILL OPTIONS
+		// 
+		// $(your_option_html_element).text($(current_selected_component).css('border'));
+		//TODO FOR CART LAYOUT SELECTION OPTION IF 2 THEN SHOW ITES OPTIONS 
+		$('.xblog-general-bind').each(function(index,value){
+			$(this).val($(current_selected_component).attr($(this).attr('data-attr')));
+			if($(this).attr('hide-class') != undefined){
+				$('.'+$(this).attr('hide-class')).hide();
+				if($(this).val() > 0){
+					$('.'+$(this).attr('hide-class')).show();
+				}
+			}
+		});
+	}
+}
+</script>

@@ -1,0 +1,18 @@
+<div id="{$_name}" class="{$class} xblog-blog" style="" >
+	<link rel="stylesheet" type="text/css" href="epan-components/xBlog/templates/css/xblog-category-layout.css">
+	{$Content}
+	<ul class="list-group">
+	{rows}
+	{row}
+		<li class="xblog-category-li list-group-item">
+			<span class="badge"  title="Total Emails">{$cat_post_count}</span>
+			<a href="{$xblog-category-anchor_page}"class="xblog-category-name">
+				{$cat_name}
+			</a>
+		</li>	
+	{/row}
+	{/rows}
+		
+	</ul>
+
+</div>

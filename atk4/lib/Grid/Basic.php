@@ -402,7 +402,7 @@ class Grid_Basic extends CompleteLister
 
             // header row
             $header_col
-                ->set('descr', $column['descr'])
+                ->setHTML('descr', $column['descr'])
                 ->trySet('type', $column['type']);
 
             // sorting

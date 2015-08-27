@@ -5,6 +5,7 @@ class Model_OfficialEmail extends \Model_Document{
 	public $table="xhr_official_emails";
 	public $status=array('active','deactive');
 	public $root_document_name = "xHR\OfficialEmail";
+	public $title_field="email_username";
 	public $actions=array(
 			'can_view'=>array(),
 			'allow_add'=>array(),
@@ -33,11 +34,20 @@ class Model_OfficialEmail extends \Model_Document{
 		$this->addField('email_username')->group('ecs~3');
 		$this->addField('email_password')->type('password')->group('ecs~3');
 
+		$this->addField('from_email')->group('from~2~Email From Sender Settings');
+		$this->addField('from_name')->group('from~2');
+		$this->addField('sender_email')->group('from~2');
+		$this->addField('sender_name')->group('from~2');
+		$this->addField('email_reply_to')->group('from~2');
+		$this->addField('return_path')->group('from~2');
+
 		$this->addField('imap_email_host')->group('pop~3~<i class="glyphicon glyphicon-link "></i>IMAP/POP3 Settings')->caption('Host');
 		$this->addField('imap_email_port')->group('pop~1')->caption('Port');
 		$this->addField('imap_email_username')->group('pop~1')->caption('Username');
 		$this->addField('imap_email_password')->type('password')->group('pop~1')->caption('Password');
 		$this->addField('imap_flags')->mandatory(true)->defaultValue('/imap/ssl/novalidate-cert')->group('pop~6')->caption('Flags');
+
+
 
 		$this->addField('auto_reply')->type('boolean')->group('ar~4~Auto Reply');
 		$this->addField('email_subject')->group('ar~12')->hint('{{customer_name}}');
@@ -47,6 +57,8 @@ class Model_OfficialEmail extends \Model_Document{
 		$this->addField('denied_email_body')->type('text')->display(array('form'=>'RichText'))->group('ar~12')->hint('{{from_name}},{{from_email}}');
 
 		$this->addField('footer')->type('text')->display(array('form'=>'RichText'))->group('e~12~Email Footer');
+		
+		// $this->addExpression('name')->set(function(){});
 		// $this->addHook('beforeDelete',$this);
 		//$this->add('dynamic_model/Controller_AutoCreator');
 	}

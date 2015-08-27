@@ -7,10 +7,10 @@ class page_xHR_page_owner_employees extends page_xProduction_page_owner_main{
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-users"></i> Employee Management <small> Manage companies employees </small>');
 
 		$emp_model=$this->add('xHR/Model_Employee');
-		$emp_crud = $this->add('CRUD',array('grid_class'=>'xHR/Grid_Employee'));
-		$emp_crud->setModel($emp_model,array('user_id','user','department_id','department','post_id','post',
-											 'name','dob','gender',
-											 'empolyee_image','is_active','name_with_designation',
+		$emp_crud = $this->add('CRUD',array('grid_class'=>'xHR/Grid_Employee','allow_edit'=>false));
+		$emp_crud->setModel($emp_model,array('empolyee_image','name','post_id','department_id','user_id','department','post'
+											 ,'user','dob','gender',
+											 'is_active','name_with_designation',
 											 'status','doj','company_email_id',
 											 'offer_date','confirmation_date',
 											 'contract_end_date','date_of_retirement',

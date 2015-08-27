@@ -13,7 +13,6 @@ class View_OrderDetail extends \CompleteLister{
 	}
 
 	function formatRow(){
-
 		$this->current_row_html['unit']=$this->model['unit'];
 		$this->current_row_html['sno']=$this->sno;
 			$this->current_row_html['sub_total']=$this->model['qty']*$this->model['rate'];
@@ -35,6 +34,7 @@ class View_OrderDetail extends \CompleteLister{
 		parent::setModel($model);
 
 		if($this->show_price){
+			$this->template->setHtml('currency',$this->model->order()->currency());	
 			$order= $model->ref('order_id');
 			// $order= $model->ref('priority_id');
 			// $this->template->set('gross_amount',$order['amount']);

@@ -28,7 +28,7 @@ class Model_NewsLetterTemplate extends \Model_Document{
 		$f->icon='fa fa-adn~red';
 		$this->addField('description')->type('text');
 		$this->addField('content')->type('text')->display(array('form'=>'RichText'))->mandatory(true);
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 }

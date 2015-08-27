@@ -14,7 +14,7 @@ class page_xProduction_page_owner_task_cancelled extends page_xProduction_page_o
 		
 		$crud=$left_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false,'grid_class'=>'xProduction/Grid_Task'));
 		$crud->setModel($mytask);
-		$crud->manageAction('activities');
+		$crud->manageAction('activities','comment atk-swatch-blue');
 		
 		// $crud->add('xHR/Controller_Acl');
 
@@ -23,7 +23,7 @@ class page_xProduction_page_owner_task_cancelled extends page_xProduction_page_o
 		$emptask->addCondition('created_by_id',$this->api->current_employee->id);
 		$crud=$right_col->add('CRUD',array('allow_add'=>false,'allow_edit'=>false,'grid_class'=>'xProduction/Grid_Task'));
 		$crud->setModel($emptask);
-		$crud->manageAction('activities');
+		$crud->manageAction('activities','comment atk-swatch-blue');
 		// $crud->add('xHR/Controller_Acl');
 		
 	}

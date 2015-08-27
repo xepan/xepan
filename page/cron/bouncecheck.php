@@ -112,7 +112,7 @@ class page_cron_bouncecheck extends Page {
 						}
 						$obj[$f] = implode(", ", $emails_count);
 						// echo $obj[$f]. " changed <br/>";
-						$obj->save();
+						$obj->saveAndUnload();
 					}else{
 						// echo $obj[$f]. " deactivated <br/>";
 						$obj->deactivate();

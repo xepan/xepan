@@ -7,6 +7,11 @@ class View_Email extends \View{
 	function init(){
 		parent::init();
 		
+		if($this->api->stickyGET('associate_filter'))
+			$box = $this->add('View_Box')->set('Filter');
+
+		$this->addClass('xepan-xmail-email-view');
+		
 		$tab = $this->add('Tabs');
 		$associate_tab = $tab->addTab('Associate')->addClass('atk-box');
 		$other_tab = $tab->addTab('Other')->addClass('atk-box');
@@ -19,7 +24,7 @@ class View_Email extends \View{
 		}
 
 		//SHOW ONLY CUSTOMER EMAILS
-		if($_GET['customer_id']){
+		if($this->api->stickyGET('customer_id')){
 			$emails->addCondition(
 				$emails->dsql()->orExpr()
 							->where(
@@ -36,7 +41,7 @@ class View_Email extends \View{
 
 		}
 
-		if($_GET['supplier_id']){
+		if($this->api->stickyGET('supplier_id')){
 
 			$emails->addCondition(
 				$emails->dsql()->orExpr()
@@ -53,7 +58,7 @@ class View_Email extends \View{
 					);			
 		}
 
-		if($_GET['affiliate_id']){
+		if($this->api->stickyGET('affiliate_id')){
 
 			$emails->addCondition(
 				$emails->dsql()->orExpr()
@@ -71,15 +76,14 @@ class View_Email extends \View{
 		}
 
 		$mail_crud=$associate_tab->add('CRUD',array('grid_class'=>'xCRM/Grid_Email'));
-		$mail_crud->setModel($emails,array(),array('subject','to_email','from_email','message','from','id','from_id','direction','task_id','task_status','from_name','cc','bcc','to','to_id','from','from_id'));
+		$mail_crud->setModel($emails,array(),array('subject','to_email','from_email','message','from','id','from_id','direction','task_id','task_status','from_name','cc','bcc','to','to_id','from','from_id','from_detail','read_by_employee'));
 		$mail_crud->add('xHR/Controller_Acl');
 
 
 		$other_mail = $this->add('xCRM/Model_OtherEmail');
 		$other_mail = $other_mail->loadDepartmentEmails();
 		$other_mail_crud = $other_tab->add('CRUD',array('grid_class'=>'xCRM/Grid_Email'));
-		$other_mail_crud->setModel($other_mail,array(),array('subject','to_email','from_email','message','from','id','from_id','direction','task_id','task_status','from_name','cc','bcc','to','to_id','from','from_id'));
-
+		$other_mail_crud->setModel($other_mail,array(),array('subject','to_email','from_email','message','from','id','from_id','direction','task_id','task_status','from_name','cc','bcc','to','to_id','from','from_id','read_by_employee'));
 		$other_mail_crud->add('xHR/Controller_Acl');
 	}
 }

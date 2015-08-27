@@ -1,0 +1,63 @@
+
+<div id="{$_name}" class="atk-table atk-table-zebra atk-table-bordered {$class}">
+  <link rel="stylesheet" type="text/css" href="epan-components/xProduction/templates/css/task.css"/>{Pannel}
+  <div class="atk-box-small {$pannel_class}">{$quick_search}
+    <div class="atk-actions">{$grid_buttons}</div>
+  </div>{/Pannel}
+  <div>{header}
+    <div>{cols}{col}
+      <div id="{$sortid}"><a href="javascript:void(0)">
+          {$descr}
+          {sort}<span class="{$sorticon}"></span>{/}</a></div>{/}{/}
+    </div>{/}
+    {$subheader}
+    <div>{rows}{row}
+      <div data-id="{$id}" class="{$odd_even}">{cols}
+        <div class="xsticky atk-size-micro yellow atk-padding">
+          <div class="atk-row"> 
+            <div class="atk-col-5">
+              <p {$tdparam_name}="{$tdparam_name}">Task No.: {$name}&nbsp;&nbsp;<b>{$priority_icon}</b><br/>{$created_at}&nbsp;{$task_created_att}</p>
+            </div>
+            <div class="atk-col-7 atk-size-kilo">{$task_subject}</div>
+          </div>
+          <div class="atk-row">
+            <div class="atk-col-6">
+              <p>Created By.:- <b>{$created_by}</b></p>
+            </div>
+            <div class="atk-col-6">
+              <p>Assign to.:- <b>{$employee}</b></p>
+            </div>
+            <div class="atk-col-6">
+              <p>Starting Date.:- {$expected_start_date}</p>
+            </div>
+            <div class="atk-col-6">
+              <p>Ending Date.:- {$expected_end_date}</p>
+            </div>
+          </div>
+          <div class="atk-buttonset">
+            {$approve}
+            {$start_processing}
+            {$assign}
+            {$mark_processed}
+            {$activities}
+            {$cancel}
+            {$reject}
+          </div>
+        </div>{/}
+      </div>{/}{/}
+      {not_found}
+      <div>
+        <div class="atk-padding-large atk-align-center"><span class="atk-label atk-effect-warning"><span class="icon-attention">&nbsp;{$not_found_message}</span></span></div>
+      </div>{/}
+    </div>{totals}
+    <div>
+      <div class="totals">
+        {cols}{col}
+        <div {$tdparam}>
+        {$content}
+        </div>
+        {/}{/}
+      </div>
+    </div>{/}
+  </div>{$Paginator}
+</div>

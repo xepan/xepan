@@ -124,6 +124,9 @@ class Model_Supplier extends \Model_Document{
 	function updateEmail($email){
 		if(!$this->loaded()) return false;
 		
+		if(strlen(strstr($this['email'],$email)) > 0)
+			return false;
+	
 		$this['email'] = $this['email'].', '.$email;
 		$this->save();
 	}

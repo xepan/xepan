@@ -42,35 +42,34 @@ class CRUD extends View_CRUD{
         return $js;
     }
 
-	function manageAction($action_name,$icon='target'){
-		
+	function manageAction($action_name,$icon='target',$caption=null){
 		if(!$this->model)
 			throw $this->exception('Must be called after setModel');
 
+		$title = explode("_", $action_name);
+		for($i=0;$i<count($title);$i++){
+			if(in_array($title[$i],array('manage','see'))){
+				unset($title[$i]);
+			}
+		}
+
+		$title = implode(" ", $title);
+		if($caption) $title  = $caption;
+		
 		if($this->model->hasMethod($action_name.'_page')){
 			$action_page_function = $action_name.'_page';
-			
-			$title = explode("_", $action_name);
-			for($i=0;$i<count($title);$i++){
-				if(in_array($title[$i],array('manage','see'))){
-					unset($title[$i]);
-				}
-			}
-
-			$title = implode(" ", $title);
-
-			$p = $this->addFrame(ucwords($title),array('icon'=>$icon));
-			if($p and $this->isEditing('fr_'.$this->api->normalizeName(ucwords($title)))){
+			if($this->isEditing($this->api->normalizeName($title))){
 				$this->model->tryLoad($this->id);
 				if($this->model->loaded()){
 					try{
+						$p=$this->virtual_page->getPage();
 						$this->api->db->beginTransaction();
 							$function_run = $this->model->$action_page_function($p);
 						$this->api->db->commit();
 						if($function_run ){
 							$js=array();
 							$js[] = $p->js()->univ()->closeDialog();
-							$js[] = $this->js()->reload(array('cut_object'=>'',$p->short_name=>'',$p->short_name.'_id'=>''));
+							$js[] = $this->js()->reload([$p->short_name=>'',$p->short_name.'_id'=>'']);
 							$this->js(null,$js)->execute();
 						}
 					}
@@ -86,6 +85,10 @@ class CRUD extends View_CRUD{
 						}
 					}
 				}
+			}elseif(!$this->isEditing()){
+				$this
+	                ->virtual_page
+	                ->addColumn($this->api->normalizeName($title), $title,  array('descr'=>$title,'icon'=>$icon), $this->grid);
 			}
 		}elseif($this->model->hasMethod($action_name)){
 			try{

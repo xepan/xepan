@@ -1,5 +1,8 @@
 var shortcut_menu_pages = [];
 var opened_pages = [];
+var right_shortcut_on=false;
+var up_shortcut_on=false;
+var down_shortcut_on=false;
 
 $.each({
 	setUpShortMenus: function(menus,called_from){
@@ -12,6 +15,10 @@ $.each({
 $.atk4(function(){
 
 	shortcut.add("Ctrl+up", function(event) {
+		
+		if(up_shortcut_on) return;
+		up_shortcut_on=true;
+
 		var fuse = new Fuse(shortcut_menu_pages, {
 			caseSensitive: false,
 			shouldSort: true,
@@ -34,6 +41,9 @@ $.atk4(function(){
 			modal: true,
 			open: function (event,ui){
 				$(inp).focus();
+			},
+			close : function (event,ui){
+				up_shortcut_on = false;
 			}
 		});
 
@@ -74,6 +84,9 @@ $.atk4(function(){
 
 	shortcut.add("Ctrl+down", function(event) {
 
+		if(down_shortcut_on) return;
+		down_shortcut_on=true;
+
 		var inp = $('<input type="text"/>');
 
 		var outer = $('<div>');
@@ -87,6 +100,9 @@ $.atk4(function(){
 			modal: true,
 			open: function (event,ui){
 				$(inp).focus();
+			},
+			close: function(event,ui){
+				down_shortcut_on=false;
 			}
 		});
 
@@ -129,10 +145,15 @@ $.atk4(function(){
 	});
 
 	shortcut.add("Ctrl+right", function(event) {
+		$.univ().frameURL('xEpan To Do/ Task','index.php?page=xProduction_page_owner_task_shortmenu');
 
+		return;
+		
+		if(right_shortcut_on) return;
+		right_shortcut_on=true;
 		var inp = $('<input type="text"/>');
 
-		var outer = $('<div>');
+		var outer = $('<div class="xepan-shortmenu-outer-div">');
 		$(outer)
 			.append($('<div><i class="glyphicon glyphicon-leaf"> xEpan </i> TO DO / Note </div>').addClass('label label-warning'))
 			.append(inp)
@@ -143,6 +164,9 @@ $.atk4(function(){
 			modal: true,
 			open: function (event,ui){
 				$(inp).focus();
+			},
+			close : function(event,ui){
+				right_shortcut_on =false;
 			}
 		});
 

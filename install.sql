@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 12, 2015 at 02:15 PM
+-- Generation Time: Aug 24, 2015 at 01:14 PM
 -- Server version: 5.5.43
 -- PHP Version: 5.5.26-1+deb.sury.org~precise+1
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `erp`
+-- Database: `xepan-blog`
 --
 
 -- --------------------------------------------------------
@@ -573,7 +573,7 @@ CREATE TABLE IF NOT EXISTS `epan_components_marketplace` (
   `initialize_and_clone_from_git` tinyint(1) DEFAULT NULL,
   `category` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=86 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=87 ;
 
 --
 -- Dumping data for table `epan_components_marketplace`
@@ -597,7 +597,8 @@ INSERT INTO `epan_components_marketplace` (`id`, `name`, `allowed_children`, `sp
 (82, 'Accounts Mangement Application', '0', '0', 'xAccount', 'application', 0, '0', 1, 0, 0, NULL, 0, 'https://github.com/xepan/xAccount.git', 1, NULL),
 (83, 'Stock Mangement Application', '0', '0', 'xStore', 'application', 0, '0', 1, 0, 0, NULL, 0, 'https://github.com/xepan/xStore.git', 1, NULL),
 (84, 'Purchase Management Application', '0', '0', 'xPurchase', 'application', 0, '0', 1, 1, 0, NULL, 0, 'https://github.com/xepan/xPurchase.git', 1, NULL),
-(85, 'Dispatch Management Application', '0', '0', 'xDispatch', 'application', 0, '0', 1, 0, 0, NULL, 0, 'https://github.com/xepan/xDispatch.git', 1, NULL);
+(85, 'Dispatch Management Application', '0', '0', 'xDispatch', 'application', 0, '0', 1, 0, 0, NULL, 0, 'https://github.com/xepan/xDispatch.git', 1, NULL),
+(86, 'Blog', NULL, NULL, 'xBlog', 'application', 0, NULL, 1, 1, 1, 0, 0, '', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -662,7 +663,7 @@ CREATE TABLE IF NOT EXISTS `epan_components_tools` (
   `order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_component_id` (`component_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1166 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1171 ;
 
 --
 -- Dumping data for table `epan_components_tools`
@@ -703,7 +704,11 @@ INSERT INTO `epan_components_tools` (`id`, `component_id`, `name`, `is_serversid
 (1162, 77, 'ItemDetail', 1, 0, 0, '', 3),
 (1163, 77, 'Designer', 1, 0, 0, 'Designer', 9),
 (1164, 77, 'ItemImages', 1, 0, 0, 'Item Images', 0),
-(1165, 77, 'Blog', 1, 0, 0, 'Blog', 0);
+(1165, 77, 'Blog', 1, 0, 0, 'Blog', 0),
+(1167, 86, 'BlogCategory', 1, 0, 0, 'Blog Category', 0),
+(1168, 86, 'BlogPost', 1, 0, 0, 'Blog Post', 0),
+(1169, 86, 'BlogPostDetails', 1, 0, 0, 'Blog Post Details', 0),
+(1170, 86, 'BlogSearch', 1, 0, 0, 'Blog Search', 0);
 
 -- --------------------------------------------------------
 
@@ -749,7 +754,7 @@ CREATE TABLE IF NOT EXISTS `epan_installed_components` (
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_component_id` (`component_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=41 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=42 ;
 
 --
 -- Dumping data for table `epan_installed_components`
@@ -772,7 +777,8 @@ INSERT INTO `epan_installed_components` (`id`, `epan_id`, `component_id`, `enabl
 (37, 1, 82, 1, NULL, '2015-02-16'),
 (38, 1, 83, 1, NULL, '2015-02-16'),
 (39, 1, 84, 1, NULL, '2015-02-16'),
-(40, 1, 85, 1, NULL, '2015-03-04');
+(40, 1, 85, 1, NULL, '2015-03-04'),
+(41, 1, 86, 1, NULL, '2015-08-24');
 
 -- --------------------------------------------------------
 
@@ -821,7 +827,7 @@ CREATE TABLE IF NOT EXISTS `epan_page` (
 --
 
 INSERT INTO `epan_page` (`id`, `parent_page_id`, `name`, `menu_caption`, `epan_id`, `is_template`, `title`, `description`, `keywords`, `content`, `body_attributes`, `created_on`, `updated_on`, `access_level`, `template_id`) VALUES
-(1, NULL, 'home', 'Home', 1, 0, 'XTPL :: PHP development, Web, Online, Android, development company, xepan, cms developer, drag and drop website builder developer, ERP developer, Developers tools developer, Artificial Intelligent application/software developer.', 'Xavoc is a world class company providing cutting edge technology to next generation, Xavoc works in developing new tools for web and mobile like Artificial Intelligent website builder or cms like xEpan. Developer of xCIDeveloper, A tool to let you write Joomla components in CodeIgniter. Developer of xJDataMapper, a ruby style ORM for JAVA. Contributor in spreading agiletoolkit, a great PHP framework. In Short, Not just another IT Company in town.', 'PHP development, Web, Online, Android, development company, xepan, cms developer, drag and drop website builder developer, ERP developer, Developers tools developer, Artificial Intelligent application/software developer.', '', 'cursor: default; overflow: hidden;; cursor: default; overflow: auto; background-image: none;', NULL, '2015-08-11 11:40:28', '0', 1);
+(1, NULL, 'home', 'Home', 1, 0, 'XTPL :: PHP development, Web, Online, Android, development company, xepan, cms developer, drag and drop website builder developer, ERP developer, Developers tools developer, Artificial Intelligent application/software developer.', 'Xavoc is a world class company providing cutting edge technology to next generation, Xavoc works in developing new tools for web and mobile like Artificial Intelligent website builder or cms like xEpan. Developer of xCIDeveloper, A tool to let you write Joomla components in CodeIgniter. Developer of xJDataMapper, a ruby style ORM for JAVA. Contributor in spreading agiletoolkit, a great PHP framework. In Short, Not just another IT Company in town.', 'PHP development, Web, Online, Android, development company, xepan, cms developer, drag and drop website builder developer, ERP developer, Developers tools developer, Artificial Intelligent application/software developer.', '<div id="66c44d00-59d7-4693-d494-b9716d2ed9d9" component_namespace="xBlog" component_type="BlogCategory" data-responsible-namespace="xBlog" data-responsible-view="View_Tools_BlogCategory" data-is-serverside-component="true" class="  epan-component " style=""></div>', 'cursor: default; overflow: auto; background-image: none;', NULL, '2015-08-24 13:05:12', '0', 1);
 
 -- --------------------------------------------------------
 
@@ -982,7 +988,16 @@ CREATE TABLE IF NOT EXISTS `last_seen_updates` (
   PRIMARY KEY (`id`),
   KEY `fk_employee_id` (`employee_id`) USING BTREE,
   KEY `fk_epan_id` (`epan_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `last_seen_updates`
+--
+
+INSERT INTO `last_seen_updates` (`id`, `employee_id`, `related_document_id`, `related_root_document_name`, `related_document_name`, `seen_till`, `epan_id`) VALUES
+(1, NULL, NULL, 'xShop\\Item', 'xShop\\Blog', '2015-08-24 12:50:23', 1),
+(2, NULL, NULL, 'xShop\\Application', 'xShop\\Shop', '2015-08-24 12:49:52', 1),
+(3, NULL, NULL, 'xShop\\Category', 'xShop\\BlogCategory', '2015-08-24 12:50:25', 1);
 
 -- --------------------------------------------------------
 
@@ -1185,7 +1200,7 @@ CREATE TABLE IF NOT EXISTS `userappaccess` (
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_user_id` (`user_id`),
   KEY `fk_installed_app_id` (`installed_app_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
 
 -- --------------------------------------------------------
 
@@ -1211,7 +1226,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `website_designing` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=88 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=89 ;
 
 -- --------------------------------------------------------
 
@@ -1468,7 +1483,15 @@ CREATE TABLE IF NOT EXISTS `xai_data` (
   `name` text,
   PRIMARY KEY (`id`),
   KEY `fk_session_id` (`session_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=296 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=298 ;
+
+--
+-- Dumping data for table `xai_data`
+--
+
+INSERT INTO `xai_data` (`id`, `session_id`, `name`) VALUES
+(296, 50, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"56","value":"RUN"}}}'),
+(297, 50, '{"ALWAYS":{"ALWAYS":{"meta_data_id":"56","value":"RUN"}}}');
 
 -- --------------------------------------------------------
 
@@ -1548,7 +1571,51 @@ CREATE TABLE IF NOT EXISTS `xai_meta_data` (
   `description` text,
   `action` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=94 ;
+
+--
+-- Dumping data for table `xai_meta_data`
+--
+
+INSERT INTO `xai_meta_data` (`id`, `from`, `name`, `last_value`, `description`, `action`) VALUES
+(56, 'ALWAYS', 'ALWAYS', 'RUN', NULL, '2'),
+(57, 'SERVER', 'HTTP_HOST', 'localhost', NULL, '-1'),
+(58, 'SERVER', 'HTTP_USER_AGENT', 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:38.0) Gecko/20100101 Firefox/38.0', NULL, '-1'),
+(59, 'SERVER', 'HTTP_ACCEPT', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', NULL, '-1'),
+(60, 'SERVER', 'HTTP_ACCEPT_LANGUAGE', 'en-US,en;q=0.5', NULL, '-1'),
+(61, 'SERVER', 'HTTP_ACCEPT_ENCODING', 'gzip, deflate', NULL, '-1'),
+(62, 'SERVER', 'HTTP_REFERER', 'http://localhost/blog/?page=owner_dashboard&step=4', NULL, '-1'),
+(63, 'SERVER', 'HTTP_COOKIE', '__zlcmid=WGessGr90YrCJo; medetourism-admin=4lgqmdr4skc1v9t5va7cvqs913; PHPSESSID=j1v65rphf3r7p69ikf49cjcm63; xbank2=ejvhn4i5o5n69kqqjls0u42v65; web=b18af2a6h7jqo395spelh7f1f0', NULL, '-1'),
+(64, 'SERVER', 'HTTP_CONNECTION', 'keep-alive', NULL, '-1'),
+(65, 'SERVER', 'PATH', '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', NULL, '-1'),
+(66, 'SERVER', 'SERVER_SIGNATURE', '<address>Apache/2.4.12 (Ubuntu) Server at localhost Port 80</address>\n', NULL, '-1'),
+(67, 'SERVER', 'SERVER_SOFTWARE', 'Apache/2.4.12 (Ubuntu)', NULL, '-1'),
+(68, 'SERVER', 'SERVER_NAME', 'localhost', NULL, '-1'),
+(69, 'SERVER', 'SERVER_ADDR', '127.0.0.1', NULL, '-1'),
+(70, 'SERVER', 'SERVER_PORT', '80', NULL, '-1'),
+(71, 'SERVER', 'REMOTE_ADDR', '127.0.0.1', NULL, '-1'),
+(72, 'SERVER', 'DOCUMENT_ROOT', '/var/www', NULL, '-1'),
+(73, 'SERVER', 'REQUEST_SCHEME', 'http', NULL, '-1'),
+(74, 'SERVER', 'CONTEXT_PREFIX', '', NULL, '-1'),
+(75, 'SERVER', 'CONTEXT_DOCUMENT_ROOT', '/var/www', NULL, '-1'),
+(76, 'SERVER', 'SERVER_ADMIN', 'webmaster@localhost', NULL, '-1'),
+(77, 'SERVER', 'SCRIPT_FILENAME', '/var/www/blog/index.php', NULL, '-1'),
+(78, 'SERVER', 'REMOTE_PORT', '53716', NULL, '-1'),
+(79, 'SERVER', 'GATEWAY_INTERFACE', 'CGI/1.1', NULL, '-1'),
+(80, 'SERVER', 'SERVER_PROTOCOL', 'HTTP/1.1', NULL, '-1'),
+(81, 'SERVER', 'REQUEST_METHOD', 'GET', NULL, '-1'),
+(82, 'SERVER', 'QUERY_STRING', '', NULL, '-1'),
+(83, 'SERVER', 'REQUEST_URI', '/blog/', NULL, '-1'),
+(84, 'SERVER', 'SCRIPT_NAME', '/blog/index.php', NULL, '-1'),
+(85, 'SERVER', 'PHP_SELF', '/blog/index.php', NULL, '-1'),
+(86, 'SERVER', 'REQUEST_TIME_FLOAT', '1440398975.56', NULL, '-1'),
+(87, 'SERVER', 'REQUEST_TIME', '1440398975', NULL, '-1'),
+(88, 'COOKIE', '__zlcmid', 'WGessGr90YrCJo', NULL, '-1'),
+(89, 'COOKIE', 'medetourism-admin', '4lgqmdr4skc1v9t5va7cvqs913', NULL, '-1'),
+(90, 'COOKIE', 'PHPSESSID', 'j1v65rphf3r7p69ikf49cjcm63', NULL, '-1'),
+(91, 'COOKIE', 'xbank2', 'ejvhn4i5o5n69kqqjls0u42v65', NULL, '-1'),
+(92, 'COOKIE', 'web', 'b18af2a6h7jqo395spelh7f1f0', NULL, '-1'),
+(93, 'SERVER', 'HTTP_CACHE_CONTROL', 'max-age=0', NULL, '-1');
 
 -- --------------------------------------------------------
 
@@ -1589,7 +1656,14 @@ CREATE TABLE IF NOT EXISTS `xai_session` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=51 ;
+
+--
+-- Dumping data for table `xai_session`
+--
+
+INSERT INTO `xai_session` (`id`, `name`, `type`, `is_goal_achieved`, `created_at`, `updated_at`) VALUES
+(50, 'b18af2a6h7jqo395spelh7f1f0', 'website', 0, '2015-08-24 12:19:35', '2015-08-24 13:05:12');
 
 -- --------------------------------------------------------
 
@@ -2361,7 +2435,17 @@ CREATE TABLE IF NOT EXISTS `xhr_departments_acl` (
   KEY `fk_document_id` (`document_id`),
   KEY `fk_post_id` (`post_id`),
   KEY `fk_epan_id` (`epan_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `xhr_departments_acl`
+--
+
+INSERT INTO `xhr_departments_acl` (`id`, `document_id`, `post_id`, `can_view`, `can_submit`, `can_approve`, `allow_add`, `allow_edit`, `allow_del`, `can_reject`, `can_forward`, `can_receive`, `can_send_via_email`, `can_assign`, `can_select_outsource`, `can_manage_tasks`, `task_types`, `can_assign_to`, `can_start_processing`, `can_mark_processed`, `can_accept`, `can_cancel`, `can_redesign`, `can_manage_attachments`, `can_see_activities`, `can_forcedelete`, `can_create_activity`, `can_create_ticket`, `epan_id`) VALUES
+(1, 177, NULL, 'Self Only', 'No', 'No', 0, 'No', 'No', 'No', 'No', 0, 'No', 'No', 'No', 'No', NULL, 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 1, 1, 1),
+(2, 178, NULL, 'Self Only', 'No', 'No', 0, 'No', 'No', 'No', 'No', 0, 'No', 'No', 'No', 'No', NULL, 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 1, 1, 1),
+(3, 179, NULL, 'Self Only', 'No', 'No', 0, 'No', 'No', 'No', 'No', 0, 'No', 'No', 'No', 'No', NULL, 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 1, 1, 1),
+(4, 180, NULL, 'Self Only', 'No', 'No', 0, 'No', 'No', 'No', 'No', 0, 'No', 'No', 'No', 'No', NULL, 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2377,7 +2461,17 @@ CREATE TABLE IF NOT EXISTS `xhr_documents` (
   PRIMARY KEY (`id`),
   KEY `fk_department_id` (`department_id`),
   KEY `fk_epan_id` (`epan_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=177 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=181 ;
+
+--
+-- Dumping data for table `xhr_documents`
+--
+
+INSERT INTO `xhr_documents` (`id`, `department_id`, `name`, `epan_id`) VALUES
+(177, NULL, 'xShop\\Blog', 1),
+(178, 4, 'xShop\\Shop', 1),
+(179, 4, 'xShop\\Blog', 1),
+(180, 4, 'xShop\\BlogCategory', 1);
 
 -- --------------------------------------------------------
 
@@ -3588,7 +3682,14 @@ CREATE TABLE IF NOT EXISTS `xshop_application` (
   PRIMARY KEY (`id`),
   KEY `fk_epan_id` (`epan_id`),
   KEY `fk_created_by_id` (`created_by_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `xshop_application`
+--
+
+INSERT INTO `xshop_application` (`id`, `epan_id`, `name`, `type`, `created_by_id`, `related_document_id`, `related_root_document_name`, `related_document_name`, `created_at`, `updated_at`) VALUES
+(3, 1, 'Xavoc technocrats Pvt. Ltd.', 'shop', NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
