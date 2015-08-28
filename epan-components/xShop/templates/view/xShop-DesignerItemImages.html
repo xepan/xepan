@@ -1,17 +1,39 @@
-<div id="{$_name}" class="{$class}">
+<div id="{$_name}" class="{$class} xshop-designer-image-lister">
 	{$Content}
+{Pannel}
+	<div class="atk-box-small {$pannel_class}">{$quick_search}
+    	<div class="atk-actions">{$grid_buttons}</div>
+  	</div>
+{/Pannel}
+{$header}
 	<div class="xshop-designer-itemimageslister row">
 	{rows}
 		{row}
-		<figure class="xshop-designer-item-images col-md-3 col-sm-3" >
-			<img src="{image}{/}" class="xshop-designer-item-images thumbnail"></img>
-       		 <figcaption class="xshop-designer-add-replace">
-            	<div class="xshop-designer-add-replace-button btn btn-primary" selectedimagesrc="{$image}" data-image-id="{$id}">Add/Replace</div>
-            	<div class="xshop-designer-remove-member-image-button btn btn-primary" data-image-id="{$id}" img-no-of-time-used="{$img_used_no_of_time}">Remove</div>
-        	</figcaption>
-    	</figure>
+		<div data-id="{$id}" class="{$odd_even}">
+		{cols}
+			<figure class="xshop-designer-item-images col-md-3 col-sm-3 ">
+				<img src="{image}{/}" class="xshop-designer-item-images thumbnail" style="height:80px;overflow:hidden;" ></img>
+	       		 <figcaption class="xshop-designer-add-replace">
+	            	<div class="xshop-designer-add-replace-button btn btn-primary btn-sm" selectedimagesrc="{$image}" data-image-id="{$id}">Insert</div>
+	            	<!-- <div class="xshop-designer-remove-member-image-button btn btn-primary" data-image-id="{$id}" img-no-of-time-used="{$img_used_no_of_time}">Remove</div> -->
+		        	{$edit}
+			        {$delete}
+	        	</figcaption>
+	    	</figure>
+	    {/}
+	    </div>
 		{/}	
-	{/}	
+	{/}
+	{not_found}
+    	<div>
+        	<div class="atk-padding-large atk-align-center">
+        		<span class="atk-label atk-effect-warning">
+        			<span class="icon-attention">&nbsp;{$not_found_message}
+        			</span>
+        		</span>
+        	</div>
+      </div>
+    {/}
 	</div>
 	<script type="text/javascript">
 		$( function() {
