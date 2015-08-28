@@ -1,0 +1,53 @@
+
+<link rel="stylesheet" type="text/css" href="epan-components/xProduction/templates/css/task.css"/>
+<div id="{$_name}" class="atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
+  <div class="atk-box-small {$pannel_class}">{$quick_search}
+    <div class="atk-actions">{$grid_buttons}</div>
+  </div>{/Pannel}
+  <div>{header}
+    <div>{cols}{col}
+      <div id="{$sortid}"><a href="javascript:void(0)">
+          {$descr}
+          {sort}<span class="{$sorticon}"></span>{/}</a></div>{/}{/}
+    </div>{/}
+    {$subheader}
+    <div class="list-group">{rows}{row}
+      <div data-id="{$id}" class="{$odd_even} atk-cell list-group-item">{cols}
+        <div class="atk-row">
+          <div class="atk-col-1">{$priority_icon}</div>
+          <div class="atk-col-5">
+            <p {$tdparam_name}="{$tdparam_name}">{$task_subject}</p>
+          </div>
+          <div class="atk-col-3">
+            <div title="Start Date"><i class="icon-calendar atk-swatch-green"></i>&nbsp;{expected_start_date}Starting Date{/expected_start_date}</div>
+            <div title="End Date"><i class="icon-calendar atk-swatch-red"></i>&nbsp;{expected_end_date}EndDate{/expected_end_date}</div>
+          </div>
+          <div class="atk-col-3 atk-align-right">
+            {$approve}
+            {$start_processing}
+            {$assign}
+            {$mark_processed}
+            {$activities}
+            {$cancel}
+            {$reject}
+            {$edit}
+            {$delete}
+          </div>
+        </div>{/}
+      </div>{/}{/}
+      {not_found}
+      <div>
+        <div class="atk-padding-large atk-align-center"><span class="atk-label atk-effect-warning"><span class="icon-attention">&nbsp;{$not_found_message}</span></span></div>
+      </div>{/}
+    </div>{totals}
+    <div>
+      <div class="totals">
+        {cols}{col}
+        <div {$tdparam}>
+        {$content}
+        </div>
+        {/}{/}
+      </div>
+    </div>{/}
+  </div>{$Paginator}
+</div>

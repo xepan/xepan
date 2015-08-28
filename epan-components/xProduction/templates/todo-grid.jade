@@ -1,0 +1,64 @@
+link(rel='stylesheet', type='text/css', href='epan-components/xProduction/templates/css/task.css')
+.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
+    {Pannel}
+    .atk-box-small(class="{$pannel_class}") {$quick_search}
+        .atk-actions {$grid_buttons}
+    {/Pannel}
+    div
+        {header}
+        div
+            {cols}{col}
+            div(id="{$sortid}")
+                a(href="javascript:void(0)")
+                    {$descr}
+                    {sort}
+                    span(class="{$sorticon}")
+                    {/}
+            {/}{/}
+        {/}
+        {$subheader}
+        div.list-group
+            {rows}{row}
+            div(class="{$odd_even} atk-cell list-group-item" data-id="{$id}")
+                {cols}
+                .atk-row
+                    .atk-col-1
+                        {$priority_icon}
+                    .atk-col-5
+                        p({$tdparam_name}){$task_subject}
+                    .atk-col-3
+                        div(title="Start Date")
+                            i.icon-calendar.atk-swatch-green
+                            |&nbsp;{expected_start_date}Starting Date{/expected_start_date}
+                        div(title="End Date")
+                            i.icon-calendar.atk-swatch-red
+                            |&nbsp;{expected_end_date}EndDate{/expected_end_date}
+                    .atk-col-3.atk-align-right
+                        {$approve}
+                        {$start_processing}
+                        {$assign}
+                        {$mark_processed}
+                        {$activities}
+                        {$cancel}
+                        {$reject}
+                        {$edit}
+                        {$delete}
+                {/}
+            {/}{/}
+            {not_found}
+            div
+                div.atk-padding-large.atk-align-center
+                    span.atk-label.atk-effect-warning
+                        span.icon-attention &nbsp;{$not_found_message}
+            {/}
+
+        {totals}
+        div
+            div(class="totals")
+                {cols}{col}
+                <div {$tdparam}>
+                {$content}
+                </div>
+                {/}{/}
+        {/}
+    {$Paginator}
