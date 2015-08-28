@@ -9,7 +9,7 @@ class Model_MemberImages extends \Model_Table {
 		
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
-		// $this->hasOne('xShop/ImageLibraryCategory','category_id');
+		$this->hasOne('xShop/ImageLibraryCategory','category_id');
 				
 		$this->hasOne('xShop/MemberDetails','member_id');
 
@@ -20,6 +20,6 @@ class Model_MemberImages extends \Model_Table {
 		$f = $this->addField('title')->group('a~11~bl');
 		$f->icon ="glyphicon glyphicon-pencil~blue";
 
-		//$this->add('dynamic_model/Controller_AutoCreator');		
+		// $this->add('dynamic_model/Controller_AutoCreator');		
 	}
 }
