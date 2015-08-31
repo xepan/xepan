@@ -666,7 +666,11 @@ class Model_Document extends Model_Table{
 	}
 
 	function round($amount,$point=0){
-		return round($amount,$point);
+		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		if($shop_config['is_round_amount_calculation']){
+			return round($amount,$point);
+		}
+		return $amount;
 	}
 
 
