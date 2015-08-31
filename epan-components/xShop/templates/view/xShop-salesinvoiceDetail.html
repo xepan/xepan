@@ -44,29 +44,29 @@
 		</tr>
 		<tr align="right">
 			<td colspan="3">Total</td>
-			<td colspan="4"><b>&#8377; {$gross_amount} </b> </td>
+			<td colspan="4"><b>{$currency} {$gross_amount} </b> </td>
 		</tr>
 		{discount_voucher_amount_section}
 		<tr align="right">
 			<td colspan="3">Discount</td>
-			<td class='' colspan="4"><b> - &#8377;{discount_voucher_amount}{/discount_voucher_amount} </b> </td>
+			<td class='' colspan="4"><b>{$currency} {discount_voucher_amount}{/discount_voucher_amount} </b> </td>
 		</tr>
 		{/discount_voucher_amount_section}
 		{round_amount_section}
 			<tr align="right">
 				<td colspan="3">Round Amount</td>
-				<td colspan="4"><b>&#8377; {round_amount}0{/round_amount}</b> </td>
+				<td colspan="4"><b>{$currency} {round_amount}0{/round_amount}</b> </td>
 			</tr>
 		{/round_amount_section}
 		{shipping_charge_section}
 		<tr align="right">
 			<td colspan="3">Shipping Charge</td>
-			<td class='' colspan="4"><b> &#8377;{shipping_charge}{/shipping_charge} </b> </td>
+			<td class='' colspan="4"><b>{$currency} {shipping_charge}{/shipping_charge} </b> </td>
 		</tr>
 		{/shipping_charge_section}
 		<tr align="right">
 			<td colspan="3">Net Amount</td>
-			<td colspan="4" class=''><b>&#8377; {$net_amount} </b> </td>
+			<td colspan="4" class=''><b>{$currency} {$net_amount} </b> </td>
 		</tr>
 		{/order_amount_section}
 	</tbody>

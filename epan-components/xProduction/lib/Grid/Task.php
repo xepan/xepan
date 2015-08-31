@@ -3,6 +3,7 @@ namespace xProduction;
 
 class Grid_Task extends \xGrid{
 	public $ipp=100;
+	public $grid_template='task-grid';
 	function init(){
 		parent::init();
 		$this->task_vp = $this->add('VirtualPage');
@@ -59,8 +60,8 @@ class Grid_Task extends \xGrid{
 
 		$icon_html = "";
 		switch ($this->model['priority']) {
-			case 'low':
-				$icon_html = '<i class="atk-effect-warning>'.$this->model['priority'].'</i>';
+			case 'Low':
+				$icon_html = '<i class="atk-effect-warning">'.$this->model['priority'].'</i>';
 				break;
 
 			case 'Medium':
@@ -80,8 +81,7 @@ class Grid_Task extends \xGrid{
 	}
 
 	function defaultTemplate(){
-
-		return array('task-grid');
+		return array($this->grid_template);
 	}
 
 }

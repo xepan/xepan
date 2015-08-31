@@ -669,5 +669,25 @@ class Model_Document extends Model_Table{
 		return round($amount,$point);
 	}
 
+		//Model Return Currency name or Model
+	function currency($name=true){
+		if(!$this->hasField('currency_id'))
+			throw new \Exception("Model Must Have \"currency_id\" Field");
+			
+		$currency = $this->add('xShop/model_Currency');
+		$default_currency = $currency->defaultCurrency();
+
+		if($name and $this['currency_id']){
+			return $currency->load($this['currency_id'])->get('name');
+
+		}elseif($name and !$this['currency_id']){
+			return $default_currency->get('name');
+
+		}elseif(!$name and $this['currency_id']){
+			return $this->ref('currency_id');
+
+		}else
+			return $default_currency;
+	}
 
 }

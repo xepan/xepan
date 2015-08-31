@@ -11,7 +11,7 @@ class Model_ImageLibraryCategory extends \Model_Table {
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
 		$f = $this->addField('name')->caption('Category Name');
-		
+		$this->hasMany('xShop/MemberImages','category_id');
 		//$this->add('dynamic_model/Controller_AutoCreator');		
 	}
 }

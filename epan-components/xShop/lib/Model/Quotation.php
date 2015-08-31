@@ -222,12 +222,12 @@ class Model_Quotation extends \Model_Document{
 	}
 
 	//Model Return Currency name or Model
-	function currency($name=1){
-		if($name)
-			return $this->ref('currency_id')->get('name');
+	// function currency($name=true){
+	// 	if($name)
+	// 		return $this->ref('currency_id')->get('name');
 		
-		return $this->ref('currency_id');
-	}
+	// 	return $this->ref('currency_id');
+	// }
 
 	function itemsTermAndCondition(){
 		$tnc = "";

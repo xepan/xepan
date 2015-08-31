@@ -36,11 +36,10 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 	}
 	
 	function page_shops_imagelibrary(){
-		$this->add('View')->set('System Image Library');
-	    $item_images_lister = $this->add('xShop/View_Lister_DesignerItemImages');
-      	$item_images_lister->addClass('xshop-designer-image-lister');
-      	$item_images_lister->setModel($image_model);
-		
+		$this->add('View_Info')->set('System Image Library');
+		$crud = $this->add('CRUD');
+		$crud->setModel('xShop/Model_ImageLibraryCategory');
+		$crud->addRef('xShop/MemberImages',array('label'=>'Images'));
 	}
 
 	function page_blogs(){

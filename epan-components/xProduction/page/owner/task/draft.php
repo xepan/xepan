@@ -34,24 +34,21 @@ class page_xProduction_page_owner_task_draft extends page_xProduction_page_owner
 		$draft->addCondition('created_by_id',$this->api->current_employee->id);
 		$form= $left_col->add('Form_Minimal');
 		$form->addField('line','to_do');
-		$crud=$left_col->add('CRUD');
+		$crud=$left_col->add('CRUD',array('grid_class'=>'xProduction/Grid_Task','grid_options'=>array('grid_template'=>'todo-grid')));
 		if($form->isSubmitted()){
 			$draft['subject'] = $form['to_do'];
 			$draft->save();
 			$form->js(null,$crud->grid->js()->reload())->reload()->execute();
 		}
 				
-		$crud->setModel($draft,array('subject','content','priority','expected_start_date','expected_end_date'),array('subject','Priority','expected_start_date','expected_end_date'));
-		$crud->manageAction('see_activities');
-		$crud->grid->addMethod('format_subject',function($g,$f)use($task_vp){
-			$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL($g->model['subject'],$g->api->url($task_vp->getURL(),array('task_id'=>$g->model->id))).'">'.substr(strip_tags($g->model['subject']),0,25).'</a>';
-		});
-		$crud->grid->addFormatter('subject','subject');
-		$crud->manageAction('assign');
+		$crud->setModel($draft,array('subject','content','priority','expected_start_date','expected_end_date'),array('subject','priority','expected_start_date','expected_end_date'));
+		$crud->manageAction('activities','comment atk-swatch-blue');
+		$crud->manageAction('assign','user-add atk-swatch');
 		$crud->manageAction('approve','target','Complete');
-		if(!$crud->isEditing()){
-			$crud->grid->addPaginator($ipp=100);
-		}
+		// $crud->grid->addMethod('format_subject',function($g,$f)use($task_vp){
+		// 	$g->current_row_html[$f]='<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL($g->model['subject'],$g->api->url($task_vp->getURL(),array('task_id'=>$g->model->id))).'">'.substr(strip_tags($g->model['subject']),0,25).'</a>';
+		// });
+		// $crud->grid->addFormatter('subject','subject');
 		// $crud->grid->ipp=2;
 		// $crud->add('xHR/Controller_Acl',array('override'=>array('allow_add'=>true,'allow_edit'=>'Self Only','allow_del'=>'Self Only')));
 
