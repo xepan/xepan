@@ -674,8 +674,8 @@ class Model_Document extends Model_Table{
 		if(!$this->hasField('currency_id'))
 			throw new \Exception("Model Must Have \"currency_id\" Field");
 			
-		$default_currency = $this->add('xShop/model_Currency');
-		$default_currency = $default_currency->addCondition('is_default',true)->tryLoadAny();
+		$currency = $this->add('xShop/model_Currency');
+		$default_currency = $currency->defaultCurrency();
 
 		if($name and $this['currency_id']){
 			return $currency->load($this['currency_id'])->get('name');
