@@ -20,20 +20,23 @@ class page_xShop_page_designer_itemimages extends Page {
       $image_model->addCondition('member_id',$member->id);
       $image_model->setOrder('id','desc');
       //Form
-      $form = $this->add('Form');
-      $form->addSubmit('upload');
+      // $form = $this->add('Form');
+      // $form->addSubmit('upload');
       
-      $item_images_lister = $this->add('xShop/View_Lister_DesignerItemImages');
-      $form->setModel($image_model,array('member_id','image_id'));
+      // // $item_images_lister = $this->add('xShop/View_Lister_DesignerItemImages');
+      // $form->setModel($image_model,array('member_id','image_id'));
       
-      if($form->isSubmitted()){
-        $form->update();
-        $form->js(true,$item_images_lister->js()->reload())->univ()->successMessage('Upload Successfully')->execute();
-      }
+      $crud = $this->add('CRUD',array('allow_edit'=>false,'grid_class'=>'xGrid','grid_options'=>array('grid_template'=>'view/xShop-DesignerItemImages','grid_template_path'=>'epan-components/xShop')));
+      $item_images_lister = $crud->setModel($image_model,array('member_id','image_id','image'),array('member_id','image_id','image'));
+      $crud->grid->addQuickSearch(array('image_id','image'));
+      // if($form->isSubmitted()){
+      //   $form->update();
+      //   $form->js(true,$item_images_lister->js()->reload())->univ()->successMessage('Upload Successfully')->execute();
+      // }
             
       //Lister
-      $item_images_lister->addClass('xshop-designer-image-lister');
-      $item_images_lister->setModel($image_model);
+      // $item_images_lister->addClass('xshop-designer-image-lister');
+      // $item_images_lister->setModel($image_model);
   }
 
   function page_previous_upload(){
@@ -41,8 +44,13 @@ class page_xShop_page_designer_itemimages extends Page {
   }
 
   function page_image_library(){
-      $this->add('View')->set('Library Images');
+    $image_model = $this->add('xShop/Model_MemberImages');
+    $image_model->addCondition('category_id','>',0);
+    $image_model->setOrder('id','desc');
 
+    $crud = $this->add('CRUD',array('allow_edit'=>false,'allow_del'=>false,'allow_add'=>false,'grid_class'=>'xGrid','grid_options'=>array('grid_template'=>'view/xShop-DesignerItemImages','grid_template_path'=>'epan-components/xShop')));
+    $crud->setModel($image_model);
+    $crud->grid->addQuickSearch(array('image_id','image','category','category_id','alt_text','title'));
   }
 
 

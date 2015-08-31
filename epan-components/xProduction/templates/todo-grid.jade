@@ -1,7 +1,7 @@
+link(rel='stylesheet', type='text/css', href='epan-components/xProduction/templates/css/task.css')
 .atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
-    link(rel='stylesheet', type='text/css', href='epan-components/xProduction/templates/css/task.css')
     {Pannel}
-    div(class="{$pannel_class}") {$quick_search}
+    .atk-box-small(class="{$pannel_class}") {$quick_search}
         .atk-actions {$grid_buttons}
     {/Pannel}
     div
@@ -17,29 +17,23 @@
             {/}{/}
         {/}
         {$subheader}
-        div
+        div.list-group
             {rows}{row}
-            div(class="{$odd_even}" data-id="{$id}")
+            div(class="{$odd_even} atk-cell list-group-item" data-id="{$id}")
                 {cols}
-                .xsticky.atk-size-micro.yellow.atk-padding
-                    .atk-row 
-                        .atk-col-5
-                            p({$tdparam_name})|Task No.: {$name}&nbsp;&nbsp;
-                                b {$priority_icon}
-                                br
-                                {$created_at}&nbsp;{$task_created_att}
-                        .atk-col-7.atk-size-kilo
-                            {$task_subject}
-                    .atk-row
-                        .atk-col-6
-                            p|Created By.:- <b>{$created_by}</b>
-                        .atk-col-6
-                            p|Assign to.:- <b>{$employee}</b>
-                        .atk-col-6
-                            p|Starting Date.:- {$expected_start_date}
-                        .atk-col-6
-                            p|Ending Date.:- {$expected_end_date}
-                    .atk-buttonset
+                .atk-row
+                    .atk-col-1
+                        {$priority_icon}
+                    .atk-col-5
+                        p({$tdparam_name}){$task_subject}
+                    .atk-col-3
+                        div(title="Start Date")
+                            i.icon-calendar.atk-swatch-green
+                            |&nbsp;{expected_start_date}Starting Date{/expected_start_date}
+                        div(title="End Date")
+                            i.icon-calendar.atk-swatch-red
+                            |&nbsp;{expected_end_date}EndDate{/expected_end_date}
+                    .atk-col-3.atk-align-right
                         {$approve}
                         {$start_processing}
                         {$assign}
@@ -47,7 +41,8 @@
                         {$activities}
                         {$cancel}
                         {$reject}
-
+                        {$edit}
+                        {$delete}
                 {/}
             {/}{/}
             {not_found}
