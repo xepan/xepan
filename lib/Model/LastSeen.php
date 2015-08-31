@@ -15,6 +15,7 @@ class Model_LastSeen extends SQL_Model {
 		$this->addField('related_root_document_name');
 		$this->addField('related_document_name');
 
+		// Last seen till is last created at document timestamp
 		$this->addField('seen_till')->type('datetime')->defaultValue('1970-01-01');
 		$this->addHook('beforeDelete',$this);
 

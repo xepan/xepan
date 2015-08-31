@@ -9,13 +9,47 @@ class Controller_NotificationSystem extends AbstractController {
 			What status of those document I can do what actions
 
 			Create that array first 
-			[
-				doc_id=>[
-						in_status=>[
-								action1,action2
+			d_array =[
+				related_document_root_name => [
+						in_status => [
+									enter => [action1,action2],
+									life => []
 								]
 						]
 			]
+
+
+			Activity that's related document root name is in d_array
+			And Last Seen is less then activity created_at
+
+		*/
+
+
+		/*
+			Get my Last seen time
+			Get my getColleagues, getSubordinats, getTeams
+
+			Activities COUNT that's last seen is greater then my last seen
+			and that's can_view is permission is as per Controller_Acl line 425
+			in SQL mode ->expr() ;)
+
+			group by root_document_name, document_name
+
+		*/
+
+		/*
+			RULE BASED Notifications :
+			define rules in models
+				$notification_rules = 	[
+											on_activity_action_this('submitted') => ['Document\Namespace'=>[
+																			'can_approve' => '{count} DocumentName(s) to approve '
+																			'can_view'=>'You have {count} Submitted Documents',
+																			]
+																		],
+											'rejected'=> 	['Document\Rejected'
+																'creator' => 'Your Document is rejected, please review {$message}'
+															]
+										]
 		*/
 
 	}
