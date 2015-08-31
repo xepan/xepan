@@ -35,6 +35,7 @@ class View_SalesInvoice extends  \CompleteLister{
 		else
 			$this->template->trySetHTML('termsandcondition_matter',$this->invoice->ref('termsandcondition_id')->get('terms_and_condition'));
 
+		$this->template->trySetHtml('currency',$this->invoice->currency());
 		$this->setModel($this->invoice->itemrows());
 	}
 

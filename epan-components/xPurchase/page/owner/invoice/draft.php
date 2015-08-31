@@ -7,7 +7,7 @@ class page_xPurchase_page_owner_invoice_draft extends page_xPurchase_page_owner_
 		$invoice_draft = $this->add('xPurchase/Model_Invoice_Draft');
 		
 		$crud=$this->add('CRUD',array('grid_class'=>'xPurchase/Grid_Invoice'));
-		$crud->setModel($invoice_draft,array('supplier_id','termsandcondition_id','discount','billing_address','invoiceitem_count','narration'),array('name','invoice_no','po','supplier','total_amount','tax','gross_amount','discount','net_amount','invoiceitem_count'));
+		$crud->setModel($invoice_draft,array('supplier_id','currency_id','termsandcondition_id','discount','billing_address','invoiceitem_count','narration'),array('name','invoice_no','po','supplier','currency','total_amount','tax','gross_amount','discount','net_amount','invoiceitem_count'));
 		$from_purchased_order_vp = $this->add('VirtualPage')->set(function($p)use($crud){
 			$purchased_orders = $p->add('xPurchase/Model_PurchaseOrder');
 			$purchased_orders->addCondition('status','<>',array('draft','submitted'));

@@ -29,6 +29,8 @@ class View_SalesInvoiceDetail extends \CompleteLister{
 		parent::setModel($model);
 
 		$invoice= $model->ref('invoice_id');
+
+		$this->template->setHtml('currency',$invoice->currency());
 		// $invoice= $model->ref('priority_id');
 		// $this->template->set('gross_amount',$invoice['amount']);
 		

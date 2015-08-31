@@ -26,6 +26,7 @@ class Model_Invoice extends \Model_Document{
 		$this->hasOne('xShop/Model_Order','sales_order_id');
 		$this->hasOne('xPurchase/Model_PurchaseOrder','po_id')->caption('Purchase Order');
 		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->display(array('form'=>'autocomplete/Basic'))->caption('Terms & Cond.');
+		$this->hasOne('xShop/Currency','currency_id')->sortable(true)->mandatory(true)->mandatory(true);
 
 		$this->addField('type')->enum(array('salesInvoice','purchaseInvoice'));
 		$this->addField('name')->caption('Invoice No')->type('int')->sortable(true);
