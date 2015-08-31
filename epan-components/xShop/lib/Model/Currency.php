@@ -14,7 +14,10 @@ class Model_Currency extends \Model_Table {
 		$this->addField('Value');
 		$this->addField('is_default')->type('boolean');
 
-		$this->add('dynamic_model/Controller_AutoCreator');
+		$this->hasMany('xShop/Quotation','currency_id');
+		$this->hasMany('xShop/Invoice','currency_id');
+		$this->hasMany('xShop/Order','currency_id');
+		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 }

@@ -356,13 +356,14 @@ class Model_Order extends \Model_Document{
 
 		return $email_body;
 	}
-	//Model Return Currency name or Model
-	function currency($name=1){
-		if($name)
-			return $this->ref('currency_id')->get('name');
+	
+	// //Model Return Currency name or Model
+	// function currency($name=1){
+	// 	if($name)
+	// 		return $this->ref('currency_id')->get('name');
 		
-		return $this->ref('currency_id');
-	}
+	// 	return $this->ref('currency_id');
+	// }
 
 	function send_via_email_page($p){
 
