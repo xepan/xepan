@@ -20,11 +20,11 @@
 				<p>{$item_name}<br><small>{$departments}{$item_narration}</small></p>
 			</td>
 			
-				<td align="right">{$qty}&nbsp<small>{$unit}</small></td>
+				<td align="right">{$qty}&nbsp;<small>{$unit}</small></td>
 			{order_amount_section}
-				<td align="right">{$rate}</td>
+				<td align="right">{$currency}&nbsp;{$rate}</td>
 				<!-- <td align="right">{$tax_amount}<br>@  {tax_per_sum}{/tax_per_sum}</td> -->
-				<td colspan="2" align="right">{$texted_amount}</td>
+				<td colspan="2" align="right">{$currency}&nbsp;{$texted_amount}</td>
 			{/order_amount_section}
 		</tr>
 		{/row}
@@ -36,7 +36,7 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<th>Total</th>
-			<td class='' colspan="4"><b>&#8377;{$total_amount} </b> </td>
+			<td class='' colspan="4"><b>{$currency}&nbsp;{$total_amount} </b> </td>
 		</tr>
 		<!-- <tr align="right">
 			<td>&nbsp;</td>
