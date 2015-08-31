@@ -14,6 +14,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->hasOne('xShop/TermsAndCondition','termsandcondition_id')->sortable(true)->display(array('form'=>'autocomplete/Basic'))->caption('Term and Condition');
 		$this->hasOne('xPurchase/Supplier','supplier_id')->sortable(true)->display(array('form'=>'autocomplete/Plus'));
 		$this->hasOne('xShop/Priority','priority_id')->group('z~6')->mandatory(true)->defaultValue($this->add('xShop/Model_Priority')->addCondition('name','Medium')->tryLoadAny()->get('id'));
+		$this->hasOne('xShop/Currency','currency_id')->sortable(true)->mandatory(true);//->display(array('form'=>'autocomplete/Basic'));
 		$this->addField('name')->caption('Purchase Order');
 		$this->addField('order_summary')->type('text');
 		$this->addField('order_date')->type('datetime')->defaultValue($this->api->now);
@@ -31,7 +32,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$this->addHook('afterSave',$this);
 
 		$this->addExpression('orderitem_count')->set($this->refSQL('xPurchase/PurchaseOrderItem')->count());
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 		$this->setOrder('id','desc');
 	}
 
@@ -550,6 +551,13 @@ class Model_PurchaseOrder extends \Model_Document{
 			//$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
 			return true;
 		}
+	}
+
+	function currency($name=1){
+		if($name)
+			return $this->ref('currency_id')->get('name');
+		
+		return $this->ref('currency_id');
 	}
 }
 

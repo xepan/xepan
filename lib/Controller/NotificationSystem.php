@@ -3,11 +3,29 @@
 class Controller_NotificationSystem extends AbstractController {
 	function init(){
 		parent::init();
+
+		/*
+			What documents I can View
+			What status of those document I can do what actions
+
+			Create that array first 
+			[
+				doc_id=>[
+						in_status=>[
+								action1,action2
+								]
+						]
+			]
+		*/
+
 	}
 
 	function prepareSystem(){
 		// get Current User Applications
 			// store allowed app napespaces in x array
+
+		$acts = $this->add('xCRM/Activity');
+
 		// loop through xhR/Documents that fits you for can_view => d
 			// If document namespace is not in x array continue
 			// If I have muted notifications for this continue
