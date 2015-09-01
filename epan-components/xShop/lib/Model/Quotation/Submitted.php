@@ -21,14 +21,16 @@ class Model_Quotation_Submitted extends Model_Quotation{
 	}
 
 	function approve(){
-		$this['status'] = 'approved';
-		$this->saveAndUnload();
-		return "Quotation Approved";
+		$this->setStatus('approved');
+		// $this['status'] = 'approved';
+		// $this->saveAndUnload();
+		// return "Quotation Approved";
 	}
 
 	function redesign(){
-		$this['status'] = 'redesign';
-		$this->saveAndUnload();
-		return "Quotation Approved";
+		$this->setStatus('redesign');
+		// $this['status'] = 'redesign';
+		// $this->saveAndUnload();
+		// return "Quotation Approved";
 	}
 }

@@ -8,6 +8,34 @@ class Model_JobCard extends \Model_Document{
 	public $root_document_name = 'xProduction\JobCard';
 	public $show_details = true;
 	
+	public $notification_rules = array(
+		// 'activity NOT STATUS' => array (....)		
+		'approved'=>array(
+				'xProduction/Jobcard_Approved/can_receive'=>'New Jobcard Received [{order}] [{department}] [{employee}]',
+				'xProduction/Jobcard_Approved/can_cancel'=>'Your Jobcrad is cancelled by [{department}] [{employee}]',
+			),
+		
+		'processing' =>array(
+						'xProduction/Jobcard_Processing/can_mark_processed'=>'Jobcard {name} Processed',
+						'xProduction/Jobcard_Processing/can_cancel'=>'Jobcard {name} rejected to redesign by {actor} from department {department}',
+						'xProduction/Jobcard_Processing/can_send_via_email'=>'Jobcard {name} send via email by {employee}'
+					),
+
+		'processed' => array(
+						'xProduction/Jobcard_Processed/can_forward'=>'Jobcard {name} Forwarded by {employee}',
+						'xProduction/Jobcard_Processed/can_cancel'=>'Jobcard {name} cancelled by {actor} from department {department}',
+						'xProduction/Jobcard_Processed/can_send_via_email'=>'Jobcard {name} send via email by {employee}'
+					),
+
+		'assigned' => array(
+						'xProduction/Jobcard_Assigned/can_start_processing'=>'Jobcard {name} is under processing in {department} by {employee}'
+					),
+
+		'completed' => array(
+						'xProduction/Jobcard_Completed/can_send_via_email'=>'Jobcard {name} form complete send via email by {employee}'
+					)
+	);
+
 
 	function init(){
 		parent::init();

@@ -11,6 +11,14 @@ class Model_Task extends \Model_Document{
 			'can_assign'=>array()
 		);
 	
+	public $notification_rules = array(
+			// 'activity NOT STATUS' => array (....)
+			'assigned' => array('xProduction/Task_Assigned/can_start_processing'=>'New Task {task_name} is assigned to you by {employee_name}'),
+			'processing' => array('xProduction/Task_Processing/creator'=>'Your Task {task_name} is under process by {employee_name}'),
+			'processed' =>array('xProduction/Task_Processed/creator'=>'New Task {task_name} for approval, assigned to {employee_name}'),
+			'rejected' => array('xProduction/Task_Rejected/creator'=>'Your Task Rejected by {employee_name}')
+		);
+
 	function init(){
 		parent::init();
 

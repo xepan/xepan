@@ -8,6 +8,18 @@ class Model_Order extends \Model_Document{
 							'complete','cancel','return','redesign','onlineunpaid');
 	public $root_document_name = 'xShop\Order';
 
+	public $notification_rules = array(
+			// 'activity NOT STATUS' => array (....)
+			'submitted'=>array('xShop/Order_Submitted/can_approve'=>'New Order subimitted to approve [{customer}]'),
+			'approved'=>array(
+					'xShop/Order_Approved/can_send_via_email'=>'New Order Approved [{customer}], can send via email',
+					'xShop/Order_Draft/creator' => 'Your Order is approved now'
+				),
+			'redesign' =>array('xShop/Order_Draft/creator'=>'Order {name} rejected to redesign by {actor}'),
+			'cancelled' => array('xShop/Order_Cancelled/can_view'=>'Order cancelled [{customer}]'),
+			'email' => array('xShop/Order_Submitted/can_send_via_email'=>'Order emailed to {customer}')
+		);
+
 	function init(){
 		parent::init();
 		

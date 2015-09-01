@@ -5,6 +5,20 @@ class Model_PurchaseOrder extends \Model_Document{
 	public $table="xpurchase_purchase_order";
 	public $status=array('draft','approved','processing','submitted','completed','rejected','redesign','accepted');
 	public $root_document_name='xPurchase\PurchaseOrder';
+	
+	public $notification_rules = array(
+		// 'activity NOT STATUS' => array (....)
+		'submitted'=>array('xPurchase/PurchaseOrder_Submitted/can_approve'=>'New Purchase Order subimitted to approve [{supplier}]'),
+		'approved'=>array(
+				'xPurchase/PurchaseOrder_Approved/can_send_via_email'=>'New Purchase Order Approved [{supplier}], can send via email',
+				'xPurchase/PurchaseOrder_Draft/creator' => 'Your Purchase Order is approved now'
+			),
+		
+		'redesign' =>array('xPurchase/PurchaseOrder_Draft/creator'=>'Purchase Order {name} rejected to redesign by {actor}'),
+		'cancelled' =>array('xPurchase/PurchaseOrder_Cancelled/can_view'=>'Purchase Order cancelled [{supplier}]'),
+		'email' => array('xPurchase/PurchaseOrder_Submitted/can_send_via_email'=>'Purchase Order emailed to {supplier}')
+	);
+
 	function init(){
 		parent::init();
 

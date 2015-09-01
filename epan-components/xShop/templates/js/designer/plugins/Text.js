@@ -255,7 +255,7 @@ xShop_Text_Editor = function(parent){
 			current_zindex = 0;
 		}
 		current_text.css('z-index', parseInt(current_zindex)+1);
-		self.current_text_component.options.z_index = current_text.css('z-index');
+		self.current_text_component.options.zindex = current_text.css('z-index');
 		if($('span.xshop-designer-text-down-btn').hasClass('xepan-designer-button-disable')){
 			$('span.xshop-designer-text-down-btn').removeClass('xepan-designer-button-disable');
 		}
@@ -271,7 +271,7 @@ xShop_Text_Editor = function(parent){
 			current_zindex = (parseInt(current_zindex)-1);
 
 		current_text.css('z-index', current_zindex);
-		self.current_text_component.options.z_index = current_zindex;
+		self.current_text_component.options.zindex = current_zindex;
 		if(current_zindex == 0 ){
 			console.log($('span.xshop-designer-text-down-btn'));
 			$('span.xshop-designer-text-down-btn').addClass('xepan-designer-button-disable');
@@ -400,7 +400,7 @@ Text_Component = function (params){
 		colorable: true,
 		editable: true,
 		default_value:'Enter Text',
-		z_index:0,
+		zindex:0,
 		resizable: true,
 		auto_fit: false,
 		frontside:true,
@@ -497,7 +497,7 @@ Text_Component = function (params){
 		        event.stopPropagation();
 	        	
 	        	//check For the Z-index
-            	if(self.options.z_index == 0){
+            	if(self.options.zindex == 0){
             		$('span.xshop-designer-text-down-btn').addClass('xepan-designer-button-disable');
             	}else
             		$('span.xshop-designer-text-down-btn').removeClass('xepan-designer-button-disable');
@@ -533,7 +533,7 @@ Text_Component = function (params){
 					zoom: self.designer_tool.zoom,
 					stokethrough:self.options.stokethrough,
 					width: self.options.width,
-					z_index:self.options.z_index
+					zindex:self.options.zindex
 					},
 		})
 		.done(function(ret) {
