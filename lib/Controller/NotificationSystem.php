@@ -21,6 +21,8 @@ class Controller_NotificationSystem extends AbstractController {
 			$this->memorize('rules_documents_array',$rules_documents_array);
 		}
 
+		session_write_close();
+
 		$activity = $this->add('xCRM/Model_Activity');
 		$q= $activity->dsql();
 
@@ -41,20 +43,24 @@ class Controller_NotificationSystem extends AbstractController {
 
 		$seen_till=0;
 		foreach ($activity as $act) {
-			$my_rules = $rules_documents_array[$act['related_document_name']]['rules'];
-			if(!$my_rules) continue;
-			foreach ($my_rules as $mr) {
-				foreach ($mr as $doc_name_and_action => $message) {
+			$my_rules = $rules_documents_array[$act['related_document_name']]['rules'][$act['action']];
+			if(!is_array($my_rules)) continue;
+			// foreach ($my_rules as $mr) {
+				foreach ($my_rules as $doc_name_and_action => $message) {
 					$temp = explode("/", $doc_name_and_action);
 					$temp_class = $temp[0].'/Model_'.$temp[1];
 					$temp_action = $temp[2];
+					// echo $temp_class. " " . $temp_action . "<br/>";
 					if($act->checkif($temp_action,$this->add($temp_class)->tryLoad($act['related_document_id']))){
 						$this->api->current_employee->updateLastSeenActivity($act->id);
 						echo json_encode(['id'=>$act->id,'message'=>$message]);
 						exit;
 					}
+					else{
+						// echo "Failed <br/>";
+					}
 				}
-			}
+			// }
 			$seen_till = $act->id;
 		}
 
