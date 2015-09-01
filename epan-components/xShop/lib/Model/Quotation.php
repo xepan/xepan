@@ -24,7 +24,8 @@ class Model_Quotation extends \Model_Document{
 				),
 			'redesign' =>array('xShop/Quotation/creator'=>'Quotation {name} rejected to redesign by {actor}'),
 			'cancelled' =>array('xShop/Quotation_Cancelled/can_view'=>'Quotation cancelled [{customer}]'),
-			'email' => array('xShop/Quotation_Submitted/can_send_via_email'=>'Quotation emailed to {customer}')
+			'email' => array('xShop/Quotation_Submitted/can_send_via_email'=>'Quotation emailed to {customer}'),
+			'live' => array('xShop/Quotation_Submitted/can_approve'=>' {count} Quotations pending to approve')
 		);
 	
 

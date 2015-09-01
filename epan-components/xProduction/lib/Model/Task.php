@@ -54,8 +54,7 @@ class Model_Task extends \Model_Document{
 				$rd->start_processing();
 		}
 
-		$this['status']='processing';
-		$this->saveAndUnload();
+		$this->setStatus('processing',$remark);
 	}
 
 	function mark_processed_page($p){
