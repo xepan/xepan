@@ -12,6 +12,19 @@ class Model_SalesInvoice extends Model_Invoice{
 			'update_from_order'=>array(),
 		);
 
+	public $notification_rules = array(
+		// 'activity NOT STATUS' => array (....)
+		'submitted'=>array('xShop/Invoice_Submitted/can_approve'=>'New Sale Invoice subimitted to approve [{customer}]'),
+		'approved'=>array(
+				'xShop/Invoice_Approved/can_send_via_email'=>'New Sale Invoice Approved [{customer}], can send via email',
+				'xShop/Invoice_Draft/creator' => 'Your Invoice is approved now'
+			),
+		
+		'redesign' =>array('xShop/Invoice_Draft/creator'=>'Sale Invoice {name} rejected to redesign by {actor}'),
+		'cancelled' =>array('xShop/Invoice_Cancelled/can_view'=>'Sale Invoice cancelled [{customer}]'),
+		'email' => array('xShop/Quotation_Submitted/can_send_via_email'=>'Sale Invoice emailed to {customer}')
+	);
+
 	function init(){
 		parent::init();
 		$this->getElement('created_at')->system(false)->visible(true)->editable(true);

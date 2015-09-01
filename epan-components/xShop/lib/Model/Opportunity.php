@@ -15,6 +15,9 @@ class Model_Opportunity extends \Model_Document {
 			'can_manage_attachments'=>array(),
 			'can_see_activities'=>array(),
 		);
+
+	public $notification_rules = array(			
+		);
 	
 	function init(){
 		parent::init();

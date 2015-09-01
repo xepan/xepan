@@ -8,24 +8,25 @@ xShop_Image_Editor = function(parent){
 	// this.image_manager = $('<div class="btn "><span class="glyphicon glyphicon-film"></span></div>').appendTo(this.image_button_set);
 	this.image_edit = $('<div class="btn xshop-designer-image-edit-btn"><i class="icon-edit atk-size-tera"></i><br/><span class="atk-size-micro">Edit</span></div>').appendTo(this.image_button_set);
 	this.image_crop_resize = $('<div class="btn xshop-designer-image-crop-btn"><i class="icon-crop atk-size-tera"></i><br/><span class="atk-size-micro">Crop</span></div>').appendTo(this.image_button_set);
-	this.image_mask = $('<div class="btn xshop-designer-image-mask-btn"><i class="glyphicon glyphicon-picture atk-size-tera"></i><br/><span class="atk-size-micro">Mask</span></div>').appendTo(this.image_button_set);
+	
+	// this.image_mask = $('<div class="btn xshop-designer-image-mask-btn"><i class="glyphicon glyphicon-picture atk-size-tera"></i><br/><span class="atk-size-micro">Mask</span></div>').appendTo(this.image_button_set);
 	this.image_mask_apply = $('<div class="btn xshop-designer-image-mask-apply-btn"><i class="glyphicon glyphicon-picture atk-size-tera"></i><br/><span class="atk-size-micro">Apply Mask</span></div>').appendTo(this.image_button_set);
 	this.image_mask_edit = $('<div class="btn xshop-designer-image-mask-edit-btn"><i class="glyphicon glyphicon-picture atk-size-tera"></i><br/><span class="atk-size-micro">Edit Mask</span></div>').appendTo(this.image_button_set);
 	// this.image_duplicate = $('<div class="btn "><span class="glyphicon glyphicon-">Duplicate</span></div>').appendTo(this.image_button_set);
 	// this.image_manager = $('<div class="btn "><span class="glyphicon glyphicon-film"></span></div>').appendTo(this.image_button_set);
-	this.image_remove = $('<div class="btn xshop-designer-image-remove-btn"><i class="icon-trash atk-size-tera"></i><br/><span class="atk-size-micro">Remove</span></div>').appendTo(this.image_button_set);
 	this.image_lock = $('<div class="btn xshop-designer-image-lock-btn"><i class="icon-lock atk-size-tera"></i><br/><span class="atk-size-micro">Lock</span></div>').appendTo(this.image_button_set);
 	this.image_up_down = $('<div class="btn xshop-designer-image-up-down-btn"></div>').appendTo(this.image_button_set);
 	this.image_up = $('<div class="xshop-designer-image-up-btn icon-angle-circled-up atk-size-mega xshop-designer-image-up-btn" title="Bring to Front" ></div>').appendTo(this.image_up_down);
 	this.image_down = $('<div class="xshop-designer-image-down-btn icon-angle-circled-down atk-size-mega xshop-designer-image-up-btn" title="Send to Back" ></div>').appendTo(this.image_up_down);
+	this.image_remove = $('<div class="btn xshop-designer-image-remove-btn"><i class="icon-trash atk-size-tera"></i><br/><span class="atk-size-micro">Remove</span></div>').appendTo(this.image_button_set);
 	
-	this.image_mask.click(function(event){
-		self.current_image_component.options.mask_added=true;
-		options ={modal:false,
-					width:800
-				};
-		$.univ().frameURL('Add Mask Images From...','index.php?page=xShop_page_designer_itemimages',options);
-	});
+	// this.image_mask.click(function(event){
+	// 	self.current_image_component.options.mask_added=true;
+	// 	options ={modal:false,
+	// 				width:800
+	// 			};
+	// 	$.univ().frameURL('Add Mask Images From...','index.php?page=xShop_page_designer_itemimages',options);
+	// });
 
 	this.image_mask_apply.click(function(event){
 		self.current_image_component.options.apply_mask=true;
@@ -77,7 +78,7 @@ xShop_Image_Editor = function(parent){
 			current_zindex = 0;
 		}
 		current_image.css('z-index', parseInt(current_zindex)+1);
-		self.current_image_component.options.z_index = current_image.css('z-index');
+		self.current_image_component.options.zindex = current_image.css('z-index');
 		if($('div.xshop-designer-image-down-btn').hasClass('xepan-designer-button-disable')){
 			$('div.xshop-designer-image-down-btn').removeClass('xepan-designer-button-disable');
 		}
@@ -93,7 +94,7 @@ xShop_Image_Editor = function(parent){
 			current_zindex = (parseInt(current_zindex)-1);
 
 		current_image.css('z-index', current_zindex);
-		self.current_image_component.options.z_index = current_zindex;
+		self.current_image_component.options.zindex = current_zindex;
 		if(current_zindex == 0 ){
 			$('div.xshop-designer-image-down-btn').addClass('xepan-designer-button-disable');
 		}
@@ -211,7 +212,7 @@ Image_Component = function (params){
 		colorable: true,
 		editable: true,
 		default_url:'templates/images/logo.png',
-		z_index:0,
+		zindex:0,
 		resizable: true,
 		auto_fit: false,
 		frontside:true,
@@ -371,7 +372,7 @@ Image_Component = function (params){
 	            	}
 
 	            	//check For the Z-index
-	            	if(self.options.z_index == 0){
+	            	if(self.options.zindex == 0){
 	            		$('div.xshop-designer-image-down-btn').addClass('xepan-designer-button-disable');
 	            	}else
 	            		$('div.xshop-designer-image-down-btn').removeClass('xepan-designer-button-disable');
@@ -433,7 +434,7 @@ Image_Component = function (params){
 					is_mask_image:self.options.is_mask_image,
 					x: self.options.x,
 					y: self.options.y,
-					z_index:self.options.z_index
+					zindex:self.options.zindex
 				},
 		})
 		.done(function(ret) {
