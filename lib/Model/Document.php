@@ -176,12 +176,17 @@ class Model_Document extends Model_Table{
 	// 	$page->add('View')->set('In Model Document ... complete me ');
 	// }
 
-	function canI($action,$document=null, $emp=null){
+	function checkif($action,$document=null, $emp=null){
 		if(!$emp) $emp= $this->api->current_employee;
 		if(!$document){
 			$document=  $this;
 		}
+		if(!$document->loaded()) return false;
+
+		if(!isset($document->actions[$action]) && ($document->actions[$action] ===false || $document->actions[$action] === null )) return false;
 		
+		if($emp->user()->isSuperUser()) return true;
+
 		$sys_document = $this->add('xHR/Model_Document');
 		$sys_document->tryLoadBy('name',$document->document_name);
 		if(!$sys_document->loaded()) return false;
@@ -192,7 +197,7 @@ class Model_Document extends Model_Table{
 		$acl->tryLoadAny();
 
 		if(!$acl->loaded()) return false;
-		
+
 		$this->self_only_ids = array($emp->id);
 		
 		$this->include_colleagues = $emp->getColleagues();
@@ -202,6 +207,16 @@ class Model_Document extends Model_Table{
 		$this->include_subordinates[] = $this->self_only_ids[0];
 
 		$this->my_teams = $emp->getTeams();
+
+		switch ($action) {
+			case 'creator':
+				return $document['created_by_id'] == $emp->id;
+				break;
+			
+			default:
+				# code...
+				break;
+		}
 
 		$filter_ids = false;
 		switch ($acl[$action]) {

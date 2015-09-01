@@ -487,6 +487,8 @@ class page_base_owner extends Page {
 
 		if($this->app->layout->template->get('page_title')[0] == 'Page Title') $this->app->layout->template->del('page_title');
 
+		$this->add('View_Notification');
+				
 		$this->api->xpr->markPoint("ownermain (page only) rec-render done : Now components render time");
 		parent::recursiveRender();
 	}

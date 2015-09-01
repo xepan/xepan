@@ -2,20 +2,23 @@
 
 class Controller_NotificationSystem extends AbstractController {
 	
-	function test(){
+	function getNotification(){
 		$this->app->current_employee = $this->add('xHR/Model_Employee');
 		$this->app->current_employee->loadFromLogin();
 
-		$rules_documents_array=[];
-		$documents_model = $this->add('xHR/Model_Document');
-		foreach ($documents_model as $doc) {
-			$class = explode("\\", $doc['name']);
-			if(count($class) == 1)
-				$class='Model_'.$class[0];
-			else
-				$class=$class[0].'/Model_'.$class[1];
-			$obj = $this->add($class);
-			$rules_documents_array[$doc['name']] = ['table'=>$obj->table,'rules'=>$obj->notification_rules];
+		$rules_documents_array=$this->recall('rules_documents_array',[]);
+		if(empty($rules_documents_array)){
+			$documents_model = $this->add('xHR/Model_Document');
+			foreach ($documents_model as $doc) {
+				$class = explode("\\", $doc['name']);
+				if(count($class) == 1)
+					$class='Model_'.$class[0];
+				else
+					$class=$class[0].'/Model_'.$class[1];
+				$obj = $this->add($class);
+				$rules_documents_array[$doc['name']] = ['table'=>$obj->table,'rules'=>$obj->notification_rules];
+			}
+			$this->memorize('rules_documents_array',$rules_documents_array);
 		}
 
 		$activity = $this->add('xCRM/Model_Activity');
@@ -35,8 +38,8 @@ class Controller_NotificationSystem extends AbstractController {
 
 		$activity->addCondition('id','>',$this->api->current_employee['seen_till']);
 		$activity->setOrder('id');
-		$activity->debug();
 
+		$seen_till=0;
 		foreach ($activity as $act) {
 			$my_rules = $rules_documents_array[$act['related_document_name']]['rules'];
 			if(!$my_rules) continue;
@@ -45,14 +48,18 @@ class Controller_NotificationSystem extends AbstractController {
 					$temp = explode("/", $doc_name_and_action);
 					$temp_class = $temp[0].'/Model_'.$temp[1];
 					$temp_action = $temp[2];
-					if($act->canI($temp_action,$this->add($temp_class)->load($act['related_document_id']))){
-						// $this->api->current_employee->updateLastSeenActivity($act->id);
-						echo $act->id." " .$message;
-						break;
+					if($act->checkif($temp_action,$this->add($temp_class)->tryLoad($act['related_document_id']))){
+						$this->api->current_employee->updateLastSeenActivity($act->id);
+						echo json_encode(['id'=>$act->id,'message'=>$message]);
+						exit;
 					}
 				}
 			}
+			$seen_till = $act->id;
 		}
+
+		if($seen_till) $this->api->current_employee->updateLastSeenActivity($seen_till);
+		
 		/*
 			RULE BASED Notifications :
 
