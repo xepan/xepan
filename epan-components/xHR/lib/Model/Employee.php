@@ -407,4 +407,9 @@ class Model_Employee extends \Model_Table{
 		$this->save();
 		return true;
 	}
+
+	function updateLastSeenActivity($till_id){
+		$this['seen_till'] = $till_id;
+		$this->save();
+	}
 }

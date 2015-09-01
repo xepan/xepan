@@ -1,46 +1,71 @@
 <?php
 
 class Controller_NotificationSystem extends AbstractController {
-	function init(){
-		parent::init();
+	
+	function test(){
+		$this->app->current_employee = $this->add('xHR/Model_Employee');
+		$this->app->current_employee->loadFromLogin();
 
+		$rules_documents_array=[];
+		$documents_model = $this->add('xHR/Model_Document');
+		foreach ($documents_model as $doc) {
+			$class = explode("\\", $doc['name']);
+			if(count($class) == 1)
+				$class='Model_'.$class[0];
+			else
+				$class=$class[0].'/Model_'.$class[1];
+			$obj = $this->add($class);
+			$rules_documents_array[$doc['name']] = ['table'=>$obj->table,'rules'=>$obj->notification_rules];
+		}
+
+		$activity = $this->add('xCRM/Model_Activity');
+		$q= $activity->dsql();
+
+		$activity->getElement('action_from')->destroy();
+		$activity->getElement('action_to')->destroy();
+		$activity->getElement('related_document')->destroy();
+
+		// $doc_of_activity = $activity->join('xhr_documents.name','related_document_name');
+		// $acl_for_doc = $doc_of_activity->join('xhr_departments_acl.document_id');
+		// $acl_for_doc->addField('post_id');
+		// $acl_for_doc->addField('can_view');
+		// $acl_for_doc->addField('can_approve');
+
+		// $activity->addCondition('post_id',$this->api->current_employee['post_id']);
+
+		$activity->addCondition('id','>',$this->api->current_employee['seen_till']);
+		$activity->setOrder('id');
+		$activity->debug();
+
+		foreach ($activity as $act) {
+			$my_rules = $rules_documents_array[$act['related_document_name']]['rules'];
+			if(!$my_rules) continue;
+			foreach ($my_rules as $mr) {
+				foreach ($mr as $doc_name_and_action => $message) {
+					$temp = explode("/", $doc_name_and_action);
+					$temp_class = $temp[0].'/Model_'.$temp[1];
+					$temp_action = $temp[2];
+					if($act->canI($temp_action,$this->add($temp_class)->load($act['related_document_id']))){
+						// $this->api->current_employee->updateLastSeenActivity($act->id);
+						echo $act->id." " .$message;
+						break;
+					}
+				}
+			}
+		}
 		/*
-			What documents I can View
-			What status of those document I can do what actions
+			RULE BASED Notifications :
 
-			Create that array first 
-			d_array =[
-				related_document_root_name => [
-						in_status => [
-									enter => [action1,action2],
-									life => []
-								]
-						]
-			]
-
-
-			Activity that's related document root name is in d_array
-			And Last Seen is less then activity created_at
-
-		*/
-
-
-		/*
 			Get my Last seen time
 			Get my getColleagues, getSubordinats, getTeams
 
-			Activities COUNT that's last seen is greater then my last seen
-			and that's can_view is permission is as per Controller_Acl line 425
-			in SQL mode ->expr() ;)
+			Current Employee .. all documents ACL/Permissions (can_view,can_approve => self, all , ???) .. Get all documents that emp can_view
 
-			group by root_document_name, document_name
 
-		*/
+			Get Rules from all those documents
 
-		/*
-			RULE BASED Notifications :
 			define rules in models
-				$notification_rules = 	[
+				$notification_rules[related_root_name] = 	[
 											on_activity_action_this('submitted') => ['Document\Namespace'=>[
 																			'can_approve' => '{count} DocumentName(s) to approve '
 																			'can_view'=>'You have {count} Submitted Documents',
@@ -48,8 +73,27 @@ class Controller_NotificationSystem extends AbstractController {
 																		],
 											'rejected'=> 	['Document\Rejected'
 																'creator' => 'Your Document is rejected, please review {$message}'
-															]
+																'last_status_changer' => '',
+																'last_activity_by_employee' => 'sk  jfhskghj dkfgjh'
+															],
+											'email' => [
+															'super_users' => 'EMail to {customer} about {document_detail} sent',
+															'department_top_post' => 'EMail to {customer} about {document_detail} sent',
+														]
 										]
+
+
+			$ativities
+					-> IF(related_root_name == $d_array->key ) 
+		*/
+
+		/*
+
+			examples: 
+				1. QuotationDraft -> action -> submitted : 
+													Those who can_approve SubmittedQuotation
+													And this quotation satisfies can_approve condition of this employee
+														created_by_id in as per can_approve condition Controller_Acl / 465 line
 		*/
 
 	}

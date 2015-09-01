@@ -7,6 +7,7 @@ class Model_Document extends Model_Table{
 	public $status = null;
 	public $document_name=null;
 	public $root_document_name=null;
+	public $notification_rules=[];
 
 	public $default_icons=array(
 			'can_submit'=>'lock atk-swatch-red',
@@ -173,7 +174,72 @@ class Model_Document extends Model_Table{
 
 	// function assign_page($page){
 	// 	$page->add('View')->set('In Model Document ... complete me ');
-	// }m
+	// }
+
+	function canI($action,$document=null, $emp=null){
+		if(!$emp) $emp= $this->api->current_employee;
+		if(!$document){
+			$document=  $this;
+		}
+		
+		$sys_document = $this->add('xHR/Model_Document');
+		$sys_document->tryLoadBy('name',$document->document_name);
+		if(!$sys_document->loaded()) return false;
+
+		$acl = $this->add('xHR/Model_DocumentAcl');
+		$acl->addCondition('document_id', $sys_document->id);
+		$acl->addCondition('post_id', $emp['post_id']);
+		$acl->tryLoadAny();
+
+		if(!$acl->loaded()) return false;
+		
+		$this->self_only_ids = array($emp->id);
+		
+		$this->include_colleagues = $emp->getColleagues();
+		$this->include_colleagues[] = $this->self_only_ids[0];
+
+		$this->include_subordinates = $emp->getSubordinats();
+		$this->include_subordinates[] = $this->self_only_ids[0];
+
+		$this->my_teams = $emp->getTeams();
+
+		$filter_ids = false;
+		switch ($acl[$action]) {
+			case 'Self Only':
+				$filter_ids = $this->self_only_ids;
+				break;
+			case 'Include Subordinats':
+				$filter_ids = $this->include_subordinates;
+				break;
+			case 'Include Colleagues':
+				$filter_ids = $this->include_colleagues;
+				break;
+			case 'Include Subordinats & Colleagues':
+				$filter_ids = $this->include_subordinates;
+				$filter_ids = array_merge($filter_ids,$this->include_colleagues);
+				break;
+
+			case 'Assigned To Me':
+				return in_array($document['employee_id'],$this->self_only_ids);
+			break;
+			
+			case 'Assigned To My Team':
+				return in_array($document['employee_id'],$this->self_only_ids) || in_array($document['team_id'],$this->my_teams);
+			break;
+
+			case 'If Team Leader':
+			break;
+
+			default: // No
+				$filter_ids = array(0);
+				break;
+		}
+		if($filter_ids) 
+			return in_array($document['created_by_id'],$filter_ids);
+
+		return false;
+
+	}
 
 	function assignTo($to,$subject="",$message=""){
 			

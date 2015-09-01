@@ -4,6 +4,10 @@
 class page_test extends Page {
 
 	function page_index(){
+		$this->add('Controller_NotificationSystem')->test();
+	}
+
+	function page_notify(){
 		$this->js(true)
 			->_load('pnotify.custom.min')
 			->_load('xepan.pnotify')

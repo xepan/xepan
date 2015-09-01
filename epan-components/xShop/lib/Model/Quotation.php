@@ -12,8 +12,23 @@ class Model_Quotation extends \Model_Document{
 			'allow_add'=>array(),
 			'allow_del'=>array(),
 			'can_see_activities'=>array(),
-			'send_via_email'=>array(),
+			'can_send_via_email'=>array(),
 		);
+	
+	public $notification_rules = array(
+			// 'activity NOT STATUS' => array (....)
+			'submitted'=>array('xShop/Quotation_Submitted/can_approve'=>'New Quotation subimitted to approve [{customer}]'),
+			'approved'=>array(
+					'xShop/Quotation_Approved/can_send_via_email'=>'New Quotation Approved [{customer}], can send via email',
+					'xShop/Quotation_Draft/creator' => 'Your Quotation is approved now'
+				),
+			
+			'redesign' =>array('xShop/Quotation_Draft/creator'=>'Quotation {name} rejected to redesign by {actor}'),
+			'cancelled' =>array('xShop/Quotation_Cancelled/can_view'=>'Quotation cancelled [{customer}]'),
+			'email' => array('xShop/Quotation_Submitted/can_send_via_email'=>'Quotation emailed to {customer}')
+		);
+	
+
 	function init(){
 		parent::init();
 
