@@ -22,8 +22,7 @@ class Model_Quotation extends \Model_Document{
 					'xShop/Quotation_Approved/can_send_via_email'=>'New Quotation Approved [{customer}], can send via email',
 					'xShop/Quotation_Draft/creator' => 'Your Quotation is approved now'
 				),
-			
-			'redesign' =>array('xShop/Quotation_Draft/creator'=>'Quotation {name} rejected to redesign by {actor}'),
+			'redesign' =>array('xShop/Quotation/creator'=>'Quotation {name} rejected to redesign by {actor}'),
 			'cancelled' =>array('xShop/Quotation_Cancelled/can_view'=>'Quotation cancelled [{customer}]'),
 			'email' => array('xShop/Quotation_Submitted/can_send_via_email'=>'Quotation emailed to {customer}')
 		);
@@ -119,8 +118,15 @@ class Model_Quotation extends \Model_Document{
 		parent::setStatus('submitted');
 	}
 
-	function reject($message){
-		$this->setStatus('redesign');
+	function reject_page($p){
+		$f = $p->add('Form');
+		$f->addField('Text','message');
+		$f->addSubmit('Reject');
+		$self = $this;
+		if($f->isSubmitted()){
+			$this->setStatus('redesign');
+			return true;
+		}
 	}
 	
 

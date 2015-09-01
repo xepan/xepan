@@ -160,10 +160,8 @@ class Model_Document extends Model_Table{
 			$x['name'] = /* $this->getSeries() .' ' .*/ sprintf("%05d", $x->id);
 			$x->save();
 		}
-		//Creating Activity When Any Document was created
-		if($this['status']==="draft"){
-			$this->setStatus('draft','Document Created as Draft');
-		}
+		if(!$x instanceof xCRM\Model_Activity)
+			$x->createActivity('created',$x['name'].' Created','Document',$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null,$notify_via_email=false, $notify_via_sms=false,$single_attachment=null,$from_official_email=[]);
 	}
 
 	function getRootClass($specific_calss=false){
@@ -180,14 +178,17 @@ class Model_Document extends Model_Table{
 	// 	$page->add('View')->set('In Model Document ... complete me ');
 	// }
 
-	function checkif($action,$document=null, $emp=null){
+	function checkif($action_actor,$document=null, $emp=null){
 		if(!$emp) $emp= $this->api->current_employee;
 		if(!$document){
 			$document=  $this;
 		}
+		
 		if(!$document->loaded()) return false;
 
-		if(!isset($document->actions[$action]) && ($document->actions[$action] ===false || $document->actions[$action] === null )) return false;
+		$other_actions = ['creator'];
+
+		if(!in_array($action_actor, $other_actions) && !isset($document->actions[$action_actor]) && ($document->actions[$action_actor] ===false || $document->actions[$action_actor] === null )) return false;
 		
 		if($emp->user()->isSuperUser()) return true;
 
@@ -212,7 +213,7 @@ class Model_Document extends Model_Table{
 
 		$this->my_teams = $emp->getTeams();
 
-		switch ($action) {
+		switch ($action_actor) {
 			case 'creator':
 				return $document['created_by_id'] == $emp->id;
 				break;
@@ -223,7 +224,7 @@ class Model_Document extends Model_Table{
 		}
 
 		$filter_ids = false;
-		switch ($acl[$action]) {
+		switch ($acl[$action_actor]) {
 			case 'Self Only':
 				$filter_ids = $this->self_only_ids;
 				break;

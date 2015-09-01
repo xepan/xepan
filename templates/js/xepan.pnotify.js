@@ -12,17 +12,28 @@ $.each({
 			);
 		if(callback !==undefined) nn.get().click(callback);	
 	},
-	setShortPoll : function(){
-		$.univ().getNotification();
-	},
-
+	
 	getNotification: function (){
-		$.atk4.get('index.php?page=owner_notification',{},function(ret){
-			msg = JSON.parse(ret);
-			if(msg['message']){
-				$.univ().notify("Title Here", msg['message'],null,true);
+		$.ajax({
+			url: 'index.php?page=owner_notification',
+		})
+		.done(function(ret) {
+			try{
+				msg = JSON.parse(ret);
+				if(msg['message']){
+					$.univ().notify("Title Here", msg['message'],null,true);
+				}
+			}catch(e){
+
 			}
-			// $.univ().getNotification();
-		});
+		})
+		.fail(function() {
+			// console.log("error");
+		})
+		.always(function() {
+			$.univ().getNotification();
+			// console.log("complete");
+		});		
 	}
+	
 }, $.univ._import);
