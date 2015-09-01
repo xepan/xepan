@@ -160,6 +160,10 @@ class Model_Document extends Model_Table{
 			$x['name'] = /* $this->getSeries() .' ' .*/ sprintf("%05d", $x->id);
 			$x->save();
 		}
+		//Creating Activity When Any Document was created
+		if($this['status']==="draft"){
+			$this->setStatus('draft','Document Created as Draft');
+		}
 	}
 
 	function getRootClass($specific_calss=false){
