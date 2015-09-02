@@ -6,17 +6,19 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 	public $root_document_name = 'xPurchase\PurchaseInvoice';
 
 	public $notification_rules = array(
-		// 'activity NOT STATUS' => array (....)
-		'submitted'=>array('xPurchase/Invoice_Submitted/can_approve'=>'New Purchase Invoice subimitted to approve [{customer}]'),
-		'approved'=>array(
-				'xPurchase/Invoice_Approved/can_send_via_email'=>'New Purchase Invoice Approved [{customer}], can send via email',
-				'xPurchase/Invoice_Draft/creator' => 'Your Purchase Invoice is approved now'
-			),
-		
-		'redesign' =>array('xPurchase/Invoice_Draft/creator'=>'Purchase Invoice {name} rejected to redesign by {actor}'),
-		'cancelled' =>array('xPurchase/Invoice_Cancelled/can_view'=>'Purchase Invoice cancelled [{customer}]'),
-		'email' => array('xPurchase/Quotation_Submitted/can_send_via_email'=>'Purchase Invoice emailed to {customer}')
-	);
+			// 'activity NOT STATUS' => array (....)
+			'submitted' => array('xPurchase/Invoice_Submitted/can_approve'=>'New Purchase Invoice subimitted to approve [{supplier}]'),
+			'approved' => array('xPurchase/Invoice_Approved/creator' => 'Your Purchase Invoice {purchase_invoice_name} is approved now'),
+			'redesign' => array('xPurchase/Invoice_Redesign/creator'=>'Purchase Invoice {name} rejected by {actor} for redesign'),
+			'cancelled' => array('xPurchase/Invoice_Canceled/can_view'=>'Purchase Invoice of [{supplier}] canceled by [{employee_name}]'),
+			'completed' => array('xPurchase/Invoice_Completed/can_view'=>'Purchase Invoice {purchase_invoice_name} Completed by {employee_name}'),
+			'email' => array('xPurchase/PurchaseInvoice/can_send_via_email'=>'Purchase Invoice {purchase_invoice_name} emailed to {supplier} by {employee_name}'),
+			'comment' => array('xPurchase/PurchaseInvoice/can_see_activities'=>'New Comment Added by {employee_name} on {purchase_invoice_name}'),
+			'call' => array('xPurchase/PurchaseInvoice/can_see_activities'=>'New Activity of {purchase_invoice_name} to see, Communication between {supplier} and {employee}'),
+			'sms' => array('xPurchase/PurchaseInvoice/can_see_activities'=>'Purchase Invoice {purchase_invoice_name} Supplier {supplier_name} notify via sms by {employee_name}'),
+			'personal' => array('xPurchase/PurchaseInvoice/can_see_activities'=>'personal Communication between {supplier_name} and  {employee_name} on {purchase_invoice_name}'),
+			'action' => array('xPurchase/PurchaseInvoice/can_see_activities'=>'Action taken by {employee_name} on {purchase_order_name}')
+		);
 
 	function init(){
 		parent::init();
