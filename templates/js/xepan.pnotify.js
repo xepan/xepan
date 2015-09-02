@@ -26,9 +26,9 @@ $.each({
 		}
 	},
 	
-	getNotification: function (){
+	getNotification: function (xUrl){
 		$.ajax({
-			url: 'index.php?page=owner_notification',
+			url: xUrl,
 		})
 		.done(function(ret) {
 			try{
@@ -44,7 +44,7 @@ $.each({
 			// console.log("error");
 		})
 		.always(function() {
-			$.univ().getNotification();
+			$.univ().getNotification(xUrl);
 			// console.log("complete");
 		});		
 	}

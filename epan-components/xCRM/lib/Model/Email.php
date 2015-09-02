@@ -6,6 +6,9 @@ class Model_Email extends \Model_Document{
 	public $table = 'xcrm_emails';
 	public $status = array();
 	public $root_document_name='xCRM\Email';
+	
+	public $acl = ['can_view'=>['All'=>'All','No'=>'No','Includes My EmailID'=>'Emails Related to My Email Id(s)']];
+
 	public $actions=array(
 			'can_view'=>array(),
 			// 'allow_add'=>array(),

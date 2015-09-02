@@ -2,7 +2,7 @@
 
 namespace xCRM;
 
-class Model_AssociatedEmail extends Model_Email{
+class Model_AssociatedEmail extends Model_Email {
 	function init(){
 		parent::init();
 
