@@ -118,7 +118,6 @@ class Controller_Acl extends \AbstractController {
 		$this->include_subordinates[] = $this->self_only_ids[0];
 
 		$this->my_teams = $this->api->current_employee->getTeams();
-		
 		// CRUD
 		if($this->owner instanceof \CRUD){
 			// check add edit delete
@@ -191,20 +190,19 @@ class Controller_Acl extends \AbstractController {
 						}
 						$fields = array_merge(array('post_department','post','post_id'),$defined_permissions);
 					}
+					
+					foreach ($fields as $acl_fld) {
+						if($fld = $m->hasElement($acl_fld)){
+							if(isset($this->my_model->acl[$acl_fld]))
+								$fld->setValueList($this->my_model->acl[$acl_fld]);
+						}
+					}
+
 					$c->setModel($m,$fields);
+					
+					
 					if(!$c->isEditing()){
 						$c->grid->removeColumn('post_id');
-						// foreach ($fields as $f) {
-						// 	if(!in_array($f, array('post_department','post','post_id')))
-						// 		$c->grid->addFormatter($f,'grid/inline');
-						// }
-					}else{
-						foreach ($fields as $acl_fld) {
-							if($fld = $c->hasElement($acl_fld)){
-								if(isset($this->my_model->acl[$acl_fld]))
-									$fld->setValueList($this->my_model->acl[$acl_fld]);
-							}
-						}
 					}
 				});
 
@@ -418,6 +416,7 @@ class Controller_Acl extends \AbstractController {
 	}
 
 	function filterModel($model, $filter_column='created_by_id'){
+		
 		// $acl =array('No'=>'No','Self Only'=>'Created By Employee',
 		// 'Include Subordinats'=>'Created By Subordinates','Include Colleagues'=>'Created By Colleagues',
 		// 'Include Subordinats & Colleagues'=>'Created By Subordinats or Colleagues',
@@ -444,6 +443,8 @@ class Controller_Acl extends \AbstractController {
 				$filter_ids = array_merge($filter_ids,$this->include_colleagues);
 				break;
 
+			// For tasks
+
 			case 'Assigned To Me':
 				$this->owner->model->addCondition('employee_id',$this->self_only_ids);
 			break;
@@ -458,6 +459,25 @@ class Controller_Acl extends \AbstractController {
 			break;
 
 			case 'If Team Leader':
+			break;
+
+			// For xEmail
+
+			case "Includes My EmailID":
+				$this->my_model->_dsql()->del('where');
+				$this->my_model->addCondition(
+					$model->dsql()->orExpr()
+					->where('from_email','like',$this->api->current_employee['company_email_id']?'%'.$this->api->current_employee['company_email_id'].'%':"null")
+					->where('to_email','like',$this->api->current_employee['company_email_id']?'%'.$this->api->current_employee['company_email_id'].'%':"null")
+					->where('cc','like',$this->api->current_employee['company_email_id']?'%'.$this->api->current_employee['company_email_id'].'%':"null")
+					->where('bcc','like',$this->api->current_employee['company_email_id']?'%'.$this->api->current_employee['company_email_id'].'%':"null")
+
+					->where('from_email','like','%'.$this->api->current_employee['personal_email'].'%')
+					->where('to_email','like','%'.$this->api->current_employee['personal_email'].'%')
+					->where('cc','like','%'.$this->api->current_employee['personal_email'].'%')
+					->where('bcc','like','%'.$this->api->current_employee['personal_email'].'%')
+					)
+					;
 			break;
 
 			default: // No

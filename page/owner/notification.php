@@ -8,7 +8,7 @@ class page_owner_notification extends page_base_owner{
 			$ns=$this->add('Controller_NotificationSystem');
 			// while(true){
 				$ns->getNotification();
-			// 	usleep(1000);
+			// 	usleep(5000);
 			// }
 			exit;
 		}
