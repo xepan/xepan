@@ -40,8 +40,9 @@ BackgroundImage_Component = function (params){
 	this.renderTool = function(parent){
 		var self=this;
 		this.parent = parent;
-		tool_btn = $('<div class="btn xshop-designer-backgroundimage-toolbtn"><i class="glyphicon glyphicon-picture"></i><br>BGI</div>').appendTo(parent.find('.xshop-designer-tool-topbar-buttonset')).data('tool',self);
-
+		bgi_tool_btn = $('<div class="btn xshop-designer-backgroundimage-toolbtn"></div>').appendTo(parent.find('.xshop-designer-tool-topbar-buttonset')).data('tool',self);
+		tool_btn = $('<div><i class="glyphicon glyphicon-picture"></i><br>BGI</div>').appendTo(bgi_tool_btn);
+		remove_btn = $('<div class="atk-swatch-red icon-trash"></div>').appendTo(bgi_tool_btn);
 		tool_btn.click(function(event){
 			self.designer_tool.current_selected_component = self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background;
 			options ={modal:false,
@@ -52,6 +53,23 @@ BackgroundImage_Component = function (params){
 				};
 			$.univ().frameURL('Add Images From...','index.php?page=xShop_page_designer_itemimages',options);
 		});
+
+		remove_btn.click(function(event){
+			self.designer_tool.current_selected_component = self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background;
+			// $('.xepan-designer-background-image span > img').attr('src','');
+
+			$(self.designer_tool.current_selected_component.element).hide();
+			$(self.designer_tool.current_selected_component.element).find('img').removeAttr('src');
+
+			self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background.options.url=undefined;
+			// self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background.options.type='BackgroundImage';
+			// delete self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background;
+			// console.log(self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout]);
+			self.designer_tool.current_selected_component = null;
+
+
+		});
+
 	}
 
 
@@ -59,7 +77,7 @@ BackgroundImage_Component = function (params){
 		var self = this;
 		if(this.options.url == undefined) return;
 		if(this.element == undefined){
-			this.element = $('<div style="position:absolute;z-index:-10;" class="xshop-designer-component"><span><img></img></span></div>').appendTo(this.canvas);
+			this.element = $('<div style="position:absolute;z-index:-10;" class="xshop-designer-component xepan-designer-background-image"><span><img></img></span></div>').appendTo(this.canvas);
 			self.options.width = self.designer_tool.screen2option(self.designer_tool.canvas.width());
 			self.options.height = self.designer_tool.screen2option(self.designer_tool.canvas.height());
 		}else{

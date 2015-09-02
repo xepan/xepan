@@ -42,18 +42,9 @@ class page_xShop_page_designer_save extends Page {
 			foreach ($page as $layout) {
 				foreach ($layout['components'] as $component) {
 					$component = json_decode($component,true);
-					$keys = array_map(
-										function($component) { 
-											return $component['zindex']; 
-										}, 
-										$save_data
-									);
-					array_multisort($keys, $);
 				}
 			}
 		}
-
-		throw new \Exception($save_data);
 		
 		$save_data = json_encode($save_data);
 
