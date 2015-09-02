@@ -10,7 +10,7 @@ $global_start = time()+microtime();
 $app = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 $app = (parse_url($app));
 $app_path = str_replace("/", "_", $app['path']);
-$session_var='web';//$app_path;
+$session_var=isset($_GET['xepan_session'])?$_GET['xepan_session']:'web';//$app_path;
 
 if(isset($_GET['page'])){
 	$page=$_GET['page'];
@@ -24,5 +24,6 @@ if(isset($_GET['page'])){
 include 'atk4/loader.php';
 include 'vendor/autoload.php';
 $api=new Frontend($session_var);
+if(isset($_GET['xepan_session'])) $api->stickyGET('xepan_session');
 $api->main();
 $api->xpr->dump();
