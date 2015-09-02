@@ -9,14 +9,16 @@ class Model_PurchaseOrder extends \Model_Document{
 	public $notification_rules = array(
 		// 'activity NOT STATUS' => array (....)
 		'submitted'=>array('xPurchase/PurchaseOrder_Submitted/can_approve'=>'New Purchase Order subimitted to approve [{supplier}]'),
-		'approved'=>array(
-				'xPurchase/PurchaseOrder_Approved/can_send_via_email'=>'New Purchase Order Approved [{supplier}], can send via email',
-				'xPurchase/PurchaseOrder_Draft/creator' => 'Your Purchase Order is approved now'
-			),
-		
+		'approved'=>array('xPurchase/PurchaseOrder_Draft/creator' => 'Your Purchase Order is approved now'),
+		'completed' => array('xPurchase/PurchaseOrder_Completed/can_view'=>'Purchase Order {purchase_order_name} Completed by {employee_name}'),	
 		'redesign' =>array('xPurchase/PurchaseOrder_Draft/creator'=>'Purchase Order {name} rejected to redesign by {actor}'),
 		'cancelled' =>array('xPurchase/PurchaseOrder_Cancelled/can_view'=>'Purchase Order cancelled [{supplier}]'),
-		'email' => array('xPurchase/PurchaseOrder_Submitted/can_send_via_email'=>'Purchase Order emailed to {supplier}')
+		'email' => array('xPurchase/PurchaseOrder_Submitted/can_send_via_email'=>'Purchase Order emailed to {supplier}'),
+		'comment' => array('xPurchase/PurchaseOrder/can_see_activities'=>'New Comment Added by {employee_name} on {purchase_order_name}'),
+		'call' => array('xPurchase/PurchaseOrder/can_see_activities'=>'New Activity of {purchase_order_name} to see, Communication between {supplier} and {employee}'),
+		'sms' => array('xPurchase/PurchaseOrder/can_see_activities'=>'Purchase Invoice {purchase_order_name} Supplier {supplier_name} notify via sms by {employee_name}'),
+		'personal' => array('xPurchase/PurchaseOrder/can_see_activities'=>'personal Communication between {supplier_name} and  {employee_name} on {purchase_invoice_name}'),
+		'action' => array('xPurchase/PurchaseOrder/can_see_activities'=>'Action taken by {employee_name} on {purchase_order_name}')
 	);
 
 	function init(){
