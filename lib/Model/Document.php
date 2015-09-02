@@ -186,7 +186,7 @@ class Model_Document extends Model_Table{
 		
 		if(!$document->loaded()) return false;
 
-		$other_actions = ['creator'];
+		$other_actions = ['creator','assignee'];
 
 		if(!in_array($action_actor, $other_actions) && !isset($document->actions[$action_actor]) && ($document->actions[$action_actor] ===false || $document->actions[$action_actor] === null )) return false;
 		
@@ -218,6 +218,8 @@ class Model_Document extends Model_Table{
 				return $document['created_by_id'] == $emp->id;
 				break;
 			
+			case 'assignee':
+				return $document['employee_id'] == $emp->id;
 			default:
 				# code...
 				break;
