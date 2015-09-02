@@ -19,10 +19,10 @@ class Controller_NotificationSystem extends AbstractController {
 					$class=$class[0].'/Model_'.$class[1];
 				try{
 					$obj = $this->add($class);
+					$rules_documents_array[$doc['name']] = ['table'=>$obj->table,'rules'=>$obj->notification_rules];
 				}catch(Exception $e){
-					
+
 				}
-				$rules_documents_array[$doc['name']] = ['table'=>$obj->table,'rules'=>$obj->notification_rules];
 			}
 		}
 
