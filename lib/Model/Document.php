@@ -196,7 +196,7 @@ class Model_Document extends Model_Table{
 		$sys_document->tryLoadBy('name',$document->document_name);
 		if(!$sys_document->loaded()) return false;
 
-		if($cached = $this->recall('checkif_cache'.$emp->id.$action_actor.$document->related_document_name,false)) return $cached;
+		if($cached = $this->recall('checkif_cache'.$emp->id.$action_actor.$document->related_root_document_name,false)) return $cached;
 
 		$acl = $this->add('xHR/Model_DocumentAcl');
 		$acl->addCondition('document_id', $sys_document->id);
@@ -204,7 +204,7 @@ class Model_Document extends Model_Table{
 		$acl->tryLoadAny();
 
 		if(!$acl->loaded()) {
-			$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->related_document_name,false);
+			$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->related_root_document_name,false);
 			return false;
 		}
 
@@ -263,11 +263,11 @@ class Model_Document extends Model_Table{
 				break;
 		}
 		if($filter_ids){
-			$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->related_document_name,in_array($document['created_by_id'],$filter_ids));
+			$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->related_root_document_name,in_array($document['created_by_id'],$filter_ids));
 			return in_array($document['created_by_id'],$filter_ids);
 		}
 		
-		$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->related_document_name,false);
+		$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->related_root_document_name,false);
 		return false;
 
 	}
