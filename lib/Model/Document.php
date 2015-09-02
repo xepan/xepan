@@ -196,15 +196,28 @@ class Model_Document extends Model_Table{
 		$sys_document->tryLoadBy('name',$document->document_name);
 		if(!$sys_document->loaded()) return false;
 
-		if($cached = $this->recall('checkif_cache'.$emp->id.$action_actor.$document->related_root_document_name,false)) return $cached;
+		if($cached = $this->recall('checkif_cache'.$emp->id.$action_actor.$document->root_document_name,false)) return $cached;
 
+
+		switch ($action_actor) {
+			case 'creator':
+				return $document['created_by_id'] == $emp->id;
+				break;
+			
+			case 'assignee':			
+				return $document['employee_id'] == $emp->id;
+			default:
+				# code...
+				break;
+		}
+		
 		$acl = $this->add('xHR/Model_DocumentAcl');
 		$acl->addCondition('document_id', $sys_document->id);
 		$acl->addCondition('post_id', $emp['post_id']);
 		$acl->tryLoadAny();
 
 		if(!$acl->loaded()) {
-			$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->related_root_document_name,false);
+			$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->root_document_name,false);
 			return false;
 		}
 
@@ -218,18 +231,6 @@ class Model_Document extends Model_Table{
 		$this->include_subordinates[] = $this->self_only_ids[0];
 
 		$this->my_teams = $emp->getTeams();
-
-		switch ($action_actor) {
-			case 'creator':
-				return $document['created_by_id'] == $emp->id;
-				break;
-			
-			case 'assignee':
-				return $document['employee_id'] == $emp->id;
-			default:
-				# code...
-				break;
-		}
 
 		$filter_ids = false;
 		switch ($acl[$action_actor]) {
@@ -263,11 +264,11 @@ class Model_Document extends Model_Table{
 				break;
 		}
 		if($filter_ids){
-			$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->related_root_document_name,in_array($document['created_by_id'],$filter_ids));
+			$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->root_document_name,in_array($document['created_by_id'],$filter_ids));
 			return in_array($document['created_by_id'],$filter_ids);
 		}
 		
-		$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->related_root_document_name,false);
+		$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->root_document_name,false);
 		return false;
 
 	}
