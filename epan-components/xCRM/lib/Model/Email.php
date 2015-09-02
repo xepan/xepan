@@ -183,7 +183,7 @@ class Model_Email extends \Model_Document{
 		$page->add('H4')->set('Create Task')->addClass('atk-swatch-ink atk-padding-small');
 		$task_form = $page->add('Form_Stacked');
 		$narration_field = $task_form->addField('text','narration')->set($this['subject']);
-		$employee_field = $task_form->addField('autocomplete/Basic','employee','Assign To Employee');
+		$employee_field = $task_form->addField('autocomplete/Basic','employee','Assign To Employee')->validateNotNull();
 		$employee_field->setModel($employee_model);
 
 		$task_end_date_field = $task_form->addField('DatePicker','expected_end_date');
@@ -420,14 +420,15 @@ class Model_Email extends \Model_Document{
 		if($this['task_id'])
 			$task->load($this['task_id']);
 		
-		$task['status']= 'assigned';
-		$task['employee_id']= $assing_to_employee_id;
+		$task['status']= 'created';
 		$task['subject'] = $narration;
 		$task['content'] = $this['subject'].'<br/>'.$this['message'];
 		$task['expected_end_date'] = $expected_end_date;
 		$task['Priority'] = $priority;
 		$task->relatedDocument($this);
 		$task->save();
+		if($assing_to_employee_id)
+			$task->assign($assing_to_employee_id);
 
 		//Update Email Task Id
 		$this['task_id'] = $task->id;

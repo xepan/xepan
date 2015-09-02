@@ -17,15 +17,14 @@ class Model_Quotation extends \Model_Document{
 	
 	public $notification_rules = array(
 			// 'activity NOT STATUS' => array (....)
-			'submitted'=>array('xShop/Quotation_Submitted/can_approve'=>'New Quotation subimitted to approve [{customer}]'),
-			'approved'=>array(
-					'xShop/Quotation_Approved/can_send_via_email'=>'New Quotation Approved [{customer}], can send via email',
-					'xShop/Quotation/creator' => 'Your Quotation is approved now'
-				),
-			'redesign' =>array('xShop/Quotation/creator'=>'Quotation {name} rejected to redesign by {actor}'),
-			'cancelled' =>array('xShop/Quotation_Cancelled/can_view'=>'Quotation cancelled [{customer}]'),
-			'email' => array('xShop/Quotation/can_send_via_email'=>'Quotation emailed to {customer}'),
-			'live' => array('xShop/Quotation_Submitted/can_approve'=>' {count} Quotations pending to approve')
+			'submitted'=>array('xShop/Quotation_Submitted/can_approve'=>['title'=>"New Quotation Submitted",'message'=>'New Quotation {name} is subimitted to approve by {created_by} ','sticky'=>true]),
+			'approved'=>array('xShop/Quotation/creator' => ['title'=>"Quotation Approved",'message'=>"Your Quotation {name} is approved by {created_by}",'sticky'=>true]),
+			'redesign' =>array('xShop/Quotation/creator'=>['title'=>"Quotation for Redesign",'message'=>"Quotation {name} rejected by {created_by} to Redesign",'sticky'=>true]),
+			'cancelled' =>array('xShop/Quotation_Cancelled/can_view'=>['title'=>'Quotation Canceled','message'=>'Quotation {name} cancelled by {created_by}','sticky'=>true]),
+			'email' => array('xShop/Quotation_Approved/can_send_via_email'=>['title'=>"Quotation {name} email to {to} {to_email} by {created_by}",'sticky'=>true]),
+			'live' => array('xShop/Quotation_Submitted/can_approve'=>['title'=>"Total Quotation to Approve",'message'=>"{count} Quotations pending to approve",'sticky'=>true]),
+			'live' => array('xShop/Quotation_Approved/creator'=>['title'=>"Total Quotation to Approve",'message'=>"{count} Quotations pending to approve",'sticky'=>true])
+
 		);
 	
 
