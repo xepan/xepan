@@ -194,10 +194,10 @@ class Controller_Acl extends \AbstractController {
 					$c->setModel($m,$fields);
 					if(!$c->isEditing()){
 						$c->grid->removeColumn('post_id');
-						foreach ($fields as $f) {
-							if(!in_array($f, array('post_department','post','post_id')))
-								$c->grid->addFormatter($f,'grid/inline');
-						}
+						// foreach ($fields as $f) {
+							// if(!in_array($f, array('post_department','post','post_id')))
+							// 	$c->grid->addFormatter($f,'grid/inline');
+						// }
 					}
 				});
 
