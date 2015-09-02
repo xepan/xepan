@@ -196,12 +196,18 @@ class Model_Document extends Model_Table{
 		$sys_document->tryLoadBy('name',$document->document_name);
 		if(!$sys_document->loaded()) return false;
 
+		if($cached = $this->recall('checkif_cache'.$emp->id.$action_actor.$document->related_document_name,false)) return $cached;
+
 		$acl = $this->add('xHR/Model_DocumentAcl');
 		$acl->addCondition('document_id', $sys_document->id);
 		$acl->addCondition('post_id', $emp['post_id']);
 		$acl->tryLoadAny();
 
-		if(!$acl->loaded()) return false;
+		if(!$acl->loaded()) {
+			$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->related_document_name,false);
+			return false;
+		}
+
 
 		$this->self_only_ids = array($emp->id);
 		
@@ -256,9 +262,12 @@ class Model_Document extends Model_Table{
 				$filter_ids = array(0);
 				break;
 		}
-		if($filter_ids) 
+		if($filter_ids){
+			$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->related_document_name,in_array($document['created_by_id'],$filter_ids));
 			return in_array($document['created_by_id'],$filter_ids);
-
+		}
+		
+		$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->related_document_name,false);
 		return false;
 
 	}
@@ -411,6 +420,11 @@ class Model_Document extends Model_Table{
 		$crud->addHook('crud_form_submit',function($crud,$form){
 			$form->model->notify = true;
 			return true;
+		});
+
+		$self= $this;
+		$activities->addHook('beforeSave',function($m)use($self){
+			$m['related_document_name'] = $self->document_name;
 		});
 
 		$crud->setModel($activities,array('created_at','action_from','action','subject','message','notify_via_email','email_to','notify_via_sms','sms_to','attachment_id'));
