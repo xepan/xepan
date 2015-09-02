@@ -17,10 +17,10 @@ class Model_Quotation extends \Model_Document{
 	
 	public $notification_rules = array(
 			// 'activity NOT STATUS' => array (....)
-			'submitted'=>array('xShop/Quotation_Submitted/can_approve'=>'New Quotation subimitted to approve [{customer}]'),
+			'submitted'=>array('xShop/Quotation_Draft/can_approve'=>'New Quotation subimitted to approve [{customer}]'),
 			'approved'=>array(
 					'xShop/Quotation_Approved/can_send_via_email'=>'New Quotation Approved [{customer}], can send via email',
-					'xShop/Quotation_Draft/creator' => 'Your Quotation is approved now'
+					'xShop/Quotation/creator' => 'Your Quotation is approved now'
 				),
 			'redesign' =>array('xShop/Quotation/creator'=>'Quotation {name} rejected to redesign by {actor}'),
 			'cancelled' =>array('xShop/Quotation_Cancelled/can_view'=>'Quotation cancelled [{customer}]'),
