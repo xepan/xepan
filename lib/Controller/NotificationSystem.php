@@ -1,26 +1,32 @@
 <?php
 
 class Controller_NotificationSystem extends AbstractController {
-	
+	public $documents = null;
 	function getNotification(){
 		$this->app->current_employee = $this->add('xHR/Model_Employee');
 		$this->app->current_employee->loadFromLogin();
 
-		$rules_documents_array=$this->recall('rules_documents_array',[]);
-		if(empty($rules_documents_array)){
-			$documents_model = $this->add('xHR/Model_Document');
-			foreach ($documents_model as $doc) {
+		if(!($rules_documents_array = $this->recall('rules_documents',false))){
+			$this->documents =  $this->add('xHR/Model_Document')->getDefaults();
+			
+			$rules_documents_array=[];
+
+			foreach ($this->documents as $doc) {
 				$class = explode("\\", $doc['name']);
 				if(count($class) == 1)
 					$class='Model_'.$class[0];
 				else
 					$class=$class[0].'/Model_'.$class[1];
-				$obj = $this->add($class);
-				$rules_documents_array[$doc['name']] = ['table'=>$obj->table,'rules'=>$obj->notification_rules];
+				try{
+					$obj = $this->add($class);
+					$rules_documents_array[$doc['name']] = ['table'=>$obj->table,'rules'=>$obj->notification_rules];
+				}catch(Exception $e){
+
+				}
 			}
-			$this->memorize('rules_documents_array',$rules_documents_array);
 		}
 
+		$this->memorize('rules_documents',$rules_documents_array);
 		session_write_close();
 
 		$activity = $this->add('xCRM/Model_Activity');
