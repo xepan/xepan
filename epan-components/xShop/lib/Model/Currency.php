@@ -34,7 +34,7 @@ class Model_Currency extends \Model_Table {
 	}
 
 	function defaultCurrency(){
-		return $this->addCondition('is_default',true)->tryLoadAny();
+		return $this->newInstance()->addCondition('is_default',true)->tryLoadAny();
 	}
 
 }
