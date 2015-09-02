@@ -195,9 +195,16 @@ class Controller_Acl extends \AbstractController {
 					if(!$c->isEditing()){
 						$c->grid->removeColumn('post_id');
 						// foreach ($fields as $f) {
-							// if(!in_array($f, array('post_department','post','post_id')))
-							// 	$c->grid->addFormatter($f,'grid/inline');
+						// 	if(!in_array($f, array('post_department','post','post_id')))
+						// 		$c->grid->addFormatter($f,'grid/inline');
 						// }
+					}else{
+						foreach ($fields as $acl_fld) {
+							if($fld = $c->hasElement($acl_fld)){
+								if(isset($this->my_model->acl[$acl_fld]))
+									$fld->setValueList($this->my_model->acl[$acl_fld]);
+							}
+						}
 					}
 				});
 
