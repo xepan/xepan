@@ -57,12 +57,21 @@ class Controller_NotificationSystem extends AbstractController {
 					$temp_action = $temp[2];
 					$related_document = $this->add($temp_class)->tryLoad($act['related_document_id']);
 					if($act->checkif($temp_action,$related_document)){
+						$title=null;
+						$type=null;
+						$sticky=null;
+						if(is_array($message)){
+							$title = $message['title']; 
+							$type = $message['type']; 
+							$sticky = $message['sticky']; 
+							$message = $message['message']; 
+						}
 						$this->api->current_employee->updateLastSeenActivity($act->id);
 						$message_text = $this->add('View');
 						$message_text->template->loadTemplateFromString($message);
 						$message_text->setModel($related_document);
 						$message_text= $message_text->getHTML();
-						echo json_encode(['id'=>$act->id,'message'=>$message_text]);
+						echo json_encode(['id'=>$act->id,'message'=>$message_text,'type'=>$type,'title'=>$title , 'sticky'=>$sticky]);
 						exit;
 					}
 					else{
