@@ -67,4 +67,38 @@ class Model_Document extends \Model_Table {
 		file_put_contents($filename, json_encode($arr));
 	}
 
+	function getRules(){
+		$filename = getcwd().'/epan-components/xHR/default-documents-rules.xepan';
+		if(!file_exists($filename)) return false;
+		$data= file_get_contents($filename);
+		$arr = json_decode($data,true);
+		return $arr;
+	}
+
+	function saveRules(){
+		set_time_limit(0);
+		$filename = getcwd().'/epan-components/xHR/default-documents-rules.xepan';
+		$d= $this->add('xHR/Model_Document');
+		$arr = $d->getRows();
+
+		$rules_documents_array=[];
+		foreach ($arr as $doc) {
+			$class = explode("\\", $doc['name']);
+			if(count($class) == 1)
+				$class='Model_'.$class[0];
+			else
+				$class=$class[0].'/Model_'.$class[1];
+			try{
+				$obj = $this->add($class);
+				$rules_documents_array[$obj->root_document_name] = ['table'=>$obj->table,'rules'=>$obj->notification_rules];
+				$obj->destroy();
+			}catch(Exception $e){
+
+			}
+		}
+
+		file_put_contents($filename, json_encode($rules_documents_array));
+		return $rules_documents_array;
+	}
+
 }
