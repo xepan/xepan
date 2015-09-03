@@ -47,11 +47,15 @@ class Controller_NotificationSystem extends AbstractController {
 						$temp_2 = explode('\\', $act['related_document_name']?:$act['related_root_document_name']);
 						$temp_class = $temp_2[0].'/Model_'.$temp_2[1];
 						$temp_action = $temp[1];
+						$related_document = $this->add($temp_class)->tryLoad($act['related_document_id']);
 					}else{
 						$temp_class = $temp[0].'/Model_'.$temp[1];
 						$temp_action = $temp[2];
+						$related_document = $this->add($temp_class)->tryLoad($act['related_document_id']);
+						if($related_document instanceof xCRM\Model_Email)
+							if(!in_array($related_document['from'],['Lead','Opportunity','Customer','Employee','Supplier','OutSourceParty'])) 
+								continue;
 					}
-					$related_document = $this->add($temp_class)->tryLoad($act['related_document_id']);
 					if($related_document->checkif($temp_action)){
 						$title=null;
 						$type=null;
@@ -61,7 +65,7 @@ class Controller_NotificationSystem extends AbstractController {
 							$title_view = $this->add('View');
 							$title_view->template->loadTemplateFromString($title);
 
-							$title_view->template->set(array_merge($related_document->getRows(),$act));
+							$title_view->template->set(array_merge($act,$related_document->data));
 							$title= $title_view->getHTML();
 
 							$type = $message['type']; 
@@ -74,7 +78,7 @@ class Controller_NotificationSystem extends AbstractController {
 						$message_text = $this->add('View');
 						$message_text->template->loadTemplateFromString($message);
 
-						$message_text->template->set(array_merge($related_document->getRows(),$act));
+						$message_text->template->set(array_merge($act,$related_document->data));
 						$message_text= $message_text->getHTML();
 						echo json_encode(['id'=>$act['id'],'message'=>$message_text,'type'=>$type,'title'=>$title , 'sticky'=>$sticky]);
 						exit;
