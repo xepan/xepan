@@ -7,6 +7,10 @@ class page_test extends Page {
 		$this->add('Controller_NotificationSystem')->test();
 	}
 
+	function page_activitylog(){
+		$this->add('View_ActivityLog');
+	}
+
 	function page_notify(){
 		$this->js(true)
 			->_load('pnotify.custom.min')
