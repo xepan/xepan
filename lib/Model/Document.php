@@ -237,7 +237,7 @@ class Model_Document extends Model_Table{
 		switch ($acl[$action_actor]) {
 			case 'All':
 				return true;
-				
+
 			case 'Self Only':
 				$filter_ids = $this->self_only_ids;
 				break;
@@ -261,6 +261,23 @@ class Model_Document extends Model_Table{
 			break;
 
 			case 'If Team Leader':
+			break;
+
+			case "Includes My EmailID":
+					$check_emails = array_merge(explode(",", $this->api->current_employee['company_email_id']),explode(",", $this->api->current_employee['personal_email']));
+					$emails_in_doc = array_merge(
+							explode(",", $document['cc']),
+							explode(",", $document['bcc']),
+							explode(",", $document['from_email']),
+							explode(",", $document['to_email'])
+						);
+					$found_array = array_filter($emails_in_doc, function($var) use ($check_emails){
+						foreach ($check_emails as $emp_email) {
+							if(strpos($var, $emp_email)!==false) return true;
+						}
+					    return false;
+					});
+					return count($found_array);
 			break;
 
 			default: // No

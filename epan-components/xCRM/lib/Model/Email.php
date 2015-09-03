@@ -20,6 +20,12 @@ class Model_Email extends \Model_Document{
 			'can_create_task'=>array('caption'=>'Task')
 		);	
 
+	public $notification_rules = array(
+			// 'activity NOT STATUS' => array (....)
+			'created' => array('xCRM/Email/can_view'=>['title'=>'Email: {$from_email}','message'=>'{$subject}']),
+		);
+
+
 	function init(){
 		parent::init();
 		
