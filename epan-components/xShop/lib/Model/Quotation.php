@@ -17,7 +17,7 @@ class Model_Quotation extends \Model_Document{
 	
 	public $notification_rules = array(
 			// 'activity NOT STATUS' => array (....)
-			'submitted'=>array('xShop/Quotation_Submitted/can_approve'=>['title'=>"New Quotation Submitted",'message'=>'New Quotation {name} is subimitted to approve by {created_by} ','sticky'=>true]),
+			'submitted'=>array('xShop/Quotation_Submitted/can_approve'=>['title'=>"New Quotation Submitted",'message'=>'To {$customer}, by {$created_by} ','sticky'=>true]),
 			'approved'=>array('xShop/Quotation/creator' => ['title'=>"Quotation Approved",'message'=>"Your Quotation {name} is approved by {created_by}",'sticky'=>true]),
 			'redesign' =>array('xShop/Quotation/creator'=>['title'=>"Quotation for Redesign",'message'=>"Quotation {name} rejected by {created_by} to Redesign",'sticky'=>true]),
 			'cancelled' =>array('xShop/Quotation_Cancelled/can_view'=>['title'=>'Quotation Canceled','message'=>'Quotation {name} cancelled by {created_by}','sticky'=>true]),
