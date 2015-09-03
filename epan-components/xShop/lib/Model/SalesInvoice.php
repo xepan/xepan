@@ -15,19 +15,19 @@ class Model_SalesInvoice extends Model_Invoice{
 	public $notification_rules = array(
 			// 'activity NOT STATUS' => array (....)
 			'submitted' => array(
-							'xShop/Invoice_Submitted/can_approve'=>'New Sale Invoice subimitted to approve [{customer}]',
-							'xShop/Invoice_Submitted/creator'=>'You Sale Invoice {name} is submitted by {employee_name}'
+							'xShop/Invoice_Submitted/can_approve'=>['title'=>"Sales Invoice Submitted",'message'=>"New Sale Invoice {name} subimitted to approve [{customer}]"],
+							'xShop/Invoice_Submitted/creator'=>['title'=>"Sales Invoice Submitted",'message'=>"Sales Invoice {name} is submitted by {created_by}"]
 							),
-			'approved' => array('xShop/Invoice_Approved/creator' => 'Your Sale Invoice is approved now'),
-			'redesign' => array('xShop/Invoice_Redesign/creator'=>'Sale Invoice {name} rejected by {actor} for redesign'),
-			'cancelled' => array('xShop/Invoice_Canceled/can_view'=>'Sale Invoice of [{customer}] canceled by [{employee_name}]'),
-			'completed' => array('xShop/Invoice_Completed/can_view'=>'Sale Invoice Completed by {employee_name} and payment received via {payment_method}'),
-			'email' => array('xShop/SalesInvoice/can_send_via_email'=>'Sale Invoice emailed to {customer} by {employee_name}'),
-			'comment' => array('xShop/SalesInvoice/can_see_activities'=>'New Comment Added by {employee_name} on {invoice_name}'),
-			'call' => array('xShop/SalesInvoice/can_see_activities'=>'New Activity of {saleinvoice} to see, Communication between {customer} and {employee}'),
-			'sms' => array('xShop/SalesInvoice/can_see_activities'=>'sale Invoice {saleinvoice_name} Customer {customer_name} notify via sms by {employee_name}'),
-			'personal' => array('xShop/SalesInvoice/can_see_activities'=>'personal Communication between {customer_name} and  {employee_name} on {saleinvoice_name}'),
-			'action' => array('xShop/SalesInvoice/can_see_activities'=>'Action taken by {employee_name} on {order_name}')
+			'approved' => array('xShop/Invoice_Approved/creator' => ['title'=>"Sales Invoice Approved",'message'=>"Your Sales Invoice {name} is approved by {created_by}"]),
+			'redesign' => array('xShop/Invoice_Redesign/creator'=>['title'=>"Sales Invoice Rejected",'message'=>"Sales Invoice {name} rejected by {actor} for redesign"]),
+			'cancelled' => array('xShop/Invoice_Canceled/can_view'=>['title'=>"Sales Invoice canceled",'message'=>"Sales Invoice [{name}] of [{customer}] canceled by [{employee_name}]"]),
+			'completed' => array('xShop/Invoice_Completed/can_view'=>['title'=>"Sales Invoice completed",'message'=>"Sales Invoice {name} Completed by {created_by} and payment received via {payment_method}"]),
+			'email' => array('xShop/SalesInvoice_Approved/can_send_via_email'=>['title'=>"Sales Invoice Emailed",'message'=>"Sales Invoice [{name}] email to [{to}-{email_to}] from [{from}]"]),
+			// 'comment' => array('xShop/SalesInvoice/can_see_activities'=>'New Comment Added by {employee_name} on {invoice_name}'),
+			// 'call' => array('xShop/SalesInvoice/can_see_activities'=>'New Activity of {saleinvoice} to see, Communication between {customer} and {employee}'),
+			// 'sms' => array('xShop/SalesInvoice/can_see_activities'=>'sale Invoice {saleinvoice_name} Customer {customer_name} notify via sms by {employee_name}'),
+			// 'personal' => array('xShop/SalesInvoice/can_see_activities'=>'personal Communication between {customer_name} and  {employee_name} on {saleinvoice_name}'),
+			// 'action' => array('xShop/SalesInvoice/can_see_activities'=>'Action taken by {employee_name} on {order_name}')
 		);
 
 	function init(){

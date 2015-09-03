@@ -11,18 +11,22 @@ class Model_Order extends \Model_Document{
 	public $notification_rules = array(
 			// 'activity NOT STATUS' => array (....)
 			'submitted' => array(
-							'xShop/Order_Submitted/can_approve'=>'New Order subimitted to approve [{customer}]',
-							'xShop/Order_Submitted/creator'=>'You Order{name} is submitted by {employee_name}'
+							'xShop/Order_Submitted/can_approve'=>['title'=>"New sales Order Submitted",'message'=>'New saless Order {name} is subimitted to approve by {created_by}'],
+							'xShop/Order_Submitted/creator'=>['title'=>'sales Order is Submitted Now','message'=>"You sales Order{name} is submitted by {created_by}"],
 							),
-			'approved' => array('xShop/Order_Approved/creator' => 'Your Order is approved now'),
-			'redesign' => array('xShop/Order_Draft/creator'=>'Order {name} rejected by {actor} for redesign'),
-			'cancelled' => array('xShop/Order_Cancelled/can_view'=>'Order cancelled [{customer}]'),
-			'email' => array('xShop/Order_Submitted/can_send_via_email'=>'Order emailed to {customer}'),
-			'comment' => array('xShop/Order/can_see_activities'=>'New Comment Added by {employee_name} on {order_name}'),
-			'call' => array('xShop/Order/can_see_activities'=>'New Activity of {order_name} to see, Communication between {customer} and {employee}'),
-			'sms' => array('xShop/Order/can_see_activities'=>'sale {oder_name} Customer {customer_name} notify via sms by {employee_name}'),
-			'personal' => array('xShop/Order/can_see_activities'=>'personal Communication between {customer_name} and  {employee_name} on {order_name}'),
-			'action' => array('xShop/Order/can_see_activities'=>'Action taken by {employee_name} on {order_name}')
+			'approved' => array('xShop/Order_Approved/creator' => ['title'=>"sales Order Approved",'message'=>"sales Order {name} Approved by {created_by}"]),
+			'redesign' => array('xShop/Order_Redesign/creator'=>['title'=>"sales Order Rejected",'message'=>"sales Order {name} Rejected to Redesign by {created_by}"]),
+			'cancelled' => array('xShop/Order_Cancelled/can_view'=>['title'=>"sales Order is Canceled",'message'=>"One more sales Order {name} is canceled by {created_by}"]),
+			'completed' => array('xShop/Order_Completed/can_view'=>['title'=>"sales Order Completed",'message'=>"Sales Order {name} is Completed"]),
+			'processed' => array('xShop/Order_Processed/can_view'=>['title'=>"sales Order Processed",'message'=>"Sales Order {name} is Processed by {created_by}"]),
+			'processing' => array('xShop/Order_Processing/can_view'=>['title'=>"sales Order under Processing",'message'=>"Sales Order {name} is under processing "]),
+			'email' => array('xShop/Order_Approved/creator'=>['title'=>'sales Order Emailed','message'=>"sales order [{name}] email to [{to}-{email_to}] from [{from}]"])
+
+			// 'comment' => array('xShop/Order/can_see_activities'=>),
+			// 'call' => array('xShop/Order/can_see_activities'=>'New Activity of {order_name} to see, Communication between {customer} and {employee}'),
+			// 'sms' => array('xShop/Order/can_see_activities'=>'sales {oder_name} Customer {customer_name} notify via sms by {employee_name}'),
+			// 'personal' => array('xShop/Order/can_see_activities'=>'personal Communication between {customer_name} and  {employee_name} on {order_name}'),
+			// 'action' => array('xShop/Order/can_see_activities'=>'Action taken by {employee_name} on {order_name}')
 		);
 
 	function init(){
