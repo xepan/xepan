@@ -8,15 +8,15 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 	public $notification_rules = array(
 			// 'activity NOT STATUS' => array (....)
 			'submitted' => array(
-							'xPurchase/Invoice_Submitted/can_approve'=>['title'=>"Purchase Invoice for Approved",'message'=>"Purchase Invoice {name} subimitted to approve of [{supplier}]"],
-							'xPurchase/Invoice_Submitted/creator'=>['title'=>"Purchase Invoice Submitted",'message'=>"Purchase Invoice {name} is submitted by {created_by}"],
+							'xPurchase/Invoice_Submitted/can_approve'=>['title'=>'Purchase Invoice for Approval','message'=>'Purchase Invoice {$name} for Approval : [{$supplier}]'],
+							'xPurchase/Invoice_Submitted/creator'=>['title'=>'Purchase Invoice Submitted','message'=>'Purchase Invoice {$name} is submitted by {$created_by}'],
 						),
-			'approved' => array('xPurchase/Invoice_Approved/creator' => ['title'=>"Purchase Invoice Approved",'message'=>"Purchase Invoice [{name}] is approved by [{created_by}]"]),
-			'redesign' => array('xPurchase/Invoice_Redesign/creator'=>['title'=>"Purchase Invoice Rejected",'message'=>"Purchase Invoice {name} rejected by {created_by} for Redesign"]),
-			'cancelled' => array('xPurchase/Invoice_Canceled/can_view'=>['title'=>"Purchase Invoice Canceled",'message'=>"Purchase Invoice [{name}] of [{supplier}] canceled by [{created_by}]"]),
-			'completed' => array('xPurchase/Invoice_Completed/can_view'=>['title'=>"Purchase Invoice  Completed",'message'=>"Purchase Invoice [{name}] Completed by {created_by}"]),
-			'email' => array('xPurchase/Invoice_Approved/can_send_via_email'=>['title'=>"Purchase Invoice Emailed",'message'=>"Purchase Invoice [{name}] emailed to [{to} - {email_to}] by {created_by}"]),
-			// 'comment' => array('xPurchase/PurchaseInvoice/can_see_activities'=>'New Comment Added by {employee_name} on {purchase_invoice_name}'),
+			'approved' => array('xPurchase/Invoice_Approved/creator' => ['title'=>'Purchase Invoice Approved','message'=>'Purchase Invoice [{$name}] is approved by [{$created_by}]']),
+			'redesign' => array('xPurchase/Invoice_Redesign/creator'=>['title'=>'Purchase Invoice Rejected','message'=>'Purchase Invoice {$name} is rejected by {$created_by} for Redesign']),
+			'cancelled' => array('xPurchase/Invoice_Canceled/can_view'=>['title'=>'Purchase Invoice Canceled','message'=>'Purchase Invoice [{$name}] of [{$supplier}] is canceled by [{$created_by}]']),
+			'completed' => array('xPurchase/Invoice_Completed/can_view'=>['title'=>'Purchase Invoice  Completed','message'=>'Purchase Invoice [{$name}] is Completed by {$created_by}']),
+			'email' => array('xPurchase/Invoice_Approved/can_send_via_email'=>['title'=>'Purchase Invoice been Mailed','message'=>'Purchase Invoice [{$name}] is Mailed to [{$to} - {$email_to}] by {$created_by}']),
+			// 'comment' => array('xPurchase/PurchaseInvoice/can_see_activities'=>'New Comment Added by {employee_name} on {purchase_invoice_name}'), 
 			// 'call' => array('xPurchase/PurchaseInvoice/can_see_activities'=>'New Activity of {purchase_invoice_name} to see, Communication between {supplier} and {employee}'),
 			// 'sms' => array('xPurchase/PurchaseInvoice/can_see_activities'=>'Purchase Invoice {purchase_invoice_name} Supplier {supplier_name} notify via sms by {employee_name}'),
 			// 'personal' => array('xPurchase/PurchaseInvoice/can_see_activities'=>'personal Communication between {supplier_name} and  {employee_name} on {purchase_invoice_name}'),

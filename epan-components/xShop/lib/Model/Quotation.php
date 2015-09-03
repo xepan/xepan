@@ -17,13 +17,13 @@ class Model_Quotation extends \Model_Document{
 	
 	public $notification_rules = array(
 			// 'activity NOT STATUS' => array (....)
-			'submitted'=>array('xShop/Quotation_Submitted/can_approve'=>['title'=>"New Quotation Submitted",'message'=>'To {$customer}, by {$created_by} ','sticky'=>true]),
-			'approved'=>array('xShop/Quotation/creator' => ['title'=>"Quotation Approved",'message'=>"Your Quotation {name} is approved by {created_by}",'sticky'=>true]),
-			'redesign' =>array('xShop/Quotation/creator'=>['title'=>"Quotation for Redesign",'message'=>"Quotation {name} rejected by {created_by} to Redesign",'sticky'=>true]),
-			'cancelled' =>array('xShop/Quotation_Cancelled/can_view'=>['title'=>'Quotation Canceled','message'=>'Quotation {name} cancelled by {created_by}','sticky'=>true]),
-			'email' => array('xShop/Quotation_Approved/can_send_via_email'=>['title'=>"Quotation {name} email to {to} {to_email} by {created_by}",'sticky'=>true]),
-			'live' => array('xShop/Quotation_Submitted/can_approve'=>['title'=>"Total Quotation to Approve",'message'=>"{count} Quotations pending to approve",'sticky'=>true]),
-			'live' => array('xShop/Quotation_Approved/creator'=>['title'=>"Total Quotation to Approve",'message'=>"{count} Quotations pending to approve",'sticky'=>true])
+			'submitted'=>array('xShop/Quotation_Submitted/can_approve'=>['title'=>'New Quotation Submitted','message'=>'Sales Quotation Submitted  to {$customer}, by {$created_by} ','sticky'=>true]),
+			'approved'=>array('xShop/Quotation/creator' => ['title'=>'Quotation Approved','message'=>'Quotation {$name} is approved by {$created_by}','sticky'=>true]),
+			'redesign' =>array('xShop/Quotation/creator'=>['title'=>'Quotation for Redesign','message'=>'Quotation {$name} is rejected by {$created_by} to Redesign','sticky'=>true]),
+			'cancelled' =>array('xShop/Quotation_Cancelled/can_view'=>['title'=>'Quotation Canceled','message'=>'Quotation {$name} is cancelled by {$created_by}','sticky'=>true]),
+			'email' => array('xShop/Quotation_Approved/can_send_via_email'=>['title'=>'Quotation has been mailed','message'=>'Quotation {$name} is been mailed to {$to} {$to_email} by {$created_by}','sticky'=>true]),
+			'live' => array('xShop/Quotation_Submitted/can_approve'=>['title'=>'Total Quotation Pending for Approval','message'=>'{$count} Quotations pending to get approved','sticky'=>true]),
+			'live' => array('xShop/Quotation_Approved/creator'=>['title'=>'Total Quotation which are Approved','message'=>'{$count} Quotations approve','sticky'=>true])
 
 		);
 	
