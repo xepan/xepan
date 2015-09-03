@@ -10,20 +10,20 @@ class Model_JobCard extends \Model_Document{
 	
 	public $notification_rules = array(
 		// 'activity NOT STATUS' => array (....)
-		'received' => array('xProduction/Jobcard_Received/can_start_processing'=>'New Jobcard {jobcard_name} To Start Processing'),
-		'approved'=>array('xProduction/Jobcard_Approved/can_receive'=>'New Jobcard To Received of [{order}] [{department}] [{employee}]'),	
-		'processing' =>array('xProduction/Jobcard_Processing/can_mark_processed'=>'New Jobcrad {jobcard_name} to processed/finish is added in you {employe_name} queue',
-							'xProduction/Jobcard_Processing/creator'=>'Jobcard {jobcrad_name} of order {order_name} is under processing',
+		'created' => array('xProduction/Jobcard/can_receive'=>['title'=>"Jobcard To Received",'message'=>"Jobcard{name} to Received ",'sticky'=>true]),
+		'received' => array('xProduction/Jobcard_Received/can_start_processing'=>['title'=>"Jobcard Received",'message'=>"New Jobcard {name} To Start Processing"]),
+		'approved'=>array('xProduction/Jobcard_Approved/can_receive'=>['title'=>"Jobcard To Received",'message'=>"Jobcard {name} of [{order}] To Received by [{employee}] in [{department}] [{employee}]",'sticky'=>true]),
+		'processing' =>array('xProduction/Jobcard_Processing/can_mark_processed'=>['title'=>"JobCard Under Processing",'message'=>"Jobcrad {name} is added in you {employe_name} queue"],
+							'xProduction/Jobcard_Processing/creator'=>['title'=>"JobCard Under Processing",'message'=>"Jobcard {name} of order {order} is under processing"]
 						),
-		'processed' => array('xProduction/Jobcard_Processed/creator'=>'Jobcard is processed by the employee {employee_name}'),
-		'assigned' => array('xProduction/Jobcard_Assigned/can_start_processing'=>'Jobcard {name} is under processing in {department} by {employee}'),
-		'completed' => array('xProduction/Jobcard_Completed/creator'=>'Jobcard {jobcard_name} of order {order_name} completed in department {department_name} by {employee_name}'),
-		'email' => array('xProduction/JobCard/can_send_via_email'=>'Jobcard {jobcard_name} of order {order_name} is emailed to {to_name} by {employee_name}'),
-		'comment' => array('xProduction/JobCard/can_see_activities'=>'New Comment Added by {employee_name} on {jobcard_name}'),
-		'call' => array('xProduction/JobCard/can_see_activities'=>'New Activity of call to see, Communication between {customer} and {employee}'),
-		'sms' => array('xProduction/JobCard/can_see_activities'=>'customer is notify via sms by {employee_name} for jobcard {jobcrad_name} of order{order_name}'),
-		'personal' => array('xProduction/JobCard/can_see_activities'=>'Activity to see personal Communication between {customer_name} and  {employee_name} on {jobcard_name} {order_name}'),
-		'action' => array('xProduction/JobCard/can_see_activities'=>'Activity to see Action taken by {employee_name} on {jobcard_name}{order_name}')
+		'processed' => array('xProduction/Jobcard_Processed/creator'=>['title'=>"Jobcard Processed",'message'=>"Jobcard {name} is processed by the employee {created_by}"]),
+		'completed' => array('xProduction/Jobcard/creator'=>['title'=>"JobCard Complete",'message'=>"Jobcard {name} of order {order} completed in department {department} by {created_by}"]),
+		'forwarded' => array('xProduction/Jobcard/creator'=>['title'=>"JobCard Complete",'message'=>"Jobcard {name} of order {order} completed in department {department} by {created_by}"])
+		// 'comment' => array('xProduction/JobCard/can_see_activities'=>'New Comment Added by {employee_name} on {jobcard_name}'),
+		// 'call' => array('xProduction/JobCard/can_see_activities'=>'New Activity of call to see, Communication between {customer} and {employee}'),
+		// 'sms' => array('xProduction/JobCard/can_see_activities'=>'customer is notify via sms by {employee_name} for jobcard {jobcrad_name} of order{order_name}'),
+		// 'personal' => array('xProduction/JobCard/can_see_activities'=>'Activity to see personal Communication between {customer_name} and  {employee_name} on {jobcard_name} {order_name}'),
+		// 'action' => array('xProduction/JobCard/can_see_activities'=>'Activity to see Action taken by {employee_name} on {jobcard_name}{order_name}')
 	);
 
 	function init(){
