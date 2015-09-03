@@ -13,10 +13,10 @@ class Model_Task extends \Model_Document{
 	
 	public $notification_rules = array(
 			// 'activity NOT STATUS' => array (....)
-			'assigned' => array('xProduction/Task_Assigned/assignee'=>['title'=>"New Task Assigned",'message'=>'{subject}','sticky'=>true]),
-			'processing' => array('xProduction/Task_Processing/creator'=>['title'=>"Task Under Process",'message'=>"Task  \" {subject} \"  is under process by {employee_id}"]),
-			'processed' =>array('xProduction/Task_Processed/creator'=>['title'=>"Task Processed",'message'=>"Task {subject} for approval"]),
-			'rejected' => array('xProduction/Task_Rejected/creator'=>['title'=>"Task Rejected",'message'=>"Task {subject} Rejected by {created_by}"])
+			'assigned' => array('xProduction/Task_Assigned/assignee'=>['title'=>'New Task Assigned','message'=>'{$subject} is Assigned to {$employee_id} by {$created_by_id}','sticky'=>true]),
+			'processing' => array('xProduction/Task_Processing/creator'=>['title'=>'Task Under Process','message'=>'Task  \" {$subject} \"  is under process by {$employee_id}']),
+			'processed' =>array('xProduction/Task_Processed/creator'=>['title'=>'Task Processed','message'=>'Task {$subject} for approval']),
+			'rejected' => array('xProduction/Task_Rejected/creator'=>['title'=>'Task Rejected','message'=>'Task {$subject} Rejected by {$created_by}'])
 		);
 
 	function init(){

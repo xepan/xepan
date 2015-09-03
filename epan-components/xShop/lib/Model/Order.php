@@ -11,16 +11,16 @@ class Model_Order extends \Model_Document{
 	public $notification_rules = array(
 			// 'activity NOT STATUS' => array (....)
 			'submitted' => array(
-							'xShop/Order_Submitted/can_approve'=>['title'=>"New sales Order Submitted",'message'=>'New saless Order {name} is subimitted to approve by {created_by}'],
-							'xShop/Order_Submitted/creator'=>['title'=>'sales Order is Submitted Now','message'=>"You sales Order{name} is submitted by {created_by}"],
+							'xShop/Order_Submitted/can_approve'=>['title'=>'New sales Order for Approval','message'=>'New saless Order {$name} is subimitted  by {$created_by} for Approval'],
+							'xShop/Order_Submitted/creator'=>['title'=>'Sales Order Submitted','message'=>'Sales Order{$name} is submitted by {$created_by}'],
 							),
-			'approved' => array('xShop/Order_Approved/creator' => ['title'=>"sales Order Approved",'message'=>"sales Order {name} Approved by {created_by}"]),
-			'redesign' => array('xShop/Order_Redesign/creator'=>['title'=>"sales Order Rejected",'message'=>"sales Order {name} Rejected to Redesign by {created_by}"]),
-			'cancelled' => array('xShop/Order_Cancelled/can_view'=>['title'=>"sales Order is Canceled",'message'=>"One more sales Order {name} is canceled by {created_by}"]),
-			'completed' => array('xShop/Order_Completed/can_view'=>['title'=>"sales Order Completed",'message'=>"Sales Order {name} is Completed"]),
-			'processed' => array('xShop/Order_Processed/can_view'=>['title'=>"sales Order Processed",'message'=>"Sales Order {name} is Processed by {created_by}"]),
-			'processing' => array('xShop/Order_Processing/can_view'=>['title'=>"sales Order under Processing",'message'=>"Sales Order {name} is under processing "]),
-			'email' => array('xShop/Order_Approved/creator'=>['title'=>'sales Order Emailed','message'=>"sales order [{name}] email to [{to}-{email_to}] from [{from}]"])
+			'approved' => array('xShop/Order_Approved/creator' => ['title'=>'Sales Order Approved','message'=>'Sales Order {$name} is approved by {$created_by}']),
+			'redesign' => array('xShop/Order_Redesign/creator'=>['title'=>'Sales Order Rejected','message'=>'sales Order {$name} is rejected to Redesign by {$created_by}']),
+			'cancelled' => array('xShop/Order_Cancelled/can_view'=>['title'=>'Sales Order Canceled','message'=>'Sales Order {$name} is canceled by {$created_by}']),
+			'completed' => array('xShop/Order_Completed/can_view'=>['title'=>'Sales Order Completed','message'=>'Sales Order {$name} is Completed']),
+			'processed' => array('xShop/Order_Processed/can_view'=>['title'=>'Sales Order Processed','message'=>'Sales Order {$name} is Processed by {$created_by}']),
+			'processing' => array('xShop/Order_Processing/can_view'=>['title'=>'Sales Order under Processing','message'=>'Sales Order {$name} is under processing ']),
+			'email' => array('xShop/Order_Approved/creator'=>['title'=>'Sales Order been mailed','message'=>'Sales order [{$name}] is been mailed to [{$to}-{$email_to}] from [{$from}]'])
 
 			// 'comment' => array('xShop/Order/can_see_activities'=>),
 			// 'call' => array('xShop/Order/can_see_activities'=>'New Activity of {order_name} to see, Communication between {customer} and {employee}'),

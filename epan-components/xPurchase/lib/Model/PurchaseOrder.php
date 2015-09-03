@@ -9,15 +9,15 @@ class Model_PurchaseOrder extends \Model_Document{
 	public $notification_rules = array(
 		// 'activity NOT STATUS' => array (....)
 		'submitted'=>array(
-						'xPurchase/PurchaseOrder_Submitted/can_approve'=>['title'=>"New Purchase Order for Approval",'message'=>'New Purchase Order [{name}] of [{supplier}] is subimitted by {created_by} to approve'],
-						'xPurchase/PurchaseOrder_Submitted/creator'=>['title'=>'Purchase Order is Submitted','message'=>"Purchase Order [{name}] is submitted by {created_by}"]
+						'xPurchase/PurchaseOrder_Submitted/can_approve'=>['title'=>'New Purchase Order for Approval','message'=>'New Purchase Order [{$name}] of [{$supplier}] is subimitted by {$created_by} to approve'],
+						'xPurchase/PurchaseOrder_Submitted/creator'=>['title'=>'Purchase Order Submitted','message'=>'Purchase Order [{$name}] is submitted by {$created_by}']
 					),
-		'approved'=>array('xPurchase/PurchaseOrder_Approved/creator' =>['title'=>"Purchase Order approved",'message'=>"Purchase Order[{name}] Approved by {created_by}"]),
-		'completed' => array('xPurchase/PurchaseOrder_Completed/can_view'=>['title'=>"Purchase Order completed",'message'=>"Purchase Order [{name}] Completed by employee {created_by}"]),
-		'redesign' =>array('xPurchase/PurchaseOrder_Redesign/creator'=>['title'=>"Purchase Order Rejected",'message'=>"Purchase Order [{name}] Rejected to redesign by {created_by}"]),
-		'cancelled' =>array('xPurchase/PurchaseOrder_Cancelled/can_view'=>['title'=>"Purchase Order canceled",'message'=>"Purchase Order [{name}] cancelled of [{supplier}] by [{created_by}]"]),
-		'email' => array('xPurchase/PurchaseOrder_Submitted/can_send_via_email'=>['title'=>"Purchase Order Emailed",'message'=>"Purchase Order emailed to supplier {supplier}"]),
-		// 'comment' => array('xPurchase/PurchaseOrder/can_see_activities'=>'New Comment Added by {employee_name} on {purchase_order_name}'),
+		'approved'=>array('xPurchase/PurchaseOrder_Approved/creator' =>['title'=>'Purchase Order Approved','message'=>'Purchase Order[{$name}] Approved by {$created_by}']),
+		'completed' => array('xPurchase/PurchaseOrder_Completed/can_view'=>['title'=>'Purchase Order Completed','message'=>'Purchase Order [{$name}] is completed by employee {$created_by}']),
+		'redesign' =>array('xPurchase/PurchaseOrder_Redesign/creator'=>['title'=>'Purchase Order Rejected','message'=>'Purchase Order [{$name}] is rejected to redesign by {$created_by}']),
+		'cancelled' =>array('xPurchase/PurchaseOrder_Cancelled/can_view'=>['title'=>'Purchase Order Canceled','message'=>'Purchase Order [{$name}] of [{$supplier}] is cancelled by [{$created_by}]']),
+		'email' => array('xPurchase/PurchaseOrder_Submitted/can_send_via_email'=>['title'=>'Purchase Order been mailed','message'=>'Purchase Order {$name} is mailed to supplier {$supplier}']),
+		// 'comment' => array('xPurchase/PurchaseOrder/can_see_activities'=>'New Comment Added by {employee_name} on {purchase_order_name}'), 
 		// 'call' => array('xPurchase/PurchaseOrder/can_see_activities'=>'New Activity of {purchase_order_name} to see, Communication between {supplier} and {employee}'),
 		// 'sms' => array('xPurchase/PurchaseOrder/can_see_activities'=>'Purchase Invoice {purchase_order_name} Supplier {supplier_name} notify via sms by {employee_name}'),
 		// 'personal' => array('xPurchase/PurchaseOrder/can_see_activities'=>'personal Communication between {supplier_name} and  {employee_name} on {purchase_invoice_name}'),

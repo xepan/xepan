@@ -15,20 +15,20 @@ class Model_SalesInvoice extends Model_Invoice{
 	public $notification_rules = array(
 			// 'activity NOT STATUS' => array (....)
 			'submitted' => array(
-							'xShop/Invoice_Submitted/can_approve'=>['title'=>"Sales Invoice Submitted",'message'=>"New Sale Invoice {name} subimitted to approve [{customer}]"],
-							'xShop/Invoice_Submitted/creator'=>['title'=>"Sales Invoice Submitted",'message'=>"Sales Invoice {name} is submitted by {created_by}"]
+							'xShop/Invoice_Submitted/can_approve'=>['title'=>'Sales Invoice Submitted','message'=>'Sale Invoice {$name} is subimitted for approval : [{$customer}]'],
+							'xShop/Invoice_Submitted/creator'=>['title'=>'Sales Invoice Submitted','message'=>'Sales Invoice {$name} is submitted by {$created_by}']
 							),
-			'approved' => array('xShop/Invoice_Approved/creator' => ['title'=>"Sales Invoice Approved",'message'=>"Your Sales Invoice {name} is approved by {created_by}"]),
-			'redesign' => array('xShop/Invoice_Redesign/creator'=>['title'=>"Sales Invoice Rejected",'message'=>"Sales Invoice {name} rejected by {actor} for redesign"]),
-			'cancelled' => array('xShop/Invoice_Canceled/can_view'=>['title'=>"Sales Invoice canceled",'message'=>"Sales Invoice [{name}] of [{customer}] canceled by [{employee_name}]"]),
-			'completed' => array('xShop/Invoice_Completed/can_view'=>['title'=>"Sales Invoice completed",'message'=>"Sales Invoice {name} Completed by {created_by} and payment received via {payment_method}"]),
-			'email' => array('xShop/SalesInvoice_Approved/can_send_via_email'=>['title'=>"Sales Invoice Emailed",'message'=>"Sales Invoice [{name}] email to [{to}-{email_to}] from [{from}]"]),
+			'approved' => array('xShop/Invoice_Approved/creator' => ['title'=>'Sales Invoice Approved','message'=>'Sales Invoice {$name} is approved by {$created_by}']),
+			'redesign' => array('xShop/Invoice_Redesign/creator'=>['title'=>'Sales Invoice Rejected','message'=>'Sales Invoice {$name} is rejected by {$created_by} for redesign']),
+			'cancelled' => array('xShop/Invoice_Canceled/can_view'=>['title'=>'Sales Invoice Canceled','message'=>'Sales Invoice [{$name}] of [{$customer}] is canceled by [{$employee_name}]']),
+			'completed' => array('xShop/Invoice_Completed/can_view'=>['title'=>'Sales Invoice Completed','message'=>'Sales Invoice {$name} is completed by {$created_by} and payment has been received via {$payment_method}']),
+			'email' => array('xShop/SalesInvoice_Approved/can_send_via_email'=>['title'=>'Sales Invoice been mailed','message'=>'Sales Invoice [{$name}] has been mailed to [{$to}-{$email_to}] from [{$from}]']),
 			// 'comment' => array('xShop/SalesInvoice/can_see_activities'=>'New Comment Added by {employee_name} on {invoice_name}'),
 			// 'call' => array('xShop/SalesInvoice/can_see_activities'=>'New Activity of {saleinvoice} to see, Communication between {customer} and {employee}'),
 			// 'sms' => array('xShop/SalesInvoice/can_see_activities'=>'sale Invoice {saleinvoice_name} Customer {customer_name} notify via sms by {employee_name}'),
 			// 'personal' => array('xShop/SalesInvoice/can_see_activities'=>'personal Communication between {customer_name} and  {employee_name} on {saleinvoice_name}'),
 			// 'action' => array('xShop/SalesInvoice/can_see_activities'=>'Action taken by {employee_name} on {order_name}')
-		);
+		);	
 
 	function init(){
 		parent::init();
