@@ -191,6 +191,7 @@ class Model_Document extends Model_Table{
 		if(!in_array($action_actor, $other_actions) && !isset($document->actions[$action_actor]) && ($document->actions[$action_actor] ===false || $document->actions[$action_actor] === null )) return false;
 		
 		if($emp->user()->isSuperUser()) return true;
+		
 
 		$sys_document = $this->add('xHR/Model_Document');
 		$sys_document->tryLoadBy('name',$document->document_name);
@@ -221,7 +222,6 @@ class Model_Document extends Model_Table{
 			return false;
 		}
 
-
 		$this->self_only_ids = array($emp->id);
 		
 		$this->include_colleagues = $emp->getColleagues();
@@ -233,7 +233,11 @@ class Model_Document extends Model_Table{
 		$this->my_teams = $emp->getTeams();
 
 		$filter_ids = false;
+
 		switch ($acl[$action_actor]) {
+			case 'All':
+				return true;
+				
 			case 'Self Only':
 				$filter_ids = $this->self_only_ids;
 				break;

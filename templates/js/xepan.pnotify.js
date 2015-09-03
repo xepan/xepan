@@ -44,7 +44,7 @@ $.each({
 			// console.log("error");
 		})
 		.always(function() {
-			$.univ().getNotification(xUrl);
+			window.setTimeout($.univ().getNotification(xUrl),2000);
 			// console.log("complete");
 		});		
 	}

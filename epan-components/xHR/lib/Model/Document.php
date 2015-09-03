@@ -90,7 +90,7 @@ class Model_Document extends \Model_Table {
 				$class=$class[0].'/Model_'.$class[1];
 			try{
 				$obj = $this->add($class);
-				$obj->notification_rules['comment'] = array('activity_related_document_name/can_see_activities'=>['title'=>"{action} Activity {subject}",'message'=>"{action} Added by FROM {from}-{action_from} on TO {to}-{name} {sms_to} {email_to}"]);
+				$obj->notification_rules['comment'] = array('activity_related_document_name/can_see_activities'=>['title'=>'{$action} Activity {$subject}','message'=>'{$action} Added by FROM {$from}-{$action_from} on TO {$to}-{$name} {$sms_to} {$email_to}']);
 				$obj->notification_rules['call'] = array('activity_related_document_name/can_see_activities'=>['title'=>"{action} Activity {subject}",'message'=>"{action} Added by FROM {from}-{action_from} on TO {to}-{name} {sms_to} {email_to}"]);
 				$obj->notification_rules['sms'] = array('activity_related_document_name/can_see_activities'=>['title'=>"{action} Activity {subject}",'message'=>"{action} Added by FROM {from}-{action_from} on TO {to}-{name} {sms_to} {email_to}"]);
 				$obj->notification_rules['personal'] = array('activity_related_document_name/can_see_activities'=>['title'=>"{action} Activity {subject}",'message'=>"{action} Added by FROM {from}-{action_from} on TO {to}-{name} {sms_to} {email_to}"]);

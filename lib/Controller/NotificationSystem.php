@@ -19,9 +19,9 @@ class Controller_NotificationSystem extends AbstractController {
 		$activity = $this->add('xCRM/Model_Activity');
 		// $q= $activity->dsql();
 
-		$activity->getElement('action_from')->destroy();
-		$activity->getElement('action_to')->destroy();
-		$activity->getElement('related_document')->destroy();
+		// $activity->getElement('action_from')->destroy();
+		// $activity->getElement('action_to')->destroy();
+		// $activity->getElement('related_document')->destroy();
 
 		// $doc_of_activity = $activity->join('xhr_documents.name','related_document_name');
 		// $acl_for_doc = $doc_of_activity->join('xhr_departments_acl.document_id');
@@ -44,7 +44,7 @@ class Controller_NotificationSystem extends AbstractController {
 				foreach ($my_rules as $doc_name_and_action => $message) {
 					$temp = explode("/", $doc_name_and_action);
 					if($temp[0]=='activity_related_document_name'){
-						$temp_2 = explode("/", $act['related_document_name']?:$act['related_root_document_name']);
+						$temp_2 = explode('\\', $act['related_document_name']?:$act['related_root_document_name']);
 						$temp_class = $temp_2[0].'/Model_'.$temp_2[1];
 						$temp_action = $temp[1];
 					}else{
@@ -58,14 +58,18 @@ class Controller_NotificationSystem extends AbstractController {
 						$sticky=null;
 						if(is_array($message)){
 							$title = $message['title']; 
+							$title_view = $this->add('View');
+							$title_view->template->loadTemplateFromString($title);
+
+							$title_view->template->set(array_merge($related_document->getRows(),$act));
+							$title= $title_view->getHTML();
+
 							$type = $message['type']; 
 							$sticky = $message['sticky']; 
 							$message = $message['message']; 
 						}
 						
-
 						$this->api->current_employee->updateLastSeenActivity($act['id']);
-
 
 						$message_text = $this->add('View');
 						$message_text->template->loadTemplateFromString($message);
