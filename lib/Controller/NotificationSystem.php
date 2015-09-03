@@ -7,30 +7,17 @@ class Controller_NotificationSystem extends AbstractController {
 		$this->app->current_employee->loadFromLogin();
 
 		if(!($rules_documents_array = $this->recall('rules_documents',false))){
-			$this->documents =  $this->add('xHR/Model_Document')->getDefaults();
-			
 			$rules_documents_array=[];
-
-			foreach ($this->documents as $doc) {
-				$class = explode("\\", $doc['name']);
-				if(count($class) == 1)
-					$class='Model_'.$class[0];
-				else
-					$class=$class[0].'/Model_'.$class[1];
-				try{
-					$obj = $this->add($class);
-					$rules_documents_array[$doc['name']] = ['table'=>$obj->table,'rules'=>$obj->notification_rules];
-				}catch(Exception $e){
-
-				}
+			if(!($rules_documents_array=$this->add('xHR/Model_Document')->getRules())){
+				$rules_documents_array = $this->add('xHR/Model_Document')->saveRules();
 			}
+			$this->memorize('rules_documents',$rules_documents_array);
 		}
 
-		$this->memorize('rules_documents',$rules_documents_array);
 		session_write_close();
 
 		$activity = $this->add('xCRM/Model_Activity');
-		$q= $activity->dsql();
+		// $q= $activity->dsql();
 
 		$activity->getElement('action_from')->destroy();
 		$activity->getElement('action_to')->destroy();
@@ -46,74 +33,50 @@ class Controller_NotificationSystem extends AbstractController {
 
 		$activity->addCondition('id','>',$this->api->current_employee['seen_till']);
 		$activity->setOrder('id');
-
+		$activity->setLimit(10);
+		// $activity->debug();
+		$activity = $activity->getRows();
 		$seen_till=0;
 		foreach ($activity as $act) {
-			$my_rules = $rules_documents_array[$act['related_document_name']]['rules'][$act['action']];
+			$seen_till = $act['id'];
+			$my_rules = $rules_documents_array[$act['related_root_document_name']]['rules'][$act['action']];
 			if(!is_array($my_rules)) continue;
-			// foreach ($my_rules as $mr) {
 				foreach ($my_rules as $doc_name_and_action => $message) {
 					$temp = explode("/", $doc_name_and_action);
 					$temp_class = $temp[0].'/Model_'.$temp[1];
 					$temp_action = $temp[2];
-					// echo $temp_class. " " . $temp_action . "<br/>";
-					if($act->checkif($temp_action,$this->add($temp_class)->tryLoad($act['related_document_id']))){
-						$this->api->current_employee->updateLastSeenActivity($act->id);
-						echo json_encode(['id'=>$act->id,'message'=>$message]);
+					$related_document = $this->add($temp_class)->tryLoad($act['related_document_id']);
+					if($related_document->checkif($temp_action)){
+						$title=null;
+						$type=null;
+						$sticky=null;
+						if(is_array($message)){
+							$title = $message['title']; 
+							$type = $message['type']; 
+							$sticky = $message['sticky']; 
+							$message = $message['message']; 
+						}
+						
+
+						$this->api->current_employee->updateLastSeenActivity($act['id']);
+
+
+						$message_text = $this->add('View');
+						$message_text->template->loadTemplateFromString($message);
+
+						$message_text->template->set(array_merge($related_document->getRows(),$act));
+						$message_text= $message_text->getHTML();
+						echo json_encode(['id'=>$act['id'],'message'=>$message_text,'type'=>$type,'title'=>$title , 'sticky'=>$sticky]);
 						exit;
 					}
 					else{
 						// echo "Failed <br/>";
 					}
 				}
-			// }
-			$seen_till = $act->id;
 		}
 
 		if($seen_till) $this->api->current_employee->updateLastSeenActivity($seen_till);
 		
-		/*
-			RULE BASED Notifications :
-
-			Get my Last seen time
-			Get my getColleagues, getSubordinats, getTeams
-
-			Current Employee .. all documents ACL/Permissions (can_view,can_approve => self, all , ???) .. Get all documents that emp can_view
-
-
-			Get Rules from all those documents
-
-			define rules in models
-				$notification_rules[related_root_name] = 	[
-											on_activity_action_this('submitted') => ['Document\Namespace'=>[
-																			'can_approve' => '{count} DocumentName(s) to approve '
-																			'can_view'=>'You have {count} Submitted Documents',
-																			]
-																		],
-											'rejected'=> 	['Document\Rejected'
-																'creator' => 'Your Document is rejected, please review {$message}'
-																'last_status_changer' => '',
-																'last_activity_by_employee' => 'sk  jfhskghj dkfgjh'
-															],
-											'email' => [
-															'super_users' => 'EMail to {customer} about {document_detail} sent',
-															'department_top_post' => 'EMail to {customer} about {document_detail} sent',
-														]
-										]
-
-
-			$ativities
-					-> IF(related_root_name == $d_array->key ) 
-		*/
-
-		/*
-
-			examples: 
-				1. QuotationDraft -> action -> submitted : 
-													Those who can_approve SubmittedQuotation
-													And this quotation satisfies can_approve condition of this employee
-														created_by_id in as per can_approve condition Controller_Acl / 465 line
-		*/
 
 	}
 

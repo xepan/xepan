@@ -1,8 +1,8 @@
 $.each({
-	notify: function(xTitle, xText, xType, isDesktop, callback, icon){
+	notify: function(xTitle, xText, xType, isDesktop, callback, sticky){
 		var nn = new PNotify(
 			{ 
-				title: xText,
+				title: xTitle,
 				text: xText,
 				type: xType==null?"notice":xType,
 				desktop: {
@@ -11,17 +11,30 @@ $.each({
 			}
 			);
 		if(callback !==undefined) nn.get().click(callback);	
+		if(sticky !== null) {
+			var nn = new PNotify(
+			{ 
+				title: xTitle,
+				text: xText,
+				type: xType==null?"notice":xType,
+				hide: false,
+				desktop: {
+						desktop: false
+					}
+				}
+			);
+		}
 	},
 	
-	getNotification: function (){
+	getNotification: function (xUrl){
 		$.ajax({
-			url: 'index.php?page=owner_notification',
+			url: xUrl,
 		})
 		.done(function(ret) {
 			try{
 				msg = JSON.parse(ret);
 				if(msg['message']){
-					$.univ().notify("Title Here", msg['message'],null,true);
+					$.univ().notify(msg['title'], msg['message'],msg['type'],true,undefined,msg['sticky']);
 				}
 			}catch(e){
 
@@ -31,7 +44,7 @@ $.each({
 			// console.log("error");
 		})
 		.always(function() {
-			$.univ().getNotification();
+			$.univ().getNotification(xUrl);
 			// console.log("complete");
 		});		
 	}
