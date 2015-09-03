@@ -23,6 +23,17 @@ $.each({
 					}
 				}
 			);
+		}else{
+			var nn = new PNotify(
+			{ 
+				title: xTitle,
+				text: xText,
+				type: xType==null?"success":xType,
+				history: {
+        			menu: true
+    			}
+    		}
+			);
 		}
 	},
 	
