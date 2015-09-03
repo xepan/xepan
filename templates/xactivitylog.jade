@@ -1,0 +1,57 @@
+.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
+    {Pannel}
+    div(class="{$pannel_class}") {$quick_search}
+        .atk-actions {$grid_buttons}
+    {/Pannel}
+    div
+        {header}
+        div
+            {cols}{col}
+            div(id="{$sortid}")
+                a(href="javascript:void(0)")
+                    {$descr}
+                    {sort}
+                    span(class="{$sorticon}")
+                    {/}
+            {/}{/}
+        {/}
+        {$subheader}
+        div
+            {rows}{row}
+            div(class="{$odd_even} atk-cell list-group-item" data-id="{$id}")
+                {cols}
+                .atk-row
+                    .atk-col-5
+                        p({$tdparam_subject})|subject: {$subject}
+                        p({$tdparam_message})|message: {$message}
+
+                        p({$tdparam_action})|action: {$action}
+                        p({$tdparam_email_to})|email to: {$email_to}
+                        p({$tdparam_email_to})|sms_to: {$sms_to}
+                    .atk-col-3
+                        p({$tdparam_from})|from: {$from}
+                        p({$tdparam_from_id})|from: {$from_id}
+                        p({$tdparam_action_from})|action_from: {$action_from}
+                    .atk-col-3
+                        p({$tdparam_to})|to: {$to}
+                        p({$tdparam_to_id})|to_id: {$to_id}
+                        p({$tdparam_action_to})|action_to: {$action_to}
+                {/}
+            {/}{/}
+            {not_found}
+            div
+                div.atk-padding-large.atk-align-center
+                    span.atk-label.atk-effect-warning
+                        span.icon-attention &nbsp;{$not_found_message}
+            {/}
+
+        {totals}
+        div
+            div(class="totals")
+                {cols}{col}
+                <div {$tdparam}>
+                {$content}
+                </div>
+                {/}{/}
+        {/}
+    {$Paginator}

@@ -1,0 +1,50 @@
+
+<div id="{$_name}" class="atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
+  <div class="{$pannel_class}">{$quick_search}
+    <div class="atk-actions">{$grid_buttons}</div>
+  </div>{/Pannel}
+  <div>{header}
+    <div>{cols}{col}
+      <div id="{$sortid}"><a href="javascript:void(0)">
+          {$descr}
+          {sort}<span class="{$sorticon}"></span>{/}</a></div>{/}{/}
+    </div>{/}
+    {$subheader}
+    <div>{rows}{row}
+      <div data-id="{$id}" class="{$odd_even} atk-cell list-group-item">{cols}
+        <div class="atk-row">
+          <div class="atk-col-5">
+            <p {$tdparam_subject}="{$tdparam_subject}">subject: {$subject}</p>
+            <p {$tdparam_message}="{$tdparam_message}">message: {$message}</p>
+            <p {$tdparam_action}="{$tdparam_action}">action: {$action}</p>
+            <p {$tdparam_email_to}="{$tdparam_email_to}">email to: {$email_to}</p>
+            <p {$tdparam_email_to}="{$tdparam_email_to}">sms_to: {$sms_to}</p>
+          </div>
+          <div class="atk-col-3">
+            <p {$tdparam_from}="{$tdparam_from}">from: {$from}</p>
+            <p {$tdparam_from_id}="{$tdparam_from_id}">from: {$from_id}</p>
+            <p {$tdparam_action_from}="{$tdparam_action_from}">action_from: {$action_from}</p>
+          </div>
+          <div class="atk-col-3">
+            <p {$tdparam_to}="{$tdparam_to}">to: {$to}</p>
+            <p {$tdparam_to_id}="{$tdparam_to_id}">to_id: {$to_id}</p>
+            <p {$tdparam_action_to}="{$tdparam_action_to}">action_to: {$action_to}</p>
+          </div>
+        </div>{/}
+      </div>{/}{/}
+      {not_found}
+      <div>
+        <div class="atk-padding-large atk-align-center"><span class="atk-label atk-effect-warning"><span class="icon-attention">&nbsp;{$not_found_message}</span></span></div>
+      </div>{/}
+    </div>{totals}
+    <div>
+      <div class="totals">
+        {cols}{col}
+        <div {$tdparam}>
+        {$content}
+        </div>
+        {/}{/}
+      </div>
+    </div>{/}
+  </div>{$Paginator}
+</div>
