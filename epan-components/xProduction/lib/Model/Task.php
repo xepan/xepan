@@ -14,9 +14,9 @@ class Model_Task extends \Model_Document{
 	public $notification_rules = array(
 			// 'activity NOT STATUS' => array (....)
 			'assigned' => array('xProduction/Task_Assigned/assignee'=>['title'=>"New Task Assigned",'message'=>'{subject}','sticky'=>true]),
-			'processing' => array('xProduction/Task_Processing/creator'=>'Your Task {task_name} is under process by {employee_name}'),
-			'processed' =>array('xProduction/Task_Processed/creator'=>'New Task {task_name} for approval, assigned to {employee_name}'),
-			'rejected' => array('xProduction/Task_Rejected/creator'=>'Your Task Rejected by {employee_name}'),
+			'processing' => array('xProduction/Task/creator'=>'Your Task {task_name} is under process by {employee_name}'),
+			'processed' =>array('xProduction/Task/creator'=>'New Task {task_name} for approval, assigned to {employee_name}'),
+			'rejected' => array('xProduction/Task/creator'=>'Your Task Rejected by {employee_name}'),
 			'comment' => array('xProduction/Task/creator'=>['title'=>"New Task Assigned",'message'=>'Comment {subject}','sticky'=>true]),
 		);
 
@@ -57,13 +57,21 @@ class Model_Task extends \Model_Document{
 		return $my_team->getAssociatedEmployees( $team_leader = true );
 	}
 
-	function start_processing(){
-		if($rd = $this->relatedDocument()){
-			if($rd->hasMethod('start_processing'))
-				$rd->start_processing();
+	function start_processing_page($p){
+		$f= $p->add('Form');
+		$f->addField('text','remark');
+		$f->addSubmit('Start Processing');
+
+		if($f->isSubmitted()){
+			if($rd = $this->relatedDocument()){
+				if($rd->hasMethod('start_processing'))
+					$rd->start_processing();
+			}
+			
+			$this->setStatus('processing',$f['remark']);
+			return true;
 		}
 
-		$this->setStatus('processing',$remark);
 	}
 
 	function mark_processed_page($p){

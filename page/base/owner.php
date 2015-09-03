@@ -33,6 +33,13 @@ class page_base_owner extends Page {
 		$this->app->current_employee->loadFromLogin();
 
 		$this->app->top_menu =  $m = $this->app->layout->add('Menu_Horizontal',null,'Top_Menu');
+		
+		$this->app->layout->add('View',null,'UserMenu')
+			->setHTML($this->api->auth->model['name'] . '<br/><span class="atk-text-dimmed atk-size-micro">('.$this->api->current_employee->department()->get('name').'/'.$this->api->current_employee->post()->get('name').')</span>');
+		
+		if($this->app->layout->user_menu){
+			$this->app->layout->user_menu->destroy();
+		}
 
 		$this->api->xpr->markPoint("ownermain init done");
 	}
@@ -40,8 +47,6 @@ class page_base_owner extends Page {
 	function recursiveRender(){
 		$this->api->xpr->markPoint("ownermain rec-render start");
 		
-		$this->add('Controller_NotificationSystem')->setUpMain();
-
 		$this->shorcut_menus = array();
 		
 		// Looks like you are called from update page
@@ -468,16 +473,7 @@ class page_base_owner extends Page {
 		// $web_designing_menu->addItem(array('Blog','icon'=>'right-hand'),'xShop_page_owner_blog');
 		$web_designing_menu->addItem(array('Blog','icon'=>'right-hand'),'xBlog_page__owner_dashboard');
 		
-		$this->app->layout->add('View',null,'UserMenu')
-			->setHTML($this->api->auth->model['name'] . '<br/><span class="atk-text-dimmed atk-size-micro">('.$this->api->current_employee->department()->get('name').'/'.$this->api->current_employee->post()->get('name').')</span>');
 		
-		if($this->app->layout->user_menu){
-			// $menu=$this->app->layout->user_menu->addMenu(array($this->api->auth->model['name'] . '('.$this->api->current_employee->department()->get('name').'/'.$this->api->current_employee->post()->get('name').')','icon'=>'user'));
-			// $menu->addItem(array_merge(array('Alert'),$alert_badge),'/owner/alert');
-			// $menu->addItem(array_merge(array('Message'),$msg_badge),'/owner/message');
-			// $menu->addItem('Logout','logout');
-			$this->app->layout->user_menu->destroy();
-		}
 
 		$menu=array($this->api->top_menu);
 		$this->api->event('menu-created',$menu);
