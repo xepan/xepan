@@ -43,8 +43,14 @@ class Controller_NotificationSystem extends AbstractController {
 			if(!is_array($my_rules)) continue;
 				foreach ($my_rules as $doc_name_and_action => $message) {
 					$temp = explode("/", $doc_name_and_action);
-					$temp_class = $temp[0].'/Model_'.$temp[1];
-					$temp_action = $temp[2];
+					if($temp[0]=='activity_related_document_name'){
+						$temp_2 = explode("/", $act['related_document_name']?:$act['related_root_document_name']);
+						$temp_class = $temp_2[0].'/Model_'.$temp_2[1];
+						$temp_action = $temp[1];
+					}else{
+						$temp_class = $temp[0].'/Model_'.$temp[1];
+						$temp_action = $temp[2];
+					}
 					$related_document = $this->add($temp_class)->tryLoad($act['related_document_id']);
 					if($related_document->checkif($temp_action)){
 						$title=null;
