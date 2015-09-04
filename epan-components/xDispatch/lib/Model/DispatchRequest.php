@@ -76,8 +76,26 @@ class Model_DispatchRequest extends \Model_Document {
 
 		$this->addHook('beforeInsert',$this);
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeDelete',[$this,'searchStringBeforeSave']);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function searchStringBeforeSave(){
+		$str = $this['type']." ".
+								$this['name']." ".
+								$this['status']." ".
+								$this['order_no']." ".
+								$this['outsource_party']." ".
+								$this['item_with_qty_fields']." ".
+								$this->order()->get('name');
+								
+		foreach ($this->itemRows as $ir) {
+			$str .= $ir->item()->get('name');
+		}
+
+		$this['search_string'] = $str;
+
 	}
 
 	function beforeDelete(){

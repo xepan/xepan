@@ -56,11 +56,7 @@ class Model_PurchaseOrder extends \Model_Document{
 	}
 
 	function afterSave(){
-		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
-		if($shop_config['is_round_amount_calculation']){
-			$this['net_amount'] = round($this['net_amount'],0);
-			$this->save();
-		}
+		$this->updateAmount();
 	}
 
 	function beforeDelete(){
@@ -138,6 +134,45 @@ class Model_PurchaseOrder extends \Model_Document{
 			return true;
 		}
 
+	}
+
+	function updateAmount(){
+		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		
+		$this['total_amount']=0;
+		$this['net_amount']=0;
+		
+		$order_items_info = "";
+		foreach ($this->purchaseOrderItems() as $oi) {
+			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
+			$this['net_amount'] = $this['total_amount'];
+			
+			//For Order Item String Manupulation
+			$order_items_info .= $oi['name']." ".
+								$oi['qty']." ".
+								$oi['amount']." ".
+								$oi['narration']." ".
+								$oi['status']." ".
+								$oi->item()->get('item_name');
+		}
+
+		if($shop_config['is_round_amount_calculation']){
+			$this['net_amount'] = round($this['net_amount'],0);
+		}
+
+		//Updating String
+		$str = "Purchase Order ";
+		$str .= $this['name']."".
+				$this['order_summary']."".
+				$this['total_amount']."".
+				$this['net_amount']."".
+				$this['delivery_to']."".
+				$this->supplier()->get('name')."".
+				$this['order_date']." ".
+				$order_items_info;
+
+		$this['search_string'] = $str;
+		$this->save();
 	}
 
 	function approve_page($page){

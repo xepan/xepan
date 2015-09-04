@@ -145,7 +145,16 @@ class Model_Activity extends \Model_Document{
 			$this['to_id'] = $to->id;
 		}
 
-
+		//Update Search String
+		$str = "Activity: ".$this['action']." ".
+				$this['created_at']." ".
+				$this['from']." ".
+				$this['action_from']." ".
+				$this['to']." ".
+				$this['action_to']." ".
+				$this['subject']." ".
+				$this['message'];
+		$this['search_string'] = $str;
 	}
 
 	function beforeDelete(){

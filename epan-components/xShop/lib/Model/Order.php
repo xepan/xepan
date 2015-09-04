@@ -304,23 +304,43 @@ class Model_Order extends \Model_Document{
 		// throw new \Exception($member['']);
 	}
 
-	function updateAmounts(){		
+	function updateAmounts(){
 		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
 		$this['total_amount']=0;
 		$this['gross_amount']=0;
 		$this['tax']=0;
 		$this['net_amount']=0;
 		
+		$order_items_info = "";
 		foreach ($this->itemRows() as $oi) {
 			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
 			$this['gross_amount'] = $this['gross_amount'] + $oi['texted_amount'];
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
 			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
+			
+			//For Order Item String Manupulation
+			$order_items_info .= $oi['name']." ".
+								$oi['qty']." ".
+								$oi['amount']." ".
+								$oi['narration']." ".
+								$oi['item_name'];
 		}
 
 		if($shop_config['is_round_amount_calculation']){
 			$this['net_amount'] = round($this['net_amount'],0);
 		}
+
+		//Updating Search String 
+		$this['search_string']= $this['search_phrase']." ".
+								$this['order_from']. " ".
+								$this['total_amount']. " ".
+								$this['net_amount']. " ".
+								$this['billing_address']. " ".
+								$this['shipping_address']. " ".
+								$this['meta_description']. " ".
+								$this['order_summary']. " ".
+								$this['status']. " ".
+								$order_items_info;
 
 		$this->save();
 	}

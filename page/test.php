@@ -11,6 +11,46 @@ class page_test extends Page {
 		$this->add('View_ActivityLog');
 	}
 
+	function page_updatesearchstring(){
+		set_time_limit(0);
+		$docs = $this->add('xHR/Model_Document')->getDefaults();
+		$class_array = [];
+		foreach ($docs as $doc) {			
+			$array = explode('\\', $doc['name']);
+			$array2= explode("_", $array[1]);
+			
+			if($array2[0]=='Jobcard') $array2[0] = 'JobCard';
+			if($array[0]=="xPurchase" and $array2[0] == "Invoice") $array2[0] = "PurchaseInvoice";
+			if($array[0]=="xShop" and $array2[0] == "Invoice") $array2[0] = "saleInvoice";
+
+			$class_name = $array[0]."/Model_".$array2[0];
+			// echo $class_name." ".var_dump($class_array)."<br/>";
+			if(in_array($class_name, $class_array))
+				continue;
+
+			$root_model = $this->add($class_name);
+			$root_model->addCondition('search_string',Null);
+
+			foreach ($root_model as $model) {
+				$array = explode('\\', $doc['name']);
+				$array2= explode("_", $array[1]);
+				
+				if($array2[0]=='Jobcard') $array2[0] = 'JobCard';
+				if($array[0]=="xPurchase" and $array2[0] == "Invoice") $array2[0] = "PurchaseInvoice";
+				if($array[0]=="xShop" and $array2[0] == "Invoice") $array2[0] = "saleInvoice";
+
+				$class_name = $array[0]."/Model_".$array2[0];
+				$model->saveAs($class_name);
+				echo $class_name. " " . $model->id ."<br/>";
+				ob_flush();
+			}
+
+			$class_array[] = $class_name;
+
+		}
+
+	}
+
 	function page_notify(){
 		$this->js(true)
 			->_load('pnotify.custom.min')

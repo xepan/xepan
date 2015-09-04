@@ -77,10 +77,17 @@ class Model_Invoice extends \Model_Document{
 		$this['tax']=0;
 		$this['net_amount']=0;
 		
+		$invoice_items_info = "";
 		foreach ($this->itemrows() as $oi) {
 			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
 			$this['gross_amount'] = $this['gross_amount'] + $oi['texted_amount'];
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
+
+			$invoice_items_info .= 	$oi->item()->get('name')." ".
+									$oi['amount']." ".
+									$oi['qty']." ".
+									$oi['narration']." ".
+									$oi->item()->get('item_name');
 		}	
 		
 		$this['net_amount'] = $this['gross_amount'] + $this['shipping_charge'] - $this['discount'];
@@ -90,7 +97,25 @@ class Model_Invoice extends \Model_Document{
 			$this['net_amount'] = round($this['net_amount'],0);
 		}
 
+		//Updating Search String		
+		$str = 	$this['name']." ".
+				$this['type']. " ".
+				$this['total_amount']." ".
+				$this['net_amount']. " ".
+				$this['narration']. " ".
+				$this['shipping_address']. " ".
+				$this['billing_address']. " ".
+				$this['order_summary']. "".
+				$invoice_items_info;
+				
+		$str .= $this['customer_id']?$this->ref('customer_id')->get('name'):"";
+		$str .= $this['sales_order_id']?$this->order()->get('search_phrase'):"";
+		$str .= $this['supplier_id']?$this->ref('supplier_id')->get('name'):"";
+		$str .= $this['po_id']?$this->order()->get('name'):"";
+
+		$this['search_string'] = $str;
 		$this->save();
+		
 	}
 
 	function beforeSave(){

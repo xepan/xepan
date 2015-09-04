@@ -19,6 +19,6 @@ class Model_Priority extends \Model_Document{
 
 		$this->addField('name');
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 		}	
 }
