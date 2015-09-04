@@ -33,7 +33,16 @@ class Model_Account extends \Model_Document{
 		$this->hasMany('xAccount/TransactionRow','account_id');
 
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeSave',array($this,'searchStringBeforeSave'));
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function searchStringBeforeSave(){
+
+		$str = "Account: ".
+				$this['name']." ".$this['CurrentBalanceCr']." ".$this['CurrentBalanceDr'];
+		$str .= $this['group_id']?$this->group()->get('name'):"";
+		$this['search_string'] = $str;
 	}
 
 	function beforeDelete(){

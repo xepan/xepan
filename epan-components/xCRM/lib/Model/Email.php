@@ -100,6 +100,19 @@ class Model_Email extends \Model_Document{
 	function beforeSave(){
 		if(!$this['from_email'])
 			$this['from_email'] =$this->api->current_website['email_username'];
+
+		$str = "Email: ";
+		$str.= $this['direction']."".
+				$this['from']."".
+				$this['from_email']."".
+				$this['to']."".
+				$this['to_email']."".
+				$this['cc']."".
+				$this['bcc']."".
+				$this['subject']."".
+				$this['message']."".
+				$this['from_detail'];
+		$this['search_string'] = $str;
 	}
 
 	function createFromActivity($activity){

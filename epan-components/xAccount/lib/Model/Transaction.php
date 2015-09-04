@@ -43,8 +43,22 @@ class Model_Transaction extends \Model_Document{
 		// $this->addExpression('dr_sum')->set($this->refSQL('xAccount/TransactionRow')->sum('amountDr'));
 
 		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeSave',[$this,'searchStringBeforeSave']));
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function searchStringBeforeSave(){
+		$str = "Transaction: ".$this['name']." ".
+				$this['Narration'];
+
+		foreach ($this->rows(); as $tr) {
+			$str .= $this['side'];
+			$str .= $this->account()->get('name');
+			$str .= $this['amountCr']." ".$this['amountDr'];
+		}
+
+		$this['search_string'] = $str;
 	}
 
 	function beforeDelete(){
