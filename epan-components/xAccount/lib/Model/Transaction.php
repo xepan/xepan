@@ -52,10 +52,10 @@ class Model_Transaction extends \Model_Document{
 		$str = "Transaction: ".$this['name']." ".
 				$this['Narration'];
 
-		foreach ($this->rows(); as $tr) {
-			$str .= $this['side'];
-			$str .= $this->account()->get('name');
-			$str .= $this['amountCr']." ".$this['amountDr'];
+		foreach ($this->rows() as $tr) {
+			$str .= $tr['side'];
+			$str .= $tr->account()->get('name');
+			$str .= $tr['amountCr']." ".$tr['amountDr']." ".$tr['Narration']." ".$tr['voucher_no']." ".$tr['transaction_type'];
 		}
 
 		$this['search_string'] = $str;

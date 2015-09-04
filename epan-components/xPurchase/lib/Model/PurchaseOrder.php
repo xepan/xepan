@@ -152,7 +152,8 @@ class Model_PurchaseOrder extends \Model_Document{
 								$oi['qty']." ".
 								$oi['amount']." ".
 								$oi['narration']." ".
-								$oi['status'];
+								$oi['status']." ".
+								$oi->item()->get('item_name');
 		}
 
 		if($shop_config['is_round_amount_calculation']){

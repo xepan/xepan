@@ -86,8 +86,8 @@ class Model_Invoice extends \Model_Document{
 			$invoice_items_info .= 	$oi->item()->get('name')." ".
 									$oi['amount']." ".
 									$oi['qty']." ".
-									$oi['narration'];
-
+									$oi['narration']." ".
+									$oi->item()->get('item_name');
 		}	
 		
 		$this['net_amount'] = $this['gross_amount'] + $this['shipping_charge'] - $this['discount'];

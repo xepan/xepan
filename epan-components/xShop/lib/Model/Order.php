@@ -322,7 +322,8 @@ class Model_Order extends \Model_Document{
 			$order_items_info .= $oi['name']." ".
 								$oi['qty']." ".
 								$oi['amount']." ".
-								$oi['narration'];
+								$oi['narration']." ".
+								$oi['item_name'];
 		}
 
 		if($shop_config['is_round_amount_calculation']){

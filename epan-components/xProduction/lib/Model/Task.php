@@ -40,7 +40,16 @@ class Model_Task extends \Model_Document{
 
 		$this->hasMany('xProduction/TaskAttachment','related_document_id',null,'Attachments');
 		$this->hasMany('xCRM/Email','task_id');
+
+		$this->addHook('beforeSave',[$this,'searchStringBeforeSave']);
 		// $this->add('dynamic_model/Controller_AutoCreator');
+	}
+
+	function searchStringBeforeSave(){
+
+		$str = "Task: ".$this['name']." ".$this['subject']." ".$this['content']." ".$this['expected_start_date']." ".$this['related_root_document_name'];
+		$str .= $this['employee_id']?$this->ref('employee_id')->get('name'):"";
+		$this['search_string'] = $str;
 	}
 
 	function getTeamMembers(){

@@ -108,7 +108,7 @@ class Model_Quotation extends \Model_Document{
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
 			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
 			
-			$quotation_items_info .= $oi['name']." ".$oi['qty']." ".$oi['amount']." ".$oi['narration']." ".$oi['custom_fields'];
+			$quotation_items_info .= $oi['name']." ".$oi['qty']." ".$oi['amount']." ".$oi['narration']." ".$oi['custom_fields']." ".$oi['item_name'];
 		}
 		
 		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
