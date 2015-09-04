@@ -193,103 +193,107 @@ class Model_Document extends Model_Table{
 		if($emp->user()->isSuperUser()) return true;
 		
 
-		$sys_document = $this->add('xHR/Model_Document');
-		$sys_document->tryLoadBy('name',$document->document_name);
-		if(!$sys_document->loaded()) return false;
+		$sys_document_s = $this->add('xHR/Model_Document');
+		$sys_document_s->addCondition('name', $document->document_name);
 
-		if($cached = $this->recall('checkif_cache'.$emp->id.$action_actor.$document->root_document_name,false)) return $cached;
+		// This sys_document may be used for multiple departments so lets check all
+		foreach ($sys_document_s as $sys_document) {
+			if(!$sys_document->loaded()) return false;
+
+			if($cached = $this->recall('checkif_cache'.$emp->id.$action_actor.$document->id,false)) return $cached;
 
 
-		switch ($action_actor) {
-			case 'creator':
-				return $document['created_by_id'] == $emp->id;
-				break;
+			switch ($action_actor) {
+				case 'creator':
+					return $document['created_by_id'] == $emp->id;
+					break;
+				
+				case 'assignee':			
+					return $document['employee_id'] == $emp->id;
+				default:
+					# code...
+					break;
+			}
 			
-			case 'assignee':			
-				return $document['employee_id'] == $emp->id;
-			default:
-				# code...
-				break;
-		}
-		
-		$acl = $this->add('xHR/Model_DocumentAcl');
-		$acl->addCondition('document_id', $sys_document->id);
-		$acl->addCondition('post_id', $emp['post_id']);
-		$acl->tryLoadAny();
+			$acl = $this->add('xHR/Model_DocumentAcl');
+			$acl->addCondition('document_id', $sys_document->id);
+			$acl->addCondition('post_id', $emp['post_id']);
+			$acl->tryLoadAny();
 
-		if(!$acl->loaded()) {
-			$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->root_document_name,false);
-			return false;
-		}
+			if(!$acl->loaded()) {
+				$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->id,false);
+				return false;
+			}
 
-		$this->self_only_ids = array($emp->id);
-		
-		$this->include_colleagues = $emp->getColleagues();
-		$this->include_colleagues[] = $this->self_only_ids[0];
-
-		$this->include_subordinates = $emp->getSubordinats();
-		$this->include_subordinates[] = $this->self_only_ids[0];
-
-		$this->my_teams = $emp->getTeams();
-
-		$filter_ids = false;
-
-		switch ($acl[$action_actor]) {
-			case 'All':
-				return true;
-
-			case 'Self Only':
-				$filter_ids = $this->self_only_ids;
-				break;
-			case 'Include Subordinats':
-				$filter_ids = $this->include_subordinates;
-				break;
-			case 'Include Colleagues':
-				$filter_ids = $this->include_colleagues;
-				break;
-			case 'Include Subordinates & Colleagues':
-				$filter_ids = $this->include_subordinates;
-				$filter_ids = array_merge($filter_ids,$this->include_colleagues);
-				break;
-
-			case 'Assigned To Me':
-				return in_array($document['employee_id'],$this->self_only_ids);
-			break;
+			$this->self_only_ids = array($emp->id);
 			
-			case 'Assigned To My Team':
-				return in_array($document['employee_id'],$this->self_only_ids) || in_array($document['team_id'],$this->my_teams);
-			break;
+			$this->include_colleagues = $emp->getColleagues();
+			$this->include_colleagues[] = $this->self_only_ids[0];
 
-			case 'If Team Leader':
-			break;
+			$this->include_subordinates = $emp->getSubordinats();
+			$this->include_subordinates[] = $this->self_only_ids[0];
 
-			case "Includes My EmailID":
-					$check_emails = array_merge(explode(",", $this->api->current_employee['company_email_id']),explode(",", $this->api->current_employee['personal_email']));
-					$emails_in_doc = array_merge(
-							explode(",", $document['cc']),
-							explode(",", $document['bcc']),
-							explode(",", $document['from_email']),
-							explode(",", $document['to_email'])
-						);
-					$found_array = array_filter($emails_in_doc, function($var) use ($check_emails){
-						foreach ($check_emails as $emp_email) {
-							if(strpos($var, $emp_email)!==false) return true;
-						}
-					    return false;
-					});
-					return count($found_array);
-			break;
+			$this->my_teams = $emp->getTeams();
 
-			default: // No
-				$filter_ids = array(0);
+			$filter_ids = false;
+
+			switch ($acl[$action_actor]) {
+				case 'All':
+					return true;
+
+				case 'Self Only':
+					$filter_ids = $this->self_only_ids;
+					break;
+				case 'Include Subordinats':
+					$filter_ids = $this->include_subordinates;
+					break;
+				case 'Include Colleagues':
+					$filter_ids = $this->include_colleagues;
+					break;
+				case 'Include Subordinates & Colleagues':
+					$filter_ids = $this->include_subordinates;
+					$filter_ids = array_merge($filter_ids,$this->include_colleagues);
+					break;
+
+				case 'Assigned To Me':
+					return in_array($document['employee_id'],$this->self_only_ids);
 				break;
+				
+				case 'Assigned To My Team':
+					return in_array($document['employee_id'],$this->self_only_ids) || in_array($document['team_id'],$this->my_teams);
+				break;
+
+				case 'If Team Leader':
+				break;
+
+				case "Includes My EmailID":
+						$check_emails = array_merge(explode(",", $this->api->current_employee['company_email_id']),explode(",", $this->api->current_employee['personal_email']));
+						$emails_in_doc = array_merge(
+								explode(",", $document['cc']),
+								explode(",", $document['bcc']),
+								explode(",", $document['from_email']),
+								explode(",", $document['to_email'])
+							);
+						$found_array = array_filter($emails_in_doc, function($var) use ($check_emails){
+							foreach ($check_emails as $emp_email) {
+								if(strpos($var, $emp_email)!==false) return true;
+							}
+						    return false;
+						});
+						return count($found_array);
+				break;
+
+				default: // No
+					$filter_ids = array(0);
+					break;
+			}
+			if($filter_ids){
+				$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->id,in_array($document['created_by_id'],$filter_ids));
+				return in_array($document['created_by_id'],$filter_ids);
+			}
 		}
-		if($filter_ids){
-			$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->root_document_name,in_array($document['created_by_id'],$filter_ids));
-			return in_array($document['created_by_id'],$filter_ids);
-		}
-		
-		$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->root_document_name,false);
+
+		$this->memorize('checkif_cache'.$emp->id.$action_actor.$document->id,false);
 		return false;
 
 	}

@@ -244,13 +244,13 @@ class Model_Ticket extends \Model_Document{
 		
 	}
 
-	function createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null,$notify_via_email=false, $notify_via_sms=false){
-		if($this['status'] == 'solved'){
-			$this['status']='submitted';
-			$this->save();
-		}
-		parent::createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null,$notify_via_email=false, $notify_via_sms=false);
-	}
+	// function createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null,$notify_via_email=false, $notify_via_sms=false){
+	// 	if($this['status'] == 'solved'){
+	// 		$this['status']='submitted';
+	// 		$this->save();
+	// 	}
+	// 	parent::createActivity($action,$subject,$message,$from=null,$from_id=null, $to=null, $to_id=null,$email_to=null,$notify_via_email=false, $notify_via_sms=false);
+	// }
 
 	function attachment(){
 		return $this->ref('Attachments')->addCondition('related_document_id',$this->id);

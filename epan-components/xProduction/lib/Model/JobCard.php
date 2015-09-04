@@ -10,20 +10,15 @@ class Model_JobCard extends \Model_Document{
 	
 	public $notification_rules = array(
 		// 'activity NOT STATUS' => array (....)
-		'created' => array('xProduction/Jobcard/can_receive'=>['title'=>'Jobcard to be Received','message'=>'Jobcard {$name} is to be Received  by you','sticky'=>true]),
+		'created' => array('xProduction/JobCard/can_receive'=>['title'=>'Jobcard to be Received','message'=>'Jobcard {$name} is to be Received  by you','sticky'=>true]),
 		'received' => array('xProduction/Jobcard_Received/can_start_processing'=>['title'=>'Jobcard for processing','message'=>'Jobcard {$name} is to Start Processing']),
 		'approved'=>array('xProduction/Jobcard_Approved/can_receive'=>['title'=>'Jobcard Received','message'=>'Jobcard {$name} of [{$order_no}] is received by [{$employee}] in [{$department}] [{$employee}]','sticky'=>true]),
 		'processing' =>array('xProduction/Jobcard_Processing/can_mark_processed'=>['title'=>'JobCard Under Processing','message'=>'Jobcrad {$name} is added {$employe_name} in the queue'],
 							'xProduction/Jobcard/can_view'=>['title'=>'JobCard Under Processing','message'=>'Jobcard {$name} of order {$order_no} is under processing by {$employe_name}']
 						),
 		'processed' => array('xProduction/Jobcard_Processed/can_forward'=>['title'=>'Jobcard Processed','message'=>'Jobcard {$name} is processed by the employee {$created_by}']),
-		'forwarded' => array('xProduction/Jobcard/can_view'=>['title'=>'JobCard Forwarded','message'=>'Jobcard {$name} of order {$order_no} is completed in department {$department} by {$created_by} and forwarded in department {$department} to {$employee_name}']) 
-		'completed' => array('xProduction/Jobcard/can_view'=>['title'=>'JobCard Completed','message'=>'Jobcard {$name} of order {$order_no} is completed in department {$department} by {$created_by}']),
-		// 'comment' => array('xProduction/JobCard/can_see_activities'=>'New Comment Added by {employee_name} on {jobcard_name}'),
-		// 'call' => array('xProduction/JobCard/can_see_activities'=>'New Activity of call to see, Communication between {customer} and {employee}'),
-		// 'sms' => array('xProduction/JobCard/can_see_activities'=>'customer is notify via sms by {employee_name} for jobcard {jobcrad_name} of order{order_name}'),
-		// 'personal' => array('xProduction/JobCard/can_see_activities'=>'Activity to see personal Communication between {customer_name} and  {employee_name} on {jobcard_name} {order_name}'),
-		// 'action' => array('xProduction/JobCard/can_see_activities'=>'Activity to see Action taken by {employee_name} on {jobcard_name}{order_name}')
+		'forwarded' => array('xProduction/Jobcard_Approved/can_view'=>['title'=>'JobCard Forwarded','message'=>'Jobcard {$name} of order {$order_no} is completed in department {$department} by {$created_by} and forwarded in department {$department} to {$employee_name}']), 
+		'completed' => array('xProduction/Jobcard_Approved/can_view'=>['title'=>'JobCard Completed','message'=>'Jobcard {$name} of order {$order_no} is completed in department {$department} by {$created_by}']),
 	);
 
 	function init(){

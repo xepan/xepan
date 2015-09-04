@@ -46,7 +46,7 @@ class Model_DocumentAcl extends \Model_Table{
 
 		$this->addField('can_manage_attachments')->setValueList($acl)->defaultValue('No')->display(array('form'=>'DropDownNormal'));
 		$this->addField('can_manage_tasks')->setValueList($acl)->defaultValue('No')->display(array('form'=>'DropDownNormal'));
-		$this->addField('task_types')->setValueList(array("job_card_tasks"=>"Root Docuement","job_card_current_status_tasks"=>"Specific Document","job_card_all_status_tasks"=>'Root Document With Status'))->display(array('form'=>'DropDownNormal'));
+		$this->addField('task_types')->setValueList(array("job_card_tasks"=>"Root Document","job_card_current_status_tasks"=>"Specific Document","job_card_all_status_tasks"=>'Root Document With Status'))->display(array('form'=>'DropDownNormal'));
 
 		$this->addField('can_send_via_email')->setValueList($acl)->defaultValue('No')->display(array('form'=>'DropDownNormal'));
 		$this->addField('can_forcedelete')->setValueList($acl)->defaultValue('No')->display(array('form'=>'DropDownNormal'));
