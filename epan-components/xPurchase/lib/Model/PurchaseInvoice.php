@@ -261,4 +261,9 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		}
 	}
 
+
+	function order(){
+		return $this->ref('po_id');
+	}
+
 }

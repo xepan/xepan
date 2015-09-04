@@ -100,11 +100,15 @@ class Model_Quotation extends \Model_Document{
 		$this['tax']=0;
 		$this['net_amount']=0;
 		
+		$quotation_items_info = "";
+
 		foreach ($this->itemRows() as $oi) {
 			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
 			$this['gross_amount'] = $this['gross_amount'] + $oi['texted_amount'];
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
 			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
+			
+			$quotation_items_info .= $oi['name']." ".$oi['qty']." ".$oi['amount']." ".$oi['narration']." ".$oi['custom_fields'];
 		}
 		
 		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
@@ -112,6 +116,20 @@ class Model_Quotation extends \Model_Document{
 			$this['net_amount'] = round($this['net_amount'],0);
 		}
 
+
+		//Updating Search String
+		$str = "Quotation ".
+				$this['name']." ".
+				$this['status']. " ".
+				$this['total_amount']. " ".
+				$this['net_amount']. " ".
+				$this['narration']. " ".
+				$quotation_items_info;
+		$str .= $this['customer_id']?$this->customer()->get('name'):"";
+		$str .=	$this['opportunity_id']?$this->ref('opportunity_id')->get('name'):"";
+		$str .=	$this['lead_id']?$this->ref('lead_id')->get('name'):"";
+
+		$this['search_string'] = $str;
 		$this->save();
 	}
 	function submit(){

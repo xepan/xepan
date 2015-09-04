@@ -69,7 +69,8 @@ class Model_Document extends Model_Table{
 		
 		$this->addField('created_at')->type('datetime')->system(true)->defaultValue($this->api->now)->sortable(true);
 		$this->addField('updated_at')->type('datetime')->system(true)->defaultValue($this->api->now);
-		
+		$this->addField('search_string')->type('text')->system(true);
+			
 		$this->hasOne('xHR/Employee','created_by_id')->defaultValue($this->api->current_employee->id)->system(true);
 		$this->hasMany('xProduction/Task','related_document_id');
 		

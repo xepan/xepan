@@ -109,7 +109,7 @@ class Model_Item extends \Model_Document{
 		$this->addField('designs')->type('text')->group('o~5~bl');
 	
 		//Search String
-		$this->addField('search_string')->type('text')->system(true);
+		// $this->addField('search_string')->type('text')->system(true);
 
 		//Item SEO
 		$this->addField('meta_title');
