@@ -88,8 +88,8 @@ class Model_DispatchRequest extends \Model_Document {
 								$this['order_no']." ".
 								$this['outsource_party']." ".
 								$this['item_with_qty_fields']." ".
-								$this->order()->get('name')." ".
-								;
+								$this->order()->get('name');
+								
 		foreach ($this->itemRows as $ir) {
 			$str .= $ir->item()->get('name');
 		}

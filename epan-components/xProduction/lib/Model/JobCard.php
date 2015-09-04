@@ -75,15 +75,15 @@ class Model_JobCard extends \Model_Document{
 	}
 
 	function searchStringBeforeSave(){
-		$str = "";
-		$str.= $this['type']."".
-				$this['name']."".
-				$this['status']."".
+		$str = " ";
+		$str.= $this['type']." ".
+				$this['name']." ".
+				$this['status']." ".
 				$this->toDepartment()->get('name')." ".
-				$this->fromDepartment()->get('name')." ".
-				$this->order()->get('search_phrase')." ".
-				$this->orderItem()->get('name');
+				$this->fromDepartment()->get('name');
 
+		$str .= $this->order()?$this->order()->get('search_phrase'):"";
+		$str .= $this->orderItem()?$this->orderItem()->get('name'):"";
 		$this['search_string'] = $str;
 	}
 

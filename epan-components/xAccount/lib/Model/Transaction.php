@@ -43,7 +43,7 @@ class Model_Transaction extends \Model_Document{
 		// $this->addExpression('dr_sum')->set($this->refSQL('xAccount/TransactionRow')->sum('amountDr'));
 
 		$this->addHook('beforeDelete',$this);
-		$this->addHook('beforeSave',[$this,'searchStringBeforeSave']));
+		$this->addHook('beforeSave',[$this,'searchStringBeforeSave']);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
