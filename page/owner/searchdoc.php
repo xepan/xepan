@@ -11,10 +11,10 @@ class page_owner_searchdoc extends page_base_owner{
 			// 		'search_phrases'=>array('field1','field2',...)
 			// 	)
 
-			)
+			);
 
-		$data = $this->add('xAccount/Model_Account');
-		$data->addCondition('name','like','%'.$_GET['term'].'%');
+		$data = $this->add('xShop/Model_Customer');
+		$data->addCondition('customer_name','like','%'.$_GET['term'].'%');
 
 		$data= $data->getRows(array('id', 'name'));
 
