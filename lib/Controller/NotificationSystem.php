@@ -31,7 +31,7 @@ class Controller_NotificationSystem extends AbstractController {
 
 		// $activity->addCondition('post_id',$this->api->current_employee['post_id']);
 
-		$activity->addCondition('id','>',$this->api->current_employee['seen_till']);
+		$activity->addCondition('id','>',$this->api->current_employee['seen_till']?:0);
 		$activity->setOrder('id');
 		$activity->setLimit(10);
 		// $activity->debug();
