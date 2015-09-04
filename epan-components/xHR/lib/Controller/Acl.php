@@ -419,7 +419,7 @@ class Controller_Acl extends \AbstractController {
 		
 		// $acl =array('No'=>'No','Self Only'=>'Created By Employee',
 		// 'Include Subordinats'=>'Created By Subordinates','Include Colleagues'=>'Created By Colleagues',
-		// 'Include Subordinats & Colleagues'=>'Created By Subordinats or Colleagues',
+		// 'Include Subordinates & Colleagues'=>'Created By Subordinates or Colleagues',
 		// 'Assigned To Me'=>'Assigned To Me','Assigned To My Team'=>'Assigned To Me & My Team',
 		// 'If Team Leader'=>'If Team Leader','All'=>'All');
 		if($this->api->auth->model->isSuperUser()) return;
@@ -432,13 +432,13 @@ class Controller_Acl extends \AbstractController {
 			case 'Self Only':
 				$filter_ids = $this->self_only_ids;
 				break;
-			case 'Include Subordinats':
+			case 'Include Subordinates':
 				$filter_ids = $this->include_subordinates;
 				break;
 			case 'Include Colleagues':
 				$filter_ids = $this->include_colleagues;
 				break;
-			case 'Include Subordinats & Colleagues':
+			case 'Include Subordinates & Colleagues':
 				$filter_ids = $this->include_subordinates;
 				$filter_ids = array_merge($filter_ids,$this->include_colleagues);
 				break;
@@ -496,13 +496,13 @@ class Controller_Acl extends \AbstractController {
 			case 'Self Only':
 				$filter_ids = $this->self_only_ids;
 				break;
-			case 'Include Subordinats':
+			case 'Include Subordinates':
 				$filter_ids = $this->include_subordinates;
 				break;
 			case 'Include Colleagues':
 				$filter_ids = $this->include_colleagues;
 				break;
-			case 'Include Subordinats & Colleagues':
+			case 'Include Subordinates & Colleagues':
 				$filter_ids = $this->include_subordinates;
 				$filter_ids = $filter_ids + $this->include_colleagues; 
 				break;

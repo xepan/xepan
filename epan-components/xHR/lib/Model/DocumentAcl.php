@@ -7,7 +7,7 @@ class Model_DocumentAcl extends \Model_Table{
 	function init(){
 		parent::init();
 
-		$acl =array('No'=>'No','Self Only'=>'Created By Employee','Include Subordinats'=>'Created By Subordinates','Include Colleagues'=>'Created By Colleagues','Include Subordinats & Colleagues'=>'Created By Subordinats or Colleagues','Assigned To Me'=>'Assigned To Me','Assigned To My Team'=>'Assigned To Me & My Team','If Team Leader'=>'If Team Leader','All'=>'All');
+		$acl =array('No'=>'No','Self Only'=>'Created By Employee','Include Subordinates'=>'Created By Subordinates','Include Colleagues'=>'Created By Colleagues','Include Subordinates & Colleagues'=>'Created By Subordinates or Colleagues','Assigned To Me'=>'Assigned To Me','Assigned To My Team'=>'Assigned To Me & My Team','If Team Leader'=>'If Team Leader','All'=>'All');
 
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);

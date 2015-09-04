@@ -247,7 +247,7 @@ class Model_Document extends Model_Table{
 			case 'Include Colleagues':
 				$filter_ids = $this->include_colleagues;
 				break;
-			case 'Include Subordinats & Colleagues':
+			case 'Include Subordinates & Colleagues':
 				$filter_ids = $this->include_subordinates;
 				$filter_ids = array_merge($filter_ids,$this->include_colleagues);
 				break;
