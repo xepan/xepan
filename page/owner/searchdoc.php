@@ -4,13 +4,6 @@ class page_owner_searchdoc extends page_base_owner{
 	
 	function page_index(){
 
-		$document = "Any || xShop/Customer";
-		$document = "xShop/Model_Order";
-		$document = "Any";
-		$term = $_GET['term'];
-
-		// sensitize term like add + befrore order, customer etc
-
 		$structure_array =[
 		//Accounts
 			'xAccount/Model_Account'=>[
@@ -24,7 +17,8 @@ class page_owner_searchdoc extends page_base_owner{
 					'document_model' =>'xAccount/Model_Account',
 					'document' =>'Account',
 					'id' =>'id',
-				]
+				],
+				'keyword'=>['account','ledger']
 			],
 
 			'xAccount/Model_Transaction'=>[
@@ -38,14 +32,15 @@ class page_owner_searchdoc extends page_base_owner{
 					'document_model' =>'xAccount/Model_Transaction',
 					'document' =>'Voucher Number',
 					'id' =>'id',
-				]
+				],
+				'keyword'=>['transaction','account']
 			],
 
 		//Activity
 			'xCRM/Model_Activity'=>[
 				'search_field'=>'search_string',
 				'return_fields'=>[
-					'name'=>'subject',
+					'name'=>'what',
 					'by' =>'action_from',
 					'to' =>'action_to',
 					'date' =>'created_at',
@@ -53,7 +48,8 @@ class page_owner_searchdoc extends page_base_owner{
 					'document_model' =>'xCRM/Model_Activity',
 					'document' =>'Activity',
 					'id' =>'id',
-				]
+				],
+				'keyword'=>['activity','action','comment','call','sms','personal','draft','submitted','approved','rejected','cancelled','canceled','assigned']
 			],
 
 			'xCRM/Model_Email'=>[
@@ -67,7 +63,8 @@ class page_owner_searchdoc extends page_base_owner{
 					'document_model' =>'xCRM/Model_Email',
 					'document' =>'Email',
 					'id' =>'id',
-				]
+				],
+				'keyword'=>['email']
 			],
 
 			'xCRM/Model_Ticket'=>[
@@ -81,7 +78,8 @@ class page_owner_searchdoc extends page_base_owner{
 					'document_model' =>'xCRM/Model_Ticket',
 					'document' =>'Ticket',
 					'id' =>'id',
-				]
+				],
+				'keyword'=>['ticket','task','support','complaints','bug']
 			],
 
 		//Dispatch
@@ -96,7 +94,8 @@ class page_owner_searchdoc extends page_base_owner{
 					'document_model' =>'xDispatch/Model_DispatchRequest',
 					'document' =>'Dispatch',
 					'id' =>'id'
-				]
+				],
+				'keyword'=>['dispatch','delivery','complete']
 			],
 
 		//xProduction
@@ -111,7 +110,8 @@ class page_owner_searchdoc extends page_base_owner{
 					'document_model' =>'xProduction/Model_JobCard',
 					'document' =>'Jobcard',
 					'id' =>'id'
-				]
+				],
+				'keyword'=>['jobcard','job']
 			],
 
 			'xProduction/Model_Task'=>[
@@ -126,7 +126,8 @@ class page_owner_searchdoc extends page_base_owner{
 					'document' =>'Task',
 					'detail' =>'subject',
 					'id' =>'id'
-				]
+				],
+				'keyword'=>['task']
 			],
 		
 		//Purchase
@@ -142,7 +143,8 @@ class page_owner_searchdoc extends page_base_owner{
 					'document' =>'Purchase Invoice',
 					'detail' =>'narration',
 					'id' =>'id'
-				]
+				],
+				'keyword'=>['invoice','purchaseinvoice','p invoice','pinvoice','purchase','purchase invoice']
 			],
 
 			'xPurchase/Model_PurchaseOrder'=>[
@@ -157,7 +159,8 @@ class page_owner_searchdoc extends page_base_owner{
 					'document' =>'Purchase Order',
 					'detail' =>'order_summary',
 					'id' =>'id'
-				]
+				],
+				'keyword'=>['order','purchaseorder','p order','porder','purchase']
 			],
 
 		//xShop
@@ -173,7 +176,8 @@ class page_owner_searchdoc extends page_base_owner{
 					'document' =>'Sale Order',
 					'detail' =>'narration',
 					'id' =>'id'
-				]
+				],
+				'keyword'=>['invoice','salesinvoice','sales invoice','sinvoice','sales','sale',]
 			],
 
 			'xShop/Model_Order'=>[
@@ -181,24 +185,68 @@ class page_owner_searchdoc extends page_base_owner{
 				'return_fields'=>[
 					'name'=>'name',
 					'by' =>'created_by',
-					'to' =>'customer',
+					'to' =>'member',
 					'date' =>'created_at',
 					'status' =>'status',
 					'document_model' =>'xShop/Model_Order',
 					'document' =>'Sale Order',
 					'detail' =>'narration',
 					'id' =>'id'
-				]
+				],
+				'keyword'=>['order','sale order','proforma invoice']
+			],
+			'xShop/Model_Quotation'=>[
+				'search_field'=>'search_string',
+				'return_fields'=>[
+					'name'=>'name',
+					'by' =>'created_by',
+					'to' =>'customer',
+					'date' =>'created_at',
+					'status' =>'status',
+					'document_model' =>'xShop/Model_Quotation',
+					'document' =>'Quotation',
+					'detail' =>'narration',
+					'id' =>'id'
+				],
+				'keyword'=>['quotation']
 			]
 		];
 
+		$document = "Any || xShop/Customer";
+		// $document = "xShop/Model_Order";
+		$document = "Any";
+		$term = strtolower($_GET['term']);
+
+		// sensitize term like add + befrore order, customer etc
+		if($document == 'Any'){
+			foreach ($structure_array as $model=>$structure) {
+				$keyword = $structure['keyword'];
+				$term = preg_replace('!\s+!', ' ', $term);
+				foreach ($keyword as $kw) {
+					if(strpos($term, $kw.":")===0){
+						if($document=='Any') $document ="";
+						$document .= ($model." ");
+						$term = str_replace($model.":", "", $term);
+					}
+				}
+			}
+		}
+
+		// var_dump($document);
+
 		$data=[];
 		foreach ($structure_array as $model=>$structure) {
-			if($document!='Any' && $document !=$model) continue;
+			if($document!='Any' && strpos($document,$model) === false){
+				// echo $model." continuing <br/> " . strpos($document,$model);
+				continue;	
+			} 
 				$m=$this->add($model);
 				$m->addExpression('relevance')
 					->set('(MATCH('.$structure['search_field'].') AGAINST ("'.$term.'" IN NATURAL LANGUAGE MODE))');
 				$m->addCondition('relevance','>',0);
+
+				if($m->hasElement('action'))
+					$m->addCondition('action','<>',['email']);
 
 				$m->setOrder($m->dsql()->expr('[0]',[$m->getElement('relevance')]),'DESC');
 				if($document =='Any')
