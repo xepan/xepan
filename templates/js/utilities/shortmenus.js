@@ -87,17 +87,26 @@ $.atk4(function(){
 		if(down_shortcut_on) return;
 		down_shortcut_on=true;
 
-		var inp = $('<input type="text"/>');
+		var row = $('<div class="atk-row">');
+		var col_left = $('<div class="atk-col-12">').appendTo(row);
+        var select = $('<select name="Document"><option value="Any">Any</option><option value="xShop/Customer">Customer</option></select>').appendTo(col_left);
+		var col_right = $('<div class="atk-col-12">').appendTo(row);
+
+		var inp = $('<input type="text"/>').appendTo(row);
+		$(inp).appendTo(col_right);
 
 		var outer = $('<div>');
 		$(outer)
-			.append($('<div><i class="glyphicon glyphicon-leaf"> xEpan </i> Document Search </div>').addClass('label label-info'))
-			.append(inp)
+			.append($('<div class="atk-box"><i class="glyphicon glyphicon-leaf"> xEpan </i> Document Search </div>'))
+			// .append(inp)
+			.append(row)
 			.addClass('text-center');
 
 
 		var dd = $(outer).dialog({
 			modal: true,
+			width:600,
+			height:450,
 			open: function (event,ui){
 				$(inp).focus();
 			},
@@ -137,7 +146,7 @@ $.atk4(function(){
 			}).data("ui-autocomplete")._renderItem = function(ul, item) {
                 return $("<li></li>")
                     .data("ui-autocomplete-item", item)
-                    .append("<a>" + item['name'] + "</a>")
+                    .append('<div class="atk-box-small"> <a>'+ item.document_name +"::" + item.name +"</a>"+'<span class="atk-move-right atk-label atk-effect-info">'+ item.status +"</span>"+"<span>  By: " + item.by +"</span>"+"<span> To: " + item.to +"</span>"+"<div> Date: " + item.date +"</div>"+"<span>" + item.id +"</span>")
                     .appendTo(ul);
                 }
 
