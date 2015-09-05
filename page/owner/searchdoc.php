@@ -11,6 +11,108 @@ class page_owner_searchdoc extends page_base_owner{
 		// sensitize term like add + befrore order, customer etc
 
 		$structure_array =[
+		//Accounts
+			'xAccount/Model_Account'=>[
+				'search_field'=>'search_string',
+				'return_fields'=>[
+					'name'=>'name',
+					'by' =>'created_by',
+					'to' =>'',
+					'date' =>'created_at',
+					'status' =>'account_type',
+					'document_model' =>'xAccount/Model_Account',
+					'document' =>'Account',
+					'id' =>'id',
+				]
+			],
+
+			'xAccount/Model_Transaction'=>[
+				'search_field'=>'search_string',
+				'return_fields'=>[
+					'name'=>'name',
+					'by' =>'created_by',
+					'to' =>'',
+					'date' =>'created_at',
+					'status' =>'transaction_type',
+					'document_model' =>'xAccount/Model_Transaction',
+					'document' =>'Voucher Number',
+					'id' =>'id',
+				]
+			],
+
+		//Activity
+			'xCRM/Model_Activity'=>[
+				'search_field'=>'search_string',
+				'return_fields'=>[
+					'name'=>'subject',
+					'by' =>'action_from',
+					'to' =>'action_to',
+					'date' =>'created_at',
+					'status' =>'action',
+					'document_model' =>'xCRM/Model_Activity',
+					'document' =>'Activity',
+					'id' =>'id',
+				]
+			],
+
+			'xCRM/Model_Email'=>[
+				'search_field'=>'search_string',
+				'return_fields'=>[
+					'name'=>'subject',
+					'by' =>'from_email',
+					'to' =>'to_email',
+					'date' =>'created_at',
+					'status' =>'direction',
+					'document_model' =>'xCRM/Model_Email',
+					'document' =>'Email',
+					'id' =>'id',
+				]
+			],
+
+			'xCRM/Model_Ticket'=>[
+				'search_field'=>'search_string',
+				'return_fields'=>[
+					'name'=>'name',
+					'by' =>'from_email',
+					'to' =>'to_email',
+					'date' =>'created_at',
+					'status' =>'subject',
+					'document_model' =>'xCRM/Model_Ticket',
+					'document' =>'Ticket',
+					'id' =>'id',
+				]
+			],
+
+		//Dispatch
+			'xDispatch/Model_DispatchRequest'=>[
+				'search_field'=>'search_string',
+				'return_fields'=>[
+					'name'=>'name',
+					'by' =>'',
+					'to' =>'order_no',
+					'date' =>'created_at', 
+					'status' =>'status', 
+					'document_model' =>'xDispatch/Model_DispatchRequest',
+					'id' =>'id'
+				]
+			],
+
+		//xProduction
+			'xProduction/Model_Jobcard'=>[
+				'search_field'=>'search_string',
+				'return_fields'=>[
+					'name'=>'name',
+					'by' =>'from_department',
+					'to' =>'to_department',
+					'date' =>'created_at', 
+					'status' =>'status', 
+					'document_model' =>'xProduction/Model_Jobcard',
+					'id' =>'id'
+				]
+			],
+			
+
+
 			'xShop/Model_Customer'=>[
 				'search_field'=>'search_string',
 				'return_fields'=>[
@@ -23,6 +125,9 @@ class page_owner_searchdoc extends page_base_owner{
 					'id' =>'id', /*will get name in by of producer of document*/
 				]
 			],
+
+
+
 			'xShop/Model_Order'=>[
 				'search_field'=>'search_string',
 				'return_fields'=>[
