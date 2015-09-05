@@ -100,7 +100,7 @@ class page_owner_searchdoc extends page_base_owner{
 			],
 
 		//xProduction
-			'xProduction/Model_Jobcard'=>[
+			'xProduction/Model_JobCard'=>[
 				'search_field'=>'search_string',
 				'return_fields'=>[
 					'name'=>'name',
@@ -108,7 +108,7 @@ class page_owner_searchdoc extends page_base_owner{
 					'to' =>'to_department',
 					'date' =>'created_at', 
 					'status' =>'status', 
-					'document_model' =>'xProduction/Model_Jobcard',
+					'document_model' =>'xProduction/Model_JobCard',
 					'document' =>'Jobcard',
 					'id' =>'id'
 				]
@@ -190,34 +190,6 @@ class page_owner_searchdoc extends page_base_owner{
 					'id' =>'id'
 				]
 			]
-
-			// 'xShop/Model_Customer'=>[
-			// 	'search_field'=>'search_string',
-			// 	'return_fields'=>[
-			// 		'name'=>'name',
-			// 		'by' =>'customer/supplier/employee', /*will get name in by of producer of document*/
-			// 		'to' =>'customer/supplier/employee', /*will get name in by of producer of document*/
-			// 		'date' =>'created_at', /*will get name in by of producer of document*/
-			// 		'status' =>'status', /*will get name in by of producer of document*/
-			// 		'document_model' =>'xShop/Model_Customer', /*will get name in by of producer of document*/
-			// 		'id' =>'id', /*will get name in by of producer of document*/
-			// 	]
-			// ],
-
-
-
-			// 'xShop/Model_Order'=>[
-			// 	'search_field'=>'search_string',
-			// 	'return_fields'=>[
-			// 		'name'=>'name',
-			// 		'by' =>'member', /*will get name in by of producer of document*/
-			// 		'to' =>'created_by', /*will get name in by of producer of document*/
-			// 		'date' =>'created_at', will get name in by of producer of document
-			// 		'status' =>'status', /*will get name in by of producer of document*/
-			// 		'document_model' =>'xShop/Model_Order', /*will get name in by of producer of document*/
-			// 		'id' =>'id', /*will get name in by of producer of document*/
-			// 	]
-			// ]
 		];
 
 		$data=[];
@@ -261,7 +233,6 @@ class page_owner_searchdoc extends page_base_owner{
 		// json echo ..
 		// baat khatam
 		// $data= array_slice($data, 0, 15);
-		var_dump($data);
 		
         echo json_encode($data);
         exit;
