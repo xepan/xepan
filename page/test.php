@@ -33,13 +33,15 @@ class page_test extends Page {
 						$activities->getElement('created_at'),
 						$activities->getElement('from'),
 						$activities->getElement('action_from'),
+						$activities->getElement('to'),
 						$activities->getElement('action_to'),
+						$activities->getElement('subject'),
+						$activities->getElement('message'),
 
 					]
 			)
 		);
 
-		// $activities->set($activities->dsql()->expr('search_string=[0]',[$activities->getElement('ss')]))->debug()->update();
 		$activities->_dsql()->set('search_string',$activities->dsql()->expr('[0]',[$activities->getElement('ss')]))->debug()->update();
 
 		return;
