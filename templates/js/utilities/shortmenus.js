@@ -120,7 +120,7 @@ $.atk4(function(){
 		});
 
 		$(inp).autocomplete({
-				delay: 0,
+				delay: 750,
 				minLength: 3,
 				source: function(request, response) {
 	                var other_fields_to_send = {};
