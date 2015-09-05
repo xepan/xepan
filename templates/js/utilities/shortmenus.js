@@ -146,7 +146,7 @@ $.atk4(function(){
 			}).data("ui-autocomplete")._renderItem = function(ul, item) {
                 return $("<li></li>")
                     .data("ui-autocomplete-item", item)
-                    .append('<div class="atk-box-small"> <a>'+ item.document_name +"::" + item.name +"</a>"+'<span class="atk-move-right atk-label atk-effect-info">'+ item.status +"</span>"+"<span>  By: " + item.by +"</span>"+"<span> To: " + item.to +"</span>"+"<div> Date: " + item.date +"</div>"+"<span>" + item.id +"</span>")
+                    .append('<div class="atk-box-small"> <a>'+ item.document_model +"::" + item.name +"</a>"+'<span class="atk-move-right atk-label atk-effect-info">'+ item.status +"</span>"+"<span>  By: " + item.by +"</span>"+"<span> To: " + item.to +"</span>"+"<div> Date: " + item.date +"</div>"+"<span>" + item.id +"</span>")
                     .appendTo(ul);
                 }
 
