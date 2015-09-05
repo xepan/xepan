@@ -16,7 +16,7 @@ class Model_JobCardAttachment extends \Model_Attachment{
 		parent::init();
 
 		$this->addCondition('related_root_document_name','xProduction\JobCard');
-		// //$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }
 

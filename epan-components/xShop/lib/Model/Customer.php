@@ -20,7 +20,7 @@ class Model_Customer extends Model_MemberDetails{
 		parent::init();
 
 		
-		$this->getElement('users_id')->destroy();
+		// $this->getElement('users_id')->destroy();
 		$this->getElement('name')->destroy();
 		$this->getElement('email')->destroy();
 
@@ -60,6 +60,7 @@ class Model_Customer extends Model_MemberDetails{
 	}
 
 	function beforeCustomerSave(){
+
 		$old_user = $this->add('Model_Users');
 		$old_user->addCondition('username',$this['username']);
 		$old_user->addCondition('username','<>',null);
@@ -69,12 +70,15 @@ class Model_Customer extends Model_MemberDetails{
 			$old_user->addCondition('epan_id',$this->api->current_website->id);
 		
 		if($this->loaded()){
-			$old_user->addCondition('id','<>',$this->id);
+			$old_user->addCondition('id','<>',$this['users_id']);
 		}
 
 		$old_user->tryLoadAny();
+
 		if($old_user->loaded()){
-			throw $this->exception("This username is allready taken, Chose Another",'ValidityCheck')->setField('username');
+			throw $this->exception("This username is allready taken, Chose Another",'ValidityCheck')
+					->setField('username')
+					->addMoreInfo('username', $old_user['username']);
 		}
 
 	}
