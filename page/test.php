@@ -13,12 +13,46 @@ class page_test extends Page {
 
 	function page_updatesearchstring(){
 		// set_time_limit(0);
+
+		// $str = "Activity: ".$this['action']." ".
+		// 		$this['created_at']." ".
+		// 		$this['from']." ".
+		// 		$this['action_from']." ".
+		// 		$this['to']." ".
+		// 		$this['action_to']." ".
+		// 		$this['subject']." ".
+		// 		$this['message'];
+		// $this['search_string'] = $str;
+
+		$activities = $this->add('xCRM/Model_Activity');
+		$activities->addExpression('ss')
+			->set(
+				$activities->dsql()->expr(
+					'CONCAT(IFNULL([0],"")," ",IFNULL([1],"")," ",IFNULL([2],"")," ",IFNULL([3],""))',
+					[
+						$activities->getElement('created_at'),
+						$activities->getElement('from'),
+						$activities->getElement('action_from'),
+						$activities->getElement('action_to'),
+
+					]
+			)
+		);
+
+		// $activities->set($activities->dsql()->expr('search_string=[0]',[$activities->getElement('ss')]))->debug()->update();
+		$activities->_dsql()->set('search_string',$activities->dsql()->expr('[0]',[$activities->getElement('ss')]))->debug()->update();
+
+		return;
+
+
 		$docs = $this->add('xHR/Model_Document')->getDefaults();
 		$class_array = [];
 		foreach ($docs as $doc) {			
 			$array = explode('\\', $doc['name']);
 			$array2= explode("_", $array[1]);
 			
+			if(strtolower($array2[0])=='activity') continue;
+
 			if($array2[0]=='Jobcard') $array2[0] = 'JobCard';
 			if($array[0]=="xPurchase" and $array2[0] == "Invoice") $array2[0] = "PurchaseInvoice";
 			if($array[0]=="xShop" and $array2[0] == "Invoice") $array2[0] = "SalesInvoice";
