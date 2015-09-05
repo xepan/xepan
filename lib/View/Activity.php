@@ -1,6 +1,15 @@
 <?php
 
 class View_Activity extends View {
+	public $activity=null;
+
+	function init(){
+		parent::init();
+
+		if($this->activity)
+			$this->setModel($this->activity);
+
+	}
 
 	function setModel($model){
 		//Set Date

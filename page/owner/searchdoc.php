@@ -240,6 +240,61 @@ class page_owner_searchdoc extends page_base_owner{
 	}
 
 	function page_display(){
-		$this->add('View_Success')->set($_GET['key']);
+		if(!$_GET['key'] and !$_GET['document_model'])
+			return;
+		$view_array = array(
+					'xPurchase/Model_PurchaseOrder'=>array(
+						'view'=>'xPurchase/View_PurchaseOrder',
+						'model_variable'=>'purchaseorder'
+						),
+					'xShop/Model_Order'=>array(
+						'view'=>'xShop/View_Order',
+						'model_variable'=>'order'
+						),
+					'xProduction/Model_JobCard'=>array(
+						'view'=>'xProduction/View_Jobcard',
+						'model_variable'=>'jobcard'
+						),
+					'xStore/Model_StockMovement'=>array(
+						'view'=>'xStore/View_StockMovement',
+						'model_variable'=>'stockmovement'
+						),
+					'xDispatch/Model_DispatchRequest'=>array(
+						'view'=>'xDispatch/View_DispatchRequest',
+						'model_variable'=>'dispatchrequest'
+						),
+					'xShop/Model_SalesInvoice'=>array(
+						'view'=>'xShop/View_SalesInvoice',
+						'model_variable'=>'invoice'
+						),
+					'xPurchase/Model_PurchaseInvoice'=>array(
+						'view'=>'xPurchase/View_PurchaseInvoice',
+						'model_variable'=>'invoice'
+						),
+					'xCRM/Model_Email'=>[
+						'view'=>'xHR/View_Email',
+						'model_variable'=>'email'
+						],
+					'xCRM/Model_Ticket'=>[
+						'view'=>'xCRM/View_Ticket',
+						'model_variable'=>'model'
+						],
+					'xCRM/Model_Activity'=>[
+						'view'=>'View_Activity',
+						'model_variable'=>'activity'
+						]
+				);
+
+				
+		if(!$view_array[$_GET['document_model']]){			
+			$this->add('View_Warning')->set('No View ('+$_GET['document_model']+') Found, Contact to Xavoc Technocrats Pvt. Ltd.');
+			return;
+		}
+
+		$related_model = $this->add($_GET['document_model'])->load($_GET['key']);
+		$selected_view_array = $view_array[$_GET['document_model']];
+		$selected_view = $selected_view_array['view'];
+
+		$this->add($selected_view,array($selected_view_array['model_variable']=>$related_model));
 	}
 }

@@ -2,6 +2,15 @@
 
 namespace xHR;
 class View_Email extends \View{
+	public $email=null;
+
+	function init(){
+		parent::init();
+
+		if($this->email)
+			$this->setModel($this->email);
+
+	}
 
 	function setModel($model){
 		$cc= "";
