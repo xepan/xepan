@@ -28,6 +28,7 @@ class Model_Activity extends \Model_Document{
 		$this->addField('to')->enum($from_to);
 		$this->addField('to_id');
 
+
 		$this->addExpression('action_from')->set(function($m,$q){
 
 			$nq=$m->api->db->dsql();
@@ -71,12 +72,12 @@ class Model_Activity extends \Model_Document{
 			$nq1=$m->api->db->dsql();
 			$users = $nq1->table('xshop_memberdetails');
 			$cust_j = $users->join('users','users_id',null,'cujto');
-			$users->where('xshop_memberdetails.id',$q->getField('from_id'));
+			$users->where('xshop_memberdetails.id',$q->getField('to_id'));
 			$users->del('fields');
 
 			$nq2=$m->api->db->dsql();
 			$suppliers = $nq2->table('xpurchase_supplier');
-			$suppliers->where('id',$q->getField('from_id'));
+			$suppliers->where('id',$q->getField('to_id'));
 			$suppliers->del('fields');
 
 			$str="(
@@ -101,6 +102,8 @@ class Model_Activity extends \Model_Document{
 		
 		$this->add('filestore/Field_File','attachment_id',array('policy_add_new_type'=>true));
 		$this->setOrder('created_at','desc');
+
+		$this->addExpression('what')->set($this->dsql()->expr('CONCAT([0]," ", [1])',[$this->getElement('related_document_name'),$this->getElement('action')]));
 
 		$this->addHook('beforeSave,beforeDelete',function($obj){
 			if(!isset($obj->forceDelete) AND $obj['created_by_id'] != $obj->api->current_employee->id)
