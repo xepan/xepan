@@ -94,6 +94,7 @@ class page_owner_searchdoc extends page_base_owner{
 					'date' =>'created_at', 
 					'status' =>'status', 
 					'document_model' =>'xDispatch/Model_DispatchRequest',
+					'document' =>'Dispatch',
 					'id' =>'id'
 				]
 			],
@@ -108,39 +109,115 @@ class page_owner_searchdoc extends page_base_owner{
 					'date' =>'created_at', 
 					'status' =>'status', 
 					'document_model' =>'xProduction/Model_Jobcard',
+					'document' =>'Jobcard',
 					'id' =>'id'
 				]
 			],
-			
 
-
-			'xShop/Model_Customer'=>[
+			'xProduction/Model_Task'=>[
 				'search_field'=>'search_string',
 				'return_fields'=>[
 					'name'=>'name',
-					'by' =>'customer/supplier/employee', /*will get name in by of producer of document*/
-					'to' =>'customer/supplier/employee', /*will get name in by of producer of document*/
-					'date' =>'created_at', /*will get name in by of producer of document*/
-					'status' =>'status', /*will get name in by of producer of document*/
-					'document_model' =>'xShop/Model_Customer', /*will get name in by of producer of document*/
-					'id' =>'id', /*will get name in by of producer of document*/
+					'by' =>'created_by',
+					'to' =>'employee_id',
+					'date' =>'expected_start_date',
+					'status' =>'status',
+					'document_model' =>'xProduction/Model_Task',
+					'document' =>'Task',
+					'detail' =>'subject',
+					'id' =>'id'
+				]
+			],
+		
+		//Purchase
+			'xPurchase/Model_PurchaseInvoice'=>[
+				'search_field'=>'search_string',
+				'return_fields'=>[
+					'name'=>'name',
+					'by' =>'created_by',
+					'to' =>'supplier',
+					'date' =>'created_at',
+					'status' =>'status',
+					'document_model' =>'xPurchase/Model_PurchaseInvoice',
+					'document' =>'Purchase Invoice',
+					'detail' =>'narration',
+					'id' =>'id'
 				]
 			],
 
+			'xPurchase/Model_PurchaseOrder'=>[
+				'search_field'=>'search_string',
+				'return_fields'=>[
+					'name'=>'name',
+					'by' =>'created_by',
+					'to' =>'supplier',
+					'date' =>'created_at',
+					'status' =>'status',
+					'document_model' =>'xPurchase/Model_PurchaseOrder',
+					'document' =>'Purchase Order',
+					'detail' =>'order_summary',
+					'id' =>'id'
+				]
+			],
 
+		//xShop
+			'xShop/Model_Invoice'=>[
+				'search_field'=>'search_string',
+				'return_fields'=>[
+					'name'=>'name',
+					'by' =>'created_by',
+					'to' =>'customer',
+					'date' =>'created_at',
+					'status' =>'status',
+					'document_model' =>'xShop/Model_Invoice',
+					'document' =>'Sale Order',
+					'detail' =>'narration',
+					'id' =>'id'
+				]
+			],
 
 			'xShop/Model_Order'=>[
 				'search_field'=>'search_string',
 				'return_fields'=>[
 					'name'=>'name',
-					'by' =>'member', /*will get name in by of producer of document*/
-					'to' =>'created_by', /*will get name in by of producer of document*/
-					'date' =>'created_at', /*will get name in by of producer of document*/
-					'status' =>'status', /*will get name in by of producer of document*/
-					'document_model' =>'xShop/Model_Order', /*will get name in by of producer of document*/
-					'id' =>'id', /*will get name in by of producer of document*/
+					'by' =>'created_by',
+					'to' =>'customer',
+					'date' =>'created_at',
+					'status' =>'status',
+					'document_model' =>'xShop/Model_Order',
+					'document' =>'Sale Order',
+					'detail' =>'narration',
+					'id' =>'id'
 				]
 			]
+
+			// 'xShop/Model_Customer'=>[
+			// 	'search_field'=>'search_string',
+			// 	'return_fields'=>[
+			// 		'name'=>'name',
+			// 		'by' =>'customer/supplier/employee', /*will get name in by of producer of document*/
+			// 		'to' =>'customer/supplier/employee', /*will get name in by of producer of document*/
+			// 		'date' =>'created_at', /*will get name in by of producer of document*/
+			// 		'status' =>'status', /*will get name in by of producer of document*/
+			// 		'document_model' =>'xShop/Model_Customer', /*will get name in by of producer of document*/
+			// 		'id' =>'id', /*will get name in by of producer of document*/
+			// 	]
+			// ],
+
+
+
+			// 'xShop/Model_Order'=>[
+			// 	'search_field'=>'search_string',
+			// 	'return_fields'=>[
+			// 		'name'=>'name',
+			// 		'by' =>'member', /*will get name in by of producer of document*/
+			// 		'to' =>'created_by', /*will get name in by of producer of document*/
+			// 		'date' =>'created_at', will get name in by of producer of document
+			// 		'status' =>'status', /*will get name in by of producer of document*/
+			// 		'document_model' =>'xShop/Model_Order', /*will get name in by of producer of document*/
+			// 		'id' =>'id', /*will get name in by of producer of document*/
+			// 	]
+			// ]
 		];
 
 		$data=[];
