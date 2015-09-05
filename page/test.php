@@ -15,38 +15,39 @@ class page_test extends Page {
 		// set_time_limit(0);
 
 		// create FULLTEXT index
-		$docs = $this->add('xHR/Model_Document')->getDefaults();
-		$class_array = [];
-		foreach ($docs as $doc) {			
-			$array = explode('\\', $doc['name']);
-			$array2= explode("_", $array[1]);
+		// $docs = $this->add('xHR/Model_Document')->getDefaults();
+		// $class_array = [];
+		// foreach ($docs as $doc) {			
+		// 	$array = explode('\\', $doc['name']);
+		// 	$array2= explode("_", $array[1]);
 			
 
-			if($array2[0]=='Jobcard') $array2[0] = 'JobCard';
-			if($array[0]=="xPurchase" and $array2[0] == "Invoice") $array2[0] = "PurchaseInvoice";
-			if($array[0]=="xShop" and $array2[0] == "Invoice") $array2[0] = "SalesInvoice";
+		// 	if($array2[0]=='Jobcard') $array2[0] = 'JobCard';
+		// 	if($array[0]=="xPurchase" and $array2[0] == "Invoice") $array2[0] = "PurchaseInvoice";
+		// 	if($array[0]=="xShop" and $array2[0] == "Invoice") $array2[0] = "SalesInvoice";
 
-			$class_name = $array[0]."/Model_".$array2[0];
-			// echo $class_name." ".var_dump($class_array)."<br/>";
-			if(in_array($class_name, $class_array))
-				continue;
+		// 	$class_name = $array[0]."/Model_".$array2[0];
+		// 	// echo $class_name." ".var_dump($class_array)."<br/>";
+		// 	if(in_array($class_name, $class_array))
+		// 		continue;
 
-			$root_model = $this->add($class_name);
-			try{
-				$this->api->db->dsql()->expr("CREATE FULLTEXT INDEX search_string_index ON ". $root_model->table . "(search_string);")->execute();
-			}catch(Exception $e){
+		// 	$root_model = $this->add($class_name);
+		// 	try{
+		// 		$this->api->db->dsql()->expr("CREATE FULLTEXT INDEX search_string_index ON ". $root_model->table . "(search_string);")->execute();
+		// 	}catch(Exception $e){
 
-			}
-		}
+		// 	}
+		// }
 
-		return;
+		// return;
 
 		$activities = $this->add('xCRM/Model_Activity');
 		$activities->addExpression('ss')
 			->set(
 				$activities->dsql()->expr(
-					'CONCAT(IFNULL([0],"")," ",IFNULL([1],"")," ",IFNULL([2],"")," ",IFNULL([3],""))',
+					'CONCAT("Activity: ",[8]," ",[0]," ",IFNULL([1],"")," ",IFNULL([2],"")," ",IFNULL([3],"")," ",IFNULL([4],"")," ",IFNULL([5],"")," ",IFNULL([6],"")," ",IFNULL([7],""))',
 					[
+						$activities->getElement('action'),
 						$activities->getElement('created_at'),
 						$activities->getElement('from'),
 						$activities->getElement('action_from'),
@@ -54,6 +55,7 @@ class page_test extends Page {
 						$activities->getElement('action_to'),
 						$activities->getElement('subject'),
 						$activities->getElement('message'),
+						$activities->getElement('related_root_document_name'),
 
 					]
 			)
