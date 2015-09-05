@@ -65,11 +65,11 @@ class Model_JobCard extends \Model_Document{
 							)
 					);
 		$this->addHook('beforeDelete',$this);
-		$this->addHook('beforeSave',array($this,'searchStringBeforeSave'));
+		$this->addHook('afterSave',array($this,'searchStringAftereSave'));
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function searchStringBeforeSave(){
+	function searchStringAftereSave(){
 		$str = " ";
 		$str.= $this['type']." ".
 				$this['name']." ".
@@ -80,6 +80,7 @@ class Model_JobCard extends \Model_Document{
 		$str .= $this->order()?$this->order()->get('search_phrase'):"";
 		$str .= $this->orderItem()?$this->orderItem()->get('name'):"";
 		$this['search_string'] = $str;
+		$this->save();
 	}
 
 	function beforeDelete(){

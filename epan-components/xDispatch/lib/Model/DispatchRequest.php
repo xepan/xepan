@@ -76,12 +76,12 @@ class Model_DispatchRequest extends \Model_Document {
 
 		$this->addHook('beforeInsert',$this);
 		$this->addHook('beforeDelete',$this);
-		$this->addHook('beforeDelete',[$this,'searchStringBeforeSave']);
+		$this->addHook('afterSave',[$this,'searchStringAfterSave']);
 
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
-	function searchStringBeforeSave(){
+	function searchStringAfterSave(){
 		$str = $this['type']." ".
 								$this['name']." ".
 								$this['status']." ".
