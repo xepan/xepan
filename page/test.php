@@ -12,7 +12,7 @@ class page_test extends Page {
 	}
 
 	function page_updatesearchstring(){
-		set_time_limit(0);
+		// set_time_limit(0);
 		$docs = $this->add('xHR/Model_Document')->getDefaults();
 		$class_array = [];
 		foreach ($docs as $doc) {			
@@ -21,7 +21,7 @@ class page_test extends Page {
 			
 			if($array2[0]=='Jobcard') $array2[0] = 'JobCard';
 			if($array[0]=="xPurchase" and $array2[0] == "Invoice") $array2[0] = "PurchaseInvoice";
-			if($array[0]=="xShop" and $array2[0] == "Invoice") $array2[0] = "saleInvoice";
+			if($array[0]=="xShop" and $array2[0] == "Invoice") $array2[0] = "SalesInvoice";
 
 			$class_name = $array[0]."/Model_".$array2[0];
 			// echo $class_name." ".var_dump($class_array)."<br/>";
@@ -37,10 +37,10 @@ class page_test extends Page {
 				
 				if($array2[0]=='Jobcard') $array2[0] = 'JobCard';
 				if($array[0]=="xPurchase" and $array2[0] == "Invoice") $array2[0] = "PurchaseInvoice";
-				if($array[0]=="xShop" and $array2[0] == "Invoice") $array2[0] = "saleInvoice";
+				if($array[0]=="xShop" and $array2[0] == "Invoice") $array2[0] = "SalesInvoice";
 
 				$class_name = $array[0]."/Model_".$array2[0];
-				$model->saveAs($class_name);
+				$this->add($class_name)->load($model->id)->save();
 				echo $class_name. " " . $model->id ."<br/>";
 				ob_flush();
 			}
