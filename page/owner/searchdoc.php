@@ -5,6 +5,7 @@ class page_owner_searchdoc extends page_base_owner{
 	function page_index(){
 
 		$document = "Any || xShop/Customer";
+		$document = "xShop/Model_Order";
 		$document = "Any";
 		$term = $_GET['term'];
 
@@ -41,34 +42,45 @@ class page_owner_searchdoc extends page_base_owner{
 		foreach ($structure_array as $model=>$structure) {
 			if($document!='Any' && $document !=$model) continue;
 				$m=$this->add($model);
-				$m->addExpression('relevance')->set('(MATCH('.$structure['search_field'].') AGAINST ("'.$term.'"))');
+				$m->addExpression('relevance')
+					->set('(MATCH('.$structure['search_field'].') AGAINST ("'.$term.'" IN NATURAL LANGUAGE MODE))');
+				$m->addCondition('relevance','>',0);
+
 				$m->setOrder($m->dsql()->expr('[0]',[$m->getElement('relevance')]),'DESC');
 				if($document =='Any')
 					$m->setLimit(5);
 				else
 					$m->setLimit(15);
 
-				// $m->getRows();
-				$m_data=[];
-				foreach ($m as $tm) {
-					$m_data['relevance'] = $m['relevance'];
-					foreach ($structure['return_fields'] as $standard => $model_field) {
-						$m_data[$standard] = $m[$model_field]?:$model_field;
-					}
+				$fields=['relevance'];
+				foreach ($structure['return_fields'] as $standard => $model_field) {
+					$fields[] = $model_field;
 				}
 
-				$data[] = $m_data;
+
+				// $m->getRows();
+				foreach ($m->getRows($fields) as $tm) {
+					$m_data=[];
+					$m_data['relevance'] = $tm['relevance'];
+					foreach ($structure['return_fields'] as $standard => $model_field) {
+						$m_data[$standard] = $tm[$model_field]?:$model_field;
+					}
+					$data[] = $m_data;
+				}
+
 		}
 
 		usort($data, function($a,$b){
-			return $a['relevance'] > $b['relevance'];
+			return $a['relevance'] < $b['relevance'];
 		});
 		
 		// Sort this $data array by its all relevance
 		// take first 15 records
 		// json echo ..
 		// baat khatam
-
+		// $data= array_slice($data, 0, 15);
+		var_dump($data);
+		
         echo json_encode($data);
         exit;
 
