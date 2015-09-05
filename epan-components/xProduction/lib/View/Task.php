@@ -2,12 +2,15 @@
 namespace xProduction;
 
 class View_Task extends \View{
-	public $task;
+	public $task=null;
 	public $sno=1;
 	public $task_vp;
 
 	function init(){
 		parent::init();
+
+		if($this->task)
+			$this->setModel($this->task);
 	}
 
 	function setModel($model){
@@ -33,7 +36,7 @@ class View_Task extends \View{
 				
 		$this->template->trySetHtml('priority_icon',$icon_html);
 
-		$this->template->trySetHtml('task_subject','<a href="javascript:void(0)" onclick="'.$this->js()->univ()->frameURL($model['subject'],$this->api->url($this->task_vp->getURL(),array('task_id'=>$model->id))).'">'.substr(strip_tags($model['subject']),0,40).'</a>');
+		// $this->template->trySetHtml('task_subject',$model['subject']);
 		parent::setModel($model);
 	}
 

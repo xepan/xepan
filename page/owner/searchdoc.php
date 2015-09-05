@@ -330,6 +330,10 @@ class page_owner_searchdoc extends page_base_owner{
 					'xCRM/Model_Activity'=>[
 						'view'=>'View_Activity',
 						'model_variable'=>'activity'
+						],
+					'xProduction/Model_Task'=>[
+						'view'=>'xProduction/View_Task',
+						'model_variable'=>'task'
 						]
 				);
 
