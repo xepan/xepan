@@ -56,6 +56,18 @@ class Model_EpanPage extends Model_Table {
 
 		if(!$this->loaded() AND $this['name']=='')
 			throw $this->exception('URL must be filled','ValidityCheck')->setField('name');
+		
+		//check for unique name
+		$epage_old=$this->add('Model_EpanPage');
+		if($this->loaded()){
+			$epage_old->addCondition('id','<>',$this->id);
+		}
+		$epage_old->addCondition('name',$this['name']);
+		$epage_old->tryLoadAny();
+		
+		if($epage_old->loaded() and $epage_old['name'] == $this['name'])
+			throw $epage_old->exception('Name Already Taken','ValidityCheck')->setField('name');
+
 
 		if($this->loaded() AND $this['name'] == '') $this['name']='home';
 
