@@ -38,8 +38,8 @@ class page_xShop_page_designer_save extends Page {
 				usort($layout['components'], function($a,$b){
 						$a_array = json_decode($a,true);
 						$b_array = json_decode($b,true);
-						$a_zindex = $a_array['z_index']?$a_array['z_index']:0;
-						$b_zindex = $b_array['z_index']?$b_array['z_index']:0;
+						$a_zindex = $a_array['zindex']?$a_array['zindex']:0;
+						$b_zindex = $b_array['zindex']?$b_array['zindex']:0;
 						return $a_zindex > $b_zindex;
 					});
 			}
