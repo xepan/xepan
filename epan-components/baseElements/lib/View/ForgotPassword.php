@@ -8,11 +8,12 @@ class View_ForgotPassword extends \View{
 	function init(){
 		parent::init();
 		
-		$this->add('View_Info')->set('Forgot Password');
 		//Show Forgot Password
 				$this->api->stickyGET('forgot_password_view');
 				$resend_form = $this->add('Form');
-				$resend_form->addClass('stacked');
+				if($this->html_attributes['form_stacked_on'])
+						$resend_form->addClass('stacked');
+
 				$email_field = $resend_form->addField('line','email','Registered Email Id')->validateNotNull()->validateField('filter_var($this->get(), FILTER_VALIDATE_EMAIL)');
 				$email_field->setAttr('PlaceHolder','Enter your Registerd E-mail Id.');
 				$btn = $resend_form->addSubmit('Send Activation Code');	

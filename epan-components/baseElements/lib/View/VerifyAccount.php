@@ -8,11 +8,13 @@ class View_VerifyAccount extends \View{
 	function init(){
 		parent::init();
 		
-		$this->add('View_Info')->set('Account Verify');
 		//Verify Account Form				
 				$verify_user_model=$this->add('Model_Users');	
 							
 				$verify_form=$this->add('Form');
+				if($this->html_attributes['form_stacked_on'])
+					$verify_form->addClass('stacked');
+
 				$verify_form->addField('line','email_id');
 				$verify_form->addField('line','verification_code');
 				$verify_form->addSubmit('Submit');
@@ -29,7 +31,7 @@ class View_VerifyAccount extends \View{
 					if(!$verify_user_model->verifyAccount($verify_form['email_id'],$verify_form['verification_code'])){
 						$verify_form->js(null,$this->js()->univ()->errorMessage('Try Again'))->reload()->execute();		
 					}					
-					$this->api->stickyForget('verify_account');								
+					$this->api->stickyForget('verify_account');
 					$verify_form->js(null,$this->js()->univ()->successMessage('Account Verify Successfully'))->reload()->execute();	
 				} 
 	}
