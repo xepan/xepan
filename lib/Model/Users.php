@@ -42,13 +42,13 @@ class Model_Users extends Model_Table {
 		$this->hasMany('UserAppAccess','user_id');
 		$this->hasMany('xHR/Employee','user_id');
 
-		$this->add('Controller_Validator');
-		$this->is(array(
-							'name|to_trim|required?type User name here',
-							'email|email',
-							'username|to_trim|unique'
-						)
-				);
+		// $this->add('Controller_Validator');
+		// $this->is(array(
+		// 					'name|to_trim|required?type User name here',
+		// 					'email|email',
+		// 					'username|to_trim|unique'
+		// 				)
+		// 		);
 
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeSave',$this);
@@ -71,7 +71,18 @@ class Model_Users extends Model_Table {
 		$this->api->event('new_user_registered',$user_model_value);
 	}
 
+	function isEmailExist($email){
+		if(!$email)
+			return false;
+
+		$user = $this->add('Model_Users');
+		$user->addCondition('email',$email);
+		$user->tryLoadAny();
+		return $user->count()->getOne();
+	}
+
 	function beforeSave(){
+		
 		//Check User Name is Empty
 		if($this->dirty['type'] and $this['type'] == ""){
 			throw $this->exception('User Type Must be Defined','ValidityCheck')->setField('type');
@@ -88,8 +99,7 @@ class Model_Users extends Model_Table {
 		}
 		$old_user->tryLoadAny();
 		if($old_user->loaded()){
-			// throw $this->exception("This username is allready taken, Chose Another");
-			$this->api->js()->univ()->errorMessage('This username is already taken, Chose Another')->execute();
+			throw $this->exception('This username(Email) is already taken, Chose Another','Growl')->setField('email');
 		}
 
 		if(!isset($this->allow_duplicate_email)){
@@ -159,6 +169,98 @@ class Model_Users extends Model_Table {
 			$this['password']=$new_password;
 			$this->save();
 			return $this;
+	}	
+
+
+	//Send Password Update Successfully Email
+	function sendPasswordUpdateMail($email_id=null){
+		if(!$this->loaded()) return false;
+
+		$user = $this;
+		if($email_id){
+			$user = $this->add('Model_Users')->addCondition('email',$email_id);	
+			$user->tryLoadAny();
+		}
+
+		$tm=$this->add( 'TMail_Transport_PHPMailer' );
+
+		$subject =$this->api->current_website['password_forget_email_subject'];
+		$email_body=$this->api->current_website['password_forget_email_body'];
+		$email_body=str_replace("{{name}}", $user['name'], $email_body);
+		$email_body=str_replace("{{email}}", $user['email'], $email_body);
+		$email_body=str_replace("{{user_name}}", $user['username'], $email_body);
+		// $email_body=str_replace("{{password}}", "******", $email_body);
+		$email_body=str_replace("{{activation_code}}", $user['activation_code'], $email_body);
+			
+			$protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ? 'http' : 'https';
+		$host     = $_SERVER['HTTP_HOST'];
+		$script   = $_SERVER['SCRIPT_NAME'];
+		$params   = $_SERVER['QUERY_STRING'];
+		$currentUrl = $protocol. '://' .$host;
+				
+		$email_body=str_replace("{{click_here_to_activate}}",
+										"<a href=\"".$currentUrl.str_replace("&new_registration=1","", $this->api->url(null,array(
+												'activation_code'=>$user['activation_code'],
+												'activate_email'=>$user['email'],
+												'user_selected_form'=>"login"
+											)))."\">Click Here </a>",$email_body);
+		
+
+		try{
+			$tm->send( $user['email'], $this->api->current_website['email_username'], $subject, $email_body ,false,null);
+		}catch( phpmailerException $e ) {
+			$this->api->js()->univ()->errorMessage( $e->errorMessage() . " "  )->execute();
+		}catch( Exception $e ) {
+			throw $e;
+		}
+
+	}
+
+
+	//Send Password Verification Email With Activation Code
+	function sendPasswordVerificationMail($email_id=null){
+		if(!$this->loaded()) return false;
+
+		$user = $this;
+		if($email_id){
+			$user = $this->add('Model_Users')->addCondition('email',$email_id);	
+			$user->tryLoadAny();
+		}
+
+
+		$tm=$this->add( 'TMail_Transport_PHPMailer' );
+
+		$subject =$this->api->current_website['password_forget_email_subject'];
+		$email_body=$this->api->current_website['password_forget_email_body'];
+		$email_body=str_replace("{{name}}", $user['name'], $email_body);
+		$email_body=str_replace("{{email}}", $user['email'], $email_body);
+		$email_body=str_replace("{{user_name}}", $user['username'], $email_body);
+		// $email_body=str_replace("{{password}}", "******", $email_body);
+		$email_body=str_replace("{{activation_code}}", $user['activation_code'], $email_body);
+			
+			$protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ? 'http' : 'https';
+		$host     = $_SERVER['HTTP_HOST'];
+		$script   = $_SERVER['SCRIPT_NAME'];
+		$params   = $_SERVER['QUERY_STRING'];
+		$currentUrl = $protocol. '://' .$host;
+				
+		$email_body=str_replace("{{click_here_to_activate}}",
+										"<a href=\"".$currentUrl.str_replace("&new_registration=1","", $this->api->url(null,array(
+												'activation_code'=>$user['activation_code'],
+												'activate_email'=>$user['email'],
+												'user_selected_form'=>"forget_password",
+												'update_password'=>"true"
+											)))."\">Click Here </a>",$email_body);
+		
+
+		try{
+			$tm->send( $user['email'], $this->api->current_website['email_username'], $subject, $email_body ,false,null);
+		}catch( phpmailerException $e ) {
+			$this->api->js()->univ()->errorMessage( $e->errorMessage() . " "  )->execute();
+		}catch( Exception $e ) {
+			throw $e;
+		}
+
 	}
 
 	function sendVerificationMail($email=null,$type=null,$activation_code=null){
@@ -168,19 +270,18 @@ class Model_Users extends Model_Table {
 			$this->tryLoadAny();
 		}	
 
-		$this['email'] = $email;
-		$this['activation_code'] = $activation_code;
-		$this->save();
-		$type = null;
-
+		// $this['email'] = $email;
+		// $this['activation_code'] = $activation_code;
+		// $this->save();
+		// $type = null;
 			$tm=$this->add( 'TMail_Transport_PHPMailer' );
 
 			$subject =$this->api->current_website['user_registration_email_subject'];
-			$email_body=$this->api->current_website['user_registration_email_message_body'];	
+			$email_body=$this->api->current_website['user_registration_email_message_body'];
 			$email_body=str_replace("{{name}}", $this['name'], $email_body);
 			$email_body=str_replace("{{email}}", $this['email'], $email_body);
 			$email_body=str_replace("{{user_name}}", $this['username'], $email_body);
-			$email_body=str_replace("{{password}}", $this['password'], $email_body);
+			// $email_body=str_replace("{{password}}", "******", $email_body);
 			$email_body=str_replace("{{activation_code}}", $this['activation_code'], $email_body);
  			
  			$protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https') === FALSE ? 'http' : 'https';
@@ -190,18 +291,15 @@ class Model_Users extends Model_Table {
 			$currentUrl = $protocol. '://' .$host;
 			
 			
-			$email_body=str_replace("{{click_here_to_activate}}", 
+			$email_body=str_replace("{{click_here_to_activate}}",
 											"<a href=\"".$currentUrl.str_replace("&new_registration=1","", $this->api->url(null,array(
 													'activation_code'=>$this['activation_code'],
 													'activate_email'=>$this['email'],
-													'verify_account'=>1
-												)))."\">Click Here to Activate Your Account</a>",$email_body);				
-			
-			// throw new \Exception($subject.$email_body);
-			
+													'user_selected_form'=>"verify_account"
+												)))."\">Click Here to Activate Your Account</a>",$email_body);
+						
 			try{
 				$tm->send( $this['email'], $this->api->current_website['email_username'], $subject, $email_body ,false,null);
-				return true;
 			}catch( phpmailerException $e ) {
 				$this->api->js()->univ()->errorMessage( $e->errorMessage() . " "  )->execute();
 			}catch( Exception $e ) {

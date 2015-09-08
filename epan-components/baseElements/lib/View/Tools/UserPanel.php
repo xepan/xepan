@@ -15,15 +15,18 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 		
 		//Show Desire Form (Registration/Forgot Password/Verify) if not logged In
 		if(!$this->api->auth->isLoggedIn()){
-			$this->api->stickyGET('new_registration');
-			$this->api->stickyGET('verify_account');
-			$this->api->stickyGET('forgot_password_view');
+			$this->api->stickyGET('user_selected_form');
 			
 			//Set Display Form Variable According to Default Form or user selected form 
 			$display = $this->html_attributes['default_login_view']?:'login';
+			//Set view According to GET Value
 			if(isset($_GET['user_selected_form'])){
 				$display = $_GET['user_selected_form'];
 			}
+
+			//IF View setted as Short Login View then show always short login view -----Region two Login View on one page
+			if(isset($this->html_attributes['login_view']) and $this->html_attributes['login_view'] === "1")
+				$display = 'login';
 
 			switch ($display) {
 				case 'login':
@@ -42,7 +45,9 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 			}
 
 			//Add Short Linkes for Login Options
-			if(!isset($this->html_attributes['login_view'])){
+			//if login view he to don't sho
+
+			if(!isset($this->html_attributes['login_view']) or $this->html_attributes['login_view'] == "0"){
 				if($display !== 'login'){
 					$login = $this->add('View')->setHTML('Login');
 					$login->js('click',$this->js()->reload(array('user_selected_form'=>'login')));
@@ -62,8 +67,8 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 					$verify_account=$this->add('View')->setHTML($user_panel_btn_Verify_name);
 					$verify_account->js('click',$this->js()->reload(array('user_selected_form'=>'verify_account')));
 				}
-				
 			}
+				
 
 		}else{
 			if($this->html_attributes['user_panel_after_login_page']){
