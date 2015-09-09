@@ -26,7 +26,7 @@ class Model_Email extends \Model_Document{
 
 	public $notification_rules = array(
 			// 'activity NOT STATUS' => array (....)
-			'created' => array('xCRM/Email/can_view'=>['title'=>'New Email: {$from_email} Received','message'=>'Email : {$subject}']),
+			'created' => array('xCRM/Email/can_view'=>['title'=>'New Email: {$from_email} => {$to_email}','message'=>'Email : {$subject}']),
 		);
 
 
