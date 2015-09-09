@@ -1,6 +1,7 @@
 <?php
 
 class page_edit_css extends Page {
+
 	function init(){
 		parent::init();
 
@@ -8,9 +9,8 @@ class page_edit_css extends Page {
 		if(!file_exists($css_file)) file_put_contents($css_file, "");
 		$css_content = file_get_contents($css_file);
 
-
 		$form = $this->add('Form');
-		$form->addField('text','css')->set($css_content)->addClass('xepan-customcss');
+		$ta =$form->addField('text','css')->set($css_content)->addClass('xepan-customcss');
 		$form->addSubmit('UPDATE');
 
 		if($form->isSubmitted()){
@@ -23,5 +23,10 @@ class page_edit_css extends Page {
 				$form->js()->_selector('#xepan-mystyles-css-link')->attr('href',$user_css. "?".rand(1000,9999))
 				)->univ()->closeDialog()->execute();
 		}
+		$this->template->trySet('textarea_id',$ta->name);
+	}
+
+	function defaultTemplate(){
+		return ['page/edit_css'];
 	}
 }

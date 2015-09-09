@@ -88,6 +88,7 @@ class page_index extends Page {
 					'templates/js/popline/build/jquery.popline.min.js',
 					'templates/js/google-fonts/jquery.fontselect.js',
 					'elfinder/js/elfinder.full.js',
+					'templates/js/edit_area/edit_area_full.js',
 					'elfinder/js/jquery.dialogelfinder.js'
 				);
 

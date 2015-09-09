@@ -450,7 +450,7 @@ $('#front-app-launcher').click(function(event) {
 
 $('#epan-editcss-button').click(function(event) {
     var options ={
-                    width:600,
+                    width:$(window).width()-100,
                     height:540
                 };
 
