@@ -18,7 +18,9 @@ class page_owner_epanpages extends page_base_owner {
 		$this->app->layout->template->trySetHTML('page_title','<i class="fa fa-files-o"></i> '.  strtoupper($this->api->current_website['name']) . " :: Pages <small>Pages and snapshots for your current website / application </small>" );
 
 		$crud = $this->add('CRUD');
-		
+		$epan_page_model = $this->add('Model_EpanPage')->load($this->api->current_website->id);
+		$crud->setModel($epan_page_model,array('template_id','parent_page_id','name','menu_caption','title','description','keywords','access_level'),array('template','parent_page_id','name','menu_caption','access_level','name'));
+
 		if($f=$crud->form){
 			$duplicate_field = $f->addField('dropdown','duplicate_content_from');
 			$duplicate_field->setFieldHint('Leave Title, Keywords and Description empty to be copied too..');
@@ -27,13 +29,10 @@ class page_owner_epanpages extends page_base_owner {
 			$duplicate_field->setEmptyText('Empty Page, No Duplicate');
 		}
 
-		$epan_page_model = $this->api->current_website->ref('EpanPage');
-
 		if($crud->isEditing('edit')){
 			$epan_page_model->getElement('parent_page_id')->getModel()->addCondition('id','<>',$crud->id);
 		}
 
-		$crud->setModel($epan_page_model,array('template_id','parent_page_id','name','menu_caption','title','description','keywords','access_level'),array('template','parent_page_id','name','menu_caption','access_level'));
 
 		if($crud->isEditing()){
 			$f=$crud->form;
@@ -52,7 +51,7 @@ class page_owner_epanpages extends page_base_owner {
 					if($crud->model['description']=='') $crud->model['description'] = $duplicate_from['description'];
 					if($crud->model['keywords']=='') $crud->model['keywords'] = $duplicate_from['keywords'];
 					$crud->model->save();
-				}
+				}				
 			}
 		}
 

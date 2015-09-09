@@ -212,7 +212,7 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 
 	setupCanvas: function(){
 		var self = this;
-		this.canvas = $('<div class="xshop-desiner-tool-canvas atk-move-center" style="position:relative; z-index:50"></div>').appendTo(this.workplace);
+		this.canvas = $('<div class="xshop-desiner-tool-canvas atk-move-center" style="position:relative; z-index:5"></div>').appendTo(this.workplace);
 		
 		this.canvas.css('width',this.options.width + this.options.unit); // In given Unit
 		this.px_width = this.canvas.width(); // Save in pixel for actual should be width

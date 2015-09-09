@@ -88,6 +88,18 @@ class Model_Epan extends Model_Table {
 		$f=$this->addField('user_registration_email_message_body')->type('text')->display(array('form'=>'RichText'))->defaultValue("Name:{{name}}Email:{{email}}User Name :{{user_name}}Password:{{password}}Activation code :{{activation_code}}Click here to activate:     {{click_here_to_activate}}")->hint("{{name}}, {{email}}, {{user_name}}, {{password}}, {{activation_code}}, {{click_here_to_activate}}")->group('ue~12~bl');
 		$f->icon = "fa fa-quote-left~red";
 
+		//Password Reset Email Notification
+		$f=$this->addField('password_forget_email_subject')->defaultValue('Password Reset Link')->group('uple~12~<i class="fa fa-envelope"></i> Password Reset Email');
+		$f->icon ="fa fa-quote-left~red";
+		$f=$this->addField('password_forget_email_body')->type('text')->display(array('form'=>'RichText'))->defaultValue("Name:{{name}}Email:{{email}}User Name :{{user_name}} Activation code :{{activation_code}}Click here to activate:     {{click_here_to_activate}}")->hint("{{name}}, {{email}}, {{user_name}}, {{activation_code}}, {{click_here_to_activate}}")->group('uple~12~bl');
+		$f->icon = "fa fa-quote-left~red";
+
+		//Password Change SuccessFully Email
+		$f=$this->addField('password_change_successfully_email_subject')->defaultValue('Password Reset Link')->group('upe~12~<i class="fa fa-envelope"></i> Password Update Successfully Email');
+		$f->icon ="fa fa-quote-left~red";
+		$f=$this->addField('password_change_successfully_email_body')->type('text')->display(array('form'=>'RichText'))->defaultValue("Name:{{name}}Email:{{email}}User Name :{{user_name}} Activation code :{{activation_code}}Click here to activate:     {{click_here_to_activate}}")->hint("{{name}}, {{email}}, {{user_name}}, {{activation_code}}, {{click_here_to_activate}}")->group('upe~12~bl');
+		$f->icon = "fa fa-quote-left~red";		
+
 		//sms form field
 		$this->addField('gateway_url')->caption('GateWay Url')->group('sms~4~<i class="fa fa-info "></i> Gate Way Info');
 		$this->addField('sms_username')->caption('Gateway User Name')->group('sms~4');

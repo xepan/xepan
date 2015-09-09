@@ -79,7 +79,7 @@ class page_owner_users extends page_base_owner {
 	function page_options(){
 		$form = $this->add('Form');
 		$form->addClass('stacked');
-		$form->setModel($this->api->current_website,array('is_frontend_registration_allowed','user_activation','user_registration_email_subject','user_registration_email_message_body'));
+		$form->setModel($this->api->current_website,array('is_frontend_registration_allowed','user_activation','user_registration_email_subject','user_registration_email_message_body','password_forget_email_subject','password_forget_email_body','password_change_successfully_email_subject','password_change_successfully_email_body'));
 		$form->addSubmit('Update');
 		$form->add('Controller_FormBeautifier');
 		if($form->isSubmitted()){

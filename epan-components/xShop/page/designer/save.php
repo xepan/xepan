@@ -33,19 +33,23 @@ class page_xShop_page_designer_save extends Page {
 		}
 
 		$design = json_decode($_POST['xshop_item_design'],true);
+		foreach ($design as &$page) {
+			foreach ($page as &$layout) {
+				usort($layout['components'], function($a,$b){
+						$a_array = json_decode($a,true);
+						$b_array = json_decode($b,true);
+						$a_zindex = $a_array['zindex']?$a_array['zindex']:0;
+						$b_zindex = $b_array['zindex']?$b_array['zindex']:0;
+						return $a_zindex > $b_zindex;
+					});
+			}
+		}
+
+
 		$save_data =array();
 		$save_data['px_width']=$_POST['px_width'];
 		$save_data['design']=$design;
-		$save_data['selected_layouts_for_print']=json_decode($_POST['selected_layouts_for_print'],true);
-		
-		foreach ($save_data['design'] as $page) {
-			foreach ($page as $layout) {
-				foreach ($layout['components'] as $component) {
-					$component = json_decode($component,true);
-				}
-			}
-		}
-		
+		$save_data['selected_layouts_for_print']=json_decode($_POST['selected_layouts_for_print'],true);		
 		$save_data = json_encode($save_data);
 
 		if(isset($target) and $_POST['designer_mode']=='true' and $target['designer_id']== $designer->id){

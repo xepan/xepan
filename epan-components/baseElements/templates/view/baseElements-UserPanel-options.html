@@ -8,7 +8,7 @@
 				</a>
 				</h4>
 			</div>
-			<div id="user-panel" class="panel-collapse collapse">
+			<div id="user-panel" class="panel-collapse collapse in">
 				<div class="panel-body">
 					<div class='xepan-collasp-header'>
 						<table class="table table-condensed table-hover">
@@ -57,7 +57,25 @@
 										
 									</td>
 								</tr>
-
+								<tr>
+									<td>
+										Default View
+									</td>
+									<td>
+										<table>
+											<tr>
+											<td>
+												<select class="bind" data-option="default_login_view">
+													<option value="login">Login</option>
+													<option value="forget_password">Forget Password</option>
+													<option value="verify_account">Verify Account</option>
+													<option value="new_registration">New Registration</option>
+												</select>
+											</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
 								<tr>
 									<td>
 										<b>URL(s)</b>
@@ -164,9 +182,27 @@
 										Registration Button
 									</td>
 									<td>
-										<input id="user_panel_new_registration_caption" type="text"/>				
+										<input id="user_panel_new_registration_caption" type="text"/>
 									</td>
 								</tr>
+								<tr>
+									<td>
+										Logout Label
+									</td>
+									<td>
+										<input id="user_panel_logout_caption" type="text" value="Logout"/>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										Prefix of User Name
+									</td>
+									<td>
+										<input id="user_panel_logout_prefix" type="text" placeholder="Hello Admin" value="Hello" />
+										<span style="color:gray;">ex. Hello Admin/{UserName}</span>
+									</td>
+								</tr>
+
 								<tr>
 									<td>
 										<b>Place Holders</b>
@@ -221,10 +257,28 @@
 // $(your_option_html_element).click(function(event,ui){
 		// 		$(current_selected_component).what to do ???
 // })
+
+$('.bind').change(function(event){
+	$(current_selected_component).attr($(this).attr('data-option'),$(this).val());
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+});
+
+$('#user_panel_logout_caption').change(function(event){
+	$(current_selected_component).attr('user_panel_logout_caption',$(this).val());
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+});
+
+$('#user_panel_logout_prefix').change(function(event){
+	$(current_selected_component).attr('user_panel_logout_prefix',$(this).val());
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+});
+
+
 $('#user_panel_login_view').change(function(event) {
 	if($('#user_panel_login_view').is(':checked')?$(current_selected_component).attr('login_view',1):$(current_selected_component).attr('login_view',0));
 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
+
 $('#user_panel_redirect_page').change(function(event) {
 	$(current_selected_component).attr('user_panel_redirect_page',$('#user_panel_redirect_page').val());
 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
@@ -328,6 +382,10 @@ $('#user_panel_show_logout_view').attr('checked',$(current_selected_component).a
 $('#user_panel_after_login_page').val($(current_selected_component).attr("user_panel_after_login_page"));
 $('#user_panel_after_logout_page').val($(current_selected_component).attr("user_panel_after_logout_page"));
 $('#user_panel_login_btn_css').val($(current_selected_component).attr("user_panel_login_btn_css")?$(current_selected_component).attr("user_panel_login_btn_css"):"btn btn-success btn-block");
+$('#user_panel_logout_caption').val($(current_selected_component).attr("user_panel_logout_caption")?$(current_selected_component).attr("user_panel_logout_caption"):"Logout");
+$('#user_panel_logout_prefix').val($(current_selected_component).attr("user_panel_logout_prefix")?$(current_selected_component).attr("user_panel_logout_prefix"):"Hello");
+
+$('.bind').val($(current_selected_component).attr("default_login_view")?$(current_selected_component).attr("default_login_view"):'login');
 
 }}
 </script>

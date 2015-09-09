@@ -119,15 +119,23 @@ class TMail_Transport_SwiftMailer extends AbstractObject {
 			return false;	
 		} 
 
-		if(strtotime(date('Y-m-d H:i:0',strtotime($email_settings['last_engaged_at']))) == strtotime(date('Y-m-d H:i:0',strtotime(date('Y-m-d H:i:s'))))){
-			$email_settings['email_sent_in_this_minute'] = $email_settings['email_sent_in_this_minute'] + 1;
+        $email_sent_count = 1;
+		if(strtotime(date('Y-m-d H:i:0',strtotime($email_settings['last_engaged_at']))) == strtotime(date('Y-m-d H:i:0',strtotime(date('Y-m-d H:i:s'))))){	
+            $email_sent_count = $email_settings['email_sent_in_this_minute'] = $email_settings['email_sent_in_this_minute'] + 1;
 		}else{
-			$email_settings['email_sent_in_this_minute'] = 1;
+			$email_sent_count = $email_settings['email_sent_in_this_minute'] = 1;
 		}
 
-		$email_settings['last_engaged_at'] = date('Y-m-d H:i:s');
-		$email_settings->save();
+        //Actually the Model are different at dirrent time like at mass mailing time
+        $field_and_value_array['email_sent_in_this_minute'] = $email_sent_count;
 
+        if($email_settings->hasElement('last_engaged_at')){
+            $field_and_value_array['last_engaged_at'] = date('Y-m-d H:i:s');
+        }
+
+        $email_settings->_dsql()->set($field_and_value_array)->update();
+        // $email_settings['last_engaged_at'] = date('Y-m-d H:i:s');
+        // $email_settings->save();
 		return true;
 
     }
