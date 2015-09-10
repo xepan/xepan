@@ -214,7 +214,7 @@ class View_Lister_Item extends \CompleteLister{
 			$html_objects,
 			'Personalize',
 			'Personalize',
-			'xshop-item-personalize btn btn-success',
+			'xshop-item-personalize',
 			'$(this).univ().location("index.php?subpage='.$this->html_attributes['personalization-page'].'&xsnb_design_item_id='.$this->model->id.'")', // FrameURL JS CODE for Personalized JUMP
 			'li/div',
 			$this->html_attributes['order-personalized']

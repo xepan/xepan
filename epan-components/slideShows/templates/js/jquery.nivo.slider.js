@@ -141,7 +141,7 @@
         
         // Add Control nav
         if(settings.controlNav){
-            vars.controlNavEl = $('<div class="nivo-controlNav"></div>');
+            vars.controlNavEl = $('<div class="nivo-controlNav" style="height:40px;"></div>');
             slider.after(vars.controlNavEl);
             for(var i = 0; i < kids.length; i++){
                 if(settings.controlNavThumbs){
