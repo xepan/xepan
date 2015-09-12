@@ -35,7 +35,7 @@ class page_owner_users extends page_base_owner {
 		$usr->addExpression('total_active_superuser')->set($usr->newInstance()->addcondition('type',100)->addCondition('is_active',true)->count());
 		$usr->addExpression('total_inactive_superuser')->set($usr->newInstance()->addcondition('type',100)->addCondition('is_active',false)->count());
 
-		$usr->setOrder('last_login_date','desc');
+		$usr->setOrder(['last_login_date desc','is_active desc']);
 		$usr->tryLoadAny();
 
 
