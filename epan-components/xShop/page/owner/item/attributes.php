@@ -11,6 +11,14 @@ class page_xShop_page_owner_item_attributes extends page_xShop_page_owner_main{
 		$tabs->addTabURL('./specification','Specification');
 		$tabs->addTabURL('./customfields','CustomFields');
 		$tabs->addTabURL('./stockcustomfields','StockEffectCustomFieds');
+		$tabs->addTabURL('./filter','filter');
+	}
+
+	function page_filter(){
+
+		$filter = $this->add('xShop/Model_Filter');
+		$crud = $this->add('CRUD');
+		$crud->setModel($filter);
 	}
 
 	function page_specification(){

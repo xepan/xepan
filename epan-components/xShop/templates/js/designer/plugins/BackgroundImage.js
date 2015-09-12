@@ -42,7 +42,7 @@ BackgroundImage_Component = function (params){
 		this.parent = parent;
 		bgi_tool_btn = $('<div class="btn xshop-designer-backgroundimage-toolbtn"></div>').appendTo(parent.find('.xshop-designer-tool-topbar-buttonset')).data('tool',self);
 		tool_btn = $('<div><i class="glyphicon glyphicon-picture"></i><br>BGI</div>').appendTo(bgi_tool_btn);
-		remove_btn = $('<div class="atk-swatch-red icon-trash"></div>').appendTo(bgi_tool_btn);
+
 		tool_btn.click(function(event){
 			self.designer_tool.current_selected_component = self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background;
 			options ={modal:false,
@@ -54,21 +54,25 @@ BackgroundImage_Component = function (params){
 			$.univ().frameURL('Add Images From...','index.php?page=xShop_page_designer_itemimages',options);
 		});
 
-		remove_btn.click(function(event){
-			self.designer_tool.current_selected_component = self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background;
-			// $('.xepan-designer-background-image span > img').attr('src','');
+		// console.log(self.designer_tool.options.designer_mode);
+		if(self.options.designer_mode == "true"){
+			remove_btn = $('<div class="atk-swatch-red icon-trash"></div>').appendTo(bgi_tool_btn);
+			remove_btn.click(function(event){
+				self.designer_tool.current_selected_component = self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background;
+				// $('.xepan-designer-background-image span > img').attr('src','');
 
-			$(self.designer_tool.current_selected_component.element).hide();
-			$(self.designer_tool.current_selected_component.element).find('img').removeAttr('src');
+				$(self.designer_tool.current_selected_component.element).hide();
+				$(self.designer_tool.current_selected_component.element).find('img').removeAttr('src');
 
-			self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background.options.url=undefined;
-			// self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background.options.type='BackgroundImage';
-			// delete self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background;
-			// console.log(self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout]);
-			self.designer_tool.current_selected_component = null;
+				self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background.options.url=undefined;
+				// self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background.options.type='BackgroundImage';
+				// delete self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background;
+				// console.log(self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout]);
+				self.designer_tool.current_selected_component = null;
 
 
-		});
+			});
+		}
 
 	}
 
@@ -121,7 +125,7 @@ BackgroundImage_Component = function (params){
 			console.log("error");
 		})
 		.always(function() {
-			console.log("BackgroundImage complete");
+			// console.log("BackgroundImage complete");
 		});
 	}
 

@@ -223,14 +223,18 @@ class Model_Item extends \Model_Document{
 		$target->save();
 	}
 
-	function getCategory($item_id=null){
+	function getCategory($item_id=null,$category_name=true){
 		if(!$item_id) $item_id= $this->id;
 
 		$cat_pro_model=$this->add('xShop/Model_CategoryItem');
 		$cat_pro_model->addCondition('item_id',$item_id);
 		$cat_name=array();
 		foreach ($cat_pro_model as $j) {
-			$cat_name[]=$cat_pro_model->ref('category_id')->get('name');
+			if($category_name)
+				$cat_name[]=$cat_pro_model->ref('category_id')->get('name');
+			else	
+				$cat_name[]=$cat_pro_model->ref('category_id')->get('id');
+
 		}
 		return $cat_name;				
 	}

@@ -16,9 +16,11 @@ class Model_Specification extends \Model_Table{
 		$f->icon = 'fa fa-circle~blue';
 			
 		$this->hasMany('xShop/ItemSpecificationAssociation','specification_id');
-
+		
+		$this->addField('is_filterable')->type('boolean');
+		
 		$this->addHook('beforeDelete',$this);
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function beforeDelete($m){
