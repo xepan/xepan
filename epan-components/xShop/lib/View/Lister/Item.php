@@ -89,7 +89,7 @@ class View_Lister_Item extends \CompleteLister{
 			$html_objects,
 			'ItemName',
 			$this->model['name'],
-			'xshop-item-name panel-heading',
+			'xshop-item-name',
 			$detail_url,
 			'li/a',
 			$this->html_attributes['order-name']

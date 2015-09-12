@@ -61,7 +61,7 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 
 	//=======================Detail HEADING=================================	
 		if($this->html_attributes['show-heading']){
-			$str = '<div class="text-center"> <h1 class="page page-header">'.$item['name'].'</h1></div>';
+			$str = '<div class="xhop-itemdetail-name"> <h1>'.$item['name'].'</h1></div>';
 			$this->template->trySetHtml('item_detail_heading',$str);
 		}
 		
