@@ -14,11 +14,12 @@ class Model_Specification extends \Model_Table{
 
 		$f = $this->addField('name')->mandatory(true)->group('a~6~<i class=\'fa fa-cog\'> Item Custom Fields</i>')->mandatory(true);
 		$f->icon = 'fa fa-circle~blue';
+		$this->addField('order')->type('Number')->group('a~6')->hint('show in asceding order');
 			
 		$this->hasMany('xShop/ItemSpecificationAssociation','specification_id');
 		
 		$this->addField('is_filterable')->type('boolean');
-		
+	
 		$this->addHook('beforeDelete',$this);
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
