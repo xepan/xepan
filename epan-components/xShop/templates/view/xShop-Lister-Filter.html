@@ -1,0 +1,20 @@
+<div id="{$_name}" style=" {$style} " class="xshop-filter {$class} ">
+  <div class="xshop-filter-row">
+  	{$Content}
+    <div class="atk-box-small">
+      {spec_name}{/spec_name}
+    </div>
+    <ul>
+      {rows}
+      {row}
+        <li class="checkbox xshop-item-filter-checkbox" data-unique-value="$unique_value" >
+            <label>
+                {$unique_value}
+                <input type="checkbox" value="{$unique_value}">
+              </label>
+				</li>
+  			{/}
+  		{/}
+    </ul>
+</div>
+</div>

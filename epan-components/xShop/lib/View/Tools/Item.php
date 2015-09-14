@@ -47,14 +47,18 @@ class View_Tools_Item extends \componentBase\View_ServerSideComponent{
 		}
 		//-------------------------------------
 		
-		//Search Filter				
-		if($search=$_GET['search']){		
+		//General Search Filter				
+		if($search=$_GET['search']){	
 			$item_model->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search.'" IN BOOLEAN MODE)');
 			$item_model->addCondition('Relevance','>',0);
 	 		$item_model->setOrder('Relevance','Desc');
 		}
 		//---------------------
 
+		//Filter Search
+		if($_GET['filter']){
+			
+		}
 		
 		$item_model->_dsql()->group('item_id'); // Multiple category association shows multiple times item so .. grouped
 		$item_model->_dsql()->having('item_id','<>',null); 
