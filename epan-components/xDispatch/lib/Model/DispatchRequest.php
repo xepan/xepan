@@ -90,7 +90,7 @@ class Model_DispatchRequest extends \Model_Document {
 								$this['item_with_qty_fields']." ".
 								$this->order()->get('name');
 								
-		foreach ($this->itemRows as $ir) {
+		foreach ($this->itemRows() as $ir) {
 			$str .= $ir->item()->get('name');
 		}
 
