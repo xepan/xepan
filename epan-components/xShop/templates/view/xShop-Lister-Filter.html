@@ -7,14 +7,34 @@
     <ul>
       {rows}
       {row}
-        <li class="checkbox xshop-item-filter-checkbox" data-unique-value="$unique_value" >
+        <li class="checkbox xshop-item-filter-checkbox" data-filter-value="{$unique_value}" >
             <label>
                 {$unique_value}
-                <input type="checkbox" value="{$unique_value}">
+                <input type="checkbox" />
               </label>
 				</li>
   			{/}
   		{/}
     </ul>
 </div>
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+      var filter = [];
+      $('.xshop-item-filter-checkbox input').click(function(event){ 
+        if($(this).is(':checked')){
+          //push into filter Variable
+          
+        }
+
+        if(!$(this).is(':checked')){
+          //pop from filter variable
+        }
+
+      });
+
+    });
+
+</script>
 </div>

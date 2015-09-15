@@ -4,16 +4,37 @@ namespace xShop;
 
 class View_Tools_Filter extends \componentBase\View_Component{
 	public $html_attributes=array(); // ONLY Available in server side components
+	public $filter_design=array();//Make Filter List with Category item ['specification_name'=>['value1'=>['options']]]
+	public $selected_filter_value = null;//Selected Value of Filter
+
 	function init(){
 		parent::init();
 
+		if($_GET['filter_data']){
+			$selected_data = explode("|", $_GET['filter_data']);
+			$this->selected_filter_value = $_GET['filter_data'];
+		}
+
+		$this->addClass('xshop-filter-tool');
+
 		$this->api->stickyGET('xsnb_category_id');
+		$this->api->stickyGET('filter_data');
 
 		$specifications = $this->add('xShop/Model_Specification');
 		$specifications->addCondition('is_filterable',true);
 		$specifications->setOrder('order');
 		$specifications->tryLoadAny();
-		
+
+		/*
+			['specification_id'] = [
+									unique_values => [
+														'name'=>''
+													]
+									'specification_id'=>,
+									'specification_name'=>'',
+									]
+		*/
+		$new_values=[];
 		foreach ($specifications as $specification) {
 			$filter = $this->add('xShop/Model_Filter');
 			$filter->addCondition('specification_id',$specification->id);
@@ -25,23 +46,54 @@ class View_Tools_Filter extends \componentBase\View_Component{
 			}
 
 			$v = json_decode($filter['unique_values'],true);
-			$new_values=[];
 
-			foreach ($v as $key=> $value) {
-				$new_values[] = array(
-									'url'=>$this->api->url("home"),
-									'unique_value'=>$key,
-									'category_id'=>$filter['category_id'],
-									'specification_id'=>$filter['specification_id'],
-									'specification_name'=>$specification['name']
-								);
+			$unique_values_array = [];
+			foreach ($v as $key=>$value) {
+				$is_selected = "unchecked";
+				if(isset($selected_data) and in_array($specification['id'].":".$key,$selected_data)){
+					$is_selected = "checked";
+				}
+				$unique_values_array[$key] = $is_selected;
 			}
-			$lister = $this->add('xShop/View_Lister_Filter')->setSource($new_values);
-			$lister->template->trySet('spec_name',$specification['name']);
-		}
 
-		$this->on('click','.xshop-item-filter-checkbox')->univ()->location($this->api->url('',array('filter'=>$this->js()->_selectorThis()->data('unique-value'))));
+			$new_values[$specification->id] = [
+												'unique_values'=>$unique_values_array,
+												'category_id'=>$filter['category_id'],
+												'specification_id'=>$filter['specification_id'],
+												'specification_name'=>$specification['name'],
+												'is_selected'=>$is_selected
+											];
+		}	
 		
+		$this->filter_design = $new_values;
+		$this->api->stickyForget('filter_data');
+
+	}
+
+	function render(){
+		$this->app->pathfinder->base_location->addRelativeLocation(
+		    'epan-components/'.__NAMESPACE__, array(
+		        'php'=>'lib',
+		        'template'=>'templates',
+		        'css'=>array('templates/css','templates/js'),
+		        'img'=>array('templates/css','templates/js'),
+		        'js'=>'templates/js',
+
+		    )
+		);
+
+		$this->api->jquery->addStylesheet('filter');
+		$this->api->template->appendHTML('js_include','<script src="epan-components/xShop/templates/js/filter.js"></script>'."\n");
+
+		$this->js(true)->xepan_xshopfilter(
+											array(
+													'filter_design'=>$this->filter_design,
+													'html_attributes'=>$this->html_attributes,
+													'url'=>$this->api->url(),
+													'selected_filter_value'=>$this->selected_filter_value
+												)
+											);
+		parent::render();
 	}
 
 	// defined in parent class
