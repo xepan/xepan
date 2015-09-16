@@ -1,36 +1,108 @@
 <div id='{$_name}' class='epan-component-options' component_type="{$component_type}">
-	<h3>{$component_type_name}</h3>
-	<div class='xepan-collasp-header'>
-		<table class="table table-condensed table-hover">
-			<tbody>
-				<tr>
-					<td style="width:100%" class='text-center'>
-						Option Title</b>
-					</td>
-					<td>
-						<input type='text' value='' id='input_option_b' />
-					</td>
-				</tr>
-			</tbody>
-		</table>
+	<div class="panel-group" id="accordion">
+		<div class="xepan-collasp-header component-header">
+		 	<div class="panel-heading">
+		      	<h3 class="panel-title">
+		        	<a data-toggle="collapse" data-parent="#accordion"	 href="#collapse-xshop-xfilter">
+						{$component_type_name}
+		        	</a> 
+		      	</h3>
+		   	</div>
+	   		<div id="collapse-xshop-xfilter" class="panel-collapse collapse">
+		      	<div class="panel-body">
+		      		<div class='xepan-collasp-header'>
+						<table class="table table-condensed table-hover">
+							<tr>
+								<td>
+									Edit CSS
+								</td>
+								<td>
+									<div id="xshop-filter-editcss" class="btn btn-default btn-xs">Edit CSS</div>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3" class="panel">
+									Add/ Remove
+								</td>
+							</tr>
+							<tr>
+								<td>Price Filter</td>
+								<td>
+									<select data-attr="show-price-filter" class="xfilter-general-bind xshop-xfilter-price-dropdown" >
+										<option value="1">Add</option>
+										<option value="0">Remove</option>
+									</select>
+									<tr class="xfilter-hide">
+										<td>
+											Price Header Label
+										</td>
+										<td >
+											<input type="text" class="xfilter-general-bind" value="Price" data-attr="xfilter-price-label">
+										</td>
+									</tr>
+									<tr class="xfilter-hide">
+										<td>
+											Start Price<input type="number" min="0" data-attr="xshop-filter-start-price" class="xshop-filter-start-price xfilter-general-bind">
+										</td>
+										<td>
+											End Price<input type="number" min="0" data-attr="xshop-filter-end-price" class="xshop-filter-end-price xfilter-general-bind">			
+										</td>
+									</tr>
+								</td>
+							</tr>
+
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
+
 <script type="text/javascript">
 // ========== OPTION TO COMPONENT EFFECT ==============
 //
-// $(your_option_html_element).click(function(event,ui){
-		// 		$(current_selected_component).what to do ???
-// })
-$('#input_option_b').change(function(event) {
-	$(current_selected_component).find('b').text($('#input_option_b').val());
+
+$('.xfilter-general-bind').change(function(event){
+	$(current_selected_component).attr($(this).attr('data-attr'),$(this).val());
+	$(current_selected_component).univ().errorMessage('Save and Reload to get change');
 });
+
+
+$('.xshop-xfilter-price-dropdown').change(function(event){
+	if( parseInt($(this).val()) == 0){
+		$('.xfilter-hide').hide();
+	}
+	if(parseInt($(this).val()) == 1){
+		$('.xfilter-hide').show();
+	}
+});
+
+$('.xshop-filter-end-price').keypress(function(event){
+	$('.xfilter-option-error').hide();
+});
+
+$('.xshop-filter-end-price').blur(function(event){
+	if( parseInt($('.xshop-filter-start-price').val()) > parseInt($('.xshop-filter-end-price').val())){
+		$('<div class="xfilter-option-error" style="color:red;">it always grater than to start price</div>').appendTo($(this).parent());
+	}
+});
+
+
 var {$component_type}_options = {
 show: function (){
 // ===== THIS CODE RUNS EVERY TIME YOU DOUBLE CLICK YOUR COMPONENT
 // TO TAKE VALUES FROM COMPONENT AND FILL OPTIONS
 //
 // $(your_option_html_element).text($(current_selected_component).css('border'));
-$('#input_option_b').val($(current_selected_component).find('b').text());
+$('.xfilter-general-bind').each(function(index,value){
+		$(this).val($(current_selected_component).attr($(this).attr('data-attr')));
+	});
+
+if($(current_selected_component).attr('show-price-filter') === "0"){
+	$('.xfilter-hide').hide();
+}else
+	$('.xfilter-hide').show();
 }
 }
 </script>

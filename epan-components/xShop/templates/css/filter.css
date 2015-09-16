@@ -1,3 +1,19 @@
 .xshop-filter-tool input{
 	width: auto !important;
 }
+
+.xshop-xfilter-ul li:first-child,.xshop-filter-ul li:last-child{
+
+}
+
+.xshop-xfilter-list-group-header{
+
+}
+
+.xshop-xfilter-list-group-item{
+
+}
+
+.xshop-xfilter-list-group-item input{
+
+}

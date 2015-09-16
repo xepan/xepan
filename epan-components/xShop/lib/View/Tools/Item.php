@@ -36,6 +36,7 @@ class View_Tools_Item extends \componentBase\View_ServerSideComponent{
 		// item Model according to application
 		$item_join=$item_model->leftJoin('xshop_category_item.item_id','id');
 		$item_join->addField('category_id');
+		$item_join->addField('category_assos_item_id','item_id');
 		$item_join->addField('is_associate');
 		//Category Wise item Loading
 		if($_GET['xsnb_category_id']){
@@ -55,15 +56,54 @@ class View_Tools_Item extends \componentBase\View_ServerSideComponent{
 		}
 		//---------------------
 
-		//Filter Search
-		if($_GET['filter']){
-			
+
+		$q= $item_model->dsql();
+		$group_element = $q->expr('[0]',[$item_model->getElement('category_assos_item_id')]);
+		
+		//Price Range Search
+		if(isset($_GET['xmip']) and is_numeric($_GET['xmip']) and $_GET['xmip']){
+			$item_model->addCondition('sale_price','>=',$_GET['xmip']);
 		}
-		
-		$item_model->_dsql()->group('item_id'); // Multiple category association shows multiple times item so .. grouped
-		$item_model->_dsql()->having('item_id','<>',null); 
+
+		if(isset($_GET['xmap']) and is_numeric($_GET['xmap']) and $_GET['xmap']){
+			$item_model->addCondition('sale_price','<=',$_GET['xmap']);
+		}
+
+		//Filter Search
+		if(isset($_GET['filter_data']) and $_GET['filter_data']){
+			$selected_filter_data_array = explode("|", $_GET['filter_data']);
+			
+			$item_spec_j = $item_model->Join('xshop_item_spec_ass.item_id');
+			$item_spec_j->addField('specification_id');
+			$item_spec_j->addField('specification_item_id','item_id');
+			$item_spec_j->addField('value');
+
+			$cond=[];
+			foreach ($selected_filter_data_array as $key => $data) {
+				if($data == "" and !$data)
+					continue;
+				$temp = explode(":", $data);
+				$cond[] = $q->andExpr()
+									->where('specification_id',$temp[0])
+									->where('value','like','%'.$temp[1].'%');
+			}
+
+			$or_cond=$q->orExpr();
+			foreach ($cond as $and_conds) {
+				$or_cond->where($and_conds);
+			}
+
+			$item_model->addCondition($or_cond);
+
+			$group_element = $q->expr('[0]',[$item_model->getElement('specification_item_id')]);
+		}
+
+		$item_model->_dsql()->group($group_element); // Multiple category association shows multiple times item so .. grouped
+		// if(!$_GET['filter_data'])
+		// 	$item_model->_dsql()->having($q->expr('[0] is not null',[$item_model->getElement('category_assos_item_id')])); 
+
 		$item_model->setOrder('created_at','desc');
-		
+
 		if($item_model->count()->getOne() != 0)
 			$item_lister_view->template->del('no_record_found');
 
