@@ -114,7 +114,7 @@ class Model_Document extends Model_Table{
 		$this->addExpression('created_date')->set('DATE_FORMAT('.$this->dsql()->getField('created_at').',"%Y-%m-%d")');
 		$this->addExpression('updated_date')->set('DATE_FORMAT('.$this->dsql()->getField('updated_at').',"%Y-%m-%d")');
 
-		$this->add('Controller_NotificationSystem')->setUpLive();
+		// $this->add('Controller_NotificationSystem')->setUpLive();
 	}
 
 	function defaultBeforeDelete(){
