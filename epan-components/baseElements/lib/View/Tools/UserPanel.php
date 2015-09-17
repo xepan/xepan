@@ -8,6 +8,7 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 	function init(){
 		parent::init();
 
+		$this->addClass('xepan-user-login-panel');
 		//Setting Default Values
 		$user_panel_btn_registration_name = isset($this->html_attributes['user_panel_btn_registration_name'])?$this->html_attributes['user_panel_btn_registration_name']:'Registration';
 		$user_panel_forgot_pass=isset($this->html_attributes['user_panel_forgot_pass'])?$this->html_attributes['user_panel_forgot_pass']:'Forgot password';
@@ -54,17 +55,17 @@ class View_Tools_UserPanel extends \componentBase\View_Component{
 				}
 
 				if($display !== 'new_registration'){
-					$sign_up_field = $this->add('View')->setHTML($user_panel_btn_registration_name);
+					$sign_up_field = $this->add('View')->setHTML($user_panel_btn_registration_name)->addClass('xepan-login-registration-link');
 					$sign_up_field->js('click',$this->js()->reload(array('user_selected_form'=>'new_registration')));
 				}
 				
 				if($display !== 'forget_password'){
-					$forgot_field = $this->add('View')->setHTML($user_panel_forgot_pass);
+					$forgot_field = $this->add('View')->setHTML($user_panel_forgot_pass)->addClass('xepan-login-forget-password-link');
 					$forgot_field->js('click',$this->js()->reload(array('user_selected_form'=>'forget_password')));
 				}
 				
 				if($display !== 'verify_account'){
-					$verify_account=$this->add('View')->setHTML($user_panel_btn_Verify_name);
+					$verify_account=$this->add('View')->setHTML($user_panel_btn_Verify_name)->addClass('xepan-login-verify-account-link');
 					$verify_account->js('click',$this->js()->reload(array('user_selected_form'=>'verify_account')));
 				}
 			}
