@@ -11,7 +11,7 @@ jQuery.widget("ui.xepan_xshopfilter",{
 		max_price:undefined
 	},
 	filter_container:null,
-	selected_value:[],
+	selected_value:{},
 
 
 	_create: function(){
@@ -80,37 +80,36 @@ jQuery.widget("ui.xepan_xshopfilter",{
 			$.each(spec_values['unique_values'],function(spec_value_name,selected){
 				var filter_checkbox = $('<li id="#'+index+'" class="list-group-item xshop-xfilter-list-group-item "><label><input data-spec-cat-name="'+spec_values['specification_name']+'" data-spec-cat-id="'+index+'" data-spec-value-name="'+spec_value_name+'" type="checkbox" class="xshop-filter-tool-checkbox"  '+selected+'/> '+spec_value_name+' </label></li>').appendTo(header);
 				if(selected === "checked"){
-					self.selected_value.push({
-						'key': index,
-						'value': spec_value_name
-					});	
+					self.selected_value[index+'-'+spec_value_name] = spec_value_name;
 				}
 
 			});
 		});
 
+		//Reloading the Page and Passing the Selected Value
 		$('.xshop-filter-tool-checkbox').click(function(event){
-			if($(this).is(':Checked')){
-				self.selected_value.push({
-					'key': $(this).attr('data-spec-cat-id'),
-					'value': $(this).attr('data-spec-value-name')
-				});
-			}
+			if($(this).is(':Checked'))
+				self.selected_value[$(this).attr('data-spec-cat-id')+'-'+$(this).attr('data-spec-value-name')] = $(this).attr('data-spec-value-name');
 
 			if(!$(this).is(':Checked')){
-				self.selected_value.pop({
-					'key': $(this).attr('data-spec-cat-id'),
-					'value': $(this).attr('data-spec-value-name')
+				var selected_spec_id = $(this).attr('data-spec-cat-id');
+				var selected_spec_value = $(this).attr('data-spec-value-name');
+				
+				$.each(self.selected_value,function(index,value){
+					if(index === selected_spec_id+'-'+selected_spec_value && value === selected_spec_value ){
+						delete self.selected_value[index];
+					}
 				});
 			}
 			
 			var str = "";
-			$.each(self.selected_value,function(index,filterdata){
-				str += filterdata['key']+":"+filterdata['value']+'|';
+			$.each(self.selected_value,function(key,value){
+				str += key.split('-')[0]+":"+value+'|';
+				// console.log("R"+str);
 			});
 
+
 			$.univ.redirect(url+'&filter_data='+str);
-			// console.log(window.location.href);
 		});
 	}
 
