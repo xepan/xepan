@@ -15,9 +15,10 @@ class View_VerifyAccount extends \View{
 		if($this->html_attributes['form_stacked_on'])
 			$verify_form->addClass('stacked');
 
-		$verify_form->addField('line','email_id');
+		$verify_form->addField('line','email_id')->validateNotNull();
 		$verify_form->addField('line','verification_code');
-		$verify_form->addSubmit('Submit');
+		$submit_btn = $verify_form->addSubmit('Submit');
+		$resend_btn = $verify_form->addSubmit('Resend Activation Code');
 
 		if($_GET['activation_code']){
 			$verify_form['verification_code']=$_GET['activation_code'];
@@ -28,11 +29,26 @@ class View_VerifyAccount extends \View{
 		}
 
 		if($verify_form->isSubmitted()){
-			if(!$verify_user_model->verifyAccount($verify_form['email_id'],$verify_form['verification_code'])){
-				$verify_form->js(null,$this->js()->univ()->errorMessage('Try Again'))->reload()->execute();		
-			}					
+			if($verify_form->isClicked($submit_btn)){
+				if(!trim($verify_form['verification_code']))
+					$verify_form->error('verification_code','Verification Code is Mandatory Field');
+				
+				if(!$verify_user_model->verifyAccount($verify_form['email_id'],$verify_form['verification_code'])){
+					$verify_form->js(null,$this->js()->univ()->errorMessage('Try Again'))->reload()->execute();		
+				}
+				$verify_form->js(null,$this->js()->univ()->successMessage('Account Verify Successfully'))->reload()->execute();
+			}
+
+			if($verify_form->isClicked($resend_btn)){
+				if(!$verify_user_model->isEmailExist($verify_form['email_id'])){
+					$verify_form->error('email_id','Email id Not Registered');
+				}
+
+				$verify_user_model->sendVerificationMail($verify_form['email_id'],null,rand(100000,999999));
+				$verify_form->js(null,$this->js()->univ()->successMessage('Email Send Successfully'))->reload()->execute();
+			}			
+			
 			$this->api->stickyForget('verify_account');
-			$verify_form->js(null,$this->js()->univ()->successMessage('Account Verify Successfully'))->reload()->execute();	
 		} 
 	}
 }
