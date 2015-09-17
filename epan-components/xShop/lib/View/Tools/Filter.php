@@ -81,6 +81,11 @@ class View_Tools_Filter extends \componentBase\View_Component{
 		$this->api->stickyForget('xmip');
 		$this->api->stickyForget('xmap');
 
+
+		//loading custom CSS file	
+		$cart_css = 'epans/'.$this->api->current_website['name'].'/xshopfilter.css';
+		$this->api->template->appendHTML('js_include','<link id="xshop-filter-customcss-link" type="text/css" href="'.$cart_css.'" rel="stylesheet" />'."\n");
+
 	}
 
 	function render(){
