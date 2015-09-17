@@ -25,4 +25,4 @@ require dirname(__FILE__) . '/dependency_maps/message_deps.php';
 require dirname(__FILE__) . '/dependency_maps/transport_deps.php';
 
 // Load in global library preferences
-require dirname(__FILE__) . '/preferences.php';
+require dirname(__FILE__) . '/Preferences.php';
