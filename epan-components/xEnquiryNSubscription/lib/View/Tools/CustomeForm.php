@@ -3,24 +3,18 @@
 namespace xEnquiryNSubscription;
 
 class View_Tools_CustomeForm extends \componentBase\View_Component{
-
+	public $html_attributes=[];
 	function init(){
 		parent::init();
 			
 			if(!$this->data_options){
 				$this->add('View_Error')->set('Please Select Form Category');
 				return;
-				$this->data_options = $form['data_options'];
 			}
+
 			$form_model=$this->add('xEnquiryNSubscription/Model_Forms');
-			
-			$form=$this->add('Form',array('name'=>$this->api->normalizeName($form_model['name'])));
-			$form_data_options_field = $form->addField('hidden','data_options');
-
-			$form_data_options_field->set($this->data_options);
-			
 			$form_model->addCondition('epan_id',$this->api->current_website->id);
-
+			
 			if(!$this->data_options){
 				$form_model->tryLoadAny();
 				if(!$form_model->loaded()){
@@ -33,11 +27,14 @@ class View_Tools_CustomeForm extends \componentBase\View_Component{
 			}
 
 			$this->rename($this->api->normalizeName($form_model['name']));
-
+			
+			$form=$this->add($form_model['form_layout'],array('name'=>$this->api->normalizeName($form_model['name'])));
+				
+			$form_data_options_field = $form->addField('hidden','data_options');
+			$form_data_options_field->set($this->data_options);
 
 			$custome_field=$form_model->ref('xEnquiryNSubscription/CustomFields');
 			
-
 			if($custome_field->count()->getOne() == '0'){
 				$this->add('View_Error')->set('Please Add Field in your form');
 				$form->setStyle('display','none');	
