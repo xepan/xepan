@@ -14,7 +14,7 @@ $.each({
 
 $.atk4(function(){
 
-	shortcut.add("Ctrl+up", function(event) {
+	shortcut.add("Ctrl+Alt+m", function(event) {
 		
 		if(up_shortcut_on) return;
 		up_shortcut_on=true;
@@ -82,7 +82,7 @@ $.atk4(function(){
 		event.stopPropagation();
 	});
 
-	shortcut.add("Ctrl+down", function(event) {
+	shortcut.add("Ctrl+Alt+d", function(event) {
 
 		if(down_shortcut_on) return;
 		down_shortcut_on=true;
@@ -153,7 +153,7 @@ $.atk4(function(){
 		event.stopPropagation();
 	});
 
-	shortcut.add("Ctrl+right", function(event) {
+	shortcut.add("Ctrl+Alt+t", function(event) {
 		$.univ().frameURL('xEpan To Do/ Task','index.php?page=xProduction_page_owner_task_shortmenu');
 
 		return;
