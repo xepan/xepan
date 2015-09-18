@@ -33,11 +33,12 @@ class page_owner_documents extends page_base_owner{
 		// $crud->setModel($doc_m);
 		// $crud->add('xHR\Controller_Acl');
 
+		// $this->add('Model_GenericDocumentShare'); // Just to reproduce Table with dynamic line if change
 
 		$tabs=$this->add('Tabs');
 		$tabs->addTabURL('owner/documents_public','Public');
 		$tabs->addTabURL('owner/documents_department','Departmental');
-		$tabs->addTabURL('owner/documents_shared','Shared');
+		$tabs->addTabURL('owner/documents_shared','Shared With Me');
 		$tabs->addTabURL('owner/documents_private','Private');
 		
 	}

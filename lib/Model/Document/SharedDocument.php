@@ -9,8 +9,10 @@ class Model_Document_SharedDocument extends Model_GenericDocument {
 
 	function init(){
 		parent::init();
+		$share_j= $this->join('xepan_generic_documents_share.document_id');
+		$share_j->addField('employee_id');
+		$share_j->addField('share_mode')->system(true);
 
-		$this->addCondition('status','shared');
-
+		$this->addCondition('employee_id',@$this->api->current_employee->id);		
 	}
 }
