@@ -33,7 +33,8 @@ class Filter_Item extends \Filter_Base
                                                 'is_visible_sold'=>'Item Remains Visible After Sold',
                                                 'enquiry_send_to_admin'=>'Enquiry Send To Admin',
                                                 'allow_comments'=>'Allow Comments',
-                                                'qty_from_set_only'=>'Qty From Set Only'
+                                                'qty_from_set_only'=>'Qty From Set Only',
+                                                'pending_approval'=>'Pending Approval'
                                                 )
                                         );
 
@@ -88,7 +89,13 @@ class Filter_Item extends \Filter_Base
         
         if($type){
             foreach (explode(",",$type) as $types) {
-                $and->where($types,1);
+                if($type == "pending_approval"){
+                    $and->where('is_designable',true);
+                    $and->where('is_saleable',true);
+                    $and->where('is_party_publish',true);
+                    $and->where('is_publish','<>',true);
+                }else
+                  $and->where($types,1);
             }
         }
 

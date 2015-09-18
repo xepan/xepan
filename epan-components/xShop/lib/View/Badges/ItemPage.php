@@ -17,6 +17,9 @@ class View_Badges_ItemPage extends \View_BadgeGroup{
 		
 		$unactive = $this->add('xShop/Model_Item')->getUnpublishCount($application_id)->getOne();
 		if($unactive)
-			$this->add('View_Badge')->set(' Unpublish Item ')->setCount($unactive)->setCountSwatch('red');		
+			$this->add('View_Badge')->set(' Unpublish Item ')->setCount($unactive)->setCountSwatch('red');
+		
+		$this->add('View_Badge')->set(' Pending Approval ')->setCount($this->add('xShop/Model_Item')->pendingApproval($count=true))->setCountSwatch('blue');
+
 	}
 }
