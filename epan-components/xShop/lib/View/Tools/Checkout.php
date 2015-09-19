@@ -228,15 +228,11 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		$personal_form->addField('Checkbox','i_read',"I have Read All trems & Conditions")->validateNotNull()->js(true)->closest('div.atk-form-row');
 
 		$shipping=$personal_form->layout->add('Button',null,'copy_address')->set('Copy Address')->addClass('atk-swatch-tomato');//->js('click',$form->js()->submit());
-
-
 		// // Copy billing Address to shipping address
-
 		$shipping->js('click')->univ()->copyBillingAddress($b_a,$b_l,$b_c,$b_s,$b_country,$b_p,$b_t,$b_e,$s_a,$s_l,$s_c,$s_s,$s_country,$s_p,$s_t,$s_e);
-		// if($shipping->isClicked()){
-		// }
-		
-		$prev = $personal_form->addSubmit('Preview');
+
+		// $prev = $personal_form->addSubmit('Preview');
+		$prev=$personal_form->layout->add('Button',null,'previous')->set('Previous')->addClass('atk-swatch-tomato');//->js('click',$form->js()->submit());
 		
 		$personal_form->addSubmit('Next');
 
@@ -284,8 +280,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		$pay_gate_field = $pay_form->addField('DropDown','payment_gateway_selected')->setEmptyText('Please Select Your Payment Method')->validateNotNull(true);
 		// $pay_gate_field->setModel($this->add('xShop/Model_PaymentGateway')->addCondition('is_active',true));
 
-		$prev = $pay_form->addSubmit('Preview');
-		
+		$prev=$pay_form->layout->add('Button',null,'previous')->set('Previous')->addClass('atk-swatch-tomato');//->js('click',$form->js()->submit());
 
 		if($prev->isClicked()){
 			$pay_form->owner->js(null,$pay_form->js()->univ()->successMessage("Update Personal Section Information"))->univ()->redirect($this->api->url(null,array('step'=>2)))->execute();
