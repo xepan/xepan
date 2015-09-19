@@ -384,13 +384,14 @@ Image_Component = function (params){
 	            }
 	            self.designer_tool.current_selected_component = self;
 	            self.designer_tool.option_panel.css('z-index',70);
+	            self.designer_tool.option_panel.css('top',0);
 	            self.designer_tool.option_panel.addClass('xshop-text-options');
 
-	            // current_image_position = self.element.position();
-	            // self.designer_tool.option_panel.css('top', current_image_position.top);
-	            // self.designer_tool.option_panel.css('left',current_image_position.left);
-	            self.designer_tool.option_panel.css('top',event.pageY - (event.currentTarget.clientHeight/2));
-	            self.designer_tool.option_panel.css('left',event.pageX - (event.currentTarget.clientWidth/2));
+	           	designer_currentTarget = $(event.currentTarget);
+	           	top_value = parseInt(designer_currentTarget.offset().top) - parseInt($('#xshop-designer-image-editor').height() +10);
+
+	            self.designer_tool.option_panel.css('top',top_value);
+	            self.designer_tool.option_panel.css('left',$(designer_currentTarget).offset().left);
 
 	            self.editor.setImageComponent(self);
 		        event.stopPropagation();
