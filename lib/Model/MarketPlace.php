@@ -106,9 +106,9 @@ class Model_MarketPlace extends Model_Table {
 		}
 	}
 
-	function reProcessConfig(){
+	function reProcessConfig($config_file_path=null,$create_new=false){
 		
-		$config_file_path = 'epan-components'.DS.$this['namespace'].DS.'config.xml';
+		if(!$config_file_path) $config_file_path = 'epan-components'.DS.$this['namespace'].DS.'config.xml';
 		
 		if(!file_exists($config_file_path))
 			throw $this->exception('Config file not found')->addMoreInfo('Component',$this['namespace']);
@@ -127,12 +127,14 @@ class Model_MarketPlace extends Model_Table {
 		$marketplace = $this->add( 'Model_MarketPlace' );
 		$marketplace->tryLoadBy( 'namespace', $config_array['namespace'] );
 
-		if ( ! $marketplace->loaded() ) {
+		if ( ! $marketplace->loaded() && !$create_new) {
 			throw $this->exception('Config Update Failed, No Existing Component is installed')->addMoreInfo('Component',$config_array['namespace']);
 		}
 
-		$marketplace->ref('Tools')->deleteAll();
-		$marketplace->ref('Plugins')->deleteAll();
+		if($marketplace->loaded()){
+			$marketplace->ref('Tools')->deleteAll();
+			$marketplace->ref('Plugins')->deleteAll();
+		}
 		// $marketplace->ref('InstalledComponents')->deleteAll();
 
 		// add entry to marketplace table (Model)
