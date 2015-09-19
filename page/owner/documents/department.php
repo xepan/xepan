@@ -9,8 +9,8 @@ class page_owner_documents_department extends page_base_owner{
 		$model=$this->add('Model_Document_DepartmentDocument');
 		$crud=$this->add('CRUD',array('grid_class'=>'Grid_GenericDocument'));
 		$crud->setModel($model);
-		$crud->manageAction('manage_attachments');
-		$crud->manageAction('see_activities');
+		// $crud->manageAction('manage_attachments');
+		// $crud->manageAction('see_activities');
 
 	}
 }

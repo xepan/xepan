@@ -41,7 +41,7 @@ class View_ForgotPassword extends \View{
 					$user['password'] = $form['password'];
 					$user->save();
 					$user->sendPasswordUpdateMail();
-					$form->js(null,$form->js()->univ()->successMessage('Password Update Successfully'))->reload(array('user_selected_form'=>'login'))->execute();
+					$this->owner->js(null,$form->js()->univ()->successMessage('Password Update Successfully'))->reload(array('user_selected_form'=>'login'))->execute();
 				}
 
 				$form->js(null,$form->js()->univ()->errorMessage('Wrong Email id'))->reload()->execute();
@@ -66,7 +66,8 @@ class View_ForgotPassword extends \View{
 
 				if($user->loaded())	{
 					$user->sendPasswordVerificationMail();
-					$resend_form->js(null,$resend_form->js()->univ()->successMessage('Activation code Send to Registered Email id'))->reload(array('user_selected_form'=>'verify_account'))->execute();
+
+					$this->js(null,$resend_form->js()->univ()->successMessage('Activation code Send to Registered Email id'))->reload(array('update_password'=>true))->execute();
 				}
 				$resend_form->js(null,$resend_form->js()->univ()->errorMessage('Wrong Email id'))->reload()->execute();
 			}

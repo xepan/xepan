@@ -12,11 +12,11 @@ class View_Captcha extends \View {
     public $bg_color           = 'white';
     public $alphanum           = 'ABCDIFGHIJKLMNOPQRSTUVWXYZ1234567890'; // 'abcdefghijklmnopqrstuvwxyz1234567890'
     public $image_format       = 'png';
-    public $image_width        = 85;
-    public $image_height       = 30;
+    public $image_width        = 130;
+    public $image_height       = 45;
     public $text_length        = 6;
-    public $font_size          = 20;
-    public $text_position_top  = 25;
+    public $font_size          = 25;
+    public $text_position_top  = 30;
     public $text_position_left = 4;
     public $font = null;
     function init() {

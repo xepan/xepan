@@ -8,6 +8,7 @@ class View_Login extends \View{
 	function init(){
 		parent::init();
 
+			$this->addClass('xepan-login-panel');
 			$user_panel_name=isset($this->html_attributes['user_panel_name'])?$this->html_attributes['user_panel_name']:"Login ID";
 			$user_panel_pass=isset($this->html_attributes['user_panel_pass'])?$this->html_attributes['user_panel_pass']:"Password";
 			$user_panel_btn_login_name=isset($this->html_attributes['user_panel_btn_login_name'])?$this->html_attributes['user_panel_btn_login_name']:"Login";

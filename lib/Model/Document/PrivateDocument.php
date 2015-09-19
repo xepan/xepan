@@ -11,5 +11,6 @@ class Model_Document_PrivateDocument extends Model_GenericDocument {
 		parent::init();
 
 		$this->addCondition('status','private');
+		$this->addCondition('created_by_id',@$this->api->current_employee->id);
 	}
 }

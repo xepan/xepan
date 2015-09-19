@@ -16,13 +16,13 @@ xShop_Text_Editor = function(parent){
 	})
 	.done(function(ret) {
 		$(ret).appendTo(self.font_selector);
-		console.log("success");
+		// console.log("success");
 	})
 	.fail(function() {
-		console.log("error");
+		// console.log("error");
 	})
 	.always(function() {
-		console.log("complete");
+		// console.log("complete");
 	});
 
 	$(this.font_selector).change(function(event){
@@ -478,18 +478,15 @@ Text_Component = function (params){
 	            self.designer_tool.option_panel.addClass('xshop-text-options');
 	            self.designer_tool.option_panel.css('top',0);
 
-				// console.log("pageY="+event.pageY);
-				// console.log("clientY="+event.clientY);
-				// console.log("clientHeight="+event.currentTarget.clientHeight);
-				// console.log("position="+$(this).position());
-				// console.log("top="+event.pageY - event.currentTarget.clientHeight);
+	            designer_currentTarget = $(event.currentTarget);
+	            height_diff = parseInt($(self.designer_tool.option_panel).height() + 10);
+	            top_value = parseInt($(designer_currentTarget).offset().top) - parseInt(height_diff);
 
-	            self.designer_tool.option_panel.css('top',event.pageY - event.currentTarget.clientHeight - 90);
-	            self.designer_tool.option_panel.css('left',event.pageX - event.currentTarget.clientWidth);
+	            self.designer_tool.option_panel.css('top',top_value);
+	            self.designer_tool.option_panel.css('left',$(designer_currentTarget).offset().left);
+
 	            self.editor.setTextComponent(self);
-	            // console.log(event);
-	            // console.log("this");
-	            // console.log($(this).options);
+	            
 	            if(self.designer_tool.options.designer_mode){
 		            self.designer_tool.freelancer_panel.FreeLancerComponentOptions.element.show();
 		            self.designer_tool.freelancer_panel.setComponent($(this).data('component'));

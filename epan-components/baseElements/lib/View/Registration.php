@@ -63,6 +63,7 @@ class View_Registration extends \View{
 		$r_form->addSubmit('submit')->set('Register');
 
 		if($r_form->isSubmitted()){
+					
 			if( $r_form['password'] != $r_form['re_password']){
 				$r_form->displayError('password','Password not match');
 			}
@@ -143,8 +144,13 @@ class View_Registration extends \View{
 				$custom_field_value_model = $this->add('Model_UserCustomFieldValue');
 				$custom_field_value_model->createNew($user_model['id'],$junk['id'],$allFields[$this->api->normalizeName($junk['name'])]);
 			}
+			
+			$reload_after_view = $this->html_attributes['default_login_view']?:"login";
+			if($this->html_attributes['show_verify_me'])
+				$reload_after_view = "verify_account";
 
-			$this->js(null,$this->js()->univ()->successMessage('Account Created Successfully'))->reload()->execute();
+			$this->owner->js(null,$this->js()->univ()->successMessage('Account Created Successfully'))->reload(array('user_selected_form'=>$reload_after_view))->execute();
+			
 		}		
 	}
 }

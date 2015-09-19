@@ -94,6 +94,7 @@ class Model_Users extends Model_Table {
 		
 		if(isset($this->api->current_website))
 			$old_user->addCondition('epan_id',$this->api->current_website->id);
+
 		if($this->loaded()){
 			$old_user->addCondition('id','<>',$this->id);
 		}
@@ -268,11 +269,13 @@ class Model_Users extends Model_Table {
 		if(!$this->loaded()){
 			$this->addCondition('email',$email);
 			$this->tryLoadAny();
-		}	
+		}
 
-		// $this['email'] = $email;
-		// $this['activation_code'] = $activation_code;
-		// $this->save();
+		if($activation_code and $this->loaded()){
+			$this['activation_code'] = $activation_code;
+			$this->update();
+		}
+
 		// $type = null;
 			$tm=$this->add( 'TMail_Transport_PHPMailer' );
 

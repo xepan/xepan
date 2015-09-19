@@ -6,14 +6,25 @@ class View_Tools_Filter extends \componentBase\View_Component{
 	public $html_attributes=array(); // ONLY Available in server side components
 	public $filter_design=array();//Make Filter List with Category item ['specification_name'=>['value1'=>['options']]]
 	public $selected_filter_value = null;//Selected Value of Filter
+	public $min_price = null;
+	public $max_price = null;
 
 	function init(){
 		parent::init();
+
+		$this->min_price = $this->html_attributes['xshop-filter-start-price'];
+		$this->max_price = $this->html_attributes['xshop-filter-end-price'];
 
 		if($_GET['filter_data']){
 			$selected_data = explode("|", $_GET['filter_data']);
 			$this->selected_filter_value = $_GET['filter_data'];
 		}
+
+		if(isset($_GET['xmip']) and $_GET['xmip'])
+			$this->min_price = $_GET['xmip'];
+
+		if(isset($_GET['xmap']) and $_GET['xmap'])
+			$this->max_price = $_GET['xmap'];
 
 		$this->addClass('xshop-filter-tool');
 
@@ -67,6 +78,13 @@ class View_Tools_Filter extends \componentBase\View_Component{
 		
 		$this->filter_design = $new_values;
 		$this->api->stickyForget('filter_data');
+		$this->api->stickyForget('xmip');
+		$this->api->stickyForget('xmap');
+
+
+		//loading custom CSS file	
+		$cart_css = 'epans/'.$this->api->current_website['name'].'/xshopfilter.css';
+		$this->api->template->appendHTML('js_include','<link id="xshop-filter-customcss-link" type="text/css" href="'.$cart_css.'" rel="stylesheet" />'."\n");
 
 	}
 
@@ -90,7 +108,9 @@ class View_Tools_Filter extends \componentBase\View_Component{
 													'filter_design'=>$this->filter_design,
 													'html_attributes'=>$this->html_attributes,
 													'url'=>$this->api->url(),
-													'selected_filter_value'=>$this->selected_filter_value
+													'selected_filter_value'=>$this->selected_filter_value,
+													'min_price'=>$this->min_price,
+													'max_price'=>$this->max_price
 												)
 											);
 		parent::render();

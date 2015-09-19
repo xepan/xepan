@@ -32,7 +32,7 @@ class Model_Item extends \Model_Document{
 		$this->addField('name')->mandatory(true)->group('b~5')->sortable(true);
 		$this->addField('sku')->PlaceHolder('Insert Unique Referance Code')->caption('Code')->hint('Place your unique Item code ')->mandatory(true)->group('b~3')->sortable(true);
 		$this->addField('is_publish')->type('boolean')->defaultValue(true)->group('b~2')->sortable(true);
-		$this->addField('is_party_publish')->type('boolean')->defaultValue(true)->group('b~2')->sortable(true);
+		$this->addField('is_party_publish')->type('boolean')->defaultValue(false)->group('b~2')->sortable(true);
 
 		$this->addField('original_price')->type('money')->mandatory(true)->group('c~6~Basic Price');
 		$this->addField('sale_price')->type('money')->mandatory(true)->group('c~6')->sortable(true);
@@ -50,19 +50,19 @@ class Model_Item extends \Model_Document{
 		$this->addField('qty_from_set_only')->type('boolean')->group('e~3')->defaultValue(false);
 		
 		//Item Allow Optins
-		$this->addField('is_saleable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
-		$this->addField('is_purchasable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
-		$this->addField('mantain_inventory')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
-		$this->addField('allow_negative_stock')->type('boolean')->group('f~3~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('is_saleable')->type('boolean')->defaultValue(false)->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('is_purchasable')->type('boolean')->defaultValue(false)->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('mantain_inventory')->type('boolean')->defaultValue(true)->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('allow_negative_stock')->type('boolean')->defaultValue(false)->group('f~3~<i class=\'fa fa-cog\' > Item Allow Options</i>');
 		$this->addField('is_servicable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>')->system(true);
-		$this->addField('is_productionable')->type('boolean')->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
-		$this->addField('website_display')->type('boolean')->group('f~2');
+		$this->addField('is_productionable')->type('boolean')->defaultValue(true)->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('website_display')->type('boolean')->defaultValue(true)->group('f~2');
 		$this->addField('is_downloadable')->type('boolean')->group('f~2')->system(true);
 		$this->addField('is_rentable')->type('boolean')->group('f~2')->system(true);
-		$this->addField('is_designable')->type('boolean')->group('f~2');
+		$this->addField('is_designable')->type('boolean')->defaultValue(false)->group('f~2');
 		$this->addField('is_template')->type('boolean')->defaultValue(false)->group('f~2');
-		$this->addField('is_enquiry_allow')->type('boolean')->group('f~2');
-		$this->addField('is_attachment_allow')->type('boolean')->group('f~2');
+		$this->addField('is_enquiry_allow')->type('boolean')->defaultValue(true)->group('f~2');
+		$this->addField('is_attachment_allow')->type('boolean')->defaultValue(true)->group('f~2');
 		$this->addField('is_fixed_asset')->type('boolean')->group('f~2')->system(true);
 		$this->addField('warrenty_days')->type('int')->group('f~2');
 		
@@ -421,6 +421,21 @@ class Model_Item extends \Model_Document{
 		$this->addCondition('application_id',$app_id);
 		$this->tryLoadAny();
 		return $this;
+	}
+
+	//Items that are not approved for website display but designed by freelance and is partypublish
+	function pendingApproval($count=false){
+
+		$this->addCondition('is_designable',true);
+		$this->addCondition('is_saleable',true);
+		$this->addCondition('is_party_publish',true);
+		$this->addCondition('is_publish','<>',true);	
+		$this->tryLoadAny();
+		if($count)
+			return $this->count()->getOne();
+
+		return $this;
+
 	}
 
 	function getAssociatedCategories(){

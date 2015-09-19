@@ -6,7 +6,10 @@ class page_xShop_page_designer_save extends Page {
 		if(!$this->api->auth->isLoggedIn()){
 			//not logged in save current design in session and return to login page
 			// TODOOOOOOOOOOOOOOOOOo.
-			$this->js(null)->univ()->frameURL('Login First',$this->api->url('xShop_page_designer_login'))->execute();
+			$options = [
+					'width'=>600
+				];
+			$this->js(null)->univ()->frameURL('Login Panel',$this->api->url('xShop_page_designer_login'),$options)->execute();
 			echo "false:9";
 			exit;
 		}

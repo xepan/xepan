@@ -1,0 +1,15 @@
+div(id="{$_name}")
+	{missmatch_components}
+	h3.atk-box(class="atk-swatch-{block_swatch}{/}") {block_title}Components not available physically{/}
+	{rows}{row}
+	.atk-box {$name}
+	{/row}{/rows}
+	{/missmatch_components}
+	.atk-actions.atk-cells
+		{lite_button}
+		.atk-cell.atk-box.atk-swatch-blue.btn-lite(id="{$_name}" class="{$class}" style="cursor:pointer") {$icon}{$nbsp}{Content}Lite{/}
+		{/lite_button}
+		.atk-cell &nbsp;
+		{full_button}
+		.atk-cell.atk-box.atk-swatch-red.btn-full(id="{$_name}" class="{$class}" style="cursor:pointer") {$icon}{$nbsp}{Content}Full{/}
+		{/full_button}

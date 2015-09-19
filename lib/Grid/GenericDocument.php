@@ -28,6 +28,25 @@ class Grid_GenericDocument extends \Grid{
 
 
 	}
+
+	function formatRow(){
+		parent::formatRow();
+		if($this->model->hasElement('share_mode')){
+			if($this->model['share_mode']=='view-only'){
+				$this->current_row_html['edit']='';
+			}
+		}
+
+		if(in_array($this->model['status'],['public','departmental'])){
+			if(!$this->model['allow_edit_other'] && $this->model['created_by_id'] != $this->api->current_employee->id){
+				$this->current_row_html['edit']='';
+				$this->current_row_html['delete']='';
+			}
+
+		}
+
+	}
+
 	function format_preview($f){
 		$this->current_row_html[$f]='<a href="javascript:void(0)" onclick="'. $this->js()->univ()->frameURL('Content',$this->api->url($this->content_vp->getURL(),array('generic_document_id'=>$this->model->id))) .'">'.substr(strip_tags($this->model['content']),0,50).'</a>';
 	}
@@ -43,9 +62,10 @@ class Grid_GenericDocument extends \Grid{
 		$m=parent::setModel($model,$fields);
 
 		if($this->hasColumn('item_name'))$this->removeColumn('item_name');
-		if($this->hasColumn('created_by'))$this->removeColumn('created_by');
+		if(!$this->hasColumn('share_mode') && $this->hasColumn('created_by')) $this->removeColumn('created_by');
 		if($this->hasColumn('related_document'))$this->removeColumn('related_document');
 		if($this->hasColumn('updated_date'))$this->removeColumn('updated_date');
+		if($this->hasColumn('share_mode'))$this->removeColumn('share_mode');
 
 		$this->addFormatter('content','preview');
 		// $this->addFormatter('content','imagethumb');

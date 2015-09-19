@@ -1,0 +1,11 @@
+
+<div id="{$_name}">{missmatch_components}
+  <h3 class="atk-box atk-swatch-{block_swatch}{/}">{block_title}Components not available physically{/}</h3>{rows}{row}
+  <div class="atk-box">{$name}</div>{/row}{/rows}
+  {/missmatch_components}
+  <div class="atk-actions atk-cells">{lite_button}
+    <div id="{$_name}" style="cursor:pointer" class="atk-cell atk-box atk-swatch-blue btn-lite {$class}">{$icon}{$nbsp}{Content}Lite{/}</div>{/lite_button}
+    <div class="atk-cell">&nbsp;</div>{full_button}
+    <div id="{$_name}" style="cursor:pointer" class="atk-cell atk-box atk-swatch-red btn-full {$class}">{$icon}{$nbsp}{Content}Full{/}</div>{/full_button}
+  </div>
+</div>

@@ -82,7 +82,7 @@ class page_xShop_page_owner_item extends page_xShop_page_owner_main{
 				'designs',
 				'is_blog'
 			);
-
+		
 		$bg = $this->add('xShop/View_Badges_ItemPage');
 		$item_model = $this->add('xShop/Model_Item');
 		$item_model = $item_model->applicationItems($application_id);

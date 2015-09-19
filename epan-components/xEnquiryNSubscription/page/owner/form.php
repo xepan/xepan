@@ -25,7 +25,7 @@ class page_xEnquiryNSubscription_page_owner_form extends page_xEnquiryNSubscript
 		if($unread_entry) $v=$bg->add('View_Badge')->set('Unread / Watch')->setCount($unread_entry)->setCountSwatch('red');
 
 		$crud=$this->app->layout->add('CRUD');
-		$crud->setModel('xEnquiryNSubscription/Model_Forms',array('name','receive_mail','receipent_email_id','un_read_submission'));
+		$crud->setModel('xEnquiryNSubscription/Model_Forms',array('name','receive_mail','receipent_email_id','un_read_submission','button_name','form_layout'));
 		// $crud->add('Controller_FormBeautifier');
 
 		// if(!$crud->isEditing()){

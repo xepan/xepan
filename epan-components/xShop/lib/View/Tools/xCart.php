@@ -56,12 +56,12 @@ class View_Tools_xCart extends \componentBase\View_Component{
 		//Get Total amount and Total Item
 		$total_amount=$cart_model->getTotalAmount();
 		$total_item=$cart_model->getItemCount();
-
+		
 		// Show Total Item added in Cart
 		if($this->html_attributes['show-item-count']){
-			$str = '<div class="xshop-cart-item-count"><span class="xshop-cart-item-count-label">';
-			$str.=$total_item;
-			$str.=" item(s)</span></div>";
+			$str = '<div class="xshop-cart-item-count"><span class="xshop-cart-item-added">';
+			$str.= $total_item."</span>";
+			$str.="<span class='xshop-cart-item-count-label'> item(s)</span></div>";
 			$this->template->setHtml('xshop_cart_items',$str);
 		}else {
 			$this->template->tryDel('xshop_cart_items');

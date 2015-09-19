@@ -7,8 +7,8 @@ class View_Notification extends View {
 		$this->js(true)
 			->_load('pnotify.custom.min')
 			->_css('pnotify.custom.min');
-		$this->js(true)->_library('PNotify.desktop')->permission();
-		$this->js(true)->_load('xepan.pnotify')->univ()->getNotification($this->api->url('/owner_notification'));
+		// $this->js(true)->_library('PNotify.desktop')->permission();
+		// $this->js(true)->_load('xepan.pnotify')->univ()->getNotification($this->api->url('/owner_notification'));
 		parent::render();
 	}
 }
