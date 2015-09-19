@@ -36,7 +36,8 @@ class View_VerifyAccount extends \View{
 				if(!$verify_user_model->verifyAccount($verify_form['email_id'],$verify_form['verification_code'])){
 					$verify_form->js(null,$this->js()->univ()->errorMessage('Try Again'))->reload()->execute();		
 				}
-				$verify_form->js(null,$this->js()->univ()->successMessage('Account Verify Successfully'))->reload()->execute();
+
+				$this->owner->js(null,$this->js()->univ()->successMessage('Account Verify Successfully'))->reload(array('user_selected_form'=>"login"))->execute();
 			}
 
 			if($verify_form->isClicked($resend_btn)){
@@ -44,7 +45,7 @@ class View_VerifyAccount extends \View{
 					$verify_form->error('email_id','Email id Not Registered');
 				}
 
-				$verify_user_model->sendVerificationMail($verify_form['email_id'],null,rand(100000,999999));
+				$verify_user_model->sendVerificationMail($verify_form['email_id'],null,rand(100000,999999));							
 				$verify_form->js(null,$this->js()->univ()->successMessage('Email Send Successfully'))->reload()->execute();
 			}			
 			
