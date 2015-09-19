@@ -1,0 +1,25 @@
+form.atk-form(id="web_xshop_view_tools_checkout" action="#")
+  .atk-row
+      .atk-col-6
+          .atk-cell.atk-form-label.atk-text-nowrap
+              span Total
+          .atk-form-row.atk-form-field {$total}
+      .atk-col-6
+          .atk-cell.atk-form-label.atk-text-nowrap
+              span Discount Voucher
+          .atk-form-row.atk-form-field {$discount_voucher}
+  //- .atk-box-large.atk-shape-rounded-bottom(style="border-top:none")
+  .atk-cells.atk-cells-justified.atk-cells-gutter.atk-push
+  .atk-row
+      .atk-col-6
+          .atk-cell.atk-form-label.atk-text-nowrap
+              span Discount Amount
+          .atk-form-row.atk-form-field {$discount_amount}
+      .atk-col-6
+          .atk-cell.atk-form-label.atk-text-nowrap
+              span Net Amount
+          .atk-form-row.atk-form-field {$net_amount}
+  .atk-box-large.atk-shape-rounded-bottom(style="border-top:none")
+  .atk-cells.atk-cells-justified.atk-cells-gutter.atk-push 
+  .atk-push
+  .atk-actions(class="{$buttons_class}") {$FormButtons} 

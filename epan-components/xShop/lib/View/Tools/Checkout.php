@@ -4,13 +4,14 @@ namespace xShop;
 use Omnipay\Common\GatewayFactory;
 class View_Tools_Checkout extends \componentBase\View_Component{
 	public $html_attributes=array(); // ONLY Available in server side components
-	
+	public $order="";
+	public $gateway="";
 	function init(){
 		parent::init();
 
 		//Memorize checkout page if not logged in
 		$this->api->memorize('next_url',array('subpage'=>$_GET['subpage'],'order_id'=>$_GET['order_id']));
-
+		
 		//Check for the authtentication
 		//Redirect to Login Page
 		if($this->html_attributes['xshop_checkout_noauth_subpage_url']=='on'){
@@ -32,12 +33,14 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 
 		// Check if order is owned by current member ??????
 		
-		$order = $this->api->memorize('checkout_order',$this->api->recall('checkout_order',$this->add('xShop/Model_Order')->tryLoad($_GET['order_id']?:0)));
+		$order=$this->order = $this->api->memorize('checkout_order',$this->api->recall('checkout_order',$this->add('xShop/Model_Order')->tryLoad($_GET['order_id']?:0)));
 		if(!$order->loaded()){
 			$this->api->forget('checkout_order');
 			$this->add('View_Error')->set('Order not found');
 			return;
 		}
+
+		$this->order->reload();
 
 		$member = $this->add('xShop/Model_MemberDetails');
 		$member->loadLoggedIn();
@@ -47,10 +50,22 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			return;
 		}
 
+		
+		$this->api->stickyGET('step');
+		
+		$step =isset($_GET['step'])? $_GET['step']:1;
+		try{
+			call_user_method("step$step", $this);
+		}catch(Exception $e){
+			// remove all database tables if exists or connetion available
+			// remove config-default.php if exists
+			throw $e;
+		}
+
 		// ================================= PAYMENT MANAGEMENT =======================
 		if($_GET['pay_now']=='true'){
 			// create gateway
-			$gateway = GatewayFactory::create($order['paymentgateway']);
+			$gateway = $this->gateway = GatewayFactory::create($order['paymentgateway']);
 			
 			$gateway_parameters = $order->ref('paymentgateway_id')->get('parameters');
 			$gateway_parameters = json_decode($gateway_parameters,true);
@@ -145,28 +160,45 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		$cart=$this->add('xShop/Model_Cart');
 		$item=$this->add('xShop/Model_Item');
 
+		
+
+
+
+		
+
+		
+	}
+
+	function step1(){
+		// throw new \Exception($this->order, 1);
+		// throw new \Exception($order, 1);
+		$this->add('View')->setHTML('<span class="stepred">Step 1</span> / <span class="stepgray">Step 2</span> / <span class="stepgray">Step 3</span> / <span class="stepgray">Finish</span')->addClass('text-center');
 		$form=$this->add('Form_Stacked');
-		$c = $form->add('Columns');
+		$form->setLayout(['view/form/checkout']);;
 
-		$total_field = $c->addColumn(3)->addField('line','total');
-		$total_field->setAttr('disabled',true)->addClass('atk-span-2');
+			$total_field =$form->addField('line','total');
+			$discount_field =$form->addField('line','discount_voucher');
+			$discount_amount_field  =$form->addField('line','discount_amount');
+			$net_amount_field=$form->addField('line','net_amount');
 
-		$discount_field = $c->addColumn(3)->addField('line','discount_voucher');
+			$discount_field->js('change')->univ()->validateVoucher($discount_field,$form,$discount_amount_field,$total_field,$net_amount_field);
+
+			$total_field->set($this->order->get('total_amount'));
+			$net_amount_field->set($this->order->get('net_amount'));	
 		
-		$discount_amount_field = $c->addColumn(3)->addField('line','discount_amount');
-		$discount_amount_field->setAttr('disabled',true);
-
-		$net_amount_field = $c->addColumn(3)->addField('line','net_amount');
-		$net_amount_field->setAttr('disabled',true);		
-							
-		$discount_field->js('change')->univ()->validateVoucher($discount_field,$form,$discount_amount_field,$total_field,$net_amount_field);
-
-		$total_field->set($order['total_amount']);
-		$net_amount_field->set($order['net_amount']);	
+			$form->addSubmit('Next');
 		
-		$col=$form->add('Columns');
-		$colleft=$col->addColumn(6);
-		$colright=$col->addColumn(6);
+		if($form->isSubmitted()){
+			$form->js(null,$form->js()->univ()->successMessage("Update Amount Section Information"))->univ()->redirect($this->api->url(null,array('step'=>2)))->execute();
+		}
+	}
+
+	function step2(){
+		// throw new \Exception($this->order, 1);
+		$order=$this->order;
+		$this->add('View')->setHTML('<span class="stepred">Step 1</span> / <span class="stepgray">Step 2</span> / <span class="stepgray">Step 3</span> / <span class="stepgray">Finish</span')->addClass('text-center');
+		$personal_form=$this->add('Form_Stacked');
+		$personal_form->setLayout(['view/form/checkout-form2']);
 
 		$member=$this->add('xShop/Model_MemberDetails');
 		if($this->api->auth->model->id){
@@ -174,87 +206,129 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			$member->tryLoadAny();
 		}
 
-		$form->setModel($member,array('address','landmark','city','state','country','pincode','mobile_number'));
+		$personal_form->setModel($member,array('address','landmark','city','state','country','pincode','mobile_number'));
 
-		$b_a=$form->getElement('address');
-		$b_a->setCaption('Billing Address')->js(true)->closest('div.atk-form-row')->appendTo($colleft);
-		$b_l=$form->getElement('landmark');
-		$b_l->js(true)->closest('div.atk-form-row')->appendTo($colleft);
-		$b_c=$form->getElement('city');
-		$b_c->js(true)->closest('div.atk-form-row')->appendTo($colleft);
-		$b_s=$form->getElement('state');
-		$b_s->js(true)->closest('div.atk-form-row')->appendTo($colleft);
-		$b_country=$form->getElement('country');
-		$b_country->js(true)->closest('div.atk-form-row')->appendTo($colleft);
-		$b_p=$form->getElement('pincode');
-		$b_p->js(true)->closest('div.atk-form-row')->appendTo($colleft);
-		$b_t= $form->getElement('mobile_number');
-		$b_t->js(true)->closest('div.atk-form-row')->appendTo($colleft);
-		$b_e= $form->addField('line','email');
-		$b_e->js(true)->closest('div.atk-form-row')->appendTo($colleft);
-		$form->addField('Checkbox','i_read',"I have Read All trems & Conditions")->validateNotNull()->js(true)->closest('div.atk-form-row')->appendTo($colleft);
+		$b_a=$personal_form->getElement('address');
+		$s_a=$personal_form->addField('text','shipping_address')->validateNotNull(true)->set($order['billing_address']?:$member['address']);
+		$b_l=$personal_form->getElement('landmark');
+		$s_l=$personal_form->addField('line','s_landmark','Landmark')->validateNotNull(true);
+		$b_c=$personal_form->getElement('city');
+		$s_c=$personal_form->addField('line','s_city','City')->validateNotNull(true);
+		$b_s=$personal_form->getElement('state');
+		$s_s=$personal_form->addField('line','s_state','State')->validateNotNull(true);
+		$b_country=$personal_form->getElement('country');
+		$s_country=$personal_form->addField('line','s_country','Country')->validateNotNull(true);
+		$b_p=$personal_form->getElement('pincode');
+		$s_p=$personal_form->addField('Number','s_pincode','Pincode')->validateNotNull(true);
+		$b_t= $personal_form->getElement('mobile_number');
+		$s_t=$personal_form->addField('line','s_mobile_number','Mobile Number')->validateNotNull(true);
+		$b_e= $personal_form->addField('line','email');
+		$s_e=$personal_form->addField('line','s_email','Email')->validateNotNull(true);
 		
-		$s_a=$form->addField('text','shipping_address')->validateNotNull(true);
-		$s_a->js(true)->closest('div.atk-form-row')->appendTo($colright);
-		$s_l=$form->addField('line','s_landmark','Landmark')->validateNotNull(true);
-		$s_l->js(true)->closest('div.atk-form-row')->appendTo($colright);
-		$s_c=$form->addField('line','s_city','City')->validateNotNull(true);
-		$s_c->js(true)->closest('div.atk-form-row')->appendTo($colright);
-		$s_s=$form->addField('line','s_state','State')->validateNotNull(true);
-		$s_s->js(true)->closest('div.atk-form-row')->appendTo($colright);
-		$s_country=$form->addField('line','s_country','Country')->validateNotNull(true);
-		$s_country->js(true)->closest('div.atk-form-row')->appendTo($colright);
-		$s_p=$form->addField('Number','s_pincode','Pincode')->validateNotNull(true);
-		$s_p->js(true)->closest('div.atk-form-row')->appendTo($colright);
-		$s_t=$form->addField('line','s_mobile_number','Mobile Number')->validateNotNull(true);
-		$s_t->js(true)->closest('div.atk-form-row')->appendTo($colright);
-		$s_e=$form->addField('line','s_email','Email')->validateNotNull(true);
-		$s_e->js(true)->closest('div.atk-form-row')->appendTo($colright);
-		$shipping=$form->addButton('Copy Address');
-		$shipping->js(true)->appendTo($colright);
-		
-		// Copy billing Address to shipping address
+		$personal_form->addField('Checkbox','i_read',"I have Read All trems & Conditions")->validateNotNull()->js(true)->closest('div.atk-form-row');
+
+		$shipping=$personal_form->layout->add('Button',null,'copy_address')->set('Copy Address')->addClass('atk-swatch-tomato');//->js('click',$form->js()->submit());
+
+
+		// // Copy billing Address to shipping address
+
 		$shipping->js('click')->univ()->copyBillingAddress($b_a,$b_l,$b_c,$b_s,$b_country,$b_p,$b_t,$b_e,$s_a,$s_l,$s_c,$s_s,$s_country,$s_p,$s_t,$s_e);
+		// if($shipping->isClicked()){
+		// }
+		
+		$prev = $personal_form->addSubmit('Preview');
+		
+		$personal_form->addSubmit('Next');
 
+		if($prev->isClicked()){
+			$personal_form->owner->js(null,$personal_form->js()->univ()->successMessage("Update Personal Section Information"))->univ()->redirect($this->api->url(null,array('step'=>1)))->execute();
+			return;					
+		}
+		if($personal_form->isSubmitted()){
+			if(!$personal_form['i_read'])
+				$personal_form->displayError('i_read','It is Must');
+
+			$order['billing_landmark'] = $personal_form['billing_address'];
+			$order['billing_address'] = $personal_form['billing_address'];
+			$order['billing_city'] = $personal_form['city'];
+			$order['billing_state'] = $personal_form['state'];
+			$order['billing_zip'] = $personal_form['pincode'];
+			$order['billing_country'] = $personal_form['country'];
+			$order['billing_tel'] = $personal_form['mobile_number'];
+			$order['billing_email'] = $personal_form['email'];
+
+			$order['shipping_landmark'] = $personal_form['s_landmark'];
+			$order['shipping_address'] = $personal_form['shipping_address'];
+			$order['shipping_city'] = $personal_form['s_city'];
+			$order['shipping_state'] = $personal_form['s_state'];
+			$order['shipping_zip'] = $personal_form['s_pincode'];
+			$order['shipping_country'] = $personal_form['s_country'];
+			$order['shipping_tel'] = $personal_form['s_mobile_number'];
+			$order['shipping_email'] = $personal_form['s_email'];
+			// save order :)
+			
+			$order->update();
+			$this->order = $order;
+			// Update order in session :: checkout_order																
+			$this->api->memorize('checkout_order',$order);
+		
+			$personal_form->owner->js(null,$personal_form->js()->univ()->successMessage("Update Personal Section Information"))->univ()->redirect($this->api->url(null,array('step'=>3)))->execute();
+		}
+	}
+
+	function step3(){
 		// add all active payment gateways
-		$pay_gate_field = $form->addField('DropDown','payment_gateway_selected')->setEmptyText('Please Select Your Payment Method')->validateNotNull(true);
-		$pay_gate_field->setModel($this->add('xShop/Model_PaymentGateway')->addCondition('is_active',true));
+		$this->add('View')->setHTML('<span class="stepred">Step 1</span> / <span class="stepgray">Step 2</span> / <span class="stepgray">Step 3</span> / <span class="stepgray">Finish</span')->addClass('text-center');
+		$pay_form=$this->add('Form_Stacked');
+		$pay_form->setLayout(['view/form/checkout-form3']);
+		$pay_gate_field = $pay_form->addField('DropDown','payment_gateway_selected')->setEmptyText('Please Select Your Payment Method')->validateNotNull(true);
+		// $pay_gate_field->setModel($this->add('xShop/Model_PaymentGateway')->addCondition('is_active',true));
+
+		$prev = $pay_form->addSubmit('Preview');
+		
+
+		if($prev->isClicked()){
+			$pay_form->owner->js(null,$pay_form->js()->univ()->successMessage("Update Personal Section Information"))->univ()->redirect($this->api->url(null,array('step'=>2)))->execute();
+			return;					
+		}
+
 
 		$btn_label = $this->html_attributes['xshop_checkout_btn_label']?:'Proceed';
 			
-		$form->addSubmit($btn_label);
+		$pay_form->addSubmit($btn_label);
 		
-		if($form->isSubmitted()){
+		if($pay_form->isSubmitted()){
 			$cart=$this->add('xShop/Model_Cart');
-			if(!$form['i_read'])
-				$form->displayError('i_read','It is Must');
+			// if(!$form['i_read'])
+			// 	$form->displayError('i_read','It is Must');
 
 			// validate address ...
 			// do discount coup validation or application
 			// Update order with shipping and billing details
 			// Update order with Payment Gateway selected
-			$order['paymentgateway_id'] = $form['payment_gateway_selected'];
-			$order['billing_landmark'] = $form['billing_address'];
-			$order['billing_address'] = $form['billing_address'];
-			$order['billing_city'] = $form['city'];
-			$order['billing_state'] = $form['state'];
-			$order['billing_zip'] = $form['pincode'];
-			$order['billing_country'] = $form['country'];
-			$order['billing_tel'] = $form['mobile_number'];
-			$order['billing_email'] = $form['email'];
+			$order['paymentgateway_id'] = $pay_form['payment_gateway_selected'];
+			// $order['billing_landmark'] = $form['billing_address'];
+			// $order['billing_address'] = $form['billing_address'];
+			// $order['billing_city'] = $form['city'];
+			// $order['billing_state'] = $form['state'];
+			// $order['billing_zip'] = $form['pincode'];
+			// $order['billing_country'] = $form['country'];
+			// $order['billing_tel'] = $form['mobile_number'];
+			// $order['billing_email'] = $form['email'];
 
-			$order['shipping_landmark'] = $form['s_landmark'];
-			$order['shipping_address'] = $form['shipping_address'];
-			$order['shipping_city'] = $form['s_city'];
-			$order['shipping_state'] = $form['s_state'];
-			$order['shipping_zip'] = $form['s_pincode'];
-			$order['shipping_country'] = $form['s_country'];
-			$order['shipping_tel'] = $form['s_mobile_number'];
-			$order['shipping_email'] = $form['s_email'];
-			// save order :)
+			// $order['shipping_landmark'] = $form['s_landmark'];
+			// $order['shipping_address'] = $form['shipping_address'];
+			// $order['shipping_city'] = $form['s_city'];
+			// $order['shipping_state'] = $form['s_state'];
+			// $order['shipping_zip'] = $form['s_pincode'];
+			// $order['shipping_country'] = $form['s_country'];
+			// $order['shipping_tel'] = $form['s_mobile_number'];
+			// $order['shipping_email'] = $form['s_email'];
+			// // save order :)
+			// $order->save();
+			// // Update order in session :: checkout_order																
+			// $this->api->memorize('checkout_order',$order);
 			$order->save();
-			// Update order in session :: checkout_order																
-			$this->api->memorize('checkout_order',$order);
 
 			$this->js(null, $this->js()->univ()->successMessage('Order Placed Successfully'))
 				->redirect($this->api->url(null,array('pay_now'=>'true')))->execute();
