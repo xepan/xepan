@@ -40,7 +40,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			return;
 		}
 
-		$this->order->reload();
+		// $this->order->reload();
 
 		$member = $this->add('xShop/Model_MemberDetails');
 		$member->loadLoggedIn();
@@ -64,8 +64,10 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 
 		// ================================= PAYMENT MANAGEMENT =======================
 		if($_GET['pay_now']=='true'){
+			
 			// create gateway
-			$gateway = $this->gateway = GatewayFactory::create($order['paymentgateway']);
+			$gateway = $this->gateway;
+			$gateway= GatewayFactory::create($order['paymentgateway']);
 			
 			$gateway_parameters = $order->ref('paymentgateway_id')->get('parameters');
 			$gateway_parameters = json_decode($gateway_parameters,true);
@@ -159,14 +161,6 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		//Cart model
 		$cart=$this->add('xShop/Model_Cart');
 		$item=$this->add('xShop/Model_Item');
-
-		
-
-
-
-		
-
-		
 	}
 
 	function step1(){
@@ -273,17 +267,22 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 	}
 
 	function step3(){
+		$order=$this->order;		
 		// add all active payment gateways
 		$this->add('View')->setHTML('<span class="stepred">Step 1</span> / <span class="stepgray">Step 2</span> / <span class="stepgray">Step 3</span> / <span class="stepgray">Finish</span')->addClass('text-center');
 		$pay_form=$this->add('Form_Stacked');
 		$pay_form->setLayout(['view/form/checkout-form3']);
-		$pay_gate_field = $pay_form->addField('DropDown','payment_gateway_selected')->setEmptyText('Please Select Your Payment Method')->validateNotNull(true);
-		// $pay_gate_field->setModel($this->add('xShop/Model_PaymentGateway')->addCondition('is_active',true));
+		// $pay_form->addField('line','date');
+		$payment_model=$this->add('xShop/Model_PaymentGateway');
+		$payment_model->addCondition('is_active',true);
+		
+		$pay_gate_field = $pay_form->addField('Radio','payment_gateway_selected')->setEmptyText('Please Select Your Payment Method')->validateNotNull(true);
+		$pay_gate_field->setModel($payment_model);
 
 		$prev=$pay_form->layout->add('Button',null,'previous')->set('Previous')->addClass('atk-swatch-tomato');//->js('click',$form->js()->submit());
 
 		if($prev->isClicked()){
-			$pay_form->owner->js(null,$pay_form->js()->univ()->successMessage("Update Personal Section Information"))->univ()->redirect($this->api->url(null,array('step'=>2)))->execute();
+			$pay_form->owner->js(null,$pay_form->js())->univ()->redirect($this->api->url(null,array('step'=>2)))->execute();
 			return;					
 		}
 
@@ -294,40 +293,26 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		
 		if($pay_form->isSubmitted()){
 			$cart=$this->add('xShop/Model_Cart');
-			// if(!$form['i_read'])
-			// 	$form->displayError('i_read','It is Must');
 
 			// validate address ...
 			// do discount coup validation or application
 			// Update order with shipping and billing details
 			// Update order with Payment Gateway selected
 			$order['paymentgateway_id'] = $pay_form['payment_gateway_selected'];
-			// $order['billing_landmark'] = $form['billing_address'];
-			// $order['billing_address'] = $form['billing_address'];
-			// $order['billing_city'] = $form['city'];
-			// $order['billing_state'] = $form['state'];
-			// $order['billing_zip'] = $form['pincode'];
-			// $order['billing_country'] = $form['country'];
-			// $order['billing_tel'] = $form['mobile_number'];
-			// $order['billing_email'] = $form['email'];
-
-			// $order['shipping_landmark'] = $form['s_landmark'];
-			// $order['shipping_address'] = $form['shipping_address'];
-			// $order['shipping_city'] = $form['s_city'];
-			// $order['shipping_state'] = $form['s_state'];
-			// $order['shipping_zip'] = $form['s_pincode'];
-			// $order['shipping_country'] = $form['s_country'];
-			// $order['shipping_tel'] = $form['s_mobile_number'];
-			// $order['shipping_email'] = $form['s_email'];
-			// // save order :)
-			// $order->save();
-			// // Update order in session :: checkout_order																
-			// $this->api->memorize('checkout_order',$order);
 			$order->save();
 
 			$this->js(null, $this->js()->univ()->successMessage('Order Placed Successfully'))
-				->redirect($this->api->url(null,array('pay_now'=>'true')))->execute();
+				->redirect($this->api->url(null,array('pay_now'=>'true','step'=>4)))->execute();
 		}
+	}
+
+	function step4(){
+		$this->add('View')->addClass('text-center')->setHTML('<span class="stepgreen">Step 1</span> / <span class="stepgreen">Step 2</span> / <span class="stepgreen">Step 3</span> / <span class="stepred">Finish</span');
+		$this->add('View')->set('Payment Processed Successfully Done')->addClass('text-center alert alert-success');
+		$outer_div=$this->add('View');
+		$outer_div->addClass('container well');
+		$outer_div->setStyle('width','30%');
+
 	}
 
 	function postOrderProcess(){
