@@ -267,7 +267,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 	}
 
 	function step3(){
-		$order=$this->order;		
+		$order=$this->order;
 		// add all active payment gateways
 		$this->add('View')->setHTML('<span class="stepred">Step 1</span> / <span class="stepgray">Step 2</span> / <span class="stepgray">Step 3</span> / <span class="stepgray">Finish</span')->addClass('text-center');
 		$pay_form=$this->add('Form_Stacked');
@@ -276,14 +276,14 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		$payment_model=$this->add('xShop/Model_PaymentGateway');
 		$payment_model->addCondition('is_active',true);
 		
-		$pay_gate_field = $pay_form->addField('Radio','payment_gateway_selected')->setEmptyText('Please Select Your Payment Method')->validateNotNull(true);
+		$pay_gate_field = $pay_form->addField('Radio','payment_gateway_selected')->validateNotNull(true);
+		$pay_gate_field->setImageField('gateway_image');
 		$pay_gate_field->setModel($payment_model);
-
 		$prev=$pay_form->layout->add('Button',null,'previous')->set('Previous')->addClass('atk-swatch-tomato');//->js('click',$form->js()->submit());
 
 		if($prev->isClicked()){
 			$pay_form->owner->js(null,$pay_form->js())->univ()->redirect($this->api->url(null,array('step'=>2)))->execute();
-			return;					
+			return;
 		}
 
 
