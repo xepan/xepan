@@ -464,6 +464,25 @@ Text_Component = function (params){
 				}
 			});
 			;
+
+			//Apply FreeLancer Options on Component
+			if(!self.options.movable){
+				self.element.draggable('disable');
+			}
+
+			if(!self.options.colorable){
+				self.editor.text_color_picker.next('button').hide();
+			}
+
+			if(!self.options.editable){
+				self.editor.text_input.hide();
+			}
+
+			if(!self.options.resizable){
+				self.element.resizable('disable');
+			}
+			//
+
 			$(this.element).data('component',self);
 			$(this.element).click(function(event) {
 	            $('.ui-selected').removeClass('ui-selected');
