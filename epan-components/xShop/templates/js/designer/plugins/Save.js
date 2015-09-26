@@ -29,11 +29,24 @@ Save_Component = function (params){
 					self.layout_array[self.page][index]=new Object;
 					self.layout_array[self.page][self.layout]['components']=[];
 					$.each(layout.components,function(index,component){
+						//Setup Image Path Relative
+						if(component.options.type=="Image"){
+							// console.log("Rakesh");
+							url = component.options.url;
+							component.options.url = url.substr(url.indexOf("/upload"));
+							// console.log(component.options.url);
+						}
 						self.layout_array[self.page][self.layout]['components'].push(JSON.stringify(component.options));
 					});
 
-					// if(self.designer_tool.pages_and_layouts[self.page][self.layout]['background'] != undefined)
-					self.layout_array[self.page][self.layout]['background'] = JSON.stringify(self.designer_tool.pages_and_layouts[self.page][self.layout]['background'].options);
+
+					background_options = self.designer_tool.pages_and_layouts[self.page][self.layout]['background'].options;
+					//Setup Image Path Relative
+					if(background_options.url){
+						background_options.url = background_options.url.substr(background_options.url.indexOf("/upload"));
+						// console.log(background_options.url);
+					}				
+					self.layout_array[self.page][self.layout]['background'] = JSON.stringify(background_options);
 				});	
 			});
 			
