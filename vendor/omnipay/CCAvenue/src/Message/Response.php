@@ -68,7 +68,7 @@ class Response extends AbstractResponse implements RedirectResponseInterface
                             <title>Redirecting...</title>
                         </head>
                         <body onload="document.forms[0].submit();">
-                            <form action="%1$s" method="post">
+                            <form action="%1$s" method="post" style="display:none;">
                                 <p>Redirecting to payment page...</p>
                                 <input type=text name=encRequest value="%2$s"/>
                                 <input type=text name=access_code value="%3$s"/>

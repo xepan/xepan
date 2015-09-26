@@ -11,7 +11,11 @@ class CompletePurchaseResponse extends AbstractResponse
 {
   public function isSuccessful()
   {
-    return isset($this->data['decision']) && 'ACCEPT' === $this->data['decision'];
+    return isset($this->data) && 'Success' === $this->data['order_status'];
+  }
+
+  public function getOrderStatus(){
+    return $this->data['order_status'];
   }
 
   public function getTransactionReference()
@@ -23,4 +27,10 @@ class CompletePurchaseResponse extends AbstractResponse
   {
     return isset($this->data['message']) ? $this->data['message'] : null;
   }
+
+
+  public function getData(){
+    return $this->data;
+  }
+
 }

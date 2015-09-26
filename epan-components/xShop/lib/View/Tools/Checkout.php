@@ -40,8 +40,6 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			return;
 		}
 
-		// $this->order->reload();
-
 		$member = $this->add('xShop/Model_MemberDetails');
 		$member->loadLoggedIn();
 
@@ -65,6 +63,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		// ================================= PAYMENT MANAGEMENT =======================
 		if($_GET['pay_now']=='true'){
 			
+			$this->order->reload();
 			// create gateway
 			$gateway = $this->gateway;
 			$gateway= GatewayFactory::create($order['paymentgateway']);
@@ -78,18 +77,6 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 				$fn ="set".$param;
 				$gateway->$fn($value);
 			}
-
-			// create params for purchase ... no card prepare now (may be for next version of xepan)
-
-			// ---- No Cards for now 
-			// $formInputData = array(
-			//     'firstName' => 'Bobby',
-			//     'lastName' => 'Tables',
-			//     'number' => '4111111111111111',
-			//     'expiryMonth' => '06',
-			//     'expiryYear' => '16',
-			// );
-			// $card = new \Omnipay\Common\CreditCard($formInputData);
 
 			$params = array(
 			    'amount' => $order['net_amount'],
@@ -122,11 +109,18 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 
 			if($_GET['paid']){
 				$response = $gateway->completePurchase($params)->send();
-
-			    if ( ! $response->isSuccessful())
-			    {
+			    if ( ! $response->isSuccessful()){
+			  //   	$order_status = $response->getOrderStatus();
+			  //   	if(in_array($order_status, ['Failure']))
+			  //   		$order_status = "onlineFailure";
+			  //   	elseif(in_array($order_status, ['Aborted']))
+			  //   		$order_status = "onlineAborted";
+			  //   	else
+			  //   		$order_status = "onlineFailure";
+					// $order->setStatus($order_status);
 			        throw new \Exception($response->getMessage());
 			    }
+		    	
 			    $order->invoice()->PayViaOnline($response->getTransactionReference(),$response->getData());
 				//Change Order Status onlineUnPaid to Submitted
 				$order->setStatus('submitted');
@@ -164,33 +158,31 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 	}
 
 	function step1(){
-		// throw new \Exception($this->order, 1);
-		// throw new \Exception($order, 1);
-		$this->add('View')->setHTML('<span class="stepred">Step 1</span> / <span class="stepgray">Step 2</span> / <span class="stepgray">Step 3</span> / <span class="stepgray">Finish</span')->addClass('text-center');
-		$form=$this->add('Form_Stacked');
-		$form->setLayout(['view/form/checkout']);;
+		$this->add('View')->setHTML('<span class="xcheckout-step stepred">Step 1</span> / <span class="xcheckout-step stepgray">Step 2</span> / <span class=" xcheckout-step stepgray">Step 3</span> / <span class="xcheckout-step stepgray">Finish</span')->addClass('text-center');
+		$form=$this->add('Form_Horizontal');
+		// $form->setLayout(['view/form/checkout']);;
 
-			$total_field =$form->addField('line','total');
-			$discount_field =$form->addField('line','discount_voucher');
-			$discount_amount_field  =$form->addField('line','discount_amount');
-			$net_amount_field=$form->addField('line','net_amount');
+		$total_field =$form->addField('line','total');
+		$discount_field =$form->addField('line','discount_voucher');
+		$discount_amount_field  =$form->addField('line','discount_amount');
+		$net_amount_field=$form->addField('line','net_amount');
 
-			$discount_field->js('change')->univ()->validateVoucher($discount_field,$form,$discount_amount_field,$total_field,$net_amount_field);
+		$discount_field->js('change')->univ()->validateVoucher($discount_field,$form,$discount_amount_field,$total_field,$net_amount_field);
 
-			$total_field->set($this->order->get('total_amount'));
-			$net_amount_field->set($this->order->get('net_amount'));	
-		
-			$form->addSubmit('Next');
+		$total_field->set($this->order->get('total_amount'));
+		$net_amount_field->set($this->order->get('net_amount'));
+	
+		$form->addSubmit('Next');
 		
 		if($form->isSubmitted()){
-			$form->js(null,$form->js()->univ()->successMessage("Update Amount Section Information"))->univ()->redirect($this->api->url(null,array('step'=>2)))->execute();
+			//Save Data
+			$form->js(null)->univ()->redirect($this->api->url(null,array('step'=>2)))->execute();
 		}
 	}
 
 	function step2(){
-		// throw new \Exception($this->order, 1);
-		$order=$this->order;
-		$this->add('View')->setHTML('<span class="stepred">Step 1</span> / <span class="stepgray">Step 2</span> / <span class="stepgray">Step 3</span> / <span class="stepgray">Finish</span')->addClass('text-center');
+		$order=$this->order->reload();
+		$this->add('View')->setHTML('<span class="xcheckout-step stepred">Step 1</span> / <span class="xcheckout-step stepgray">Step 2</span> / <span class=" xcheckout-step stepgray">Step 3</span> / <span class="xcheckout-step stepgray">Finish</span')->addClass('text-center');
 		$personal_form=$this->add('Form_Stacked');
 		$personal_form->setLayout(['view/form/checkout-form2']);
 
@@ -267,9 +259,9 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 	}
 
 	function step3(){
-		$order=$this->order;
+		$order=$this->order->reload();
 		// add all active payment gateways
-		$this->add('View')->setHTML('<span class="stepred">Step 1</span> / <span class="stepgray">Step 2</span> / <span class="stepgray">Step 3</span> / <span class="stepgray">Finish</span')->addClass('text-center');
+		$this->add('View')->setHTML('<span class="xcheckout-step stepred">Step 1</span> / <span class="xcheckout-step stepgray">Step 2</span> / <span class="xcheckout-step stepgray">Step 3</span> / <span class="xcheckout-step stepgray">Finish</span')->addClass('text-center');
 		$pay_form=$this->add('Form_Stacked');
 		$pay_form->setLayout(['view/form/checkout-form3']);
 		// $pay_form->addField('line','date');
@@ -283,7 +275,6 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 
 		if($prev->isClicked()){
 			$pay_form->owner->js(null,$pay_form->js())->univ()->redirect($this->api->url(null,array('step'=>2)))->execute();
-			return;
 		}
 
 
@@ -307,12 +298,23 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 	}
 
 	function step4(){
-		$this->add('View')->addClass('text-center')->setHTML('<span class="stepgreen">Step 1</span> / <span class="stepgreen">Step 2</span> / <span class="stepgreen">Step 3</span> / <span class="stepred">Finish</span');
-		$this->add('View')->set('Payment Processed Successfully Done')->addClass('text-center alert alert-success');
-		$outer_div=$this->add('View');
-		$outer_div->addClass('container well');
-		$outer_div->setStyle('width','30%');
+		$this->order->reload();
+		$message = "Payment Processed Successfully";
+		$class ="atk-box atk-swatch-green atk-align-center";
 
+		$this->add('View')->addClass('text-center')->setHTML('<span class="xcheckout-step stepgreen">Step 1</span> / <span class="xcheckout-step stepgreen">Step 2</span> / <span class="xcheckout-step stepgreen">Step 3</span> / <span class="xcheckout-step stepred">Finish</span');
+		//Payment Calceled 	by User from CCAvenue
+		if($_GET['canceled'] == "true"){
+			$message = "Payment Processed Canceled";
+			$this->order->setStatus('OnlineCanceled');
+			$class = "atk-box atk-swatch-red atk-align-center";
+			$_GET['pay_now'] = false;
+		}
+		$this->add('View')->set($message)->addClass($class);
+
+		$cont_shop_btn = $this->add('Button')->set('Continue Shopping');
+		//Get Continue Shopping button url from config
+		$cont_shop_btn->js('click')->univ()->location($this->api->url(null,array('subpage'=>'home')));
 	}
 
 	function postOrderProcess(){
