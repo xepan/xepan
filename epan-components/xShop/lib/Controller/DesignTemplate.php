@@ -37,8 +37,7 @@ class Controller_DesignTemplate extends \AbstractController{
 
 		$this->phpimage = $img = new \PHPImage($width,$height);
 
-		$content = $design[$this->page_name][$this->layout];
-
+		$content = $design[$this->page_name][$this->layout];		
 		$background_options = json_decode($content['background'],true);
 
 		$this->addImage($background_options,$img);
@@ -72,17 +71,25 @@ class Controller_DesignTemplate extends \AbstractController{
 	}
 
 	function addImage($options, $img){
-		if($options['url'] AND file_exists(getcwd().DS.$options['url'])){
-			$options['url'] = getcwd().DS.$options['url'];
-			$options['width'] = $options['width'] * $this->print_ratio;
-			$options['height'] = $options['height'] * $this->print_ratio;
-			$options['x'] = $options['x'] * $this->print_ratio;
-			$options['y'] = $options['y'] * $this->print_ratio;
-
-			$cont = $this->add('xShop/Controller_RenderImage',array('options'=>$options));
-			$data = $cont->show('png',1,false,true);
-			$img->addImage($data, $this->pixcelToUnit($options['x']), $this->pixcelToUnit($options['y']), $this->pixcelToUnit($options['width']), $this->pixcelToUnit($options['height']));
+		$saved_url = $options['url'];
+		$options['url'] = getcwd().$saved_url;
+		if(!file_exists($options['url'])){
+			$options['url'] = dirname(getcwd()).$saved_url;
+			if(!file_exists($options['url'])){
+				return;
+			}
 		}
+		
+		
+		$options['width'] = $options['width'] * $this->print_ratio;
+		$options['height'] = $options['height'] * $this->print_ratio;
+		$options['x'] = $options['x'] * $this->print_ratio;
+		$options['y'] = $options['y'] * $this->print_ratio;
+
+		$cont = $this->add('xShop/Controller_RenderImage',array('options'=>$options));
+		$data = $cont->show('png',1,false,true);
+		$img->addImage($data, $this->pixcelToUnit($options['x']), $this->pixcelToUnit($options['y']), $this->pixcelToUnit($options['width']), $this->pixcelToUnit($options['height']));
+
 	}
 
 
