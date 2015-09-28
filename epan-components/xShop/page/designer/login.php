@@ -11,7 +11,7 @@ class page_xShop_page_designer_login extends Page{
 											array(
 												'html_attributes'=>
 															array(
-																'show_register_new_user'=>true
+																'show_register_new_user'=>false
 															)
 														)
 											);
