@@ -48,7 +48,8 @@ class View_CartItem extends \View{
 														'xsnb_design_template'=>'false',
 														'item_member_design_id'=>$model['item_member_design_id']
 														)).'> Edit </a>';
-				$name.= '<a href="#"> Preview </a>';
+				//Temporary Off
+				// $name.= '<a href="#"> Preview </a>';
 			}
 
 			//Add Custom Fields 
