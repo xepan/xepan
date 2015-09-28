@@ -15,7 +15,7 @@ function init(){
 		$order->getAllOrder($this->api->auth->model->id);
 		$grid=$this->add('Grid');
 		$order->_dsql()->order('id','desc');
-		$grid->setModel($order);
+		$grid->setModel($order,array('created_date','name','total_amount','gross_amount','tax','net_amount','billing_address','shipping_address'));
 
 		$grid->addColumn('button','print');
 		$grid->addPaginator(10);
