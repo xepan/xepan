@@ -49,7 +49,9 @@ class View_Tools_Filter extends \componentBase\View_Component{
 		foreach ($specifications as $specification) {
 			$filter = $this->add('xShop/Model_Filter');
 			$filter->addCondition('specification_id',$specification->id);
-			$filter->addCondition('category_id',$_GET['xsnb_category_id']);
+			if($_GET['xsnb_category_id'])
+				$filter->addCondition('category_id',$_GET['xsnb_category_id']);
+			
 			$filter->tryLoadAny();
 
 			if(!count(json_decode($filter['unique_values'],true))){
