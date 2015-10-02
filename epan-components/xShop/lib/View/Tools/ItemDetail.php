@@ -71,8 +71,8 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 
 	//=======================Item Price===================================	
 		if( $item['show_price'] and $this->html_attributes['show-item-price']){
-			$str = '<div class="xshop-item-old-price" onclick="javascript:void(0)">&#8377. '.$item['original_price'].'</div>';
-			$str.= '<div class="xshop-item-price" onclick="javascript:void(0)">&#8377. '.$item['sale_price'].'</div>';
+			$str = '<div class="xshop-item-old-price" onclick="javascript:void(0)">'.$this->api->currency['symbole']." ".$item['original_price'].'</div>';
+			$str.= '<div class="xshop-item-price" onclick="javascript:void(0)">'.$this->api->currency['symbole']." ".$item['sale_price'].'</div>';
 			$this->template->trySetHtml('xshop_item_detail_price',$str);
 		}
 	//===========================Tags ===========================================
