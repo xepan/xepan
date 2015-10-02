@@ -234,8 +234,8 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 		// console.log(this.canvas.width());
 		
 		this.safe_zone = $('<div class="xshop-desiner-tool-safe-zone" style="position:absolute"></div>').appendTo(this.canvas);
-		this.guidex= $('<div class="guidex" style="z-index:10;"></div>').appendTo($('body'));
-		this.guidey= $('<div class="guidey" style="z-index:10;"></div>').appendTo($('body'));
+		this.guidex= $('<div class="guidex" style="z-index:100;"></div>').appendTo($('body'));
+		this.guidey= $('<div class="guidey" style="z-index:100;"></div>').appendTo($('body'));
 	},
 
 	setupCart: function(){
