@@ -590,17 +590,16 @@ class Model_OrderDetails extends \Model_Document{
 
 	function itemMemberDesignId(){
 
-		if($this->loaded())
+		if(!$this->loaded())
 			throw new \Exception("Order Detail Model Not loaded");
 					
 		$member_design = $this->add('xShop/Model_ItemMemberDesign');
 		$member_design->addCondition('item_id',$this->item()->id);
-		$member_design->addCondition('member_id',$this->order()->member()->id);
-		$member_design->tryLoadAny();
+		$member_design->addCondition('member_id',$this->order()->get('member_id'));
+		$member_design->tryLoadAny();		
 		if($member_design->loaded())
 			return $member_design->id;
-
-
+		
 		return 0;
 	}
 
