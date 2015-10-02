@@ -70,7 +70,7 @@ class View_Tools_xCart extends \componentBase\View_Component{
 		// Show Cart Total Price
 		if($this->html_attributes['show-price-count']){
 			$str = '<div class="xshop-cart-price-count"><span class="xshop-cart-currency-sign">';
-			$str.= ' ₹ </span><span class="xshop-cart-price-count-label">';
+			$str.= $this->api->currency['symbole'].' </span><span class="xshop-cart-price-count-label">';
 			$str.= $total_amount;
 			$str .='</span></div>';
 			$this->template->setHtml('xshop_cart_price',$str);

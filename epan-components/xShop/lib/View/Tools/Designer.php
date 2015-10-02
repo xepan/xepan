@@ -140,7 +140,9 @@ class View_Tools_Designer extends \componentBase\View_Component{
 														'cart_options' => $cart_options,
 														'selected_layouts_for_print' => $selected_layouts_for_print,
 														'item_id'=>$_GET['xsnb_design_item_id'],
-														'item_member_design_id' => $_GET['item_member_design_id']
+														'item_member_design_id' => $_GET['item_member_design_id'],
+														'item_name' => $this->item['name'],
+														'currency_symbole'=>$this->api->currency['symbole']
 												));
 		}
 		parent::render();

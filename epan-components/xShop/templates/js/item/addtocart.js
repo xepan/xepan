@@ -192,7 +192,7 @@ jQuery.widget("ui.xepan_xshop_addtocart",{
 			})
 			.done(function(ret) {
 				rates = ret.split(',');
-				console.log($(self.element).closest('.xshop-item').find('.xshop-item-old-price'));
+				// console.log($(self.element).closest('.xshop-item').find('.xshop-item-old-price'));
 				if(rates[0] != rates[1]){
 					$(self.element).closest('.xshop-item').find('.xshop-item-old-price').text(rates[0]);
 				}else{

@@ -148,8 +148,14 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 
 	setupToolBar: function(){
 		var self=this;
+
+		
 		this.top_bar = $('<div class="xshop-designer-tool-topbar row"></div>');
 		this.top_bar.prependTo(this.element);
+
+		//Add Designer Item Name 
+		var item_name = $('<h1 class="xshop-designer-item-name">'+self.options.item_name+'</h1>');
+		item_name.prependTo(this.top_bar.parent());
 
 		var buttons_set = $('<div class="xshop-designer-tool-topbar-buttonset pull-left"></div>').appendTo(this.top_bar);
 		this.option_panel = $('<div class="xshop-designer-tool-topbar-options pull-right" style="display:none;"></div>').appendTo(this.top_bar);
@@ -239,8 +245,8 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 
 		cart_container = $('<div class="xepan-xshop-designer-cart-container"></div>').appendTo(self.element);
 		price_div = $('<div class="xshop-item-price"></div>').appendTo(cart_container);
-		original_rate = $('<div class="xshop-item-old-price">0</div>').appendTo(price_div);
-		price_rate = $('<div class="xshop-item-new-price">0</div>').appendTo(price_div);
+		original_rate = $('<div class="xshop-item-old-price">'+self.options.currency_symbole+' 0</div>').appendTo(price_div);
+		price_rate = $('<div class="xshop-item-new-price">'+self.options.currency_symbole+' 0</div>').appendTo(price_div);
 		this.cart = $('<div class="xshop-designer-item-custom-field-container"></div>').appendTo(cart_container);
 		this.cart.xepan_xshop_addtocart(self.options.cart_options);
 
