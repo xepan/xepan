@@ -42,9 +42,9 @@ class page_xShop_page_owner_order_detail extends page_xShop_page_owner_main{
             //Export as PDF of Design
             $grid->addMethod('format_exportdesign',function($g,$f){
                 $url =  $this->api->url('xShop_page_designer_pdf',array('item_id'=>'not-available','item_member_design_id'=>$g->model->itemMemberDesignId(),'xsnb_design_template'=>false,'print_ratio'=>10,'cut_page'=>0));
-                $g->current_row_html[$f] = '<a class="atk-box-small atk-swatch-ink" href="'.$url.'" target="_blank">Export Design</a>';
+                $g->current_row_html[$f] = '<a class="atk-box-small atk-swatch-green" href="'.$url.'" target="_blank">Export Design</a>';
             });
-            // $grid->addColumn('exportdesign','ExportDesign');
+            $grid->addColumn('exportdesign','ExportDesign');
 
             // if($_GET['ExportDesign']){
             // }
