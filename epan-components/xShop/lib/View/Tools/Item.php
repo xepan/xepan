@@ -109,9 +109,24 @@ class View_Tools_Item extends \componentBase\View_ServerSideComponent{
 
 		$item_lister_view->setModel($item_model);
 		
+
 		// Add Painator to item List
-		$paginator = $item_lister_view->add('Paginator')->addClass('xshop-item-paginator');
-		$paginator->ipp($this->html_attributes['xshop_item_paginator']?:16);
+		if(!isset($this->html_attributes['show-paginator'])){
+			$this->html_attributes['show-paginator'] = 'bottom';
+		}
+
+		if($this->html_attributes['show-paginator']){
+			switch ($this->html_attributes['show-paginator']) {
+				case 'top':
+						$item_lister_view->template->Del('bottom_paginator');
+					break;
+				case 'bottom':
+						$item_lister_view->template->Del('top_paginator');
+					break;
+			}
+			$paginator = $item_lister_view->add('Paginator')->addClass('xshop-item-paginator');
+			$paginator->ipp($this->html_attributes['xshop_item_paginator']?:16);
+		}
 		// ------------------------------------------
 
 		//loading custom CSS file

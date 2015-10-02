@@ -1,4 +1,7 @@
 <div id="{$_name}" class="{$class}">
+	{top_paginator}
+		<p>{$Paginator}</p>
+	{/top_paginator}
 
 	<div class="row">
 	{rows}
@@ -16,7 +19,8 @@
 		</div>
 	{/no_record_found}
 	<!-- {$Content} -->
-<p>
-{$Paginator}
-</p>
+{bottom_paginator}
+	<p>{$Paginator}</p>
+{/bottom_paginator}
+
 </div>

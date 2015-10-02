@@ -335,6 +335,17 @@
 									<input type='text' id='xshop-show-personalization_page' data-attr="personalization-page" class="xshop-general-bind" >
 								</td>
 							</tr>
+							<tr>
+								<td>Paginator</td>
+								<td>
+									<select id='xshop-show-paginator' data-attr="show-paginator" class="xshop-general-bind" value="bottom">
+										<option value="bottom">Bottom</option>
+										<option value="top">Top</option>
+										<option value="both"> Both Top and Bottom</option>
+										<option value="0">Hide</option>
+									</select>
+								</td>
+							</tr>
 						</table>
 					</div>
 				</div>
@@ -487,8 +498,6 @@ $('#xshop_item_short_description').attr('checked',$(current_selected_component).
 $('.xshop-general-bind').each(function(index,value){
 	$(this).val($(current_selected_component).attr($(this).attr('data-attr')));
 });
-
-}
 
 }
 </script>
