@@ -12,6 +12,7 @@ class View_Email extends \View{
 
 		$this->addClass('xepan-xmail-email-view');
 		
+
 		$tab = $this->add('Tabs');
 		$associate_tab = $tab->addTab('Associate')->addClass('atk-box');
 		$other_tab = $tab->addTab('Other')->addClass('atk-box');
@@ -82,8 +83,10 @@ class View_Email extends \View{
 
 		$other_mail = $this->add('xCRM/Model_OtherEmail');
 		$other_mail = $other_mail->loadDepartmentEmails();
-		$other_mail_crud = $other_tab->add('CRUD',array('grid_class'=>'xCRM/Grid_Email'));
-		$other_mail_crud->setModel($other_mail,array(),array('subject','to_email','from_email','message','from','id','from_id','direction','task_id','task_status','from_name','cc','bcc','to','to_id','from','from_id','read_by_employee'));
-		$other_mail_crud->add('xHR/Controller_Acl');
+		if($other_mail){
+			$other_mail_crud = $other_tab->add('CRUD',array('grid_class'=>'xCRM/Grid_Email'));
+			$other_mail_crud->setModel($other_mail,array(),array('subject','to_email','from_email','message','from','id','from_id','direction','task_id','task_status','from_name','cc','bcc','to','to_id','from','from_id','read_by_employee'));
+			$other_mail_crud->add('xHR/Controller_Acl');
+		}
 	}
 }
