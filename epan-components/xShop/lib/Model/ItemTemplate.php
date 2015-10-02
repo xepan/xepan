@@ -8,9 +8,17 @@ class Model_ItemTemplate extends Model_Item{
 		parent::init();
 		
 		$this->addCondition('is_template',true);
+		$this->addCondition('is_designable',true);
 		
 	}
 
+	function loadActive(){
+		return $this->addCondition('is_publish',true);
+	}
+
+	function loadUnactive(){
+		return $this->addCondition('is_publish',false);
+	}
 	// function duplicate($create_default_design_also=true){
 	
 	// 	$duplicate_template = $this->add('xShop/Model_Item');

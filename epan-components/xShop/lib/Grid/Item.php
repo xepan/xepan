@@ -7,7 +7,7 @@ class Grid_Item extends \Grid{
 		parent::init();
 		
 		$this->add_sno();
-		$this->addPaginator($ipp=100);
+		$this->addPaginator($ipp=25);
 		$self = $this;
 
 		$this->add('VirtualPage')->addColumn('Details','Details',array('icon'=>'edit'),$this)->set(function($p){

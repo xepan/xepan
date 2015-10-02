@@ -19,7 +19,10 @@ class View_Badges_ItemPage extends \View_BadgeGroup{
 		if($unactive)
 			$this->add('View_Badge')->set(' Unpublish Item ')->setCount($unactive)->setCountSwatch('red');
 		
-		$this->add('View_Badge')->set(' Pending Approval ')->setCount($this->add('xShop/Model_Item')->pendingApproval($count=true))->setCountSwatch('blue');
+		$this->add('View_Badge')->set(' Total Templates ')->setCount($this->add('xShop/Model_ItemTemplate')->count()->getOne())->setCountSwatch('ink');
+		$this->add('View_Badge')->set(' Active Templates ')->setCount($this->add('xShop/Model_ItemTemplate')->loadActive()->count()->getOne())->setCountSwatch('green');
+		
+		$this->add('View_Badge')->set(' Design Pending Approval ')->setCount($this->add('xShop/Model_Item')->pendingApproval($count=true))->setCountSwatch('blue');
 
 	}
 }
