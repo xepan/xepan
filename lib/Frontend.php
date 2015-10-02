@@ -51,6 +51,7 @@ class Frontend extends ApiFrontend{
 
 	public $today;
 	public $now;
+	Public $date_format;
 	/*
 	* @var Model_xShop_Configuration
 	 */
@@ -162,6 +163,8 @@ class Frontend extends ApiFrontend{
 			date_default_timezone_set($this->current_website['time_zone']?:'UTC');
 			$this->today = date('Y-m-d',strtotime($this->recall('current_date',date('Y-m-d'))));
         	$this->now = date('Y-m-d H:i:s',strtotime($this->recall('current_date',date('Y-m-d H:i:s'))));
+			$this->date_format = $this->current_website['date_format']?:'d-M-Y';
+
 			$this->current_employee = $this->add('xHR/Model_Employee');
 
 			$auth=$this->add( 'BasicAuth' );

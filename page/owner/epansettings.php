@@ -72,7 +72,7 @@ class page_owner_epansettings extends page_base_owner {
 
 		$misc_settings= $tabs->addTab('Misc Settings');
 		$misc_form = $misc_settings->add('Form_Stacked');
-		$misc_form->setModel($this->api->current_website,array('time_zone'));
+		$misc_form->setModel($this->api->current_website,array('time_zone','date_format'));
 		$misc_form->addSubmit('Update');
 
 		if($misc_form->isSubmitted()){

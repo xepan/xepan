@@ -579,7 +579,7 @@ class Model_JobCard extends \Model_Document{
 		$email_body = str_replace("{{outsource_party_tin_no}}", $outsource['tin_no']?$outsource['tin_no']:" ", $email_body);
 		$email_body = str_replace("{{jobcard_details}}", $jobcard_details, $email_body);
 		$email_body = str_replace("{{Jobcard_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{jobcard_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{jobcard_date}}",$this->customDateFormat(),$email_body);
 
 
 		return $email_body;

@@ -71,6 +71,8 @@ class Model_Epan extends Model_Table {
 		$this->addField('bounce_imap_flags')->mandatory(true)->defaultValue('/imap/ssl/novalidate-cert')->group('imap~12')->caption('Flags');
 
 		$this->addField('time_zone')->enum(timezone_identifiers_list())->defaultValue(date_default_timezone_get());
+		
+		$this->addField('date_format')->setValueList(['d-M-Y'=>"d-MM-YYYY (ex. 01-Jan-1970)",'d-m-Y'=>"d-mm-YYYY  (ex. 01-01-1970)",'M-d-Y'=>'MM-d-YYYY (ex. Jan-01-1970)','m-d-Y'=>'mm-d-YYYY (ex. 01-01-1970)','Y-M-d'=>"YYYY-M-d (ex. 1970-Jan-01)",'Y-m-d'=>"YYYY-mm-d (ex. 1970-01-01)"])->mandatory(true)->defaultValue('d-m-Y');
 
 		$this->addField('parked_domain')->hint('Specify your domain in yourdomainname.com format');
 

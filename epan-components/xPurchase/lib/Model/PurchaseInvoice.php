@@ -217,7 +217,7 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		$email_body = str_replace("{{supplier_tin_no}}", $supplier['tin_no']?$supplier['tin_no']:" - ", $email_body);
 		$email_body = str_replace("{{supplier_pan_no}}", $supplier['pan_no']?$supplier['pan_no']:" - ", $email_body);
 		$email_body = str_replace("{{purchase_Order_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{purchase_Order_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{purchase_Order_date}}", $this->customDateFormat(), $email_body);
 		$email_body = str_replace("{{terms_an_conditions}}", $tnc['terms_and_condition']?$tnc['terms_and_condition']:" ", $email_body);
 		$email_body = str_replace("{{purchase_invoice_narration}}",$this['narration']?$this['narration']:"", $email_body);
 			

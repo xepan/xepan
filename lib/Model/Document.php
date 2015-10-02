@@ -787,11 +787,20 @@ class Model_Document extends Model_Table{
 	}
 
 
-
 	function human_date($date=null){
 		if(!$date)
 			$date = $this['created_at'];
 		return $this->add('xDate')->diff(\Carbon::now(),$date);
+	}
+
+	function customDateFormat($date=null,$include_time=false){
+		if(!$date)
+			$date = $this['created_at'];
+		if($include_time)
+			return date($this->api->date_format." "."H:i:s",strtotime($date));
+			
+		return date($this->api->date_format,strtotime($date));
+
 	}
 
 	function round($amount,$point=0){

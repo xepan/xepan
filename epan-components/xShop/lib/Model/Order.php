@@ -387,7 +387,7 @@ class Model_Order extends \Model_Document{
 		$email_body = str_replace("{{customer_tin_no}}", $customer['tin_no'], $email_body);
 		$email_body = str_replace("{{customer_pan_no}}", $customer['pan_no'], $email_body);
 		$email_body = str_replace("{{order_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{order_date}}", $this['created_date'], $email_body);
+		$email_body = str_replace("{{order_date}}",$this->customDateFormat(), $email_body);
 		$email_body = str_replace("{{order_deliver_date}}", date('d-m-Y',strtotime($this['delivery_date'])), $email_body);
 		$email_body = str_replace("{{sale_order_details}}", $order_detail_html, $email_body);
 		$email_body = str_replace("{{terms_and_conditions}}", $tnc?$tnc:"", $email_body);

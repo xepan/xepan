@@ -24,7 +24,7 @@ class View_Jobcard extends \View{
 		$this->template->trySetHtml('next_dept','Todo');
 		$this->template->trySetHtml('status',$this->jobcard['status']);
 		$this->template->trySetHtml('sales_order_no','<a href="#na" onclick="javascript:'.$this->js()->univ()->frameURL('Sale Order', $this->api->url($this->vp->getURL(),array('sales_order_clicked'=>$order->id))).'">'. $order['name'] ."</a>");
-		$this->template->trySetHtml('order_created_at',$order['created_at']);
+		$this->template->trySetHtml('order_created_at', $this->jobcard->customDateFormat($order['created_at'],true));
 		$this->template->trySetHtml('customer',$order['member']);
 		$this->template->trySetHtml('order_from',$order['order_from']);
 		$this->template->trySetHtml('item',$oi['item_name']);
@@ -39,7 +39,7 @@ class View_Jobcard extends \View{
 		if(!$received_activity instanceof \Dummy)
 			$this->template->trySetHtml('receive_date', $received_activity['created_at']);
 
-		$this->template->trySetHtml('received_by_x',$this->jobcard->ref('created_by_id')->get('name_with_designation') . ' on ' .$this->jobcard['created_at']);
+		$this->template->trySetHtml('received_by_x',$this->jobcard->ref('created_by_id')->get('name_with_designation') . ' on ' .$this->jobcard->customDateFormat($this->jobcard['created_at'],true));
 		
 		
 		$o_attachments = "";

@@ -252,7 +252,7 @@ class Model_Quotation extends \Model_Document{
 		$email_body = str_replace("{{order_shipping_address}}",$customer['shipping_address'], $email_body);
 		$email_body = str_replace("{{customer_email}}", $customer['customer_email'], $email_body);
 		$email_body = str_replace("{{quotation_no}}", $this['name'], $email_body);
-		$email_body = str_replace("{{quotation_date}}", $this['created_at'], $email_body);
+		$email_body = str_replace("{{quotation_date}}", $this->customDateFormat(), $email_body);
 		$email_body = str_replace("{{quotation_detail}}", $quotation_detail_html, $email_body);
 		$email_body = str_replace("{{terms_and_conditions}}", $tnc?$tnc:" ", $email_body);
 		$email_body = str_replace("{{quotation_narration}}",$this['narration'], $email_body);
