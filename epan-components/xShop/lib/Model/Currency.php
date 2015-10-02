@@ -11,16 +11,16 @@ class Model_Currency extends \Model_Table {
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 		$this->addField('name')->mandatory(true);
-		$this->addField('Value')->mandatory(true)->hint('INR ');
+		$this->addField('symbole')->mandatory(true)->hint('ie. &#x20B9;,USD');
 		$this->addField('is_default')->type('boolean');
-		$this->addField('equivalent value')->hint('equivalent Value compare to default currency value');
+		$this->addField('value')->hint('equivalent Value compare to default currency value')->mandatory(true);
 
 		$this->hasMany('xShop/Quotation','currency_id');
 		$this->hasMany('xShop/Invoice','currency_id');
 		$this->hasMany('xShop/Order','currency_id');
 
 		$this->addHook('beforeSave',$this);
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 
