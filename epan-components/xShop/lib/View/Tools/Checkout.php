@@ -162,10 +162,16 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		$form=$this->add('Form_Horizontal');
 		// $form->setLayout(['view/form/checkout']);;
 
+
 		$total_field =$form->addField('line','total');
 		$discount_field =$form->addField('line','discount_voucher');
 		$discount_amount_field  =$form->addField('line','discount_amount');
 		$net_amount_field=$form->addField('line','net_amount');
+
+		//Disable True for Amount
+		$total_field->setAttr( 'disabled', 'true' )->addClass('disabled_input');
+		$net_amount_field->setAttr( 'disabled', 'true' )->addClass('disabled_input');
+		$discount_amount_field->setAttr( 'disabled', 'true' )->addClass('disabled_input');
 
 		$discount_field->js('change')->univ()->validateVoucher($discount_field,$form,$discount_amount_field,$total_field,$net_amount_field);
 
