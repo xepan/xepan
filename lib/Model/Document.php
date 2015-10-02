@@ -675,6 +675,10 @@ class Model_Document extends Model_Table{
 	}
 
 
+	function convertNumberToWords($number){
+		return $this->convert_number_to_words($number);
+	}
+
 	function convert_number_to_words($number) {
 	    $hyphen      = '-';
 	    $conjunction = ' and ';

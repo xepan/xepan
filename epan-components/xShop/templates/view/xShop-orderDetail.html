@@ -26,8 +26,10 @@
 			{order_amount_section}
 				<td align="right">{$rate}</td>
 				<td align="right">{$sub_total}</td>
-				<td align="right">{$tax_amount}<br>@  {tax_per_sum}{/tax_per_sum}</td>
+				<td align="right">{$tax_amount}<br>@  {$tax_type}</td>
 				<td colspan="2" align="right">{$texted_amount}</td>
+
+				<!--For Tax Value {tax_per_sum}{/tax_per_sum} -->
 			{/order_amount_section}
 		</tr>
 		{/row}
@@ -50,6 +52,11 @@
 			<td>&nbsp;</td>
 			<th>Net Amount</th>
 			<td colspan="6" class=''><b>{$currency} {$net_amount} </b> </td>
+		</tr>
+		<tr align="right">
+			<td>&nbsp;</td>
+			<th>Net Amount in Words: </th>
+			<td colspan="6" class=''><b>{$currency}: {$net_amount_in_words} </b> </td>
 		</tr>
 		{/order_amount_section}
 

@@ -27,6 +27,8 @@ class View_OrderDetail extends \CompleteLister{
 		if(trim($this->model['narration']))
 			$this->current_row_html['narration']= "Narration: ".$this->model['narration'];
 		
+		$this->current_row_html['tax_type']= $this->model->tax()->get('name');
+
 		$this->sno++;
 	}
 
@@ -47,6 +49,7 @@ class View_OrderDetail extends \CompleteLister{
 				$this->template->set('discount_amount_section'," ");
 				
 			$this->template->set('net_amount',$order['net_amount']);
+			$this->template->set('net_amount_in_words',$order->convertNumberToWords($order['net_amount']));
 			// $this->template->set('departments',"1");
 			// $this->template->set('order_item_custom_field',$model['id']);
 		}else{
