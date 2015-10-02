@@ -603,4 +603,11 @@ class Model_OrderDetails extends \Model_Document{
 		return 0;
 	}
 
+	function tax(){
+		if(!$this->loaded())
+			return "Tax Not Found";
+			
+		return $this->ref('tax_id');
+	}
+
 }
