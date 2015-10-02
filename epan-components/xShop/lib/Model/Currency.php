@@ -13,6 +13,7 @@ class Model_Currency extends \Model_Table {
 		$this->addField('name')->mandatory(true);
 		$this->addField('Value')->mandatory(true)->hint('INR ');
 		$this->addField('is_default')->type('boolean');
+		$this->addField('equivalent value')->hint('equivalent Value compare to default currency value');
 
 		$this->hasMany('xShop/Quotation','currency_id');
 		$this->hasMany('xShop/Invoice','currency_id');
