@@ -52,6 +52,7 @@ class Frontend extends ApiFrontend{
 	public $today;
 	public $now;
 	Public $date_format;
+	Public $currency;
 	/*
 	* @var Model_xShop_Configuration
 	 */
@@ -275,6 +276,10 @@ class Frontend extends ApiFrontend{
 			
 			setlocale(LC_MONETARY, 'en_IN');
 			$this->xpr->markPoint('Front-end init Finished');
+
+			//Add Default Currency Object to API
+			$this->currency = $this->add('xShop/Model_Currency')->defaultCurrency();
+
 		}
 	}
 

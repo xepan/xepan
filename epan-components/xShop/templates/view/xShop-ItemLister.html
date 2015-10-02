@@ -1,10 +1,12 @@
-<div id="{$_name}" class="row {$class}">
+<div id="{$_name}" class="{$class}">
+
+	<div class="row">
 	{rows}
 	{row}
 		{$item}
 	{/row}
 	{/rows}
-
+	</div>
 	{no_record_found}
 		<div class='epan-container'>
 			<div class="alert alert-success">
@@ -13,7 +15,8 @@
 			</div>
 		</div>
 	{/no_record_found}
-	
 	<!-- {$Content} -->
+<p>
+{$Paginator}
+</p>
 </div>
-	{$Paginator}
