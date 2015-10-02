@@ -18,6 +18,7 @@ class View_SalesInvoiceDetail extends \CompleteLister{
 		$this->current_row_html['unit']= $this->model['unit'];
 		$this->current_row_html['tax_amount'] = round($this->model['tax_amount'],3);
 		$this->current_row_html['texted_amount'] = round($this->model['texted_amount'],3);
+		$this->current_row_html['tax_type']= $this->model->tax()->get('name');		
 		if($this->model['narration'])
 			$this->current_row_html['item_narration'] = "<br/>Narration: ".$this->model['narration'];
 		$this->sno++;
@@ -47,8 +48,11 @@ class View_SalesInvoiceDetail extends \CompleteLister{
 			$this->template->set('shipping_charge',$invoice['shipping_charge']);
 
 		$this->template->set('net_amount',$invoice['net_amount']);
+		//Amount in word
+		$this->template->set('net_amount_in_words',$invoice->convertNumberToWords($invoice['net_amount']));
 		
 		$this->template->set('round_amount',abs(round($invoice['net_amount'] - $invoice['gross_amount'],2)));
+		
 		// throw new \Exception($model->item()->genericRedableCustomFieldAndValue($model['custom_fields']));
 		
 		// $this->template->set('invoice_item_custom_field',$model['id']);

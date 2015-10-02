@@ -122,14 +122,19 @@ class Model_InvoiceItem extends \Model_Document{
 		return $str;
 	}
 
-		function setItemEmpty(){
+	function setItemEmpty(){
 		if(!$this->loaded()) return;
 
 		$this['item_id'] = null;
 		$this->save();
 	}
 
-
+	function tax(){
+		if(!$this->loaded())
+			throw new \Exception('Invoice Item Model Must be Loaded');
+		
+		return $this->ref('tax_id');
+	}
 	
 	}
 	
