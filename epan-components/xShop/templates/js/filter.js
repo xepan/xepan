@@ -8,7 +8,8 @@ jQuery.widget("ui.xepan_xshopfilter",{
 		selected_filter_value:undefined,
 		category_id:undefined,
 		min_price:undefined,
-		max_price:undefined
+		max_price:undefined,
+		currency_symbole:'&#x20b9;',
 	},
 	filter_container:null,
 	selected_value:{},
@@ -28,20 +29,20 @@ jQuery.widget("ui.xepan_xshopfilter",{
 		self.filter_container = $('<div id="accordion" class="xshop-filter-tool"></div>');
 		self.filter_container.prependTo(self.element);
 
-		if(self.options.filter_design.length === 0){
-			$('<div class="xshop-filter-tool-notfound atk-swatch-red">Not Filter Found</div>');
-			return;
-		}
+		// if(self.options.filter_design.length === 0){
+		// 	$('<div class="xshop-filter-tool-notfound atk-swatch-red">Not Filter Found</div>').appendTo(self.filter_container);
+		// 	// return;
+		// }
 
 		//Add price Filter
 		html_attr = self.options.html_attributes;
-
-		if(html_attr['show-price-filter'] == "1"){
+		console.log(self.options.html_attributes);
+		if(html_attr['show-price-filter'] !== "0"){
 			var header = $('<ul class="list-group xshop-xfilter-ul" ><li class="list-group-item xshop-xfilter-list-group-header"><h1 class="xshop-filter-tool-header xfilter-price-header">'+(html_attr['xfilter-price-label']?html_attr['xfilter-price-label']:'Price')+'</h1></li></ul>').appendTo(self.filter_container);
 			slider_div = $('<li class="list-group-item xshop-xfilter-list-group-item "></li>').appendTo(header);
 
 			range_slider = $('<div class="xshop-xfilter-price-range"></div>').appendTo(slider_div);
-			min_max = $('<div class="atk-row"><div class="atk-col-4"><span class="pull-left">'+html_attr['xshop-filter-start-price']+'</span></div><div class="atk-col-4 atk-align-center "><span class="current_value"></span></div><div class="atk-col-4"><span class="pull-right">'+html_attr['xshop-filter-end-price']+'</span></div></div>').appendTo(slider_div);
+			min_max = $('<div class="atk-row"><div class="atk-col-4"><span class="pull-left">'+self.options.currency_symbole+" "+html_attr['xshop-filter-start-price']+'</span></div><div class="atk-col-4 atk-align-center "><span class="current_value"></span></div><div class="atk-col-4"><span class="pull-right">'+self.options.currency_symbole+" "+html_attr['xshop-filter-end-price']+'</span></div></div>').appendTo(slider_div);
 
 			selected_min_price = parseInt(html_attr['xshop-filter-start-price']);
 			selected_max_price = parseInt(html_attr['xshop-filter-end-price']);

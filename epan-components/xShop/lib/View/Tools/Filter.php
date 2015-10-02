@@ -112,7 +112,8 @@ class View_Tools_Filter extends \componentBase\View_Component{
 													'url'=>$this->api->url(),
 													'selected_filter_value'=>$this->selected_filter_value,
 													'min_price'=>$this->min_price,
-													'max_price'=>$this->max_price
+													'max_price'=>$this->max_price,
+													'currency_symbole'=>$this->api->currency['symbole']
 												)
 											);
 		parent::render();
