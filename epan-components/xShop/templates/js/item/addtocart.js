@@ -28,8 +28,9 @@ jQuery.widget("ui.xepan_xshop_addtocart",{
 			this.populateQtyFields();
 		}
 
-		this.populateAddToCartButton();
-		console.log(self.options);
+		if(this.options.show_cart_btn == '1')
+			this.populateAddToCartButton();
+		// console.log(self.options);
 	},
 
 	populateCustomFields: function(){
@@ -146,7 +147,8 @@ jQuery.widget("ui.xepan_xshop_addtocart",{
 			});
 		}else{
 			// add input box with spinner may be ...
-			qty_field = $('<input id="xshop-add-to-cart-qty" class="xshop-add-to-cart-qty" value="1" type="number" placeHolder="Quantity"/>').appendTo(self.element);
+			title = $('<div class="xshop-item-custom-field xshop-item-custom-qty-box"><div class="xshop-item-custom-field-name">Qty</div></div>').appendTo(self.element);
+			qty_field = $('<input id="xshop-add-to-cart-qty" class="xshop-add-to-cart-qty" value="1" type="number" placeHolder="Quantity"/>').appendTo(title);
 			qty_field.univ().numericField();
 		}
 		// add unique class under the self.element to read qty
@@ -194,11 +196,11 @@ jQuery.widget("ui.xepan_xshop_addtocart",{
 				rates = ret.split(',');
 				// console.log($(self.element).closest('.xshop-item').find('.xshop-item-old-price'));
 				if(rates[0] != rates[1]){
-					$(self.element).closest('.xshop-item').find('.xshop-item-old-price').text(rates[0]);
+					$(self.element).closest('.xshop-item').find('.xshop-item-old-price').html(rates[0]);
 				}else{
-					$(self.element).closest('.xshop-item').find('.xshop-item-old-price').text('');
+					$(self.element).closest('.xshop-item').find('.xshop-item-old-price').html('');
 				}
-				$(self.element).closest('.xshop-item').find('.xshop-item-price').text(rates[1]);
+				$(self.element).closest('.xshop-item').find('.xshop-item-price').html(rates[1]);
 			})
 			.fail(function() {
 				console.log("error");

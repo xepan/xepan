@@ -11,6 +11,7 @@ class View_Item_AddToCart extends \View{
 	public $show_price=false;
 	public $options = array();
 	public $qty_set = array();
+	public $show_cart_btn = 1;
 
 	function init(){
 		parent::init();
@@ -22,6 +23,7 @@ class View_Item_AddToCart extends \View{
 		$this->options['show_price'] = $this->show_price;
 		$this->options['show_custom_fields'] = $this->show_custom_fields;
 		$this->options['is_designable'] = $this->item_model['is_designable'];
+		$this->options['show_cart_btn'] = $this->show_cart_btn;
 
 		// echo"<pre>";
 		// print_r($this->options);
