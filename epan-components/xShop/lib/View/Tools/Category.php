@@ -10,7 +10,10 @@ class View_Tools_Category extends \componentBase\View_Component{
 		//Only Category Description
 		if($this->html_attributes['show-category-description-only'] and $_GET['xsnb_category_id']){
 			$cat_m = $this->add('xShop/Model_Category')->load($_GET['xsnb_category_id']);
-			$this->add('View')->setHTML($cat_m['description']);
+
+			//Category id replace because acustomer need category detail then go to the next page with passing category id
+			$content = str_replace("{{category_id}}", $_GET['xsnb_category_id'], $cat_m['description']);
+			$this->add('View')->setHTML($content);
 			return;
 		}
 
