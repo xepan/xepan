@@ -13,6 +13,7 @@ class View_Tools_Category extends \componentBase\View_Component{
 
 			//Category id replace because acustomer need category detail then go to the next page with passing category id
 			$content = str_replace("{{category_id}}", $_GET['xsnb_category_id'], $cat_m['description']);
+			$content = str_replace("{{product_page_name}}",$this->html_attributes['xshop_category_url_page'] , $content);
 			$this->add('View')->setHTML($content);
 			return;
 		}
