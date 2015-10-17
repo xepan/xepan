@@ -17,6 +17,14 @@
 								<td>Edit CSS</td>
 								<td><div id="xshop-category-editcss" class="btn btn-default btn-xs">Edit CSS</div></td>
 							</tr>
+							<tr >
+									<td>
+										Show Category Name Only   
+									</td>
+									<td>
+									<input type='checkbox' id='xshop-category-show-name'/>	
+									</td>
+								</tr>
 							<tr>
 								<td>
 									 Layout
@@ -166,6 +174,11 @@ $('#xshop-category-show-price').change(function(event){
 	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
 
+$('#xshop-category-show-name').change(function(event){
+	if($('#xshop-category-show-name').is(':checked')?$(current_selected_component).attr('xshop-category-show-name','1'):$(current_selected_component).attr('xshop-category-show-name','0'));
+	$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+});
+
 $('#xshop_category_add_pin').change(function(event){
 	if($('#xshop_category_add_pin').is(':checked')){
 		$(current_selected_component).attr('xshop-category-add-pin','1');
@@ -234,6 +247,7 @@ var {$component_type}_options = {
 		
 		// $('#xshop-category-show-price').val($(current_selected_component).attr('xshop-category-show-price')?$(current_selected_component).attr('xshop-category-show-price'):0);
 		$('#xshop-category-show-price').attr('checked',$(current_selected_component).attr("xshop-category-show-price")=='1'?true:false);
+		$('#xshop-category-show-name').attr('checked',$(current_selected_component).attr("xshop-category-show-name")=='1'?true:false);
 		$('#xshop_category_add_pin').attr('checked',$(current_selected_component).attr("xshop-category-add-pin")=='1'?true:false);
 
 		$('.xshop-general-bind').each(function(index,value){

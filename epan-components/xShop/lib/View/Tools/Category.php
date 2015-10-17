@@ -18,6 +18,20 @@ class View_Tools_Category extends \componentBase\View_Component{
 			return;
 		}
 
+		if($this->html_attributes['xshop-category-show-name'] and $_GET['xsnb_category_id']){
+			// throw new \Exception("Error Processing Request", 1);
+			
+			$cat_model=$this->add('xShop/Model_Category')->load($_GET['xsnb_category_id']);
+			$cat_name = $cat_model->get('name');
+			$item_count=$cat_model->ref('xShop/CategoryItem')->addCondition('is_associate',true)->count()->getOne();
+			
+			$v=$this->add('View')->addClass('xshop-category-name-count');
+			$v->add('H2')->set($cat_name)->addClass('xshop-category-name');
+			$v->add('View')->set($item_count)->addClass('xshop-category-item-count');
+			
+			return;
+		}
+
 
 		$this->template->trySet('no_of_cols',$this->html_attributes['xshop-category-grid-column']);
 		
