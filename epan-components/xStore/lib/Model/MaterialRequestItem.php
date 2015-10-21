@@ -49,11 +49,13 @@ class Model_MaterialRequestItem extends \Model_Document{
 		}
 
 		// foreach ($phases_ids as $phase_id) {
-			$stock_effect_cf = $this->ref('item_id')->stockeffectcustomfields();
-			// $custom_fields_assos_ids = $custom_fields_assos_ids->getAssociatedCustomFields($phase->id);
-			foreach ($stock_effect_cf as $cf) {
-				if(!isset($cust_field_array[$cf['customfield_id']]) or $cust_field_array[$cf['customfield_id']] == ''){
-					throw $this->exception('Custom Field Values not proper .' . $this['custom_fields']);
+			if($this['item_id']){
+				$stock_effect_cf = $this->ref('item_id')->stockeffectcustomfields();
+				// $custom_fields_assos_ids = $custom_fields_assos_ids->getAssociatedCustomFields($phase->id);
+				foreach ($stock_effect_cf as $cf) {
+					if(!isset($cust_field_array[$cf['customfield_id']]) or $cust_field_array[$cf['customfield_id']] == ''){
+						throw $this->exception('Custom Field Values not proper .' . $this['custom_fields']);
+					}
 				}
 			}
 		// }

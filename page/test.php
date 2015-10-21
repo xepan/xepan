@@ -4,8 +4,42 @@
 class page_test extends Page {
 
 	function page_index(){
-		$this->add('Controller_NotificationSystem')->test();
+	
+	// $url = 'http://64.31.1.242/api/smsapi.aspx?username=FUNTOL&password=FUNTOL&to=8559846603&from=FUNTOL&message=TEST';
+
+	// $ret = file_get_contents($url);
+	// echo $ret;
+	// $this->api->redirect('http://64.31.1.242/api/smsapi.aspx?username=FUNTOL&password=FUNTOL&to=8559846603&from=FUNTOL&message=TEST');
+
+		// $this->add('Controller_NotificationSystem')->test();
 	}
+
+	function page_deleteAllDesign(){
+
+		$item = $this->add('xShop/Model_Item');
+		$item->addCondition('website_display',true);
+		$item->addCondition('is_designable',true);
+		$item->addCondition('is_template',false);
+		
+		$item->each(function($itm){
+			echo "Item Name = ".$itm['name']." id == ".$itm['id']."<br/>";
+			$itm->forceDelete();
+		});
+		
+		$items = $this->add('xShop/Model_Item');
+		$items->addCondition('is_designable',true);
+		$items->addCondition('is_saleable',false);
+		$items->addCondition('is_template',false);
+		foreach ($items as $it) {
+			echo "Item Name = ".$it['name']." id == ".$it['id']."<br/>";
+			$items->forceDelete();
+		}
+		
+
+		// throw new \Exception($item->count()->getOne());
+		
+	}
+
 
 	function page_activitylog(){
 		$this->add('View_ActivityLog');
