@@ -13,7 +13,7 @@ class page_xShop_page_owner_item_basic extends page_xShop_page_owner_main{
 			return;
 		
 		$form = $this->add('Form_Stacked');
-		$form->setModel($selected_item_model,array('designer_id','name','sku','is_publish','is_party_publish','short_description','rank_weight','created_at','expiry_date','is_saleable','is_purchasable','is_productionable','is_servicable','website_display','is_downloadable','is_designable','mantain_inventory','allow_negative_stock','is_enquiry_allow','is_template','is_fixed_assest','warrenty_days','show_detail','show_price','new','feature','latest','mostviewed','is_visible_sold','offer_id','offer_position','allow_comments','comment_api','add_custom_button','custom_button_label','custom_button_url','reference','theme_code','description','terms_condition'));
+		$form->setModel($selected_item_model,array('designer_id','name','sku','is_publish','is_party_publish','short_description','rank_weight','created_at','expiry_date','is_saleable','allow_uploadedable','is_purchasable','is_productionable','is_servicable','website_display','is_downloadable','is_designable','mantain_inventory','allow_negative_stock','is_enquiry_allow','is_template','is_fixed_assest','warrenty_days','show_detail','show_price','new','feature','latest','mostviewed','is_visible_sold','offer_id','offer_position','allow_comments','comment_api','add_custom_button','custom_button_label','custom_button_url','reference','theme_code','description','terms_condition'));
 		$form->addSubmit()->set('Update');
 
 		$form->add('Controller_FormBeautifier');

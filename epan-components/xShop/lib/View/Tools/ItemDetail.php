@@ -136,6 +136,7 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 		$detail_header = "";
 		if($this->html_attributes['show-item-detail-in-tabs']){
 			$tabs = $this->add('Tabs',null,'xshop_item_detail_information');
+			// $tabs->addTab('upload');
 			$detail_tab = $tabs->addTab($detail_label);
 		}else{
 			$detail_tab = $this;
@@ -213,7 +214,32 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 			$attachment_tab->add('View')->setHtml($attachment_header.$html)->addClass('xshop-item-attachment');
 		}
 
+		if($item['allow_uploadedable']){
 
+			// $member = $this->add('xShop/Model_MemberDetails');
+			// $member->loadLoggedIn();
+
+			// if($item['designer_id'] != $member->id){
+			// 	$this->add('View_Error')->set('Order does not belongs to your account. ' . $item->id);
+			// 	return;
+			// }
+			if(!$this->api->auth->isLoggedIn()){
+				throw new \Exception("Error Processing Request", 1);
+			}
+			
+			$up_tab=$tabs->addTab('Upload Your Designs');
+				$member_image=$this->add('xShop/Model_MemberImages');
+				
+				$up_form=$up_tab->add('Form');
+				$up_form->setModel($member_image,array('image_id'));
+				$up_form->addSubmit('Upload');
+
+				if($up_form->isSubmitted()){
+
+
+				}
+			
+		}
 
 	//==================Enquiry Form================================
 		if($this->html_attributes['show-item-enquiry-form']){

@@ -51,6 +51,7 @@ class Model_Item extends \Model_Document{
 		
 		//Item Allow Optins
 		$this->addField('is_saleable')->type('boolean')->defaultValue(false)->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
+		$this->addField('allow_uploadedable')->type('boolean')->defaultValue(false)->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
 		$this->addField('is_purchasable')->type('boolean')->defaultValue(false)->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
 		$this->addField('mantain_inventory')->type('boolean')->defaultValue(true)->group('f~2~<i class=\'fa fa-cog\' > Item Allow Options</i>');
 		$this->addField('allow_negative_stock')->type('boolean')->defaultValue(false)->group('f~3~<i class=\'fa fa-cog\' > Item Allow Options</i>');
