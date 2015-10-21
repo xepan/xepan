@@ -16,18 +16,18 @@
 
 .xshop-item-custom-field{
 	/*clear: both;*/
-	width:50% !important;
+	/*width:auto;*/
 	float: left !important;
 }
+
 .xshop-item-custom-field, 
 .xshop-add-to-cart-qty, 
 .xshop-item-add-to-cart-btn {
-	clear: none;
 	display: inline-block; 
 }
 
 .xshop-add-to-cart-qty{
-	width:20% !important;
+	/*width:20% !important;*/
 }
 
 .xshop-item-offer-supplier-shipping{
