@@ -30,8 +30,15 @@ class View_CartItem extends \View{
 				$img_url='index.php?page=xShop_page_designer_thumbnail&item_member_design_id='.$model['item_member_design_id'].'&width=80';
 			}
 
-			$str ='<td class="xshop-cart-item-image col-md-1">
-					<img width="100%" src="'.$img_url.'"class="xcart-image"/></td>';
+			$str ='<td class="xshop-cart-item-image col-md-1">';
+			if($model['file_upload_id']){
+				$str .= '<i class="icon-upload atk-swatch-green" filestore="'.$model['file_upload_id'].'"> File Uploaded</i>';
+			}
+			else
+				$str .= '<img width="100%" src="'.$img_url.'"class="xcart-image"/>';
+
+			$str .= '</td>';
+
 			$this->template->setHtml('image',$str);	
 		}
 
@@ -50,6 +57,11 @@ class View_CartItem extends \View{
 														)).'> Edit </a>';
 				//Temporary Off
 				// $name.= '<a href="#"> Preview </a>';
+			}
+
+			if($model['file_upload_id']){
+				$file = $this->add('filestore/Model_File')->load($model['file_upload_id']);
+				$name .= '<a href="'.$file['url'].'" target="_blank">Download</a>';
 			}
 
 			//Add Custom Fields 
