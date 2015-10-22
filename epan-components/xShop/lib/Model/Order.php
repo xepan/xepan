@@ -268,6 +268,17 @@ class Model_Order extends \Model_Document{
 				$order_details['custom_fields']= $item_model->customFieldsRedableToId(json_encode($cart_items['custom_fields']));//json_encode($cart_items['custom_fields']);
 				$total_amount+=$order_details['amount'];
 				$order_details->save();
+
+				if($cart_items['file_upload_id']){
+
+					$atts = $this->add('xShop/Model_SalesOrderDetailAttachment');
+					$atts->addCondition('related_root_document_name','xShop\OrderDetail');
+					$atts->addCondition('related_document_id',$order_details->id);
+					$atts->tryLoadAny();
+					
+					$atts['attachment_url_id'] = $cart_items['file_upload_id'];
+					$atts->save();
+				}
 			}
 
 			$this['amount']=$total_amount;
