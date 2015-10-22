@@ -12,6 +12,7 @@ class View_Item_AddToCart extends \View{
 	public $options = array();
 	public $qty_set = array();
 	public $show_cart_btn = 1;
+	public $file_upload_id;
 
 	function init(){
 		parent::init();
@@ -24,6 +25,8 @@ class View_Item_AddToCart extends \View{
 		$this->options['show_custom_fields'] = $this->show_custom_fields;
 		$this->options['is_designable'] = $this->item_model['is_designable'];
 		$this->options['show_cart_btn'] = $this->show_cart_btn;
+		$this->options['is_uploadable'] = $this->item_model['allow_uploadedable'];
+		$this->options['file_upload_id'] = $this->file_upload_id;
 
 		// echo"<pre>";
 		// print_r($this->options);
