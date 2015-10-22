@@ -214,30 +214,28 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 			$attachment_tab->add('View')->setHtml($attachment_header.$html)->addClass('xshop-item-attachment');
 		}
 
-		if($item['allow_uploadedable']){
+		//Item Upload Images
+		if($item['allow_uploadedable'] and $this->html_attributes['show-item-upload']){
+			$up_tab=$tabs->addTab($this->html_attributes['item-upload-label']);
 
-			// $member = $this->add('xShop/Model_MemberDetails');
-			// $member->loadLoggedIn();
+			$member = $this->add('xShop/Model_MemberDetails');
+      		if(!$member->loadLoggedIn()){
+      			$up_tab->add('View_Error')->set('Login First');
+      			return;
+      		}
 
-			// if($item['designer_id'] != $member->id){
-			// 	$this->add('View_Error')->set('Order does not belongs to your account. ' . $item->id);
-			// 	return;
-			// }
-			if(!$this->api->auth->isLoggedIn()){
-				throw new \Exception("Error Processing Request", 1);
-			}
+		    $image_model = $this->add('xShop/Model_MemberImages');
+		    $image_model->addCondition('member_id',$member->id);
+
+			$member_image=$this->add('xShop/Model_MemberImages');
 			
-			$up_tab=$tabs->addTab('Upload Your Designs');
-				$member_image=$this->add('xShop/Model_MemberImages');
-				
-				$up_form=$up_tab->add('Form');
-				$up_form->setModel($member_image,array('image_id'));
-				$up_form->addSubmit('Upload');
+			$up_form=$up_tab->add('Form');
+			$up_form->setModel($member_image,array('image_id'));
+			$up_form->addSubmit('Upload');
 
-				if($up_form->isSubmitted()){
-
-
-				}
+			if($up_form->isSubmitted()){
+				throw new \Exception($up_form['image_id']);
+			}
 			
 		}
 
