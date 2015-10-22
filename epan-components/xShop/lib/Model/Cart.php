@@ -19,12 +19,13 @@ class Model_Cart extends \Model{
 		$this->addField('shipping_charge')->defaultValue(0);
 		$this->addField('tax')->defaultValue(0);
 		$this->addField('total_amount')->type('money')->defaultValue(0);
+		$this->addField('file_upload_id');
 
 		$this->addField('custom_fields')->type('text');
 		
 	}
 
-	function addToCart($item_id,$qty,$item_member_design_id, $custom_fields=null,$other_fields=null){
+	function addToCart($item_id,$qty,$item_member_design_id, $custom_fields=null,$other_fields=null,$file_upload_id=null){
 		$this->unload();
 
 		if(!is_numeric($qty)) $qty=1;
@@ -44,6 +45,8 @@ class Model_Cart extends \Model{
 		$this['custom_fields'] = $custom_fields;
 		$this['item_member_design_id'] = $item_member_design_id;
 		$this['total_amount'] = $amount['sale_amount'] + $this['shipping_charge'] + $this['tax'];
+		$this['file_upload_id'] = $file_upload_id;
+		
 		$this->save();
 	}
 
