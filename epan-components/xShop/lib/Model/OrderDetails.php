@@ -73,7 +73,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->addExpression('item_with_qty_fields','custom_fields');
 
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');
-		$this->hasMany('xShop/SalesOrderDetailAttachment','related_document_id',null,'Attachements');
+		$this->hasMany('xShop/SalesOrderDetailAttachment','related_document_id',null,'Attachments');
 		$this->hasMany('xProduction/Jobcard','orderitem_id');
 		$this->hasMany('xStore/MaterialRequest','orderitem_id');
 
