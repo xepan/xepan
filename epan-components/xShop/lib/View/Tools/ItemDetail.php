@@ -215,8 +215,16 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 		}
 
 		//Item Upload Images
+		$upload_label = trim($this->html_attributes['item-upload-label'])?:'Upload';
+		$upload_header = "";
 		if($item['allow_uploadedable'] and $this->html_attributes['show-item-upload']){
-			$up_tab=$tabs->addTab($this->html_attributes['item-upload-label']);
+			$up_tab = $this;
+			
+			if($this->html_attributes['show-item-detail-in-tabs']){
+				$up_tab=$tabs->addTab($upload_label);
+			}else{
+				$upload_header = '<div class="xshop-item-detail-title xshop-item-upload-label">'.$upload_label.'</div>';
+			}
 
 			$member = $this->add('xShop/Model_MemberDetails');
       		if(!$member->loadLoggedIn()){
@@ -233,8 +241,15 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 			$up_form->setModel($member_image,array('image_id'));
 			$up_form->addSubmit('Upload');
 
+			$v = $up_tab->add('View');
+			if($_GET['show_cart']){
+				
+				$v->add('View')->set('Cart Tool');
+				$v->add('xShop/View_Item_AddToCart',array('name'=>'cust_'.$this->model->id,'item_model'=>$this->model,'show_custom_fields'=>1,'show_price'=>true, 'show_qty_selection'=>1,'file_upload_id'=>$_GET['file_upload_id']));
+			}
+
 			if($up_form->isSubmitted()){
-				throw new \Exception($up_form['image_id']);
+				$up_form->js(null,$v->js()->reload(array('show_cart'=>1,'file_upload_id'=>$up_form['image_id'])))->execute();
 			}
 			
 		}
