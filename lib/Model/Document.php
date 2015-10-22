@@ -398,7 +398,7 @@ class Model_Document extends Model_Table{
 		if(!$crud->isEditing()){
 			$self = $this;
 			$crud->grid->add('VirtualPage')
-                ->addColumn('open', 'View file', array('Open','icon'=>'users'))
+                ->addColumn('open', 'View file', array('Open','icon'=>'folder-open'))
                 ->set(function($page)use($self, $crud){
                     $id = $_GET[$page->short_name.'_id'];
                     $id = $page->add('Model_Attachment')->load($id)->get('attachment_url_id');
@@ -416,7 +416,13 @@ class Model_Document extends Model_Table{
                         ->setHTML('Your browser is to old to open this file inline<br/><a href="'.$url.'" target=_blank>'.$url.'</a>')
                         ;
              });
-				// $crud->grid->addformatter('attachment_url','image');
+			
+          	$crud->grid->addMethod('format_download',function($g,$f){
+          		$g->current_row_html[$f] = '<a target="_blank" href="'.$g->model['attachment_url'].'">'.$g->model['name']?:"Download"."</a>";
+			});
+			$crud->grid->addformatter('attachment_url','download');
+			// $crud->grid->addformatter('attachment_url','link');
+
 		}
 
 		$crud->add('xHR/Controller_Acl');

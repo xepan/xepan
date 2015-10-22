@@ -6,6 +6,8 @@ jQuery.widget("ui.xepan_xshop_addtocart",{
 		item_id: undefined,
 		item_member_design_id: '0',
 		is_designable: false,
+		is_uploadable: false,
+		file_upload_id: undefined,
 
 		show_price: false,
 		show_qty: false,
@@ -242,7 +244,7 @@ jQuery.widget("ui.xepan_xshop_addtocart",{
 
 
 			// if I am designable and there is no item_member_design_id
-			if(self.options.is_designable =='1' && (self.options.item_member_design_id == undefined || self.options.item_member_design_id) == '0'){
+			if(!self.options.is_uploadable && self.options.is_designable =='1' && (self.options.item_member_design_id == undefined || self.options.item_member_design_id) == '0'){
 				// This design needs to be saved first
 				$.univ().errorMessage('check for design dirty !!!');
 				$.univ().alert('Please Save your Design First');
@@ -257,7 +259,8 @@ jQuery.widget("ui.xepan_xshop_addtocart",{
 					item_id: self.options.item_id,
 					qty: qty_to_add,
 					custome_fields: JSON.stringify(self.options.selected_custom_field_values),
-					item_member_design_id: self.options.item_member_design_id
+					item_member_design_id: self.options.item_member_design_id,
+					file_upload_id: self.options.file_upload_id
 				},
 			})
 			.done(function(ret) {
