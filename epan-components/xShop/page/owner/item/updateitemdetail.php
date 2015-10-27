@@ -7,8 +7,15 @@ class page_xShop_page_owner_item_updateitemdetail extends page_xShop_page_owner_
 		if(!$_GET['item_id'])
 			return;
 		
+		$this->api->stickyGET('inherit_parent');
+
 		$this->api->stickyGET('item_id');
-		$selected_item_model = $this->add('xShop/Model_Item')->load($_GET['item_id']);		
+		
+		$selected_item_model = $this->add('xShop/Model_Item')->load($_GET['item_id']);	
+		if($_GET['inherit_parent'])
+			$selected_item_model = $this->add('xShop/Model_Item')->load($selected_item_model['duplicate_from_item_id']);
+
+
 		if(!$selected_item_model->loaded())
 			return;
 		
@@ -18,17 +25,19 @@ class page_xShop_page_owner_item_updateitemdetail extends page_xShop_page_owner_
 														'Specification'=>'Specification','CustomField'=>'Custom Field',
 														'qtyandprice'=>'Qty & Price','categoryitem'=>'Categories',
 														'itemimages'=>'Item Images','item_tex'=>'Item Taxes',
-														'item_dept'=>'Item Department','All'=>'All'));
+														'item_dept'=>'Item Department','All'=>'All'))->setEmptyText('Please Select');
 		// $form->setModel($selected_item_model,array('designer_id','name','sku','is_publish','is_party_publish','short_description','rank_weight','created_at','expiry_date','is_saleable','allow_uploadedable','is_purchasable','is_productionable','is_servicable','website_display','is_downloadable','is_designable','mantain_inventory','allow_negative_stock','is_enquiry_allow','is_template','is_fixed_assest','warrenty_days','show_detail','show_price','new','feature','latest','mostviewed','is_visible_sold','offer_id','offer_position','allow_comments','comment_api','add_custom_button','custom_button_label','custom_button_url','reference','theme_code','description','terms_condition'));
-		$form->addSubmit()->set('Update');
+		$form->addSubmit()->set('Update');		
 
-		$form->add('Controller_FormBeautifier');
-		
+		if($form->isSubmitted()){
 
-		if($form->isSubmitted()){	
-			$childs = $this->add('xShop/Model_Item')->addCondition('duplicate_from_item_id',$selected_item_model->id);
+			if($_GET['inherit_parent']){
+				$childs = $this->add('xShop/Model_Item')->addCondition('id',$_GET['item_id']);
+			}else
+				$childs = $this->add('xShop/Model_Item')->addCondition('duplicate_from_item_id',$selected_item_model->id);
 
 			foreach ($childs as $item) {
+
 				if($form['update_detail']=='Specification' Or $form['update_detail']=='All') {
 					//Delete All Previous Specification Association
 					$item->deleteSpecificationAsso();
@@ -53,17 +62,16 @@ class page_xShop_page_owner_item_updateitemdetail extends page_xShop_page_owner_
 					}
 				}
 
-				if($form['update_detail']=='qtyandprice' Or $form['update_detail']=='All') {
-					//Delete All Previous Specification Association
+				if($form['update_detail']=='qtyandprice' Or $form['update_detail']=='All') {					
 					$item->deleteqtyandpriceAsso();
-					// throw new \Exception($item->id, 1);
 					$old_qtyandprice = $this->add('xShop/Model_QuantitySet')->addCondition('item_id',$selected_item_model->id)->addCondition('is_default',false);
-					// throw new \Exception($old_qtyandprice->count()->getOne(), 1);
 					
-					foreach ($old_qtyandprice as $junk){
-						$new_qtyandprice = $old_qtyandprice->duplicate($item['id']);
+					foreach ($old_qtyandprice as $model){
+						$new_qtyandprice = $model->duplicate($item['id']);
 					}
+					
 					$item->updateDefaultQuantitySet();
+
 				}
 
 				if($form['update_detail']=='categoryitem' Or $form['update_detail']=='All') {
@@ -103,9 +111,7 @@ class page_xShop_page_owner_item_updateitemdetail extends page_xShop_page_owner_
 				}
 			}
 
-
-			$form->js(null,$form->js()->reload())->univ()->successMessage('Item Update Successfully')->execute();
-			// $form->js()->univ()->successMessage('Item Updtaed')->execute();
+			$form->js()->univ()->successMessage('Item Update Successfully')->execute();
 		}
 
 

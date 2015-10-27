@@ -34,8 +34,11 @@ class Grid_Item extends \Grid{
 			$item_count=$item_model->count()->getOne();
 
 			if($item_count){
-				$tab->addTabURL($p->api->url('xShop_page_owner_item_updateitemdetail',array('item_id'=>$p->id)), 'Update Child Item ');
+				$tab->addTabURL($p->api->url('xShop_page_owner_item_updateitemdetail',array('item_id'=>$p->id,'inherit_parent'=>false)), 'Update Child Item ');
 			}
+
+			if($selected_item['duplicate_from_item_id'])
+				$tab->addTabURL($p->api->url('xShop_page_owner_item_updateitemdetail',array('item_id'=>$p->id,'inherit_parent'=>true)), 'Inherit Parent Info ');
 
 
 		});
