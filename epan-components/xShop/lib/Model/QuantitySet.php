@@ -43,4 +43,23 @@ class Model_QuantitySet extends \Model_Table{
 		$this->ref('xShop/QuantitySetCondition')->deleteAll();
 	}
 
+	function duplicate($new_item_id){
+		
+		if(!$this->loaded())
+			throw new \Exception("Model Must be loaded");
+			
+		$new_asso = $this->add('xShop/Model_QuantitySet');
+		$new_asso['item_id'] = $new_item_id;
+		$new_asso['name'] = $this['name'];
+		$new_asso['qty'] = $this['qty'];
+		$new_asso['old_price'] = $this['old_price'];
+		$new_asso['price'] = $this['price'];
+		$new_asso->save();
+		
+		$old_qsc = $this->add('xShop/Model_QuantitySetCondition')->addCondition('quantityset_id', $this->id);
+		foreach ($old_qsc as $qsc) {
+			$qsc->duplicate($new_asso->id);
+		}
+	}
+
 }

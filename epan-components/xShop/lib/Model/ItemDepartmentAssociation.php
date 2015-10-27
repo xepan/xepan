@@ -26,11 +26,7 @@ class Model_ItemDepartmentAssociation extends \Model_Table{
 	}
 
 	function duplicate($item_id){
-		if( $item_id < 0)
-			return false;
-
 		$asso_model = $this->add('xShop/Model_ItemDepartmentAssociation')->addCondition('item_id',$item_id);
-
 		foreach ($asso_model as $association) {
 			$m = $this->add('xShop/Model_ItemDepartmentAssociation');
 			$m['department_id'] = $association['department_id'];
@@ -40,6 +36,4 @@ class Model_ItemDepartmentAssociation extends \Model_Table{
 		}
 
 	}
-
-
 }

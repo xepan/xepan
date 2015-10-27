@@ -28,6 +28,16 @@ class Grid_Item extends \Grid{
 			$tab->addTabURL($p->api->url('xShop/page/owner/item_prophases',array('item_id'=>$p->id)),'Production Phases');
 			$tab->addTabURL($p->api->url('xShop/page/owner/item_account',array('item_id'=>$p->id)),'Accounts');
 			// $tab->addTabURL('xShop/page/owner/item_composition','Composition',array('item_id'));
+
+			$item_model=$this->add('xShop/Model_Item');
+			$item_model->addCondition('duplicate_from_item_id',$selected_item->id);
+			$item_count=$item_model->count()->getOne();
+
+			if($item_count){
+				$tab->addTabURL($p->api->url('xShop_page_owner_item_updateitemdetail',array('item_id'=>$p->id)), 'Update Child Item ');
+			}
+
+
 		});
 
 		$this->addColumn('image');

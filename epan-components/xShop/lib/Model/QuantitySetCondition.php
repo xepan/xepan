@@ -32,4 +32,12 @@ class Model_QuantitySetCondition extends \Model_Table{
 		$this['department_phase_id'] = $this->ref('custom_field_value_id')->ref('itemcustomfiledasso_id')->get('department_phase_id');
 
 	}
+	function duplicate($qty_set_id){
+		$new_custom_value = $this->add('xShop/Model_QuantitySetCondition');
+		// $new_custom_value['department_phase_id'] = $this['department_phase_id'];
+		$new_custom_value['quantityset_id'] = $qty_set_id;
+		$new_custom_value['custom_field_value_id'] = $this['custom_field_value_id'];
+		// $new_custom_value['customfield_id'] = $this['customfield_id'];
+		$new_custom_value->save();
+	}
 }

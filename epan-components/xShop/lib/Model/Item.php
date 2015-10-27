@@ -953,6 +953,12 @@ class Model_Item extends \Model_Document{
 			$new_asso->unload();
 		}
 
+		//Qty and Price Duplicate 
+		$old_qtyandprice = $this->add('xShop/Model_QuantitySet')->addCondition('item_id',$this->id)->addCondition('is_default',false);
+		foreach ($old_qtyandprice as $junk){
+			$new_qtyandprice = $old_qtyandprice->duplicate($duplicate_template['id']);
+		}
+
 		// //Category Association Duplicate
 		$cat_item_asso = $this->add('xShop/Model_CategoryItem')->addCondition('item_id',$this->id);
 		$cat_item_asso->duplicate($duplicate_template['id']);
@@ -965,6 +971,10 @@ class Model_Item extends \Model_Document{
 		foreach ($old_tax_asso as $junk) {
 			$old_tax_asso->duplicate($duplicate_template['id']);
 		}
+
+		// //Deaprtment Association Duplicate
+		$department_ass_model = $this->add('xShop/Model_ItemDepartmentAssociation')->addCondition('item_id',$this->id);
+		$department_ass_model->duplicate($this['id']);
 		
 		//Duplicate Phrases
 
@@ -972,9 +982,6 @@ class Model_Item extends \Model_Document{
 		// $docs = $this->add('xShop/Model_Attachments')->addCondition('item_id',$this->id);
 		// $docs->duplicate($duplicate_template['id']);
 
-		// //Deaprtment Association Duplicate
-		// $department_ass_model = $this->add('xShop/Model_ItemDepartmentAssociation');
-		// $department_ass_model->duplicate($this['id']);
 
 		return $duplicate_template;
 	}
@@ -1089,5 +1096,36 @@ class Model_Item extends \Model_Document{
 
 	}
 
+	function deleteSpecificationAsso(){
+		$this->ref('xShop/ItemSpecificationAssociation')->each(function($obj){$obj->forceDelete();});
+	}
+
+	function deleteCustomField(){
+		$this->ref('xShop/CustomFieldValueFilterAssociation')->each(function($obj){$obj->forceDelete();});
+		$this->ref('xShop/ItemCustomFieldAssos')->each(function($obj){$obj->forceDelete();});
+
+	}
+
+	function deleteqtyandpriceAsso(){
+		$this->ref('xShop/QuantitySet')->each(function($obj){$obj->forceDelete();});
+		// $this->ref('xShop/QuantitySetCondition')->each(function($obj){$obj->forceDelete();});
+
+	}
+
+	function deleteCategoryItemasso(){
+		$this->ref('xShop/CategoryItem')->each(function($obj){$obj->forceDelete();});
+	}
+
+	function deleteItemImageasso(){
+		$this->ref('xShop/ItemImages')->each(function($obj){$obj->forceDelete();});
+	}
+
+	function deleteItemTaxasso(){
+		$this->ref('xShop/ItemTaxAssociation')->each(function($obj){$obj->forceDelete();});
+	}
+
+	function deleteItemDepartmentAsso(){
+		$this->ref('xShop/ItemDepartmentAssociation')->each(function($obj){$obj->forceDelete();});
+	}
 }	
 
