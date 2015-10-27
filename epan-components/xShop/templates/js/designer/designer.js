@@ -34,7 +34,7 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 		showTopBar: true,
 		// ComponentsIncluded: ['Background','Text','Image','Help'], // Plugins
 		IncludeJS: ['FreeLancerPanel'], // Plugins
-		ComponentsIncluded: ['BackgroundImage','Text','Image','PDF','ZoomPlus','ZoomMinus','Save'], // Plugins
+		ComponentsIncluded: ['BackgroundImage','Text','Image','PDF','ZoomPlus','ZoomMinus','Save','Calendar'], // Plugins
 		design: [],
 		show_cart: false,
 		cart_options: [],
