@@ -1,17 +1,102 @@
 <?php
 
-
 class page_test extends Page {
 
 	function page_index(){
-	
-	// $url = 'http://64.31.1.242/api/smsapi.aspx?username=FUNTOL&password=FUNTOL&to=8559846603&from=FUNTOL&message=TEST';
+		
+		$content = $this->draw_calendar('11','2015','');
+		$v = $this->add('View');
+		$v->setHtml($content);
 
-	// $ret = file_get_contents($url);
-	// echo $ret;
-	// $this->api->redirect('http://64.31.1.242/api/smsapi.aspx?username=FUNTOL&password=FUNTOL&to=8559846603&from=FUNTOL&message=TEST');
+		//new FPDF_xPdf
+		//Html2Pdf
+		$pdf = new TCPDF_TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf->setPrintHeader(false);
+		$pdf->setPrintFooter(false);
+		$pdf->SetFont('times', 'BI', 20);
+		// add a page
+		$pdf->AddPage();
+		$pdf->WriteHTML($content, true, false, true, false, '');
+  		
+		$pdfData = $pdf->Output(null,'S');
 
-		// $this->add('Controller_NotificationSystem')->test();
+		//Convert PDF Data to Image Data
+		$imageData = new Imagick();
+	    $imageData->readimageblob($pdfData);
+
+	    header('Expires: Wed, 1 Jan 1997 00:00:00 GMT');
+		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+		header('Cache-Control: no-store, no-cache, must-revalidate');
+		header('Cache-Control: post-check=0, pre-check=0', false);
+		header('Pragma: no-cache');
+		header('Content-type: image/png');
+		echo $imageData;
+	}
+
+	function draw_calendar($month,$year,$resultA){
+  		/* draw table */
+  		$calendar = '<table cellpadding="0" cellspacing="0" class="calendar">';
+ 		/* table headings */
+  		$headings = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
+  		$calendar.= '<tr class="calendar-row"><td class="calendar-day-head" style="background-color:green;">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
+  		
+  		/* days and weeks vars now ... */
+  		$running_day = date('w',mktime(0,0,0,$month,1,$year));
+  		$days_in_month = date('t',mktime(0,0,0,$month,1,$year));
+  		$days_in_this_week = 1;
+  		$day_counter = 0;
+
+		 /* row for week one */
+		$calendar.= '<tr class="calendar-row">';
+  		/* print "blank" days until the first of the current week */
+  		for($x = 0; $x < $running_day; $x++){
+    		$calendar.= '<td class="calendar-day-np">&nbsp;</td>';
+    		$days_in_this_week++;
+  		}
+
+		/* keep going with days.... */
+		for($list_day = 1; $list_day <= $days_in_month; $list_day++){
+
+		    $calendar.= '<td class="calendar-day">';
+		    /* add in the day number */
+		    $calendar.= '<div class="day-number">'.$list_day.'</div>';
+
+		    $date=date('Y-m-d',mktime(0,0,0,$month,$list_day,$year));
+
+		    $tdHTML='';        
+		    if(isset($resultA[$date])) $tdHTML=$resultA[$date];
+
+		    $calendar.=$tdHTML;      
+
+		    $calendar.= '</td>';
+
+		    if($running_day == 6){
+		      $calendar.= '</tr>';
+		      if(($day_counter+1) != $days_in_month)
+		        $calendar.= '<tr class="calendar-row">';
+
+		      $running_day = -1;
+		      $days_in_this_week = 0;
+		    }
+		    $days_in_this_week++; $running_day++; $day_counter++;
+		 	
+		}
+
+	  	/* finish the rest of the days in the week */
+	  	if($days_in_this_week < 8){	
+	    	for($x = 1; $x <= (8 - $days_in_this_week); $x++){
+	    		$calendar.= '<td class="calendar-day-np">&nbsp;</td>';
+	  		}
+	  	}
+
+	  	/* final row */
+	  	$calendar.= '</tr>';
+
+	  	/* end the table */
+	  	$calendar.= '</table>';
+
+	  	/* all done, return result */
+	  	return $calendar;
 	}
 
 	function page_deleteAllDesign(){
