@@ -7,7 +7,9 @@ Calendar_Component = function (params){
 
 	this.options = {
 		month:08,
-		year:2015
+		year:2015,
+		width:400,
+		height:300
 	};
 
 	this.init = function(designer,canvas){

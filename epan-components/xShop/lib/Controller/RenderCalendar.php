@@ -1,0 +1,139 @@
+<?php
+
+namespace xShop;
+
+class Controller_RenderCalendar extends \AbstractController {
+	public $options = array();
+	public $phpimage;
+	public $pdf;
+
+	function init(){
+		parent::init();
+
+		$now = new \DateTime('now');
+   		$current_month = $now->format('m');
+   		$current_year = $now->format('Y');
+   		
+		if(!$this->options['year']) $this->options['year'] = $current_year;
+		if(!$this->options['month']) $this->options['month'] = $current_month;
+
+		$calendar_html = $this->drawCalendar($this->options['month'],$this->options['year'],[]);
+
+		//Convert Html to PDF
+		$this->convertHtmlToPdf($calendar_html);
+
+		//Convert PDF Data to Image Data
+		$this->convertPdfToImage($this->pdf);
+
+	}
+
+	function convertPdfToImage(&$pdfData){
+		$this->phpimage = new Imagick();
+	    $this->phpimage->readimageblob($pdfData);
+
+	}
+
+	function convertHtmlToPdf($html){
+		if(!$html)
+			throw new \Exception("Html Not Given");
+
+		$pdf = new \TCPDF_TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pdf->setPrintHeader(false);
+		$pdf->setPrintFooter(false);
+		// $pdf->SetFont('times', 'BI', 20);
+		// add a page
+		$pdf->AddPage();
+		$pdf->WriteHTML($html, true, false, true, false, '');
+		$this->pdf = $pdf->Output(null,'S');
+	}
+
+	function drawCalendar($month,$year,$resultA){
+  		/* draw table */
+  		$calendar = '<table cellpadding="0" cellspacing="0" class="calendar">';
+ 		/* table headings */
+  		$headings = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
+  		$calendar.= '<tr class="calendar-row"><td class="calendar-day-head" style="background-color:green;">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
+  		
+  		/* days and weeks vars now ... */
+  		$running_day = date('w',mktime(0,0,0,$month,1,$year));
+  		$days_in_month = date('t',mktime(0,0,0,$month,1,$year));
+  		$days_in_this_week = 1;
+  		$day_counter = 0;
+
+		 /* row for week one */
+		$calendar.= '<tr class="calendar-row">';
+  		/* print "blank" days until the first of the current week */
+  		for($x = 0; $x < $running_day; $x++){
+    		$calendar.= '<td class="calendar-day-np">&nbsp;</td>';
+    		$days_in_this_week++;
+  		}
+
+		/* keep going with days.... */
+		for($list_day = 1; $list_day <= $days_in_month; $list_day++){
+
+		    $calendar.= '<td class="calendar-day">';
+		    /* add in the day number */
+		    $calendar.= '<div class="day-number">'.$list_day.'</div>';
+
+		    $date=date('Y-m-d',mktime(0,0,0,$month,$list_day,$year));
+
+		    $tdHTML='';        
+		    if(isset($resultA[$date])) $tdHTML=$resultA[$date];
+
+		    $calendar.=$tdHTML;      
+
+		    $calendar.= '</td>';
+
+		    if($running_day == 6){
+		      $calendar.= '</tr>';
+		      if(($day_counter+1) != $days_in_month)
+		        $calendar.= '<tr class="calendar-row">';
+
+		      $running_day = -1;
+		      $days_in_this_week = 0;
+		    }
+		    $days_in_this_week++; $running_day++; $day_counter++;
+		 	
+		}
+
+	  	/* finish the rest of the days in the week */
+	  	if($days_in_this_week < 8){	
+	    	for($x = 1; $x <= (8 - $days_in_this_week); $x++){
+	    		$calendar.= '<td class="calendar-day-np">&nbsp;</td>';
+	  		}
+	  	}
+	  	/* final row */
+	  	$calendar.= '</tr>';
+	  	/* end the table */
+	  	$calendar.= '</table>';
+	  	/* all done, return result */
+	  	return $calendar;
+	}
+
+	function show($type="png",$quality=3,$base64_encode=true, $return_data=false){
+		ob_start();
+		imagepng($this->phpimage, null,9,PNG_ALL_FILTERS);
+		$imageData = ob_get_contents();
+		ob_clean();
+		$this->cleanup();
+		if($base64_encode)
+			$imageData = base64_encode($imageData);
+		
+		if($return_data)
+			return $imageData;
+
+		header('Cache-Control: no-store, no-cache, must-revalidate');
+		header('Cache-Control: post-check=0, pre-check=0', false);
+		header('Pragma: no-cache');
+		if($type="png")
+			header("Content-type: image/png");
+		// imagepng($this->phpimage, null, 9, PNG_ALL_FILTERS);
+		
+		echo $imageData;
+		die();
+	}
+
+	public function cleanup(){
+		imagedestroy($this->phpimage);
+	}
+}
