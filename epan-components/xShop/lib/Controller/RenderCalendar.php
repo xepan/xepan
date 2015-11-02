@@ -38,10 +38,12 @@ class Controller_RenderCalendar extends \AbstractController {
 		if(!$html)
 			throw new \Exception("Html Not Given");
 
-		$pdf = new \TCPDF_TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$pagelayout = array('400', "400"); //  or array($height, $width)
+		$pdf = new \TCPDF_TCPDF('p', 'pt', $pagelayout, true, 'UTF-8', false);
+		// $pdf = new \TCPDF_TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->setPrintHeader(false);
 		$pdf->setPrintFooter(false);
-		$pdf->SetFont('times', 'BI', 20);
+		$pdf->SetFont('freemono', 'BI', 20);
 		// add a page
 		$pdf->AddPage();
 		$pdf->WriteHTML($html, true, false, true, false, '');

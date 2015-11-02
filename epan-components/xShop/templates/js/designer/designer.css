@@ -173,7 +173,7 @@ img.xdesigner-page-layout-thumbnail{
   margin-top: 30px;
 }
 /*TextBox Tool Tip Designer*/
-#xshop-designer-text-editor {
+#xshop-designer-text-editor,#xshop-designer-calendar-editor {
   position: relative;
   z-index: 0;
   /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);*/
@@ -356,7 +356,7 @@ img.xdesigner-page-layout-thumbnail{
   padding: 0.7rem;
 }
 
-.xshop-text-options,.xshop-options-editor{
+.xshop-text-options,.xshop-options-editor,.xshop-designer-calendar-editor{
   position: absolute ;
   /*z-index: 100;*/
   visibility: visible;
@@ -418,3 +418,4 @@ img.xdesigner-page-layout-thumbnail{
   color:gray;
   cursor:default;
 }
+

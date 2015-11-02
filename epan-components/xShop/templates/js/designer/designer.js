@@ -41,7 +41,8 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 		designer_mode: false,
 		width: undefined,
 		height: undefined,
-		selected_layouts_for_print:{}
+		selected_layouts_for_print:{},
+		calendar_starting_month:undefined
 	},
 	_create: function(){
 		this.setupLayout();
