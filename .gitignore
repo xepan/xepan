@@ -17,3 +17,4 @@ todo
 /*.sql
 *.orig
 lib/Model/GenericDocument.php
+epan-components/xShop/templates/fonts

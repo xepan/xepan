@@ -57,7 +57,7 @@
  * Path for PDF fonts.
  * By default it is automatically set but you can also set it as a fixed string to improve performances.
  */
-define ('K_PATH_FONTS', 'xShop/templates/fonts/');
+define ('K_PATH_FONTS', getcwd().'/epan-components/xShop/templates/fonts/');
 
 /**
  * Default images directory.

@@ -10,6 +10,7 @@ class Controller_RenderCalendar extends \AbstractController {
 	function init(){
 		parent::init();
 
+
 		$now = new \DateTime('now');
    		$current_month = $now->format('m');
    		$current_year = $now->format('Y');
@@ -27,10 +28,10 @@ class Controller_RenderCalendar extends \AbstractController {
 
 	}
 
-	function convertPdfToImage(&$pdfData){
-		$this->phpimage = new Imagick();
-	    $this->phpimage->readimageblob($pdfData);
-
+	function convertPdfToImage($pdfData){
+		$imageData = new \Imagick();
+	   	$imageData->readimageblob($pdfData);
+	   	$this->phpimage = $imageData;
 	}
 
 	function convertHtmlToPdf($html){
@@ -40,7 +41,7 @@ class Controller_RenderCalendar extends \AbstractController {
 		$pdf = new \TCPDF_TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->setPrintHeader(false);
 		$pdf->setPrintFooter(false);
-		// $pdf->SetFont('times', 'BI', 20);
+		$pdf->SetFont('times', 'BI', 20);
 		// add a page
 		$pdf->AddPage();
 		$pdf->WriteHTML($html, true, false, true, false, '');
@@ -111,11 +112,14 @@ class Controller_RenderCalendar extends \AbstractController {
 	}
 
 	function show($type="png",$quality=3,$base64_encode=true, $return_data=false){
-		ob_start();
-		imagepng($this->phpimage, null,9,PNG_ALL_FILTERS);
-		$imageData = ob_get_contents();
-		ob_clean();
-		$this->cleanup();
+		// ob_start();
+		// imagepng($this->phpimage, null,9,PNG_ALL_FILTERS);
+		// $imageData = ob_get_contents();
+		// ob_clean();
+
+		// $this->cleanup();
+		$imageData = $this->phpimage;
+
 		if($base64_encode)
 			$imageData = base64_encode($imageData);
 		
