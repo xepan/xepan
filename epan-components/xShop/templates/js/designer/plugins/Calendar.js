@@ -7,8 +7,8 @@ xShop_Calendar_Editor = function(parent,designer){
 
 	// add font_selection with preview
 	// header_font_size:16,
-
-	this.header_font_size = $('<select class="btn btn-xs">Header Size</select>').appendTo(this.element);
+	this.header_font_size_label = $('<label for="header_font_size">Header Font Size :</label>').appendTo(this.element);
+	this.header_font_size = $('<select id="header_font_size" class="btn btn-xs">Header Size</select>').appendTo(this.header_font_size_label);
 	options = '';
 	for (var i = 7; i < 50; i++) {
 		options += '<option value="'+i+'">'+i+'</option>';
@@ -21,7 +21,8 @@ xShop_Calendar_Editor = function(parent,designer){
 	});
 
 	// day_date_font_size:12,
-	this.day_date_font_size = $('<select class="btn btn-xs">Day Date Size</select>').appendTo(this.element);
+	this.day_date_font_size_label = $('<label for="day_date_font_size">Day Date Font Size :</label>').appendTo(this.element);
+	this.day_date_font_size = $('<select id="day_date_font_size"class="btn btn-xs">Day Date Size</select>').appendTo(this.day_date_font_size_label);
 	for (var i = 7; i < 50; i++) {
 		$('<option value="'+i+'">'+i+'</option>').appendTo(this.day_date_font_size);
 	};
@@ -32,7 +33,8 @@ xShop_Calendar_Editor = function(parent,designer){
 	});
 
 	// day_name_font_size:12,
-	this.day_name_font_size = $('<select class="btn btn-xs">Day Name Size</select>').appendTo(this.element);
+	this.day_name_font_size_label = $('<label for="day_name_font_size">Day Name Font Size :</label>').appendTo(this.element);
+	this.day_name_font_size = $('<select class="btn btn-xs">Day Name Size</select>').appendTo(this.day_name_font_size_label);
 	for (var i = 7; i < 50; i++) {
 		$('<option value="'+i+'">'+i+'</option>').appendTo(this.day_name_font_size);
 	};
@@ -43,7 +45,8 @@ xShop_Calendar_Editor = function(parent,designer){
 	});
 
 	// event_font_size:10,
-	this.event_font_size = $('<select class="btn btn-xs">Event Size</select>').appendTo(this.element);
+	this.event_font_size_label = $('<label for="day_name_font_size">Event Font Size :</label>').appendTo(this.element);
+	this.event_font_size = $('<select class="btn btn-xs">Event Size</select>').appendTo(this.event_font_size_label);
 	for (var i = 7; i < 50; i++) {
 		$('<option value="'+i+'">'+i+'</option>').appendTo(this.event_font_size);
 	};
@@ -54,8 +57,9 @@ xShop_Calendar_Editor = function(parent,designer){
 	});
 
 	//Month
-	this.month = $('<select class="btn btn-xs"></select>').appendTo(this.element);
-	options = '';
+	this.month_label = $('<label for="month">Month :</label>').appendTo(this.element);
+	this.month = $('<select id="month" class="btn btn-xs"></select>').appendTo(this.month_label);
+	options = '<option value="00">Starting</option>';
 	options += '<option value="01">January</option>';
 	options += '<option value="02">Febuary</option>';
 	options += '<option value="03">March</option>';
@@ -71,9 +75,14 @@ xShop_Calendar_Editor = function(parent,designer){
 	$(options).appendTo(this.month);
 
 	$(this.month).change(function(event){
-		self.current_calendar_component.options.month = $(this).val();
+		if($(this).val() == "00"){
+			self.current_calendar_component.options.month = self.current_calendar_component.options.starting_month;
+		}else{
+			self.current_calendar_component.options.month = $(this).val();
+		}
 		$('.xshop-designer-tool').xepan_xshopdesigner('check');
 		self.current_calendar_component.render();
+
 	});	
 
 
@@ -87,15 +96,19 @@ xShop_Calendar_Editor = function(parent,designer){
         dateFormat: 'MM yy',
         onClose: function(dateText, inst) { 
             var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            var month = parseInt(month) + 1;
             var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+
             $(this).attr('month',month);
             $(this).attr('year',year);
-            $(this).datepicker('setDate', new Date(year, month, 1));
+            $(this).datepicker('setDate', new Date(year, month, 0));
 
             self.designer_tool.options.calendar_starting_month = $(this).val();
             self.current_calendar_component.options.starting_date = $(this).val();
     		self.current_calendar_component.options.starting_month = month;
     		self.current_calendar_component.options.starting_year = year;
+    		if(!self.current_calendar_component.options.month)
+    			self.current_calendar_component.options.month = month;
 			$('.xshop-designer-tool').xepan_xshopdesigner('check');
 			self.current_calendar_component.render();
 
@@ -136,7 +149,7 @@ Calendar_Component = function (params){
 		day_name_font_size:12,
 		event_font_size:10,
 
-		month:08,
+		month:undefined,
 		width:400,
 		height:300,
 
@@ -252,12 +265,27 @@ Calendar_Component = function (params){
 			url: 'index.php?page=xShop_page_designer_rendercalendar',
 			type: 'GET',
 			data: { 
-					year:self.options.year,
-					month: self.options.month,
+					header_font_size:self.options.header_font_size,
+					day_date_font_size:self.options.day_date_font_size,
+					day_name_font_size:self.options.day_name_font_size,
+					event_font_size:self.options.event_font_size,
+
 					zoom: self.designer_tool.zoom,
-					width: self.options.width,
-					height: self.options.height,
-					zindex:self.options.zindex
+					zindex:self.options.zindex,
+					month:self.options.month,
+					width:self.options.width,
+					height:self.options.height,
+
+					starting_date:self.designer_tool.options.calendar_starting_month, //Show Only Date and Month // Default Value currentYear-1st Jan Month
+					starting_month:self.options.starting_month,
+					starting_year:self.options.starting_year,
+					resizable:self.options.resizable,
+					movable:self.options.movable,
+					colorable:self.options.colorable,
+					editor:self.options.editor,
+					designer_mode:self.options.designer_mode,
+					x:self.options.x,
+					y:self.options.y
 					},
 		})
 		.done(function(ret) {
