@@ -10,19 +10,10 @@ class Controller_RenderCalendar extends \AbstractController {
 	function init(){
 		parent::init();
 
-
-		$now = new \DateTime('now');
-   		$current_month = $now->format('m');
-   		$current_year = $now->format('Y');
-   		
-		if(!$this->options['year']) $this->options['year'] = $current_year;
-		if(!$this->options['month']) $this->options['month'] = $current_month;
-
 		$calendar_html = $this->drawCalendar($this->options['month'],$this->options['year'],[]);
-
+		
 		//Convert Html to PDF
 		$this->convertHtmlToPdf($calendar_html);
-
 		//Convert PDF Data to Image Data
 		$this->convertPdfToImage($this->pdf);
 
@@ -52,7 +43,8 @@ class Controller_RenderCalendar extends \AbstractController {
 
 	function drawCalendar($month,$year,$resultA){
   		/* draw table */
-  		$calendar = '<table cellpadding="0" cellspacing="0" class="calendar">';
+  		$calendar = '<div>'.$month.' - '.$year.'</div>';
+  		$calendar .= '<table cellpadding="0" cellspacing="0" class="calendar">';
  		/* table headings */
   		$headings = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
   		$calendar.= '<tr class="calendar-row"><td class="calendar-day-head" style="background-color:green;">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
