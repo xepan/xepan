@@ -176,7 +176,6 @@ Calendar_Component = function (params){
 	this.canvas= undefined;
 	this.element = undefined;
 	this.editor = undefined;
-
 	this.options = {
 		header_font_size:16,
 		day_date_font_size:12,
@@ -228,14 +227,13 @@ Calendar_Component = function (params){
 			// create new CalendarComponent type object
 			var new_calendar = new Calendar_Component();
 			new_calendar.init(self.designer_tool,self.canvas, self.editor);
-
 			self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].components.push(new_calendar);
 			new_calendar.render(true);
 		});
 
 	}
 
-	this.render = function(){
+	this.render = function(place_in_center=0){
 
 		var self = this;
 		if(self.options.load_design == true){
@@ -344,13 +342,14 @@ Calendar_Component = function (params){
 			self.element.find('img').attr('src','data:image/jpg;base64, '+ ret);
 			// $(ret).appendTo(self.element.find('span').html(''));
 			self.xhr=undefined;
-			// if(place_in_center === true){
+			if(place_in_center){
 				window.setTimeout(function(){
 					self.element.center(self.designer_tool.canvas);
 					self.options.x = self.element.css('left').replace('px','') / self.designer_tool.zoom;
 					self.options.y = self.element.css('top').replace('px','') / self.designer_tool.zoom;
 				},200);
-			// }
+				place_in_center = 0;
+			}
 		})
 		.fail(function(ret) {
 			// evel(ret);
