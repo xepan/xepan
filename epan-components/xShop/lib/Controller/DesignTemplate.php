@@ -51,6 +51,11 @@ class Controller_DesignTemplate extends \AbstractController{
 			if($options['type'] == 'Text'){
 				$this->addText($options,$img);
 			}
+
+			if($options['type']=='Calendar'){
+				$this->addCalendar($options,$img);
+			}
+
 		}
 	}
 
@@ -70,7 +75,21 @@ class Controller_DesignTemplate extends \AbstractController{
 	    // $this->RotatedText(35,190,'W a t e r m a r k   d e m o',45);
 	}
 
+	function addCalendar($options,$img){		
+		$options['width'] = $options['width'] * $this->print_ratio;
+		$options['x'] = $options['x'] * $this->print_ratio;
+		$options['y'] = $options['y'] * $this->print_ratio;
+		
+		$cont = $this->add('xShop/Controller_RenderCalendar',array('options'=>$options));
+
+		$data = $cont->show('png',1,false,true);
+		// $pdf->MemImage($data, 0, 0, 100, 20);
+		$img->addImage($data, $this->pixcelToUnit($options['x']), $this->pixcelToUnit($options['y']), $this->pixcelToUnit($options['width']), $this->pixcelToUnit($options['height'] * $this->print_ratio));
+	}
+
 	function addImage($options, $img){
+		if(!$options['url'])
+			return;
 		$saved_url = $options['url'];
 		$options['url'] = getcwd().$saved_url;
 		if(!file_exists($options['url'])){
@@ -80,7 +99,7 @@ class Controller_DesignTemplate extends \AbstractController{
 			}
 		}
 		
-		
+						
 		$options['width'] = $options['width'] * $this->print_ratio;
 		$options['height'] = $options['height'] * $this->print_ratio;
 		$options['x'] = $options['x'] * $this->print_ratio;

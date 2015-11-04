@@ -163,7 +163,8 @@ Calendar_Component = function (params){
 		editor:undefined,
 		designer_mode:false,
 		x:undefined,
-		y:undefined
+		y:undefined,
+		type: 'Calendar',
 	};
 	
 	this.init = function(designer,canvas, editor){
