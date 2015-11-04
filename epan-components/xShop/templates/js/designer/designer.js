@@ -42,7 +42,8 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 		width: undefined,
 		height: undefined,
 		selected_layouts_for_print:{},
-		calendar_starting_month:undefined
+		calendar_starting_month:undefined,
+		calendar_event:{}
 	},
 	_create: function(){
 		this.setupLayout();
@@ -133,7 +134,6 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 				self.layout_finalized[page] = layout;
 			});
 		}
-
 	},
 
 	setupPageLayoutBar : function(){
