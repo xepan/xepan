@@ -11,6 +11,8 @@ class Controller_RenderCalendar extends \AbstractController {
 		parent::init();
 
 		$calendar_html = $this->drawCalendar($this->options['month'],$this->options['year'],[]);
+		// throw new \Exception($cale);
+		
 		
 		//Convert Html to PDF
 		$this->convertHtmlToPdf($calendar_html);
@@ -29,8 +31,11 @@ class Controller_RenderCalendar extends \AbstractController {
 		if(!$html)
 			throw new \Exception("Html Not Given");
 
-		$pagelayout = array('400', "400"); //  or array($height, $width)
-		$pdf = new \TCPDF_TCPDF('p', 'pt', $pagelayout, true, 'UTF-8', false);
+		$pagelayout = array($this->options['height'],$this->options['width']); //  or array($height, $width)
+		$pdf = new \TCPDF_TCPDF('l', 'pt', $pagelayout, true, 'UTF-8', false);
+		$pdf->SetMargins(0, 0, 0);
+		$pdf->SetHeaderMargin(0);
+		$pdf->SetFooterMargin(0);
 		// $pdf = new \TCPDF_TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->setPrintHeader(false);
 		$pdf->setPrintFooter(false);
@@ -44,7 +49,7 @@ class Controller_RenderCalendar extends \AbstractController {
 	function drawCalendar($month,$year,$resultA){
   		/* draw table */
   		$calendar = '<div>'.$month.' - '.$year.'</div>';
-  		$calendar .= '<table cellpadding="0" cellspacing="0" class="calendar">';
+  		$calendar .= '<table cellpadding="0" cellspacing="0" class="calendar" width="100%">';
  		/* table headings */
   		$headings = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
   		$calendar.= '<tr class="calendar-row"><td class="calendar-day-head" style="background-color:green;">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';

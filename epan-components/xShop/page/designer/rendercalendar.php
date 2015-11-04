@@ -12,7 +12,7 @@ class page_xShop_page_designer_rendercalendar extends Page {
    		$current_month = $now->format('m');
    		$current_year = $now->format('Y');
 
-		$options['font_size'] = $_GET['font_size'] * ($zoom / 1.328352013);
+		// $options['font_size'] = $_GET['font_size'] * ($zoom / 1.328352013);
 		$options['font'] = $_GET['font'];
 		$options['month'] = $_GET['month'];
 
@@ -48,7 +48,7 @@ class page_xShop_page_designer_rendercalendar extends Page {
 		//ex:  Starting month= "Nov 2015" and month is "8" then calendar will draw 8th month from Nov 2015 that is "July 2016"
 		if(!$_GET['month'])
 			$options['month'] = $options['starting_month'];
-		
+		$options['year'] = $options['starting_year'];
    		if($options['month'] < $options['starting_month']){
    			$options['year'] = $options['starting_year'] + 1;
    		}

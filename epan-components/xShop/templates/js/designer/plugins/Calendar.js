@@ -215,10 +215,12 @@ Calendar_Component = function (params){
 				}
 			}).resizable({
 				containment: self.designer_tool.safe_zone,
-				handles: "e",
+				handles: "e, se, s",
 				autoHide: true,
 				stop: function(e,ui){
 					self.options.width = self.designer_tool.screen2option(ui.size.width);
+					self.options.height = self.designer_tool.screen2option(ui.size.height);
+					// alert(self.options.width);
 					self.render();
 				}
 			});
@@ -292,13 +294,13 @@ Calendar_Component = function (params){
 			self.element.find('img').attr('src','data:image/jpg;base64, '+ ret);
 			// $(ret).appendTo(self.element.find('span').html(''));
 			self.xhr=undefined;
-			// if(place_in_center === true){
+			if(place_in_center === true){
 				window.setTimeout(function(){
 					self.element.center(self.designer_tool.canvas);
 					self.options.x = self.element.css('left').replace('px','') / self.designer_tool.zoom;
 					self.options.y = self.element.css('top').replace('px','') / self.designer_tool.zoom;
 				},200);
-			// }
+			}
 		})
 		.fail(function(ret) {
 			// evel(ret);
