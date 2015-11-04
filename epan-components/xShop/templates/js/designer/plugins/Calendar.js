@@ -198,8 +198,7 @@ Calendar_Component = function (params){
 		designer_mode:false,
 		x:undefined,
 		y:undefined,
-		events:[],
-
+		events:{},
 		type: 'Calendar',
 	};
 	
@@ -238,10 +237,18 @@ Calendar_Component = function (params){
 
 	this.render = function(){
 
-		
 		var self = this;
+		if(self.options.load_design == true){
+			self.designer_tool.options.calendar_event = JSON.parse(self.options.events);
+			self.designer_tool.options.calendar_starting_month = self.options.starting_month;
+			self.options.load_design = "false";
+			console.log(self.designer_tool.options.calendar_event);
+			console.log(self.designer_tool.options.calendar_starting_month);
+		}
 		// console.log(JSON.stringify(self.designer_tool.options.calendar_event));
 		// console.log(self.designer_tool.options.calendar_event);
+		self.options.events = JSON.stringify(self.designer_tool.options.calendar_event);
+		self.options.starting_date = self.designer_tool.options.calendar_starting_month;
 
 		if(this.element == undefined){
 			this.element = $('<div style="position:absolute" class="xshop-designer-component"><span><img></img></span></div>').appendTo(this.canvas);
