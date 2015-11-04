@@ -10,7 +10,12 @@ class Controller_RenderCalendar extends \AbstractController {
 	function init(){
 		parent::init();
 
-		$calendar_html = $this->drawCalendar($this->options['month'],$this->options['year'],[]);
+		$all_events = json_decode($this->options['events'],true);
+		$current_month_events = [];
+		if(count($all_events[$this->options['month']]))
+			$current_month_events = $all_events[$this->options['month']];
+
+		$calendar_html = $this->drawCalendar($this->options['month'],$this->options['year'],[],$current_month_events);
 		// throw new \Exception($cale);
 		
 		
@@ -46,7 +51,10 @@ class Controller_RenderCalendar extends \AbstractController {
 		$this->pdf = $pdf->Output(null,'S');
 	}
 
-	function drawCalendar($month,$year,$resultA){
+	function drawCalendar($month,$year,$resultA,$events=[]){
+
+
+
   		/* draw table */
   		$calendar = '<div>'.$month.' - '.$year.'</div>';
   		$calendar .= '<table cellpadding="0" cellspacing="0" class="calendar" width="100%">';
@@ -76,6 +84,11 @@ class Controller_RenderCalendar extends \AbstractController {
 		    $calendar.= '<div class="day-number">'.$list_day.'</div>';
 
 		    $date=date('Y-m-d',mktime(0,0,0,$month,$list_day,$year));
+		    
+		    $event_date_format = date('d-F-Y',strtotime($date));
+		    if($message = $events[$event_date_format]){
+		    	$calendar .= '<small style="font-size:6px;">'.$message."</small>";
+		    }
 
 		    $tdHTML='';        
 		    if(isset($resultA[$date])) $tdHTML=$resultA[$date];
