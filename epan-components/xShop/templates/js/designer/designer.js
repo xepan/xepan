@@ -108,6 +108,7 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 						var temp = new window[value.type + "_Component"]();
 						temp.init(self, self.canvas, self.editors[value.type]);
 						temp.options = value;
+						temp.options.load_design = true;
 						self.pages_and_layouts[page_name][layout_name]['components'][key] = temp;
 					});
 				}
