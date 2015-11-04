@@ -123,7 +123,41 @@ xShop_Calendar_Editor = function(parent,designer){
 		});
 	});
 
+    //Calendar Events
+    event_btn = $('<div class="btn"><i class="glyphicon glyphicon-star-empty"></i><br>Events</div>').appendTo(this.element);
+	
+	event_frame = $('<div id="xshop-designer-calendar-events-dialog" class="xshop-designer-calendar-events-frame"></div>').appendTo(this.element);
 
+	this.event_date = $('<input type="text" name="event_date" id="xshop-designer-calendar-event-date" PlaceHolder="Date"/>').appendTo(event_frame);
+	this.event_message = $('<input type="text" name="event" id="xshop-designer-calendar-event" PlaceHolder="Event"/>').appendTo(event_frame);
+	this.event_add = $(' <button type="button">Add</button> ').appendTo(event_frame);
+		
+	$(this.event_date).datepicker({
+		dateFormat: 'dd-MM-yy'
+	});
+
+	event_dialog= event_frame.dialog({
+	 	autoOpen: false,
+		width: 500,
+		modal: true
+	});
+
+	$(event_btn).click(function(event){
+		event_dialog.dialog("open");
+	});
+
+	$(this.event_add).click(function(event){
+		curr_month = self.current_calendar_component.options.month;
+		
+		if(self.designer_tool.options.calendar_event[curr_month]== undefined)
+		self.designer_tool.options.calendar_event[curr_month]= new Object;
+
+		self.designer_tool.options.calendar_event[curr_month][self.event_date.val()]=new Object;
+		// self.designer_tool.options.calendar_event[curr_month][self.event_date.val()] = self.event_message.val();
+		self.designer_tool.options.calendar_event[curr_month][self.event_date.val()] = self.event_message.val();
+		self.current_calendar_component.render();
+		$(event_dialog).dialog('close');
+	});
 
     //Set from Saved Values
 	this.setCalendarComponent = function(component){
@@ -164,6 +198,8 @@ Calendar_Component = function (params){
 		designer_mode:false,
 		x:undefined,
 		y:undefined,
+		events:[],
+
 		type: 'Calendar',
 	};
 	
@@ -201,8 +237,12 @@ Calendar_Component = function (params){
 	}
 
 	this.render = function(){
+
+		
 		var self = this;
-		console.log(self);
+		// console.log(JSON.stringify(self.designer_tool.options.calendar_event));
+		// console.log(self.designer_tool.options.calendar_event);
+
 		if(this.element == undefined){
 			this.element = $('<div style="position:absolute" class="xshop-designer-component"><span><img></img></span></div>').appendTo(this.canvas);
 			this.element.draggable({
@@ -263,6 +303,7 @@ Calendar_Component = function (params){
 
 		if(this.xhr != undefined)
 			this.xhr.abort();
+		
 
 		this.xhr = $.ajax({
 			url: 'index.php?page=xShop_page_designer_rendercalendar',
@@ -288,20 +329,21 @@ Calendar_Component = function (params){
 					editor:self.options.editor,
 					designer_mode:self.options.designer_mode,
 					x:self.options.x,
-					y:self.options.y
+					y:self.options.y,
+					events:JSON.stringify(self.designer_tool.options.calendar_event)
 					},
 		})
 		.done(function(ret) {
 			self.element.find('img').attr('src','data:image/jpg;base64, '+ ret);
 			// $(ret).appendTo(self.element.find('span').html(''));
 			self.xhr=undefined;
-			if(place_in_center === true){
+			// if(place_in_center === true){
 				window.setTimeout(function(){
 					self.element.center(self.designer_tool.canvas);
 					self.options.x = self.element.css('left').replace('px','') / self.designer_tool.zoom;
 					self.options.y = self.element.css('top').replace('px','') / self.designer_tool.zoom;
 				},200);
-			}
+			// }
 		})
 		.fail(function(ret) {
 			// evel(ret);
