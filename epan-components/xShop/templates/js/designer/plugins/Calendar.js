@@ -271,13 +271,20 @@ xShop_Calendar_Editor = function(parent,designer){
 //___________________________________________________________________________| 
     //Calendar Events
 	this.col7 = $('<div class="atk-col-3"></div>').appendTo(this.row2);
-    event_btn = $('<div class="btn"><i class="glyphicon glyphicon-star-empty"></i><br>Events</div>').appendTo(this.col7);
+    event_btn = $('<div class="btn atk-swatch-blue"><i class="glyphicon glyphicon-star-empty"></i>Events</div>').appendTo(this.col7);
 	
 	event_frame = $('<div id="xshop-designer-calendar-events-dialog" class="xshop-designer-calendar-events-frame"></div>').appendTo(this.element);
 
-	this.event_date = $('<input type="text" name="event_date" id="xshop-designer-calendar-event-date" PlaceHolder="Date"/>').appendTo(event_frame);
-	this.event_message = $('<input type="text" name="event" id="xshop-designer-calendar-event" PlaceHolder="Event"/>').appendTo(event_frame);
-	this.event_add = $(' <button type="button">Add</button> ').appendTo(event_frame);
+	form_row = $('<div class="atk-row atk-padding-small">').appendTo(event_frame);
+	form_col1 = $('<div class="atk-col-4">').appendTo(form_row);
+	this.event_date = $('<input type="text" name="event_date" id="xshop-designer-calendar-event-date" PlaceHolder="Date"/>').appendTo(form_col1);
+	form_col2 = $('<div class="atk-col-6">').appendTo(form_row);
+	this.event_message = $('<input type="text" name="event" id="xshop-designer-calendar-event" PlaceHolder="Event"/>').appendTo(form_col2);
+	form_col3 = $('<div class="atk-col-2">').appendTo(form_row);
+	this.event_add = $(' <button type="button">Add</button> ').appendTo(form_col3);
+	// this.event_date = $('<input type="text" name="event_date" id="xshop-designer-calendar-event-date" PlaceHolder="Date"/>').appendTo(event_frame);
+	// this.event_message = $('<input type="text" name="event" id="xshop-designer-calendar-event" PlaceHolder="Event"/>').appendTo(event_frame);
+	// this.event_add = $(' <button type="button">Add</button> ').appendTo(event_frame);
 		
 	$(this.event_date).datepicker({
 		dateFormat: 'dd-MM-yy'
@@ -286,7 +293,23 @@ xShop_Calendar_Editor = function(parent,designer){
 	event_dialog= event_frame.dialog({
 	 	autoOpen: false,
 		width: 500,
-		modal: true
+		modal: true,
+		open:function(){
+			
+			$('div').remove('#xshop-designer-calendar-events');
+			table = '<div id="xshop-designer-calendar-events" class="atk-box"><div class="atk-table atk-table-zebra atk-table-bordered"><div class="atk-box-small atk-align-center"><h3>Your All Events</h3></div><table><thead><tr><th>Date</th><th>Message</th><th>Actions</th></tr></thead><tbody>';
+			$.each(self.designer_tool.options.calendar_event,function(index,month_events){
+				$.each(month_events,function(date,message){
+					table += '<tr><td>'+date+'</td><td>'+message+'</td><td><a href="#">Edit</a></td></tr>';
+				});
+			});
+
+			table +='</tbody></table></div></div>';
+			$(table).appendTo(this);
+		},
+		close:function(){
+
+		}
 	});
 
 	$(event_btn).click(function(event){
@@ -304,6 +327,26 @@ xShop_Calendar_Editor = function(parent,designer){
 		self.designer_tool.options.calendar_event[curr_month][self.event_date.val()] = self.event_message.val();
 		self.current_calendar_component.render();
 		$(event_dialog).dialog('close');
+	});
+
+
+//```````````````````````````````````````````````````````````````````````````|
+//------------------------------Delete Button--------------------------------
+//___________________________________________________________________________| 
+	//Delete Button
+	this.col8 = $('<div class="atk-col-3"></div>').appendTo(this.row2);
+	this.calendar_remove = $('<div class="btn atk-swatch-red"><span class="glyphicon glyphicon-trash"></span> Remove</div>').appendTo(this.col8);
+	this.calendar_remove.click(function(){
+		dt  = self.current_calendar_component.designer_tool;
+		$.each(dt.pages_and_layouts[dt.current_page][dt.current_layout].components, function(index,cmp){
+			if(cmp === dt.current_selected_component){
+				// console.log(self.pages_and_layouts);
+				$(dt.current_selected_component.element).remove();
+				dt.pages_and_layouts[dt.current_page][dt.current_layout].components.splice(index,1);
+				dt.current_selected_component = null;
+				dt.option_panel.hide();
+			}
+		});
 	});
 
     //Set from Saved Values
