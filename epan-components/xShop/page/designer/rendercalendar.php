@@ -14,11 +14,17 @@ class page_xShop_page_designer_rendercalendar extends Page {
 		// $options['font_size'] = $_GET['font_size'] * ($zoom / 1.328352013);
 		$options['font'] = $_GET['font'];
 		$options['month'] = $_GET['month'];
-
+		
 		$options['header_font_size'] = $_GET['header_font_size'] * ($zoom / 1.328352013);
+		$options['header_font_color'] = $_GET['header_font_color'];
 		$options['day_date_font_size'] = $_GET['day_date_font_size'] * ($zoom / 1.328352013);
+		$options['day_date_font_color'] = $_GET['day_date_font_color'];
 		$options['day_name_font_size'] = $_GET['day_name_font_size'] * ($zoom / 1.328352013);
+		$options['day_name_font_color'] = $_GET['day_name_font_color'];
 		$options['event_font_size'] = $_GET['event_font_size'] * ($zoom / 1.328352013);
+		$options['event_font_color'] = $_GET['event_font_color'];
+		$options['day_name_bg_color'] = $_GET['day_name_bg_color'];
+		$options['calendar_cell_heigth'] = $_GET['calendar_cell_heigth'];
 
 		$options['zindex'] = $_GET['zindex'];
 		$options['width'] = $_GET['width'] * $zoom;

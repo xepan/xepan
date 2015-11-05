@@ -3,11 +3,17 @@ xShop_Calendar_Editor = function(parent,designer){
 	this.parent = parent;
 	this.current_calendar_component = undefined;
 	this.designer_tool = designer;
-	this.element = $('<div id="xshop-designer-calendar-editor" class="xshop-options-editor" style="display:block"> </div>').appendTo(this.parent);
+	this.element = $('<div id="xshop-designer-calendar-editor" class="xshop-options-editor atk-row" style="display:block"> </div>').appendTo(this.parent);
 
-	// add font_selection with preview
+	this.row1 = $('<div class="atk-row" style="display:block;margin:0;"> </div>').appendTo(this.element);
+
+//```````````````````````````````````````````````````````````````````````````|
+//------------------------------Header Style Options-------------------------
+//___________________________________________________________________________|
+	
 	// header_font_size:16,
-	this.header_font_size_label = $('<label for="header_font_size">Header Font Size :</label>').appendTo(this.element);
+	this.col1 = $('<div class="atk-col-3">Header</div>').appendTo(this.row1);
+	this.header_font_size_label = $('<div><label for="header_font_size">Font Size :</label></div>').appendTo(this.col1);
 	this.header_font_size = $('<select id="header_font_size" class="btn btn-xs">Header Size</select>').appendTo(this.header_font_size_label);
 	options = '';
 	for (var i = 7; i < 50; i++) {
@@ -20,8 +26,32 @@ xShop_Calendar_Editor = function(parent,designer){
 		self.current_calendar_component.render();
 	});
 
+	//header font color: default Value Black
+	this.header_color_label = $('<div class="xshop-designer-calendar-color-picker"><label for="header_font_color">Color : </label></div>').appendTo(this.col1);
+	this.header_color_picker = $('<input id="header_font_color" style="display:none;">').appendTo(this.header_color_label);
+	$(this.header_color_picker).colorpicker({
+		parts:          'full',
+        alpha:          false,
+        showOn:         'both',
+        buttonColorize: true,
+        showNoneButton: true,
+        ok: function(event, color){
+        	// self.current_calendar_component.options.header_font_color = parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100);
+        	self.current_calendar_component.options.header_font_color = '#'+color.formatted;
+        	$('.xshop-designer-tool').xepan_xshopdesigner('check');
+        	self.current_calendar_component.render();
+        	// console.log('#'+color.formatted);
+        	// console.log(parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100));
+        }
+	});
+
+
+//```````````````````````````````````````````````````````````````````````````|
+//------------------------------Day Date Style Options-----------------------
+//___________________________________________________________________________|
 	// day_date_font_size:12,
-	this.day_date_font_size_label = $('<label for="day_date_font_size">Day Date Font Size :</label>').appendTo(this.element);
+	this.col2 = $('<div class="atk-col-3">Day Date</div>').appendTo(this.row1);
+	this.day_date_font_size_label = $('<div><label for="day_date_font_size">Font Size :</label></div>').appendTo(this.col2);
 	this.day_date_font_size = $('<select id="day_date_font_size"class="btn btn-xs">Day Date Size</select>').appendTo(this.day_date_font_size_label);
 	for (var i = 7; i < 50; i++) {
 		$('<option value="'+i+'">'+i+'</option>').appendTo(this.day_date_font_size);
@@ -32,8 +62,48 @@ xShop_Calendar_Editor = function(parent,designer){
 		self.current_calendar_component.render();
 	});
 
+	//Day Date Font Color
+	//header font color: default Value Black
+	this.day_date_color_label = $('<div class="xshop-designer-calendar-color-picker"><label for="day_date_font_color">Color : </label></div>').appendTo(this.col2);
+	this.day_date_color_picker = $('<input id="day_date_font_color" style="display:none;">').appendTo(this.day_date_color_label);
+	$(this.day_date_color_picker).colorpicker({
+		parts:          'full',
+        alpha:          false,
+        showOn:         'both',
+        buttonColorize: true,
+        showNoneButton: true,
+        ok: function(event, color){
+        	// self.current_calendar_component.options.header_font_color = parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100);
+        	self.current_calendar_component.options.day_date_font_color = '#'+color.formatted;
+        	$('.xshop-designer-tool').xepan_xshopdesigner('check');
+        	self.current_calendar_component.render();
+        	// console.log('#'+color.formatted);
+        	// console.log(parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100));
+        }
+	});
+
+
+	//```````````````````````````````````````````````````````````````````````````|
+	//------------------------------Cell Block Height----------------------------
+	//___________________________________________________________________________|
+	//Height
+	this.height_label = $('<label for="xshop-designer-calendar-height">Height :</label>').appendTo(this.col2);
+	this.cell_height = $('<input type="number" id="xshop-designer-calendar-height"  min="10" max="80" value="20" style="padding:0;font-size:12px;" />').appendTo(this.height_label);
+
+	$(this.cell_height).change(function(event){
+		self.current_calendar_component.options.calendar_cell_heigth = $(this).val();
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
+
+	});	
+
+
+//```````````````````````````````````````````````````````````````````````````|
+//------------------------------Day Name Style Options-----------------------
+//___________________________________________________________________________|
 	// day_name_font_size:12,
-	this.day_name_font_size_label = $('<label for="day_name_font_size">Day Name Font Size :</label>').appendTo(this.element);
+	this.col3 = $('<div class="atk-col-3">Day Name</div>').appendTo(this.row1);
+	this.day_name_font_size_label = $('<div><label for="day_name_font_size">Font Size :</label></div>').appendTo(this.col3);
 	this.day_name_font_size = $('<select class="btn btn-xs">Day Name Size</select>').appendTo(this.day_name_font_size_label);
 	for (var i = 7; i < 50; i++) {
 		$('<option value="'+i+'">'+i+'</option>').appendTo(this.day_name_font_size);
@@ -44,8 +114,49 @@ xShop_Calendar_Editor = function(parent,designer){
 		self.current_calendar_component.render();
 	});
 
+	//Day Name Font Color
+	this.day_name_color_label = $('<div class="xshop-designer-calendar-color-picker"><label for="day_name_font_color">Color : </label></div>').appendTo(this.col3);
+	this.day_name_color_picker = $('<input id="day_name_font_color" style="display:none;">').appendTo(this.day_name_color_label);
+	$(this.day_name_color_picker).colorpicker({
+		parts:          'full',
+        alpha:          false,
+        showOn:         'both',
+        buttonColorize: true,
+        showNoneButton: true,
+        ok: function(event, color){
+        	// self.current_calendar_component.options.header_font_color = parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100);
+        	self.current_calendar_component.options.day_name_font_color = '#'+color.formatted;
+        	$('.xshop-designer-tool').xepan_xshopdesigner('check');
+        	self.current_calendar_component.render();
+        	// console.log('#'+color.formatted);
+        	// console.log(parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100));
+        }
+	});
+
+	//Day Name Background Color
+	this.day_name_bg_color_label = $('<div class="xshop-designer-calendar-color-picker"><label for="day_name_bg_color">BG Color : </label></div>').appendTo(this.col3);
+	this.day_name_bg_color_picker = $('<input id="day_name_bg_color" style="display:none;">').appendTo(this.day_name_bg_color_label);
+	$(this.day_name_bg_color_picker).colorpicker({
+		parts:          'full',
+        alpha:          false,
+        showOn:         'both',
+        buttonColorize: true,
+        showNoneButton: true,
+        ok: function(event, color){
+        	// self.current_calendar_component.options.header_font_color = parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100);
+        	self.current_calendar_component.options.day_name_bg_color = '#'+color.formatted;
+        	$('.xshop-designer-tool').xepan_xshopdesigner('check');
+        	self.current_calendar_component.render();
+        	// console.log('#'+color.formatted);
+        	// console.log(parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100));
+        }
+	});
+//```````````````````````````````````````````````````````````````````````````|
+//------------------------------Event Style Options--------------------------
+//___________________________________________________________________________|
 	// event_font_size:10,
-	this.event_font_size_label = $('<label for="day_name_font_size">Event Font Size :</label>').appendTo(this.element);
+	this.col4 = $('<div class="atk-col-3" >Event</div>').appendTo(this.row1);
+	this.event_font_size_label = $('<div><label for="day_name_font_size">Font Size :</label></div>').appendTo(this.col4);
 	this.event_font_size = $('<select class="btn btn-xs">Event Size</select>').appendTo(this.event_font_size_label);
 	for (var i = 7; i < 50; i++) {
 		$('<option value="'+i+'">'+i+'</option>').appendTo(this.event_font_size);
@@ -56,8 +167,35 @@ xShop_Calendar_Editor = function(parent,designer){
 		self.current_calendar_component.render();
 	});
 
+	//Event Font Color
+	this.event_color_label = $('<div class="xshop-designer-calendar-color-picker"><label for="event_font_color">Color : </label></div>').appendTo(this.col4);
+	this.event_color_picker = $('<input id="event_font_color" style="display:none;">').appendTo(this.event_color_label);
+	$(this.event_color_picker).colorpicker({
+		parts:          'full',
+        alpha:          false,
+        showOn:         'both',
+        buttonColorize: true,
+        showNoneButton: true,
+        ok: function(event, color){
+        	// self.current_calendar_component.options.header_font_color = parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100);
+        	self.current_calendar_component.options.event_font_color = '#'+color.formatted;
+        	$('.xshop-designer-tool').xepan_xshopdesigner('check');
+        	self.current_calendar_component.render();
+        	// console.log('#'+color.formatted);
+        	// console.log(parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100));
+        }
+	});
+
+
+//```````````````````````````````````````````````````````````````````````````|
+//------------------------------Month Style Options--------------------------
+//___________________________________________________________________________|
 	//Month
-	this.month_label = $('<label for="month">Month :</label>').appendTo(this.element);
+	$('<hr>').appendTo(this.element);
+	this.row2 = $('<div class="atk-row" style="display:block;margin:0;"></div>').appendTo(this.element);
+	this.col5 = $('<div class="atk-col-3"></div>').appendTo(this.row2);
+	
+	this.month_label = $('<label for="month">Month :</label>').appendTo(this.col5);
 	this.month = $('<select id="month" class="btn btn-xs"></select>').appendTo(this.month_label);
 	options = '<option value="00">Starting</option>';
 	options += '<option value="01">January</option>';
@@ -86,8 +224,12 @@ xShop_Calendar_Editor = function(parent,designer){
 	});	
 
 
+//```````````````````````````````````````````````````````````````````````````|
+//------------------------------Starting Month Style Options-----------------
+//___________________________________________________________________________|
 	//Choose Your Calendar's Starting Month 
-	this.starting_month = $('<label for="startDate">Starting Month :</label>').appendTo(this.element);
+	this.col6 = $('<div class="atk-col-3"></div>').appendTo(this.row2);
+	this.starting_month = $('<label for="startDate">Starting Month :</label>').appendTo(this.col6);
 	this.starting_month_text = $('<input name="startDate" id="xshop-designer-startDate" class="xshop-designer-calendar-month-picker" />').appendTo(this.starting_month);	
 	$('.xshop-designer-calendar-month-picker').datepicker( {
         changeMonth: true,
@@ -123,8 +265,13 @@ xShop_Calendar_Editor = function(parent,designer){
 		});
 	});
 
+
+//```````````````````````````````````````````````````````````````````````````|
+//------------------------------Starting Month Style Options-----------------
+//___________________________________________________________________________| 
     //Calendar Events
-    event_btn = $('<div class="btn"><i class="glyphicon glyphicon-star-empty"></i><br>Events</div>').appendTo(this.element);
+	this.col7 = $('<div class="atk-col-3"></div>').appendTo(this.row2);
+    event_btn = $('<div class="btn"><i class="glyphicon glyphicon-star-empty"></i><br>Events</div>').appendTo(this.col7);
 	
 	event_frame = $('<div id="xshop-designer-calendar-events-dialog" class="xshop-designer-calendar-events-frame"></div>').appendTo(this.element);
 
@@ -178,9 +325,15 @@ Calendar_Component = function (params){
 	this.editor = undefined;
 	this.options = {
 		header_font_size:16,
+		header_font_color:'#000000',
 		day_date_font_size:12,
+		day_date_font_color:'#00000',
 		day_name_font_size:12,
+		day_name_font_color:'#00000',
 		event_font_size:10,
+		event_font_size:'#00000',
+		day_name_bg_color:'#FFFFFF',
+		calendar_cell_heigth:20,
 
 		month:undefined,
 		width:400,
@@ -315,9 +468,15 @@ Calendar_Component = function (params){
 			type: 'GET',
 			data: { 
 					header_font_size:self.options.header_font_size,
+					header_font_color:self.options.header_font_color,
 					day_date_font_size:self.options.day_date_font_size,
+					day_date_font_color:self.options.day_date_font_color,
 					day_name_font_size:self.options.day_name_font_size,
+					day_name_font_color:self.options.day_name_font_color,
 					event_font_size:self.options.event_font_size,
+					event_font_color:self.options.event_font_color,
+					day_name_bg_color:self.options.day_name_bg_color,
+					calendar_cell_heigth:self.options.calendar_cell_heigth,
 
 					zoom: self.designer_tool.zoom,
 					zindex:self.options.zindex,

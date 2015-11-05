@@ -419,3 +419,10 @@ img.xdesigner-page-layout-thumbnail{
   cursor:default;
 }
 
+.xshop-designer-calendar-color-picker > button {
+  padding:0 !important;
+}
+.xshop-designer-calendar-color-picker > button{
+  background-color: none !important;
+  
+}
