@@ -15,9 +15,8 @@ class Controller_RenderCalendar extends \AbstractController {
 		if(count($all_events[$this->options['month']]))
 			$current_month_events = $all_events[$this->options['month']];
 
-		$calendar_html = $this->drawCalendar($this->options['month'],$this->options['year'],[],$current_month_events);
+		$calendar_html = $this->drawCalendar($this->options['month'],$this->options['year'],[],$current_month_events,$this->options);
 		// throw new \Exception($cale);
-		
 		
 		//Convert Html to PDF
 		$this->convertHtmlToPdf($calendar_html);
@@ -51,16 +50,24 @@ class Controller_RenderCalendar extends \AbstractController {
 		$this->pdf = $pdf->Output(null,'S');
 	}
 
-	function drawCalendar($month,$year,$resultA,$events=[]){
+	function drawCalendar($month,$year,$resultA,$events=[],$styles=[]){
+		$header_font_size = 30;
+		$day_date_font_size = 16;
+		$day_name_font_size = 20;
+		$event_font_size = 13;
 
-
-
+		if(is_array($styles)){
+			$header_font_size = isset($styles['header_font_size'])?$styles['header_font_size']:30;
+			$day_date_font_size = isset($styles['day_date_font_size'])?$styles['day_date_font_size']:16;
+			$day_name_font_size = isset($styles['day_name_font_size'])?$styles['day_name_font_size']:20;
+			$event_font_size = isset($styles['event_font_size'])?$styles['event_font_size']:13;
+		}
   		/* draw table */
-  		$calendar = '<div>'.$month.' - '.$year.'</div>';
-  		$calendar .= '<table cellpadding="0" cellspacing="0" class="calendar" width="100%">';
+  		$calendar = '<div style="font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';">'.$month.' - '.$year.'</div>';
+  		$calendar .= '<table cellpadding="0" cellspacing="0" class="calendar" width="100%" style="border:1px solid red;" border="1" align="center">';
  		/* table headings */
   		$headings = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
-  		$calendar.= '<tr class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
+  		$calendar.= '<tr style="background-color:'.$styles['day_name_bg_color'].';font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
   		
   		/* days and weeks vars now ... */
   		$running_day = date('w',mktime(0,0,0,$month,1,$year));
@@ -79,7 +86,7 @@ class Controller_RenderCalendar extends \AbstractController {
 		/* keep going with days.... */
 		for($list_day = 1; $list_day <= $days_in_month; $list_day++){
 
-		    $calendar.= '<td class="calendar-day">';
+		    $calendar.= '<td class="calendar-day" style="overflow:hidden;height:'.$styles['calendar_cell_heigth'].';font-size:'.$day_date_font_size.'px;color:'.$styles['day_date_font_color'].'">';
 		    /* add in the day number */
 		    $calendar.= '<div class="day-number">'.$list_day.'</div>';
 
@@ -87,7 +94,7 @@ class Controller_RenderCalendar extends \AbstractController {
 		    
 		    $event_date_format = date('d-F-Y',strtotime($date));
 		    if($message = $events[$event_date_format]){
-		    	$calendar .= '<small style="font-size:6px;">'.$message."</small>";
+		    	$calendar .= '<small style="font-size:'.$event_font_size.'px;color:'.$styles['event_font_color'].'">'.$message."</small>";
 		    }
 
 		    $tdHTML='';        
