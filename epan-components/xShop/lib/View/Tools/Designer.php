@@ -102,6 +102,10 @@ class View_Tools_Designer extends \componentBase\View_Component{
 		);
 
 		if($this->render_designer){
+
+			$this->api->jquery->addStylesheet('designer/flat_top_orange');
+			$this->api->template->appendHTML('js_include','<script src="epan-components/xShop/templates/js/designer/pace.js"></script>'."\n");
+			
 			$this->api->jquery->addStylesheet('designer/designer');
 			$this->api->template->appendHTML('js_include','<script src="epan-components/xShop/templates/js/designer/designer.js"></script>'."\n");
 			//Jquery Color Picker
