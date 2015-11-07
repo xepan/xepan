@@ -366,6 +366,7 @@ img.xdesigner-page-layout-thumbnail{
   border:1px solid #b5babf;
   box-shadow:2px 2px 8px -2px #888;
   font-size: 11px; 
+  overflow: inherit !important;
 }
 
 #xshop-designer-image-editor{
