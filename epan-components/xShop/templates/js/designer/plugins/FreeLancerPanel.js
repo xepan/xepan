@@ -261,7 +261,7 @@ FreeLancerPageLayoutManager = function(parent,designer, canvas){
 
 	this.init = function(){
 		var self = this;
-		this.element = $('<div class="btn xshop-designer-freelancer-tool"><i class="glyphicon glyphicon-list-alt"></i><br>P&L</div>').appendTo(this.parent);
+		this.element = $('<div class="btn xshop-designer-freelancer-tool" title="Pages and Layout" ><i class="glyphicon glyphicon-list-alt"></i><br>P&L</div>').appendTo(this.parent);
 		this.page = $('<div></div>').appendTo(this.element);
 
 		this.pageblock = new PageBlock(this.page,this.designer_tool,this.canvas,this);
@@ -399,7 +399,7 @@ FreeLancerPanel = function(parent, designer, canvas){
 	this.FreeLancerPageLayoutManager=undefined;
 
 	this.init =  function(){
-		this.element = $('<div class="row"></div>').appendTo(this.parent);
+		this.element = $('<div class="row pull-left"></div>').appendTo(this.parent);
 		this.FreeLancerPageLayoutManager = new FreeLancerPageLayoutManager(this.element,this.designer_tool, this.canvas);
 		this.FreeLancerPageLayoutManager.init();
 		this.FreeLancerComponentOptions = new FreeLancerComponentOptions(this.element,this.designer_tool, this.canvas);

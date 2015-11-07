@@ -429,7 +429,7 @@ Calendar_Component = function (params){
 
 	}
 
-	this.render = function(place_in_center=0){
+	this.render = function(place_in_center){
 
 		var self = this;
 		if(self.options.load_design == true){
