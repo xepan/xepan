@@ -231,7 +231,7 @@ xShop_Calendar_Editor = function(parent,designer){
 	this.col6 = $('<div class="atk-col-3"></div>').appendTo(this.row2);
 	this.starting_month = $('<label for="startDate">Starting Month :</label>').appendTo(this.col6);
 	this.starting_month_text = $('<input name="startDate" id="xshop-designer-startDate" class="xshop-designer-calendar-month-picker" />').appendTo(this.starting_month);	
-	$('.xshop-designer-calendar-month-picker').datepicker( {
+	this.starting_month_datepicker = $('.xshop-designer-calendar-month-picker').datepicker( {
         changeMonth: true,
         changeYear: true,
         showButtonPanel: true,
@@ -351,11 +351,41 @@ xShop_Calendar_Editor = function(parent,designer){
 
     //Set from Saved Values
 	this.setCalendarComponent = function(component){
+		console.log(component);
+
 		this.current_calendar_component  = component;
-		$(this.font_size).val(component.options.font_size);
-		$(this.font_selector).val(component.options.font);
-		$(this.text_color_picker).val(component.options.color_formatted);
-		$(this.text_color_picker).colorpicker('setColor',component.options.color_formatted);
+		$(this.header_font_size).val(component.options.header_font_size);
+		$(this.header_color_picker).colorpicker('setColor',component.options.header_font_color);
+
+		$(this.day_date_color_picker).colorpicker('setColor',component.options.day_date_font_color);
+		$(this.day_date_font_size).val(component.options.day_date_font_size);
+
+		$(this.day_name_bg_color_picker).colorpicker('setColor',component.options.day_name_bg_color);
+
+		$(this.day_name_color_picker).colorpicker('setColor',component.options.day_name_font_color);
+		$(this.day_name_font_size).val(component.options.day_name_font_size);
+
+		$(this.event_color_picker).colorpicker('setColor',component.options.event_font_color);
+		$(this.event_font_size).val(component.options.event_font_size);
+		
+		$(this.height).val(component.options.height);
+
+		$(this.events).val(component.options.events);
+		$(this.calendar_cell_heigth).val(component.options.calendar_cell_heigth);
+		$(this.designer_mode).val(component.options.designer_mode);
+		$(this.load_design).val(component.options.load_design);
+
+		$(this.month).val(component.options.month);
+		$(this.starting_date).val(component.options.starting_date);
+
+		$(this.starting_month_datepicker).datepicker('setDate',component.options.starting_month);
+
+		$(this.starting_year).val(component.options.starting_year);
+		$(this.type).val(component.options.type);
+		$(this.width).val(component.options.width);
+		$(this.x).val(component.options.x);
+		$(this.y).val(component.options.y);
+
 	}
 }
 
