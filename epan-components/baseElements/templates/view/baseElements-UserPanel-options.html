@@ -53,6 +53,12 @@
 											</td>
 											<td style='vertical-align:middle'>New Registration</td>
 										</tr>
+										<tr>
+											<td>
+											<input id="user_panel_nameorusername_{$id}" type="checkbox">
+											</td>
+											<td style='vertical-align:middle'>Hide Name / Username</td>
+										</tr>
 									</table>
 										
 									</td>
@@ -339,6 +345,10 @@ $('#user_panel_new_registration_{$id}').change(function(event) {
 if($('#user_panel_new_registration_{$id}').is(':checked')?$(current_selected_component).attr('show_register_new_user',1):$(current_selected_component).attr('show_register_new_user',0));
 $(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
 });
+$('#user_panel_nameorusername_{$id}').change(function(event) {
+if($('#user_panel_nameorusername_{$id}').is(':checked')?$(current_selected_component).attr('show_name_or_username',1):$(current_selected_component).attr('show_name_or_username',0));
+$(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
+});
 $('#user_panel_show_logout_view').change(function(event) {
 if($('#user_panel_show_logout_view').is(':checked')?$(current_selected_component).attr('user_panel_show_logout_view',1):$(current_selected_component).attr('user_panel_show_logout_view',0));
 $(current_selected_component).univ().errorMessage('Save and reload Page to see changes');
@@ -365,7 +375,10 @@ show: function (){
 // $(your_option_html_element).text($(current_selected_component).css('border'));
 $('#user_panel_login_view').attr('checked',$(current_selected_component).attr("login_view")=='1'?true:false);
 $('#user_panel_redirect_page').val($(current_selected_component).attr('user_panel_redirect_page'));
-$('#user_panel_new_registration_{$id}').attr('checked',$(current_selected_component).attr("show_register_new_user")=='1'?true:false);
+$('#user_panel_forgotpassword_{$id}').attr('checked',$(current_selected_component).attr("show_register_new_user")=='1'?true:false);
+
+$('#user_panel_nameorusername_{$id}').attr('checked',$(current_selected_component).attr("show_name_or_username")=='1'?true:false);
+
 $('#user_panel_forgotpassword_{$id}').attr('checked',$(current_selected_component).attr("show_forgot_password")=='1'?true:false);
 
 $('#user_panel_verify_{$id}').attr('checked',$(current_selected_component).attr("show_verify_me")=='1'?true:false);
