@@ -31,6 +31,12 @@ class View_FontUpload extends \View{
 				if ($uploadOk == 1) {
 			    	if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 				    	$this->api->js(true,$this->js()->reload())->univ()->successMessage('Font File '.basename( $_FILES["fileToUpload"]["name"]." has been uploded"));
+						
+						/*TTF File To Convert & create TCPDF Font file*/	
+						$pdf = new \TCPDF_TCPDF('l', 'pt', '', true, 'UTF-8', false);
+					    $fontname = \TCPDF_FONTS::addTTFfont($target_file, 'TrueTypeUnicode', '',32);
+					    $pdf->AddFont($fontname, '', 14, '', false);
+
 			    	} else {
 					    $this->api->js(true)->univ()->errorMessage('Sorry, there was an error uploading your file');
 			    	} 
