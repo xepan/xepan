@@ -433,3 +433,16 @@ img.xdesigner-page-layout-thumbnail{
 .xshop-designer-backgroundimage-crop{
   height: 300px !important;
 }
+
+.xshop-calendar-show-hide-checkbox{
+  width: 30px !important;
+  float:left;
+}
+
+.xshop-calendar-editor-options-to-show div.panel-body{
+  display: none;
+}
+
+.ui-dialog.xshop-calendar-show-hide-dialog{
+  overflow-y: scroll;
+}
