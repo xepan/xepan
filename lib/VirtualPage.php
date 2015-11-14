@@ -150,12 +150,12 @@ class VirtualPage extends AbstractController
                     // it's fine to ignore it.
                     throw $e;
                 }
-                    // throw $this->exception('', 'StopInit');
 
                 //Imants: most likely forgetting is not needed, because we stop execution anyway
                 //$self->api->stickyForget($self->name.'_id');
                 //$self->api->stickyForget($self->name);
             });
+                    throw $this->exception('', 'StopInit');
         }
         return $this;
     }
