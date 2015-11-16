@@ -398,7 +398,29 @@ xShop_Calendar_Editor = function(parent,designer){
 	 	autoOpen: false,
 		width: 500,
 		modal: true,
-		height:400
+		height:400,
+		open:function(){
+			// console.log(self.current_calendar_component.options);
+			//Show to default/Save Options
+			$('input[data_variable="hide_header_font_size"]').prop('checked',self.current_calendar_component.options.hide_header_font_size);
+			$('input[data_variable="hide_header_font_color"]').prop('checked',self.current_calendar_component.options.hide_header_font_color);
+			
+			$('input[data_variable="hide_day_date_font_size"]').prop('checked',self.current_calendar_component.options.hide_day_date_font_size);
+			$('input[data_variable="hide_day_date_font_color"]').prop('checked',self.current_calendar_component.options.hide_day_date_font_color);
+			$('input[data_variable="hide_day_date_font_height"]').prop('checked',self.current_calendar_component.options.hide_day_date_font_height);
+			
+			$('input[data_variable="hide_day_name_font_size"]').prop('checked',self.current_calendar_component.options.hide_day_name_font_size);
+			$('input[data_variable="hide_day_name_font_color"]').prop('checked',self.current_calendar_component.options.hide_day_name_font_color);
+			$('input[data_variable="hide_day_name_font_bg_color"]').prop('checked',self.current_calendar_component.options.hide_day_name_font_bg_color);
+
+			$('input[data_variable="hide_event_font_size"]').prop('checked',self.current_calendar_component.options.hide_event_font_size);
+			$('input[data_variable="hide_event_font_color"]').prop('checked',self.current_calendar_component.options.hide_event_font_color);
+
+			$('input[data_variable="hide_month"]').prop('checked',self.current_calendar_component.options.hide_month);
+			$('input[data_variable="hide_starting_month"]').prop('checked',self.current_calendar_component.options.hide_starting_month);
+			$('input[data_variable="hide_remove_btn"]').prop('checked',self.current_calendar_component.options.hide_remove_btn);
+		
+		}
 	});
 
 	$(this.hide_show_btn).click(function(){
