@@ -275,7 +275,7 @@ xShop_Calendar_Editor = function(parent,designer){
 //___________________________________________________________________________| 
     //Calendar Events
 	this.col7 = $('<div class="atk-col-3"></div>').appendTo(this.row2);
-    event_btn = $('<div class="btn atk-swatch-blue"><i class="glyphicon glyphicon-star-empty"></i>Events </div>').appendTo(this.col7);
+    event_btn = $('<div class="btn atk-swatch-blue"><i class="glyphicon glyphicon-star-empty"></i>Add Events </div>').appendTo(this.col7);
 	
 	event_frame = $('<div id="xshop-designer-calendar-events-dialog" class="xshop-designer-calendar-events-frame"></div>').appendTo(this.element);
 
@@ -355,7 +355,6 @@ xShop_Calendar_Editor = function(parent,designer){
 //```````````````````````````````````````````````````````````````````````````|
 //------------------------------Delete Button--------------------------------
 //___________________________________________________________________________| 
-	//Delete Button
 	this.col8 = $('<div class="atk-col-3"></div>').appendTo(this.row2);
 	this.calendar_remove = $('<div class="btn atk-swatch-red"><span class="glyphicon glyphicon-trash"></span> Remove</div>').appendTo(this.col8);
 	this.calendar_remove.click(function(){
@@ -371,12 +370,45 @@ xShop_Calendar_Editor = function(parent,designer){
 		});
 	});
 
+//```````````````````````````````````````````````````````````````````````````|
+//------------------------------Add Hide Show Button-------------------------
+//___________________________________________________________________________| 
+	this.hide_show_btn = $('<div class="btn btn-warning"> Hide/Show </div>').appendTo(this.col8);
+	hide_show_frame = $('<div id="xshop-designer-calendar-options-dialog" class="xshop-designer-calendar-options-frame"></div>').appendTo(this.element);
+	
+	header_options = $('<div class="panel panel-default xshop-calendar-editor-options-to-show"><div class="panel-heading">Header options to show/hide</div><div class="panel-body"></div><ul class="list-group"><li class="list-group-item" data_variable="hide_header_font_size">Font Size<input data_variable="hide_header_font_size" class="xshop-calendar-show-hide-checkbox" type="checkbox" /></li><li class="list-group-item" data_variable="hide_header_font_color">Font Color<input data_variable="hide_header_font_color" class="xshop-calendar-show-hide-checkbox" type="checkbox" /></li></ul></div>').appendTo(hide_show_frame);
+	day_date_options = $('<div class="panel panel-default xshop-calendar-editor-options-to-show"><div class="panel-heading">Day Date options to show/hide</div><div class="panel-body"></div><ul class="list-group"><li class="list-group-item" data_variable="hide_day_date_font_size">Font Size<input data_variable="hide_day_date_font_size" class="xshop-calendar-show-hide-checkbox" type="checkbox" /></li><li class="list-group-item" data_variable="hide_day_date_font_color">Font Color<input data_variable="hide_day_date_font_color" class="xshop-calendar-show-hide-checkbox" type="checkbox" /></li><li class="list-group-item" data_variable="hide_day_date_font_height">Cell Height<input data_variable="hide_day_date_font_height" class="xshop-calendar-show-hide-checkbox" type="checkbox" /></li></ul></div>').appendTo(hide_show_frame);
+	day_name_options = $('<div class="panel panel-default xshop-calendar-editor-options-to-show"><div class="panel-heading">Day Name options to show/hide</div><div class="panel-body"></div><ul class="list-group"><li class="list-group-item" data_variable="hide_day_name_font_size">Font Size<input data_variable="hide_day_name_font_size" class="xshop-calendar-show-hide-checkbox" type="checkbox" /></li><li class="list-group-item" data_variable="hide_day_name_font_color">Font Color<input data_variable="hide_day_name_font_color" class="xshop-calendar-show-hide-checkbox" type="checkbox" /></li><li class="list-group-item" data_variable="hide_day_name_font_bg_color">Background Color<input data_variable="hide_day_name_font_bg_color" class="xshop-calendar-show-hide-checkbox" type="checkbox" /></li></ul></div>').appendTo(hide_show_frame);
+	event_options = $('<div class="panel panel-default xshop-calendar-editor-options-to-show"><div class="panel-heading">Event options to show/hide</div><div class="panel-body"></div><ul class="list-group"><li class="list-group-item" data_variable="hide_event_font_size">Font Size	<input data_variable="hide_event_font_size" class="xshop-calendar-show-hide-checkbox" type="checkbox" /></li><li class="list-group-item" data_variable="hide_event_font_color">Font Color	<input data_variable="hide_event_font_color" class="xshop-calendar-show-hide-checkbox" type="checkbox" /></li></ul></div>').appendTo(hide_show_frame);
+	other_calendar_options = $('<div class="panel panel-default xshop-calendar-editor-options-to-show"><div class="panel-heading">Other Calendar options to show/hide</div><div class="panel-body"></div><ul class="list-group"><li class="list-group-item" data_variable="hide_month">Hide Month/Sequence<input data_variable="hide_month" class="xshop-calendar-show-hide-checkbox" type="checkbox" /></li><li class="list-group-item" data_variable="hide_starting_month">Starting Month<input data_variable="hide_starting_month" class="xshop-calendar-show-hide-checkbox" type="checkbox" /></li><li class="list-group-item" data_variable="hide_remove_btn">Remove Button<input data_variable="hide_remove_btn" class="xshop-calendar-show-hide-checkbox" type="checkbox" /></li></ul></div>').appendTo(hide_show_frame);
+
+	$('.xshop-calendar-editor-options-to-show  li').click(function(event){
+		option = $(this).attr('data_variable');
+		current_value = eval('self.current_calendar_component.options.'+option);
+		if(current_value == true)
+			current_value=false;
+		else
+			current_value=true;
+
+		eval('self.current_calendar_component.options.'+option+' = '+current_value+';');
+		$(this).find(':checkbox').prop('checked', current_value);
+	});
+
+	option_display_dialog = hide_show_frame.dialog({
+	 	autoOpen: false,
+		width: 500,
+		modal: true,
+		height:400
+	});
+
+	$(this.hide_show_btn).click(function(){
+		option_display_dialog.dialog("open");
+	});
 
     //Set from Saved Values
 	this.setCalendarComponent = function(component){
 		// console.log(component);
-
-		this.current_calendar_component  = component;
+		this.current_calendar_component  = component;		
 		$(this.header_font_size).val(component.options.header_font_size);
 		$(this.header_color_picker).colorpicker('setColor',component.options.header_font_color);
 
@@ -410,6 +442,126 @@ xShop_Calendar_Editor = function(parent,designer){
 		$(this.y).val(component.options.y);
 
 		$(this.event_count).html(self.getCalendarEvent());
+
+		if(component.options.designer_mode == false && 0){
+			//Hide Header Font Size
+			if(component.options.hide_header_font_size){
+				$(this.header_font_size_label).hide();
+				$(this.header_font_color).hide();
+			}else{
+				$(this.header_font_size_label).show();
+				$(this.header_font_color).show();
+
+			}
+
+			if(component.options.hide_header_font_color){
+				$(this.header_color_label).hide();
+				$(this.header_color_picker).hide();
+			}else{
+				$(this.header_color_label).show();
+				$(this.header_color_picker).show();
+
+			}
+
+
+			//Hide Day Date Font Size
+			if(component.options.hide_day_date_font_size){
+				$(this.day_date_font_size_label).hide();
+				$(this.day_date_font_size).hide();
+			}else{
+				$(this.day_date_font_size_label).show();
+				$(this.day_date_font_size).show();
+			}
+
+			//Hide Day Date Font color
+			if(component.options.hide_day_date_font_color){
+				$(this.day_date_color_picker).hide();
+				$(this.day_date_color_label).hide();
+			}else{
+				$(this.day_date_color_picker).show();
+				$(this.day_date_color_label).show();
+			}
+
+			//Hide Day Date Font Height
+			if(component.options.hide_day_date_font_height){
+				$(this.height_label).hide();
+				$(this.cell_height).hide();
+			}else{
+				$(this.height_label).show();
+				$(this.cell_height).show();
+			}
+
+			//Hide Day Name Font Size
+			if(component.options.hide_day_name_font_size){
+				$(this.day_name_font_size_label).hide();
+				$(this.day_name_font_size).hide();
+			}else{
+				$(this.day_name_font_size_label).show();
+				$(this.day_name_font_size).show();
+			}
+
+			//Hide Day Name Font Color
+			if(component.options.hide_day_name_font_color){
+				$(this.day_name_color_label).hide();
+				$(this.day_name_color_picker).hide();
+			}else{
+				$(this.day_name_color_label).show();
+				$(this.day_name_color_picker).show();
+			}
+
+			//Hide Day Name Font BG Color
+			if(component.options.hide_day_name_font_bg_color){
+				$(this.day_name_bg_color_label).hide();
+				$(this.day_name_bg_color_picker).hide();
+			}else{
+				$(this.day_name_bg_color_label).show();
+				$(this.day_name_bg_color_picker).show();
+			}
+
+			//Hide Event Font Size
+			if(component.options.hide_event_font_size){
+				$(this.event_font_size_label).hide();
+				$(this.event_font_size).hide();
+			}else{
+				$(this.event_font_size_label).show();
+				$(this.event_font_size).show();
+			}
+
+			//Hide Event Font Color
+			if(component.options.hide_event_font_color){
+				$(this.event_color_label).hide();
+				$(this.event_color_picker).hide();
+			}else{
+				$(this.event_color_label).show();
+				$(this.event_color_picker).show();
+			}
+
+			//Hide Month 
+			if(component.options.hide_month){
+				$(this.month_label).hide();
+				$(this.month).hide();
+			}else{
+				$(this.month_label).show();
+				$(this.month).show();
+			}
+
+			//Hide Starting Month
+			if(component.options.hide_starting_month){
+				$(this.starting_month_datepicker).hide();
+				$(this.starting_month).hide();
+			}else{
+				$(this.starting_month_datepicker).show();
+				$(this.starting_month).show();
+			}
+			
+			//Hide Remove Button
+			if(component.options.hide_remove_btn){
+				$(this.calendar_remove).hide();
+			}else{
+				$(this.calendar_remove).show();
+			}
+		}
+
 	}
 }
 
@@ -449,6 +601,25 @@ Calendar_Component = function (params){
 		y:undefined,
 		events:{},
 		type: 'Calendar',
+
+		movable:false,
+		hide_header_font_size:true,
+		hide_header_font_color:true,
+
+		hide_day_date_font_size:true,
+		hide_day_date_font_color:true,
+		hide_day_date_font_height:true,
+
+		hide_day_name_font_size:true,
+		hide_day_name_font_color:true,
+		hide_day_name_font_bg_color:true,
+
+		hide_event_font_size:true,
+		hide_event_font_color:true,
+
+		hide_month:false,
+		hide_starting_month:false,
+		hide_remove_btn:true
 	};
 	
 	this.init = function(designer,canvas, editor){
@@ -490,7 +661,6 @@ Calendar_Component = function (params){
 			self.designer_tool.options.calendar_event = JSON.parse(self.options.events);
 			self.designer_tool.options.calendar_starting_month = self.options.starting_date;
 			self.options.load_design = "false";
-			// console.log(self.designer_tool.options.calendar_starting_month);
 		}
 		// console.log(JSON.stringify(self.designer_tool.options.calendar_event));
 		// console.log(self.designer_tool.options.calendar_event);
@@ -519,7 +689,7 @@ Calendar_Component = function (params){
 					self.render();
 				}
 			});
-			$(this.element).data('component',self);			
+			$(this.element).data('component',self);
 
 			$(this.element).click(function(event) {
 				$('.ui-selected').removeClass('ui-selected');
@@ -558,7 +728,6 @@ Calendar_Component = function (params){
 		if(this.xhr != undefined)
 			this.xhr.abort();
 
-		console.log(self.designer_tool.options.calendar_starting_month);
 		this.xhr = $.ajax({
 			url: 'index.php?page=xShop_page_designer_rendercalendar',
 			type: 'GET',
@@ -590,7 +759,26 @@ Calendar_Component = function (params){
 					designer_mode:self.options.designer_mode,
 					x:self.options.x,
 					y:self.options.y,
-					events:JSON.stringify(self.designer_tool.options.calendar_event)
+					events:JSON.stringify(self.designer_tool.options.calendar_event),
+
+					movable:self.options.movable,
+					hide_header_font_size:self.options.hide_header_font_size,
+					hide_header_font_color:self.options.hide_header_font_color,
+
+					hide_day_date_font_size:self.options.hide_day_date_font_size,
+					hide_day_date_font_color:self.options.hide_day_date_font_color,
+					hide_day_date_font_height:self.options.hide_day_date_font_height,
+
+					hide_day_name_font_size:self.options.hide_day_name_font_size,
+					hide_day_name_font_color:self.options.hide_day_name_font_color,
+					hide_day_name_font_bg_color:self.options.hide_day_name_font_bg_color,
+
+					hide_event_font_size:self.options.hide_event_font_size,
+					hide_event_font_color:self.options.hide_event_font_color,
+
+					hide_month:self.options.hide_month,
+					hide_starting_month:self.options.hide_starting_month,
+					hide_remove_btn:self.options.hide_remove_btn
 					},
 		})
 		.done(function(ret) {
