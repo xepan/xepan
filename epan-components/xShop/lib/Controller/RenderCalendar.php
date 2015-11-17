@@ -28,6 +28,9 @@ class Controller_RenderCalendar extends \AbstractController {
 	function convertPdfToImage($pdfData){
 		$imageData = new \Imagick();
 	   	$imageData->readimageblob($pdfData);
+
+	   	// $imageData->extentImage($this->options['width'],$this->options['height'],0,0);
+	   	
 	   	$this->phpimage = $imageData;
 	}
 
@@ -35,7 +38,7 @@ class Controller_RenderCalendar extends \AbstractController {
 		if(!$html)
 			throw new \Exception("Html Not Given");
 
-		$pagelayout = array($this->options['height'],$this->options['width']); //  or array($height, $width)
+		$pagelayout = array($this->options['width'],$this->options['height']); //  or array($height, $width)
 		$pdf = new \TCPDF_TCPDF('l', 'pt', $pagelayout, true, 'UTF-8', false);
 		$pdf->SetMargins(0, 0, 0);
 		$pdf->SetHeaderMargin(0);
@@ -64,7 +67,7 @@ class Controller_RenderCalendar extends \AbstractController {
 		}
   		/* draw table */
   		$calendar = '<div style="font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';">'.$month.' - '.$year.'</div>';
-  		$calendar .= '<table cellpadding="0" cellspacing="0" class="calendar" width="100%" style="border:1px solid red;" border="1" align="center">';
+  		$calendar .= '<table cellpadding="0" cellspacing="0" class="calendar" width="99%" border="1" align="center">';
  		/* table headings */
   		$headings = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
   		$calendar.= '<tr style="background-color:'.$styles['day_name_bg_color'].';font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';

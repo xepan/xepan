@@ -28,7 +28,7 @@ class page_xShop_page_designer_rendercalendar extends Page {
 
 		$options['zindex'] = $_GET['zindex'];
 		$options['width'] = $_GET['width'] * $zoom;
-		$options['height'] = $_GET['height'];
+		$options['height'] = $_GET['height'] * $zoom;
 		
 		$options['starting_date'] = $now;
 		$options['starting_month']= $current_month;

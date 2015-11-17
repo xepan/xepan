@@ -608,7 +608,7 @@ Calendar_Component = function (params){
 
 		month:undefined,
 		width:400,
-		height:300,
+		height:200,
 
 		starting_date:undefined, //Show Only Date and Month // Default Value currentYear-1st Jan Month
 		starting_month:undefined,
@@ -707,7 +707,7 @@ Calendar_Component = function (params){
 				stop: function(e,ui){
 					self.options.width = self.designer_tool.screen2option(ui.size.width);
 					self.options.height = self.designer_tool.screen2option(ui.size.height);
-					// alert(self.options.width);
+					// alert(self.options.height);
 					self.render();
 				}
 			});
