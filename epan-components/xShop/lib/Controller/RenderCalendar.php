@@ -89,7 +89,7 @@ class Controller_RenderCalendar extends \AbstractController {
 		/* keep going with days.... */
 		for($list_day = 1; $list_day <= $days_in_month; $list_day++){
 
-		    $calendar.= '<td class="calendar-day" style="overflow:hidden;height:'.$styles['calendar_cell_heigth'].';font-size:'.$day_date_font_size.'px;color:'.$styles['day_date_font_color'].'">';
+		    $calendar.= '<td class="calendar-day" style="overflow:hidden; height:'.$styles['calendar_cell_heigth'].'; max-height:'.$styles['calendar_cell_heigth'].';font-size:'.$day_date_font_size.'px;color:'.$styles['day_date_font_color'].'">';
 		    /* add in the day number */
 		    $calendar.= '<div class="day-number">'.$list_day.'</div>';
 
@@ -97,7 +97,7 @@ class Controller_RenderCalendar extends \AbstractController {
 		    
 		    $event_date_format = date('d-F-Y',strtotime($date));
 		    if($message = $events[$event_date_format]){
-		    	$calendar .= '<small style="font-size:'.$event_font_size.'px;color:'.$styles['event_font_color'].'">'.$message."</small>";
+		    	$calendar .= '<small style="text-align:right; font-size:'.$event_font_size.'px;color:'.$styles['event_font_color'].'">'.$message."</small>";
 		    }
 
 		    $tdHTML='';        
