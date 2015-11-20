@@ -50,6 +50,34 @@ xShop_Calendar_Editor = function(parent,designer){
         }
 	});
 
+	/*Header Font Family*/
+	
+	this.header_font_family_label = $('<div><label for="header_font_family">Font Family :</label></div>').appendTo(this.col1);
+	this.header_font_family = $('<select id="header_font_family" class="btn btn-xs">Header Font Family</select>').appendTo(this.header_font_family_label);
+	
+	// get all fonts via ajax
+	$.ajax({
+		url: 'index.php?page=xShop_page_designer_fonts',
+		type: 'GET',
+		data: {param1: 'value1'},
+	})
+	.done(function(ret) {
+		$(ret).appendTo(self.header_font_family);
+		// console.log("success");
+	})
+	.fail(function() {
+		// console.log("error");
+	})
+	.always(function() {
+		// console.log("complete");
+	});
+
+	$(this.header_font_family).change(function(event){
+		self.current_calendar_component.options.header_font_family = $(this).val();
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
+	});
+
 
 //```````````````````````````````````````````````````````````````````````````|
 //------------------------------Day Date Style Options-----------------------
@@ -597,11 +625,15 @@ Calendar_Component = function (params){
 	this.options = {
 		header_font_size:32,
 		header_font_color:'#000000',
+		header_font_family:'freemono',
 		day_date_font_size:20,
 		day_date_font_color:'#00000',
+		day_date_font_family:'freemono',
 		day_name_font_size:25,
 		day_name_font_color:'#00000',
+		day_name_font_family:'freemono',
 		event_font_size:10,
+		event_font_family:'freemono',
 		event_font_size:'#00000',
 		day_name_bg_color:'#FFFFFF',
 		calendar_cell_heigth:20,

@@ -13,6 +13,8 @@ class page_xShop_page_designer_fonts extends Page {
         $font_array=array();
 
         foreach ($p as  $junk) {
+            if(strpos($junk,'.ttf') === false) continue;
+            
             $font_name = explode("-", $junk);
             $font_name = $font_name[0];
             if(!in_array($font_name, $font_array)){
