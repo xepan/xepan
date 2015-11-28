@@ -1,5 +1,5 @@
 <?php
-class page_xBlog_page__owner_dashboard extends page_xBlog_page_owner_main{
+class page_xBlog_page_owner_dashboard extends page_xBlog_page_owner_main{
 	function page_index(){
 		// parent::init();
 		$this->app->title='xBlog  : Dashboard';

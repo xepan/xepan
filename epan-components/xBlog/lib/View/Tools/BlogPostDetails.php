@@ -42,7 +42,17 @@ class View_Tools_BlogPostDetails extends \componentBase\View_Component{
 				$this->template->trySetHTML('xshop_item_discus',$config_model['disqus_code']);
 			else 
 				$this->template->trySetHTML('xshop_item_discus',"<div class='alert alert-warning'>Place Your Discus Code and Select Comment Api in Item or Configuration</div>");
+		}
+		if(!$this->html_attributes['show-post-review']){
+			// $review_model=$this->add('xBlog/Model_BlogPostReview')->load($_GET['post_id']);
+			$this->template->del('review_section');
 		}	
+		// if($this->html_attributes['show-post-review-auth']){
+		// 	if(!$this->api->auth->isLoggedIn()){
+				
+				
+		// 	}
+		// }
 
 	}
 

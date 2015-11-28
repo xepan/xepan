@@ -1,5 +1,6 @@
 <div id="{$_name}" class="xblog-blog-details" style="" >
 <link rel="stylesheet" type="text/css" href="epan-components/xBlog/templates/css/xblog-post-detail.css">
+<script src="epan-components/xBlog/templates/js/jRate.js"></script>
 	{$Content}
 	<div class="well">
 		<div class="xblog-blog-details-posted-date">
@@ -17,6 +18,41 @@
 		<div class="xblog-blog-details-author">
 			<span class="">Posted By : {$author}</span> 
 		</div>
+		{review_section}
+		<div id="jRate_{$id}">{$reviews}</div>
+		<div id="jRate_{$id}-value">{$reviews_value}</div>
+		{/review_section}
 	</div>
 	{$xshop_item_discus}
+	<script type="text/javascript">
+		$("#jRate_{$id}").jRate({
+			rating: 0,
+	            shape: "STAR",
+	            count: 5,
+	            width: "20",
+	            height: "20",
+	            widthGrowth: 0.0,
+	            heightGrowth: 0.0,
+	            backgroundColor: "white",
+	            startColor: "yellow",
+	            endColor: "green",
+	            strokeColor: "black",
+	            transparency: 1,
+	            shapeGap: "0px",
+	            opacity: 1,
+	            min: 0,
+	            max: 5,
+	            precision: 0.1,
+	            minSelected: 0,
+				strokeWidth: '2px',
+	            horizontal: true,
+	            reverse: false,
+	            readOnly: false,
+				touch: true,
+	            onChange: function(rating) {
+					$('#jRate_{$id}-value').text("Your Rating: "+rating);
+				},
+	            onSet: null
+		});
+	</script>
 </div>

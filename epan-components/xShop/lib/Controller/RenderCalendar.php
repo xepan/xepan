@@ -43,6 +43,7 @@ class Controller_RenderCalendar extends \AbstractController {
 		// $pdf = new \TCPDF_TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->setPrintHeader(false);
 		$pdf->setPrintFooter(false);
+		
 		$pdf->SetFont('freeserif', 'BI', 20);
 		// add a page
 		$pdf->AddPage();

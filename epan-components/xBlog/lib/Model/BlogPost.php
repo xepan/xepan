@@ -3,7 +3,7 @@ namespace xBlog;
 class Model_BlogPost extends \Model_Document{
 	public $table='xblog_posts';
 	public $status=array();
-	public $root_document_name='xBlog\Post';
+	public $root_document_name='xBlog\BlogPost';
 
 	function init(){
 		parent::init();
@@ -14,7 +14,7 @@ class Model_BlogPost extends \Model_Document{
 		$this->addField('author')->set($this->api->current_employee->id);
 		$this->addField('is_publish')->type('boolean');
 
-		$this->hasMany('xBlog/PostDetail','post_id');
+		$this->hasMany('xBlog/BlogPostReview','post_id');
 		
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
