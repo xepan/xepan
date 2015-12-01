@@ -17,7 +17,8 @@ xShop_Calendar_Editor = function(parent,designer){
 //___________________________________________________________________________|
 	
 	// header_font_size:16,
-	this.col1 = $('<div class="atk-col-3"><b class="xshop-calendar-editor-header">Header</b></div>').appendTo(this.row1);
+	$('<div class="xshop-calendar-editor-header" style="">Header</div>').appendTo(this.row1);
+	this.col1 = $('<div class="atk-col-31 atk-box-small atk-box-designer"></div>').appendTo(this.row1);
 	this.header_font_size_label = $('<div><label for="header_font_size">Font Size :</label></div>').appendTo(this.col1);
 	this.header_font_size = $('<select id="header_font_size" class="btn btn-xs">Header Size</select>').appendTo(this.header_font_size_label);
 	options = '';
@@ -83,7 +84,7 @@ xShop_Calendar_Editor = function(parent,designer){
 //------------------------------Day Date Style Options-----------------------
 //___________________________________________________________________________|
 	// day_date_font_size:12,
-	this.col2 = $('<div class="atk-col-3"><b class="xshop-calendar-editor-header" >Day Date</b></div>').appendTo(this.row1);
+	this.col2 = $('<div class="atk-col-31"><b class="xshop-calendar-editor-header" >Day Date</b></div>').appendTo(this.row1);
 	this.day_date_font_size_label = $('<div><label for="day_date_font_size">Font Size :</label></div>').appendTo(this.col2);
 	this.day_date_font_size = $('<select id="day_date_font_size"class="btn btn-xs">Day Date Size</select>').appendTo(this.day_date_font_size_label);
 	for (var i = 7; i < 50; i++) {
@@ -135,7 +136,7 @@ xShop_Calendar_Editor = function(parent,designer){
 //------------------------------Day Name Style Options-----------------------
 //___________________________________________________________________________|
 	// day_name_font_size:12,
-	this.col3 = $('<div class="atk-col-3"><b class="xshop-calendar-editor-header">Day Name</b></div>').appendTo(this.row1);
+	this.col3 = $('<div class="atk-col-31"><b class="xshop-calendar-editor-header">Day Name</b></div>').appendTo(this.row1);
 	this.day_name_font_size_label = $('<div><label for="day_name_font_size">Font Size :</label></div>').appendTo(this.col3);
 	this.day_name_font_size = $('<select class="btn btn-xs">Day Name Size</select>').appendTo(this.day_name_font_size_label);
 	for (var i = 7; i < 50; i++) {
@@ -188,7 +189,7 @@ xShop_Calendar_Editor = function(parent,designer){
 //------------------------------Event Style Options--------------------------
 //___________________________________________________________________________|
 	// event_font_size:10,
-	this.col4 = $('<div class="atk-col-3"><b class="xshop-calendar-editor-header">Event</b></div>').appendTo(this.row1);
+	this.col4 = $('<div class="atk-col-31"><b class="xshop-calendar-editor-header">Event</b></div>').appendTo(this.row1);
 	this.event_font_size_label = $('<div><label for="day_name_font_size">Font Size :</label></div>').appendTo(this.col4);
 	this.event_font_size = $('<select class="btn btn-xs">Event Size</select>').appendTo(this.event_font_size_label);
 	for (var i = 7; i < 50; i++) {
@@ -226,7 +227,7 @@ xShop_Calendar_Editor = function(parent,designer){
 	//Month
 	$('<hr>').appendTo(this.element);
 	this.row2 = $('<div class="atk-row" style="display:block;margin:0;"></div>').appendTo(this.element);
-	this.col5 = $('<div class="atk-col-3"></div>').appendTo(this.row2);
+	this.col5 = $('<div class="atk-col-31"></div>').appendTo(this.row2);
 	
 	this.month_label = $('<label for="month">Month :</label>').appendTo(this.col5);
 	this.month = $('<select id="month" class="btn btn-xs"></select>').appendTo(this.month_label);
@@ -261,7 +262,7 @@ xShop_Calendar_Editor = function(parent,designer){
 //------------------------------Starting Month Style Options-----------------
 //___________________________________________________________________________|
 	//Choose Your Calendar's Starting Month 
-	this.col6 = $('<div class="atk-col-3"></div>').appendTo(this.row2);
+	this.col6 = $('<div class="atk-col-31"></div>').appendTo(this.row2);
 	this.starting_month = $('<label for="startDate">Starting Month :</label>').appendTo(this.col6);
 	this.starting_month_text = $('<input name="startDate" id="xshop-designer-startDate" class="xshop-designer-calendar-month-picker" />').appendTo(this.starting_month);	
 	this.starting_month_datepicker = $('.xshop-designer-calendar-month-picker').datepicker( {
@@ -302,7 +303,7 @@ xShop_Calendar_Editor = function(parent,designer){
 //------------------------------Starting Month Style Options-----------------
 //___________________________________________________________________________| 
     //Calendar Events
-	this.col7 = $('<div class="atk-col-3"></div>').appendTo(this.row2);
+	this.col7 = $('<div class="atk-col-31"></div>').appendTo(this.row2);
     event_btn = $('<div class="btn atk-swatch-blue"><i class="glyphicon glyphicon-star-empty"></i>Add Events </div>').appendTo(this.col7);
 	
 	event_frame = $('<div id="xshop-designer-calendar-events-dialog" class="xshop-designer-calendar-events-frame"></div>').appendTo(this.element);
@@ -383,7 +384,7 @@ xShop_Calendar_Editor = function(parent,designer){
 //```````````````````````````````````````````````````````````````````````````|
 //------------------------------Delete Button--------------------------------
 //___________________________________________________________________________| 
-	this.col8 = $('<div class="atk-col-3"></div>').appendTo(this.row2);
+	this.col8 = $('<div class="atk-col-31"></div>').appendTo(this.row2);
 	this.calendar_remove = $('<div class="btn atk-swatch-red"><span class="glyphicon glyphicon-trash"></span> Remove</div>').appendTo(this.col8);
 	this.calendar_remove.click(function(){
 		dt  = self.current_calendar_component.designer_tool;
