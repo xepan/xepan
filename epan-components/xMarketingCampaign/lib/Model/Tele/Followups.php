@@ -1,9 +1,10 @@
 <?php
 
-namespace xMarketingCampaigns;
+namespace xMarketingCampaign;
 
 class Model_Tele_Followups extends \Model_Document{
-	public $tabel = "xmarketingcampaign_tele_followups";
+
+	public $table = "xmarketingcampaign_tele_followups";
 	public $status =[];
 	public $root_document_name = 'xMarketingCampaign\Tele_Followups';
 	public $actions=array(
@@ -21,13 +22,17 @@ class Model_Tele_Followups extends \Model_Document{
 		$this->hasOne('xMarketingCampaign/Tele_Lead','telelead_id');
 		$this->hasOne('xMarketingCampaign/Tele_CampLeadAsso','telecampleadasso_id');
 
-		$this->addField('name')->caption('Narration');
+		$this->addField('next_followup_date')->type('datetime');
+		$this->addField('name')->caption('Narration')->type('text');
+		$this->addField('is_active')->type('boolean')->defaultValue(true);
 		
 		$this->addHook('beforeSave',$this);	
+
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 
-	function beforeSave($this){
+	function beforeSave(){
 
 		if($this['telecampleadasso_id']){			
 			$asso = $this->add('xMarketingCampaign/Model_Tele_CampLeadAsso')->tryLoad($this['telecampleadasso_id']);

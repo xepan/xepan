@@ -20,8 +20,8 @@ class Model_Tele_Lead extends Model_Lead {
 	function init(){
 		parent::init();
 
-		$this->hasOne('Epan','epan_id');
-		$this->addCondition('epan_id',$this->api->current_website->id);
+		// $this->hasOne('Epan','epan_id');
+		// $this->addCondition('epan_id',$this->api->current_website->id);
 		
 		$this->hasOne('xMarketingCampaign/Tele_Campaign','telecampaign_id');
 
