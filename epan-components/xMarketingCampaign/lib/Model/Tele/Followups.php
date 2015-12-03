@@ -18,12 +18,12 @@ class Model_Tele_Followups extends \Model_Document{
 	function init(){
 		parent::init();
 
-		$this->hasOne('xMarketingCampaign/Tele_Campaign','telecampaign_id');
-		$this->hasOne('xMarketingCampaign/Tele_Lead','telelead_id');
-		$this->hasOne('xMarketingCampaign/Tele_CampLeadAsso','telecampleadasso_id');
+		$this->hasOne('xMarketingCampaign/Tele_Campaign','telecampaign_id')->mandatory(true);
+		$this->hasOne('xMarketingCampaign/Tele_Lead','telelead_id')->mandatory(true);
+		$this->hasOne('xMarketingCampaign/Tele_CampLeadAsso','telecampleadasso_id')->mandatory(true);
 
-		$this->addField('next_followup_date')->type('datetime');
-		$this->addField('name')->caption('Narration')->type('text');
+		$this->addField('next_followup_date')->type('datetime')->mandatory(true);
+		$this->addField('name')->caption('Narration')->type('text')->mandatory(true);
 		$this->addField('is_active')->type('boolean')->defaultValue(true);
 		
 		$this->addHook('beforeSave',$this);	
