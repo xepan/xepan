@@ -27,6 +27,8 @@ class page_xMarketingCampaign_page_owner_tele_playground extends page_xMarketing
 		$col3->add('View_Info')->set('Show all Follow-ups');
 
 
+//===============================Leads===================================
+
 		$grid = $col1->add('Grid');
 		$grid->setModel($campaign->leads(),['name','email','mobile_no']);
 		$grid->addQuickSearch(array('name','email','mobile_no'));
@@ -35,6 +37,31 @@ class page_xMarketingCampaign_page_owner_tele_playground extends page_xMarketing
     		$g->current_row_html[$f]= '<a href="#na" onclick="javascript:'.$v8->js()->reload(['telelead_id'=>$g->model->id]).'">'.$g->model['name'].'</a>';
     	});
 		
+   		$lead_vp = $grid->add('VirtualPage')->set(function($page)use($campaign_id,$grid){
+   			$page->add('View_info')->set('Add New Leads');
+
+   			$form = $page->add('Form_Stacked');
+			$form->setModel('xMarketingCampaign/Model_Tele_Lead');
+			$form->addSubmit('Add');
+			if($form->isSubmitted()){
+				$form->save();
+				$form->model->association($campaign_id);				
+				$js= [
+						$form->js()->reload()
+					];
+				$form->js(null,$js)->univ()->successMessage('Lead Added Successfully')->execute();
+			}
+
+   		});
+
+		$new_lead_btn = $grid->addButton('Add Lead');
+		$new_lead_btn->js('click')->univ()->frameURL($this->api->url($lead_vp->getURL()));
+		$refresh_btn = $grid->addButton('')->addClass('icon-arrows-cw')->setAttr('title','Refresh Lead');
+		$refresh_btn->onClick(function($refresh_btn)use($grid){
+			return $grid->js()->reload();
+		});
+
+
 		// $form = $col1->add('Form_Stacked');
 		// $dropdown = $form->addField('autocomplete/Plus','Lead')->setModel();
 		// $form->addSubmit('Associates');
