@@ -24,9 +24,22 @@ class Model_Tele_Campaign extends \Model_Document {
 		$this->addField('name')->sortable(true);
 
 		$this->hasMany('xMarketingCampaign/Tele_CampLeadAsso','telecampaign_id');
-		$this->hasMany('xMarketingCampaign/Tele_Lead','telecampaign_id');
+		// $this->hasMany('xMarketingCampaign/Tele_Lead','telecampaign_id');
 
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
+
+	function leads(){
+		if(!$this->loaded())
+			throw new \Exception("Tele campaign must be loaded before getting all associated leads");
+		
+		$lead_model = $this->add('xMarketingCampaign/Model_Tele_Lead');
+		$lead_model_j = $lead_model->join('xmarketingcampaign_tele_campaign_lead_asso.telelead_id');
+		$lead_model_j->addField('telecampaign_id');
+		$lead_model->addCondition('telecampaign_id',$this->id);
+		return $lead_model->tryLoadAny();
+
+	}
+
 }
