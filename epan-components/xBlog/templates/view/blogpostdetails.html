@@ -19,21 +19,21 @@
 			<span class="">Posted By : {$author}</span> 
 		</div>
 		{review_section}
-		<div id="jRate_{$id}">{$reviews}</div>
-		<div id="jRate_{$id}-value">{$reviews_value}</div>
+		<div id="jRate_{$id}" xpost="{$post_id}" xauth="{$auth}" xdays="{$xdays}" subpage="{$subpage}">{$reviews}</div>
+		<div id="jRate_{$id}-value">Your Rating: {$reviews_value}</div>
 		{/review_section}
 	</div>
 	{$xshop_item_discus}
 	<script type="text/javascript">
 		$("#jRate_{$id}").jRate({
-			rating: 0,
+			rating: '{$reviews_value}',
 	            shape: "STAR",
 	            count: 5,
 	            width: "20",
 	            height: "20",
 	            widthGrowth: 0.0,
 	            heightGrowth: 0.0,
-	            backgroundColor: "white",
+	            backgroundColor: "gray",
 	            startColor: "yellow",
 	            endColor: "green",
 	            strokeColor: "black",
@@ -42,7 +42,7 @@
 	            opacity: 1,
 	            min: 0,
 	            max: 5,
-	            precision: 0.1,
+	            precision: 1,
 	            minSelected: 0,
 				strokeWidth: '2px',
 	            horizontal: true,
@@ -52,7 +52,12 @@
 	            onChange: function(rating) {
 					$('#jRate_{$id}-value').text("Your Rating: "+rating);
 				},
-	            onSet: null
+	            onSet:function(rating){
+	            	url = $('#jRate_{$id}').attr('subpage');
+	            	post_id = $('#jRate_{$id}').attr('xpost');
+	            	
+	            	$(this).closest('[component_type="BlogPostDetails"]').univ().reload('index.php?subpage='+url,{'review':true,'rating':rating,'post_id':post_id,'cut_object':$(this).closest('.xblog-blog-details').attr('id')});
+	            }
 		});
 	</script>
 </div>
