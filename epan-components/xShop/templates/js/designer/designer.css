@@ -446,3 +446,23 @@ img.xdesigner-page-layout-thumbnail{
 .ui-dialog.xshop-calendar-show-hide-dialog{
   overflow-y: scroll;
 }
+
+
+.atk-col-31 > div{
+  float: left !important;
+  margin-right:10px;
+}
+
+.atk-box-designer{
+  padding:1px !important; 
+  /*border: 1px solid gray;*/
+  background-color: white;
+  border-radius: 0px !important;
+  border-left:  0.0rem solid rgba(0, 0, 0, 0) !important;
+}
+
+.xshop-calendar-editor-header{
+  width:100px;
+  background-color: gray;
+  color: white;
+}

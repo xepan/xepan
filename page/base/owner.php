@@ -122,6 +122,7 @@ class page_base_owner extends Page {
 			
 			$marketing_m->addItem(array('Dashboard','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$marketing_m->addItem(array('Leads','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_leads',array('department_id'=>$dept_model->id)));
+			$marketing_m->addItem(array('TeleCalling Management','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_telecallingmgnt',array('department_id'=>$dept_model->id)));
 			$marketing_m->addItem(array('Manage NewsLetters','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_newsletters',array('department_id'=>$dept_model->id)));
 			$marketing_m->addItem(array('Add SocialContent','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_socialcontents',array('department_id'=>$dept_model->id)));
 			$marketing_m->addItem(array('Scheduled Jobs','icon'=>'gauge-1'),$this->api->url('xMarketingCampaign_page_owner_scheduledjobs',array('department_id'=>$dept_model->id)));
@@ -151,6 +152,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Marketing Material Request Sent","url"=>$this->api->url('xStore_page_owner_materialrequestsent',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Marketing Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Marketing Stock Management","url"=>$this->api->url('xMarketingCampaign_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Marketing TeleCalling Management","url"=>$this->api->url('xMarketingCampaign_page_owner_telecallingmgnt',array('department_id'=>$dept_model->id)));
 
 
 			$exec_m = $marketing_m->addMenu('Executors',null,array('SubMenu'));
