@@ -7,6 +7,7 @@ class page_xMarketingCampaign_page_owner_telecallingmgnt extends page_xMarketing
 		parent::init();
 
 		$this->add('View_Error')->set('TeleCalling Management Today task for completion');
+		$this->add('xMarketingCampaign/View_Activity');
 
 		$tele_tabs = $this->add('Tabs');
 		$tele_tabs->toLeft();

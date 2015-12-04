@@ -1,10 +1,17 @@
 <?php
 
-namespace xShop;
+namespace xMarketingCampaign;
 
-class View_Lister_Filter extends \CompleteLister{
-	public $html_attributes = array();
-	public $specification_id = null;
+class View_Activity extends \View{
+
+	function init(){
+		parent::init();
+
+	}
+
+	function render(){
+		parent::render();
+	}
 
 	function defaultTemplate(){
 		$this->app->pathfinder->base_location->addRelativeLocation(
@@ -15,6 +22,7 @@ class View_Lister_Filter extends \CompleteLister{
 		        'js'=>'templates/js',
 		    )
 		);
-		return array('view/xShop-Lister-Filter');		
+
+		return array('view/activity1');
 	}
 }
