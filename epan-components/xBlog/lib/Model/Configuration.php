@@ -14,7 +14,7 @@ class Model_Configuration extends \Model_Table {
 		$f = $this->addField('disqus_code')->type('text')->caption('Place the Disqus code')->PlaceHolder('Place your Disqus Code here..')->hint('Place your Discus code here')->group('x~12~<i class="fa fa-comments"></i> Website Comment System Config'); 		
 		$f->icon = "fa fa-comment~blue";
 			
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function loadDefaults($application){

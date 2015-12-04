@@ -473,7 +473,7 @@ class page_base_owner extends Page {
 		$web_designing_menu->addItem(array('Extended Images','icon'=>'right-hand'),'extendedImages_page_owner_dashboard');
 		$web_designing_menu->addItem(array('Image Gallaries','icon'=>'right-hand'),'xImageGallery_page_owner_dashboard');
 		// $web_designing_menu->addItem(array('Blog','icon'=>'right-hand'),'xShop_page_owner_blog');
-		$web_designing_menu->addItem(array('Blog','icon'=>'right-hand'),'xBlog_page__owner_dashboard');
+		$web_designing_menu->addItem(array('Blog','icon'=>'right-hand'),'xBlog_page_owner_dashboard');
 		
 		
 
