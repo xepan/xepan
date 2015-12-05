@@ -1,3 +1,7 @@
+.xshop-designer-tool input{
+  width:auto !important;
+}
+
 h3.xshop-designer-layout-name{
   color: black;
 }
@@ -459,10 +463,23 @@ img.xdesigner-page-layout-thumbnail{
   background-color: white;
   border-radius: 0px !important;
   border-left:  0.0rem solid rgba(0, 0, 0, 0) !important;
+  margin: 0;
 }
 
 .xshop-calendar-editor-header{
+  background:linear-gradient(to bottom, #fefefe, #f0f2f3) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  color:black;
+  height:28px;
   width:100px;
-  background-color: gray;
-  color: white;
+  font-size: 12px;
+  text-align: center;
 }
+
+.xdesigner-starting-month label, .xdesigner-starting-month input{
+  float: left !important;
+}
+
+.xdesigner-starting-month > input{
+  width: 100px !important;
+}
+
