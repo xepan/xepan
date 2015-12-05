@@ -56,7 +56,8 @@ class Controller_RenderCalendar extends \AbstractController {
 		$day_date_font_size = 16;
 		$day_name_font_size = 20;
 		$event_font_size = 13;
-
+		$month_name_array = ['01'=>'January','1'=>'January','02'=>'February','2'=>'February','03'=>'March','3'=>'March','04'=>'April','4'=>'April','05'=>'May','5'=>'May','06'=>'June','6'=>'June','07'=>'July','7'=>'July','08'=>'August','8'=>'August','09'=>'September','9'=>'September','10'=>'October','11'=>'November','12'=>'December'];
+		$month_name = $month_name_array[$month];
 		if(is_array($styles)){
 			$header_font_size = isset($styles['header_font_size'])?$styles['header_font_size']:30;
 			$day_date_font_size = isset($styles['day_date_font_size'])?$styles['day_date_font_size']:16;
@@ -64,7 +65,7 @@ class Controller_RenderCalendar extends \AbstractController {
 			$event_font_size = isset($styles['event_font_size'])?$styles['event_font_size']:13;
 		}
   		/* draw table */
-  		$calendar = '<div style="font-face:K010; font-family:K010; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';">'.$month.' - '.$year.'</div>';
+  		$calendar = '<div style="font-face:K010; font-family:K010; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';">'.$month_name.' - '.$year.'</div>';
   		$calendar .= '<table cellpadding="0" cellspacing="0" class="calendar" width="100%" style="border:1px solid red;" border="1" align="center">';
  		/* table headings */
   		$headings = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
