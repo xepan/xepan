@@ -658,7 +658,7 @@ Calendar_Component = function (params){
 
 		month:undefined,
 		width:400,
-		height:200,
+		height:250,
 
 		starting_date:undefined, //Show Only Date and Month // Default Value currentYear-1st Jan Month
 		starting_month:undefined,

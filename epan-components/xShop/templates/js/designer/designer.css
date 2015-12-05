@@ -121,7 +121,7 @@ h3.xshop-designer-layout-name{
 .xshop-designer-pagelayout {
   margin: 10px auto 0px auto;
   position: relative;
-  width:600px;
+  /*width:600px;*/
   max-width: auto;
 }
 .xshop-designer-pagelayout > div.ui-selected {
