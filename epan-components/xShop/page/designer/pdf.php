@@ -8,6 +8,7 @@ class page_xShop_page_designer_pdf extends Page {
 	function init(){
 		parent::init();
 
+		
 		if($_GET['print_ratio'])
 			$this->print_ratio = $_GET['print_ratio'];
 		
@@ -102,6 +103,9 @@ class page_xShop_page_designer_pdf extends Page {
 					if($options['type'] == 'Text'){
 						$this->addText($options,$pdf);
 					}
+					if($options['type'] == 'Calendar'){
+						$this->addCalendar($options,$pdf);
+					}
 				}
 				// $pdf->Cell(40,10,$layout_name);
 			// }
@@ -162,6 +166,14 @@ class page_xShop_page_designer_pdf extends Page {
 			// $pdf->MemImage($data, 0, 0, 100, 20);
 			$pdf->MemImage($data, $this->pixcelToUnit($options['x']), $this->pixcelToUnit($options['y']), $this->pixcelToUnit($options['desired_width']), $this->pixcelToUnit($options['height'] * $this->print_ratio));
 		}
+	}
+
+	function addCalendar($options,$pdf){
+			$cont = $this->add('xShop/Controller_RenderCalendar',array('options'=>$options));
+
+			$data = $cont->show('png',1,false,true);
+			// $pdf->MemImage($data, 0, 0, 100, 20);
+			$pdf->MemImage($data, $this->pixcelToUnit($options['x']), $this->pixcelToUnit($options['y']), $this->pixcelToUnit($options['desired_width']), $this->pixcelToUnit($options['height'] * $this->print_ratio));	
 	}
 
 	function fetchDimensions($item){

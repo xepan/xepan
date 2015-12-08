@@ -2,14 +2,14 @@
 
 class page_xShop_page_designer_itemimages extends Page {
 
-	function page_index(){
-		// parent::init();  
+  function page_index(){
+    // parent::init();  
        // $this->add('View')->set('Member Images');
        $tabs = $this->add('Tabs');
        $tabs->addTabUrl('./upload','Your Library');
        // $tabs->addTabUrl('./previous_upload','Previuos Upload');
        $tabs->addTabUrl('./image_library','Image Library');
-	}
+  }
 
   function page_upload(){
 
@@ -26,7 +26,7 @@ class page_xShop_page_designer_itemimages extends Page {
       // // $item_images_lister = $this->add('xShop/View_Lister_DesignerItemImages');
       // $form->setModel($image_model,array('member_id','image_id'));
       
-      $crud = $this->add('CRUD',array('allow_edit'=>false,'grid_class'=>'xGrid','grid_options'=>array('grid_template'=>'view/xShop-DesignerItemImages','grid_template_path'=>'epan-components/xShop')));
+      $crud = $this->add('CRUD',array('entity_name'=>'Image','allow_edit'=>false,'grid_class'=>'xGrid','grid_options'=>array('grid_template'=>'view/xShop-DesignerItemImages','grid_template_path'=>'epan-components/xShop')));
       $item_images_lister = $crud->setModel($image_model,array('member_id','image_id','image'),array('member_id','image_id','image'));
       $crud->grid->addQuickSearch(array('image_id','image'));
       // if($form->isSubmitted()){
