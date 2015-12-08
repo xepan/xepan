@@ -169,11 +169,13 @@ class page_xShop_page_designer_pdf extends Page {
 	}
 
 	function addCalendar($options,$pdf){
-			$cont = $this->add('xShop/Controller_RenderCalendar',array('options'=>$options));
+		$options['width'] = $options['width'] * $this->print_ratio;
+		// $options['height'] = $options['height'] * $zoom;
 
-			$data = $cont->show('png',1,false,true);
-			// $pdf->MemImage($data, 0, 0, 100, 20);
-			$pdf->MemImage($data, $this->pixcelToUnit($options['x']), $this->pixcelToUnit($options['y']), $this->pixcelToUnit($options['desired_width']), $this->pixcelToUnit($options['height'] * $this->print_ratio));	
+		$cont = $this->add('xShop/Controller_RenderCalendar',array('options'=>$options));
+		$data = $cont->show('png',1,false,true);
+		// $pdf->MemImage($data, 0, 0, 100, 20);
+		$pdf->MemImage($data, $this->pixcelToUnit($options['x']), $this->pixcelToUnit($options['y']), $this->pixcelToUnit($options['width']), $this->pixcelToUnit($options['height'] * $this->print_ratio));
 	}
 
 	function fetchDimensions($item){

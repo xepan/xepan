@@ -45,7 +45,9 @@ class Controller_RenderCalendar extends \AbstractController {
 		$pdf->setPrintHeader(false);
 		$pdf->setPrintFooter(false);
 		$pdf->SetAutoPageBreak(false);
-		// $pdf->SetFont('freeserif', 'BI', 20);
+
+		if($this->options['header_font_family'])
+			$pdf->SetFont($this->options['header_font_family']);
 		// add a page
 		$pdf->AddPage();
 		$pdf->WriteHTML($html, true, false, true, false, '');
@@ -56,6 +58,7 @@ class Controller_RenderCalendar extends \AbstractController {
 	}
 
 	function drawCalendar($month,$year,$resultA,$events=[],$styles=[]){
+		// style="text-align:left;"
 		$header_font_size = 30;
 		$day_date_font_size = 16;
 		$day_name_font_size = 20;

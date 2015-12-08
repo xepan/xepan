@@ -806,6 +806,7 @@ Calendar_Component = function (params){
 			data: { 
 					header_font_size:self.options.header_font_size,
 					header_font_color:self.options.header_font_color,
+					header_font_family:self.options.header_font_family,
 					day_date_font_size:self.options.day_date_font_size,
 					day_date_font_color:self.options.day_date_font_color,
 					day_name_font_size:self.options.day_name_font_size,
