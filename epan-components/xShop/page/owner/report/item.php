@@ -52,7 +52,7 @@ class page_xShop_page_owner_report_item extends page_xShop_page_owner_main{
 		$grid->addPaginator(50);
 		$grid->addSno();
 		
-		// if($grid->hasColumn('Details'))$grid->removeColumn('Details');
+		if($grid->hasColumn('Details'))$grid->removeColumn('Details');
 		if($grid->hasColumn('duplicate'))$grid->removeColumn('duplicate');
 		// if($grid->hasColumn('price'))$grid->removeColumn('price');
 
