@@ -45,7 +45,9 @@ class Controller_RenderCalendar extends \AbstractController {
 		$pdf->setPrintHeader(false);
 		$pdf->setPrintFooter(false);
 		$pdf->SetAutoPageBreak(false);
-		// $pdf->SetFont('freeserif', 'BI', 20);
+
+		if($this->options['header_font_family'])
+			$pdf->SetFont($this->options['header_font_family']);
 		// add a page
 		$pdf->AddPage();
 		$pdf->WriteHTML($html, true, false, true, false, '');
@@ -56,6 +58,7 @@ class Controller_RenderCalendar extends \AbstractController {
 	}
 
 	function drawCalendar($month,$year,$resultA,$events=[],$styles=[]){
+		// style="text-align:left;"
 		$header_font_size = 30;
 		$day_date_font_size = 16;
 		$day_name_font_size = 20;
@@ -82,7 +85,7 @@ class Controller_RenderCalendar extends \AbstractController {
   		$day_counter = 0;
 
 		 /* row for week one */
-		$calendar.= '<tr class="calendar-row">';
+		$calendar.= '<tr class="calendar-row" style="text-align:'.$styles['alignment'].';">';
   		/* print "blank" days until the first of the current week */
   		for($x = 0; $x < $running_day; $x++){
     		$calendar.= '<td class="calendar-day-np">&nbsp;</td>';
@@ -113,7 +116,7 @@ class Controller_RenderCalendar extends \AbstractController {
 		    if($running_day == 6){
 		      $calendar.= '</tr>';
 		      if(($day_counter+1) != $days_in_month)
-		        $calendar.= '<tr class="calendar-row">';
+		        $calendar.= '<tr class="calendar-row" style="text-align:'.$styles['alignment'].';">';
 
 		      $running_day = -1;
 		      $days_in_this_week = 0;
