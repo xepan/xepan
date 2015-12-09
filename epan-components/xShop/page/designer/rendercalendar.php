@@ -51,6 +51,7 @@ class page_xShop_page_designer_rendercalendar extends Page {
 		$options['x'] = $_GET['x'];
 		$options['y'] = $_GET['y'];
 		$options['events'] = $_GET['events'];
+		$options['alignment'] = $_GET['alignment'];
 		//calculate the year and month on basis of month and starting-Year for which Calendar will be draw
 		//ex:  Starting month= "Nov 2015" and month is "8" then calendar will draw 8th month from Nov 2015 that is "July 2016"
 		if(!$_GET['month'])

@@ -135,6 +135,55 @@ xShop_Calendar_Editor = function(parent,designer){
 
 	});	
 
+	//```````````````````````````````````````````````````````````````````````````|
+	//------------------------------Day Date Alignment Style Options-----------------------
+	//___________________________________________________________________________|
+
+	this.alignment_label = $('<div><label for="xcalendar-alignment">Align :</label></div>').appendTo(this.col2);
+	this.alignment_btn_set = $('<div class="btn-group btn-group-xs xshop-calendar-align" role="group" aria-label="Text Alignment"></div>').appendTo(this.alignment_label);
+	this.align_left_btn = $('<div class="btn"><span class="glyphicon glyphicon-align-left"></span></div>').appendTo(this.alignment_btn_set);
+	this.align_center_btn = $('<div class="btn"><span class="glyphicon glyphicon-align-center"></span></div>').appendTo(this.alignment_btn_set);
+	this.align_right_btn = $('<div class="btn"><span class="glyphicon glyphicon-align-right"></span></div>').appendTo(this.alignment_btn_set);
+
+	$(this.align_left_btn).click(function(){
+		$(this).addClass('active');
+		self.current_calendar_component.options.alignment = "left";
+
+		//Render Current Selected Calendar
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
+
+		//Remove active Align Class form other options
+		$(self.align_right_btn).removeClass('active');
+		$(self.align_center_btn).removeClass('active');
+
+	});
+
+	$(this.align_center_btn).click(function(){
+		$(this).addClass('active');
+		self.current_calendar_component.options.alignment = "center";
+
+		//Render Current Selected Calendar
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
+
+		//Remove active Align Class form other options
+		$(self.align_right_btn).removeClass('active');
+		$(self.align_left_btn).removeClass('active');
+	});
+
+	$(this.align_right_btn).click(function(){
+		$(this).addClass('active');
+		self.current_calendar_component.options.alignment = "right";
+
+		//Render Current Selected Calendar
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
+
+		//Remove active Align Class form other options
+		$(self.align_left_btn).removeClass('active');
+		$(self.align_center_btn).removeClass('active');
+	});
 
 //```````````````````````````````````````````````````````````````````````````|
 //------------------------------Day Name Style Options-----------------------
@@ -655,7 +704,7 @@ Calendar_Component = function (params){
 		event_font_size:'#00000',
 		day_name_bg_color:'#FFFFFF',
 		calendar_cell_heigth:20,
-
+		alignment: "center",
 		month:undefined,
 		width:400,
 		height:250,
@@ -815,6 +864,7 @@ Calendar_Component = function (params){
 					event_font_color:self.options.event_font_color,
 					day_name_bg_color:self.options.day_name_bg_color,
 					calendar_cell_heigth:self.options.calendar_cell_heigth,
+					alignment:self.options.alignment,
 
 					zoom: self.designer_tool.zoom,
 					zindex:self.options.zindex,

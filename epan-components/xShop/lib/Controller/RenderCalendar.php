@@ -85,7 +85,7 @@ class Controller_RenderCalendar extends \AbstractController {
   		$day_counter = 0;
 
 		 /* row for week one */
-		$calendar.= '<tr class="calendar-row">';
+		$calendar.= '<tr class="calendar-row" style="text-align:'.$styles['alignment'].';">';
   		/* print "blank" days until the first of the current week */
   		for($x = 0; $x < $running_day; $x++){
     		$calendar.= '<td class="calendar-day-np">&nbsp;</td>';
@@ -116,7 +116,7 @@ class Controller_RenderCalendar extends \AbstractController {
 		    if($running_day == 6){
 		      $calendar.= '</tr>';
 		      if(($day_counter+1) != $days_in_month)
-		        $calendar.= '<tr class="calendar-row">';
+		        $calendar.= '<tr class="calendar-row" style="text-align:'.$styles['alignment'].';">';
 
 		      $running_day = -1;
 		      $days_in_this_week = 0;
