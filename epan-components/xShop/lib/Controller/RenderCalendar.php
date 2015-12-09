@@ -28,6 +28,7 @@ class Controller_RenderCalendar extends \AbstractController {
 	function convertPdfToImage($pdfData){
 		$imageData = new \Imagick();
 	   	$imageData->readimageblob($pdfData);
+		// $imageData->extentImage($this->options['width'],$this->options['height'],0,0);
 	   	$this->phpimage = $imageData;
 	}
 
@@ -35,20 +36,23 @@ class Controller_RenderCalendar extends \AbstractController {
 		if(!$html)
 			throw new \Exception("Html Not Given");
 
-		$pagelayout = array($this->options['height'],$this->options['width']); //  or array($height, $width)
-		$pdf = new \TCPDF_TCPDF('l', 'pt', $pagelayout, true, 'UTF-8', false);
+		$pagelayout = array($this->options['width'],$this->options['height']); //  or array($width,$height)
+		$pdf = new \TCPDF_TCPDF('l', 'px', $pagelayout, true, 'UTF-8', false);
 		$pdf->SetMargins(0, 0, 0);
 		$pdf->SetHeaderMargin(0);
 		$pdf->SetFooterMargin(0);
 		// $pdf = new \TCPDF_TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->setPrintHeader(false);
 		$pdf->setPrintFooter(false);
-		
-		$pdf->SetFont('freeserif', 'BI', 20);
+		$pdf->SetAutoPageBreak(false);
+		// $pdf->SetFont('freeserif', 'BI', 20);
 		// add a page
 		$pdf->AddPage();
 		$pdf->WriteHTML($html, true, false, true, false, '');
 		$this->pdf = $pdf->Output(null,'S');
+		// $this->pdf = $pdf->Output(null);
+		// echo $this->pdf;
+		// exit;
 	}
 
 	function drawCalendar($month,$year,$resultA,$events=[],$styles=[]){
