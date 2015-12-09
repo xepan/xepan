@@ -68,13 +68,13 @@ class page_xMarketingCampaign_page_owner_tele_playground extends page_xMarketing
 
 //===============================Activities===================================
 		if($selected_lead){
-			$activity_crud = $col2->add('CRUD',['allow_del'=>false]);
+			$activity_crud = $col2->add('CRUD',['allow_del'=>false,'grid_class'=>'xMarketingCampaign/Grid_TeleLeadActivity']);
 			$activity_lead_model = $col2->add('xMarketingCampaign/Model_Tele_Lead')->load($selected_lead);
 			$activity_model = $activity_lead_model->activities();
 			$activity_model->addCondition('from','Employee');
 			$activity_model->addCondition('to','Lead');
 			$activity_model->addCondition('action','call');
-			$activity_crud->setModel($activity_model,array('from','to','subject','message','action'));
+			$activity_crud->setModel($activity_model,array(/*'from','to',*/'subject','message'/*,'action'*/));
 		}
 		
 //===============================Follow-ups===================================
