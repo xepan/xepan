@@ -4,7 +4,9 @@ class page_xShop_page_owner_report_materialrequest extends page_xShop_page_owner
 	function init(){
 		parent::init();
 		$materialrequest=$this->add('xStore/Model_MaterialRequest');
-		$materialrequest->addCondition('from_department_id'$_GET['department_id']);
+		$materialrequest->addCondition('from_department_id',$_GET['department_id']);
+		$materialrequest->addCondition('status','<>','draft');
+		$materialrequest->addCondition('status','<>','submitted');
 		$form=$this->add('Form');
 		$form->addField('Dropdown','status')->setValueList(array('approved'=>'approved','assigned'=>'assigned','processing'=>'processing','processed'=>'processed','forwarded'=>'forwarded',
 															'completed'=>'completed','cancelled'=>'cancelled','return'=>'return'));
@@ -12,7 +14,7 @@ class page_xShop_page_owner_report_materialrequest extends page_xShop_page_owner
 		$form->addField('DatePicker','to_date');
 		$form->addSubmit('Get Report');
 
-		$grid=$this->add('Grid');
+		$grid=$this->add('xStore/Grid_MaterialRequest');
 
 		// $this->app->stickyGET('filter');
 		$this->app->stickyGET('status');
