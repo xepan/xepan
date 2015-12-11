@@ -80,7 +80,6 @@ class page_xShop_page_owner_report_order extends page_xShop_page_owner_main{
                 
             }
 
-
         }else{
             $order->addCondition('id',-1);
         }
@@ -113,6 +112,12 @@ class page_xShop_page_owner_report_order extends page_xShop_page_owner_main{
 
         $grid->addPaginator(100);
         $grid->addSno();    
+         
+        $print_all_btn=$grid->addButton('print')->set('Print All');
+
+        $print_all_btn->OnClick(function($print_all_btn)use($grid,$from_date,$to_date,$member_id){
+            return $this->js()->univ()->newWindow($this->api->url('xShop_page_owner_printsaleorder',array('from_date'=>$from_date,'to_date'=>$to_date,'member_id'=>$member_id,'printAll'=>1,'sale_performa'=>1)))->execute();
+        });
             
 
         if($form->isSubmitted()){
