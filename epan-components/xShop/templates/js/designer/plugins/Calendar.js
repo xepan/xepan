@@ -136,14 +136,14 @@ xShop_Calendar_Editor = function(parent,designer){
 	});	
 
 	//```````````````````````````````````````````````````````````````````````````|
-	//------------------------------Day Date Alignment Style Options-----------------------
+	//----------------------------Day Date Horizental Alignment Style Options-----
 	//___________________________________________________________________________|
 
-	this.alignment_label = $('<div><label for="xcalendar-alignment">Align :</label></div>').appendTo(this.col2);
+	this.alignment_label = $('<div><label for="xcalendar-alignment">H-Align :</label></div>').appendTo(this.col2);
 	this.alignment_btn_set = $('<div class="btn-group btn-group-xs xshop-calendar-align" role="group" aria-label="Text Alignment"></div>').appendTo(this.alignment_label);
-	this.align_left_btn = $('<div class="btn"><span class="glyphicon glyphicon-align-left"></span></div>').appendTo(this.alignment_btn_set);
-	this.align_center_btn = $('<div class="btn"><span class="glyphicon glyphicon-align-center"></span></div>').appendTo(this.alignment_btn_set);
-	this.align_right_btn = $('<div class="btn"><span class="glyphicon glyphicon-align-right"></span></div>').appendTo(this.alignment_btn_set);
+	this.align_left_btn = $('<div class="btn" title="Left"><span class="glyphicon glyphicon-align-left"></span></div>').appendTo(this.alignment_btn_set);
+	this.align_center_btn = $('<div class="btn" title="Center"><span class="glyphicon glyphicon-align-center"></span></div>').appendTo(this.alignment_btn_set);
+	this.align_right_btn = $('<div class="btn" title="Right"><span class="glyphicon glyphicon-align-right"></span></div>').appendTo(this.alignment_btn_set);
 
 	$(this.align_left_btn).click(function(){
 		$(this).addClass('active');
@@ -185,6 +185,57 @@ xShop_Calendar_Editor = function(parent,designer){
 		$(self.align_center_btn).removeClass('active');
 	});
 
+	//```````````````````````````````````````````````````````````````````````````|
+	//----------------------------Day Date Vertical Alignment Style Options-------
+	//___________________________________________________________________________|
+
+	this.valignment_label = $('<div><label for="xcalendar-alignment">V</label></div>').appendTo(this.col2);
+	this.valignment_btn_set = $('<div class="btn-group btn-group-xs xshop-calendar-valign" role="group" aria-label="Text Alignment"></div>').appendTo(this.valignment_label);
+	this.valign_top_btn = $('<div class="btn" title="Top"><span class="glyphicon glyphicon-align-left"></span></div>').appendTo(this.valignment_btn_set);
+	this.valign_middle_btn = $('<div class="btn" title="Middle"><span class="glyphicon glyphicon-align-center"></span></div>').appendTo(this.valignment_btn_set);
+	this.valign_bottom_btn = $('<div class="btn" title="Bottom"><span class="glyphicon glyphicon-align-right"></span></div>').appendTo(this.valignment_btn_set);
+
+	$(this.valign_top_btn).click(function(){
+		$(this).addClass('active');
+		self.current_calendar_component.options.valignment = "top";
+
+		//Render Current Selected Calendar
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
+
+		//Remove active Align Class form other options
+		$(self.valign_middle_btn).removeClass('active');
+		$(self.valign_bottom_btn).removeClass('active');
+
+	});
+
+	$(this.valign_middle_btn).click(function(){
+		$(this).addClass('active');
+		self.current_calendar_component.options.valignment = "middle";
+
+		//Render Current Selected Calendar
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
+
+		//Remove active Align Class form other options
+		$(self.valign_top_btn).removeClass('active');
+		$(self.valign_bottom_btn).removeClass('active');
+
+	});
+
+	$(this.valign_bottom_btn).click(function(){
+		$(this).addClass('active');
+		self.current_calendar_component.options.valignment = "bottom";
+
+		//Render Current Selected Calendar
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
+
+		//Remove active Align Class form other options
+		$(self.valign_top_btn).removeClass('active');
+		$(self.valign_middle_btn).removeClass('active');
+
+	});
 //```````````````````````````````````````````````````````````````````````````|
 //------------------------------Day Name Style Options-----------------------
 //___________________________________________________________________________|
@@ -705,6 +756,8 @@ Calendar_Component = function (params){
 		day_name_bg_color:'#FFFFFF',
 		calendar_cell_heigth:20,
 		alignment: "center",
+		valignment:'middle',
+
 		month:undefined,
 		width:400,
 		height:250,
@@ -865,6 +918,7 @@ Calendar_Component = function (params){
 					day_name_bg_color:self.options.day_name_bg_color,
 					calendar_cell_heigth:self.options.calendar_cell_heigth,
 					alignment:self.options.alignment,
+					valignment:self.options.valignment,
 
 					zoom: self.designer_tool.zoom,
 					zindex:self.options.zindex,

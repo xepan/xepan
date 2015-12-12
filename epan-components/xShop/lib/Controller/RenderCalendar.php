@@ -63,6 +63,12 @@ class Controller_RenderCalendar extends \AbstractController {
 		$day_date_font_size = 16;
 		$day_name_font_size = 20;
 		$event_font_size = 13;
+
+		//Calculate Vertical Alignment as cellPadding
+		//cell_paddding = cell_height / 2 - font_size / 2;
+
+
+
 		$month_name_array = ['01'=>'January','1'=>'January','02'=>'February','2'=>'February','03'=>'March','3'=>'March','04'=>'April','4'=>'April','05'=>'May','5'=>'May','06'=>'June','6'=>'June','07'=>'July','7'=>'July','08'=>'August','8'=>'August','09'=>'September','9'=>'September','10'=>'October','11'=>'November','12'=>'December'];
 		$month_name = $month_name_array[$month];
 		if(is_array($styles)){
@@ -71,12 +77,19 @@ class Controller_RenderCalendar extends \AbstractController {
 			$day_name_font_size = isset($styles['day_name_font_size'])?$styles['day_name_font_size']:20;
 			$event_font_size = isset($styles['event_font_size'])?$styles['event_font_size']:13;
 		}
+
+		$cell_padding = 0;
+		if($styles['valignment'] == 'middle')
+			$cell_padding = (($styles['calendar_cell_heigth'] / 2) - ($day_date_font_size / 2));
+		if($styles['valignment'] == 'bottom')
+			$cell_padding = ( $styles['calendar_cell_heigth'] - $day_date_font_size);
+
   		/* draw table */
   		$calendar = '<div style="font-face:K010; font-family:K010; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';">'.$month_name.' - '.$year.'</div>';
-  		$calendar .= '<table cellpadding="0" cellspacing="0" class="calendar" width="100%" style="border:1px solid red;" border="1" align="center">';
+  		$calendar .= '<table cellspacing="0" class="calendar" width="100%" style="padding-top:'.$cell_padding.';border:1px solid red;" border="1" align="center">';
  		/* table headings */
   		$headings = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
-  		$calendar.= '<tr style="background-color:'.$styles['day_name_bg_color'].';font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
+  		$calendar.= '<tr style="background-color:'.$styles['day_name_bg_color'].';font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td  class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
   		
   		/* days and weeks vars now ... */
   		$running_day = date('w',mktime(0,0,0,$month,1,$year));
