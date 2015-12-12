@@ -17,11 +17,11 @@ class page_xPurchase_page_owner_report_invoice extends page_xPurchase_page_owner
 
         $grid=$this->add('xPurchase/Grid_Invoice');
         $this->app->stickyGET('filter');
-        $this->app->stickyGET('order');
-        $this->app->stickyGET('supplier');
-        $this->app->stickyGET('status');
-        $this->app->stickyGET('from_date');
-        $this->app->stickyGET('to_date');
+        $order_id=$this->app->stickyGET('order');
+        $supplier_id=$this->app->stickyGET('supplier');
+        $status=$this->app->stickyGET('status');
+        $from_date=$this->app->stickyGET('from_date');
+        $to_date=$this->app->stickyGET('to_date');
 
         if($_GET['filter']){
         	if($_GET['order']){
@@ -49,13 +49,12 @@ class page_xPurchase_page_owner_report_invoice extends page_xPurchase_page_owner
 
 		$grid->addPaginator(100);
 		$grid->addSno();
-		$print=$grid->addButton('Print');
+		
+		$print_all_btn=$grid->addButton('print')->set('Print All');
 
-		$print->onClick(function()use ($print){
-
-			// $print->js()->univ()->
-
-		});
+        $print_all_btn->OnClick(function($print_all_btn)use($grid,$from_date,$to_date,$supplier_id,$order_id,$status){
+            return $this->js()->univ()->newWindow($this->api->url('xPurchase_page_owner_printpurchaseinvoice',array('from_date'=>$from_date,'to_date'=>$to_date,'supplier_id'=>$supplier_id,'order_id'=>$order_id,'status'=>$status,'printAll'=>1)))->execute();
+        });
 
 		if($form->isSubmitted()){
 
