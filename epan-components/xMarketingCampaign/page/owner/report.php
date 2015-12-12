@@ -7,5 +7,6 @@ class page_xMarketingCampaign_page_owner_report extends page_xMarketingCampaign_
 
 		$tabs=$this->add('Tabs');
 		$tabs->addTabURL('xMarketingCampaign_page_owner_report_lead','Lead');
+		$tabs->addTabURL('xMarketingCampaign_page_owner_report_newsletter','NewsLetter');
 	}
 }
