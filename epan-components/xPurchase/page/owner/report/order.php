@@ -14,7 +14,7 @@ class page_xPurchase_page_owner_report_order extends page_xPurchase_page_owner_m
 		$form->addField('DatePicker','to_date');
 		$form->addSubmit('Get report');
 
-		$grid=$this->add('Grid');
+		$grid=$this->add('xPurchase/Grid_PurchaseOrder');
 
 		$this->app->stickyGET('filter');
 		$supplier = $this->app->stickyGET('supplier');
