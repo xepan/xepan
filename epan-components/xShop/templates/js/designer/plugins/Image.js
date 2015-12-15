@@ -125,7 +125,7 @@ xShop_Image_Editor = function(parent){
 			modal:true,
 			open: function( event, ui ) {
 				$(crop_image).cropper({
-					aspectRatio: o.width / o.height,
+					aspectRatio: false,
 				    multiple: true,
 				    data: {
 					    x: o.crop == true? o.crop_x: 0,
@@ -333,9 +333,9 @@ Image_Component = function (params){
 					self.options.y = self.designer_tool.screen2option(position.top);
 				}
 			}).resizable({
-				aspectRatio: false,
+				aspectRatio: true,
 				autoHide: true,
-				handles: "e, se, s",
+				handles: "se",//,s,e
 				
 				stop:function(e,ui){
 					// self.options.x = ui.position.left / self.designer_tool.zoom;
@@ -463,6 +463,18 @@ Image_Component = function (params){
 			else
 				self.element.find('img[is_mask_image=0]').attr('src','data:image/jpg;base64, '+ ret);
 
+			window.setTimeout(function(){
+				self.element.height(self.element.find('img[is_mask_image=0]').height());
+				self.element.width(self.element.find('img[is_mask_image=0]').width());
+				// console.log(self.element.find('img[is_mask_image=0]').height());
+				// console.log(self.element.find('img[is_mask_image=0]').width());
+
+			},300);
+
+			// self.element.width(self.designer_tool.screen2option(self.element.find('img').width()));
+			// $(image).closest('div.xshop-designer-component').width($(image).width());
+			// xshop-designer-component
+			
 			if(is_new_image===true){
 				window.setTimeout(function(){
 					self.options.width = self.designer_tool.screen2option(self.element.find('img').width());
