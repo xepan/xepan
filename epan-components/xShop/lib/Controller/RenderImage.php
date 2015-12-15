@@ -21,7 +21,7 @@ class Controller_RenderImage extends \AbstractController {
 			$p->crop($this->options['crop_x'],$this->options['crop_y'],$this->options['crop_width'],$this->options['crop_height']);
 		}
 
-		$p->resize($this->options['width'],$this->options['height'],false,true,false);
+		$p->resize($this->options['width'],$this->options['height'],false,true,true);
 		
 		if($this->options['mask_added'] == "true" && $this->options['apply_mask'] == "true"){			
 			$this->phpimage->mask($this->options['mask']);
