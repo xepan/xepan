@@ -915,6 +915,9 @@ Calendar_Component = function (params){
 					var position = ui.position;
 					self.options.x = self.designer_tool.screen2option(position.left);
 					self.options.y = self.designer_tool.screen2option(position.top);
+					//Displaying x and y position of calender on it's editor tool
+					self.editor.calendar_x.val(position.left);
+					self.editor.calendar_y.val(position.top);
 				}
 			}).resizable({
 				containment: self.designer_tool.safe_zone,
@@ -924,6 +927,8 @@ Calendar_Component = function (params){
 					self.options.width = self.designer_tool.screen2option(ui.size.width);
 					self.options.height = self.designer_tool.screen2option(ui.size.height);
 					// alert(self.options.height);
+					self.editor.calendar_width.val(ui.size.width);
+					self.editor.calendar_height.val(ui.size.height);
 					self.render();
 				}
 			});
@@ -933,7 +938,15 @@ Calendar_Component = function (params){
 				$('.ui-selected').removeClass('ui-selected');
 	            $(this).addClass('ui-selected');
 	            $('.xshop-options-editor').hide();
+
 	            self.editor.element.show();
+
+	            self.editor.calendar_x.val(self.designer_tool.option2screen(self.options.x));
+	            self.editor.calendar_y.val(self.designer_tool.option2screen(self.options.y));
+	            
+	            self.editor.calendar_width.val(self.designer_tool.option2screen(self.options.width));
+	            self.editor.calendar_height.val(self.designer_tool.option2screen(self.options.height));
+
 	            self.designer_tool.option_panel.fadeIn(500);
 
 	            self.designer_tool.current_selected_component = self;
