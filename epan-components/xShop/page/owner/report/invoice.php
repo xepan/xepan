@@ -17,11 +17,11 @@ class page_xShop_page_owner_report_invoice extends page_xShop_page_owner_main{
         $grid=$this->add('xShop/Grid_Invoice');
 
         $this->app->stickyGET('filter');
-        $this->app->stickyGET('order');
-        $this->app->stickyGET('customer');
-        $this->app->stickyGET('status');
-        $this->app->stickyGET('from_date');
-        $this->app->stickyGET('to_date');
+        $order_id=$this->app->stickyGET('order');
+        $customer_id=$this->app->stickyGET('customer');
+        $status=$this->app->stickyGET('status');
+        $from_date=$this->app->stickyGET('from_date');
+        $to_date=$this->app->stickyGET('to_date');
 
         if($_GET['filter']){
         	if($_GET['order']){
@@ -59,6 +59,12 @@ class page_xShop_page_owner_report_invoice extends page_xShop_page_owner_main{
 		// 	);
 
 		// $grid->js('click',$js);
+
+		$print_all_btn=$grid->addButton('print')->set('Print All');
+
+        $print_all_btn->OnClick(function($print_all_btn)use($grid,$from_date,$to_date,$customer_id,$order_id,$status){
+            return $this->js()->univ()->newWindow($this->api->url('xShop_page_owner_printsaleinvoice',array('from_date'=>$from_date,'to_date'=>$to_date,'customer_id'=>$customer_id,'order_id'=>$order_id,'status'=>$status,'printAll'=>1)))->execute();
+        });
 
 
 		if($form->isSubmitted()){
