@@ -375,7 +375,7 @@ xShop_Calendar_Editor = function(parent,designer){
 	//Choose Your Calendar's Starting Month 
 	this.col6 = $('<div class="atk-col-5 xdesigner-starting-month"></div>').appendTo(this.row2);
 	this.starting_month = $('<label for="startDate">Starting Month :</label>').appendTo(this.col6);
-	this.starting_month_text = $('<input name="startDate" id="xshop-designer-startDate" class="xshop-designer-calendar-month-picker" />').appendTo(this.col6);	
+	this.starting_month_text = $('<input name="startDate" id="xshop-designer-startDate" class="xshop-designer-calendar-month-picker" />').appendTo(this.col6);
 	this.starting_month_datepicker = $('.xshop-designer-calendar-month-picker').datepicker( {
         changeMonth: true,
         changeYear: true,
@@ -447,17 +447,33 @@ xShop_Calendar_Editor = function(parent,designer){
 		width: 500,
 		modal: true,
 		open:function(){
-			
+
 			$('div').remove('#xshop-designer-calendar-events');
 			table = '<div id="xshop-designer-calendar-events" class="atk-box"><div class="atk-table atk-table-zebra atk-table-bordered"><div class="atk-box-small atk-align-center"><h3>Your All Events</h3></div><table><thead><tr><th>Date</th><th>Message</th><th>Actions</th></tr></thead><tbody>';
 			$.each(self.designer_tool.options.calendar_event,function(index,month_events){
 				$.each(month_events,function(date,message){
-					table += '<tr><td>'+date+'</td><td>'+message+'</td><td><a href="#">Edit</a></td></tr>';
+					table += '<tr selected_date='+date+' ><td>'+date+'</td><td>'+message+'</td><td><a class="atk-effect-danger xshop-designer-calendar-event-delete" href="#">Delete</a></td></tr>';
 				});
 			});
 
 			table +='</tbody></table></div></div>';
 			$(table).appendTo(this);
+			$('.xshop-designer-calendar-event-delete').click(function(){
+				selected_date = $(this.closest('tr')).attr('selected_date');
+				console.log(self.designer_tool.options.calendar_event);
+
+				// self.designer_tool.options.calendar_event[curr_month][self.event_date.val()]
+				$.each(self.designer_tool.options.calendar_event, function(index,events){
+					console.log(events);
+				});
+				// self.designer_tool.options.calendar_event.remove(selected_date);
+				
+				// self.designer_tool.options.calendar_event[selected_date];
+				// dt.pages_and_layouts[dt.current_page][dt.current_layout].components.splice(index,1);
+				// console.log(self.designer_tool.options.calendar_event);
+
+			});
+
 		},
 		close:function(){
 			$('.xshop-designer-calendar-event-count').empty();
@@ -471,7 +487,7 @@ xShop_Calendar_Editor = function(parent,designer){
 
 	$(this.event_add).click(function(event){
 		curr_month = self.current_calendar_component.options.month;
-		
+
 		if(self.designer_tool.options.calendar_event[curr_month]== undefined)
 		self.designer_tool.options.calendar_event[curr_month]= new Object;
 
@@ -484,7 +500,7 @@ xShop_Calendar_Editor = function(parent,designer){
 		self.event_date.val("");
 	});
 	
-	this.getCalendarEvent = function(){		
+	this.getCalendarEvent = function(){
 		// console.log(self.current_calendar_component);
 		count = 0 ;
 		$.each(self.designer_tool.options.calendar_event,function(index,month_events){
@@ -901,6 +917,9 @@ Calendar_Component = function (params){
 
 		if(this.xhr != undefined)
 			this.xhr.abort();
+
+		console.log(self.options);
+		console.log(self.options.starting_month);
 
 		this.xhr = $.ajax({
 			url: 'index.php?page=xShop_page_designer_rendercalendar',
