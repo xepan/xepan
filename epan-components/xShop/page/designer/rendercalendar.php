@@ -36,14 +36,14 @@ class page_xShop_page_designer_rendercalendar extends Page {
 		$options['starting_month']= $current_month;
 		$options['starting_year'] = $current_year;
 
-		if($_GET['starting_date']){
-			$options['starting_date'] = $_GET['starting_date'];
-		}
 		if($_GET['starting_month']){
 			$options['starting_month'] = $_GET['starting_month'];
 		}
-		if($_GET['starting_year'])
+
+		if($_GET['starting_year']){
 			$options['starting_year'] = $_GET['starting_year'];
+		}
+
 		
 		$options['resizable']= $_GET['resizable'];
 		$options['movable']= $_GET['movable'];
@@ -58,11 +58,24 @@ class page_xShop_page_designer_rendercalendar extends Page {
 		//ex:  Starting month= "Nov 2015" and month is "8" then calendar will draw 8th month from Nov 2015 that is "July 2016"
 		if(!$_GET['month'])
 			$options['month'] = $options['starting_month'];
+
+		if($_GET['global_starting_year']){//globally set for calendar sequence
+			$options['starting_year'] = $_GET['global_starting_year'];
+		}
+		if($_GET['global_starting_month']){//globally set for calendar sequence
+			$options['starting_month'] = $_GET['global_starting_month'];
+		}
+
 		$options['year'] = $options['starting_year'];
+
+
    		if($options['month'] < $options['starting_month']){
    			$options['year'] = $options['starting_year'] + 1;
    		}
 
+
+   		// throw new \Exception("month= ".$options['month'] . " year=".$options['year']."Startin_year=".$options['starting_year']."Starting month".$options['starting_month']);
+		   		
 		$cont = $this->add('xShop/Controller_RenderCalendar',array('options'=>$options));
 		$cont->show('png',3,true,false);
 
