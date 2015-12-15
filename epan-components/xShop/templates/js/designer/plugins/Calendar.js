@@ -389,7 +389,8 @@ xShop_Calendar_Editor = function(parent,designer){
             $(this).attr('month',month);
             $(this).attr('year',year);
             $(this).datepicker('setDate', new Date(year, month, 0));
-            self.designer_tool.options.calendar_starting_month = $(this).val();
+            self.designer_tool.options.calendar_starting_month = month;
+            self.designer_tool.options.calendar_starting_year = year;
             self.current_calendar_component.options.starting_date = $(this).val();
     		self.current_calendar_component.options.starting_month = month;
     		self.current_calendar_component.options.starting_year = year;
@@ -400,6 +401,7 @@ xShop_Calendar_Editor = function(parent,designer){
 
         }
     });
+	
     $(".xshop-designer-calendar-month-picker").focus(function () {
 		$(".ui-datepicker-calendar").hide();
 		$("#ui-datepicker-div").position({
@@ -459,13 +461,13 @@ xShop_Calendar_Editor = function(parent,designer){
 			table +='</tbody></table></div></div>';
 			$(table).appendTo(this);
 			$('.xshop-designer-calendar-event-delete').click(function(){
+				alert('Todo');
 				selected_date = $(this.closest('tr')).attr('selected_date');
-				console.log(self.designer_tool.options.calendar_event);
-
+				// console.log(self.designer_tool.options.calendar_event);
 				// self.designer_tool.options.calendar_event[curr_month][self.event_date.val()]
-				$.each(self.designer_tool.options.calendar_event, function(index,events){
-					console.log(events);
-				});
+				// $.each(self.designer_tool.options.calendar_event, function(index,events){
+				// 	console.log(events);
+				// });
 				// self.designer_tool.options.calendar_event.remove(selected_date);
 				
 				// self.designer_tool.options.calendar_event[selected_date];
@@ -617,7 +619,10 @@ xShop_Calendar_Editor = function(parent,designer){
 		$(this.month).val(component.options.month);
 		$(this.starting_date).val(component.options.starting_date);
 
-		$(this.starting_month_datepicker).datepicker('setDate',new Date(component.options.starting_year,parseInt(component.options.starting_month),0));
+		if(this.designer_tool.options.calendar_starting_month)
+			$(this.starting_month_datepicker).datepicker('setDate',new Date(this.designer_tool.options.calendar_starting_year,parseInt(this.designer_tool.options.calendar_starting_month),0));
+		else
+			$(this.starting_month_datepicker).datepicker('setDate',new Date(component.options.starting_year,parseInt(component.options.starting_month),0));
 
 		$(this.starting_year).val(component.options.starting_year);
 		$(this.type).val(component.options.type);
@@ -845,11 +850,16 @@ Calendar_Component = function (params){
 	}
 
 	this.render = function(place_in_center){
-
 		var self = this;
+		
+		console.log("month = "+ self.designer_tool.options.calendar_starting_month + "Year" + self.designer_tool.options.calendar_starting_year);
+		
 		if(self.options.load_design == true){
 			self.designer_tool.options.calendar_event = JSON.parse(self.options.events);
-			self.designer_tool.options.calendar_starting_month = self.options.starting_date;
+			if(self.designer_tool.options.calendar_starting_month == undefined){
+				self.designer_tool.options.calendar_starting_month = self.options.starting_month;
+				self.designer_tool.options.calendar_starting_year = self.options.starting_year;
+			}
 			self.options.load_design = "false";
 		}
 		// console.log(JSON.stringify(self.designer_tool.options.calendar_event));
@@ -918,8 +928,8 @@ Calendar_Component = function (params){
 		if(this.xhr != undefined)
 			this.xhr.abort();
 
-		console.log(self.options);
-		console.log(self.options.starting_month);
+		// console.log(self.options);
+		// console.log(self.options.starting_month);
 
 		this.xhr = $.ajax({
 			url: 'index.php?page=xShop_page_designer_rendercalendar',
@@ -945,7 +955,8 @@ Calendar_Component = function (params){
 					width:self.options.width,
 					height:self.options.height,
 
-					starting_date:self.designer_tool.options.calendar_starting_month, //Show Only Date and Month // Default Value currentYear-1st Jan Month
+					global_starting_month:self.designer_tool.options.calendar_starting_month,
+					global_starting_year:self.designer_tool.options.calendar_starting_year,
 					starting_month:self.options.starting_month,
 					starting_year:self.options.starting_year,
 					resizable:self.options.resizable,

@@ -43,6 +43,7 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 		height: undefined,
 		selected_layouts_for_print:{},
 		calendar_starting_month:undefined,
+		calendar_starting_year:undefined,
 		calendar_event:{}
 	},
 	_create: function(){
