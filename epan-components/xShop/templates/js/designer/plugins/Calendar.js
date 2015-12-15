@@ -331,6 +331,43 @@ xShop_Calendar_Editor = function(parent,designer){
         }
 	});
 
+	//```````````````````````````````````````````````````````````````````````````|
+	//------------------------------Calendar Height/Width/x/y Options------------
+	//___________________________________________________________________________|
+	this.cal_col = $('<div class="atk-col-31 atk-box-small atk-box-designer"></div>').appendTo(this.row1);
+	$('<div class="xshop-calendar-editor-header" style="">Calendar</div>').appendTo(this.cal_col);
+	
+	this.calendar_x_label = $('<div class=""><label for="xshop-designer-calendar-positionx">x: </label></div>').appendTo(this.cal_col);
+	this.calendar_x = $('<input name="x" id="xshop-designer-calendar-positionx" class="xshop-designer-calendar-inputx" />').appendTo(this.calendar_x_label);
+	$(this.calendar_x).change(function(){
+		self.current_calendar_component.options.x = self.designer_tool.screen2option($(this).val());
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+    	self.current_calendar_component.render();
+	});
+
+	this.calendar_y_label = $('<div class=""><label for="xshop-designer-calendar-positiony">y: </label></div>').appendTo(this.cal_col);
+	this.calendar_y = $('<input name="y" id="xshop-designer-calendar-positiony" class="xshop-designer-calendar-inputy" />').appendTo(this.calendar_y_label);
+	$(this.calendar_y).change(function(){
+		self.current_calendar_component.options.y = self.designer_tool.screen2option($(this).val());
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+    	self.current_calendar_component.render();
+	});
+
+	this.calendar_width_label = $('<div class=""><label for="xshop-designer-calendar-width">width: </label></div>').appendTo(this.cal_col);
+	this.calendar_width = $('<input name="width" id="xshop-designer-calendar-width" class="xshop-desigber-calendar-width"/>').appendTo(this.calendar_width_label);
+	$(this.calendar_width).change(function(){
+		self.current_calendar_component.options.width = self.designer_tool.screen2option($(this).val());
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+    	self.current_calendar_component.render();	
+	});
+
+	this.calendar_height_label = $('<div class=""><label for="xshop-designer-calendar-height">height: </label></div>').appendTo(this.cal_col);
+	this.calendar_height = $('<input name="height" id="xshop-designer-calendar-height" class="xshop-desigber-calendar-height"/>').appendTo(this.calendar_height_label);
+	$(this.calendar_height).change(function(){
+		self.current_calendar_component.options.height = self.designer_tool.screen2option($(this).val());
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+    	self.current_calendar_component.render();
+	});
 
 //```````````````````````````````````````````````````````````````````````````|
 //------------------------------Month Style Options--------------------------
@@ -412,8 +449,9 @@ xShop_Calendar_Editor = function(parent,designer){
 	});
 
 
+
 //```````````````````````````````````````````````````````````````````````````|
-//------------------------------Starting Month Style Options-----------------
+//------------------------------Add Event Style Options-----------------
 //___________________________________________________________________________| 
     //Calendar Events
     // <div class="atk-buttonset">

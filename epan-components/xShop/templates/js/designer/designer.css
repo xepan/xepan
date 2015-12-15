@@ -1,6 +1,6 @@
-.xshop-designer-tool input{
+/*.xshop-designer-tool input{
   width:auto !important;
-}
+}*/
 
 h3.xshop-designer-layout-name{
   color: black;
@@ -489,4 +489,8 @@ img.xdesigner-page-layout-thumbnail{
   -webkit-transform: rotate(90deg); 
   /* Chrome, Safari, Opera */     
   transform: rotate(90deg);
+}
+
+input.xshop-designer-calendar-inputx,input.xshop-designer-calendar-inputy,.xshop-desigber-calendar-width, .xshop-desigber-calendar-height{
+  width: 50px !important;
 }
