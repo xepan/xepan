@@ -1054,7 +1054,7 @@ Calendar_Component = function (params){
 			}
 		})
 		.fail(function(ret) {
-			// evel(ret);
+			evel(ret);
 			console.log("Calendar Error");
 		})
 		.always(function() {

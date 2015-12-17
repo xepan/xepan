@@ -106,6 +106,10 @@ PageLayout_Component = function (params){
 			img = '<img class="xdesigner-page-layout-thumbnail" src="index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id='+self.designer_tool.options.item_id+'&page_name='+index+'&layout_name='+layout[index]+'" alt="'+index+'"/>';
 			page_btn = $('<div class="xshop-designer-pagebtn" xdesigner_item_page_name="'+index+'" >'+img+'<p class="xshop-designer-page-name" style="color:black;">'+index+'</p></div>').appendTo(page_layout_toolbar).data('page',index);
 			page_btn.click(function(event){
+				//Trick for solve error like select page one component and then select another page same type component here the option are same as previouse selected page component if edit here some option then previous page current_selected_component display on second page 
+				$('.xshop-designer-tool-topbar-options').hide();
+				// console.log(self.designer_tool);
+
 				layout = new Layout_Tool();
 				layout.init(self.designer_tool,self.canvas,self);
 				layout.renderTool(index);
