@@ -482,7 +482,7 @@ xShop_Calendar_Editor = function(parent,designer){
 		dateFormat: 'dd-MM-yy'
 	});
 
-	event_dialog= event_frame.dialog({
+	event_dialog = event_frame.dialog({
 	 	autoOpen: false,
 		width: 500,
 		modal: true,
@@ -950,6 +950,7 @@ Calendar_Component = function (params){
 	            self.designer_tool.option_panel.fadeIn(500);
 
 	            self.designer_tool.current_selected_component = self;
+	            self.current_calendar_component = self;
 	            self.designer_tool.option_panel.css('z-index',70);
 	            self.designer_tool.option_panel.addClass('xshop-text-options');
 	            self.designer_tool.option_panel.css('top',0);

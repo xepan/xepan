@@ -11,8 +11,11 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 			$this->add('View_Warning')->set('Login First');
 			return;
 		}
-			
-			$this->add('H1')->set($this->api->auth->model['name'])->addClass('xsnb-member-name');
+		
+		$this->template->trySet('customer',$this->api->auth->model['name']);
+		// $this->template->trySet('user_name',$this->api->auth->model['user_name']);
+
+			// $this->add('H1')->set($this->api->auth->model['name'])->addClass('xsnb-member-name');
 			
 			$tab = $this->add('Tabs')->addClass('nav-stacked');
 			//Account Information

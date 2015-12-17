@@ -1,11 +1,11 @@
-<div id='{$_name}' class='epan-component-options' component_type="{$component_type}">
-	{$Content}
-	<div class="row">
-		<div class="col-md-2">
-			<!-- NavBars	 -->
-		</div>
-		<div class="col-md-10">
-		</div>
-	</div>
-</div>
 
+<div id="{$_name}" component_type="{$component_type}" class="epan-component-options">
+  <div class="atk-box atk-row">
+    <div class="atk-col-1"><i class="icon-user"></i></div>
+    <div class="atk-col-7">
+      <h1>{$customer}</h1><span>{$user_name}</span>
+    </div>
+    <div class="atk-col-4"><a href="?page=logout" class="atk-effect-danger atk-button atk-swatch-red">
+        <p class="icon-logout">&nbsp;logout</p></a></div>
+  </div>{$Content}
+</div>

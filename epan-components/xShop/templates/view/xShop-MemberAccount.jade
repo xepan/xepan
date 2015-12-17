@@ -1,0 +1,11 @@
+.epan-component-options( id='{$_name}' component_type = '{$component_type}')
+	.atk-box.atk-row
+		.atk-col-1
+			i(class="icon-user")
+		.atk-col-7
+			h1{$customer}
+			span{$user_name}
+		.atk-col-4
+			a(href="?page=logout" class="atk-effect-danger atk-button atk-swatch-red")
+				p(class="icon-logout")|&nbsp;logout
+	{$Content}

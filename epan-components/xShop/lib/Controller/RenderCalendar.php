@@ -50,7 +50,7 @@ class Controller_RenderCalendar extends \AbstractController {
 			$pdf->SetFont($this->options['header_font_family']);
 		// add a page
 		$pdf->AddPage();
-		$pdf->WriteHTML($html, true, false, true, false, '');
+		$pdf->WriteHTML($html, true, false, true, false);
 		$this->pdf = $pdf->Output(null,'S');
 		// $this->pdf = $pdf->Output(null);
 		// echo $this->pdf;
