@@ -100,7 +100,6 @@ xShop_Calendar_Editor = function(parent,designer){
 	});
 
 	//Day Date Font Color
-	//header font color: default Value Black
 	this.day_date_color_label = $('<div class="xshop-designer-calendar-color-picker"><label for="day_date_font_color">Color : </label></div>').appendTo(this.col2);
 	this.day_date_color_picker = $('<input id="day_date_font_color" style="display:none;">').appendTo(this.day_date_color_label);
 	$(this.day_date_color_picker).colorpicker({
@@ -134,6 +133,27 @@ xShop_Calendar_Editor = function(parent,designer){
 		self.current_calendar_component.render();
 
 	});	
+	
+	//```````````````````````````````````````````````````````````````````````````|
+	//------------------------------Cell Block BG Color--------------------------
+	//___________________________________________________________________________|
+	this.cell_bg_color_label = $('<div class="xshop-designer-calendar-color-picker"><label for="xshop-designer-calendar-cell-bg-color">BG Color : </label></div>').appendTo(this.col2);
+	this.cell_bg_color = $('<input id="xshop-designer-calendar-cell-bg-color" style="display:none;">').appendTo(this.cell_bg_color_label);
+	$(this.cell_bg_color).colorpicker({
+		parts:          'full',
+        alpha:          false,
+        showOn:         'both',
+        buttonColorize: true,
+        showNoneButton: true,
+        ok: function(event, color){
+        	// self.current_calendar_component.options.header_font_color = parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100);
+        	self.current_calendar_component.options.calendar_cell_bg_color = '#'+color.formatted;
+        	$('.xshop-designer-tool').xepan_xshopdesigner('check');
+        	self.current_calendar_component.render();
+        	// console.log('#'+color.formatted);
+        	// console.log(parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100));
+        }
+	});
 
 	//```````````````````````````````````````````````````````````````````````````|
 	//----------------------------Day Date Horizental Alignment Style Options-----
@@ -814,6 +834,7 @@ Calendar_Component = function (params){
 		event_font_size:'#00000',
 		day_name_bg_color:'#FFFFFF',
 		calendar_cell_heigth:20,
+		calendar_cell_bg_color:undefined,
 		alignment: "center",
 		valignment:'middle',
 
@@ -998,6 +1019,7 @@ Calendar_Component = function (params){
 					event_font_color:self.options.event_font_color,
 					day_name_bg_color:self.options.day_name_bg_color,
 					calendar_cell_heigth:self.options.calendar_cell_heigth,
+					calendar_cell_bg_color:self.options.calendar_cell_bg_color,
 					alignment:self.options.alignment,
 					valignment:self.options.valignment,
 

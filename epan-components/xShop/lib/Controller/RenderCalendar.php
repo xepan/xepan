@@ -101,14 +101,14 @@ class Controller_RenderCalendar extends \AbstractController {
 		$calendar.= '<tr class="calendar-row" style="text-align:'.$styles['alignment'].';">';
   		/* print "blank" days until the first of the current week */
   		for($x = 0; $x < $running_day; $x++){
-    		$calendar.= '<td class="calendar-day-np">&nbsp;</td>';
+    		$calendar.= '<td class="calendar-day-np" style="background-color:'.$styles['calendar_cell_bg_color'].'">&nbsp;</td>';
     		$days_in_this_week++;
   		}
 
 		/* keep going with days.... */
 		for($list_day = 1; $list_day <= $days_in_month; $list_day++){
 
-		    $calendar.= '<td class="calendar-day" style="overflow:hidden; height:'.$styles['calendar_cell_heigth'].'; max-height:'.$styles['calendar_cell_heigth'].';font-size:'.$day_date_font_size.'px;color:'.$styles['day_date_font_color'].'">';
+		    $calendar.= '<td class="calendar-day" style="background-color:'.$styles['calendar_cell_bg_color'].';overflow:hidden; height:'.$styles['calendar_cell_heigth'].'; max-height:'.$styles['calendar_cell_heigth'].';font-size:'.$day_date_font_size.'px;color:'.$styles['day_date_font_color'].'">';
 		    /* add in the day number */
 		    $calendar.= '<div class="day-number">'.$list_day.'</div>';
 
@@ -141,7 +141,7 @@ class Controller_RenderCalendar extends \AbstractController {
 	  	/* finish the rest of the days in the week */
 	  	if($days_in_this_week < 8){	
 	    	for($x = 1; $x <= (8 - $days_in_this_week); $x++){
-	    		$calendar.= '<td class="calendar-day-np">&nbsp;</td>';
+	    		$calendar.= '<td class="calendar-day-np" style="background-color:'.$styles['calendar_cell_bg_color'].'">&nbsp;</td>';
 	  		}
 	  	}
 	  	/* final row */
