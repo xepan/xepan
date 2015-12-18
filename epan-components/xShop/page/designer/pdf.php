@@ -169,9 +169,52 @@ class page_xShop_page_designer_pdf extends Page {
 	}
 
 	function addCalendar($options,$pdf){
+		//Position, Dimention and Zindex Calculation
 		$options['width'] = $options['width'] * $this->print_ratio;
-		// $options['height'] = $options['height'] * $zoom;
+		$options['height'] = $options['height'] * $this->print_ratio;
+		$options['x'] = $options['x'] * $this->print_ratio;
+		$options['y'] = $options['y'] * $this->print_ratio;
+		$options['zindex'] = $options['zindex'];
 
+		//Font Size Calculation
+		// $options['header_font_size'] = $options['header_font_size'] * ($this->print_ratio / 1.328352013);
+		// $options['day_name_font_size'] = $options['day_name_font_size'] * ($this->print_ratio / 1.328352013);
+		// $options['day_date_font_size'] = $options['day_date_font_size'] * ($this->print_ratio / 1.328352013);
+		// $options['event_font_size'] = $options['event_font_size'] * ($this->print_ratio / 1.328352013);
+
+		//Date Calculaion
+		$now = new \DateTime('now');
+   		$current_month = $now->format('m');
+   		$current_year = $now->format('Y');
+   		$options['starting_date'] = $now;
+		$options['starting_month']= $current_month;
+		$options['starting_year'] = $current_year;
+
+		if($options['starting_month']){
+			$options['starting_month'] = $options['starting_month'];
+		}
+
+		if($options['starting_year']){
+			$options['starting_year'] = $options['starting_year'];
+		}
+
+		if(!$options['month'])
+			$options['month'] = $options['starting_month'];
+
+		if($options['global_starting_year']){//globally set for calendar sequence
+			$options['starting_year'] = $options['global_starting_year'];
+		}
+		if($options['global_starting_month']){//globally set for calendar sequence
+			$options['starting_month'] = $options['global_starting_month'];
+		}
+
+		$options['year'] = $options['starting_year'];
+
+
+   		if($options['month'] < $options['starting_month']){
+   			$options['year'] = $options['starting_year'] + 1;
+   		}
+   		//--------------------------End of date Calculation--------------------
 		$cont = $this->add('xShop/Controller_RenderCalendar',array('options'=>$options));
 		$data = $cont->show('png',1,false,true);
 		// $pdf->MemImage($data, 0, 0, 100, 20);
