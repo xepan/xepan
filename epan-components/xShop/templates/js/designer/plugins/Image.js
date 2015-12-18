@@ -4,9 +4,10 @@ xShop_Image_Editor = function(parent){
 	this.current_image_component = undefined;
 
 	this.element = $('<div id="xshop-designer-image-editor" style="display:block" class="xshop-options-editor"></div>').appendTo(this.parent);
+	this.editor_close_btn = $('<div class="atk-row" style="padding:0;margin:0;"><i class="atk-box-small pull-right glyphicon glyphicon-remove"></i></div>').appendTo(this.element);
 	this.image_button_set = $('<div class="btn-group" role="group"></div>').appendTo(this.element);
 	// this.image_manager = $('<div class="btn "><span class="glyphicon glyphicon-film"></span></div>').appendTo(this.image_button_set);
-	this.image_edit = $('<div class="btn xshop-designer-image-edit-btn"><i class="icon-edit atk-size-tera"></i><br/><span class="atk-size-micro">Edit</span></div>').appendTo(this.image_button_set);
+	this.image_edit = $('<div class="btn xshop-designer-image-edit-btn"><i class="icon-edit atk-size-tera"></i><br/><span class="atk-size-micro">Image</span></div>').appendTo(this.image_button_set);
 	this.image_crop_resize = $('<div class="btn xshop-designer-image-crop-btn"><i class="icon-crop atk-size-tera"></i><br/><span class="atk-size-micro">Crop</span></div>').appendTo(this.image_button_set);
 	
 	// this.image_mask = $('<div class="btn xshop-designer-image-mask-btn"><i class="glyphicon glyphicon-picture atk-size-tera"></i><br/><span class="atk-size-micro">Mask</span></div>').appendTo(this.image_button_set);
@@ -19,7 +20,10 @@ xShop_Image_Editor = function(parent){
 	this.image_up = $('<div class="xshop-designer-image-up-btn icon-angle-circled-up atk-size-mega xshop-designer-image-up-btn" title="Bring to Front" ></div>').appendTo(this.image_up_down);
 	this.image_down = $('<div class="xshop-designer-image-down-btn icon-angle-circled-down atk-size-mega xshop-designer-image-up-btn" title="Send to Back" ></div>').appendTo(this.image_up_down);
 	this.image_remove = $('<div class="btn xshop-designer-image-remove-btn"><i class="icon-trash atk-size-tera"></i><br/><span class="atk-size-micro">Remove</span></div>').appendTo(this.image_button_set);
-	
+
+	$(this.editor_close_btn).click(function(event){
+		self.element.hide();
+	});
 	// this.image_mask.click(function(event){
 	// 	self.current_image_component.options.mask_added=true;
 	// 	options ={modal:false,
