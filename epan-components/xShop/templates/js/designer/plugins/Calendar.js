@@ -389,6 +389,42 @@ xShop_Calendar_Editor = function(parent,designer){
     	self.current_calendar_component.render();
 	});
 
+	//Calendar up/down options
+	this.calendar_up_down = $('<div class="xshop-designer-calendar-up-down-btn"></div>').appendTo(this.cal_col);
+	this.calendar_up = $('<span class="xshop-designer-calendar-up-btn icon-angle-circled-up atk-size-mega xshop-designer-calendar-up-btn" title="Bring to Front" ></span>').appendTo(this.calendar_up_down);
+	this.calendar_down = $('<span class="xshop-designer-calendar-down-btn icon-angle-circled-down atk-size-mega xshop-designer-calendar-up-btn" title="Send to Back" ></span>').appendTo(this.calendar_up_down);
+
+	//Bring To Front
+	this.calendar_up.click(function(){
+		current_calendar = $(self.current_calendar_component.element);
+		current_zindex = current_calendar.css('z-index');
+		if( current_zindex == 'auto'){
+			current_zindex = 0;
+		}
+		current_calendar.css('z-index', parseInt(current_zindex)+1);
+		self.current_calendar_component.options.zindex = current_calendar.css('z-index');
+		if($('span.xshop-designer-calendar-down-btn').hasClass('xepan-designer-button-disable')){
+			$('span.xshop-designer-calendar-down-btn').removeClass('xepan-designer-button-disable');
+		}
+	});
+
+	//Send to Back
+	this.calendar_down.click(function(){
+		current_calendar = $(self.current_calendar_component.element);
+		current_zindex = current_calendar.css('z-index');
+		if( current_zindex == 'auto' || (parseInt(current_zindex)-1) < 0){
+			current_zindex = 0;
+		}else 
+			current_zindex = (parseInt(current_zindex)-1);
+
+		current_calendar.css('z-index', current_zindex);
+		self.current_calendar_component.options.zindex = current_zindex;
+		if(current_zindex == 0 ){
+			// console.log($('span.xshop-designer-text-down-btn'));
+			$('span.xshop-designer-calendar-down-btn').addClass('xepan-designer-button-disable');
+		}
+	});
+
 //```````````````````````````````````````````````````````````````````````````|
 //------------------------------Month Style Options--------------------------
 //___________________________________________________________________________|
@@ -853,6 +889,7 @@ Calendar_Component = function (params){
 		designer_mode:false,
 		x:undefined,
 		y:undefined,
+		zindex:0,
 		events:{},
 		type: 'Calendar',
 
@@ -989,7 +1026,15 @@ Calendar_Component = function (params){
 		            self.designer_tool.freelancer_panel.FreeLancerComponentOptions.element.show();
 		            self.designer_tool.freelancer_panel.setComponent($(this).data('component'));
 	            }
+
 		        event.stopPropagation();
+
+				//check For the Z-index
+            	if(self.options.zindex == 0){
+            		$('span.xshop-designer-calendar-down-btn').addClass('xepan-designer-button-disable');
+            	}else
+            		$('span.xshop-designer-calendar-down-btn').removeClass('xepan-designer-button-disable');
+            		
 			});
 		}else{
 			this.element.show();
@@ -1076,7 +1121,7 @@ Calendar_Component = function (params){
 			}
 		})
 		.fail(function(ret) {
-			evel(ret);
+			eval(ret);
 			console.log("Calendar Error");
 		})
 		.always(function() {
