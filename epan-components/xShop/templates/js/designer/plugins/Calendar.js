@@ -80,12 +80,72 @@ xShop_Calendar_Editor = function(parent,designer){
 	});
 
 
+
+//```````````````````````````````````````````````````````````````````````````|
+//------------------------------Day Name Style Options-----------------------
+//___________________________________________________________________________|
+	// day_name_font_size:12,
+	// this.col3 = $('<div class="atk-col-31"><b class="xshop-calendar-editor-header">Day Name</b></div>').appendTo(this.row1);
+	
+	this.col3 = $('<div class="atk-col-31 atk-box-small atk-box-designer"></div>').appendTo(this.row1);
+	$('<div class="xshop-calendar-editor-header" style="">Week</div>').appendTo(this.col3);
+
+	this.day_name_font_size_label = $('<div><label for="day_name_font_size">Font Size :</label></div>').appendTo(this.col3);
+	this.day_name_font_size = $('<select class="btn btn-xs">Day Name Size</select>').appendTo(this.day_name_font_size_label);
+	for (var i = 7; i < 50; i++) {
+		$('<option value="'+i+'">'+i+'</option>').appendTo(this.day_name_font_size);
+	};
+	$(this.day_name_font_size).change(function(event){
+		self.current_calendar_component.options.day_name_font_size = $(this).val();
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
+	});
+
+	//Day Name Font Color
+	this.day_name_color_label = $('<div class="xshop-designer-calendar-color-picker"><label for="day_name_font_color">Color : </label></div>').appendTo(this.col3);
+	this.day_name_color_picker = $('<input id="day_name_font_color" style="display:none;">').appendTo(this.day_name_color_label);
+	$(this.day_name_color_picker).colorpicker({
+		parts:          'full',
+        alpha:          false,
+        showOn:         'both',
+        buttonColorize: true,
+        showNoneButton: true,
+        ok: function(event, color){
+        	// self.current_calendar_component.options.header_font_color = parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100);
+        	self.current_calendar_component.options.day_name_font_color = '#'+color.formatted;
+        	$('.xshop-designer-tool').xepan_xshopdesigner('check');
+        	self.current_calendar_component.render();
+        	// console.log('#'+color.formatted);
+        	// console.log(parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100));
+        }
+	});
+
+	//Day Name Background Color
+	this.day_name_bg_color_label = $('<div class="xshop-designer-calendar-color-picker"><label for="day_name_bg_color">BG Color : </label></div>').appendTo(this.col3);
+	this.day_name_bg_color_picker = $('<input id="day_name_bg_color" style="display:none;">').appendTo(this.day_name_bg_color_label);
+	$(this.day_name_bg_color_picker).colorpicker({
+		parts:          'full',
+        alpha:          false,
+        showOn:         'both',
+        buttonColorize: true,
+        showNoneButton: true,
+        ok: function(event, color){
+        	// self.current_calendar_component.options.header_font_color = parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100);
+        	self.current_calendar_component.options.day_name_bg_color = '#'+color.formatted;
+        	$('.xshop-designer-tool').xepan_xshopdesigner('check');
+        	self.current_calendar_component.render();
+        	// console.log('#'+color.formatted);
+        	// console.log(parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100));
+        }
+	});
+
+
 //```````````````````````````````````````````````````````````````````````````|
 //------------------------------Day Date Style Options-----------------------
 //___________________________________________________________________________|
 	// day_date_font_size:12,
 	this.col2 = $('<div class="atk-col-31 atk-box-small atk-box-designer"></div>').appendTo(this.row1);
-	$('<div class="xshop-calendar-editor-header" style="">Day Date</div>').appendTo(this.col2);
+	$('<div class="xshop-calendar-editor-header" style="">Date</div>').appendTo(this.col2);
 	// this.col2 = $('<div class="atk-col-31 atk-box-small atk-box-designer"></div>').appendTo(this.row1);
 	// $('<div class="atk-col-31" class="xshop-calendar-editor-header" >Day Date</div>').appendTo(this.col2);
 	this.day_date_font_size_label = $('<div><label for="day_date_font_size">Font Size :</label></div>').appendTo(this.col2);
@@ -256,63 +316,8 @@ xShop_Calendar_Editor = function(parent,designer){
 		$(self.valign_middle_btn).removeClass('active');
 
 	});
-//```````````````````````````````````````````````````````````````````````````|
-//------------------------------Day Name Style Options-----------------------
-//___________________________________________________________________________|
-	// day_name_font_size:12,
-	// this.col3 = $('<div class="atk-col-31"><b class="xshop-calendar-editor-header">Day Name</b></div>').appendTo(this.row1);
-	
-	this.col3 = $('<div class="atk-col-31 atk-box-small atk-box-designer"></div>').appendTo(this.row1);
-	$('<div class="xshop-calendar-editor-header" style="">Day Name</div>').appendTo(this.col3);
 
-	this.day_name_font_size_label = $('<div><label for="day_name_font_size">Font Size :</label></div>').appendTo(this.col3);
-	this.day_name_font_size = $('<select class="btn btn-xs">Day Name Size</select>').appendTo(this.day_name_font_size_label);
-	for (var i = 7; i < 50; i++) {
-		$('<option value="'+i+'">'+i+'</option>').appendTo(this.day_name_font_size);
-	};
-	$(this.day_name_font_size).change(function(event){
-		self.current_calendar_component.options.day_name_font_size = $(this).val();
-		$('.xshop-designer-tool').xepan_xshopdesigner('check');
-		self.current_calendar_component.render();
-	});
 
-	//Day Name Font Color
-	this.day_name_color_label = $('<div class="xshop-designer-calendar-color-picker"><label for="day_name_font_color">Color : </label></div>').appendTo(this.col3);
-	this.day_name_color_picker = $('<input id="day_name_font_color" style="display:none;">').appendTo(this.day_name_color_label);
-	$(this.day_name_color_picker).colorpicker({
-		parts:          'full',
-        alpha:          false,
-        showOn:         'both',
-        buttonColorize: true,
-        showNoneButton: true,
-        ok: function(event, color){
-        	// self.current_calendar_component.options.header_font_color = parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100);
-        	self.current_calendar_component.options.day_name_font_color = '#'+color.formatted;
-        	$('.xshop-designer-tool').xepan_xshopdesigner('check');
-        	self.current_calendar_component.render();
-        	// console.log('#'+color.formatted);
-        	// console.log(parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100));
-        }
-	});
-
-	//Day Name Background Color
-	this.day_name_bg_color_label = $('<div class="xshop-designer-calendar-color-picker"><label for="day_name_bg_color">BG Color : </label></div>').appendTo(this.col3);
-	this.day_name_bg_color_picker = $('<input id="day_name_bg_color" style="display:none;">').appendTo(this.day_name_bg_color_label);
-	$(this.day_name_bg_color_picker).colorpicker({
-		parts:          'full',
-        alpha:          false,
-        showOn:         'both',
-        buttonColorize: true,
-        showNoneButton: true,
-        ok: function(event, color){
-        	// self.current_calendar_component.options.header_font_color = parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100);
-        	self.current_calendar_component.options.day_name_bg_color = '#'+color.formatted;
-        	$('.xshop-designer-tool').xepan_xshopdesigner('check');
-        	self.current_calendar_component.render();
-        	// console.log('#'+color.formatted);
-        	// console.log(parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100));
-        }
-	});
 //```````````````````````````````````````````````````````````````````````````|
 //------------------------------Event Style Options--------------------------
 //___________________________________________________________________________|
