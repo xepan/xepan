@@ -7,13 +7,13 @@
   	</div>
 {/Pannel}
 {$header}
-	<div class="xshop-designer-itemimageslister row">
+	<div class="xshop-designer-itemimageslister row atk-padding">
 	{rows}
 		{row}
 		<div data-id="{$id}" class="{$odd_even}">
 		{cols}
-			<figure class="xshop-designer-item-images col-md-3 col-sm-3 ">
-				<img src="{image}{/}" class="xshop-designer-item-images thumbnail" style="height:80px;overflow:hidden;" ></img>
+			<figure class="xshop-designer-item-images col-md-3 col-sm-3  thumbnail" style="overflow:hidden;height:100px;margin-top:10px;">
+				<img src="{image}{/}" class="xshop-designer-item-images " style="overflow:hidden; object-fit:cover;width:auto;max-height:100px;" ></img>
 	       		 <figcaption class="xshop-designer-add-replace">
 	            	<div class="xshop-designer-add-replace-button btn btn-primary btn-sm" selectedimagesrc="{$image}" data-image-id="{$id}">Insert</div>
 	            	<!-- <div class="xshop-designer-remove-member-image-button btn btn-primary" data-image-id="{$id}" img-no-of-time-used="{$img_used_no_of_time}">Remove</div> -->
