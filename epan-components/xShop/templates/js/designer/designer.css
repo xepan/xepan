@@ -437,6 +437,9 @@ img.xdesigner-page-layout-thumbnail{
 .xshop-designer-backgroundimage-crop{
   height: 300px !important;
 }
+.xshop-designer-image-crop{
+  height: 300px !important;
+}
 
 .xshop-calendar-show-hide-checkbox{
   width: 30px !important;
