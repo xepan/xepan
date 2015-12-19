@@ -32,12 +32,12 @@ class Model_InvoiceItem extends \Model_Document{
 		$this->addField('apply_tax')->type('boolean');//->defaultValue(true);
 
 		$this->addExpression('tax_per_sum')->set(function($m,$q){
-			$tax_assos = $m->add('xShop/Model_ItemTaxAssociation');
-			$tax_assos->addCondition('item_id',$q->getField('item_id'));
+			$tax_assos = $m->add('xShop/Model_Tax');
+			// $tax_assos->addCondition('item_id',$q->getField('item_id'));
 			if($q->getField('tax_id'))
-				$tax_assos->addCondition('tax_id',$q->getField('tax_id'));
+				$tax_assos->addCondition('id',$q->getField('tax_id'));
 
-			$tax = $tax_assos->sum('name');
+			$tax = $tax_assos->sum('value');
 				return "IF(".$q->getField('apply_tax').">0,(".$tax->render()."),'0')";
 		})->type('money')->caption('Total Tax %');
 
@@ -68,14 +68,14 @@ class Model_InvoiceItem extends \Model_Document{
 
 	function beforeSave(){
 			//Check for the apply tax
-		if( !(($this->dirty['apply_tax'] and $this['apply_tax'] ) and ($this->dirty['tax_id'] and $this['tax_id']) ))
-			return;
+		// if( !(($this->dirty['apply_tax'] and $this['apply_tax'] ) and ($this->dirty['tax_id'] and $this['tax_id']) ))
+		// 	return;
 
-		if($this['apply_tax'] and ($tax_asso = $this->item()->applyTaxs())){
-			$tax_asso->addCondition('tax_id',$this['tax_id']);
-			if(!$tax_asso->count()->getOne())
-				throw $this->exception('Tax Not Applied','ValidityCheck')->setField('tax_id');
-		}
+		// if($this['apply_tax'] and ($tax_asso = $this->item()->applyTaxs())){
+		// 	$tax_asso->addCondition('tax_id',$this['tax_id']);
+		// 	if(!$tax_asso->count()->getOne())
+		// 		throw $this->exception('Tax Not Applied','ValidityCheck')->setField('tax_id');
+		// }
 	}
 
 	function item(){
