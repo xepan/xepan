@@ -8,4 +8,15 @@
 		.atk-col-4
 			a(href="?page=logout" class="atk-effect-danger atk-button atk-swatch-red")
 				p(class="icon-logout")|&nbsp;logout
-	{$Content}
+	.atk-row.atk-padding-small(style='background-color:#E9EDF0;margin-top:-15px;margin-bottom:20px')
+		.atk-col-2
+			span|Joined &nbsp;  <b>{$created_at}</b>
+		.atk-col-2
+			span|Last Activity &nbsp;  <b>{$last_login_date}</b>
+		.atk-col-2
+			span|User Type &nbsp;  <b>{$user_type}</b>
+		.atk-col-4
+			span|Email &nbsp;  <b>{$email}</b>
+		.atk-col-2
+			span |&nbsp;
+	{$Content}		

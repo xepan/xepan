@@ -7,5 +7,12 @@
     </div>
     <div class="atk-col-4"><a href="?page=logout" class="atk-effect-danger atk-button atk-swatch-red">
         <p class="icon-logout">&nbsp;logout</p></a></div>
-  </div>{$Content}
+  </div>
+  <div style="background-color:#E9EDF0;margin-top:-15px;margin-bottom:20px" class="atk-row atk-padding-small">
+    <div class="atk-col-2"><span>Joined &nbsp;  <b>{$created_at}</b></span></div>
+    <div class="atk-col-2"><span>Last Activity &nbsp;  <b>{$last_login_date}</b></span></div>
+    <div class="atk-col-2"><span>User Type &nbsp;  <b>{$user_type}</b></span></div>
+    <div class="atk-col-4"><span>Email &nbsp;  <b>{$email}</b></span></div>
+    <div class="atk-col-2"><span>|&nbsp;</span></div>
+  </div>{$Content}		
 </div>
