@@ -1,14 +1,20 @@
 <?php
-
 class page_xShop_page_owner_member_accountinfo extends Page{
 	function page_index(){
-
-
 		$member = $this->add('xShop/Model_MemberDetails');
 		if(!$member->loadLoggedIn()){
 			$this->add('View_Error')->set('Not Authorized');
 			return;
 		}
+
+		$this->app->pathfinder->base_location->addRelativeLocation(
+		    'epan-components/xShop', array(
+		        'php'=>'lib',
+		        'template'=>'templates',
+		        'css'=>'templates/css',
+		        'js'=>'templates/js',
+		    )
+		);
 
 		$member->addCondition('users_id',$this->api->auth->model->id);
 		$member->tryLoadAny();
@@ -43,6 +49,7 @@ class page_xShop_page_owner_member_accountinfo extends Page{
 
 	//================================Address======================
 		$form=$address_tab->add('Form');
+		$form->setLayout(['view/form/member-address']);
 		$form->setModel($member,array('address','billing_address','shipping_address','landmark','city','state','country','mobile_number','pincode'));
 		$form->addSubmit('Update');
 		$users=$this->add('Model_Users')->load($this->api->auth->model->id);
@@ -59,7 +66,6 @@ class page_xShop_page_owner_member_accountinfo extends Page{
 		if($deactive_form->isSubmitted()){
 			if($user['password'] != $deactive_form['password'])
 				$deactive_form->displayError('password','Deactivation Failed');	
-
 			if($member->deactivate())
 				$user->deactivate()?$deactive_form->js(null,$form->js()->univ()->successMessage('Account Deactivate SuccessFully'))->redirect($this->api->url(null,array('page'=>'logout')))->execute():$deactive_form->js(null,$form->js()->univ()->successMessage('Account Deactivate SuccessFully'))->reload()->execute();
 		}

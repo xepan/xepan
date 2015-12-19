@@ -1,0 +1,43 @@
+form.atk-form( action="#")
+  .atk-cells.atk-cells-justified.atk-cells-gutter.atk-push
+  .atk-row
+      .atk-col-4
+          .atk-cell.atk-form-label.atk-text-nowrap
+              span Address
+          .atk-form-row.atk-form-field {$address}
+      .atk-col-4
+          .atk-cell.atk-form-label.atk-text-nowrap
+              span Billing Addess
+          .atk-form-row.atk-form-field {$billing_address}
+      .atk-col-4
+          .atk-cell.atk-form-label.atk-text-nowrap
+              span Shipping Address
+          .atk-form-row.atk-form-field {$shipping_address}    
+  .atk-row
+      .atk-col-4
+          .atk-cell.atk-form-label.atk-text-nowrap
+              span Landmark
+          .atk-form-row.atk-form-field {$landmark}
+      .atk-col-4
+          .atk-cell.atk-form-label.atk-text-nowrap
+              span City
+          .atk-form-row.atk-form-field {$city}    
+      .atk-col-4
+          .atk-cell.atk-form-label.atk-text-nowrap
+              span State
+          .atk-form-row.atk-form-field {$state}    
+  .atk-row
+      .atk-col-4
+          .atk-cell.atk-form-label.atk-text-nowrap
+              span Country
+          .atk-form-row.atk-form-field {$country}
+      .atk-col-4
+          .atk-cell.atk-form-label.atk-text-nowrap
+              span Mobile Number
+          .atk-form-row.atk-form-field {$mobile_number}
+      .atk-col-4
+          .atk-cell.atk-form-label.atk-text-nowrap
+              span Pin Code
+          .atk-form-row.atk-form-field {$pincode}    
+
+  .atk-actions(class="{$buttons_class}"){$FormButtons}
