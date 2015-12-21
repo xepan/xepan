@@ -199,7 +199,7 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		$supplier = $this->supplier();
 		$supplier_email=$supplier->get('email');
 
-		$config_model=$this->add('xPurchase/Model_Configuration');
+		$config_model=$this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
 		
 		// $subject = $config_model['purchase_invoice_email_subject']?:"[ Invoice No.:".$this['name']." ]"." "."::"." "."PURCHASE INVOICE";
@@ -234,7 +234,7 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		$supplier = $this->supplier();
 		$supplier_email=$supplier->get('email');
 
-		$config_model=$this->add('xPurchase/Model_Configuration');
+		$config_model=$this->add('xShop/Model_Configuration');
 		$config_model->tryLoadAny();
 		
 		$emails = explode(',', $supplier['email']);

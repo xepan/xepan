@@ -175,7 +175,7 @@ class page_base_owner extends Page {
 			$sales_m->addItem(array('Quotation','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_quotation',array('department_id'=>$dept_model->id)));
 			// $sales_m->addItem(array('Category','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_category',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Item','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_item',array('department_id'=>$dept_model->id)));
-			$sales_m->addItem(array('E-Voucher','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_voucher',array('department_id'=>$dept_model->id)));
+			// $sales_m->addItem(array('E-Voucher','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_voucher',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Customer','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_customer',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Sales Order','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_order',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Sales Invoice','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_invoice',array('department_id'=>$dept_model->id)));
@@ -197,7 +197,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Quotation","url"=>$this->api->url('xShop_page_owner_quotation',array('department_id'=>$dept_model->id)));
 			// $this->shorcut_menus[]=array("page"=>"Category","url"=>$this->api->url('xShop_page_owner_category',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Item","url"=>$this->api->url('xShop_page_owner_item',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"E-Voucher","url"=>$this->api->url('xShop_page_owner_voucher',array('department_id'=>$dept_model->id)));
+			// $this->shorcut_menus[]=array("page"=>"E-Voucher","url"=>$this->api->url('xShop_page_owner_voucher',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Customer","url"=>$this->api->url('xShop_page_owner_customer',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Sales Orders","url"=>$this->api->url('xShop_page_owner_order',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"AddBlock","url"=>$this->api->url('xShop_page_owner_addblock',array('department_id'=>$dept_model->id)));

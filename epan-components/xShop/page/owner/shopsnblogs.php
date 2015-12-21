@@ -27,6 +27,8 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 			$crud->grid->addColumn('expander','imagelibrary',array("descr"=>'Library'));
 			$crud->grid->addColumn('expander','fonts',array("descr"=>'fonts','page'=>$this->api->url('xShop_page_owner_font')));
 			$crud->grid->addColumn('expander','currency');
+			$crud->grid->addColumn('expander','PaymentGateway',array("descr"=>'Payment Gateway','page'=>$this->api->url('xShop_page_owner_paygateconfig')));
+			$crud->grid->addColumn('expander','E-Voucher',array("descr"=>'E-Voucher','page'=>$this->api->url('xShop_page_owner_voucher')));
 		}
 
 		// $crud->grid->addQuickSearch(array('name'));

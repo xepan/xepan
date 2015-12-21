@@ -5,7 +5,7 @@ class page_xPurchase_page_owner_config extends page_xPurchase_page_owner_main{
 
 		$application_id = $this->api->StickyGET('xshop_application_id');
 		
-		$config_model=$this->add('xPurchase/Model_Configuration')->addCondition('application_id',$application_id)->tryLoadAny();
+		$config_model=$this->add('xShop/Model_Configuration')->addCondition('application_id',$application_id)->tryLoadAny();
 		$tab=$this->add('Tabs');
 			// $comment_tab=$tab->addTab('Comments');
 
