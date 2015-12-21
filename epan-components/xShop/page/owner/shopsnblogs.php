@@ -109,16 +109,16 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 						$sales_form->addClass('panel panel-default');
 						$sales_form->addStyle('padding','20px');
 					
-					// $purchase_tab=$lay_tab->addTab('Purchase Order');
-					// 	$purchase_form=$purchase_tab->add('Form_Stacked');
-					// 	$purchase_form->setModel($config_model,array('purchase_order_detail_email_subject','purchase_order_detail_email_body'));
-					// 	$purchase_form->addSubmit('Update');
-					// 	if($purchase_form->Submitted()){
-					// 		$purchase_form->Update();
-					// 		$purchase_form->js(null,$purchase_form->js()->reload())->univ()->successMessage('Update Information')->execute();
-					// 	}
-					// 	$purchase_form->addClass('panel panel-default');
-					// 	$purchase_form->addStyle('padding','20px');
+					$purchase_tab=$lay_tab->addTab('Purchase Order');
+						$purchase_form=$purchase_tab->add('Form_Stacked');
+						$purchase_form->setModel($config_model,array('purchase_order_detail_email_subject','purchase_order_detail_email_body'));
+						$purchase_form->addSubmit('Update');
+						if($purchase_form->Submitted()){
+							$purchase_form->Update();
+							$purchase_form->js(null,$purchase_form->js()->reload())->univ()->successMessage('Update Information')->execute();
+						}
+						$purchase_form->addClass('panel panel-default');
+						$purchase_form->addStyle('padding','20px');
 					
 					$quotation_tab=$lay_tab->addTab('Quotation');
 						$q_form=$quotation_tab->add('Form_Stacked');

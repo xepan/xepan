@@ -68,7 +68,7 @@ class Model_Configuration extends \Model_Table {
 
 		//Round Amount Calculation
 		$this->addField('is_round_amount_calculation')->type('boolean');
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function loadDefaults($application){

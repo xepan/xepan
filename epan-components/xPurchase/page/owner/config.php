@@ -1,11 +1,16 @@
 <?php
 class page_xPurchase_page_owner_config extends page_xPurchase_page_owner_main{
-	function init(){
-		parent::init();
+	function page_index(){
+		$crud= $this->add('CRUD',array('allow_add'=>false,'allow_del'=>false));//,array('grid_class'=>'xShop/Grid_Shop'));
+		$crud->setModel('xShop/Shop',array('name'));
+		$crud->grid->addColumn('expander','configuration',array("descr"=>"Configuration",'icon'=>'cog'));
 
+	}
+	function page_configuration(){
 		$application_id = $this->api->StickyGET('xshop_application_id');
 		
 		$config_model=$this->add('xShop/Model_Configuration')->addCondition('application_id',$application_id)->tryLoadAny();
+		
 		$tab=$this->add('Tabs');
 			// $comment_tab=$tab->addTab('Comments');
 
@@ -32,7 +37,6 @@ class page_xPurchase_page_owner_config extends page_xPurchase_page_owner_main{
 				// 		}
 				// 		$sales_form->addClass('panel panel-default');
 				// 		$sales_form->addStyle('padding','20px');
-					
 					$purchase_tab=$lay_tab->addTab('Purchase Order');
 						$purchase_form=$purchase_tab->add('Form_Stacked');
 						$purchase_form->setModel($config_model,array('purchase_order_detail_email_subject','purchase_order_detail_email_body'));
