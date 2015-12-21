@@ -329,6 +329,7 @@ class page_base_owner extends Page {
 				$purchase_m->addItem(array('X Mail','icon'=>'gauge-1'),$this->api->url('xPurchase_page_owner_xmail',array('department_id'=>$dept_model->id)));
 				$this->shorcut_menus[]=array("page"=>"Purchase X Mail","url"=>$this->api->url('xPurchase_page_owner_xmail',array('department_id'=>$dept_model->id)));
 			}
+			$purchase_m->addItem(array('Configuration','icon'=>'gauge-1'),$this->api->url('xPurchase_page_owner_config',array('department_id'=>$dept_model->id)));
 
 			$this->shorcut_menus[]=array("page"=>"Purchase Dashboard","url"=>$this->api->url('xPurchase_page_owner_dashboard',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Supplier","url"=>$this->api->url('xPurchase_page_owner_supplier',array('department_id'=>$dept_model->id)));
@@ -337,7 +338,8 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Purchase Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Purchase Order","url"=>$this->api->url('xPurchase_page_owner_purchaseorder',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Purchase Stock Management","url"=>$this->api->url('xPurchase_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
-			$this->shorcut_menus[]=array("page"=>"Report","url"=>$this->api->url('Purchase_page_owner_report',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Report","url"=>$this->api->url('xPurchase_page_owner_report',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"Configuration","url"=>$this->api->url('xPurchase_page_owner_config',array('department_id'=>$dept_model->id)));
 		}	
 
 

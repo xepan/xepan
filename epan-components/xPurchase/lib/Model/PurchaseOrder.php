@@ -137,7 +137,7 @@ class Model_PurchaseOrder extends \Model_Document{
 	}
 
 	function updateAmount(){
-		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		$shop_config = $this->add('xPurchase/Model_Configuration')->tryLoadAny();
 		
 		$this['total_amount']=0;
 		$this['net_amount']=0;
@@ -539,7 +539,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$supplier = $this->supplier();
 		$supplier_email=$supplier->get('email');
 
-		$config_model=$this->add('xShop/Model_Configuration');
+		$config_model=$this->add('xPurchase/Model_Configuration');
 		$config_model->tryLoadAny();		
 		
 		$email_body=$config_model['purchase_order_detail_email_body']?:"Purchase Order Layout Is Empty";
@@ -573,7 +573,7 @@ class Model_PurchaseOrder extends \Model_Document{
 		$supplier = $this->supplier();
 		$supplier_email=$supplier->get('email');
 
-		$config_model=$this->add('xShop/Model_Configuration');
+		$config_model=$this->add('xPurchase/Model_Configuration');
 		$config_model->tryLoadAny();
 
 		$emails = explode(',', $supplier['email']);

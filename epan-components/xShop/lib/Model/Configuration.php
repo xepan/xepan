@@ -35,8 +35,8 @@ class Model_Configuration extends \Model_Table {
 
 		// Purchase Order Email Subject & Body
 
-		$f = $this->addField('purchase_order_detail_email_subject')->group('d~12~<i class="fa fa-envelope"></i> Purchase Order  Detail ( Bill ) Email');
-		$f = $this->addField('purchase_order_detail_email_body')->type('text')->caption('Purchase Order Detail Email Body')->hint('Purchase Order Email Body : this Bill send to Suppliers who placed Purchase order,{{company_name}},{{owner_name}},{{mobile_number}},{{purchase_order_address}},{{supplier_email}},{{supplier_tin_no}},{{supplier_pan_no}},{{purchase_Order_no}},{{purchase_Order_date}},{{purchase_order_summary}}')->group('d~11')->display(array('form'=>'RichText'));
+		// $f = $this->addField('purchase_order_detail_email_subject')->group('d~12~<i class="fa fa-envelope"></i> Purchase Order  Detail ( Bill ) Email');
+		// $f = $this->addField('purchase_order_detail_email_body')->type('text')->caption('Purchase Order Detail Email Body')->hint('Purchase Order Email Body : this Bill send to Suppliers who placed Purchase order,{{company_name}},{{owner_name}},{{mobile_number}},{{purchase_order_address}},{{supplier_email}},{{supplier_tin_no}},{{supplier_pan_no}},{{purchase_Order_no}},{{purchase_Order_date}},{{purchase_order_summary}}')->group('d~11')->display(array('form'=>'RichText'));
 
 		// Quotation Email Subject & Body
 
@@ -49,8 +49,8 @@ class Model_Configuration extends \Model_Table {
 
 		// Purchase Invoice Email Subject & Body
 
-		$f = $this->addField('purchase_invoice_email_subject')->group('e~12~<i class="fa fa-envelope"></i> Purchase Invoice Email Mail Subject ( Bill ) Email');
-		$f = $this->addField('purchase_invoice_email_body')->type('text')->caption('Purchase Invoice Email Body')->hint('Purchase Invoice  Email Body : this Bill send to Suppliers who placed order, {{company_name}},{{owner_name}},{{mobile_number}},{{purchase_order_address}},{{supplier_email}},{{supplier_tin_no}},{{supplier_pan_no}},{{purchase_Order_no}},{{purchase_Order_date}},{{purchase_invoice_narration}}')->group('e~11')->display(array('form'=>'RichText'));
+		// $f = $this->addField('purchase_invoice_email_subject')->group('e~12~<i class="fa fa-envelope"></i> Purchase Invoice Email Mail Subject ( Bill ) Email');
+		// $f = $this->addField('purchase_invoice_email_body')->type('text')->caption('Purchase Invoice Email Body')->hint('Purchase Invoice  Email Body : this Bill send to Suppliers who placed order, {{company_name}},{{owner_name}},{{mobile_number}},{{purchase_order_address}},{{supplier_email}},{{supplier_tin_no}},{{supplier_pan_no}},{{purchase_Order_no}},{{purchase_Order_date}},{{purchase_invoice_narration}}')->group('e~11')->display(array('form'=>'RichText'));
 
 		$f = $this->addField('outsource_email_subject')->group('e~12~<i class="fa fa-envelope"></i> OutSource Party Email Mail Subject ( Bill ) Email');
 		$f = $this->addField('outsource_email_body')->type('text')->caption('OutSource Party Email Body')
@@ -62,9 +62,9 @@ class Model_Configuration extends \Model_Table {
 		
 		$this->addField('quotation_starting_number');
 		$this->addField('sale_order_starting_number');
-		$this->addField('purchase_order_starting_number');
+		// $this->addField('purchase_order_starting_number');
 		$this->addField('sale_invoice_starting_number');
-		$this->addField('purchase_invoice_starting_number');
+		// $this->addField('purchase_invoice_starting_number');
 
 		//Round Amount Calculation
 		$this->addField('is_round_amount_calculation')->type('boolean');
