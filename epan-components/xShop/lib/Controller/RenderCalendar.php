@@ -105,6 +105,7 @@ class Controller_RenderCalendar extends \AbstractController {
     		$days_in_this_week++;
   		}
 
+  		$run = 1;
 		/* keep going with days.... */
 		for($list_day = 1; $list_day <= $days_in_month; $list_day++){
 
@@ -128,8 +129,11 @@ class Controller_RenderCalendar extends \AbstractController {
 
 		    if($running_day == 6){
 		      $calendar.= '</tr>';
-		      if(($day_counter+1) != $days_in_month)
+		      if(($day_counter+1) != $days_in_month){
 		        $calendar.= '<tr class="calendar-row" style="text-align:'.$styles['alignment'].';">';
+		      }else{
+		      	$run = 0;
+		      }
 
 		      $running_day = -1;
 		      $days_in_this_week = 0;
@@ -139,13 +143,15 @@ class Controller_RenderCalendar extends \AbstractController {
 		}
 
 	  	/* finish the rest of the days in the week */
-	  	if($days_in_this_week < 8){	
-	    	for($x = 1; $x <= (8 - $days_in_this_week); $x++){
-	    		$calendar.= '<td class="calendar-day-np" style="background-color:'.$styles['calendar_cell_bg_color'].'">&nbsp;</td>';
-	  		}
-	  	}
-	  	/* final row */
-	  	$calendar.= '</tr>';
+	  	if($run){
+		  	if($days_in_this_week < 8){	
+		    	for($x = 1; $x <= (8 - $days_in_this_week); $x++){
+		    		$calendar.= '<td class="calendar-day-np" style="background-color:'.$styles['calendar_cell_bg_color'].'">&nbsp;</td>';
+		  		}
+		  	}
+		  	/* final row */
+		  	$calendar.= '</tr>';
+		}
 	  	/* end the table */
 	  	$calendar.= '</table>';
 	  	/* all done, return result */
