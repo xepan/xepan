@@ -27,6 +27,7 @@ class page_xShop_page_designer_itemimages extends Page {
       // $form->setModel($image_model,array('member_id','image_id'));
       
       $crud = $this->add('CRUD',array('entity_name'=>'Image','allow_edit'=>false,'grid_class'=>'xGrid','grid_options'=>array('grid_template'=>'view/xShop-DesignerItemImages','grid_template_path'=>'epan-components/xShop')));
+      $crud->frame_options = ['width'=>'500'];
       $item_images_lister = $crud->setModel($image_model,array('member_id','image_id','image'),array('member_id','image_id','image'));
       $crud->grid->addQuickSearch(array('image_id','image'));
       // if($form->isSubmitted()){
