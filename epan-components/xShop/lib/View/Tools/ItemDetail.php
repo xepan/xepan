@@ -7,6 +7,11 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 	
 	function init(){
 		parent::init();
+		if($_GET['review']){
+			// throw new \Exception($_GET['days'], 1);
+			if(!$this->updateReview())
+				$this->js()->univ()->errorMessage('You can\'t add more reviews');
+		}
 		
 		$this->addClass('xshop-item');
 		// $this->js(true)->_load('jquery-elevatezoom');
@@ -20,6 +25,27 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 		$item->load($_GET['xsnb_item_id']);		
 		$this->setModel($item);
 	
+	//======================Review Section==========
+		
+		$item_id=$this->api->stickyGET('xsnb_item_id');
+		
+		//Set Tool Custom Option 
+		$this->template->trySet('item_id',$item_id);
+		$this->template->trySet('auth',$this->html_attributes['show-post-review-auth']);
+		$this->template->trySet('xdays',$this->html_attributes['show-post-review-allow-days']?:1);
+		$this->template->trySet('subpage',$_GET['subpage']);
+		
+		if(!$this->html_attributes['show-post-review']){
+			$this->template->trySet('review_section',"");
+		}	
+		// throw new \Exception("Error Processing Request", 1);
+		$this->template->trySet('id',$item_id);
+		$review=$this->add('xShop/Model_ItemReview');
+		$review->addCondition('item_id',$item_id);
+		$review->tryLoadAny();
+		// $review->setOrder('id','desc');
+		$this->template->trySet('review_value',$review['review']);	
+
 	//======================Name===================
 		
 		if($this->html_attributes['show-item-name']){
@@ -299,6 +325,65 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 			}
 		}
 
+	}
+
+	function updateReview(){
+		$item_id = $this->api->stickyGET('xsnb_item_id');
+		$rating = $this->api->stickyGET('rating');
+
+		$auth = $this->html_attributes['show-post-review-auth'];
+		$days = $this->html_attributes['show-post-review-allow-days']?:1;
+		
+		if($auth and !$this->api->auth->isLoggedIn()){
+			echo "Authentication Failed";
+			 exit;
+		}	
+		$current_ip = getenv('HTTP_CLIENT_IP')?:
+					getenv('HTTP_X_FORWARDED_FOR')?:
+					getenv('HTTP_X_FORWARDED')?:
+					getenv('HTTP_FORWARDED_FOR')?:
+					getenv('HTTP_FORWARDED')?:
+					getenv('REMOTE_ADDR');
+
+		$days = 1;
+		if($_GET['days'])
+			$days = $_GET['days']; //xdays			
+					
+		$review_model=$this->add('xShop/Model_ItemReview');
+		$review_model->addCondition('item_id',$item_id);
+		$review_model->addCondition('ip',$current_ip);
+
+		//Save Review First time
+		if($review_model->count()->getOne() == 0){
+			$review_model['review'] = $rating;
+			$review_model['date'] = $this->api->now;
+			$review_model->save();
+		}else{
+			$review_model->setOrder('date','desc');
+			$review_model->setLimit(1);
+			$review_model->tryLoadAny();
+
+			$day_diff = $this->api->my_date_diff($this->api->now, $review_model['date']);
+			$day_diff = $day_diff['days'];
+			
+			if($days == 1){
+				echo "You have allready Given Review";
+				return;
+			}
+
+			// if($days < $day_diff){
+				$b = $this->add('xShop/Model_ItemReview');
+				$b['review'] = $rating;
+				$b['date'] = $this->api->now;
+				$b['ip'] = $current_ip;
+				$b['item_id'] = $item_id;
+				$b->save();
+				
+				// echo true;
+				
+			// }
+
+		}
 	}
 
 	function defaultTemplate(){

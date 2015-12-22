@@ -1,5 +1,6 @@
 <div id="{$_name}" class="{$class} xshop-item-detail">
 <link rel="stylesheet" type="text/css" href="epan-components/xShop/templates/css/xshop-item-detail.css"/>
+<script src="epan-components/xBlog/templates/js/jRate.js"></script>
 
 	{$date}
 	{$item_detail_heading}
@@ -9,7 +10,11 @@
 		<div class="{$item-detail-width} xshop-item-detail-section-moveable">
 			{$item_name}			
 				{$item_sku}
-				{$review}
+				<!-- {$review} -->
+				{review_section}
+					<div id="jRate_{$id}" xitem="{$item_id}" xauth="{$auth}" xdays="{$xdays}" subpage="{$subpage}">{$review}</div>
+					<div id="jRate_{$id}-value">Your Rating: {$review_value}</div>
+				{/review_section}
 			<div class="xshop-item-detail-design section">
     			{xshop_item_design_item}
     			{/xshop_item_design_item}
@@ -41,6 +46,43 @@
 		{xshop_item_attachment}{/xshop_item_attachment}
 		{$xshop_item_discus}
 		{$xshop_item_tags}
+	<script type="text/javascript">
+		$("#jRate_{$id}").jRate({
+			rating: '{$review_value}',
+	            shape: "STAR",
+	            count: 5,
+	            width: "20",
+	            height: "20",
+	            widthGrowth: 0.0,
+	            heightGrowth: 0.0,
+	            backgroundColor: "gray",
+	            startColor: "yellow",
+	            endColor: "green",
+	            strokeColor: "black",
+	            transparency: 1,
+	            shapeGap: "0px",
+	            opacity: 1,
+	            min: 0,
+	            max: 5,
+	            precision: 1,
+	            minSelected: 0,
+				strokeWidth: '2px',
+	            horizontal: true,
+	            reverse: false,
+	            readOnly: false,
+				touch: true,
+	            onChange: function(rating) {
+					$('#jRate_{$id}-value').text("Your Rating: "+rating);
+				},
+	            onSet:function(rating){
+	            	url = $('#jRate_{$id}').attr('subpage');
+	            	item_id = $('#jRate_{$id}').attr('xitem');
+	            	days = $('#jRate_{$id}').attr('xdays');
+	            	
+	            	$(this).closest('.xshop-item-detail').univ().reload('index.php?subpage='+url,{'review':true,'rating':rating,'xsnb_item_id':item_id,'days':days,'cut_object':$(this).closest('.xshop-item-detail').attr('id')});
+	            }
+		});
+	</script>		
 </div>
 
 	<!-- Modal -->
