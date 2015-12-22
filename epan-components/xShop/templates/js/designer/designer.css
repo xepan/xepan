@@ -497,3 +497,6 @@ img.xdesigner-page-layout-thumbnail{
 input.xshop-designer-calendar-inputx,input.xshop-designer-calendar-inputy,.xshop-desigber-calendar-width, .xshop-desigber-calendar-height{
   width: 50px !important;
 }
+.ui-colorpicker-dialog input{
+  width:auto!important;
+}
