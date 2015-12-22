@@ -120,7 +120,7 @@ class page_xShop_page_designer_pdf extends Page {
 		$pdf->SetFont('Arial','B',30);
 	    $pdf->SetTextColor(255,192,203);
 	    $pdf->Rotate(45,0,0);
-	    $pdf->Text(0,$this->specification['height'],'printonclick.com');
+	    $pdf->Text(0,$this->specification['height'],'printonclick.in');
 	    $pdf->Rotate(0);
 		$pdf->SetAlpha(1);
 	    // $this->RotatedText(35,190,'W a t e r m a r k   d e m o',45);
@@ -177,11 +177,11 @@ class page_xShop_page_designer_pdf extends Page {
 		$options['zindex'] = $options['zindex'];
 
 		//Font Size Calculation
-		// $options['header_font_size'] = $options['header_font_size'] * ($this->print_ratio / 1.328352013);
-		// $options['day_name_font_size'] = $options['day_name_font_size'] * ($this->print_ratio / 1.328352013);
-		// $options['day_date_font_size'] = $options['day_date_font_size'] * ($this->print_ratio / 1.328352013);
-		// $options['event_font_size'] = $options['event_font_size'] * ($this->print_ratio / 1.328352013);
-
+		$options['header_font_size'] = $options['header_font_size'] * ($this->print_ratio / 1.328352013);
+		$options['day_name_font_size'] = $options['day_name_font_size'] * ($this->print_ratio / 1.328352013);
+		$options['day_date_font_size'] = $options['day_date_font_size'] * ($this->print_ratio / 1.328352013);
+		$options['event_font_size'] = $options['event_font_size'] * ($this->print_ratio / 1.328352013);
+		$options['calendar_cell_heigth'] = 40 * $this->print_ratio;
 		//Date Calculaion
 		$now = new \DateTime('now');
    		$current_month = $now->format('m');
@@ -218,7 +218,7 @@ class page_xShop_page_designer_pdf extends Page {
 		$cont = $this->add('xShop/Controller_RenderCalendar',array('options'=>$options));
 		$data = $cont->show('png',1,false,true);
 		// $pdf->MemImage($data, 0, 0, 100, 20);
-		$pdf->MemImage($data, $this->pixcelToUnit($options['x']), $this->pixcelToUnit($options['y']), $this->pixcelToUnit($options['width']), $this->pixcelToUnit($options['height'] * $this->print_ratio));
+		$pdf->MemImage($data, $this->pixcelToUnit($options['x']), $this->pixcelToUnit($options['y']), $this->pixcelToUnit($options['width']), $this->pixcelToUnit($options['height']));
 	}
 
 	function fetchDimensions($item){

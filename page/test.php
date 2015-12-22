@@ -4,12 +4,17 @@ class page_test extends Page {
 
 	function page_index(){
 		
-		$content = $this->draw_calendar('11','2015','');
-		$v = $this->add('View');
-		$v->setHtml($content);
-
-		//new FPDF_xPdf
+		$content = $this->drawCalendar('04','2016','');
+		// $v = $this->add('View');
+		// $v->setHtml($content);
+		// echo $content;
+		// $content = $this->drawCalendar('04','2016','');
+		// echo $content;
+		// exit;		//new FPDF_xPdf
 		//Html2Pdf
+		// file_put_contents("./templates/layout/test.html", $content);
+		$content = file_get_contents("./templates/layout/test.html");
+
 		$pdf = new TCPDF_TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->setPrintHeader(false);
 		$pdf->setPrintFooter(false);
@@ -31,6 +36,113 @@ class page_test extends Page {
 		header('Pragma: no-cache');
 		header('Content-type: image/png');
 		echo $imageData;
+	}
+
+	function drawCalendar($month,$year,$resultA,$events=[],$styles=[]){
+		// style="text-align:left;"
+		$header_font_size = 30;
+		$day_date_font_size = 16;
+		$day_name_font_size = 20;
+		$event_font_size = 13;
+
+		//Calculate Vertical Alignment as cellPadding
+		//cell_paddding = cell_height / 2 - font_size / 2;
+
+		$month_name_array = ['01'=>'January','1'=>'January','02'=>'February','2'=>'February','03'=>'March','3'=>'March','04'=>'April','4'=>'April','05'=>'May','5'=>'May','06'=>'June','6'=>'June','07'=>'July','7'=>'July','08'=>'August','8'=>'August','09'=>'September','9'=>'September','10'=>'October','11'=>'November','12'=>'December'];
+		$month_name = $month_name_array[$month];
+		if(is_array($styles)){
+			$header_font_size = isset($styles['header_font_size'])?$styles['header_font_size']:30;
+			$day_date_font_size = isset($styles['day_date_font_size'])?$styles['day_date_font_size']:16;
+			$day_name_font_size = isset($styles['day_name_font_size'])?$styles['day_name_font_size']:20;
+			$event_font_size = isset($styles['event_font_size'])?$styles['event_font_size']:13;
+		}
+
+		$cell_padding = 0;
+		if($styles['valignment'] == 'middle')
+			$cell_padding = (($styles['calendar_cell_heigth'] / 2) - ($day_date_font_size / 2));
+		if($styles['valignment'] == 'bottom')
+			$cell_padding = ( $styles['calendar_cell_heigth'] - $day_date_font_size);
+
+  		/* draw table */
+  		$calendar = '<div style="font-face:K010; font-family:K010; font-size:'.$header_font_size.'px;color:Black;">'.$month_name.' - '.$year.'</div>';
+  		$calendar .= '<table cellspacing="0" class="calendar" width="100%" align="center" border="1">';
+ 		/* table headings */
+  		$headings = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
+  		$styles['day_name_bg_color'] = "red";
+  		$calendar.= '<tr style="background-color:'.$styles['day_name_bg_color'].';font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td  class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
+  		$calendar.="</table>";
+
+  		$calendar .= '<table cellspacing="0" class="calendar" width="100%" style="padding-top:'.$cell_padding.';" align="center" border="1">';
+  		/* days and weeks vars now ... */
+  		$running_day = date('w',mktime(0,0,0,$month,1,$year));
+  		$days_in_month = date('t',mktime(0,0,0,$month,1,$year));
+  		$days_in_this_week = 1;
+  		$day_counter = 0;
+
+  		$styles['alignment'] = "left";
+		 /* row for week one */
+		$calendar.= '<tr class="calendar-row" style="text-align:'.$styles['alignment'].';">';
+  		/* print "blank" days until the first of the current week */
+  		$styles['calendar_cell_bg_color'] = "red";
+  		for($x = 0; $x < $running_day; $x++){
+    		$calendar.= '<td class="calendar-day-np" style="background-color:'.$styles['calendar_cell_bg_color'].'">&nbsp;</td>';
+    		$days_in_this_week++;
+  		}
+
+		/* keep going with days.... */
+		for($list_day = 1; $list_day <= $days_in_month; $list_day++){
+			$styles['calendar_cell_bg_color'] = "red";
+			$styles['calendar_cell_heigth'] = 40;
+			$styles['day_date_font_color'] = "black";
+		    $calendar.= '<td class="calendar-day" style="background-color:'.$styles['calendar_cell_bg_color'].';overflow:hidden; height:'.$styles['calendar_cell_heigth'].'; max-height:'.$styles['calendar_cell_heigth'].';font-size:'.$day_date_font_size.'px;color:'.$styles['day_date_font_color'].'">';
+		    /* add in the day number */
+		    $calendar.= '<div class="day-number">'.$list_day.'</div>';
+
+		    $date=date('Y-m-d',mktime(0,0,0,$month,$list_day,$year));
+		    
+		    $event_date_format = date('d-F-Y',strtotime($date));
+		    $styles['event_font_color'] = "black";
+		    if($message = $events[$event_date_format]){
+		    	$calendar .= '<small style="text-align:right; font-size:'.$event_font_size.'px;color:'.$styles['event_font_color'].'">'.$message."</small>";
+		    }
+
+		    $tdHTML='';
+		    if(isset($resultA[$date])) $tdHTML=$resultA[$date];
+
+		    $calendar.=$tdHTML;      
+
+		    $calendar.= '</td>';
+
+		    $styles['alignment']="left";
+
+		    if($running_day == 6){
+		      $calendar.= '</tr>';
+		      if(($day_counter+1) != $days_in_month){
+		        $calendar.= '<tr class="calendar-row" style="text-align:'.$styles['alignment'].';">';
+		      	// echo "Day Counter=".$day_counter."Day in month =".$days_in_month."<br/>";
+		      }
+
+		      $running_day = -1;
+		      $days_in_this_week = 0;
+		    }
+		    $days_in_this_week++; $running_day++; $day_counter++;
+		 	
+		}
+
+      	// echo $calendar;
+	  	/* finish the rest of the days in the week */
+	  	$styles['calendar_cell_bg_color'] = "red";
+	  	if($days_in_this_week < 8){	
+	    	for($x = 1; $x <= (8 - $days_in_this_week); $x++){
+	    		$calendar.= '<td class="calendar-day-np" style="background-color:'.$styles['calendar_cell_bg_color'].'">&nbsp;</td>';
+	  		}
+	  	}
+	  	/* final row */
+	  	$calendar.= '</tr>';
+	  	/* end the table */
+	  	$calendar.= '</table>';
+	  	/* all done, return result */
+	  	return $calendar;
 	}
 
 	function draw_calendar($month,$year,$resultA){
