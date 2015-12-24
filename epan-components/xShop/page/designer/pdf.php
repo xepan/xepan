@@ -2,7 +2,7 @@
 
 class page_xShop_page_designer_pdf extends Page {
 	
-	public $print_ratio = 3;
+	public $print_ratio = 1;
 	public $false_array=array('undefined','null','false',false);
 
 	function init(){
