@@ -553,26 +553,19 @@ xShop_Calendar_Editor = function(parent,designer){
 			table = '<div id="xshop-designer-calendar-events" class="atk-box"><div class="atk-table atk-table-zebra atk-table-bordered"><div class="atk-box-small atk-align-center"><h3>Your All Events</h3></div><table><thead><tr><th>Date</th><th>Message</th><th>Actions</th></tr></thead><tbody>';
 			$.each(self.designer_tool.options.calendar_event,function(index,month_events){
 				$.each(month_events,function(date,message){
-					table += '<tr selected_date='+date+' ><td>'+date+'</td><td>'+message+'</td><td><a class="atk-effect-danger xshop-designer-calendar-event-delete" href="#">Delete</a></td></tr>';
+					table += '<tr current_month='+self.current_calendar_component.options.month+' selected_date='+date+' ><td>'+date+'</td><td>'+message+'</td><td><a class="atk-effect-danger xshop-designer-calendar-event-delete" href="#">Delete</a></td></tr>';
 				});
 			});
 
 			table +='</tbody></table></div></div>';
 			$(table).appendTo(this);
-			$('.xshop-designer-calendar-event-delete').click(function(){
-				alert('Todo');
-				selected_date = $(this.closest('tr')).attr('selected_date');
-				// console.log(self.designer_tool.options.calendar_event);
-				// self.designer_tool.options.calendar_event[curr_month][self.event_date.val()]
-				// $.each(self.designer_tool.options.calendar_event, function(index,events){
-				// 	console.log(events);
-				// });
-				// self.designer_tool.options.calendar_event.remove(selected_date);
-				
-				// self.designer_tool.options.calendar_event[selected_date];
-				// dt.pages_and_layouts[dt.current_page][dt.current_layout].components.splice(index,1);
-				// console.log(self.designer_tool.options.calendar_event);
+			$('.xshop-designer-calendar-event-delete').click(function(event){
 
+				selected_date = $(this).closest('tr').attr('selected_date');
+				current_month = $(this).closest('tr').attr('current_month');
+				delete (self.designer_tool.options.calendar_event[current_month][selected_date]);
+				$(this).closest('tr').hide();
+				self.current_calendar_component.render();
 			});
 
 		},
