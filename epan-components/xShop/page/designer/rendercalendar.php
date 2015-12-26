@@ -4,7 +4,7 @@ class page_xShop_page_designer_rendercalendar extends Page {
 	function init(){
 		parent::init();
 		$options=array();
-		
+				
 		$zoom = $options['zoom'] = $_GET['zoom'];
 		
 		$now = new \DateTime('now');
@@ -25,9 +25,18 @@ class page_xShop_page_designer_rendercalendar extends Page {
 		$options['day_name_font_color'] = $_GET['day_name_font_color'];
 		$options['event_font_size'] = $_GET['event_font_size'] * ($zoom / 1.328352013);
 		$options['event_font_color'] = $_GET['event_font_color'];
-		$options['day_name_bg_color'] = $_GET['day_name_bg_color'];
+
 		$options['calendar_cell_heigth'] = $_GET['calendar_cell_heigth'];
-		$options['calendar_cell_bg_color'] = $_GET['calendar_cell_bg_color'];
+
+		if($_GET['day_name_bg_color'] != "#")
+			$options['day_name_bg_color'] = $_GET['day_name_bg_color'];
+		else
+			$options['day_name_bg_color'] = "";
+			
+		if($_GET['calendar_cell_bg_color'] != "#")
+			$options['calendar_cell_bg_color'] = $_GET['calendar_cell_bg_color'];
+		else
+			$options['calendar_cell_bg_color'] = "";
 
 		$options['zindex'] = $_GET['zindex'];
 		$options['width'] = $_GET['width'] * $zoom;
