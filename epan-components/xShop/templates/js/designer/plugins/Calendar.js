@@ -393,6 +393,15 @@ xShop_Calendar_Editor = function(parent,designer){
 		$('.xshop-designer-tool').xepan_xshopdesigner('check');
     	self.current_calendar_component.render();
 	});
+	
+	//set Calendar border or not
+	this.calendar_border_label = $('<div class=""><label for="xshop-designer-calendar-border">border: </label></div>').appendTo(this.cal_col);
+	this.calendar_border = $('<select> <option value="1">Show</option><option value="0">Hide</option></select>').appendTo(this.calendar_border_label);
+	$(this.calendar_border).change(function(){
+		self.current_calendar_component.options.border = $(this).val();
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+    	self.current_calendar_component.render();
+	});
 
 	//Calendar up/down options
 	this.calendar_up_down = $('<div class="xshop-designer-calendar-up-down-btn"></div>').appendTo(this.cal_col);
@@ -871,6 +880,7 @@ Calendar_Component = function (params){
 		calendar_cell_bg_color:undefined,
 		alignment: "center",
 		valignment:'middle',
+		border:1,
 
 		month:undefined,
 		width:400,
@@ -1065,6 +1075,7 @@ Calendar_Component = function (params){
 					calendar_cell_bg_color:self.options.calendar_cell_bg_color,
 					alignment:self.options.alignment,
 					valignment:self.options.valignment,
+					border:self.options.border,
 
 					zoom: self.designer_tool.zoom,
 					zindex:self.options.zindex,

@@ -84,13 +84,13 @@ class Controller_RenderCalendar extends \AbstractController {
 
   		/* draw table */
   		$calendar = '<div style="font-face:K010; font-family:K010; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';">'.$month_name.' - '.$year.'</div>';
-  		$calendar .= '<table cellspacing="0" class="calendar" width="100%" align="center" border="1">';
+  		$calendar .= '<table cellspacing="0" class="calendar" width="100%" align="center" border="'.$styles['border'].'">';
  		/* table headings */
   		$headings = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
   		$calendar.= '<tr style="background-color:'.$styles['day_name_bg_color'].';font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td  class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
   		$calendar.="</table>";
 
-  		$calendar .= '<table cellspacing="0" class="calendar" width="100%" style="padding-top:'.$cell_padding.';" align="center" border="1">';
+  		$calendar .= '<table cellspacing="0" class="calendar" width="100%" style="padding-top:'.$cell_padding.';" align="center" border="'.$styles['border'].'">';
   		/* days and weeks vars now ... */
   		$running_day = date('w',mktime(0,0,0,$month,1,$year));
   		$days_in_month = date('t',mktime(0,0,0,$month,1,$year));
