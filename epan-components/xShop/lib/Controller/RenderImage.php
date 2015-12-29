@@ -8,6 +8,8 @@ class Controller_RenderImage extends \AbstractController {
 	function init(){
 		parent::init();
 
+		session_write_close();
+
 		$this->phpimage = $p = new \PHPImage($this->options['url']);
 		if($this->options['width']==0 and $this->options['height']==0){
 			if($p->getWidth() > $p->getHeight()){
@@ -23,7 +25,7 @@ class Controller_RenderImage extends \AbstractController {
 
 		$p->resize($this->options['width'],$this->options['height'],false,true,true);
 		
-		if($this->options['mask_added'] == "true" && $this->options['apply_mask'] == "true"){			
+		if($this->options['mask_added'] == "true" && $this->options['apply_mask'] == "true"){
 			$this->phpimage->mask($this->options['mask']);
 		}
 

@@ -84,13 +84,14 @@ class Controller_RenderCalendar extends \AbstractController {
 
   		/* draw table */
   		$calendar = '<div style="font-face:K010; font-family:K010; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';">'.$month_name.' - '.$year.'</div>';
-  		$calendar .= '<table cellspacing="0" class="calendar" width="100%" align="center" border="'.$styles['border'].'">';
+
+  		$calendar .= '<table cellspacing="0" cellPadding="0" class="calendar" width="100%" align="center" border-collapse: collapse; border="'.$styles['border'].'" style="background-color:'.$styles['day_name_bg_color'].'">';
  		/* table headings */
   		$headings = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
-  		$calendar.= '<tr style="background-color:'.$styles['day_name_bg_color'].';font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td  class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
+  		$calendar.= '<tr style="font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td  class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
   		$calendar.="</table>";
 
-  		$calendar .= '<table cellspacing="0" class="calendar" width="100%" style="padding-top:'.$cell_padding.';" align="center" border="'.$styles['border'].'">';
+  		$calendar .= '<table cellspacing="0" cellPadding="0" class="calendar" width="100%" style="padding-top:'.$cell_padding.';" align="center" border="'.$styles['border'].'"style="background-color:'.$styles['calendar_cell_bg_color'].'">';
   		/* days and weeks vars now ... */
   		$running_day = date('w',mktime(0,0,0,$month,1,$year));
   		$days_in_month = date('t',mktime(0,0,0,$month,1,$year));
@@ -101,7 +102,7 @@ class Controller_RenderCalendar extends \AbstractController {
 		$calendar.= '<tr class="calendar-row" style="text-align:'.$styles['alignment'].';">';
   		/* print "blank" days until the first of the current week */
   		for($x = 0; $x < $running_day; $x++){
-    		$calendar.= '<td class="calendar-day-np" style="background-color:'.$styles['calendar_cell_bg_color'].'">&nbsp;</td>';
+    		$calendar.= '<td class="calendar-day-np">&nbsp;</td>';
     		$days_in_this_week++;
   		}
 
@@ -109,7 +110,7 @@ class Controller_RenderCalendar extends \AbstractController {
 		/* keep going with days.... */
 		for($list_day = 1; $list_day <= $days_in_month; $list_day++){
 
-		    $calendar.= '<td class="calendar-day" style="background-color:'.$styles['calendar_cell_bg_color'].';overflow:hidden; height:'.$styles['calendar_cell_heigth'].'; max-height:'.$styles['calendar_cell_heigth'].';font-size:'.$day_date_font_size.'px;color:'.$styles['day_date_font_color'].'">';
+		    $calendar.= '<td class="calendar-day" style="overflow:hidden; height:'.$styles['calendar_cell_heigth'].'; max-height:'.$styles['calendar_cell_heigth'].';font-size:'.$day_date_font_size.'px;color:'.$styles['day_date_font_color'].'">';
 		    /* add in the day number */
 		    $calendar.= '<div class="day-number">'.$list_day.'</div>';
 
@@ -146,7 +147,7 @@ class Controller_RenderCalendar extends \AbstractController {
 	  	if($run){
 		  	if($days_in_this_week < 8){	
 		    	for($x = 1; $x <= (8 - $days_in_this_week); $x++){
-		    		$calendar.= '<td class="calendar-day-np" style="background-color:'.$styles['calendar_cell_bg_color'].'">&nbsp;</td>';
+		    		$calendar.= '<td class="calendar-day-np">&nbsp;</td>';
 		  		}
 		  	}
 		  	/* final row */
