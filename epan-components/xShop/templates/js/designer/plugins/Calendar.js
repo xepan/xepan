@@ -451,7 +451,7 @@ xShop_Calendar_Editor = function(parent,designer){
 	this.month = $('<select id="month" class="btn btn-xs"></select>').appendTo(this.month_label);
 	options = '<option value="00">Starting</option>';
 	options += '<option value="01">January</option>';
-	options += '<option value="02">Febuary</option>';
+	options += '<option value="02">February</option>';
 	options += '<option value="03">March</option>';
 	options += '<option value="04">April</option>';
 	options += '<option value="05">May</option>';
@@ -459,7 +459,7 @@ xShop_Calendar_Editor = function(parent,designer){
 	options += '<option value="07">July</option>';
 	options += '<option value="08">August</option>';
 	options += '<option value="09">September</option>';
-	options += '<option value="10">Octomber</option>';
+	options += '<option value="10">October</option>';
 	options += '<option value="11">November</option>';
 	options += '<option value="12">December</option>';
 	$(options).appendTo(this.month);
