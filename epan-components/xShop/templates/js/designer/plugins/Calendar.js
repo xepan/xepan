@@ -52,7 +52,6 @@ xShop_Calendar_Editor = function(parent,designer){
 	});
 
 	/*Header Font Family*/
-	
 	this.header_font_family_label = $('<div><label for="header_font_family">Font Family :</label></div>').appendTo(this.col1);
 	this.header_font_family = $('<select id="header_font_family" class="btn btn-xs">Header Font Family</select>').appendTo(this.header_font_family_label);
 	
@@ -79,6 +78,41 @@ xShop_Calendar_Editor = function(parent,designer){
 		self.current_calendar_component.render();
 	});
 
+	//Header Background Color
+	this.header_bg_color_label = $('<div class="xshop-designer-calendar-color-picker"><label for="header_bg_color">BG Color : </label></div>').appendTo(this.col1);
+	this.header_bg_color_picker = $('<input id="header_bg_color" style="display:none;">').appendTo(this.header_bg_color_label);
+	$(this.header_bg_color_picker).colorpicker({
+		parts:          'full',
+        alpha:          false,
+        showOn:         'both',
+        buttonColorize: true,
+        showNoneButton: true,
+        ok: function(event, color){
+        	// self.current_calendar_component.options.header_font_color = parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100);
+        	self.current_calendar_component.options.header_bg_color = '#'+color.formatted;
+        	$('.xshop-designer-tool').xepan_xshopdesigner('check');
+        	self.current_calendar_component.render();
+        	// console.log('#'+color.formatted);
+        	// console.log(parseInt((color.cmyk.c)*100)+','+parseInt((color.cmyk.m)*100)+','+parseInt((color.cmyk.y)*100)+','+parseInt((color.cmyk.k)*100));
+        }
+	});
+
+	//Header Bold
+	this.h_btn_set = $('<div class="btn-group btn-group-xs xshop-calendar-align" role="group" aria-label="Text Alignment"></div>').appendTo(this.col1);
+	this.h_bold = $('<div class="btn" title="Right"><span class="glyphicon glyphicon-bold"></span></div>').appendTo(this.h_btn_set);
+	$(this.h_bold).click(function(){
+		if($(this).hasClass('active')){
+			$(this).removeClass('active');
+			self.current_calendar_component.options.header_bold = false;
+		}else{
+			$(this).addClass('active');
+			self.current_calendar_component.options.header_bold = true;
+		}
+
+		//Render Current Selected Calendar
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
+	});
 
 
 //```````````````````````````````````````````````````````````````````````````|
@@ -866,6 +900,8 @@ Calendar_Component = function (params){
 		header_font_size:32,
 		header_font_color:'#000000',
 		header_font_family:'freemono',
+		header_bold:false,
+		header_bg_color:undefined,
 		day_date_font_size:20,
 		day_date_font_color:'#00000',
 		day_date_font_family:'freemono',
@@ -1063,6 +1099,8 @@ Calendar_Component = function (params){
 			data: { 
 					header_font_size:self.options.header_font_size,
 					header_font_color:self.options.header_font_color,
+					header_bg_color:self.options.header_bg_color,
+					header_bold:self.options.header_bold,
 					header_font_family:self.options.header_font_family,
 					day_date_font_size:self.options.day_date_font_size,
 					day_date_font_color:self.options.day_date_font_color,

@@ -17,6 +17,7 @@ class page_xShop_page_designer_rendercalendar extends Page {
 		
 		$options['header_font_size'] = $_GET['header_font_size'] * ($zoom / 1.328352013);
 		$options['header_font_color'] = $_GET['header_font_color'];
+		$options['header_bold'] = $_GET['header_bold'];
 		$options['header_font_family'] = $_GET['header_font_family'];
 		
 		$options['day_date_font_size'] = $_GET['day_date_font_size'] * ($zoom / 1.328352013);
@@ -37,6 +38,11 @@ class page_xShop_page_designer_rendercalendar extends Page {
 			$options['calendar_cell_bg_color'] = $_GET['calendar_cell_bg_color'];
 		else
 			$options['calendar_cell_bg_color'] = "";
+
+		if($_GET['header_bg_color'] != "#")
+			$options['header_bg_color'] = $_GET['header_bg_color'];
+		else
+			$options['header_bg_color'] = "";
 
 		$options['zindex'] = $_GET['zindex'];
 		$options['width'] = $_GET['width'] * $zoom;

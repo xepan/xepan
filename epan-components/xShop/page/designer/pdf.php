@@ -169,6 +169,18 @@ class page_xShop_page_designer_pdf extends Page {
 	}
 
 	function addCalendar($options,$pdf){
+
+		//BG Color 
+		if($options['header_bg_color'] == "#")
+			$options['header_bg_color'] = "";
+
+		if($options['day_name_bg_color'] == "#")
+			$options['day_name_bg_color'] = "";
+
+		if($options['calendar_cell_bg_color'] == "#")
+			$options['calendar_cell_bg_color'] = "";
+
+
 		//Position, Dimention and Zindex Calculation
 		$options['width'] = $options['width'] * $this->print_ratio;
 		$options['height'] = $options['height'] * $this->print_ratio;
