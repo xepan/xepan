@@ -500,3 +500,12 @@ input.xshop-designer-calendar-inputx,input.xshop-designer-calendar-inputy,.xshop
 .ui-colorpicker-dialog input{
   width:auto!important;
 }
+
+.xshop-designer-ft-page > .list-group, .xshop-designer-ft-layout > .list-group{
+  height:300px;
+  overflow-y: auto;
+}
+
+.xdesigner-page-btn, .xdesigner-layout-btn{
+  margin-right:3px; 
+}

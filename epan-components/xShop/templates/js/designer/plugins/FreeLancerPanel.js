@@ -38,9 +38,10 @@ PageBlock = function(parent,designer,canvas, manager){
 		// on click of any page update layoutblock
 	}
 
-	this.addPage = function(page_name){
+	this.addPage = function(page_name,duplicate_from_page){
 		var self = this;
 		page_name = $.trim(page_name);
+
 		// validate page_name
 		// existing page name
 		if(page_name == ""){
@@ -51,33 +52,24 @@ PageBlock = function(parent,designer,canvas, manager){
 
 		if( !(this.pageExist(page_name)) ){
 			
-			this.designer_tool.pages_and_layouts[page_name] =  new Object();
-			this.designer_tool.pages_and_layouts[page_name]['Main Layout'] =  new Object();
-			this.designer_tool.pages_and_layouts[page_name]['Main Layout'].components = [];
-			this.designer_tool.pages_and_layouts[page_name]['Main Layout'].background = new BackgroundImage_Component();
-			this.designer_tool.pages_and_layouts[page_name]['Main Layout'].background.init(self, self.canvas,null);
+			if($.trim(duplicate_from_page)){
+				this.designer_tool.pages_and_layouts[page_name] =  new Object();
+				this.designer_tool.pages_and_layouts[page_name] =  this.designer_tool.pages_and_layouts[duplicate_from_page];
 
-			this.designer_tool.layout_finalized[page_name] = "Main Layout";
+				this.designer_tool.layout_finalized[page_name] = "Main Layout";
+			}else{
 
-			// console.log('adding ' + page_name);
-			// add default layout to this page as well
+				this.designer_tool.pages_and_layouts[page_name] =  new Object();
+				this.designer_tool.pages_and_layouts[page_name]['Main Layout'] =  new Object();
+				this.designer_tool.pages_and_layouts[page_name]['Main Layout'].components = [];
+				this.designer_tool.pages_and_layouts[page_name]['Main Layout'].background = new BackgroundImage_Component();
+				this.designer_tool.pages_and_layouts[page_name]['Main Layout'].background.init(self, self.canvas,null);
+
+				this.designer_tool.layout_finalized[page_name] = "Main Layout";
+			}
+
 			this.addPageView(page_name);
 			this.input_box.val("");
-			// page_row = $('<div class="page_row"></div>').appendTo(this.page_list_div);
-			// div = $('<a href="#" class="list-group-item"></a>').appendTo(page_row);
-			// page_name = $('<span class="xshop-designer-ft-page-name"></span>').appendTo(div).html(page_name);
-			// rm_btn = $('<span class="label label-danger pull-right">x</span>').appendTo(div).data('page_name',page_name);
-			// div.click(function(event){
-			// 	$(this).parent().siblings().find('a').removeClass('active').addClass('activeOff');
-			// 	$(this).addClass('active').removeClass('activeOff');
-			// 	self.manager.layoutblock.setPage($(this).find('span.xshop-designer-ft-page-name').html());
-			// 	console.log(self);
-			// });
-
-			// rm_btn.click(function(event){
-			// 	if(self.removePage($(this).data('page_name')))
-			// 		$(this).closest(".page_row").remove();
-			// });
 
 		}
 		// add page to pagelistdiv and add to designertool pagesnadlayout object
@@ -108,6 +100,17 @@ PageBlock = function(parent,designer,canvas, manager){
 		rm_btn.click(function(event){
 			if(self.removePage($(this).data('page_name')))
 				$(this).closest(".page_row").remove();
+		});
+
+		duplicate_btn = $('<span class="label label-default pull-right xdesigner-page-btn" title="Page Duplicate "><i class="icon-paste"></i></span>').appendTo(div).data('page_name',page_name);
+		duplicate_btn.click(function(event){
+			if(new_page_name = prompt("New Page Name", page_name[0].firstChild.data+" - copy")){
+				self.addPage(new_page_name,page_name[0].firstChild.data);
+				self.designer_tool.bottom_bar.renderTool();
+				$.univ().successMessage('Page Duplicate Successfully');
+			}else{
+				$.univ().errorMessage('Page Duplicate Cancelled');
+			}
 		});
 	}
 
@@ -187,9 +190,10 @@ LayoutBlock = function(parent,designer,canvas, manager){
 		// create layout dis with remove button and its event
 	}
 
-	this.addLayout = function(layout_name,is_new_layout){	
+	this.addLayout = function(layout_name,is_new_layout,duplicate_from_layout){
 		var self = this;
 		layout_name = $.trim(layout_name);
+		duplicate_from_layout = $.trim(duplicate_from_layout);
 		// validate page_name
 		// existing page name
 		if(layout_name == ""){
@@ -205,7 +209,11 @@ LayoutBlock = function(parent,designer,canvas, manager){
 				new_layout.background = new BackgroundImage_Component();
 				new_layout.background.init(self, self.canvas,null);
 				this.designer_tool.pages_and_layouts[this.current_page][layout_name] =  new_layout;
+			}else if(duplicate_from_layout){
+				this.designer_tool.pages_and_layouts[this.current_page][layout_name] =  this.designer_tool.pages_and_layouts[this.current_page][duplicate_from_layout];
 			}
+
+
 
 			layout_row = $('<div class="layout_row"></div>').appendTo(this.layout_list_div);
 			div = $('<a href="#" class="list-group-item"></a>').appendTo(layout_row).html(layout_name);
@@ -214,6 +222,18 @@ LayoutBlock = function(parent,designer,canvas, manager){
 			rm_btn.click(function(event){
 				if(self.removeLayout($(this).data('layout_name')))
 					$(this).closest(".layout_row").remove();			
+			});
+
+			duplicate_btn = $('<span class="label label-default pull-right xdesigner-layout-btn" title="Layout Duplicate "><i class="icon-paste"></i></span>').appendTo(div).data('layout_name',layout_name);
+			duplicate_btn.click(function(event){
+
+				if(new_layout_name = prompt("New Layout Name", $(this).data('layout_name')+" - copy")){
+					self.addLayout(new_layout_name,false,$(this).data('layout_name'));
+					// self.designer_tool.bottom_bar.renderTool();
+					$.univ().successMessage('Layout Duplicate Successfully');
+				}else{
+					$.univ().errorMessage('Layout Duplicate Cancelled');
+				}
 			});
 
 			// console.log(this.designer_tool.pages_and_layouts[this.current_page]);
