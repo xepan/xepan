@@ -127,6 +127,7 @@
 									opener.designer_tool.current_selected_component.options.crop_y = $(y).val();
 									opener.designer_tool.current_selected_component.options.crop_width = $(width).val();
 									opener.designer_tool.current_selected_component.options.crop_height = $(height).val();
+									opener.designer_tool.current_selected_component.designer_tool = opener.designer_tool;
 									opener.designer_tool.current_selected_component.render();
 				                    $(this).dialog("close"); //closing on Ok click
 				                }
