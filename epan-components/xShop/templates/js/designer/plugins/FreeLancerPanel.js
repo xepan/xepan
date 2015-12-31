@@ -28,14 +28,29 @@ PageBlock = function(parent,designer,canvas, manager){
 		});
 
 		// make a list of current pages with remove buton
-		this.page_list_div = $('<div class="list-group"></div>').appendTo(this.element);
+		this.page_list_div = $('<div class="list-group xdesigner-page-list"></div>').appendTo(this.element);
 
 		$.each(pages_data_array,function(index,page){
-			self.addPageView(page);
+			self.addPageView(page,index);
 			// self.addPage(page);
 		});
-	
-		// on click of any page update layoutblock
+
+		$(".xdesigner-page-list").sortable({
+      		stop : function(event, ui){
+      			new_object = {};
+      			$('.xdesigner-page-list').children().each(function (i,ui) {
+      				pagename = $(ui).data('pagename');
+      				new_object[pagename] =  new Object();
+					new_object[pagename] =  self.designer_tool.pages_and_layouts[pagename];
+      				
+      			});
+      			// console.log(self.designer_tool.pages_and_layouts);
+      			self.designer_tool.pages_and_layouts = new_object;
+      			self.designer_tool.bottom_bar.renderTool();	
+      			$.univ().successMessage('Page Order Changed');
+      			// console.log(new_object);
+        	}
+    	});		
 	}
 
 	this.addPage = function(page_name,duplicate_from_page){
@@ -55,7 +70,6 @@ PageBlock = function(parent,designer,canvas, manager){
 			if($.trim(duplicate_from_page)){
 				this.designer_tool.pages_and_layouts[page_name] =  new Object();
 				this.designer_tool.pages_and_layouts[page_name] =  this.designer_tool.pages_and_layouts[duplicate_from_page];
-
 				this.designer_tool.layout_finalized[page_name] = "Main Layout";
 			}else{
 
@@ -85,9 +99,10 @@ PageBlock = function(parent,designer,canvas, manager){
 		return page_array;
 	}
 
-	this.addPageView = function(page_name){
+	this.addPageView = function(page_name,order){
 		var self = this;
-		page_row = $('<div class="page_row"></div>').appendTo(this.page_list_div);
+
+		page_row = $('<div class="page_row" data-pagename="'+page_name+'"></div>').appendTo(this.page_list_div);
 		div = $('<a href="#" class="list-group-item"></a>').appendTo(page_row);
 		page_name = $('<span class="xshop-designer-ft-page-name"></span>').appendTo(div).html(page_name);
 		rm_btn = $('<span class="label label-danger pull-right">x</span>').appendTo(div).data('page_name',page_name);

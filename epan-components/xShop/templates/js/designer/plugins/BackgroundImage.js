@@ -55,24 +55,17 @@ BackgroundImage_Component = function (params){
 		});
 
 		// console.log(self.designer_tool.options.designer_mode);
-		if(self.options.designer_mode == "true"){
+		// if(self.options.designer_mode == "true"){
 			remove_btn = $('<div class="atk-swatch-red icon-trash"></div>').appendTo(bgi_tool_btn);
 			remove_btn.click(function(event){
 				self.designer_tool.current_selected_component = self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background;
-				// $('.xepan-designer-background-image span > img').attr('src','');
-
 				$(self.designer_tool.current_selected_component.element).hide();
 				$(self.designer_tool.current_selected_component.element).find('img').removeAttr('src');
 
-				self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background.options.url=undefined;
-				// self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background.options.type='BackgroundImage';
-				// delete self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background;
-				// console.log(self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout]);
+				self.designer_tool.pages_and_layouts[self.designer_tool.current_page][self.designer_tool.current_layout].background.options.url=undefined;				
 				self.designer_tool.current_selected_component = null;
-
-
 			});
-		}
+		// }
 
 	}
 
@@ -82,6 +75,7 @@ BackgroundImage_Component = function (params){
 		if(this.options.url == undefined) return;
 		if(this.element == undefined){
 			this.element = $('<div style="position:absolute;z-index:-10;" class="xshop-designer-component xepan-designer-background-image"><span><img></img></span></div>').appendTo(this.canvas);
+			// console.log(self.designer_tool.screen2option);
 			self.options.width = self.designer_tool.screen2option(self.designer_tool.canvas.width());
 			self.options.height = self.designer_tool.screen2option(self.designer_tool.canvas.height());
 		}else{
