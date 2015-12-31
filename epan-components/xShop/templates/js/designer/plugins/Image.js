@@ -2,9 +2,47 @@ xShop_Image_Editor = function(parent){
 	var self = this;
 	this.parent = parent;
 	this.current_image_component = undefined;
-
 	this.element = $('<div id="xshop-designer-image-editor" style="display:block" class="xshop-options-editor"></div>').appendTo(this.parent);
-	this.editor_close_btn = $('<div class="atk-row" style="padding:0;margin:0;"><i class="atk-box-small pull-right glyphicon glyphicon-remove"></i></div>').appendTo(this.element);
+	this.row1 = $('<div class="atk-row" style="display:block;margin:0;"> </div>').appendTo(this.element);
+
+	// this.image_col = $('<div class="atk-col-3 atk-box-small atk-box-designer"></div>').appendTo(this.row1);
+					
+	this.image_x_label = $('<div class="atk-move-left"><label for="xshop-designer-image-positionx">x: </label></div>').appendTo(this.row1);
+	this.image_x = $('<input name="x" id="xshop-designer-image-positionx" class="xshop-designer-image-inputx" style="width:45px" />').appendTo(this.image_x_label);
+	// $(this.image_x).val(self.current_image_component.options.x);
+	$(this.image_x).change(function(){
+		self.current_image_component.options.x = self.current_image_component.designer_tool.screen2option($(this).val());
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+			self.current_image_component.render();
+	});
+	this.image_y_label = $('<div class="atk-move-left"><label for="xshop-designer-image-positiony">y: </label></div>').appendTo(this.row1);
+	this.image_y = $('<input name="y" id="xshop-designer-image-positiony" class="xshop-designer-image-inputy" style="width:45px" />').appendTo(this.image_y_label);
+	$(this.image_y).change(function(){
+		self.current_image_component.options.y = self.current_image_component.designer_tool.screen2option($(this).val());
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+			self.current_image_component.render();
+	});
+
+	this.image_width_label = $('<div class="atk-move-left"><label for="xshop-designer-image-width">W: </label></div>').appendTo(this.row1);
+	this.image_width = $('<input name="W" title="width" id="xshop-designer-image-width" class="xshop-designer-image-width" style="width:45px" />').appendTo(this.image_width_label);
+	$(this.image_width).change(function(){
+		self.current_image_component.options.width = self.current_image_component.designer_tool.screen2option($(this).val());
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+			self.current_image_component.render();
+	});
+
+	this.image_height_label = $('<div class="atk-move-left"><label for="xshop-designer-image-height">H: </label></div>').appendTo(this.row1);
+	this.image_height = $('<input name="H" title="height" id="xshop-designer-image-height" class="xshop-designer-image-height" style="width:45px" />').appendTo(this.image_height_label);
+	$(this.image_height).change(function(){
+		self.current_image_component.options.height = self.current_image_component.designer_tool.screen2option($(this).val());
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+			self.current_image_component.render();
+	});
+	
+
+	this.editor_close_btn = $('<div class="" style="padding:0;margin:0;"><i class="atk-box-small pull-right glyphicon glyphicon-remove"></i></div>').appendTo(this.row1);
+
+
 	this.image_button_set = $('<div class="btn-group" role="group"></div>').appendTo(this.element);
 	// this.image_manager = $('<div class="btn "><span class="glyphicon glyphicon-film"></span></div>').appendTo(this.image_button_set);
 	this.image_edit = $('<div class="btn xshop-designer-image-edit-btn"><i class="icon-edit atk-size-tera"></i><br/><span class="atk-size-micro">Image</span></div>').appendTo(this.image_button_set);
@@ -335,6 +373,9 @@ Image_Component = function (params){
 					var position = ui.position;
 					self.options.x = self.designer_tool.screen2option(position.left);
 					self.options.y = self.designer_tool.screen2option(position.top);
+					
+					self.editor.image_x.val(position.left);
+					self.editor.image_y.val(position.top);
 				}
 			}).resizable({
 				aspectRatio: true,
@@ -346,6 +387,8 @@ Image_Component = function (params){
 					// self.options.y = ui.position.top / self.designer_tool.zoom;
 					self.options.width = self.designer_tool.screen2option(ui.size.width) ;
 					self.options.height = self.designer_tool.screen2option(ui.size.height) ;
+					self.editor.image_width.val(ui.size.width);
+					self.editor.image_height.val(ui.size.height);
 					self.render();
 				}
 			});
@@ -415,7 +458,10 @@ Image_Component = function (params){
 
 	            self.designer_tool.option_panel.css('top',top_value);
 	            self.designer_tool.option_panel.css('left',$(designer_currentTarget).offset().left);
-
+	            self.editor.image_x.val(self.options.x);
+	            self.editor.image_y.val(self.options.y);
+	            self.editor.image_width.val(self.options.width);
+	            self.editor.image_height.val(self.options.height);
 	            self.editor.setImageComponent(self);
 		        event.stopPropagation();
 			});

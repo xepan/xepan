@@ -1063,6 +1063,7 @@ Calendar_Component = function (params){
 
 	            self.designer_tool.option_panel.css('top',top_value);
 	            self.designer_tool.option_panel.css('left',$(designer_currentTarget).offset().left);
+	            self.editor.calendar_border.val(self.options.border);
 
 	            self.editor.setCalendarComponent(self);
 	            
