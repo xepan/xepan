@@ -173,6 +173,23 @@ xShop_Calendar_Editor = function(parent,designer){
         }
 	});
 
+	//Day name Bold
+	this.w_btn_set = $('<div class="btn-group btn-group-xs xshop-calendar-align" role="group" ></div>').appendTo(this.col3);
+	this.w_bold = $('<div class="btn" title="Right"><span class="glyphicon glyphicon-bold"></span></div>').appendTo(this.w_btn_set);
+	$(this.w_bold).click(function(){
+		if($(this).hasClass('active')){
+			$(this).removeClass('active');
+			self.current_calendar_component.options.day_name_bold = false;
+		}else{
+			$(this).addClass('active');
+			self.current_calendar_component.options.day_name_bold = true;
+		}
+
+		//Render Current Selected Calendar
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
+	});
+
 
 //```````````````````````````````````````````````````````````````````````````|
 //------------------------------Day Date Style Options-----------------------
@@ -908,6 +925,7 @@ Calendar_Component = function (params){
 		day_name_font_size:25,
 		day_name_font_color:'#00000',
 		day_name_font_family:'freemono',
+		day_name_bold:false,
 		event_font_size:10,
 		event_font_family:'freemono',
 		event_font_size:'#00000',
@@ -1107,6 +1125,7 @@ Calendar_Component = function (params){
 					day_date_font_color:self.options.day_date_font_color,
 					day_name_font_size:self.options.day_name_font_size,
 					day_name_font_color:self.options.day_name_font_color,
+					day_name_bold:self.options.day_name_bold,
 					event_font_size:self.options.event_font_size,
 					event_font_color:self.options.event_font_color,
 					day_name_bg_color:self.options.day_name_bg_color,

@@ -94,7 +94,12 @@ class Controller_RenderCalendar extends \AbstractController {
   		$calendar .= '<table cellspacing="0" class="calendar" width="100%" align="center" border-collapse: collapse; border="'.$styles['border'].'" style="background-color:'.$styles['day_name_bg_color'].'">';
  		/* table headings */
   		$headings = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
-  		$calendar.= '<tr style="font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td  class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
+  			
+  		if($styles['day_name_bold'] == "true")
+  			$calendar.= '<tr style="font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td class="calendar-day-head"><b>'.implode('</b></td><td class="calendar-day-head"><b>',$headings).'</b></td></tr>';
+  		else
+  			$calendar.= '<tr style="font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
+  			
   		$calendar.="</table>";
 
   		$calendar .= '<table cellspacing="0" class="calendar" width="100%" align="center" border="'.$styles['border'].'" style="padding-top:'.$cell_padding.'px; background-color:'.$styles['calendar_cell_bg_color'].'">';
