@@ -17,7 +17,7 @@ class Controller_RenderCalendar extends \AbstractController {
 
 		$calendar_html = $this->drawCalendar($this->options['month'],$this->options['year'],[],$current_month_events,$this->options);
 		// throw new \Exception($cale);
-		// echo $calendar_html;
+		// echo '<div style="width:432px;">'.$calendar_html."</div>";
 		// exit;
 		//Convert Html to PDF
 		$this->convertHtmlToPdf($calendar_html);
@@ -86,23 +86,21 @@ class Controller_RenderCalendar extends \AbstractController {
   		/* draw table */
   		// echo "cell-padidng = ".$cell_padding."<br/>font-size=".$day_date_font_size." <br/>cell Height=".$styles['calendar_cell_heigth'];
   		// exit;
-  		$calendar = '<div style="background-color:'.$styles['header_bg_color'].'; font-face:K010; font-family:K010; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';">'.$month_name.' - '.$year.'</div>';
+  		$calendar = '<div style="background-color:'.$styles['header_bg_color'].'; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';">'.$month_name.' - '.$year.'</div>';
   		//Header Bold Options
   		if($styles['header_bold'] == "true")
   			$calendar = '<div style="background-color:'.$styles['header_bg_color'].'; font-face:K010; font-family:K010; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';"><b>'.$month_name.' - '.$year.'</b></div>';
 
-  		$calendar .= '<table cellspacing="0" class="calendar" width="100%" align="center" border-collapse: collapse; border="'.$styles['border'].'" style="background-color:'.$styles['day_name_bg_color'].'">';
+  		$calendar .= '<table cellspacing="0" class="calendar" width="100%" align="center" border-collapse: collapse; border="'.$styles['border'].'" style="background-color:'.$styles['day_name_bg_color'].';">';
  		/* table headings */
   		$headings = array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
-  			
   		if($styles['day_name_bold'] == "true")
   			$calendar.= '<tr style="font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td class="calendar-day-head"><b>'.implode('</b></td><td class="calendar-day-head"><b>',$headings).'</b></td></tr>';
   		else
   			$calendar.= '<tr style="font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
-  			
   		$calendar.="</table>";
 
-  		$calendar .= '<table cellspacing="0" class="calendar" width="100%" align="center" border="'.$styles['border'].'" style="padding-top:'.$cell_padding.'px; background-color:'.$styles['calendar_cell_bg_color'].'">';
+  		$calendar .= '<table cellspacing="0" class="calendar" width="100%" align="center" border="'.$styles['border'].'" style="table-layout:fixed;padding-top:'.$cell_padding.'px; background-color:'.$styles['calendar_cell_bg_color'].'">';
   		/* days and weeks vars now ... */
   		$running_day = date('w',mktime(0,0,0,$month,1,$year));
   		$days_in_month = date('t',mktime(0,0,0,$month,1,$year));
@@ -121,16 +119,18 @@ class Controller_RenderCalendar extends \AbstractController {
 		/* keep going with days.... */
 		for($list_day = 1; $list_day <= $days_in_month; $list_day++){
 
-		    $calendar.= '<td class="calendar-day" style="overflow:hidden; height:'.$styles['calendar_cell_heigth'].'; max-height:'.$styles['calendar_cell_heigth'].';font-size:'.$day_date_font_size.'px;color:'.$styles['day_date_font_color'].'">';
+		    $calendar.= '<td class="calendar-day" style="overflow:hidden; height:'.$styles['calendar_cell_heigth'].'px; max-height:'.$styles['calendar_cell_heigth'].'px;font-size:'.$day_date_font_size.'px;color:'.$styles['day_date_font_color'].'">';
+		    
 		    /* add in the day number */
-		    $calendar.= '<div class="day-number">'.$list_day.'</div>';
 
 		    $date=date('Y-m-d',mktime(0,0,0,$month,$list_day,$year));
 		    
 		    $event_date_format = date('d-F-Y',strtotime($date));
 		    if($message = $events[$event_date_format]){
-		    	$calendar .= '<small style="text-align:right; font-size:'.$event_font_size.'px;color:'.$styles['event_font_color'].'">'.$message."</small>";
-		    }
+		    	$calendar .= '<div style="height:'.$styles['calendar_cell_heigth'].'px; overflow:hidden; text-align:center; font-size:'.$event_font_size.'px;color:'.$styles['event_font_color'].'">'.$message."</div>";
+		    }else
+		    	$calendar .= '<div class="day-number" style="height:'.$styles['calendar_cell_heigth'].'px;">'.$list_day.'</div>';
+		    
 
 		    $tdHTML='';        
 		    if(isset($resultA[$date])) $tdHTML=$resultA[$date];
