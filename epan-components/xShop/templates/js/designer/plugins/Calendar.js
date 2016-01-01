@@ -764,7 +764,9 @@ xShop_Calendar_Editor = function(parent,designer){
 		$(this.height).val(component.options.height);
 
 		$(this.events).val(component.options.events);
-		$(this.calendar_cell_heigth).val(component.options.calendar_cell_heigth);
+		$(this.cell_height).val(component.options.calendar_cell_heigth);
+		// console.log(component.options.calendar_cell_heigth);
+
 		$(this.designer_mode).val(component.options.designer_mode);
 		$(this.load_design).val(component.options.load_design);
 
@@ -901,6 +903,7 @@ xShop_Calendar_Editor = function(parent,designer){
 			}else{
 				$(this.calendar_remove).show();
 			}
+
 		}
 
 	}
