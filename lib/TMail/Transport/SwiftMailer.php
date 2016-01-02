@@ -70,20 +70,20 @@ class TMail_Transport_SwiftMailer extends AbstractObject {
 
 		if(is_array($to)){
             foreach ($to as $to_1) {
-                $message->addTo($to_1);
+                $message->addTo(trim($to_1));
             }
         }else{
-            $message->addTo($to);
+            $message->addTo(trim($to));
         }
 
         if($ccs){
             if(is_array($ccs)){
                 foreach ($ccs as $ccs_1) {
                     if($ccs_1 and $ccs_1!="")
-                        $message->addCc($ccs_1);
+                        $message->addCc(trim($ccs_1));
                 }
             }else{
-                $message->addCc($ccs);
+                $message->addCc(trim($ccs));
             }
         }
 
@@ -91,10 +91,10 @@ class TMail_Transport_SwiftMailer extends AbstractObject {
             if(is_array($bcc)){
                 foreach ($bcc as $bcc_1) {
                     if($bcc_1 and $bcc_1!="")
-                        $message->addBcc($bcc_1);
+                        $message->addBcc(trim($bcc_1));
                 }
             }else{
-                $message->addBcc($bcc);
+                $message->addBcc(trim($bcc));
             }
         }
 
