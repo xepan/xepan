@@ -553,7 +553,7 @@ Text_Component = function (params){
 					},
 		})
 		.done(function(ret) {
-			self.element.find('img').attr('src','data:image/jpg;base64, '+ ret);
+			self.element.find('img').attr('src','data:image/png;base64, '+ ret);
 			// $(ret).appendTo(self.element.find('span').html(''));
 			self.xhr=undefined;
 			if(place_in_center === true){
