@@ -24,6 +24,7 @@ class page_xShop_page_designer_rendercalendar extends Page {
 		$options['day_date_font_size'] = $_GET['day_date_font_size'] * ($zoom / 1.328352013);
 		$options['day_date_font_color'] = $_GET['day_date_font_color'];
 		$options['day_name_bold'] = $_GET['day_name_bold'];
+		$options['day_name_cell_height'] = $_GET['day_name_cell_height'];
 		
 		$options['day_name_font_size'] = $_GET['day_name_font_size'] * ($zoom / 1.328352013);
 		$options['day_name_font_color'] = $_GET['day_name_font_color'];

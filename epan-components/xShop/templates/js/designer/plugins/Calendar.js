@@ -51,33 +51,6 @@ xShop_Calendar_Editor = function(parent,designer){
         }
 	});
 
-	/*Header Font Family*/
-	this.header_font_family_label = $('<div><label for="header_font_family">Font Family :</label></div>').appendTo(this.col1);
-	this.header_font_family = $('<select id="header_font_family" class="btn btn-xs">Header Font Family</select>').appendTo(this.header_font_family_label);
-	
-	// get all fonts via ajax
-	$.ajax({
-		url: 'index.php?page=xShop_page_designer_fonts',
-		type: 'GET',
-		data: {param1: 'value1'},
-	})
-	.done(function(ret) {
-		$(ret).appendTo(self.header_font_family);
-		// console.log("success");
-	})
-	.fail(function() {
-		// console.log("error");
-	})
-	.always(function() {
-		// console.log("complete");
-	});
-
-	$(this.header_font_family).change(function(event){
-		self.current_calendar_component.options.header_font_family = $(this).val();
-		$('.xshop-designer-tool').xepan_xshopdesigner('check');
-		self.current_calendar_component.render();
-	});
-
 	//Header Background Color
 	this.header_bg_color_label = $('<div class="xshop-designer-calendar-color-picker"><label for="header_bg_color">BG Color : </label></div>').appendTo(this.col1);
 	this.header_bg_color_picker = $('<input id="header_bg_color" style="display:none;">').appendTo(this.header_bg_color_label);
@@ -134,6 +107,7 @@ xShop_Calendar_Editor = function(parent,designer){
 		$('.xshop-designer-tool').xepan_xshopdesigner('check');
 		self.current_calendar_component.render();
 	});
+
 
 //```````````````````````````````````````````````````````````````````````````|
 //------------------------------Day Name Style Options-----------------------
@@ -209,6 +183,22 @@ xShop_Calendar_Editor = function(parent,designer){
 		$('.xshop-designer-tool').xepan_xshopdesigner('check');
 		self.current_calendar_component.render();
 	});
+
+	//```````````````````````````````````````````````````````````````````````````|
+	//------------------------------Week Block Height----------------------------
+	//___________________________________________________________________________|
+	//Height
+	this.day_name_height_div = $('<div></div>').appendTo(this.col1);
+	this.day_name_height_label = $('<label for="xshop-designer-calendar-week-height" style="float:left;">Height :</label>').appendTo(this.day_name_height_div);
+	this.day_name_cell_height = $('<input type="number" id="xshop-designer-calendar-week-height"  min="10" max="80" value="20" style="padding:0;font-size:12px;float:left;width:60px !important" />').appendTo(this.day_name_height_div);
+
+	$(this.day_name_cell_height).change(function(event){
+		self.current_calendar_component.options.day_name_cell_height = $(this).val();
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
+
+	});	
+
 
 
 //```````````````````````````````````````````````````````````````````````````|
@@ -508,6 +498,33 @@ xShop_Calendar_Editor = function(parent,designer){
 			// console.log($('span.xshop-designer-text-down-btn'));
 			$('span.xshop-designer-calendar-down-btn').addClass('xepan-designer-button-disable');
 		}
+	});
+
+	/*Header Font Family*/
+	this.header_font_family_label = $('<div><label for="header_font_family">Font Family :</label></div>').appendTo(this.cal_col);
+	this.header_font_family = $('<select id="header_font_family" class="btn btn-xs">Header Font Family</select>').appendTo(this.header_font_family_label);
+	
+	// get all fonts via ajax
+	$.ajax({
+		url: 'index.php?page=xShop_page_designer_fonts',
+		type: 'GET',
+		data: {param1: 'value1'},
+	})
+	.done(function(ret) {
+		$(ret).appendTo(self.header_font_family);
+		// console.log("success");
+	})
+	.fail(function() {
+		// console.log("error");
+	})
+	.always(function() {
+		// console.log("complete");
+	});
+
+	$(this.header_font_family).change(function(event){
+		self.current_calendar_component.options.header_font_family = $(this).val();
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
 	});
 
 //```````````````````````````````````````````````````````````````````````````|
@@ -950,6 +967,7 @@ Calendar_Component = function (params){
 		day_name_font_color:'#00000',
 		day_name_font_family:'freemono',
 		day_name_bold:false,
+		day_name_cell_height:20,
 		event_font_size:10,
 		event_font_family:'freemono',
 		event_font_size:'#00000',
@@ -1151,6 +1169,7 @@ Calendar_Component = function (params){
 					day_name_font_size:self.options.day_name_font_size,
 					day_name_font_color:self.options.day_name_font_color,
 					day_name_bold:self.options.day_name_bold,
+					day_name_cell_height:self.options.day_name_cell_height,
 					event_font_size:self.options.event_font_size,
 					event_font_color:self.options.event_font_color,
 					day_name_bg_color:self.options.day_name_bg_color,
