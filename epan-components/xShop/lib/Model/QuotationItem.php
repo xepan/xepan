@@ -21,7 +21,8 @@ class Model_QuotationItem extends \Model_Document{
 		
 		$this->hasOne('xShop/Quotation','quotation_id')->sortable(true);
 		$this->hasOne('xShop/Item_Saleable','item_id')->display(array('form'=>'xShop/Item'))->sortable(true);
-		
+		$this->hasOne('xShop/Tax','tax_id');
+
 		$this->addField('qty')->sortable(true)->group('a~4');
 		$this->addField('rate')->type('money')->sortable(true)->group('a~4');
 		$this->addField('amount')->type('money')->sortable(true)->group('a~4');
@@ -39,10 +40,14 @@ class Model_QuotationItem extends \Model_Document{
 
 
 		$this->addExpression('tax_per_sum')->set(function($m,$q){
-			$tax_assos = $m->add('xShop/Model_ItemTaxAssociation');
-			$tax_assos->addCondition('item_id',$q->getField('item_id'));
-			$tax = $tax_assos->sum('name');
+			$tax_assos = $m->add('xShop/Model_Tax');
+			// $tax_assos->addCondition('item_id',$q->getField('item_id'));
+			if($q->getField('tax_id'))
+				$tax_assos->addCondition('id',$q->getField('tax_id'));
+
+			$tax = $tax_assos->sum('value');
 				return "IF(".$q->getField('apply_tax').">0,(".$tax->render()."),'0')";
+				
 		})->type('money')->caption('Total Tax %');
 
 		$this->addExpression('tax_amount')->set(function($m,$q){
@@ -65,7 +70,7 @@ class Model_QuotationItem extends \Model_Document{
 		});
 
 		$this->addHook('afterSave',$this);
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function afterSave(){
