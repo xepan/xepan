@@ -114,6 +114,26 @@ xShop_Calendar_Editor = function(parent,designer){
 		self.current_calendar_component.render();
 	});
 
+	//Header Show / Hideglyphicon glyphicon-eye-open
+	this.showhide_btn_set = $('<div class="btn-group btn-group-xs xshop-calendar-align" role="group" ></div>').appendTo(this.col1);
+	this.showhide_btn = $('<div class="btn" title="Show/Hide "><span class="glyphicon glyphicon-eye-open"></span></div>').appendTo(this.h_btn_set);
+	$(this.showhide_btn).click(function(){
+		if($(this).hasClass('active')){
+			$(this).removeClass('active');
+			$(this).children('span').removeClass('glyphicon-eye-open');
+			$(this).children('span').addClass('glyphicon-eye-close');
+			self.current_calendar_component.options.header_show = false;
+		}else{
+			$(this).addClass('active');
+			$(this).children('span').removeClass('glyphicon-eye-close');
+			$(this).children('span').addClass('glyphicon-eye-open');
+			self.current_calendar_component.options.header_show = true;
+		}
+
+		//Render Current Selected Calendar
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
+	});
 
 //```````````````````````````````````````````````````````````````````````````|
 //------------------------------Day Name Style Options-----------------------
@@ -922,6 +942,7 @@ Calendar_Component = function (params){
 		header_font_family:'freemono',
 		header_bold:false,
 		header_bg_color:undefined,
+		header_show:true,
 		day_date_font_size:20,
 		day_date_font_color:'#00000',
 		day_date_font_family:'freemono',
@@ -1123,6 +1144,7 @@ Calendar_Component = function (params){
 					header_font_color:self.options.header_font_color,
 					header_bg_color:self.options.header_bg_color,
 					header_bold:self.options.header_bold,
+					header_show:self.options.header_show,
 					header_font_family:self.options.header_font_family,
 					day_date_font_size:self.options.day_date_font_size,
 					day_date_font_color:self.options.day_date_font_color,

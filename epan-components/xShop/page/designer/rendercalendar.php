@@ -18,6 +18,7 @@ class page_xShop_page_designer_rendercalendar extends Page {
 		$options['header_font_size'] = $_GET['header_font_size'] * ($zoom / 1.328352013);
 		$options['header_font_color'] = $_GET['header_font_color'];
 		$options['header_bold'] = $_GET['header_bold'];
+		$options['header_show'] = $_GET['header_show'];
 		$options['header_font_family'] = $_GET['header_font_family'];
 		
 		$options['day_date_font_size'] = $_GET['day_date_font_size'] * ($zoom / 1.328352013);
