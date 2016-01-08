@@ -59,6 +59,7 @@ class Controller_RenderCalendar extends \AbstractController {
 	}
 
 	function drawCalendar($month,$year,$resultA,$events=[],$styles=[]){
+		$calendar = "";
 		// style="text-align:left;"
 		$header_font_size = 30;
 		$day_date_font_size = 16;
@@ -86,7 +87,8 @@ class Controller_RenderCalendar extends \AbstractController {
   		/* draw table */
   		// echo "cell-padidng = ".$cell_padding."<br/>font-size=".$day_date_font_size." <br/>cell Height=".$styles['calendar_cell_heigth'];
   		// exit;
-  		$calendar = '<div style="background-color:'.$styles['header_bg_color'].'; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';">'.$month_name.' - '.$year.'</div>';
+  		if($styles['header_show'] == "true")
+  			$calendar = '<div style="background-color:'.$styles['header_bg_color'].'; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';">'.$month_name.' - '.$year.'</div>';
   		//Header Bold Options
   		if($styles['header_bold'] == "true")
   			$calendar = '<div style="background-color:'.$styles['header_bg_color'].'; font-face:K010; font-family:K010; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';"><b>'.$month_name.' - '.$year.'</b></div>';
@@ -97,7 +99,7 @@ class Controller_RenderCalendar extends \AbstractController {
   		if($styles['day_name_bold'] == "true")
   			$calendar.= '<tr style="font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td class="calendar-day-head"><b>'.implode('</b></td><td class="calendar-day-head"><b>',$headings).'</b></td></tr>';
   		else
-  			$calendar.= '<tr style="font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
+  			$calendar.= '<tr style="font-size:'.$day_name_font_size.'px;color:'.$styles['day_name_font_color'].';" class="calendar-row"><td class="calendar-day-head" style="height:'.$styles['day_name_cell_height'].'px;">'.implode('</td><td class="calendar-day-head">',$headings).'</td></tr>';
   		$calendar.="</table>";
 
   		$calendar .= '<table cellspacing="0" class="calendar" width="100%" align="center" border="'.$styles['border'].'" style="table-layout:fixed;padding-top:'.$cell_padding.'px; background-color:'.$styles['calendar_cell_bg_color'].'">';
