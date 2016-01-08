@@ -9,6 +9,7 @@ class Model_Filter extends \Model_Table{
 		parent::init();
 
 		$this->hasOne('xShop/Category','category_id');
+		$this->hasOne('xShop/Item','item_id');
 		$this->hasOne('xShop/Specification','specification_id');
 		$this->addField('unique_values')->type('text');
 

@@ -17,6 +17,7 @@ class page_xShop_page_owner_item_attributes extends page_xShop_page_owner_main{
 	function page_filter(){
 
 		$filter = $this->add('xShop/Model_Filter');
+		$filter->addCondition('item_id',$_GET['item_id']);
 		$crud = $this->add('CRUD');
 		$crud->setModel($filter);
 	}
