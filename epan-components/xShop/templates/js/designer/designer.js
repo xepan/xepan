@@ -246,6 +246,7 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 		if(!self.options.show_cart) return;
 		if(self.options.designer_mode) return;
 
+		self.options.cart_options['show_cart_btn']=true;
 		cart_container = $('<div class="xepan-xshop-designer-cart-container"></div>').appendTo(self.element);
 		price_div = $('<div class="xshop-item-price"></div>').appendTo(cart_container);
 		original_rate = $('<div class="xshop-item-old-price">'+self.options.currency_symbole+' 0</div>').appendTo(price_div);
