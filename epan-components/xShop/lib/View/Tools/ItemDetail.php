@@ -180,7 +180,7 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 		if($this->html_attributes['show-item-detail-in-tabs']){
 			$this->tabs = $this->add('Tabs',null,'xshop_item_detail_information');
 			// $tabs->addTab('upload');
-			$detail_tab = $tabs->addTab($detail_label);
+			$detail_tab = $this->tabs->addTab($detail_label);
 		}else{
 			$detail_tab = $this;
 			$detail_header = '<div class="xshop-item-detail-title xshop-item-detail-label">'.$detail_label.'</div>';
@@ -209,7 +209,7 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 		if($this->html_attributes['show-item-specification']){
 			$specification_tab = $this;
 			if($this->html_attributes['show-item-detail-in-tabs']){
-				$specification_tab = $tabs->addTab($specification_label);
+				$specification_tab = $this->tabs->addTab($specification_label);
 			}else{
 				$this->add('View')->setHtml('<div class="xshop-item-detail-title xshop-item-specification-label">'.$specification_label.'</div>');
 			}
@@ -227,7 +227,7 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 			$attachment_tab = $this;
 			
 			if($this->html_attributes['show-item-detail-in-tabs']){
-				$attachment_tab = $tabs->addTab($attachment_label);
+				$attachment_tab = $this->tabs->addTab($attachment_label);
 			}else{
 				$attachment_header = '<div class="xshop-item-detail-title xshop-item-attachment-label">'.$attachment_label.'</div>';
 			}
@@ -249,7 +249,7 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 			$up_tab = $this;
 			
 			if($this->html_attributes['show-item-detail-in-tabs']){
-				$up_tab=$tabs->addTab($upload_label);
+				$up_tab=$this->tabs->addTab($upload_label);
 			}else{
 				$upload_header = '<div class="xshop-item-detail-title xshop-item-upload-label">'.$upload_label.'</div>';
 			}
