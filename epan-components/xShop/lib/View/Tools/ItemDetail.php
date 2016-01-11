@@ -137,6 +137,23 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 			if($this->model['is_designable']){
 				// add Personalioze View
 				$this->add('Button',null,'xshop_item_design_item')->set('Personalize')->js('click',$this->js()->univ()->location("index.php?subpage=".$this->html_attributes['personalization-page']."&xsnb_design_item_id=".$this->model->id));
+			}else{
+				//Price Section Add to cart in tab
+			//add AddToCart View
+			if($this->html_attributes['show-cart-section']){
+				$cart_label = trim($this->html_attributes['item-cart-label'])?:'Cart';
+				$cart_tab = $this;
+				$show_cart_btn = 1;
+				if($this->html_attributes['show-cart-btn'] == '0')
+					$show_cart_btn = 0;
+
+				if($this->html_attributes['show-item-detail-in-tabs'] and $this->html_attributes['show-cart-section-in-tabs']){
+					$cart_tab = $tabs->addTab($cart_label);
+					$cart_tab->add('xShop/View_Item_AddToCart',array('name'=>'cust_'.$this->model->id,'item_model'=>$this->model,'show_custom_fields'=>1,'show_price'=>$this->model['show_price'], 'show_qty_selection'=>1,'show_cart_btn'=>$show_cart_btn));
+				}
+				else
+					$cart_tab->add('xShop/View_Item_AddToCart',array('name'=>'cust_'.$this->model->id,'item_model'=>$this->model,'show_custom_fields'=>1,'show_price'=>$this->model['show_price'], 'show_qty_selection'=>1),'xshop_item_cart_btn');
+			}
 			}			
 
 	//=====================ITEM AFFILIATES===============================
@@ -201,22 +218,7 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 			$specification_tab->add('Grid')->setModel($specification,array('specification','value'));	
 		}
 
-		//Price Section Add to cart in tab
-		//add AddToCart View
-		if($this->html_attributes['show-cart-section']){
-			$cart_label = trim($this->html_attributes['item-cart-label'])?:'Cart';
-			$cart_tab = $this;
-			$show_cart_btn = 1;
-			if($this->html_attributes['show-cart-btn'] == '0')
-				$show_cart_btn = 0;
-
-			if($this->html_attributes['show-item-detail-in-tabs'] and $this->html_attributes['show-cart-section-in-tabs']){
-				$cart_tab = $tabs->addTab($cart_label);
-				$cart_tab->add('xShop/View_Item_AddToCart',array('name'=>'cust_'.$this->model->id,'item_model'=>$this->model,'show_custom_fields'=>1,'show_price'=>$this->model['show_price'], 'show_qty_selection'=>1,'show_cart_btn'=>$show_cart_btn));
-			}
-			else
-				$cart_tab->add('xShop/View_Item_AddToCart',array('name'=>'cust_'.$this->model->id,'item_model'=>$this->model,'show_custom_fields'=>1,'show_price'=>$this->model['show_price'], 'show_qty_selection'=>1),'xshop_item_cart_btn');
-		}
+		
 
 		//Attachments
 		$attachment_label = trim($this->html_attributes['item-attachment-label'])?:'Attachments';
