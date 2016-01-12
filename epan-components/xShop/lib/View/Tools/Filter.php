@@ -110,6 +110,7 @@ class View_Tools_Filter extends \componentBase\View_Component{
 													'filter_design'=>$this->filter_design,
 													'html_attributes'=>$this->html_attributes,
 													'url'=>$this->api->url(),
+													'subpage'=>$_GET['subpage'],
 													'selected_filter_value'=>$this->selected_filter_value,
 													'min_price'=>$this->min_price,
 													'max_price'=>$this->max_price,
