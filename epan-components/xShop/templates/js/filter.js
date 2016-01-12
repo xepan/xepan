@@ -72,7 +72,7 @@ jQuery.widget("ui.xepan_xshopfilter",{
 						if(self.options.subpage)
 							$.univ.redirect(url+'&xmip='+ui.values[0]+'&xmap='+ui.values[1]);
 						else
-							$.univ.redirect(url+'?xmip='+ui.values[0]+'&xmap='+ui.values[1]);
+							$.univ.redirect(url+'&xmip='+ui.values[0]+'&xmap='+ui.values[1]);
 					}
 			});
 		}
