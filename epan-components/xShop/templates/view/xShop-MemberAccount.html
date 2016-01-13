@@ -1,5 +1,8 @@
 
 <div id="{$_name}" component_type="{$component_type}" class="epan-component-options">
+  {noAuth}
+  {/noinAuth}
+  {auth}
   <div class="atk-box atk-row">
     <div class="atk-col-1"><i class="icon-user"></i></div>
     <div class="atk-col-7">
@@ -13,5 +16,6 @@
     <div class="atk-col-2"><span>Last Activity &nbsp;  <b>{$last_login_date}</b></span></div>
     <div class="atk-col-3"><span>User Type &nbsp;  <b>{$user_type}</b></span></div>
     <div class="atk-col-5"><span>Email &nbsp;  <b>{$email}</b></span></div>
-  </div>{$Content}		
+  </div>{$Content}
+  {/auth}
 </div>

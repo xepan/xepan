@@ -4,7 +4,7 @@ xShop_Text_Editor = function(parent){
 	this.current_text_component = undefined;
 
 	this.element = $('<div id="xshop-designer-text-editor" class="xshop-options-editor" style="display:block"> </div>').appendTo(this.parent);
-
+	
 	// add font_selection with preview
 	this.font_selector = $('<select class="btn btn-xs"></select>').appendTo(this.element);
 	
@@ -322,7 +322,24 @@ xShop_Text_Editor = function(parent){
 		self.current_text_component.options.text= $(el).val();
 		self.current_text_component.render();
 	},500);
-	
+
+	this.row1 = $('<div class="atk-row" style="display:block;margin:0;"> </div>').appendTo(this.element);
+
+	this.text_x_label = $('<div class="atk-move-left"><label for="xshop-designer-text-positionx">x: </label></div>').appendTo(this.row1);
+	this.text_x = $('<input name="x" id="xshop-designer-text-positionx" class="xshop-designer-text-inputx"  />').appendTo(this.text_x_label);
+	$(this.text_x).change(function(){
+		self.current_text_component.options.x = self.current_text_component.designer_tool.screen2option($(this).val());
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+			self.current_text_component.render();
+	});
+	this.text_y_label = $('<div class="atk-move-left"><label for="xshop-designer-text-positiony">y: </label></div>').appendTo(this.row1);
+	this.text_y = $('<input name="y" id="xshop-designer-text-positiony" class="xshop-designer-text-inputy"  />').appendTo(this.text_y_label);
+	$(this.text_y).change(function(){
+		self.current_text_component.options.y = self.current_text_component.designer_tool.screen2option($(this).val());
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+			self.current_text_component.render();
+	});
+
 	this.setTextComponent = function(component){
 		this.current_text_component  = component;
 		$(this.font_size).val(component.options.font_size);
@@ -453,7 +470,8 @@ Text_Component = function (params){
 					var position = ui.position;
 					self.options.x = self.designer_tool.screen2option(position.left);
 					self.options.y = self.designer_tool.screen2option(position.top);
-				}
+					
+				}	
 			}).resizable({
 				containment: self.designer_tool.safe_zone,
 				handles: "e",
@@ -503,6 +521,16 @@ Text_Component = function (params){
 
 	            self.designer_tool.option_panel.css('top',top_value);
 	            self.designer_tool.option_panel.css('left',$(designer_currentTarget).offset().left);
+	            if(!self.designer_tool.options.designer_mode){
+						self.editor.text_x.hide();
+						self.editor.text_x_label.hide();
+						self.editor.text_y.hide();
+						self.editor.text_y_label.hide();
+					}else{
+						self.editor.text_x.val(self.options.x);
+						self.editor.text_y.val(self.options.y);
+					}
+
 
 	            self.editor.setTextComponent(self);
 	            

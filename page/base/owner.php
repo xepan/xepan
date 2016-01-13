@@ -184,6 +184,7 @@ class page_base_owner extends Page {
 			$sales_m->addItem(array('Material Request','icon'=>'gauge-1'),$this->api->url('xStore_page_owner_materialrequest',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Stock Management','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Terms & Conditions','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_termsandcondition',array('department_id'=>$dept_model->id)));
+			$sales_m->addItem(array('Font Family','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_font',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Configurations','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_shopsnblogs',array('department_id'=>$dept_model->id)));
 			$sales_m->addItem(array('Report','icon'=>'gauge-1'),$this->api->url('xShop_page_owner_report',array('department_id'=>$dept_model->id)));
 
@@ -207,6 +208,7 @@ class page_base_owner extends Page {
 			$this->shorcut_menus[]=array("page"=>"Sales Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Sales Stock Management","url"=>$this->api->url('xShop_page_owner_stockmanagement',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Terms and Conditions","url"=>$this->api->url('xShop_page_owner_termsandcondition',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>"font Family","url"=>$this->api->url('xShop_page_owner_font',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Configurations","url"=>$this->api->url('xShop_page_owner_shopsnblogs',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Report","url"=>$this->api->url('xShop_page_owner_report',array('department_id'=>$dept_model->id)));
 			$this->shorcut_menus[]=array("page"=>"Designer Fonts","url"=>$this->api->url('xShop_page_owner_font',array('department_id'=>$dept_model->id)));
