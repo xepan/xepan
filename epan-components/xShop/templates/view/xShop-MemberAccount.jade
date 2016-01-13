@@ -1,4 +1,7 @@
 .epan-component-options( id='{$_name}' component_type = '{$component_type}')
+	{noAuth}
+	{/noinAuth}
+	{auth}
 	.atk-box.atk-row
 		.atk-col-1
 			i(class="icon-user")
@@ -17,4 +20,5 @@
 			span|User Type &nbsp;  <b>{$user_type}</b>
 		.atk-col-5
 			span|Email &nbsp;  <b>{$email}</b>
-	{$Content}		
+	{$Content}
+	{/auth}

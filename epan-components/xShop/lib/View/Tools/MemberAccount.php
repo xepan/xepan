@@ -8,7 +8,8 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 		parent::init();
 
 		if(!$this->api->auth->model->loaded()){
-			$this->add('View_Warning')->set('Login First');
+			$this->add('View_Warning',null,'noAuth')->set('Login First');
+			$this->template->tryDel('auth');
 			return;
 		}
 		
