@@ -169,6 +169,53 @@ class Box
         $this->debug = true;
     }
 
+    public function getBox($dim){
+        return $this->box[$dim];
+    }
+
+    public function getBoxHeight($text){
+        if (!isset($this->fontFace)) {
+            throw new \InvalidArgumentException('No path to font file has been specified.');
+        }
+
+        $lines = array();
+        // Split text explicitly into lines by \n, \r\n and \r
+        $explicitLines = preg_split('/\n|\r\n?/', $text);
+        foreach ($explicitLines as $line) {
+            // Check every line if it needs to be wrapped
+            $words = explode(" ", $line);
+            $line = $words[0];
+            for ($i = 1; $i < count($words); $i++) {
+                $box = $this->calculateBox($line." ".$words[$i]);
+                if (($box[4]-$box[6]) >= $this->box['width']) {
+                    $lines[] = $line;
+                    $line = $words[$i];
+                } else {
+                    $line .= " ".$words[$i];
+                }
+            }
+            $lines[] = $line;
+        }
+
+        if ($this->debug) {
+            // Marks whole texbox area with color
+            $this->drawFilledRectangle(
+                $this->box['x'],
+                $this->box['y'],
+                $this->box['width'],
+                $this->box['height'],
+                new Color(rand(180, 255), rand(180, 255), rand(180, 255), 80)
+            );
+        }
+
+        $lineHeightPx = $this->lineHeight * $this->fontSize;
+        $textHeight = count($lines) * $lineHeightPx;
+
+        //extra height
+        return $textHeight + ($lineHeightPx/2);
+    }
+
+
     /**
      * Draws the text on the picture.
      * @param string $text Text to draw. May contain newline characters.
@@ -274,6 +321,7 @@ class Box
 
             $n++;
         }
+        // return $textHeight;
     }
 
     protected function getFontSizeInPoints()
