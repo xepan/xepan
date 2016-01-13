@@ -20,7 +20,22 @@ xShop_Calendar_Editor = function(parent,designer){
 	this.col1 = $('<div class="atk-col-31 atk-box-small atk-box-designer"></div>').appendTo(this.row1);
 	$('<div class="xshop-calendar-editor-header" style="">Header</div>').appendTo(this.col1);
 	this.header_font_size_label = $('<div><label for="header_font_size">Font Size :</label></div>').appendTo(this.col1);
+	this.header_align_label = $('<div><label for="header_align">Align :</label></div>').appendTo(this.col1);
+	this.header_align = $('<select id="header_align" class="btn btn-xs">Header Align</select>').appendTo(this.header_align_label);
 	this.header_font_size = $('<select id="header_font_size" class="btn btn-xs">Header Size</select>').appendTo(this.header_font_size_label);
+	align_options = '';
+		align_options += '<option value="1" class="atk-move-left">left</option>';
+		align_options += '<option value="1" class="atk-move-center">center</option>';
+		align_options += '<option value="2" class="atk-move-right">right</option>';
+
+	$(align_options).appendTo(this.header_align);
+	
+	$(this.header_align).change(function(event){
+		self.current_calendar_component.options.header_align = $(this).val();
+		$('.xshop-designer-tool').xepan_xshopdesigner('check');
+		self.current_calendar_component.render();
+	});
+
 	options = '';
 	for (var i = 7; i < 50; i++) {
 		options += '<option value="'+i+'">'+i+'</option>';
