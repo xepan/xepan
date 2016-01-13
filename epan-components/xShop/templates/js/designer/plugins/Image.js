@@ -8,7 +8,7 @@ xShop_Image_Editor = function(parent){
 	// this.image_col = $('<div class="atk-col-3 atk-box-small atk-box-designer"></div>').appendTo(this.row1);
 					
 	this.image_x_label = $('<div class="atk-move-left"><label for="xshop-designer-image-positionx">x: </label></div>').appendTo(this.row1);
-	this.image_x = $('<input name="x" id="xshop-designer-image-positionx" class="xshop-designer-image-inputx" style="width:45px" />').appendTo(this.image_x_label);
+	this.image_x = $('<input name="x" id="xshop-designer-image-positionx" class="xshop-designer-image-inputx" style="width:45px !important" />').appendTo(this.image_x_label);
 	// $(this.image_x).val(self.current_image_component.options.x);
 	$(this.image_x).change(function(){
 		self.current_image_component.options.x = self.current_image_component.designer_tool.screen2option($(this).val());
@@ -16,7 +16,7 @@ xShop_Image_Editor = function(parent){
 			self.current_image_component.render();
 	});
 	this.image_y_label = $('<div class="atk-move-left"><label for="xshop-designer-image-positiony">y: </label></div>').appendTo(this.row1);
-	this.image_y = $('<input name="y" id="xshop-designer-image-positiony" class="xshop-designer-image-inputy" style="width:45px" />').appendTo(this.image_y_label);
+	this.image_y = $('<input name="y" id="xshop-designer-image-positiony" class="xshop-designer-image-inputy" style="width:45px !important" />').appendTo(this.image_y_label);
 	$(this.image_y).change(function(){
 		self.current_image_component.options.y = self.current_image_component.designer_tool.screen2option($(this).val());
 		$('.xshop-designer-tool').xepan_xshopdesigner('check');
@@ -24,7 +24,7 @@ xShop_Image_Editor = function(parent){
 	});
 
 	this.image_width_label = $('<div class="atk-move-left"><label for="xshop-designer-image-width">W: </label></div>').appendTo(this.row1);
-	this.image_width = $('<input name="W" title="width" id="xshop-designer-image-width" class="xshop-designer-image-width" style="width:45px" />').appendTo(this.image_width_label);
+	this.image_width = $('<input name="W" title="width" id="xshop-designer-image-width" class="xshop-designer-image-width" style="width:45px !important" />').appendTo(this.image_width_label);
 	$(this.image_width).change(function(){
 		self.current_image_component.options.width = self.current_image_component.designer_tool.screen2option($(this).val());
 		$('.xshop-designer-tool').xepan_xshopdesigner('check');
@@ -32,7 +32,7 @@ xShop_Image_Editor = function(parent){
 	});
 
 	this.image_height_label = $('<div class="atk-move-left"><label for="xshop-designer-image-height">H: </label></div>').appendTo(this.row1);
-	this.image_height = $('<input name="H" title="height" id="xshop-designer-image-height" class="xshop-designer-image-height" style="width:45px" />').appendTo(this.image_height_label);
+	this.image_height = $('<input name="H" title="height" id="xshop-designer-image-height" class="xshop-designer-image-height" style="width:45px !important" />').appendTo(this.image_height_label);
 	$(this.image_height).change(function(){
 		self.current_image_component.options.height = self.current_image_component.designer_tool.screen2option($(this).val());
 		$('.xshop-designer-tool').xepan_xshopdesigner('check');
@@ -509,9 +509,9 @@ Image_Component = function (params){
 		})
 		.done(function(ret) {
 			if(self.options.is_mask_image)
-				self.element.find('img[is_mask_image=1]').attr('src','data:image/jpg;base64, '+ ret);
+				self.element.find('img[is_mask_image=1]').attr('src','data:image/png;base64, '+ ret);
 			else
-				self.element.find('img[is_mask_image=0]').attr('src','data:image/jpg;base64, '+ ret);
+				self.element.find('img[is_mask_image=0]').attr('src','data:image/png;base64, '+ ret);
 
 			window.setTimeout(function(){
 				self.element.height(self.element.find('img[is_mask_image=0]').height());

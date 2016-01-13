@@ -11,16 +11,33 @@ class Controller_RenderText extends \AbstractController {
 		$options = $this->options;
 		
 		$font_path = $this->getFontPath();
-		$text = $this->wrap($options['font_size'],$options['rotation_angle'],$font_path,$options['text'],$options['desired_width']);
-		$width_height = $this->getTextBoxWidthHeight($text,$font_path);
-
-		$this->new_height = $width_height['height'];
+		// $text = $this->wrap($options['font_size'],$options['rotation_angle'],$font_path,$options['text'],$options['desired_width']);
+		// $width_height = $this->getTextBoxWidthHeight($options['text'],$font_path);
 		
 		$options['halign'] = ($options['alignment_center']==true)?'center':($options['alignment_right'] == 'right'?'right':'left');
 
-		// throw new \Exception(print_r($width_height));
+		/*
+			Calculating height of the of the box 
+		*/
+		$im = imagecreatetruecolor( $options['desired_width'],10);
+		imagesavealpha($im,true);
+		$backgroundColor = imagecolorallocatealpha($im, 255, 255, 255,127);
+		imagefill($im, 0, 0, $backgroundColor);
+		$this->phpimage = $im;
+		
+		$box = new \GDText\Box($this->phpimage);
+		$box->setFontFace($font_path);
+		$rgb_color_array = $this->hex2rgb($options['text_color']);
+		$box->setFontColor(new \GDText\Color($rgb_color_array[0],$rgb_color_array[1],$rgb_color_array[2]));
+		$box->setFontSize($options['font_size']);
+		$box->setBox(0, 0, $options['desired_width'], 0);
+		$box->setTextAlign($options['halign'], 'top');
+		// $h = $box->draw($options['text']);
+		$h = $box->getBoxHeight($options['text']);
+
+		
 		//CREATING DEFAULT IMAGES
-		$im = imagecreatetruecolor( $options['desired_width'],$width_height['height']);
+		$im = imagecreatetruecolor( $options['desired_width'],$h);
 		imagesavealpha($im,true);
 		$backgroundColor = imagecolorallocatealpha($im, 255, 255, 255,127);
 		imagefill($im, 0, 0, $backgroundColor);
@@ -32,9 +49,10 @@ class Controller_RenderText extends \AbstractController {
 		$box->setFontColor(new \GDText\Color($rgb_color_array[0],$rgb_color_array[1],$rgb_color_array[2]));
 		// $box->setTextShadow(new \GDText\Color(0, 0, 0, 50), 2, 2);
 		$box->setFontSize($options['font_size']);
-		$box->setBox(0, 0, $options['desired_width'], $width_height['height']);
+		// $box->enableDebug();
+		$box->setBox(0, 0, $options['desired_width'], $h);
 		$box->setTextAlign($options['halign'], 'top');
-		$box->draw($text);
+		$box->draw($options['text']);
 
 		if($options['rotation_angle']){
 		    $this->phpimage = imagerotate($this->phpimage, $options['rotation_angle'], imageColorAllocateAlpha($im, 255, 255, 255, 127));
@@ -214,7 +232,8 @@ class Controller_RenderText extends \AbstractController {
 	    foreach ( $arr as $word ){
 	        $teststring = $ret.' '.$word;
 	        $testbox = imagettfbbox($fontSize, $angle, $fontFace, $teststring);
-	        if ( $testbox[2] > $width ){
+	        $testbox = $this->getTextBoxWidthHeight($teststring,$fontFace);
+	        if ( $testbox['width'] > $width ){
 	            $ret.=($ret==""?"":"\n").$word;
 	        } else {
 	            $ret.=($ret==""?"":' ').$word;
