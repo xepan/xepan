@@ -4,7 +4,7 @@ namespace xShop;
 
 class View_Tools_ItemDetail extends \componentBase\View_Component{
 	public $html_attributes=array(); // ONLY Available in server side components
-	
+	public $tabs="";
 	function init(){
 		parent::init();
 		if($_GET['review']){
@@ -133,11 +133,6 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 		}
 		//end of custom btn in item detail		
 
-		//if Item Designable
-			if($this->model['is_designable']){
-				// add Personalioze View
-				$this->add('Button',null,'xshop_item_design_item')->set('Personalize')->js('click',$this->js()->univ()->location("index.php?subpage=".$this->html_attributes['personalization-page']."&xsnb_design_item_id=".$this->model->id));
-			}			
 
 	//=====================ITEM AFFILIATES===============================
 		if($this->html_attributes['show-item-affiliate']){
@@ -161,14 +156,15 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 		$detail_label = trim($this->html_attributes['item-detail-label'])?:'Description';
 		$detail_header = "";
 		if($this->html_attributes['show-item-detail-in-tabs']){
-			$tabs = $this->add('Tabs',null,'xshop_item_detail_information');
+			$this->tabs = $this->add('Tabs',null,'xshop_item_detail_information');
 			// $tabs->addTab('upload');
-			$detail_tab = $tabs->addTab($detail_label);
+			$detail_tab = $this->tabs->addTab($detail_label);
 		}else{
 			$detail_tab = $this;
 			$detail_header = '<div class="xshop-item-detail-title xshop-item-detail-label">'.$detail_label.'</div>';
 		}
 		
+
 		$item_description = $item['description'];
 		// throw new \Exception($item_description);
 		
@@ -192,7 +188,7 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 		if($this->html_attributes['show-item-specification']){
 			$specification_tab = $this;
 			if($this->html_attributes['show-item-detail-in-tabs']){
-				$specification_tab = $tabs->addTab($specification_label);
+				$specification_tab = $this->tabs->addTab($specification_label);
 			}else{
 				$this->add('View')->setHtml('<div class="xshop-item-detail-title xshop-item-specification-label">'.$specification_label.'</div>');
 			}
@@ -201,22 +197,28 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 			$specification_tab->add('Grid')->setModel($specification,array('specification','value'));	
 		}
 
-		//Price Section Add to cart in tab
-		//add AddToCart View
-		if($this->html_attributes['show-cart-section']){
-			$cart_label = trim($this->html_attributes['item-cart-label'])?:'Cart';
-			$cart_tab = $this;
-			$show_cart_btn = 1;
-			if($this->html_attributes['show-cart-btn'] == '0')
-				$show_cart_btn = 0;
+		//if Item Designable
+			if($this->model['is_designable']){
+				// add Personalioze View
+				$this->add('Button',null,'xshop_item_design_item')->set('Personalize')->js('click',$this->js()->univ()->location("index.php?subpage=".$this->html_attributes['personalization-page']."&xsnb_design_item_id=".$this->model->id));
+			}else{
+				//Price Section Add to cart in tab
+				//add AddToCart View
+				if($this->html_attributes['show-cart-section']){
+					$cart_label = trim($this->html_attributes['item-cart-label'])?:'Cart';
+					$cart_tab = $this;
+					$show_cart_btn = 1;
+				if($this->html_attributes['show-cart-btn'] == '0')
+					$show_cart_btn = 0;
 
-			if($this->html_attributes['show-item-detail-in-tabs'] and $this->html_attributes['show-cart-section-in-tabs']){
-				$cart_tab = $tabs->addTab($cart_label);
-				$cart_tab->add('xShop/View_Item_AddToCart',array('name'=>'cust_'.$this->model->id,'item_model'=>$this->model,'show_custom_fields'=>1,'show_price'=>$this->model['show_price'], 'show_qty_selection'=>1,'show_cart_btn'=>$show_cart_btn));
+				if($this->html_attributes['show-item-detail-in-tabs'] and $this->html_attributes['show-cart-section-in-tabs']){
+					$cart_tab = $this->tabs->addTab($cart_label);
+					$cart_tab->add('xShop/View_Item_AddToCart',array('name'=>'cust_'.$this->model->id,'item_model'=>$this->model,'show_custom_fields'=>1,'show_price'=>$this->model['show_price'], 'show_qty_selection'=>1,'show_cart_btn'=>$show_cart_btn));
+				}else
+					$cart_tab->add('xShop/View_Item_AddToCart',array('name'=>'cust_'.$this->model->id,'item_model'=>$this->model,'show_custom_fields'=>1,'show_price'=>$this->model['show_price'], 'show_qty_selection'=>1),'xshop_item_cart_btn');
+				}
 			}
-			else
-				$cart_tab->add('xShop/View_Item_AddToCart',array('name'=>'cust_'.$this->model->id,'item_model'=>$this->model,'show_custom_fields'=>1,'show_price'=>$this->model['show_price'], 'show_qty_selection'=>1),'xshop_item_cart_btn');
-		}
+		
 
 		//Attachments
 		$attachment_label = trim($this->html_attributes['item-attachment-label'])?:'Attachments';
@@ -225,7 +227,7 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 			$attachment_tab = $this;
 			
 			if($this->html_attributes['show-item-detail-in-tabs']){
-				$attachment_tab = $tabs->addTab($attachment_label);
+				$attachment_tab = $this->tabs->addTab($attachment_label);
 			}else{
 				$attachment_header = '<div class="xshop-item-detail-title xshop-item-attachment-label">'.$attachment_label.'</div>';
 			}
@@ -247,7 +249,7 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 			$up_tab = $this;
 			
 			if($this->html_attributes['show-item-detail-in-tabs']){
-				$up_tab=$tabs->addTab($upload_label);
+				$up_tab=$this->tabs->addTab($upload_label);
 			}else{
 				$upload_header = '<div class="xshop-item-detail-title xshop-item-upload-label">'.$upload_label.'</div>';
 			}

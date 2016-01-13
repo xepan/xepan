@@ -6,7 +6,7 @@ class page_xShop_page_owner_item_attributes extends page_xShop_page_owner_main{
 			return;
 		
 		$this->api->stickyGET('item_id');
-
+		
 		$tabs = $this->add('Tabs');
 		$tabs->addTabURL('./specification','Specification');
 		$tabs->addTabURL('./customfields','CustomFields');
@@ -15,8 +15,12 @@ class page_xShop_page_owner_item_attributes extends page_xShop_page_owner_main{
 	}
 
 	function page_filter(){
+		$itemid=$this->api->stickyGET('item_id');
+		// throw new \Exception($_GET['item_id'], 1);
+		$item = $this->add('xShop/Model_Item')->load($_GET['item_id']);
 
 		$filter = $this->add('xShop/Model_Filter');
+		$filter->addCondition('item_id',$_GET['item_id']);
 		$crud = $this->add('CRUD');
 		$crud->setModel($filter);
 	}

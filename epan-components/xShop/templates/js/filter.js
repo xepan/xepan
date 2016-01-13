@@ -36,7 +36,7 @@ jQuery.widget("ui.xepan_xshopfilter",{
 
 		//Add price Filter
 		html_attr = self.options.html_attributes;
-		console.log(self.options.html_attributes);
+		// console.log(self.options.html_attributes);
 		if(html_attr['show-price-filter'] !== "0"){
 			var header = $('<ul class="list-group xshop-xfilter-ul" ><li class="list-group-item xshop-xfilter-list-group-header"><h1 class="xshop-filter-tool-header xfilter-price-header">'+(html_attr['xfilter-price-label']?html_attr['xfilter-price-label']:'Price')+'</h1></li></ul>').appendTo(self.filter_container);
 			slider_div = $('<li class="list-group-item xshop-xfilter-list-group-item "></li>').appendTo(header);
@@ -69,7 +69,10 @@ jQuery.widget("ui.xepan_xshopfilter",{
 						$('.current_value').text(ui.values[0]+' - '+ui.values[1]);
 						},
 					change: function(event, ui){
-						$.univ.redirect(url+'&xmip='+ui.values[0]+'&xmap='+ui.values[1]);
+						if(self.options.subpage)
+							$.univ.redirect(url+'&xmip='+ui.values[0]+'&xmap='+ui.values[1]);
+						else
+							$.univ.redirect(url+'?xmip='+ui.values[0]+'&xmap='+ui.values[1]);
 					}
 			});
 		}
@@ -109,8 +112,10 @@ jQuery.widget("ui.xepan_xshopfilter",{
 				// console.log("R"+str);
 			});
 
-
-			$.univ.redirect(url+'&filter_data='+str);
+			if(self.options.subpage)
+				$.univ.redirect(url+'&filter_data='+str);
+			else
+				$.univ.redirect(url+'?filter_data='+str);
 		});
 	}
 
