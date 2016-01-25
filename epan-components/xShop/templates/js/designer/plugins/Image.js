@@ -3,7 +3,7 @@ xShop_Image_Editor = function(parent){
 	this.parent = parent;
 	this.current_image_component = undefined;
 	this.element = $('<div id="xshop-designer-image-editor" style="display:block" class="xshop-options-editor"></div>').appendTo(this.parent);
-	this.row1 = $('<div class="atk-row" style="display:block;margin:0;"> </div>').appendTo(this.element);
+	this.row1 = $('<div class="atk-row xepan-component-designer-info" style="display:block;margin:0;"> </div>').appendTo(this.element);
 
 	// this.image_col = $('<div class="atk-col-3 atk-box-small atk-box-designer"></div>').appendTo(this.row1);
 					
@@ -40,7 +40,7 @@ xShop_Image_Editor = function(parent){
 	});
 	
 
-	this.editor_close_btn = $('<div class="" style="padding:0;margin:0;"><i class="atk-box-small pull-right glyphicon glyphicon-remove"></i></div>').appendTo(this.row1);
+	this.editor_close_btn = $('<div class="" style="padding:0;margin:0;"><i class="atk-box-small pull-right glyphicon glyphicon-remove"></i></div>').appendTo(this.element);
 
 
 	this.image_button_set = $('<div class="btn-group" role="group"></div>').appendTo(this.element);
@@ -447,6 +447,8 @@ Image_Component = function (params){
 	            if(self.designer_tool.options.designer_mode){
 		            self.designer_tool.freelancer_panel.FreeLancerComponentOptions.element.show();
 		            self.designer_tool.freelancer_panel.setComponent($(this).data('component'));
+	            }else{
+	            	$('.xepan-component-designer-info').hide();
 	            }
 	            self.designer_tool.current_selected_component = self;
 	            self.designer_tool.option_panel.css('z-index',70);
