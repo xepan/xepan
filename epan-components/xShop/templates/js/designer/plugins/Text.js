@@ -413,7 +413,7 @@ Text_Component = function (params){
 		alignment_right:false,
 		alignment_justify:true,
 		// Designer properties
-		movable: true,
+		movable: false,
 		colorable: true,
 		editable: true,
 		default_value:'Enter Text',
