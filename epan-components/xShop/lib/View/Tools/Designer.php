@@ -146,6 +146,8 @@ class View_Tools_Designer extends \componentBase\View_Component{
 														'item_id'=>$_GET['xsnb_design_item_id'],
 														'item_member_design_id' => $_GET['item_member_design_id'],
 														'item_name' => $this->item['name'] ." ( ".$this->item['sku']." ) ",
+														'item_sale_price'=>$this->item['sale_price'],
+														'item_original_price'=>$this->item['original_price'],
 														'currency_symbole'=>$this->api->currency['symbole']
 												));
 		}
