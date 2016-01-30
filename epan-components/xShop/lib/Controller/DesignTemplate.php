@@ -121,8 +121,8 @@ class Controller_DesignTemplate extends \AbstractController{
 			$options['text_color'] = $options['color_formatted'];
 			
 			$cont = $this->add('xShop/Controller_RenderText',array('options'=>$options));
-			// $options['height'] = $cont->new_height /  $this->print_ratio;
-			$options['height'] = $options['height'] /  $this->print_ratio;
+			$options['height'] = $cont->new_height /  $this->print_ratio;
+			// $options['height'] = $options['height'] /  $this->print_ratio;
 
 			$data = $cont->show('png',1,false,true);
 			// $pdf->MemImage($data, 0, 0, 100, 20);
