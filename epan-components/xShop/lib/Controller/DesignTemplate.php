@@ -48,14 +48,14 @@ class Controller_DesignTemplate extends \AbstractController{
 			if($options['type']=='Image'){
 				$this->addImage($options,$img);
 			}
-			if($options['type'] == 'Text'){
-				$this->addText($options,$img);
-			}
 
 			if($options['type']=='Calendar'){
 				$this->addCalendar($options,$img);
 			}
 
+			if($options['type'] == 'Text'){
+				$this->addText($options,$img);
+			}
 		}
 	}
 

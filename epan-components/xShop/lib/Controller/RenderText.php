@@ -33,7 +33,7 @@ class Controller_RenderText extends \AbstractController {
 		$box->setBox(0, 0, $options['desired_width'], 0);
 		$box->setTextAlign($options['halign'], 'top');
 		// $h = $box->draw($options['text']);
-		$h = $box->getBoxHeight($options['text']);
+		$this->new_height = $h = $box->getBoxHeight($options['text']);
 
 		
 		//CREATING DEFAULT IMAGES
