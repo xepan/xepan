@@ -8,6 +8,9 @@ class View_Registration extends \View{
 	function init(){
 		parent::init();
 		
+		$this->add('View')->setElement('H2')->set('Registration')->addClass('xepan-userpanel-header');
+		// $this->add('View')->setElement('div')->set('enter your registered email id to get Reset Password Link')->addClass('xepan-userpanel-info atk-push');
+
 		$r_form = $this->add('Form');
 		if($this->html_attributes['form_stacked_on'])
 			$r_form->addClass('stacked');

@@ -50,6 +50,11 @@ class View_ForgotPassword extends \View{
 		}else{
 
 			//Show Forgot Password
+			$this->add('View')->setElement('H2')->set('Forgot Password')->addClass('xepan-userpanel-header')->addClass('xepan-userpanel-header');
+			$this->add('View')->setElement('div')->set('enter your registered email id to get Reset Password Link')->addClass('xepan-userpanel-info atk-push');
+				
+
+
 			$resend_form = $this->add('Form');
 			if($this->html_attributes['form_stacked_on'])
 					$resend_form->addClass('stacked');

@@ -10,7 +10,10 @@ class View_VerifyAccount extends \View{
 		
 		//Verify Account Form				
 		$verify_user_model=$this->add('Model_Users');	
-					
+		
+		$this->add('View')->setElement('H2')->set('Verification')->addClass('xepan-userpanel-header');
+		$this->add('View')->setElement('div')->setHTML('enter your email id and verification code to verify your account.<br/> if you don\'t have verification code enter your registered email id and click resend activation code.')->addClass('xepan-userpanel-info atk-push');
+
 		$verify_form=$this->add('Form');
 		if($this->html_attributes['form_stacked_on'])
 			$verify_form->addClass('stacked');

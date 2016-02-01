@@ -19,6 +19,8 @@ class View_Login extends \View{
 				$v = $this->add('View')->set('Login')->addClass('xepan-user-login-link');
 				$v->setElement('a')->setAttr('href','index.php?subpage='.$this->html_attributes['user_panel_redirect_page']);
 			}else{
+				$this->add('View')->setElement('H2')->set('Login')->addClass('xepan-userpanel-header');
+				$this->add('View')->setElement('div')->set('enter your username and password to log on')->addClass('xepan-userpanel-info atk-push');
 				$form=$this->add('Form');
 				//Set Form Stacked
 				if(isset($this->html_attributes['form_stacked_on']))
