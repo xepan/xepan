@@ -18,7 +18,7 @@ class Model_ItemImages extends \Model_Table {
 		$this->addField('alt_text')->group('a~11~bl');
 		$this->addField('title')->group('a~11~bl');
 
-		//$this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
 	function getImageUrl($item_id){
