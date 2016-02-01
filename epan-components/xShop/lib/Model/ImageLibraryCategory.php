@@ -10,8 +10,12 @@ class Model_ImageLibraryCategory extends \Model_Table {
 		$this->hasOne('Epan','epan_id');
 		$this->addCondition('epan_id',$this->api->current_website->id);
 
+		$this->hasOne('xShop/MemberDetails','member_id');
+		
 		$f = $this->addField('name')->caption('Category Name');
+		$this->addField('is_library')->type('boolean')->defaultValue(false);
+
 		$this->hasMany('xShop/MemberImages','category_id');
-		//$this->add('dynamic_model/Controller_AutoCreator');		
+		$this->add('dynamic_model/Controller_AutoCreator');		
 	}
 }

@@ -13,31 +13,60 @@ class page_xShop_page_designer_itemimages extends Page {
 
   function page_upload(){
 
+      //Check Member Auth
       $member = $this->add('xShop/Model_MemberDetails');
       $member->loadLoggedIn();
 
-      $image_model = $this->add('xShop/Model_MemberImages');
+      //Creating Column
+      $col = $this->add('Columns');
+      $cat_col = $col->addColumn(4);
+      $image_col = $col->addColumn(8);
+
+      //Category Crud and It's Model
+      $cat_crud = $cat_col->add('CRUD',array('entity_name'=>'Category'));
+      $cat_crud->frame_options = ['width'=>'500'];
+      $cat_model = $this->add('xShop/Model_ImageLibraryCategory')->addCondition('is_library',false)->addCondition('member_id',$member->id);
+      $cat_crud->setModel($cat_model,array('name'));
+
+      //Member Images
+      //Setting up Model according to the Category id
+      $image_model = $image_col->add('xShop/Model_MemberImages');
       $image_model->addCondition('member_id',$member->id);
       $image_model->setOrder('id','desc');
-      //Form
-      // $form = $this->add('Form');
-      // $form->addSubmit('upload');
-      
-      // // $item_images_lister = $this->add('xShop/View_Lister_DesignerItemImages');
-      // $form->setModel($image_model,array('member_id','image_id'));
-      
-      $crud = $this->add('CRUD',array('entity_name'=>'Image','allow_edit'=>false,'grid_class'=>'xGrid','grid_options'=>array('grid_template'=>'view/xShop-DesignerItemImages','grid_template_path'=>'epan-components/xShop')));
+      if($cat_id = $this->api->stickyGET('cat_id')){
+        $image_model->addCondition('category_id',$cat_id);
+      }
+
+      //Member Image Crud
+      $crud = $image_col->add('CRUD',array('entity_name'=>'Image','allow_edit'=>false,'grid_class'=>'xGrid','grid_options'=>array('grid_template'=>'view/xShop-DesignerItemImages','grid_template_path'=>'epan-components/xShop')));
       $crud->frame_options = ['width'=>'500'];
-      $item_images_lister = $crud->setModel($image_model,array('member_id','image_id','image'),array('member_id','image_id','image'));
+      $item_images_lister = $crud->setModel($image_model,array('category_id','member_id','image_id','image'),array('member_id','image_id','image'));
       $crud->grid->addQuickSearch(array('image_id','image'));
-      // if($form->isSubmitted()){
-      //   $form->update();
-      //   $form->js(true,$item_images_lister->js()->reload())->univ()->successMessage('Upload Successfully')->execute();
-      // }
-            
-      //Lister
-      // $item_images_lister->addClass('xshop-designer-image-lister');
-      // $item_images_lister->setModel($image_model);
+      $crud->grid->addPaginator(12);
+
+      $img_url = $this->api->url(null,['cut_object'=>$image_col->name]);
+      $cat_url = $this->api->url(null,['cut_object'=>$cat_col->name]);
+
+      //Jquery For Filter the images
+      $cat_col->on('click','td',function($js,$data)use($image_col,$img_url,$cat_col){
+        return [
+            $cat_col->js()->find('.atk-swatch-green')->removeClass('atk-swatch-green'),
+            $image_col->js()->reload(['cat_id'=>$data['id']],null,$img_url),
+            $js->addClass('atk-swatch-green'),
+          ] ;
+      });
+
+      //All Category Filter 
+      $all_cat_btn = $crud->grid->addButton('All Category');
+      $self = $this;
+
+      $all_cat_btn->on('click',function($js,$data)use($cat_col,$cat_url,$image_col,$img_url,$self){
+        $self->api->stickyForget('cat_id');
+        return [
+            $image_col->js()->reload(['cat_id'=>0],null,$img_url),
+            $cat_col->js()->find('.atk-swatch-green')->removeClass('atk-swatch-green')
+          ]; 
+      });
   }
 
   function page_previous_upload(){
