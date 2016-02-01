@@ -566,7 +566,7 @@ class Model_PurchaseOrder extends \Model_Document{
 	}
 
 	function send_via_email_page($p){
-
+		
 		if(!$this->loaded()) throw $this->exception('Model Must Be Loaded Before Email Send');
 		
 		$email_body = $this->parseEmailBody();
@@ -602,7 +602,7 @@ class Model_PurchaseOrder extends \Model_Document{
 			$email_body = $form['custom_message']."<br>".$email_body;
 			$this->sendEmail($form['to'],$subject,$email_body,$ccs,$bccs);
 			$this->createActivity('email',$subject,$form['custom_message'],$from=null,$from_id=null, $to='Supplier', $to_id=$supplier->id);
-			//$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
+			$form->js(null,$form->js()->reload())->univ()->successMessage('Send Successfully')->execute();
 			return true;
 		}
 	}
