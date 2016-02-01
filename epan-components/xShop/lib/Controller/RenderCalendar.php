@@ -86,14 +86,13 @@ class Controller_RenderCalendar extends \AbstractController {
 
   		/* draw table */
   		// echo "cell-padidng = ".$cell_padding."<br/>font-size=".$day_date_font_size." <br/>cell Height=".$styles['calendar_cell_heigth'];
-  		// exit;
-  		if($styles['header_align']){
-  			
-	  		if($styles['header_show'] == "true")
-	  			$calendar = '<div style="background-color:'.$styles['header_bg_color'].'; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';">'.$month_name.' - '.$year.'</div>';
+  		// exit;  			
+  		if($styles['header_show'] == "true"){
+  			$calendar = '<div style="text-align:'.$styles['header_align'].';background-color:'.$styles['header_bg_color'].'; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';">'.$month_name.' - '.$year.'</div>';
+
 	  		//Header Bold Options
 	  		if($styles['header_bold'] == "true")
-	  			$calendar = '<div style="background-color:'.$styles['header_bg_color'].'; font-face:K010; font-family:K010; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';"><b>'.$month_name.' - '.$year.'</b></div>';
+	  			$calendar = '<div style="text-align:'.$styles['header_align'].';background-color:'.$styles['header_bg_color'].'; font-face:K010; font-family:K010; font-size:'.$header_font_size.'px;color:'.$styles['header_font_color'].';"><b>'.$month_name.' - '.$year.'</b></div>';
   		}
 
   		$calendar .= '<table cellspacing="0" class="calendar" width="100%" align="center" border-collapse: collapse; border="'.$styles['border'].'" style="background-color:'.$styles['day_name_bg_color'].';">';

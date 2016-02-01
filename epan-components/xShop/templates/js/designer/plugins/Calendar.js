@@ -24,9 +24,9 @@ xShop_Calendar_Editor = function(parent,designer){
 	this.header_align = $('<select id="header_align" class="btn btn-xs">Header Align</select>').appendTo(this.header_align_label);
 	this.header_font_size = $('<select id="header_font_size" class="btn btn-xs">Header Size</select>').appendTo(this.header_font_size_label);
 	align_options = '';
-		align_options += '<option value="1" class="atk-move-left">left</option>';
-		align_options += '<option value="1" class="atk-move-center">center</option>';
-		align_options += '<option value="2" class="atk-move-right">right</option>';
+		align_options += '<option value="left" class="atk-move-left">left</option>';
+		align_options += '<option value="center" class="atk-move-center">center</option>';
+		align_options += '<option value="right" class="atk-move-right">right</option>';
 
 	$(align_options).appendTo(this.header_align);
 	
