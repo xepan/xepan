@@ -1038,7 +1038,7 @@ Calendar_Component = function (params){
 		header_bold:false,
 		header_bg_color:undefined,
 		header_show:true,
-		header_align:left,
+		header_align:'left',
 		day_date_font_size:20,
 		day_date_font_color:'#00000',
 		day_date_font_family:'freemono',
