@@ -1,13 +1,15 @@
 
-<div id="{$_name}" component_type="{$component_type}" class="epan-component-options">{noAuth}{/noAuth}
+<div id="{$_name}" component_type="{$component_type}" class="epan-component-options">
+  {noAuth}{/noAuth}
+  {auth}
   <div class="row">
     <div class="col-lg-3 col-md-4 col-sm-5 atk-align-center">
-      <div style="height:250px;background: #43cea2;background: -webkit-linear-gradient(to left, #43cea2 , #185a9d);background: linear-gradient(to left, #43cea2 , #185a9d);" class="thumbnail"><img src="{img}templates/images/logo.png{/}" atl="{$name}" style="width:130px;min-height:130px;max-height:130px;margin-top:40px;border:5px solid #fff;background-clip:padding-box;border-radius:18%;"/>
+      <div style="height:230px;background: #43cea2;background: -webkit-linear-gradient(to left, #43cea2 , #185a9d);background: linear-gradient(to left, #43cea2 , #185a9d);" class="thumbnail"><img src="{img}templates/images/logo.png{/}" atl="{$name}" style="width:130px;min-height:130px;max-height:130px;margin-top:30px;border:5px solid #fff;background-clip:padding-box;border-radius:18%;"/>
         <h2 style="color:white;">{customer}Your Name{/}</h2>
       </div>{$listmenu}
     </div>
     <div class="col-lg-8 col-md-9 col-sm-10">
-      <h2 class="atk-hr">{$heading}</h2>{$Content}
+      <h2 style="border-bottom:2px solid #f2f2f2;padding-bottom:10px;">{$heading}</h2>{$Content}
     </div>
-  </div>
+  </div>{/auth}
 </div>

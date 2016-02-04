@@ -48,10 +48,37 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 		if($this->api->stickyGET('type'))
 			$type = $this->api->stickyGET('type');
 
-
+		$member = $this->add('xShop/Model_MemberDetails');
 		if( $type == "myaccount"){
 			$this->template->trySet('heading','Account Information');
-			$right->add('View_Info')->set('myAccount');
+
+			$member->addCondition('users_id',$this->api->auth->model->id);
+			$member->tryLoadAny();
+
+			$this->add('H2')->set($member['name']);
+			$this->add('view')->setElement('p')->set(" ".$member['email'])->addClass('icon-mail');
+			$this->add('view')->setElement('p')->set(" ".($member['mobile_number']?:'Not Added') )->addClass('icon-phone');
+
+			$c = $this->add('Columns');
+			$left = $c->addColumn(4);
+			$middle = $c->addColumn(4);
+			$right = $c->addColumn(4);
+
+			//Permanent Address
+			$left->add('H4')->set('Permanent Address')->addClass('atk-swatch-gray atk-padding');
+			$left->add('View')->setElement('p')->set(($member['address']?:"Not Added"))->addClass('atk-padding');
+			
+			//Billing Address
+			$middle->add('H4')->set('Billing Address')->addClass('atk-swatch-gray atk-padding');
+			$middle->add('View')->setElement('p')->set(($member['billing_address']?:"Not Added"))->addClass('atk-padding');
+
+			//Shipping Address
+			$right->add('H4')->set('Shipping Address')->addClass('atk-swatch-gray atk-padding');
+			$right->add('View')->setElement('p')->set(($member['shipping_address']?:"Not Added"))->addClass('atk-padding');
+			
+			//Recent Order 
+			$this->add('H2')->set('Recent Order');
+			$this->add('xShop/View_MemberOrder');
 
 		}elseif($type == "order"){
 			$right->add('View_Info')->set('Order');
