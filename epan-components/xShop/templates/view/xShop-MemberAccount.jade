@@ -1,24 +1,11 @@
 .epan-component-options( id='{$_name}' component_type = '{$component_type}')
-	{noAuth}
-	{/noinAuth}
-	{auth}
-	.atk-box.atk-row
-		.atk-col-1
-			i(class="icon-user")
-		.atk-col-7
-			h1{$customer}
-			span{$user_name}
-		.atk-col-4
-			a(href="?page=logout" class="atk-effect-danger atk-button atk-swatch-red")
-				p(class="icon-logout")|&nbsp;logout
-	.atk-row.atk-padding-small(style='background-color:#E9EDF0;margin-top:-15px;margin-bottom:20px')
-		.atk-col-2
-			span|Joined &nbsp;  <b>{$created_at}</b>
-		.atk-col-2
-			span|Last Activity &nbsp;  <b>{$last_login_date}</b>
-		.atk-col-3
-			span|User Type &nbsp;  <b>{$user_type}</b>
-		.atk-col-5
-			span|Email &nbsp;  <b>{$email}</b>
-	{$Content}
-	{/auth}
+	{noAuth}{/noAuth}
+	.row
+		.col-lg-3.col-md-4.col-sm-5.atk-align-center
+			.thumbnail(style="height:250px;background: #43cea2;background: -webkit-linear-gradient(to left, #43cea2 , #185a9d);background: linear-gradient(to left, #43cea2 , #185a9d);")
+				img(src="{img}templates/images/logo.png{/}" atl="{$name}" style="width:130px;min-height:130px;max-height:130px;margin-top:40px;border:5px solid #fff;background-clip:padding-box;border-radius:18%;")
+				h2(style="color:white;") {customer}Your Name{/}
+			{$listmenu}
+		.col-lg-8.col-md-9.col-sm-10
+			h2.atk-hr {$heading}
+			{$Content}

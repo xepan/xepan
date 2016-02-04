@@ -1,21 +1,13 @@
 
-<div id="{$_name}" component_type="{$component_type}" class="epan-component-options">
-  {noAuth}
-  {/noinAuth}
-  {auth}
-  <div class="atk-box atk-row">
-    <div class="atk-col-1"><i class="icon-user"></i></div>
-    <div class="atk-col-7">
-      <h1>{$customer}</h1><span>{$user_name}</span>
+<div id="{$_name}" component_type="{$component_type}" class="epan-component-options">{noAuth}{/noAuth}
+  <div class="row">
+    <div class="col-lg-3 col-md-4 col-sm-5 atk-align-center">
+      <div style="height:250px;background: #43cea2;background: -webkit-linear-gradient(to left, #43cea2 , #185a9d);background: linear-gradient(to left, #43cea2 , #185a9d);" class="thumbnail"><img src="{img}templates/images/logo.png{/}" atl="{$name}" style="width:130px;min-height:130px;max-height:130px;margin-top:40px;border:5px solid #fff;background-clip:padding-box;border-radius:18%;"/>
+        <h2 style="color:white;">{customer}Your Name{/}</h2>
+      </div>{$listmenu}
     </div>
-    <div class="atk-col-4"><a href="?page=logout" class="atk-effect-danger atk-button atk-swatch-red">
-        <p class="icon-logout">&nbsp;logout</p></a></div>
+    <div class="col-lg-8 col-md-9 col-sm-10">
+      <h2 class="atk-hr">{$heading}</h2>{$Content}
+    </div>
   </div>
-  <div style="background-color:#E9EDF0;margin-top:-15px;margin-bottom:20px" class="atk-row atk-padding-small">
-    <div class="atk-col-2"><span>Joined &nbsp;  <b>{$created_at}</b></span></div>
-    <div class="atk-col-2"><span>Last Activity &nbsp;  <b>{$last_login_date}</b></span></div>
-    <div class="atk-col-3"><span>User Type &nbsp;  <b>{$user_type}</b></span></div>
-    <div class="atk-col-5"><span>Email &nbsp;  <b>{$email}</b></span></div>
-  </div>{$Content}
-  {/auth}
 </div>
