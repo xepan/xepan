@@ -43,6 +43,7 @@ class Grid_PurchaseOrder extends \Grid {
 		$this->removeColumn('orderitem_count');
 		$this->addFormatter('name','purchaseorder');
 		$this->addPaginator(100);
+		$this->addQuickSearch(array('name','supplier'));
 		return $m;
 	}
 	
