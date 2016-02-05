@@ -30,7 +30,7 @@ class View_MemberAccountInfo extends \View{
 	//============================Change Password
 		$user = $this->add('Model_Users')->load($this->api->auth->model->id);
 		$this->api->auth->addEncryptionHook($user);
-		$password_tab->add('View_Info')->set('Name :: '.$user['name']." E-mail Id:: ".$user['email']);
+		$password_tab->add('View_Info')->set(" User Name:: ".$user['email']);
 		$change_pass_form = $password_tab->add('Form');
 		$change_pass_form->addField('password','old_password')->validateNotNull();
 		$change_pass_form->addField('password','new_password')->validateNotNull();

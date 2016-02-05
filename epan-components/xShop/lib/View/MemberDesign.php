@@ -18,10 +18,14 @@ class View_MemberDesign extends \View {
 			return;
 		}
 
-		$form = $this->add('Form');
+		$col=$this->add('Columns')->addClass('atk-box');
+		$left=$col->addColumn(6);
+		$right=$col->addColumn(6);
+		$form = $left->add('Form');
 		$crud = $this->add('CRUD',array('allow_add'=>false,'allow_edit'=>'false'));
 		$template_model = $this->add('xShop/Model_ItemTemplate');
-		$form->addField('dropdown','item_template')->setModel($template_model);
+		$tem_field=$form->addField('dropdown','item_template');
+		$tem_field->setModel($template_model);
 
 		$form->addSubmit('Duplicate');
 		if($form->isSubmitted()){
@@ -43,19 +47,44 @@ class View_MemberDesign extends \View {
 		$item_j->addField('duplicate_from_item_id')->type('text');
 		$my_designs_model->addCondition('member_id',$designer->id);
 
+		$my_designs_model->setOrder('id','desc');
 		$crud->setModel($my_designs_model,array('name','sku','short_description','description','is_party_publish','duplicate_from_item_id'),array('name','sku','designs','is_ordered','is_party_publish'));
 
+		// $image_view=$right->add('View_Info');
+		// $image_view->setHtml('<img style="box-shadow:0 3px 5px rgba(0, 0, 0, 0.2);" src="index.php?page=xShop_page_designer_thumbnail&item_member_design_id='.$my_designs_model['id'].'" width="100px;"/>');
+
+		/* Right Column Js Reload Item Image*/
+		$temp_image_model= $right->add('xShop/Model_ItemImages');
+		$temp_image_model->addCondition('item_id',$_GET['image_item_id']);
+		$temp_image_model->tryLoadAny();
+			if($temp_image_model->loaded()){
+				$img=$right->add('View')->setElement('img')->setAttr('src',$temp_image_model['item_image'])->setStyle('width','50%');
+		}else{
+			$right->add('View_Box')->set('No Image Found');
+		}
+
+		$tem_field->js('change',$right->js()->reload(array('image_item_id'=>$tem_field->js()->val())));
+		
+		/* End of  Right Column Js Reload Item Image*/
+		
 		if(!$crud->isEditing()){
 			$g = $crud->grid;
 			$g->add_sno();
-
+			$g->addPaginator(10);
 			//Image
 			// $g->addMethod('format_designs',function($g,$f)use($my_designs_model){
 			// 	$g->current_row_html[$f] = '<img style="box-shadow:0 3px 5px rgba(0, 0, 0, 0.2);" src="index.php?page=xShop_page_designer_thumbnail&item_member_design_id='.$my_designs_model['id'].'" width="100px;"/>';
 			// });
 			// 	$g->addFormatter('designs','designs');
 			
-
+			$g->addMethod('format_name',function($g,$f){
+				$is_ordered = "<small style='color:red'>No</small>";
+				if($g->model['is_ordered']) $is_ordered = "<small style='color:green'>Yes</small>";
+				$g->current_row_html[$f]=$g->model['name']."<br> <small style='color:gray'> SKU - ".$g->model['sku']."</small><br><small style='color:gray'> Is Ordered - ".$is_ordered.'</small>';
+			});
+			$g->addFormatter('name','name');
+			$g->removeColumn('sku');
+			$g->removeColumn('is_ordered');
 			//Edit Template
 
 			$g->addColumn('edit_template');
@@ -105,7 +134,7 @@ class View_MemberDesign extends \View {
 			$g->addFormatter('delete','delete1');
 			// $g->addColumn('Expander','Images');
 
-			$g->add('VirtualPage')->addColumn('Images','Images',array('icon'=>'icon-users','descr'=>'image'),$g)->set(function($p)use($g){
+			$g->add('VirtualPage')->addColumn('Images','Images',array('icon'=>'file-image','descr'=>'image'),$g)->set(function($p)use($g){
 				$image_design_id = $p->id;
 				$item_member_design = $p->add('xShop/Model_ItemMemberDesign')->load($image_design_id);
 				$item_model = $item_member_design->ref('item_id');
