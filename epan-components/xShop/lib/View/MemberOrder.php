@@ -3,7 +3,8 @@
 namespace xShop;
 
 class View_MemberOrder extends \View{
-	
+	public $ipp = 10;
+	public $gridFields = array('name','created_date','total_amount','gross_amount','tax','net_amount','billing_address','shipping_address');
 function init(){
 	parent::init();
 
@@ -15,10 +16,10 @@ function init(){
 		$order->getAllOrder($this->api->auth->model->id);
 		$grid=$this->add('Grid');
 		$order->_dsql()->order('id','desc');
-		$grid->setModel($order,array('created_date','name','total_amount','gross_amount','tax','net_amount','billing_address','shipping_address'));
+		$grid->setModel($order,$this->gridFields);
 
 		$grid->addColumn('button','print');
-		$grid->addPaginator(10);
+		$grid->addPaginator($this->ipp);
 		
 	}  
 }

@@ -7,13 +7,14 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 	function init(){
 		parent::init();
 
+		//Checking Authentication
 		if(!$this->api->auth->model->loaded()){
 			$this->add('View_Warning',null,'noAuth')->set('Login First');
 			$this->template->tryDel('auth');
 			return;
 		}
 		
-		$this->template->trySet('customer',$this->api->auth->model['name']);
+		//Login User Model and Checking is it FrontEndUses or BackEndUser
 		$user=$this->add('Model_Users')->load($this->api->auth->model->id);
 		$created_at=$user->get('created_at');
 		$last_login=$user->get('last_login_date');
@@ -25,68 +26,73 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 			$user['type']='BackEndUser';
 
 		}
+
 		$user_type=$user->get('type');
 		$user_email=$user->get('email');
+
+		//Seeting Some Values in Templates
+		$this->template->trySet('customer',$this->api->auth->model['name']);
 		$this->template->trySet('created_at',date('M-d',strtotime($created_at)));
 		$this->template->trySet('last_login_date',date('M-d',strtotime($last_login)));
 		$this->template->trySet('user_type',$user_type);
 		$this->template->trySet('email',$user_email);
 
-		$col = $this->add('Columns');
-		// $left = $col->addColumn(3);
-		// $right = $col->addColumn(9);
+
+		//Adding Two view Left and Right
 		$left = $this->add('View',null,'listmenu');
 		$right = $this->add('View');
-		// $this->add('H1')->set($this->api->auth->model['name'])->addClass('xsnb-member-name');
+		
+		//Left Menu bar Buttons
 		$left->add('View')->setElement('button')->addClass('list-group-item atk-swatch-yellow')->set('My Account')->setAttr('data-type','myaccount')->setStyle('padding','10px !important');
 		$left->add('View')->setElement('button')->addClass('list-group-item ')->set('Order History')->setAttr('data-type','order')->setStyle('padding','10px !important');
 		$left->add('View')->setElement('button')->addClass('list-group-item ')->set('My Designs')->setAttr('data-type','mydesign')->setStyle('padding','10px !important');
 		$left->add('View')->setElement('button')->addClass('list-group-item ')->set('Settings')->setAttr('data-type','setting')->setStyle('padding','10px !important');
 
+		//Default selected Menu
+		$selected_menu = 'myaccount';
 		//My Account Info
-		$type = 'myaccount';
-		if($this->api->stickyGET('type'))
-			$type = $this->api->stickyGET('type');
+		if($this->api->stickyGET('selectedmenu'))
+			$selected_menu = $this->api->stickyGET('selectedmenu');
 
 		$member = $this->add('xShop/Model_MemberDetails');
-		if( $type == "myaccount"){
+		$member->addCondition('users_id',$this->api->auth->model->id);
+		$member->tryLoadAny();
+
+		if( $selected_menu == "myaccount"){
 			$this->template->trySet('heading','Account Information');
 
-			$member->addCondition('users_id',$this->api->auth->model->id);
-			$member->tryLoadAny();
+			$right->add('H2')->set($member['name']);
+			$right->add('view')->setElement('p')->set(" ".$member['email'])->addClass('icon-mail');
+			$right->add('view')->setElement('p')->set(" ".($member['mobile_number']?:'Not Added') )->addClass('icon-phone');
 
-			$this->add('H2')->set($member['name']);
-			$this->add('view')->setElement('p')->set(" ".$member['email'])->addClass('icon-mail');
-			$this->add('view')->setElement('p')->set(" ".($member['mobile_number']?:'Not Added') )->addClass('icon-phone');
-
-			$c = $this->add('Columns');
-			$left = $c->addColumn(4);
-			$middle = $c->addColumn(4);
-			$right = $c->addColumn(4);
+			$c = $right->add('Columns');
+			$col_1 = $c->addColumn(4);
+			$col_2 = $c->addColumn(4);
+			$col_3 = $c->addColumn(4);
 
 			//Permanent Address
-			$left->add('H4')->set('Permanent Address')->addClass('atk-swatch-gray atk-padding');
-			$left->add('View')->setElement('p')->set(($member['address']?:"Not Added"))->addClass('atk-padding');
+			$col_1->add('H4')->set('Permanent Address')->addClass('atk-swatch-gray atk-padding');
+			$col_1->add('View')->setElement('p')->set(($member['address']?:"Not Added"))->addClass('atk-padding');
 			
 			//Billing Address
-			$middle->add('H4')->set('Billing Address')->addClass('atk-swatch-gray atk-padding');
-			$middle->add('View')->setElement('p')->set(($member['billing_address']?:"Not Added"))->addClass('atk-padding');
+			$col_2->add('H4')->set('Billing Address')->addClass('atk-swatch-gray atk-padding');
+			$col_2->add('View')->setElement('p')->set(($member['billing_address']?:"Not Added"))->addClass('atk-padding');
 
 			//Shipping Address
-			$right->add('H4')->set('Shipping Address')->addClass('atk-swatch-gray atk-padding');
-			$right->add('View')->setElement('p')->set(($member['shipping_address']?:"Not Added"))->addClass('atk-padding');
+			$col_3->add('H4')->set('Shipping Address')->addClass('atk-swatch-gray atk-padding');
+			$col_3->add('View')->setElement('p')->set(($member['shipping_address']?:"Not Added"))->addClass('atk-padding');
 			
 			//Recent Order 
-			$this->add('H2')->set('Recent Order');
-			$this->add('xShop/View_MemberOrder');
+			$right->add('H2')->set('Recent Order');
+			$right->add('xShop/View_MemberOrder',['ipp'=>5,'gridFields'=>['name','created_date','total_amount','gross_amount','tax','net_amount']]);
 
-		}elseif($type == "order"){
+		}elseif($selected_menu == "order"){
 			$right->add('View_Info')->set('Order');
 
-		}elseif($type == "mydesign"){
+		}elseif($selected_menu == "mydesign"){
 			$right->add('View_Info')->set('My Designs');
 
-		}elseif($type == "setting"){
+		}elseif($selected_menu == "setting"){
 			$right->add('View_Info')->set('Settings');
 		}
 
@@ -99,7 +105,7 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 		$left->on('click','button',
 			[
             	$left->js()->find('.atk-swatch-yellow')->removeClass('atk-swatch-yellow'),
-				$right->js()->reload(['type'=>$this->js()->_selectorThis()->attr('data-type')]),
+				$right->js()->reload(['selectedmenu'=>$this->js()->_selectorThis()->attr('data-type')]),
 				$this->js()->_selectorThis()->addClass('atk-swatch-yellow'),
 			]
 			);

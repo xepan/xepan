@@ -32,7 +32,7 @@ class Model_MemberDetails extends \Model_Document{
 		$this->addField('pan_no')->group('a~4');
 
 		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true)->group('a~4');
-
+		$this->add('filestore/Field_File','member_photo_id')->mandatory(true);
 						
 		// $this->hasMany('xShop/Order','member_id');
 		$this->hasMany('xShop/DiscountVoucherUsed','member_id');
