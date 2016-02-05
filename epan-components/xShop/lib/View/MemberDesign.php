@@ -50,10 +50,7 @@ class View_MemberDesign extends \View {
 		$my_designs_model->setOrder('id','desc');
 		$crud->setModel($my_designs_model,array('name','sku','short_description','description','is_party_publish','duplicate_from_item_id'),array('name','sku','designs','is_ordered','is_party_publish'));
 
-		// $image_view=$right->add('View_Info');
-		// $image_view->setHtml('<img style="box-shadow:0 3px 5px rgba(0, 0, 0, 0.2);" src="index.php?page=xShop_page_designer_thumbnail&item_member_design_id='.$my_designs_model['id'].'" width="100px;"/>');
-
-		/* Right Column Js Reload Item Image*/
+	/* Right Column Js Reload Item Image*/
 		$temp_image_model= $right->add('xShop/Model_ItemImages');
 		$temp_image_model->addCondition('item_id',$_GET['image_item_id']);
 		$temp_image_model->tryLoadAny();
@@ -64,8 +61,7 @@ class View_MemberDesign extends \View {
 		}
 
 		$tem_field->js('change',$right->js()->reload(array('image_item_id'=>$tem_field->js()->val())));
-		
-		/* End of  Right Column Js Reload Item Image*/
+	/* End of  Right Column Js Reload Item Image*/
 		
 		if(!$crud->isEditing()){
 			$g = $crud->grid;
