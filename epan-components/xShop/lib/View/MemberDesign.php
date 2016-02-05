@@ -67,6 +67,7 @@ class View_MemberDesign extends \View {
 			$g = $crud->grid;
 			$g->add_sno();
 			$g->addPaginator(10);
+			$g->addQuickSearch(array('name'));
 			//Image
 			// $g->addMethod('format_designs',function($g,$f)use($my_designs_model){
 			// 	$g->current_row_html[$f] = '<img style="box-shadow:0 3px 5px rgba(0, 0, 0, 0.2);" src="index.php?page=xShop_page_designer_thumbnail&item_member_design_id='.$my_designs_model['id'].'" width="100px;"/>';
