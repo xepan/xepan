@@ -20,6 +20,6 @@ function init(){
 
 		$grid->addColumn('button','print');
 		$grid->addPaginator($this->ipp);
-		
+		$grid->addQuickSearch(array('name','created_date'));	
 	}  
 }

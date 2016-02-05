@@ -6,7 +6,7 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 	public $html_attributes=array(); // ONLY Available in server side components
 	function init(){
 		parent::init();
-
+		
 		//Checking Authentication
 		if(!$this->api->auth->model->loaded()){
 			$this->add('View_Warning',null,'noAuth')->set('Login First');
@@ -59,7 +59,8 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 		$member->tryLoadAny();
 
 		if( $selected_menu == "myaccount"){
-			$this->template->trySet('heading','Account Information');
+			$right->add('H2','heading')->set('Account Information')->setStyle(array('border-bottom'=>'2px solid #f2f2f2','padding-bottom'=>'10px'));
+			// $this->template->trySet('heading','Account Information');
 
 			$right->add('H2')->set($member['name']);
 			$right->add('view')->setElement('p')->set(" ".$member['email'])->addClass('icon-mail');
@@ -87,13 +88,17 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 			$right->add('xShop/View_MemberOrder',['ipp'=>5,'gridFields'=>['name','created_date','total_amount','gross_amount','tax','net_amount']]);
 
 		}elseif($selected_menu == "order"){
-			$right->add('View_Info')->set('Order');
+			// $this->template->trySet('heading','Order History');
+			$right->add('H2','heading')->set('Order History')->setStyle(array('border-bottom'=>'2px solid #f2f2f2','padding-bottom'=>'10px'));
+			$right->add('xShop/View_MemberOrder',['ipp'=>10,'gridFields'=>['name','created_date','total_amount','gross_amount','tax','net_amount']]);
 
 		}elseif($selected_menu == "mydesign"){
-			$right->add('View_Info')->set('My Designs');
+			$right->add('H2','heading')->set('My Designs')->setStyle(array('border-bottom'=>'2px solid #f2f2f2','padding-bottom'=>'10px'));
+			$right->add('xShop/View_MemberDesign',array('designer_page'=>$this->html_attributes['xsnb-desinger-page']));
 
 		}elseif($selected_menu == "setting"){
-			$right->add('View_Info')->set('Settings');
+			$right->add('H2','heading')->set('Settings')->setStyle(array('border-bottom'=>'2px solid #f2f2f2','padding-bottom'=>'10px'));
+			$right->add('xShop/View_MemberAccountInfo');
 		}
 
 		$right->add('View')->set($_GET['type1']);
@@ -105,7 +110,7 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 		$left->on('click','button',
 			[
             	$left->js()->find('.atk-swatch-yellow')->removeClass('atk-swatch-yellow'),
-				$right->js()->reload(['selectedmenu'=>$this->js()->_selectorThis()->attr('data-type')]),
+				$right->js()->reload(['selectedmenu'=>$this->js()->_selectorThis()->attr('data-type'),'designer_page'=>$this->html_attributes['xsnb-desinger-page']]),
 				$this->js()->_selectorThis()->addClass('atk-swatch-yellow'),
 			]
 			);
