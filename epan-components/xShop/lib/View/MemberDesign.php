@@ -19,8 +19,8 @@ class View_MemberDesign extends \View {
 		}
 
 		$col=$this->add('Columns')->addClass('atk-box');
-		$left=$col->addColumn(6);
-		$right=$col->addColumn(6);
+		$left=$col->addColumn(7);
+		$right=$col->addColumn(5);
 		$form = $left->add('Form');
 		$crud = $this->add('CRUD',array('allow_add'=>false,'allow_edit'=>'false'));
 		$template_model = $this->add('xShop/Model_ItemTemplate');
