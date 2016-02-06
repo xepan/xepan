@@ -43,6 +43,8 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 		$right = $this->add('View');
 		
 		//Left Menu bar Buttons
+		$left->add('Button')->set(['My Account',['icon'=>'user']]);
+		
 		$left->add('View')->setElement('button')->addClass('list-group-item atk-swatch-yellow')->set('My Account')->setAttr('data-type','myaccount')->setStyle('padding','10px !important');
 		$left->add('View')->setElement('button')->addClass('list-group-item ')->set('Order History')->setAttr('data-type','order')->setStyle('padding','10px !important');
 		$left->add('View')->setElement('button')->addClass('list-group-item ')->set('My Designs')->setAttr('data-type','mydesign')->setStyle('padding','10px !important');

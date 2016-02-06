@@ -49,7 +49,7 @@ xShop_Text_Editor = function(parent){
 	this.text_bold_btn = $('<div class="btn"><span class="glyphicon glyphicon-bold"></span></div>').appendTo(this.text_button_set);
 	this.text_italic_btn = $('<div class="btn"><span class="glyphicon glyphicon-italic"></span></div>').appendTo(this.text_button_set);
 	this.text_underline_btn = $('<div class="btn"><span class="icon-underline"></span></div>').appendTo(this.text_button_set);
-	this.text_strokethrough_btn = $('<div class="btn"><span class="icon-strike"></span></div>').appendTo(this.text_button_set);
+	this.text_strokethrough_btn = $('<div class="btn" style="display:none;"><span class="icon-strike"></span></div>').appendTo(this.text_button_set);
 	/*Bold Text Render*/
 	$(this.text_bold_btn).click(function(event){
 		if(!self.current_text_component.options.bold){
