@@ -63,6 +63,18 @@ class Box
         'height' => 100
     );
 
+     /**
+     //Added by Rakesh
+     * @var boolean
+     */
+    protected $underline = false;
+
+     /**
+     //Added by Rakesh
+     * @var float
+     */
+    protected $underline_weight = 0.3;
+
     public function __construct(&$image)
     {
         $this->im = $image;
@@ -103,7 +115,7 @@ class Box
         $this->textShadow = array(
             'color' => $color,
             'x' => $xShift,
-            'y' => $yShift
+            'y' => $yShiftbox
         );
     }
 
@@ -226,6 +238,8 @@ class Box
             throw new \InvalidArgumentException('No path to font file has been specified.');
         }
 
+        //define by Rakesh
+        $lineWidth = array();
         $lines = array();
         // Split text explicitly into lines by \n, \r\n and \r
         $explicitLines = preg_split('/\n|\r\n?/', $text);
@@ -238,11 +252,14 @@ class Box
                 if (($box[4]-$box[6]) >= $this->box['width']) {
                     $lines[] = $line;
                     $line = $words[$i];
+                    $lineWidth[] = $this->box['width'];
                 } else {
+                    $lineWidth[] = $box[4] - $box[6];
                     $line .= " ".$words[$i];
                 }
             }
             $lines[] = $line;
+
         }
 
         if ($this->debug) {
@@ -254,7 +271,9 @@ class Box
                 $this->box['height'],
                 new Color(rand(180, 255), rand(180, 255), rand(180, 255), 80)
             );
+            
         }
+
 
         $lineHeightPx = $this->lineHeight * $this->fontSize;
         $textHeight = count($lines) * $lineHeightPx;
@@ -291,7 +310,20 @@ class Box
             // current line X and Y position
             $xMOD = $this->box['x'] + $xAlign;
             $yMOD = $this->box['y'] + $yAlign + $yShift + ($n * $lineHeightPx);
-            
+
+            //Set Text Decoration 
+            //Underline
+            if($this->underline){
+                $box1 = $this->calculateBox($line);
+                $this->drawFilledRectangle(
+                    $xMOD,
+                    $yMOD+5,//5 extra for the y 
+                    $box1[4] - $box1[6],
+                    $this->underline_weight,
+                    $this->fontColor
+                );
+            }
+
             if ($this->debug) {
                 // Marks current line with color
                 $this->drawFilledRectangle(
@@ -353,5 +385,10 @@ class Box
             $this->fontFace,
             $text
         );
+    }
+
+    protected function setUnderline($weight=0.3){
+        $this->underline = true;
+        $this->underline_weight = $weight;
     }
 }

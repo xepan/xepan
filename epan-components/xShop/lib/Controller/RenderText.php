@@ -32,6 +32,9 @@ class Controller_RenderText extends \AbstractController {
 		$box->setFontSize($options['font_size']);
 		$box->setBox(0, 0, $options['desired_width'], 0);
 		$box->setTextAlign($options['halign'], 'top');
+
+		if($options['underline'])
+			$box->setUnderline();
 		// $h = $box->draw($options['text']);
 		$this->new_height = $h = $box->getBoxHeight($options['text']);
 
@@ -52,6 +55,9 @@ class Controller_RenderText extends \AbstractController {
 		// $box->enableDebug();
 		$box->setBox(0, 0, $options['desired_width'], $h);
 		$box->setTextAlign($options['halign'], 'top');
+		if($options['underline'])
+			$box->setUnderline();
+		
 		$box->draw($options['text']);
 
 		if($options['rotation_angle']){
