@@ -118,7 +118,7 @@ class Model_Item extends \Model_Document{
 		$this->addField('tags')->type('text')->PlaceHolder('Comma Separated Value');
 
 		//others
-		$this->addField('terms_condition')->type('text')->display(array('form'=>'RichText'));//->group('c~12');
+		$this->addField('terms_condition')->type('text');//->display(array('form'=>'RichText'));//->group('c~12');
 		$this->addField('duplicate_from_item_id')->system(true);//->group('c~12');
 		
 		//Blog
