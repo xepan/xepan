@@ -43,14 +43,14 @@ class View_Login extends \View{
 				$redirect_url = array('subpage'=>$this->html_attributes['user_panel_after_login_page']);
 				// throw new \Exception($_GET['redirect'], 1);
 				
-
 				//Check for the checkout page
-				$redirect_url = $this->api->recall('next_url',$redirect_url);
+				if($this->api->recall('next_url')){
+					$redirect_url = array('subpage'=>$this->api->recall('next_url'));
+				}
 					// $this->api->forget('next_url');
-				if($this->api->stickyGET('redirect'))
-					$redirect_url = array('subpage'=>$_GET['redirect']);
 
 				if($form->isSubmitted()){
+					// throw new \Exception(print_r($redirect_url));
 					
 					$this->api->auth->model->allow_duplicate_email=true;
 					if(!($id = $this->api->auth->verifyCredentials($form['username'],$form['password'])))

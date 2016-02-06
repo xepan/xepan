@@ -11,8 +11,9 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 		// throw new \Exception($this->html_attributes['xsnb-login-page'], 1);
 		
 		if(!$this->api->auth->model->loaded()){
-			if($this->html_attributes['xsnb-login-page']){
-				$this->api->redirect($this->api->url(null,array('subpage'=>$this->html_attributes['xsnb-login-page'],'user_selected_form'=>'login','redirect'=>$_GET['subpage'])));
+			if($this->html_attributes['xsnb-login-page'] = 'login'){
+				$this->app->memorize('next_url',$_GET['subpage']);
+				$this->api->redirect($this->api->url(null,array('subpage'=>$this->html_attributes['xsnb-login-page'],'user_selected_form'=>'login')));
 			}else{
 				$this->add('View_Warning',null,'noAuth')->set('Login First ');
 			}
@@ -47,9 +48,7 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 		$left = $this->add('View',null,'listmenu');
 		$right = $this->add('View');
 		
-		//Left Menu bar Buttons
-		$left->add('Button')->set(['My Account',['icon'=>'user']]);
-		
+		//Left Menu bar Buttons		
 		$left->add('View')->setElement('button')->addClass('list-group-item atk-swatch-yellow')->set('My Account')->setAttr('data-type','myaccount')->setStyle('padding','10px !important');
 		$left->add('View')->setElement('button')->addClass('list-group-item ')->set('Order History')->setAttr('data-type','order')->setStyle('padding','10px !important');
 		$left->add('View')->setElement('button')->addClass('list-group-item ')->set('My Designs')->setAttr('data-type','mydesign')->setStyle('padding','10px !important');

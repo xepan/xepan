@@ -23,10 +23,17 @@ class View_MemberAccountInfo extends \View{
 		$member->tryLoadAny();
 
 		$tab = $this->add('Tabs');
+		// $profile_tab = $tab->addTab('Profile Photo');
 		$password_tab = $tab->addTab('Change Password');
 		$address_tab = $tab->addTab('Address');	
 		$deactive_tab = $tab->addTab('Deactive');
-		
+	
+	// //============================Profile Photo
+	// 	$pf = $profile_tab->add('Form');
+	// 	// $c = $profile_tab->add('CRUD');
+	// 	$pf->setModel($member);
+
+
 	//============================Change Password
 		$user = $this->add('Model_Users')->load($this->api->auth->model->id);
 		$this->api->auth->addEncryptionHook($user);
