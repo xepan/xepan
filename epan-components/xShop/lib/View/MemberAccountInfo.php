@@ -53,7 +53,7 @@ class View_MemberAccountInfo extends \View{
 	//================================Address======================
 		$form=$address_tab->add('Form');
 		$form->setLayout(['view/form/member-address']);
-		$form->setModel($member,array('address','billing_address','shipping_address','landmark','city','state','country','mobile_number','pincode'));
+		$form->setModel($member,array('address'/*,'billing_address','shipping_address'*/,'landmark','city','state','country','mobile_number','pincode'));
 		$form->addSubmit('Update');
 		$users=$this->add('Model_Users')->load($this->api->auth->model->id);
 		if($form->isSubmitted()){

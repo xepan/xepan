@@ -8,12 +8,17 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 		parent::init();
 		
 		//Checking Authentication
-		if(!$this->api->auth->model->loaded()){
-			$this->add('View_Warning',null,'noAuth')->set('Login First');
-			$this->template->tryDel('auth');
-			return;
-		}
+		// throw new \Exception($this->html_attributes['xsnb-login-page'], 1);
 		
+		if(!$this->api->auth->model->loaded()){
+			if($this->html_attributes['xsnb-login-page']){
+				$this->api->redirect($this->api->url(null,array('subpage'=>$this->html_attributes['xsnb-login-page'],'user_selected_form'=>'login','redirect'=>$_GET['subpage'])));
+			}else{
+				$this->add('View_Warning',null,'noAuth')->set('Login First ');
+			}
+				$this->template->tryDel('auth');
+				return;
+		}
 		//Login User Model and Checking is it FrontEndUses or BackEndUser
 		$user=$this->add('Model_Users')->load($this->api->auth->model->id);
 		$created_at=$user->get('created_at');
@@ -76,12 +81,12 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 			$col_1->add('View')->setElement('p')->set(($member['address']?:"Not Added"))->addClass('atk-padding');
 			
 			//Billing Address
-			$col_2->add('H4')->set('Billing Address')->addClass('atk-swatch-gray atk-padding');
-			$col_2->add('View')->setElement('p')->set(($member['billing_address']?:"Not Added"))->addClass('atk-padding');
+			// $col_2->add('H4')->set('Billing Address')->addClass('atk-swatch-gray atk-padding');
+			// $col_2->add('View')->setElement('p')->set(($member['billing_address']?:"Not Added"))->addClass('atk-padding');
 
-			//Shipping Address
-			$col_3->add('H4')->set('Shipping Address')->addClass('atk-swatch-gray atk-padding');
-			$col_3->add('View')->setElement('p')->set(($member['shipping_address']?:"Not Added"))->addClass('atk-padding');
+			// //Shipping Address
+			// $col_3->add('H4')->set('Shipping Address')->addClass('atk-swatch-gray atk-padding');
+			// $col_3->add('View')->setElement('p')->set(($member['shipping_address']?:"Not Added"))->addClass('atk-padding');
 			
 			//Recent Order 
 			$right->add('H2')->set('Recent Order');

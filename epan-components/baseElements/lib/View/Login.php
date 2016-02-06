@@ -39,12 +39,19 @@ class View_Login extends \View{
 				$submit_field->addClass($user_panel_login_btn_css);
 				$submit_field->js('click',$form->js()->submit());
 				
+
 				$redirect_url = array('subpage'=>$this->html_attributes['user_panel_after_login_page']);
+				// throw new \Exception($_GET['redirect'], 1);
+				
+
 				//Check for the checkout page
 				$redirect_url = $this->api->recall('next_url',$redirect_url);
 					// $this->api->forget('next_url');
-				if($form->isSubmitted()){
+				if($this->api->stickyGET('redirect'))
+					$redirect_url = array('subpage'=>$_GET['redirect']);
 
+				if($form->isSubmitted()){
+					
 					$this->api->auth->model->allow_duplicate_email=true;
 					if(!($id = $this->api->auth->verifyCredentials($form['username'],$form['password'])))
 						$form->displayError('username','Wrong Credentials');
@@ -58,6 +65,7 @@ class View_Login extends \View{
 					// $this->app->auth->addEncryptionHook($user_model);
 					$this->api->auth->login($form['username']);
 					// if reload page
+					
 					$this->api->redirect($this->api->url(null,$redirect_url))->execute();
 					// else
 						$this->js()->reload()->execute();

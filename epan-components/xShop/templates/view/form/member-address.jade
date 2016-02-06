@@ -3,41 +3,47 @@ form.atk-form( action="#")
   .atk-row
       .atk-col-4
           .atk-cell.atk-form-label.atk-text-nowrap
-              span Address
+              span &nbsp; 
+                //- |Address
           .atk-form-row.atk-form-field {$address}
+      //- .atk-col-4
+      //-     .atk-cell.atk-form-label.atk-text-nowrap
+      //-         //- span Billing Addess
+      //-     .atk-form-row.atk-form-field {$billing_address}
+      //- .atk-col-4
+      //-     .atk-cell.atk-form-label.atk-text-nowrap
+      //-         //- span Shipping Address
+      //-     .atk-form-row.atk-form-field {$shipping_address}    
       .atk-col-4
           .atk-cell.atk-form-label.atk-text-nowrap
-              span Billing Addess
-          .atk-form-row.atk-form-field {$billing_address}
-      .atk-col-4
-          .atk-cell.atk-form-label.atk-text-nowrap
-              span Shipping Address
-          .atk-form-row.atk-form-field {$shipping_address}    
-  .atk-row
-      .atk-col-4
-          .atk-cell.atk-form-label.atk-text-nowrap
-              span Landmark
+              span &nbsp; 
+                //- |Landmark
           .atk-form-row.atk-form-field {$landmark}
       .atk-col-4
           .atk-cell.atk-form-label.atk-text-nowrap
-              span City
+              span &nbsp; 
+                //- |City
           .atk-form-row.atk-form-field {$city}    
       .atk-col-4
           .atk-cell.atk-form-label.atk-text-nowrap
-              span State
+              span &nbsp; 
+                //- |State
           .atk-form-row.atk-form-field {$state}    
-  .atk-row
       .atk-col-4
           .atk-cell.atk-form-label.atk-text-nowrap
-              span Country
+              span &nbsp; 
+                //- |Country
           .atk-form-row.atk-form-field {$country}
       .atk-col-4
           .atk-cell.atk-form-label.atk-text-nowrap
-              span Mobile Number
-          .atk-form-row.atk-form-field {$mobile_number}
+              span &nbsp;
+                //- |Pin Code
+          .atk-form-row.atk-form-field {$pincode}    
       .atk-col-4
           .atk-cell.atk-form-label.atk-text-nowrap
-              span Pin Code
-          .atk-form-row.atk-form-field {$pincode}    
+              span &nbsp;
+                //- |Mobile Number
+          .atk-form-row.atk-form-field {$mobile_number}
    .atk-push-small       
+  .atk-row
   .atk-actions(class="{$buttons_class}"){$FormButtons}
