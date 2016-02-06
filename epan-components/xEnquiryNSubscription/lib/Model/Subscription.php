@@ -111,4 +111,28 @@ class Model_Subscription extends \Model_Document {
 		$this->saveAndUnload();
 		return true;
 	}
+
+	//categories with comma(,) separated
+	function associatedWithCategory($categories){
+		if(!$this->loaded())
+			throw new \Exception("model Lead must loaded");
+			
+		if( trim($categories) == "" or trim($categories) == null )
+			throw new \Exception("must pass the category for the lead ".$this['email']);
+			
+		$c_array = explode(",", $categories);
+		foreach ($c_array as $key => $value) {
+			$category = $this->add('xEnquiryNSubscription/Model_SubscriptionCategories');
+			$category->addCondition('name',trim($value));
+			$category->tryLoadAny();
+
+			$category->save();
+
+			$ass_model = $this->add('xEnquiryNSubscription/Model_SubscriptionCategoryAssociation');
+			$ass_model['category_id'] = $category->id;
+			$ass_model['subscriber_id'] = $this->id;
+			$ass_model->saveAndUnload();
+		}
+		
+	}
 }
