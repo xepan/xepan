@@ -34,7 +34,7 @@ class page_xShop_page_designer_itemimages extends Page {
       $image_model->addCondition('member_id',$member->id);
       $image_model->setOrder('id','desc');
       if($cat_id = $this->api->stickyGET('cat_id')){
-        $image_model->addCondition('category_id',$cat_id);
+        $image_model->addCondition('category_id',$cat_id);        
       }
 
       //Member Image Crud
@@ -48,11 +48,11 @@ class page_xShop_page_designer_itemimages extends Page {
       $cat_url = $this->api->url(null,['cut_object'=>$cat_col->name]);
 
       //Jquery For Filter the images
-      $cat_col->on('click','td',function($js,$data)use($image_col,$img_url,$cat_col){
+      $cat_col->on('click','tr',function($js,$data)use($image_col,$img_url,$cat_col){
         return [
-            $cat_col->js()->find('.atk-swatch-green')->removeClass('atk-swatch-green'),
+            $cat_col->js()->children('td')->find('.atk-swatch-green')->removeClass('atk-swatch-green'),
             $image_col->js()->reload(['cat_id'=>$data['id']],null,$img_url),
-            $js->addClass('atk-swatch-green'),
+            $js->children('td:first-child ')->addClass('atk-swatch-green'),
           ] ;
       });
 
