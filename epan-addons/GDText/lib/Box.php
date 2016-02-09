@@ -387,7 +387,7 @@ class Box
         );
     }
 
-    protected function setUnderline($weight=0.3){
+    public function setUnderline($weight=0.3){
         $this->underline = true;
         $this->underline_weight = $weight;
     }
