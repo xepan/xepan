@@ -129,8 +129,12 @@ class Model_Subscription extends \Model_Document {
 			$category->save();
 
 			$ass_model = $this->add('xEnquiryNSubscription/Model_SubscriptionCategoryAssociation');
-			$ass_model['category_id'] = $category->id;
-			$ass_model['subscriber_id'] = $this->id;
+			$ass_model->addCondition('category_id',$category->id);
+			$ass_model->addCondition('subscriber_id',$this->id);
+			$ass_model->tryLoadAny();
+			// $ass_model['category_id'] = $category->id;
+			// $ass_model['subscriber_id'] = $this->id;
+
 			$ass_model->saveAndUnload();
 		}
 		

@@ -88,7 +88,7 @@ class page_xMarketingCampaign_page_owner_leads extends page_xMarketingCampaign_p
 				foreach ($data as $row) { // field like Cst 1, Cst 2 ... 
 					// add lead
 					$name = $row['name'];
-					$organization = $row['organization']
+					$organization = $row['organization'];
 
 					if(!$row['name'])
 						$name = $organization;
@@ -97,12 +97,15 @@ class page_xMarketingCampaign_page_owner_leads extends page_xMarketingCampaign_p
 						$organization = $name;
 
 					$lead = $this->add('xMarketingCampaign/Model_Lead');
-					$lead['email'] = trim($row['email']);
-					$lead['phone'] = trim($row['phone']);
-					$lead['organization_name'] = $name;
-					$lead['name'] = $organization;
-
-					$lead->save();
+					$lead->addCondition('email',trim($row['email']));
+					$lead->tryLoadAny();
+					// $lead['email'] = trim($row['email']);
+					if(!$lead->loaded()){
+						$lead['phone'] = trim($row['phone']);
+						$lead['organization_name'] = $organization;
+						$lead['name'] = $name;
+						$lead->save();
+					}
 
 					if($row['category']){
 						//associated with multiple category call it's function

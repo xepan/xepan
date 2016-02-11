@@ -39,8 +39,8 @@ class Model_SubscriptionCategoryAssociation extends \Model_Table {
 		$temp->addCondition('subscriber_id',$this['subscriber_id']);
 		$temp->addCondition('id','<>',$this['id']);
 		$temp->tryLoadAny();
-		if($temp->loaded())
-			throw $this->exception("Already Associated","ValidityCheck")->setField('subscriber_id');
+		// if($temp->loaded())
+		// 	throw $this->exception("Already Associated","ValidityCheck")->setField('subscriber_id');
 		$this['last_updated_on']=date('Y-m-d H:i:s');
 
 		if($this->dirty['send_news_letters'] and !$this['send_news_letters'])
