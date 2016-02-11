@@ -87,13 +87,28 @@ class page_xMarketingCampaign_page_owner_leads extends page_xMarketingCampaign_p
 
 				foreach ($data as $row) { // field like Cst 1, Cst 2 ... 
 					// add lead
+					$name = $row['name'];
+					$organization = $row['organization']
+
+					if(!$row['name'])
+						$name = $organization;
+					
+					if(!$row['organization'])
+						$organization = $name;
+
 					$lead = $this->add('xMarketingCampaign/Model_Lead');
-					$lead['name'] = $row['name'];
-					$lead['email'] = $row['email'];
+					$lead['email'] = trim($row['email']);
+					$lead['phone'] = trim($row['phone']);
+					$lead['organization_name'] = $name;
+					$lead['name'] = $organization;
+
 					$lead->save();
-					//associated with multiple category call it's function
-					$lead->associatedWithCategory($row['category']);
-						//if Category not found then create category
+
+					if($row['category']){
+						//associated with multiple category call it's function
+						$lead->associatedWithCategory($row['category']);
+					}
+
 					$lead->unLoad();
 				}
 				
