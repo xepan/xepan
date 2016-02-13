@@ -145,7 +145,7 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 		bottom_bar.appendTo(this.element);
 		var temp = new PageLayout_Component();
 		temp.init(self, self.canvas, bottom_bar);
-		bottom_tool_btn = temp.renderTool() ;
+		bottom_tool_btn = temp.renderTool();
 		self.bottom_bar = temp;
 	},
 

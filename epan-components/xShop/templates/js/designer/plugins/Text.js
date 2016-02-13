@@ -50,6 +50,7 @@ xShop_Text_Editor = function(parent){
 	this.text_italic_btn = $('<div class="btn"><span class="glyphicon glyphicon-italic"></span></div>').appendTo(this.text_button_set);
 	this.text_underline_btn = $('<div class="btn"><span class="icon-underline"></span></div>').appendTo(this.text_button_set);
 	this.text_strokethrough_btn = $('<div class="btn" style="display:none;"><span class="icon-strike"></span></div>').appendTo(this.text_button_set);
+	this.text_duplicate_btn = $('<div class="btn" title="Duplicate selected text"><span class="icon-docs"></span></div>').appendTo(this.text_button_set);
 	/*Bold Text Render*/
 	$(this.text_bold_btn).click(function(event){
 		if(!self.current_text_component.options.bold){
@@ -92,7 +93,7 @@ xShop_Text_Editor = function(parent){
 	
 	//Stroke Through
 	$(this.text_strokethrough_btn).click(function(event){
-		self.current_text_component.options.underline = false;		
+		self.current_text_component.options.underline = false;
 		if(!self.current_text_component.options.stokethrough){
 			$(this).addClass('active');
 			self.current_text_component.options.stokethrough = true;
@@ -103,6 +104,25 @@ xShop_Text_Editor = function(parent){
 		$('.xshop-designer-tool').xepan_xshopdesigner('check');
 		self.current_text_component.render();
 	});
+
+	//Text Duplicate
+	this.text_duplicate_btn.click(function(event){
+		// self.current_selected_component = undefined;
+		// create new TextComponent type object
+		var new_text = new Text_Component();
+		new_text.init(self.current_text_component.designer_tool,self.current_text_component.canvas, self.current_text_component.editor);
+		new_text.options = self.current_text_component.options;
+		// // // feed default values for its parameters
+		// // // add this Object to canvas components array
+		// // // console.log(self.designer_tool.current_page);
+
+		self.current_text_component.designer_tool.pages_and_layouts[self.current_text_component.designer_tool.current_page][self.current_text_component.designer_tool.current_layout].components.push(new_text);
+		new_text.render(true);
+		self.current_text_component = new_text;
+		// console.log(self.current_text_component.designer_tool);
+	});
+
+
 
 	// L/M/R/J align
 	this.text_button_set = $('<div class="btn-group btn-group-xs" role="group" aria-label="Text Alignment"></div>').appendTo(this.element);
@@ -177,6 +197,7 @@ xShop_Text_Editor = function(parent){
 		$('.xshop-designer-tool').xepan_xshopdesigner('check');
 		self.current_text_component.render();
 	});
+
 
 	//Text Justify Alignmemt
 	// $(this.text_align_justify_btn).click(function(){
@@ -413,7 +434,7 @@ Text_Component = function (params){
 		alignment_right:false,
 		alignment_justify:true,
 		// Designer properties
-		movable: false,
+		movable: true,
 		colorable: true,
 		editable: true,
 		default_value:'Enter Text',

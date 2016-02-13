@@ -27,6 +27,14 @@ class page_xShop_page_designer_itemimages extends Page {
       $cat_crud->frame_options = ['width'=>'500'];
       $cat_model = $this->add('xShop/Model_ImageLibraryCategory')->addCondition('is_library',false)->addCondition('member_id',$member->id);
       $cat_crud->setModel($cat_model,array('name'));
+      
+      if(!$cat_crud->isEditing()){
+        $g = $cat_crud->grid;
+        $g->addMethod('format_width',function($g,$f){
+          $g->current_row_html[$f] = '<div style="max-width:140px;white-space:normal !important;overflow:hidden;">'.$g->current_row[$f]."</div>";
+        });
+        $g->addFormatter('name','width');
+      }
 
       //Member Images
       //Setting up Model according to the Category id
