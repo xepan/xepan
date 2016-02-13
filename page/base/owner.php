@@ -246,6 +246,8 @@ class page_base_owner extends Page {
 				$this->shorcut_menus[]=array("page"=>$d['name']. " Material Request Received","url"=>$this->api->url('xStore_page_owner_materialrequestreceived',array('department_id'=>$d->id)));
 				$this->shorcut_menus[]=array("page"=>$d['name']. " Stock Management","url"=>$this->api->url('xProduction_page_owner_stockmanagement',array('department_id'=>$d->id)));
 			}
+			$production_m->addItem(array('Report','icon'=>'gauge-1'),$this->api->url('xProduction_page_owner_report',array('department_id'=>$dept_model->id)));
+			$this->shorcut_menus[]=array("page"=>'Report',"url"=>$this->api->url('xProduction_page_owner_report',array('department_id'=>$dept_model->id)));
 		}
 
 			

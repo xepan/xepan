@@ -80,7 +80,7 @@ class Model_OrderDetails extends \Model_Document{
 
 		$this->hasMany('xShop/OrderItemDepartmentalStatus','orderitem_id');
 		$this->hasMany('xShop/SalesOrderDetailAttachment','related_document_id',null,'Attachments');
-		$this->hasMany('xProduction/Jobcard','orderitem_id');
+		$this->hasMany('xProduction/JobCard','orderitem_id');
 		$this->hasMany('xStore/MaterialRequest','orderitem_id');
 
 		$this->addHook('beforeSave',$this);
