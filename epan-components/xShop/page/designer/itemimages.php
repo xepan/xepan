@@ -31,7 +31,7 @@ class page_xShop_page_designer_itemimages extends Page {
       if(!$cat_crud->isEditing()){
         $g = $cat_crud->grid;
         $g->addMethod('format_width',function($g,$f){
-          $g->current_row_html[$f] = '<div style="white-space:normal !important;">'.$g->current_row[$f]."</div>";
+          $g->current_row_html[$f] = '<div style="max-width:140px;white-space:normal !important;overflow:hidden;">'.$g->current_row[$f]."</div>";
         });
         $g->addFormatter('name','width');
       }
