@@ -68,6 +68,7 @@ class Model_Configuration extends \Model_Table {
 
 		//Round Amount Calculation
 		$this->addField('is_round_amount_calculation')->type('boolean');
+		$this->addField('is_invoice_date_when_approved')->type('boolean')->hint('set Invoice Date, as date of invoice approved ');
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 

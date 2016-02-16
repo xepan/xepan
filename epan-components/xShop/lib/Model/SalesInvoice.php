@@ -144,8 +144,12 @@ class Model_SalesInvoice extends Model_Invoice{
 	}
 
 	function approve(){
-		$this['created_at'] = date('Y-m-d H:i:s');
-		$this->save();
+		//Change the Date 
+		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+		if($shop_config['is_invoice_date_when_approved']){
+			$this['created_at'] = date('Y-m-d H:i:s');
+			$this->save();
+		}
 
 		$this->createVoucher();
 		$this->setStatus('approved');

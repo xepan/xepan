@@ -189,7 +189,7 @@ class page_xShop_page_owner_shopsnblogs extends page_xShop_page_owner_main {
 
 			$misc_tab=$tab->addTab('Misc Setting');
 			$misc_form = $misc_tab->add('Form_Stacked');
-			$misc_form->setModel($config_model,array('is_round_amount_calculation'));
+			$misc_form->setModel($config_model,array('is_round_amount_calculation','is_invoice_date_when_approved'));
 			$misc_form->addSubmit('Update');
 			if($misc_form->Submitted()){
 				$misc_form->update();

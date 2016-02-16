@@ -13,6 +13,6 @@ class Model_Filter extends \Model_Table{
 		$this->hasOne('xShop/Specification','specification_id');
 		$this->addField('unique_values')->type('text');
 
-		// $this->add('dynamic_model/Controller_AutoCreator');
+		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 }
