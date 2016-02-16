@@ -85,7 +85,7 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		if(!$cash_account) $cash_account = $this->add('xAccount/Model_Account')->loadDefaultCashAccount();
 
 		$transaction = $this->add('xAccount/Model_Transaction');
-		$transaction->createNewTransaction('PURCHASE INVOICE CASH PAYMENT', $this, $transaction_date=$this->api->now, $Narration=null);
+		$transaction->createNewTransaction('PURCHASE INVOICE CASH PAYMENT', $this, $transaction_date=$this->api->now, $Narration="Purchase Invoice Pay via Cash(".$this['name'].") ");
 		
 		$transaction->addDebitAccount($this->supplier()->account(),$cash_amount);
 		$transaction->addCreditAccount($cash_account ,$cash_amount);
@@ -97,7 +97,7 @@ class Model_PurchaseInvoice extends \xShop\Model_Invoice{
 		if(!$self_bank_account) $self_bank_account = $this->add('xAccount/Model_Account')->loadDefaultBankAccount();
 
 		$transaction = $this->add('xAccount/Model_Transaction');
-		$transaction->createNewTransaction('PURCHASE INVOICE BANK PAYMENT', $this, $transaction_date=$this->api->now, $Narration=null);
+		$transaction->createNewTransaction('PURCHASE INVOICE BANK PAYMENT', $this, $transaction_date=$this->api->now, $Narration="Purchase Invoice (".$this['name'].") Pay via Cheque");
 		
 		$transaction->addDebitAccount($this->supplier()->account(),$amount);
 		$transaction->addCreditAccount($self_bank_account ,$amount);
