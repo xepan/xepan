@@ -71,7 +71,7 @@ class Model_SalesInvoice extends Model_Invoice{
 		if(!$shippingLedger) $shippingLedger = $this->add('xAccount/Model_Account')->loadDefaultShippingAccount();
 
 		$transaction = $this->add('xAccount/Model_Transaction');
-		$transaction->createNewTransaction('SALES INVOICE', $this, $transaction_date=$this['created_at'], $Narration=null);
+		$transaction->createNewTransaction('SALES INVOICE ', $this, $transaction_date=$this['created_at'], $Narration="Sale Invoive (".$this['name'].")");
 
 		$transaction->addCreditAccount($salesLedger,$this['total_amount']);
 		$transaction->addCreditAccount($taxLedger,$this['tax']);
@@ -101,7 +101,7 @@ class Model_SalesInvoice extends Model_Invoice{
 		if(!$cash_account) $cash_account = $this->add('xAccount/Model_Account')->loadDefaultCashAccount();
 
 		$transaction = $this->add('xAccount/Model_Transaction');
-		$transaction->createNewTransaction('INVOICE CASH PAYMENT RECEIVED', $this, $transaction_date=$this->api->now, $Narration=null);
+		$transaction->createNewTransaction('INVOICE CASH PAYMENT RECEIVED', $this, $transaction_date=$this->api->now, $Narration="Sale Invoice (".$this['name'].") Pay Via Cash");
 		
 		$transaction->addCreditAccount($this->customer()->account(),$cash_amount);
 		$transaction->addDebitAccount($cash_account ,$cash_amount);
@@ -115,7 +115,7 @@ class Model_SalesInvoice extends Model_Invoice{
 		if(!$self_bank_account) $self_bank_account = $this->add('xAccount/Model_Account')->loadDefaultBankAccount();
 
 		$transaction = $this->add('xAccount/Model_Transaction');
-		$transaction->createNewTransaction('INVOICE BANK PAYMENT RECEIVED', $this, $transaction_date=$this->api->now, $Narration=null);
+		$transaction->createNewTransaction('INVOICE BANK PAYMENT RECEIVED', $this, $transaction_date=$this->api->now, $Narration="Sale Invoice (".$this['name'].") Pay via Cheque");
 		
 		$transaction->addCreditAccount($this->customer()->account(),$amount);
 		$transaction->addDebitAccount($self_bank_account ,$amount);
@@ -131,7 +131,7 @@ class Model_SalesInvoice extends Model_Invoice{
 	    if(!$self_bank_account) $self_bank_account = $this->add('xAccount/Model_Account')->loadDefaultBankAccount();
 
 	    $transaction = $this->add('xAccount/Model_Transaction');
-		$transaction->createNewTransaction('INVOICE ONLINE PAYMENT RECEIVED', $this, $transaction_date=$this->api->now, $Narration=null);
+		$transaction->createNewTransaction('INVOICE ONLINE PAYMENT RECEIVED', $this, $transaction_date=$this->api->now, $Narration="Sale Invoice(".$this['name'].") Pay via Online");
 		
 		$transaction->addCreditAccount($this->customer()->account(),$amount);
 		$transaction->addDebitAccount($self_bank_account ,$amount);

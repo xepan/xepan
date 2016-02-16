@@ -113,7 +113,7 @@ class Model_Transaction extends \Model_Document{
 			$account = $this->add('xAccount/Model_Account')->load($account->id);
 		}
 
-		$amount = round($amount,2);
+		$amount = $this->round($amount,2);
 		
 		$this->dr_accounts += array($account->id => array('amount'=>$amount,'account'=>$account));
 	}
@@ -123,7 +123,7 @@ class Model_Transaction extends \Model_Document{
 			$account = $this->add('xAccount/Model_Account')->load($account->id);
 		}
 
-		$amount = round($amount,2);
+		$amount = $this->round($amount,2);
 		
 		$this->cr_accounts += array($account->id=>array('amount'=>$amount,'account'=>$account));
 	}
@@ -164,7 +164,7 @@ class Model_Transaction extends \Model_Document{
 		//FOR ROUND AMOUNT CALCULATION
 		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
 		if($shop_config['is_round_amount_calculation']){
-			$total_debit_amount = round($total_debit_amount,0);
+			$total_debit_amount = $this->round($total_debit_amount,0);
 		}
 
 		$total_credit_amount =0;
@@ -177,7 +177,7 @@ class Model_Transaction extends \Model_Document{
 		
 		//FOR ROUND AMOUNT CALCULATION
 		if($shop_config['is_round_amount_calculation']){
-			$total_credit_amount = round($total_credit_amount,0);
+			$total_credit_amount = $this->round($total_credit_amount,0);
 		}
 
 		// Credit Sum Must Be Equal to Debit Sum
