@@ -73,7 +73,6 @@ class Model_SalesInvoice extends Model_Invoice{
 		$transaction = $this->add('xAccount/Model_Transaction');
 		$transaction->createNewTransaction('SALES INVOICE ', $this, $transaction_date=$this['created_at'], $Narration="Sale Invoive (".$this['name'].")");
 
-		$transaction->addCreditAccount($salesLedger,$this['total_amount']);
 		$transaction->addCreditAccount($taxLedger,$this['tax']);
 		$transaction->addCreditAccount($shippingLedger,$this['shipping_charge']);
 		
@@ -84,12 +83,17 @@ class Model_SalesInvoice extends Model_Invoice{
 
 		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
 		if($shop_config['is_round_amount_calculation']){
-			if($round_value > 0)
+			if($round_value > 0){
 				$transaction->addCreditAccount($roundLedger,abs($round_value));
-			else
+				$total_amount = $this['total_amount'] - abs($round_value);
+			}
+			else{
 				$transaction->addDebitAccount($roundLedger,abs($round_value));
+				$total_amount = $this['total_amount'] + abs($round_value);
+			}
 		}
 
+		$transaction->addCreditAccount($salesLedger,$total_amount);
 		$transaction->execute();
 		
 		return $transaction;
