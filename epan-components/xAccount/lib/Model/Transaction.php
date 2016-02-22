@@ -182,7 +182,7 @@ class Model_Transaction extends \Model_Document{
 
 		
 		// Credit Sum Must Be Equal to Debit Sum
-		throw new \Exception($total_credit_amount." = ".$total_debit_amount);
+		// throw new \Exception($total_credit_amount." = ".$total_debit_amount);
 		if($total_debit_amount != $total_credit_amount)
 			throw $this->exception('Debit and Credit Must be Same')->addMoreInfo('DebitSum',$total_debit_amount)->addMoreInfo('CreditSum',$total_credit_amount);
 
