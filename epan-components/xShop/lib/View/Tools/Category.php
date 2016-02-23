@@ -50,7 +50,8 @@ class View_Tools_Category extends \componentBase\View_Component{
 			return;
 		}
 		elseif(!$this->html_attributes['xshop_category_url_page']){
-			$this->add('View_Error')->set('Please Specify Category URL Page Name (epan page name like.. about,contactus etc..)');		
+			if($_GET['xsnb_category_id'])
+				$this->add('View_Error')->set('Please Specify Category URL Page Name (epan page name like.. about,contactus etc..)');
 			return;
 		}else{
 			
