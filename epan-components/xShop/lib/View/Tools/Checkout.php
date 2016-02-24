@@ -88,7 +88,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			    'returnUrl' => 'http://'.$_SERVER['HTTP_HOST'].$this->api->url(null,array('paid'=>'true','pay_now'=>'true'))->getURL(),
 			    'cancelUrl' => 'http://'.$_SERVER['HTTP_HOST'].$this->api->url(null,array('canceled'=>'true','pay_now'=>'true'))->getURL(),
 				'language' => 'EN',
-				'billing_name' => $order['member'],
+				'billing_name' => $order->customer(),
 				'billing_address' => $order['billing_address'],
 				'billing_city' => $order['billing_city'],
 				'billing_state' => $order['billing_state'],
@@ -105,7 +105,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 				'delivery_email' => $order['shipping_email']
 		 	);
 			// Step 2. if got returned from gateway ... manage ..
-
+		
 			if($_GET['paid']){
 				$response = $gateway->completePurchase($params)->send();
 			    if ( ! $response->isSuccessful()){
@@ -236,8 +236,6 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			return;					
 		}
 		if($personal_form->isSubmitted()){
-
-			throw new \Exception(count($this->html_attributes['tncpage']));
 
 			if(!$personal_form['i_read'])
 				$personal_form->displayError('i_read','It is Must');
