@@ -96,7 +96,7 @@ class View_Tools_Category extends \componentBase\View_Component{
 		$item->tryLoadAny();
 
 		if($category->ref('SubCategories')->count()->getOne() > 0){
-			$sub_category = $category->ref('SubCategories')->addCondition('is_active',true);
+			$sub_category = $category->ref('SubCategories')->addCondition('is_active',true)->setOrder('order_no','desc');
 			$output = "<li aria-haspopup='true' class='xshop-category'>";
 			$output .="<a href='".$this->api->url(null,array('subpage'=>$page_name,'xsnb_category_id'=>$category->id))."'>";
 			$output .= $category['name'];
