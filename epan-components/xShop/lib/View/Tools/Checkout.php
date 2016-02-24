@@ -104,7 +104,6 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 				'delivery_tel' => $order['shipping_tel'],
 				'delivery_email' => $order['shipping_email']
 		 	);
-
 			// Step 2. if got returned from gateway ... manage ..
 
 			if($_GET['paid']){
@@ -131,7 +130,10 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 
 			// Step 1. initiate purchase ..
 			try {
-			    $response = $gateway->purchase($params)->send();
+				//Sending $param with send function for passing value to gateway
+				//dont know it's right way or no
+			    $response = $gateway->purchase($params)->send($params);
+
 			    if ($response->isSuccessful() /* OR COD */) {
 			        // mark order as complete if not COD
 			        // Not doing onsite transactions now ...

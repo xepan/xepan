@@ -12,9 +12,10 @@ class PurchaseRequest extends AuthorizeRequest
     return 'sale';
   }
 
-  public function send()
-    {	
+  public function send($param=array())
+    {	  
         $data = $this->getData();
+        $data = array_replace($data, $param);
         return $this->sendData($data);
     }
 
