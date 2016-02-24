@@ -219,7 +219,8 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		$b_e= $personal_form->addField('line','email');
 		$s_e=$personal_form->addField('line','s_email','Email')->validateNotNull(true);
 		
-		$personal_form->addField('Checkbox','i_read',"I have Read All trems & Conditions")->validateNotNull()->js(true)->closest('div.atk-form-row');
+		
+		$personal_form->addField('Checkbox','i_read','<a target="_blank" href="index.php?subpage='.$this->html_attributes['xshop_checkout_tnc_subpage'].'">I have Read All trems & Conditions<a/>')->validateNotNull()->js(true)->closest('div.atk-form-row');
 
 		$shipping=$personal_form->layout->add('Button',null,'copy_address')->set('Copy Address')->addClass('atk-swatch-tomato');//->js('click',$form->js()->submit());
 		// // Copy billing Address to shipping address
@@ -235,11 +236,14 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			return;					
 		}
 		if($personal_form->isSubmitted()){
+
+			throw new \Exception(count($this->html_attributes['tncpage']));
+
 			if(!$personal_form['i_read'])
 				$personal_form->displayError('i_read','It is Must');
-
-			$order['billing_landmark'] = $personal_form['billing_address'];
-			$order['billing_address'] = $personal_form['billing_address'];
+			
+			$order['billing_landmark'] = $personal_form['address'];
+			$order['billing_address'] = $personal_form['address'];
 			$order['billing_city'] = $personal_form['city'];
 			$order['billing_state'] = $personal_form['state'];
 			$order['billing_zip'] = $personal_form['pincode'];
