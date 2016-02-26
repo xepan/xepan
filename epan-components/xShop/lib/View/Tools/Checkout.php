@@ -160,7 +160,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 	}
 
 	function step1(){
-		$this->add('View')->setHTML('<span class="xcheckout-step stepred">Step 1</span> / <span class="xcheckout-step stepgray">Step 2</span> / <span class=" xcheckout-step stepgray">Step 3</span> / <span class="xcheckout-step stepgray">Finish</span')->addClass('text-center');
+		$this->add('View')->setHTML('<div class="atk-push"><span class="xcheckout-step stepred label label-info">Step 1</span> / <span class="xcheckout-step label label-default">Step 2</span> / <span class=" xcheckout-step label label-default">Step 3</span> / <span class="xcheckout-step label label-default">Finish</span></div>')->addClass('text-center');
 		$form=$this->add('Form_Horizontal');
 		// $form->setLayout(['view/form/checkout']);;
 
@@ -190,7 +190,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 
 	function step2(){
 		$order=$this->order->reload();
-		$this->add('View')->setHTML('<span class="xcheckout-step stepred">Step 1</span> / <span class="xcheckout-step stepgray">Step 2</span> / <span class=" xcheckout-step stepgray">Step 3</span> / <span class="xcheckout-step stepgray">Finish</span')->addClass('text-center');
+		$this->add('View')->setHTML('<div class="atk-push"><span class="xcheckout-step label label-success">Step 1</span> / <span class="xcheckout-step label label-info">Step 2</span> / <span class=" xcheckout-step stepgray label label-default">Step 3</span> / <span class="xcheckout-step label label-default">Finish</span></div>')->addClass('text-center');
 		$personal_form=$this->add('Form_Stacked');
 		$personal_form->setLayout(['view/form/checkout-form2']);
 
@@ -271,7 +271,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 	function step3(){
 		$order=$this->order->reload();
 		// add all active payment gateways
-		$this->add('View')->setHTML('<span class="xcheckout-step stepred">Step 1</span> / <span class="xcheckout-step stepgray">Step 2</span> / <span class="xcheckout-step stepgray">Step 3</span> / <span class="xcheckout-step stepgray">Finish</span')->addClass('text-center');
+		$this->add('View')->setHTML('<div class="atk-push"><span class="xcheckout-step label label-success">Step 1</span> / <span class="xcheckout-step label label-success">Step 2</span> / <span class=" xcheckout-step stepgray label label-info">Step 3</span> / <span class="xcheckout-step label label-default">Finish</span></div>')->addClass('text-center');
 		$pay_form=$this->add('Form_Stacked');
 		$pay_form->setLayout(['view/form/checkout-form3']);
 		// $pay_form->addField('line','date');
@@ -312,7 +312,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		$message = "Payment Processed Successfully";
 		$class ="atk-box atk-swatch-green atk-align-center";
 
-		$this->add('View')->addClass('text-center')->setHTML('<span class="xcheckout-step stepgreen">Step 1</span> / <span class="xcheckout-step stepgreen">Step 2</span> / <span class="xcheckout-step stepgreen">Step 3</span> / <span class="xcheckout-step stepred">Finish</span');
+		$this->add('View')->setHTML('<div class="atk-push"><span class="xcheckout-step label label-success">Step 1</span> / <span class="xcheckout-step label label-success">Step 2</span> / <span class=" xcheckout-step stepgray label label-success">Step 3</span> / <span class="xcheckout-step label label-info">Finish</span></div>')->addClass('text-center');
 		//Payment Calceled 	by User from CCAvenue
 		if($_GET['canceled'] == "true"){
 			$message = "Payment Processed Canceled";
