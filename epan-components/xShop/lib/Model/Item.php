@@ -704,6 +704,24 @@ class Model_Item extends \Model_Document{
 		
 	}
 
+	// Function must return only the array of quantity 
+	function getQtySetOnly(){
+		if(!$this->loaded())
+			throw new \Exception("Item Model Must be Loaded");
+
+		$qty_added=array();
+		//load Associated Quantity Set
+			$qty_set_model = $this->ref('xShop/QuantitySet')->addCondition('is_default',false);
+			//foreach qtySet get all Condition
+				foreach ($qty_set_model as $junk){
+					if(!in_array($junk['qty'], $qty_added)){
+						$qty_added[trim($junk['qty'])] = trim($junk['qty']);
+					}
+				}
+
+		return $qty_added;		
+	}
+
 	function getQtySet(){
 		if(!$this->loaded())
 			throw new \Exception("Item Model Must be Loaded");
@@ -1055,8 +1073,9 @@ class Model_Item extends \Model_Document{
 	function applyTaxs(){
 		$tax_assos = $this->add('xShop/Model_ItemTaxAssociation');
 		$tax_assos->addCondition('item_id',$this->id);
-		if($tax_assos->count()->getOne())
+		if($tax_assos->count()->getOne()){
 			return $tax_assos;
+		}
 
 		return false;
 	}

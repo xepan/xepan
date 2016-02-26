@@ -68,7 +68,7 @@ class View_CartItem extends \View{
 			$cfs = "";
 			$a = $model['custom_fields']?:array();
 			foreach ($a as $key => $value) {
-				$cfs = "".$key." : ".$value."</br>";
+				$cfs .= "".$key." : ".$value."<br/>";
 			}
 
 			$name.= '<div class="xshop-cart-item-custom-fields">'.$cfs.'</div>';
@@ -83,10 +83,16 @@ class View_CartItem extends \View{
 			//Form			
 			$form=$this->add('Form',null,'qty',array('form/empty'));
 			// if qty_from_set_only ???????????????????
+			$item = $this->add('xShop/Model_Item')->load($model['item_id']);
+
+			$q_f=$form->addField('Hidden','cart_item_id')->set($model['id']);
+			if($item['qty_from_set_only']){
 				// add dropdown type filed with values
-			// else
-				$q_f=$form->addField('Hidden','cart_item_id')->set($model['id']);
+				$q_f=$form->addField('Dropdown','qty')->setValueList($item->getQtySetOnly())->set($model['qty']);
+			}else{
+				// else
 				$q_f=$form->addField('Number','qty')->set($model['qty'])->addClass('cart-spinner');
+			}
 			// $q_f->setAttr('size',1);
 			// $q_f->js(true)->spinner(array('min'=>1));
 			$r_f=$form->addField('line','rate')->set($model['rateperitem']);
@@ -129,7 +135,8 @@ class View_CartItem extends \View{
 		//Delivery Information
 		if($this->html_attributes['show-cart-items-delivery-info']){
 			$str = '<td class="xshop-cart-item-delivery col-md-3">';
-			$str.= $model['shipping_charge'].' tax:'.$model['tax'];
+			// $str.= $model['shipping_charge'].' tax:'.$model['tax'];
+			$str.= $model['tax_percentage'].'% tax:'.$model['tax'];
 			$str.="</td>";
 			$this->template->setHtml('delivery_detail',$str);
 		}

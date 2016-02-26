@@ -18,6 +18,7 @@ class Model_Cart extends \Model{
 		$this->addField('sales_amount')->type('money');
 		$this->addField('shipping_charge')->defaultValue(0);
 		$this->addField('tax')->defaultValue(0);
+		$this->addField('tax_percentage')->defaultValue(0);
 		$this->addField('total_amount')->type('money')->defaultValue(0);
 		$this->addField('file_upload_id');
 
@@ -34,6 +35,15 @@ class Model_Cart extends \Model{
 		$prices = $item->getPrice($custom_fields,$qty,'retailer');
 		
 		$amount = $item->getAmount($custom_fields,$qty,'retailer');
+
+		$t = $item->applyTaxs()->setLimit(1);
+		foreach ($t as $ts) {
+			$tax_percentag = $ts['name'];
+		}
+		
+		$tax = number_format(($amount['sale_amount'] * $tax_percentag)/100 , 2);
+
+		$total = number_format( ($amount['sale_amount'] + $tax),2);
 		
 		$this['item_id'] = $item->id;
 		$this['item_code'] = $item['sku'];
@@ -41,12 +51,14 @@ class Model_Cart extends \Model{
 		$this['rateperitem'] = $prices['sale_price'];
 		$this['qty'] = $qty;
 		$this['original_amount'] = $amount['original_amount'];
-		$this['sales_amount'] = $amount['sale_amount'];
+		$this['sales_amount'] = $total;
 		$this['custom_fields'] = $custom_fields;
 		$this['item_member_design_id'] = $item_member_design_id;
 		$this['total_amount'] = $amount['sale_amount'] + $this['shipping_charge'] + $this['tax'];
 		$this['file_upload_id'] = $file_upload_id;
-		
+		$this['tax'] = $tax;
+		$this['tax_percentage'] = $tax_percentag;
+		// $this['shipping_charge'] = "todo";
 		$this->save();
 	}
 
@@ -108,6 +120,31 @@ class Model_Cart extends \Model{
 		$prices = $item->getPrice($this['custom_fields'],$qty,'retailer');
 		$amount = $item->getAmount($this['custom_fields'],$qty,'retailer');
 		
+		$t = $item->applyTaxs()->setLimit(1);
+		foreach ($t as $ts) {
+			$tax_percentag = $ts['name'];
+		}
+
+		$tax = number_format(($amount['sale_amount'] * $tax_percentag)/100 , 2);
+
+		$total = number_format( ($amount['sale_amount'] + $tax),2);
+		
+		// $this['item_id'] = $item->id;
+		// $this['item_code'] = $item['sku'];
+		// $this['item_name'] = $item['name'];
+		$this['rateperitem'] = $prices['sale_price'];
+		$this['qty'] = $qty;
+		$this['original_amount'] = $amount['original_amount'];
+		$this['sales_amount'] = $total;
+		// $this['custom_fields'] = $custom_fields;
+		// $this['item_member_design_id'] = $item_member_design_id;
+		$this['total_amount'] = $amount['sale_amount'] + $this['shipping_charge'] + $this['tax'];
+		// $this['file_upload_id'] = $file_upload_id;
+		$this['tax'] = $tax;
+		$this['tax_percentage'] = $tax_percentag;
+		// $this['shipping_charge'] = "todo";
+		$this->save();
+
 		// throw new \Exception(print_r($prices,true). print_r($this['custom_fields'],true). " qty $qty", 1);
 		
 
@@ -115,17 +152,17 @@ class Model_Cart extends \Model{
 		// $this['item_id'] = $item->id;
 		// $this['item_code'] = $item['sku'];
 		// $this['item_name'] = $item['name'];
-		$this['rateperitem'] = $prices['sale_price'];
-		$this['qty'] = $qty;
-		$this['original_amount'] = $amount['original_amount'];
-		$this['sales_amount'] = $amount['sale_amount'];
-		// $this['custom_fields'] = $custom_fields;
-		// $this['item_member_design_id'] = $item_member_design_id;
-		$this['total_amount'] = $amount['sale_amount'] + $this['shipping_charge'] + $this['tax'];
+		// $this['rateperitem'] = $prices['sale_price'];
+		// $this['qty'] = $qty;
+		// $this['original_amount'] = $amount['original_amount'];
+		// $this['sales_amount'] = $amount['sale_amount'];
+		// // $this['custom_fields'] = $custom_fields;
+		// // $this['item_member_design_id'] = $item_member_design_id;
+		// $this['total_amount'] = $amount['sale_amount'] + $this['shipping_charge'] + $this['tax'];
 
-		// $text = "before ". $this['item_name'];
+		// // $text = "before ". $this['item_name'];
 
-		$this->save();
+		// $this->save();
 		// $text .= " after ". $this['item_name'];
 		// $this->unLoad();
 		// throw new \Exception("Cart Model Loaded at update cart");
