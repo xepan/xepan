@@ -134,10 +134,12 @@ jQuery.widget("ui.xepan_xshop_addtocart",{
 		// if qty_from_set_only is true
 		if(self.options.qty_from_set_only !='0'){
 			// add dropdown and add options from qty_sets
-			qty_field = $('<select class="xshop-add-to-cart-qty"></select>').appendTo(self.element);
+
+			qty_field_container = $('<div class="xshop-item-custom-field xshop-item-custom-dropdown-box">').appendTo(self.element);
+			qty_field_name = $('<div class="xshop-item-custom-field-name">Qty</div>').appendTo(qty_field_container);
+			qty_field = $('<select class="xshop-add-to-cart-qty"></select>').appendTo(qty_field_container);
 			$.each(self.options.qty_set,function(index,qty){
 				var display_name=qty.qty;
-
 				if(qty.name != qty.qty) display_name = qty.name + ' :: '+ qty.qty;
 
 				$('<option value="'+qty.qty+'">'+display_name+'</option>').appendTo(qty_field);
@@ -183,6 +185,11 @@ jQuery.widget("ui.xepan_xshop_addtocart",{
 				qty_to_add = $(self.element).find('.xshop-add-to-cart-qty').val();
 				// set qty_to_add = val of qty field value
 			}
+
+			// console.log("Qty set");
+			// console.log('id'+self.options.item_id);
+			// console.log('Qty to add '+qty_to_add);
+			// console.log('custom '+JSON.stringify(self.options.selected_custom_field_values));
 
 			$.ajax({
 				url: 'index.php?page=xShop_page_getrate',
