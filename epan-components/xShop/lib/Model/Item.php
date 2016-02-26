@@ -551,22 +551,22 @@ class Model_Item extends \Model_Document{
 		$dept=array();
 		if($custom_field_values_array != ""){
 			foreach ($custom_field_values_array as $cf_key => $cf_value) {
-				$cf[] = "- :: $cf_key :: $cf_value";
+				$cf[] = trim(str_replace(" ", "","-::$cf_key::$cf_value"));
 			}
 		}
-
-		
 		// echo implode("<br/>",$cf);
 
 		$quantitysets = $this->ref('xShop/QuantitySet')->setOrder(array('custom_fields_conditioned desc','qty desc','is_default asc'));
+
 		$i=1;
 		foreach ($quantitysets as $qsjunk) {
 			// check if all conditioned match AS WELL AS qty
 			$cond = $this->add('xShop/Model_QuantitySetCondition')->addCondition('quantityset_id',$qsjunk->id);
 			$all_conditions_matched = true;
-			foreach ($cond as $condjunk) {				
-				if(!in_array(trim(str_replace("  ", " ", $condjunk['custom_field_value'])),$cf)){
+			foreach ($cond as $condjunk) {
+				if(!in_array(trim(str_replace(" ", "", $condjunk['custom_field_value'])),$cf)){
 					$all_conditions_matched = false;
+					// echo trim(str_replace(" ", "", $condjunk['custom_field_value']))."<br/>";
 				}
 			}
 
@@ -660,6 +660,7 @@ class Model_Item extends \Model_Document{
 
 	function getAmount($custom_field_values_array, $qty, $rate_chart='retailer'){
 		$price = $this->getPrice($custom_field_values_array, $qty, $rate_chart);
+		
 		return array('original_amount'=>$price['original_price'] * $qty,'sale_amount'=>$price['sale_price'] * $qty);
 
 	}
@@ -724,7 +725,7 @@ class Model_Item extends \Model_Document{
 		$qty_added=array();
 		$qty_set_array = array();
 		//load Associated Quantity Set
-			$qty_set_model = $this->ref('xShop/QuantitySet');
+			$qty_set_model = $this->ref('xShop/QuantitySet')->addCondition('is_default',false);
 			//foreach qtySet get all Condition
 				foreach ($qty_set_model as $junk){
 					if(!in_array($junk['qty'], $qty_added)){

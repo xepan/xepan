@@ -10,7 +10,7 @@ class page_xShop_page_getrate extends Page{
 			$item= $this->add('xShop/Model_Item')->load($_GET['item_id']);
 			extract($item->getPrice(json_decode($_GET['custome_fields'],true),$_GET['qty'],null));
 
-			echo $this->api->currency['symbole']." ".$sale_amount;
+			echo $this->api->currency['symbole']." ".$sale_price;
 			exit;	
 		}else{
 			$item= $this->add('xShop/Model_Item')->load($_GET['item_id']);
