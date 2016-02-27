@@ -23,7 +23,19 @@ class View_Tools_Category extends \componentBase\View_Component{
 			
 			$cat_model=$this->add('xShop/Model_Category')->load($_GET['xsnb_category_id']);
 			$cat_name = $cat_model->get('name');
-			$item_count=$cat_model->ref('xShop/CategoryItem')->addCondition('is_associate',true)->count()->getOne();
+
+			//Count Only Website Display Item
+			$cat_item_model = $cat_model->ref('xShop/CategoryItem');
+			$cat_item_j = $cat_item_model->join('xshop_items','item_id');
+			$cat_item_j->addField('is_publish');
+			$cat_item_j->addField('is_saleable');
+			$cat_item_j->addField('website_display');
+			$cat_item_model->addCondition('is_publish',true);
+			$cat_item_model->addCondition('is_saleable',true);
+			$cat_item_model->addCondition('website_display',true);
+			$cat_item_model->addCondition('is_associate',true);
+			
+			$item_count= $cat_item_model->count()->getOne();
 			
 			$v=$this->add('View')->addClass('xshop-category-name-count');
 			$v->add('H2')->set($cat_name)->addClass('xshop-category-name');
