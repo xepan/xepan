@@ -36,7 +36,7 @@ class View_MemberAccountInfo extends \View{
 			$add_button = true;
 
 		$c = $profile_tab->add('CRUD',['allow_add'=>$add_button,'allow_del'=>false]);
-		$c->frame_options = ['width'=>'500'];
+		$c->frame_options = array('width'=>'500');
 		$c->setModel($member,['member_photo_id'],['member_photo']);
 
 		if(!$c->isEditing()){
