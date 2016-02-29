@@ -31,7 +31,8 @@ class Model_MemberDetails extends \Model_Document{
 		$this->addField('tin_no')->group('a~4');
 		$this->addField('pan_no')->group('a~4');
 
-		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true)->group('a~4');
+		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true)->group('a~1');
+		$this->addField('is_organization')->type('boolean')->group('a~2');
 		$this->add('filestore/Field_File','member_photo_id')->mandatory(true);
 						
 		// $this->hasMany('xShop/Order','member_id');
@@ -43,6 +44,7 @@ class Model_MemberDetails extends \Model_Document{
 		$this->hasMany('xShop/Quotation','customer_id');
 		$this->hasMany('xShop/Order','member_id');
 		$this->hasMany('xShop/ItemTemplate','designer_id');
+		$this->hasMany('xShop/ItemTemplate','to_customer_id');
 		$this->hasMany('xAccount/Account','customer_id');
 		
 		$this->addExpression('name')->set(function($m,$q){
