@@ -24,6 +24,7 @@ class Model_Item extends \Model_Document{
 		$this->hasOne('xShop/Application','application_id');
 		$this->hasOne('xShop/MemberDetails','designer_id')->sortable(true);
 
+		$this->hasOne('xShop/MemberDetails','to_customer_id');
 		// //for Mutiple Epan website
 		// $this->hasOne('Epan','epan_id');
 		// $this->addCondition('epan_id',$this->api->current_website->id);
