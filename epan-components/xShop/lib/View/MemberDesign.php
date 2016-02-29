@@ -23,9 +23,14 @@ class View_MemberDesign extends \View {
 		$right=$col->addColumn(5);
 		$form = $left->add('Form');
 		$crud = $this->add('CRUD',array('allow_add'=>false,'allow_edit'=>'false'));
+
 		$template_model = $this->add('xShop/Model_ItemTemplate');
+		if($member['is_organization'] )
+			$template_model->addCondition('to_customer_id',$member->id);
+
 		$tem_field=$form->addField('dropdown','item_template');
 		$tem_field->setModel($template_model);
+		$tem_field->setEmptyText('Please Select');
 
 		$form->addSubmit('Duplicate');
 		if($form->isSubmitted()){
@@ -53,9 +58,11 @@ class View_MemberDesign extends \View {
 	/* Right Column Js Reload Item Image*/
 		$temp_image_model= $right->add('xShop/Model_ItemImages');
 		$temp_image_model->addCondition('item_id',$_GET['image_item_id']);
+
 		$temp_image_model->tryLoadAny();
-			if($temp_image_model->loaded()){
-				$img=$right->add('View')->setElement('img')->setAttr('src',$temp_image_model['item_image'])->setStyle('width','50%');
+		if($temp_image_model->loaded()){
+			$img=$right->add('View')->setElement('img')->setAttr('src',$temp_image_model['item_image'])->setStyle('width','100%')->addClass('atk-box');
+			// $img->js('click')->univ()->loacation($this->api->url(null,$temp_image_model['item_image']));
 		}else{
 			$right->add('View_Box')->set('No Image Found');
 		}
@@ -82,20 +89,23 @@ class View_MemberDesign extends \View {
 			$g->addFormatter('name','name');
 			$g->removeColumn('sku');
 			$g->removeColumn('is_ordered');
+
 			//Edit Template
+			if(!$member['is_organization'] ){				
+				$g->addColumn('edit_template');
+				$g->addMethod('format_edit_template',function($g,$f)use($designer,$designer_page){
+					// echo $this->api->url();
+					if($g->model->ref('item_id')->get('designer_id') == $designer->id){
+						$img = '<img style="box-shadow:0 3px 5px rgba(0, 0, 0, 0.2);" class="atk-align-center" src="index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id='.$g->model['item_id'].'" width="100px;"/>';
+						$g->current_row_html[$f]=$img.'</br>'.'<a class="icon-pencil atk-margin-small" target="_blank" href='.$g->api->url('index',array('subpage'=>$designer_page,'xsnb_design_item_id'=>$g->model['item_id'],'xsnb_design_template'=>'true')).'>Edit Template</a>';
+					}
+					else
+						$g->current_row_html[$f]='';	
+				});
 
-			$g->addColumn('edit_template');
-			$g->addMethod('format_edit_template',function($g,$f)use($designer,$designer_page){
-				// echo $this->api->url();
-				if($g->model->ref('item_id')->get('designer_id') == $designer->id){
-					$img = '<img style="box-shadow:0 3px 5px rgba(0, 0, 0, 0.2);" class="atk-align-center" src="index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id='.$g->model['item_id'].'" width="100px;"/>';
-					$g->current_row_html[$f]=$img.'</br>'.'<a class="icon-pencil atk-margin-small" target="_blank" href='.$g->api->url('index',array('subpage'=>$designer_page,'xsnb_design_item_id'=>$g->model['item_id'],'xsnb_design_template'=>'true')).'>Edit Template</a>';
-				}
-				else
-					$g->current_row_html[$f]='';	
-			});
+				$g->addFormatter('edit_template','edit_template');
+			}
 
-			$g->addFormatter('edit_template','edit_template');
 
 			//Edit Design
 			$g->addColumn('design');

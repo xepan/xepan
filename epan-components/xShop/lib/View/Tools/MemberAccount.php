@@ -44,6 +44,7 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 		$this->template->trySet('email',$user_email);
 
 
+
 		//Adding Two view Left and Right
 		$left = $this->add('View',null,'listmenu');
 		$right = $this->add('View');
@@ -63,6 +64,8 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 		$member = $this->add('xShop/Model_MemberDetails');
 		$member->addCondition('users_id',$this->api->auth->model->id);
 		$member->tryLoadAny();
+
+		$this->template->trySet('member_photo',$member['member_photo']);
 
 		if( $selected_menu == "myaccount"){
 			$right->add('H2','heading')->set('Account Information')->setStyle(array('border-bottom'=>'2px solid #f2f2f2','padding-bottom'=>'10px'));

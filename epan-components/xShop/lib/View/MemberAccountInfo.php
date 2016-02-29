@@ -20,19 +20,32 @@ class View_MemberAccountInfo extends \View{
 		);
 
 		$member->addCondition('users_id',$this->api->auth->model->id);
+		$member->setLimit(1);
 		$member->tryLoadAny();
 
 		$tab = $this->add('Tabs');
-		// $profile_tab = $tab->addTab('Profile Photo');
+		$profile_tab = $tab->addTab('Profile Photo');
 		$password_tab = $tab->addTab('Change Password');
 		$address_tab = $tab->addTab('Address');	
-		$deactive_tab = $tab->addTab('Deactive');
+		$deactive_tab = $tab->addTab('Deactive My Account');
 	
 	// //============================Profile Photo
 	// 	$pf = $profile_tab->add('Form');
-	// 	// $c = $profile_tab->add('CRUD');
-	// 	$pf->setModel($member);
+		$add_button = false;
+		if(!$member['member_photo_id'])
+			$add_button = true;
 
+		$c = $profile_tab->add('CRUD',['allow_add'=>$add_button,'allow_del'=>false]);
+		$c->frame_options = ['width'=>'500'];
+		$c->setModel($member,['member_photo_id'],['member_photo']);
+
+		if(!$c->isEditing()){
+			$g = $c->grid;
+			$g->addMethod('format_member_photo',function($g,$f){
+				$g->current_row_html[$f]='<img width="200px" src="'.$g->model['member_photo'].'"></img>';
+			});
+			$g->addFormatter('member_photo','member_photo');
+		}
 
 	//============================Change Password
 		$user = $this->add('Model_Users')->load($this->api->auth->model->id);

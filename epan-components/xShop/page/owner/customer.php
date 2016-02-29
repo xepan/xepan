@@ -61,7 +61,7 @@ class page_xShop_page_owner_customer extends page_xShop_page_owner_main{
 										'landmark','city','state','pan_no','tin_no',
 										'country','address',
 										'pincode','billing_address',
-										'shipping_address','user_account_activation','is_active'
+										'shipping_address','user_account_activation','is_active','is_organization'
 										),
 								array('organization_name','customer_name','customer_email',
 										'mobile_number','address','city','state',

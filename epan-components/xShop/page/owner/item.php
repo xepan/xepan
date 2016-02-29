@@ -120,10 +120,16 @@ class page_xShop_page_owner_item extends page_xShop_page_owner_main{
 			}
 		}
 		$template_crud->setModel($template_model);
+		if($template_crud->isEditing()){
+			$template_crud->form->getElement('to_customer_id')->getModel()->addCondition('is_organization',true);
+			// throw new \Exception("Error Processing Request", 1);
+			
+		}
 		//array('name','sku','is_publish','short_description','description','default_qty','default_qty_unit','original_price','sale_price','rank_weight','created_at','expiry_date','allow_attachment','allow_enquiry','allow_saleable','show_offer','show_detail','show_price','show_manufacturer_detail','show_supplier_detail','new','feature','latest','mostviewed','enquiry_send_to_admin','item_enquiry_auto_reply','allow_comments','comment_api','add_custom_button','custom_button_text','custom_button_url','meta_title','meta_description','tags','offer_id','offer_position','is_designable','designer_id','is_template');
 		if(!$template_crud->isEditing()){
 			$template_crud->grid->removeColumns($removeColumns);
 		}
+
 		// ___________________________
 
 		$item_crud->js('reload',$bg->js()->reload());

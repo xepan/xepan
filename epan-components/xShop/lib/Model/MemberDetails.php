@@ -33,7 +33,7 @@ class Model_MemberDetails extends \Model_Document{
 
 		$this->addField('is_active')->type('boolean')->defaultValue(true)->sortable(true)->group('a~1');
 		$this->addField('is_organization')->type('boolean')->group('a~2');
-		$this->add('filestore/Field_File','member_photo_id')->mandatory(true);
+		$this->add('filestore/Field_File','member_photo_id');
 						
 		// $this->hasMany('xShop/Order','member_id');
 		$this->hasMany('xShop/DiscountVoucherUsed','member_id');
