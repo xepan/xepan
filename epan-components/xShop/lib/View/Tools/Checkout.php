@@ -88,7 +88,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			    'returnUrl' => 'http://'.$_SERVER['HTTP_HOST'].$this->api->url(null,array('paid'=>'true','pay_now'=>'true'))->getURL(),
 			    'cancelUrl' => 'http://'.$_SERVER['HTTP_HOST'].$this->api->url(null,array('canceled'=>'true','pay_now'=>'true'))->getURL(),
 				'language' => 'EN',
-				'billing_name' => $order->customer(),
+				'billing_name' => $order->customer()->get('customer_name'),
 				'billing_address' => $order['billing_address'],
 				'billing_city' => $order['billing_city'],
 				'billing_state' => $order['billing_state'],
@@ -104,12 +104,15 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 				'delivery_tel' => $order['shipping_tel'],
 				'delivery_email' => $order['shipping_email']
 		 	);
+
 			// Step 2. if got returned from gateway ... manage ..
 		
 			if($_GET['paid']){
-				$response = $gateway->completePurchase($params)->send();
+				$response = $gateway->completePurchase($params)->send($params);
 			    if ( ! $response->isSuccessful()){
-			  //   	$order_status = $response->getOrderStatus();
+			    	$order_status = $response->getOrderStatus();
+			    	var_dump($order_status);
+
 			  //   	if(in_array($order_status, ['Failure']))
 			  //   		$order_status = "onlineFailure";
 			  //   	elseif(in_array($order_status, ['Aborted']))
@@ -310,19 +313,23 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 	function step4(){
 		$this->order->reload();
 		$message = "Payment Processed Successfully";
-		$class ="atk-box atk-swatch-green atk-align-center";
+		$class ="atk-box atk-align-center atk-effect-success";
 
-		$this->add('View')->setHTML('<div class="atk-push"><span class="xcheckout-step label label-success">Step 1</span> / <span class="xcheckout-step label label-success">Step 2</span> / <span class=" xcheckout-step stepgray label label-success">Step 3</span> / <span class="xcheckout-step label label-info">Finish</span></div>')->addClass('text-center');
+		$this->add('View')->setHTML('<div style="margin-bottom:30px;"class="atk-push"><span class="xcheckout-step label label-success">Step 1</span> / <span class="xcheckout-step label label-success">Step 2</span> / <span class=" xcheckout-step stepgray label label-success">Step 3</span> / <span class="xcheckout-step label label-info">Finish</span></div>')->addClass('text-center');
 		//Payment Calceled 	by User from CCAvenue
 		if($_GET['canceled'] == "true"){
 			$message = "Payment Processed Canceled";
 			$this->order->setStatus('OnlineCanceled');
-			$class = "atk-box atk-swatch-red atk-align-center";
+			$class = "atk-box atk-align-center atk-size-giga atk-effect-danger";
 			$_GET['pay_now'] = false;
 		}
-		$this->add('View')->set($message)->addClass($class);
 
-		$cont_shop_btn = $this->add('Button')->set('Continue Shopping');
+		$col = $this->add('Columns');
+		$col->addColumn(3);
+		$m = $col->addColumn(6);
+		$m->add('View')->set($message)->addClass($class);
+
+		$cont_shop_btn = $m->add('Button')->set('Continue Shopping');
 		//Get Continue Shopping button url from config
 		$cont_shop_btn->js('click')->univ()->location($this->api->url(null,array('subpage'=>'home')));
 	}
