@@ -16,7 +16,7 @@ jQuery.widget("ui.xepan_xshopdesigner",{
 	current_page:'Front Page',
 	current_layout: 'Main Layout',
 	// item_id:undefined, // used from options
-	// item_member_design_id:undefined, // used from options
+	item_member_design_id:undefined, // used from options
 	workplace:undefined,
 	canvas:undefined,
 	safe_zone: undefined,
