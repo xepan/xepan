@@ -82,7 +82,7 @@ class Model_SalesInvoice extends Model_Invoice{
 		$round_value = $this['net_amount'] - ( $this['gross_amount'] + $this['shipping_charge'] - $this['discount']);
 
 		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
-		if($shop_config['is_round_amount_calculation']){
+		// if($shop_config['is_round_amount_calculation']){
 			if($round_value > 0){
 				$transaction->addCreditAccount($roundLedger,abs($round_value));
 				$total_amount = $this['total_amount'] - abs($round_value);
@@ -91,7 +91,7 @@ class Model_SalesInvoice extends Model_Invoice{
 				$transaction->addDebitAccount($roundLedger,abs($round_value));
 				$total_amount = $this['total_amount'] + abs($round_value);
 			}
-		}
+		// }
 
 		$transaction->addCreditAccount($salesLedger,$total_amount);
 		$transaction->execute();
