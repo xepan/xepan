@@ -201,7 +201,10 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 			if($this->model['is_designable']){
 				// add Personalioze View
 				$this->add('Button',null,'xshop_item_design_item')->set('Personalize')->js('click',$this->js()->univ()->location("index.php?subpage=".$this->html_attributes['personalization-page']."&xsnb_design_item_id=".$this->model->id));
-			}else{
+			}
+
+			// if designable or not add price tab to show the detail
+			// else{
 				//Price Section Add to cart in tab
 				//add AddToCart View
 				if($this->html_attributes['show-cart-section']){
@@ -217,7 +220,7 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 				}else
 					$cart_tab->add('xShop/View_Item_AddToCart',array('name'=>'cust_'.$this->model->id,'item_model'=>$this->model,'show_custom_fields'=>1,'show_price'=>$this->model['show_price'], 'show_qty_selection'=>1),'xshop_item_cart_btn');
 				}
-			}
+			// }
 		
 
 		//Attachments
@@ -270,8 +273,7 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 			$up_form->addSubmit('Upload');
 
 			$v = $up_tab->add('View');
-			if($_GET['show_cart']){
-				
+			if($_GET['show_cart']){				
 				$v->add('View')->set('Cart Tool');
 				$v->add('xShop/View_Item_AddToCart',array('name'=>'cust_'.$this->model->id,'item_model'=>$this->model,'show_custom_fields'=>1,'show_price'=>true, 'show_qty_selection'=>1,'file_upload_id'=>$_GET['file_upload_id']));
 			}
