@@ -1,7 +1,7 @@
 <?php
 
 class page_xShop_page_designer_pdf extends Page {
-	
+	public $put_water_mark  = true;
 	public $print_ratio = 1;
 	public $false_array=array('undefined','null','false',false);
 
@@ -58,6 +58,8 @@ class page_xShop_page_designer_pdf extends Page {
 				echo "You are not allowed to take the design preview";
 				exit;
 			}
+		}else{
+			$this->put_water_mark = false;
 		}
 
 		// $design = json_decode($this->item['designs'],true);
@@ -109,7 +111,8 @@ class page_xShop_page_designer_pdf extends Page {
 				}
 				// $pdf->Cell(40,10,$layout_name);
 			// }
-			$this->putWaterMark($pdf);
+			if($this->put_water_mark)
+				$this->putWaterMark($pdf);
 		}
 
 		$pdf->Output();
@@ -123,7 +126,7 @@ class page_xShop_page_designer_pdf extends Page {
 	    $pdf->Text(0,$this->specification['height'],'printonclick.in');
 	    $pdf->Rotate(0);
 		$pdf->SetAlpha(1);
-	    // $this->RotatedText(35,190,'W a t e r m a r k   d e m o',45);
+	    // $pdf->RotatedText(35,190,'W a t e r m a r k   d e m o',45);
 	}
 
 	function addImage($options, $pdf){
