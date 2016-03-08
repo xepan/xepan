@@ -257,15 +257,26 @@ class Model_Order extends \Model_Document{
 		$this->save();
 			$total_amount=0;
 			foreach ($cart_items as $junk) {
+			
 				$order_details=$this->add('xShop/Model_OrderDetails');
 				$item_model = $this->add('xShop/Model_Item')->load($cart_items['item_id']);
 
 				$order_details['order_id']=$this->id;
 				$order_details['item_id']=$cart_items['item_id'];
 				$order_details['qty']=$cart_items['qty'];
-				$order_details['rate']=$cart_items['sales_amount'];//get Item Rate????????????????
-				$order_details['amount']=$cart_items['total_amount'];
-				$order_details['custom_fields']= $item_model->customFieldsRedableToId(json_encode($cart_items['custom_fields']));//json_encode($cart_items['custom_fields']);
+				$order_details['rate']=$cart_items['rateperitem'];//get Item Rate????????????????
+				$order_details['amount']=round($cart_items['qty'] * $cart_items['rateperitem'],2);
+				$order_details['custom_fields']= $item_model->customFieldsRedableToId(json_encode($cart_items['custom_fields']));//json_encode($cart_items['custom_fields']);				
+				$order_details['apply_tax'] = true;
+
+				$tax_id = 0;
+				$t = $item_model->applyTaxs()->setLimit(1);
+				foreach ($t as $ts) {
+					$tax_id = $ts['tax_id'];
+				}
+				
+				$order_details['tax_id'] = $tax_id;
+
 				$total_amount+=$order_details['amount'];
 				$order_details->save();
 
