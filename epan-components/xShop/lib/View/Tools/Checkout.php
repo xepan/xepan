@@ -180,7 +180,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 
 		$discount_field->js('change')->univ()->validateVoucher($discount_field,$form,$discount_amount_field,$total_field,$net_amount_field);
 
-		$total_field->set($this->order->get('total_amount'));
+		$total_field->set($this->order->get('net_amount'));
 		$net_amount_field->set($this->order->get('net_amount'));
 	
 		$form->addSubmit('Next');
