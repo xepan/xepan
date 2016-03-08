@@ -8,6 +8,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 	public $gateway="";
 	function init(){
 		parent::init();
+		
 
 		//Memorize checkout page if not logged in
 		$this->api->memorize('next_url',array('subpage'=>$_GET['subpage'],'order_id'=>$_GET['order_id']));
@@ -127,7 +128,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 				//Change Order Status onlineUnPaid to Submitted
 				$order->setStatus('submitted');
 			    $this->api->forget('checkout_order');
-			    $this->api->redirect($this->api->url(null,array('subpage'=>'home')));
+			    $this->api->redirect($this->api->url(null,array('step'=>4,'pay_now'=>true,'paid'=>true)));
 			    exit;
 			}
 
