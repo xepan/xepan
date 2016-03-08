@@ -23,7 +23,7 @@ Layout_Tool = function(parent){
 			//hide page button view
 			// $('.xshop-designer-pagelayout').hide();
 			//add new Layout of current selected page
-			img = '<img class="xdesigner-page-layout-thumbnail" src="index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id='+self.designer_tool.options.item_id+'&page_name='+page_name+'&layout_name='+index+'" alt="'+index+'"/>';
+			img = '<img class="xdesigner-page-layout-thumbnail" src="index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id='+self.designer_tool.options.item_id+'&page_name='+page_name+'&layout_name='+index+'&item_member_design_id='+self.designer_tool.options.item_member_design_id+'" alt="'+index+'"/>';
 			layout_btn = $('<div class="xshop-designer-layoutbtn clearfix" xdesigner_item_page_name="'+page_name+'" >'+img+'<p class="xshop-designer-layout-name">'+index+'</p><i class="glyphicon glyphicon-ok btn btn-small-xs" > Print</i></div>').appendTo($.find('.xshop-designer-layout')).data('layout',index);
 				layout_btn.click(function(){
 					self.designer_tool.current_page = page_name;
@@ -103,7 +103,7 @@ PageLayout_Component = function (params){
 
 			layout = self.designer_tool.layout_finalized;	
 			// console.log(layout[index]);
-			img = '<img class="xdesigner-page-layout-thumbnail" src="index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id='+self.designer_tool.options.item_id+'&page_name='+index+'&layout_name='+layout[index]+'" alt="'+index+'"/>';
+			img = '<img class="xdesigner-page-layout-thumbnail" src="index.php?page=xShop_page_designer_thumbnail&xsnb_design_item_id='+self.designer_tool.options.item_id+'&page_name='+index+'&layout_name='+layout[index]+'&item_member_design_id='+self.designer_tool.options.item_member_design_id+'" alt="'+index+'"/>';
 			page_btn = $('<div class="xshop-designer-pagebtn" xdesigner_item_page_name="'+index+'" >'+img+'<p class="xshop-designer-page-name" style="color:black;">'+index+'</p></div>').appendTo(page_layout_toolbar).data('page',index);
 			page_btn.click(function(event){
 				//Trick for solve error like select page one component and then select another page same type component here the option are same as previouse selected page component if edit here some option then previous page current_selected_component display on second page 
