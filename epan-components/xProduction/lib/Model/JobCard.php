@@ -66,6 +66,8 @@ class Model_JobCard extends \Model_Document{
 					);
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('afterSave',array($this,'searchStringAftereSave'));
+
+		$this->setOrder('id','desc');
 		// $this->add('dynamic_model/Controller_AutoCreator');
 	}
 
