@@ -43,7 +43,7 @@ class View_MemberDesign extends \View {
 		$designer->loadLoggedIn();
 
 		$my_designs_model = $this->add('xShop/Model_ItemMemberDesign');
-		$item_j = $my_designs_model->join('xshop_items','item_id');
+		$item_j = $my_designs_model->leftJoin('xshop_items','item_id');
 		$item_j->addField('name');
 		$item_j->addField('sku');
 		$item_j->addField('is_party_publish')->caption('Sent for Publish')->type('boolean');
