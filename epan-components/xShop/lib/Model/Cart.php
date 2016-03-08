@@ -41,9 +41,10 @@ class Model_Cart extends \Model{
 			$tax_percentag = $ts['name'];
 		}
 		
-		$tax = number_format(($amount['sale_amount'] * $tax_percentag)/100 , 2);
+		$tax = round( ( $amount['sale_amount']* $tax_percentag)/100 , 2);
 
-		$total = number_format( ($amount['sale_amount'] + $tax),2);
+		$total = round( ($amount['sale_amount'] + $tax),2);
+		// $total = $total + $this['shipping_charge'];
 		
 		$this['item_id'] = $item->id;
 		$this['item_code'] = $item['sku'];
@@ -54,7 +55,7 @@ class Model_Cart extends \Model{
 		$this['sales_amount'] = $total;
 		$this['custom_fields'] = $custom_fields;
 		$this['item_member_design_id'] = $item_member_design_id;
-		$this['total_amount'] = $amount['sale_amount'] + $this['shipping_charge'] + $this['tax'];
+		$this['total_amount'] = $total;
 		$this['file_upload_id'] = $file_upload_id;
 		$this['tax'] = $tax;
 		$this['tax_percentage'] = $tax_percentag;
@@ -80,10 +81,15 @@ class Model_Cart extends \Model{
 	function getTotalAmount() { 
 		$total_amount=0;
 		$cart=$this->add('xShop/Model_Cart');
+		$sum = 100;
 		foreach ($cart as $junk) {
-			$total_amount += $junk['total_amount'];
-		}
 
+			$total_amount = (float)$total_amount + (float)$junk['total_amount'];
+
+		}
+		
+		// echo $total_amount." == ".$sum;
+		// exit;
 		return $total_amount;
 	}
 
@@ -111,6 +117,7 @@ class Model_Cart extends \Model{
 	}
 
 	function updateCart($id, $qty){
+		
 		if(!$this->loaded())
 			throw new \Exception("Cart Model Not Loaded at update cart".$this['item_name']);
 		
@@ -118,16 +125,17 @@ class Model_Cart extends \Model{
 
 		$item = $this->add('xShop/Model_Item')->load($this['item_id']);
 		$prices = $item->getPrice($this['custom_fields'],$qty,'retailer');
-		$amount = $item->getAmount($this['custom_fields'],$qty,'retailer');
 		
+		$amount = $item->getAmount($this['custom_fields'],$qty,'retailer');
+
 		$t = $item->applyTaxs()->setLimit(1);
 		foreach ($t as $ts) {
 			$tax_percentag = $ts['name'];
 		}
+		
+		$tax = round( ( $amount['sale_amount']* $tax_percentag)/100 , 2);
 
-		$tax = number_format(($amount['sale_amount'] * $tax_percentag)/100 , 2);
-
-		$total = number_format( ($amount['sale_amount'] + $tax),2);
+		$total = round( ($amount['sale_amount'] + $tax),2);
 		
 		// $this['item_id'] = $item->id;
 		// $this['item_code'] = $item['sku'];
@@ -138,34 +146,12 @@ class Model_Cart extends \Model{
 		$this['sales_amount'] = $total;
 		// $this['custom_fields'] = $custom_fields;
 		// $this['item_member_design_id'] = $item_member_design_id;
-		$this['total_amount'] = $amount['sale_amount'] + $this['shipping_charge'] + $this['tax'];
+		$this['total_amount'] = $total;
 		// $this['file_upload_id'] = $file_upload_id;
-		$this['tax'] = $tax;
+		$this['tax'] = $tax;		
 		$this['tax_percentage'] = $tax_percentag;
 		// $this['shipping_charge'] = "todo";
 		$this->save();
-
-		// throw new \Exception(print_r($prices,true). print_r($this['custom_fields'],true). " qty $qty", 1);
-		
-
-
-		// $this['item_id'] = $item->id;
-		// $this['item_code'] = $item['sku'];
-		// $this['item_name'] = $item['name'];
-		// $this['rateperitem'] = $prices['sale_price'];
-		// $this['qty'] = $qty;
-		// $this['original_amount'] = $amount['original_amount'];
-		// $this['sales_amount'] = $amount['sale_amount'];
-		// // $this['custom_fields'] = $custom_fields;
-		// // $this['item_member_design_id'] = $item_member_design_id;
-		// $this['total_amount'] = $amount['sale_amount'] + $this['shipping_charge'] + $this['tax'];
-
-		// // $text = "before ". $this['item_name'];
-
-		// $this->save();
-		// $text .= " after ". $this['item_name'];
-		// $this->unLoad();
-		// throw new \Exception("Cart Model Loaded at update cart");
 	}
 
 	function remove($cartitem_id){

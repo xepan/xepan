@@ -27,15 +27,18 @@ class View_CartItem extends \View{
 
 			// get preview image of editable items
 			if($model['item_member_design_id']){
-				$img_url='index.php?page=xShop_page_designer_thumbnail&item_member_design_id='.$model['item_member_design_id'].'&width=80';
+				$img_url='index.php?page=xShop_page_designer_thumbnail&item_member_design_id='.$model['item_member_design_id'];
+
 			}
 
 			$str ='<td class="xshop-cart-item-image col-md-1">';
 			if($model['file_upload_id']){
 				$str .= '<i class="icon-upload atk-swatch-green" filestore="'.$model['file_upload_id'].'"> File Uploaded</i>';
 			}
-			else
-				$str .= '<img width="100%" src="'.$img_url.'"class="xcart-image"/>';
+			else{
+				$url = $img_url."&width=80";
+				$str .= '<img width="100%" src="'.$url.'"class="xcart-image"/>';
+			}
 
 			$str .= '</td>';
 
@@ -56,7 +59,7 @@ class View_CartItem extends \View{
 														'item_member_design_id'=>$model['item_member_design_id']
 														)).'> Edit </a>';
 				//Temporary Off
-				// $name.= '<a href="#"> Preview </a>';
+				// $name.= '<a href="'.$img_url.'" target="_blank"> Preview </a>';
 			}
 
 			if($model['file_upload_id']){
@@ -79,13 +82,11 @@ class View_CartItem extends \View{
 
 		//Qty and Rate
 		if($this->html_attributes['show-cart-items-qty-rate']){
-			// $v = $this->add('View',null,'qty')->setHtml('');
 			//Form			
-			$form=$this->add('Form',null,'qty',array('form/empty'));
-			// if qty_from_set_only ???????????????????
+			$form = $this->add('Form',null,'qty',array('form/empty'));
 			$item = $this->add('xShop/Model_Item')->load($model['item_id']);
-
 			$q_f=$form->addField('Hidden','cart_item_id')->set($model['id']);
+
 			if($item['qty_from_set_only']){
 				// add dropdown type filed with values
 				$q_f=$form->addField('Dropdown','qty')->setValueList($item->getQtySetOnly())->set($model['qty']);
@@ -104,14 +105,15 @@ class View_CartItem extends \View{
 			$q_f->js(true)->univ()->numericField();
 			$q_f->js( 'change', $form->js()->submit() );//->univ()->calculateRate($q_f,$r_f_hidden,$r_f);
 
-			$btn_submit=$form->add('View')->addClass('xshop-cart-qty-update-btn')->set('Update');
-			$btn_submit->js('click')->submit();
+			//Temporary Off Update Button
+			// $btn_submit=$form->add('View')->addClass('xshop-cart-qty-update-btn')->set('Update');
+			// $btn_submit->js('click')->submit();
 			
 			if($form->isSubmitted()){
 				$all_cart_item_model = $this->add('xShop/Model_Cart');
 				$all_cart_item_model->load($form['cart_item_id']);
 				$all_cart_item_model->updateCart($form['cart_item_id'],$form['qty']);
-				// $item['qty']=$form['qty'];
+				
 				$cart_model=$this->add('xShop/Model_Cart');
 				$total_amount=$cart_model->getTotalAmount();
 				$total_saving=$cart_model->getTotalDiscount();
@@ -120,12 +122,14 @@ class View_CartItem extends \View{
 				$js=array();
 				// set rate and amount in row
 				$js[] = $r_f->js()->val($all_cart_item_model['rateperitem']);
-				$js[] = $this->js()->find('.xshop-cart-item-subtotal')->text($all_cart_item_model['total_amount']);
+				$js[] = $this->js()->find('.xshop-cart-item-subtotal')->text(number_format($all_cart_item_model['total_amount'],2));
+				$js[] = $this->js()->find('.xshop-cart-item-delivery')->text($all_cart_item_model['tax_percentage'].'% tax:'.number_format($all_cart_item_model['tax'],2));
+
 				$js[] = $q_f->js()->val($all_cart_item_model['qty']);
 				// set total amount
-				$js[] = $form->js()->_selector('.xshop-cart-price-count')->text($total_amount);
-				$js[] = $form->js()->_selector('.xshop-cart-total-amount-figure')->text($total_amount);
-				$js[] = $form->js()->_selector('.xshop-cart-total-saving-amount-figure')->text($total_saving);
+				$js[] = $form->js()->_selector('.xshop-cart-price-count')->text(number_format($total_amount,2));
+				$js[] = $form->js()->_selector('.xshop-cart-total-amount-figure')->text(number_format($total_amount,2));
+
 				$form->js(null,$js)->univ()->successMessage('Cart Update Successfully')->execute();
 			}
 		}else{
@@ -136,7 +140,7 @@ class View_CartItem extends \View{
 		if($this->html_attributes['show-cart-items-delivery-info']){
 			$str = '<td class="xshop-cart-item-delivery col-md-3">';
 			// $str.= $model['shipping_charge'].' tax:'.$model['tax'];
-			$str.= $model['tax_percentage'].'% tax:'.$model['tax'];
+			$str.= $model['tax_percentage'].'% tax:'.number_format($model['tax'],2);
 			$str.="</td>";
 			$this->template->setHtml('delivery_detail',$str);
 		}
@@ -144,7 +148,7 @@ class View_CartItem extends \View{
 		//subtotal
 		if($this->html_attributes['show-cart-items-subtotal']){
 			$str = '<td class="xshop-cart-item-subtotal col-md-2">';
-			$str.= $model['total_amount'];
+			$str.= number_format($model['total_amount'],2);
 			$str.="</td>";
 			$this->template->setHtml('subtotal',$str);
 		}
@@ -154,11 +158,6 @@ class View_CartItem extends \View{
 			$this->template->tryDel('remove');
 		}
 		
-
-
-	
-
-
 		parent::setModel($model); 	
 	}	
 
