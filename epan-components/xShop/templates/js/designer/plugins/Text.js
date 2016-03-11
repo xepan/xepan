@@ -332,6 +332,11 @@ xShop_Text_Editor = function(parent){
 		});
 	});
 
+	this.editor_close_btn = $('<div class="" style="padding:0;margin:0;position:absolute ;top:-25px;right:0;"><i class="atk-box atk-box-small pull-right glyphicon glyphicon-remove"></i></div>').appendTo(this.element);
+	this.editor_close_btn.click(function(event){
+		self.element.hide();
+	});
+
 	div = $('<div class="xshop-designer-text-input-outer-div" ></div>').appendTo(this.element);
 	this.text_input = $('<textarea class="xshop-designer-text-input" rows="1"></textarea>').appendTo(div);
 

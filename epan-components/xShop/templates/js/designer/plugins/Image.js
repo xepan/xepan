@@ -40,7 +40,7 @@ xShop_Image_Editor = function(parent){
 	});
 	
 
-	this.editor_close_btn = $('<div class="" style="padding:0;margin:0;"><i class="atk-box-small pull-right glyphicon glyphicon-remove"></i></div>').appendTo(this.element);
+	this.editor_close_btn = $('<div class="" style="padding:0;margin:0;padding:0;margin:0;position:absolute;top:-25px;right:0;"><i class="atk-box-small pull-right glyphicon glyphicon-remove"></i></div>').appendTo(this.element);
 
 
 	this.image_button_set = $('<div class="btn-group" role="group"></div>').appendTo(this.element);
