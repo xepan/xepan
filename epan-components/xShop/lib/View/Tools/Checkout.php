@@ -125,8 +125,22 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			    }
 		    	
 			    $order->invoice()->PayViaOnline($response->getTransactionReference(),$response->getData());
+				
+				//send email after payment id paid successfully
 				//Change Order Status onlineUnPaid to Submitted
+				$invoice = $order->invoice();
+				$email_body = $invoice->parseEmailBody();
+				$customer = $invoice->customer();
+				$customer_email=$customer->get('customer_email');
+				$emails = explode(',', $customer_email['customer_email']);
+				$to_email = $emails[0];
+				unset($emails[0]);
+
+				$subject = "Your ".$order['name']." Paid Successfully";
+				$invoice->sendEmail($to_email,$subject,$email_body,$emails);
+				
 				$order->setStatus('submitted');
+
 			    $this->api->forget('checkout_order');
 			    $this->api->redirect($this->api->url(null,array('step'=>4,'pay_now'=>true,'paid'=>true)));
 			    exit;
