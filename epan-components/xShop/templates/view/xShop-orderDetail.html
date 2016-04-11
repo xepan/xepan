@@ -51,13 +51,6 @@
 		</tr>
 		{/discount_amount_section}
 
-		<!-- {shipping_amount_section}
-		<tr align="right">
-			<td>&nbsp;</td>
-			<th>Shipping Amount</th>
-			<td class='' colspan="6"><b>{$currency} {$shipping_amount}</b> </td>
-		</tr>
-		{/shipping_amount_section} -->
 
 		<tr align="right">
 			<td>&nbsp;</td>
@@ -70,6 +63,13 @@
 			<th>Net Amount in Words: </th>
 			<td colspan="6" class=''><b>{$currency}: {$net_amount_in_words} </b> </td>
 		</tr>
+		{shipping_amount_section}
+		<tr align="right">
+			<td>&nbsp;</td>
+			<th>Total Shipping Amount</th>
+			<td class='' colspan="6"><b>{$currency} {$shipping_charge}</b> </td>
+		</tr>
+		{/shipping_amount_section}
 		{/order_amount_section}
 
 	</tbody>

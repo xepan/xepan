@@ -51,7 +51,7 @@ class View_SalesInvoiceDetail extends \CompleteLister{
 		//Amount in word
 		$this->template->set('net_amount_in_words',$invoice->convertNumberToWords($invoice['net_amount']));
 		
-		$this->template->set('round_amount',abs(round($invoice['net_amount'] - $invoice['gross_amount'],2)));
+		$this->template->set('round_amount',abs(round($invoice['net_amount'] - ($invoice['gross_amount']),2)));
 		
 		// throw new \Exception($model->item()->genericRedableCustomFieldAndValue($model['custom_fields']));
 		
