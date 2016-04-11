@@ -13,6 +13,8 @@ class Model_QuantitySet extends \Model_Table{
 		$this->addField('qty')->type('number')->mandatory(true);//->sortable(true);
 		$this->addField('old_price')->type('money')->mandatory(true);//->sortable(true);
 		$this->addField('price')->type('money')->mandatory(true)->caption('Unit Price');//->sortable(true);
+		
+		$this->addField('shipping_charge')->type('money')->mandatory(true);
 		$this->addField('is_default')->type('boolean')->defaultValue(false);//->sortable(true);
 
 		$this->addExpression('custom_fields_conditioned')->set(function($m,$q){
@@ -54,6 +56,7 @@ class Model_QuantitySet extends \Model_Table{
 		$new_asso['qty'] = $this['qty'];
 		$new_asso['old_price'] = $this['old_price'];
 		$new_asso['price'] = $this['price'];
+		$new_asso['shipping_charge'] = $this['shipping_charge'];
 		$new_asso->save();
 		
 		$old_qsc = $this->add('xShop/Model_QuantitySetCondition')->addCondition('quantityset_id', $this->id);

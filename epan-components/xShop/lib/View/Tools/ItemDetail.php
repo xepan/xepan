@@ -97,7 +97,8 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 
 	//=======================Item Price===================================	
 		if( $item['show_price'] and $this->html_attributes['show-item-price']){
-			$str = '<div class="xshop-item-old-price" onclick="javascript:void(0)">'.$this->api->currency['symbole']." ".$item['original_price'].'</div>';
+			$str ='<span style="float:left">Amount: </span>';
+			$str .= '<div class="xshop-item-old-price" onclick="javascript:void(0)">'.$this->api->currency['symbole']." ".$item['original_price'].'</div>';
 			$str.= '<div class="xshop-item-price" onclick="javascript:void(0)">'.$this->api->currency['symbole']." ".$item['sale_price'].'</div>';
 			$this->template->trySetHtml('xshop_item_detail_price',$str);
 		}
@@ -267,10 +268,15 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 		    $image_model->addCondition('member_id',$member->id);
 
 			$member_image=$this->add('xShop/Model_MemberImages');
-			
+			$upload_array=explode(',', $item['upload_file_lable']);
+
 			$up_form=$up_tab->add('Form');
-			$up_form->setModel($member_image,array('image_id'));
-			$up_form->addSubmit('Upload');
+			
+			foreach ($upload_array as $key => $up) {
+				$up_form->addField('Upload','upload_'.$key ,$up)
+						->setModel($image_model);
+			}
+			$up_form->addSubmit('Upload1');
 
 			$v = $up_tab->add('View');
 			if($_GET['show_cart']){				
@@ -279,6 +285,10 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 			}
 
 			if($up_form->isSubmitted()){
+				// foreach ($up_form['upload_'.$key] as $up) {
+				// 	$up_form->save();
+				// }
+
 				$up_form->js(null,$v->js()->reload(array('show_cart'=>1,'file_upload_id'=>$up_form['image_id'])))->execute();
 			}
 			

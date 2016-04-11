@@ -23,7 +23,7 @@ class page_xShop_page_owner_item_qtyandprice extends page_xShop_page_owner_main{
 
 		$crud = $this->add('CRUD');
 		$qset = $item->ref('xShop/QuantitySet')->setOrder(array('custom_fields_conditioned desc','qty desc','is_default asc'));
-		$crud->setModel($qset,array('name','qty','price'),array('name','qty','old_price','price','is_default','custom_fields_conditioned'));
+		$crud->setModel($qset,array('name','qty','price','shipping_charge'),array('name','qty','old_price','price','shipping_charge','is_default','custom_fields_conditioned'));
 		
 
 		if(!$crud->isEditing()){

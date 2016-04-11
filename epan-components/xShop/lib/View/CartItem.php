@@ -119,6 +119,7 @@ class View_CartItem extends \View{
 				$total_saving=$cart_model->getTotalDiscount();
 				$total_item=$cart_model->getItemCount();
 
+				$this->template->setHtml('shipping_charge',$model['shipping_charge']);
 				$js=array();
 				// set rate and amount in row
 				$js[] = $r_f->js()->val($all_cart_item_model['rateperitem']);
@@ -138,17 +139,19 @@ class View_CartItem extends \View{
 
 		//Delivery Information
 		if($this->html_attributes['show-cart-items-delivery-info']){
-			$str = '<td class="xshop-cart-item-delivery col-md-3">';
+			// $str = '<td class="col-md-3">';
+			$str = '<td class="xshop-cart-item-delivery col-md-2">';
 			// $str.= $model['shipping_charge'].' tax:'.$model['tax'];
 			$str.= $model['tax_percentage'].'% tax:'.number_format($model['tax'],2);
 			$str.="</td>";
+			$str .= '<td class="col-md-6">'.$model['shipping_charge'].'</td>';
 			$this->template->setHtml('delivery_detail',$str);
 		}
 
 		//subtotal
 		if($this->html_attributes['show-cart-items-subtotal']){
 			$str = '<td class="xshop-cart-item-subtotal col-md-2">';
-			$str.= number_format($model['total_amount'],2);
+			$str.= number_format($model['total_amount']+$model['shipping_charge'],2);
 			$str.="</td>";
 			$this->template->setHtml('subtotal',$str);
 		}
