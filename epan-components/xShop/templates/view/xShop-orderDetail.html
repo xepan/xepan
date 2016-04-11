@@ -10,6 +10,7 @@
 			<th align="right" class="text-right">Rate</th>
 			<th align="right" class="text-right">Total</th>
 			<th align="right" class="text-right">Tax</th>
+			<th align="right" class="text-right">Shipping <br/>Charge</th>
 			<th colspan="2" align="right" class="text-right">Amount</th>
 			{/order_amount_section}
 		</tr>
@@ -27,6 +28,7 @@
 				<td align="right">{$rate}</td>
 				<td align="right">{$sub_total}</td>
 				<td align="right">{$tax_amount}<br>@  {$tax_type}</td>
+				<<td align="right">{$shipping_charge}</td>
 				<td colspan="2" align="right">{$texted_amount}</td>
 
 				<!--For Tax Value {tax_per_sum}{/tax_per_sum} -->
@@ -48,11 +50,21 @@
 			<td class='' colspan="4"><b>{$currency} {discount_voucher_amount}{/discount_voucher_amount} </b> </td>
 		</tr>
 		{/discount_amount_section}
+
+		<!-- {shipping_amount_section}
+		<tr align="right">
+			<td>&nbsp;</td>
+			<th>Shipping Amount</th>
+			<td class='' colspan="6"><b>{$currency} {$shipping_amount}</b> </td>
+		</tr>
+		{/shipping_amount_section} -->
+
 		<tr align="right">
 			<td>&nbsp;</td>
 			<th>Net Amount</th>
 			<td colspan="6" class=''><b>{$currency} {$net_amount} </b> </td>
 		</tr>
+
 		<tr align="right">
 			<td>&nbsp;</td>
 			<th>Net Amount in Words: </th>
