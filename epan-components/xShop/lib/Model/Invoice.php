@@ -48,8 +48,8 @@ class Model_Invoice extends \Model_Document{
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
 		$this->setOrder('updated_at','desc');
 
-		$this->addExpression('shipping_charge')->function($m,$q{
-			return $m->ref('xShop/InvoiceItem')->sum('shipping_charge');
+		$this->addExpression('shipping_charge')->set(function($m,$q){
+			return $m->refSQL('xShop/InvoiceItem')->sum('shipping_charge');
 		});
 
 		$this->add('dynamic_model/Controller_AutoCreator');
