@@ -55,6 +55,7 @@ class Model_Cart extends \Model{
 		$this['sales_amount'] = $total;
 		$this['custom_fields'] = $custom_fields;
 		$this['item_member_design_id'] = $item_member_design_id;
+		$this['shipping_charge'] = $amount['shipping_charge'];
 		$this['total_amount'] = $total;
 		$this['file_upload_id'] = $file_upload_id;
 		$this['tax'] = $tax;
@@ -84,13 +85,28 @@ class Model_Cart extends \Model{
 		$sum = 100;
 		foreach ($cart as $junk) {
 
-			$total_amount = (float)$total_amount + (float)$junk['total_amount'];
+			$total_amount = (float)$total_amount + (float)$junk['total_amount']+(float)$junk['shipping_charge'];
 
 		}
 		
 		// echo $total_amount." == ".$sum;
 		// exit;
 		return $total_amount;
+	}
+
+	function getTotalShippingCharge(){
+		$total_shipping_charge=0;
+
+		$cart=$this->add('xShop/Model_Cart');
+		$sum = 100;
+		foreach ($cart as $junk) {
+
+			$total_shipping_charge = (float)$total_shipping_charge + (float)$junk['shipping_charge'];
+
+		}
+		
+		return $total_shipping_charge;
+
 	}
 
 	function getTotalDiscount($percentage=false){
