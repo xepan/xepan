@@ -121,8 +121,8 @@ class Model_Order extends \Model_Document{
 		$this->addHook('beforeDelete',$this);
 		$this->setOrder('id','desc');
 
-		$this->addExpression('shipping_charge')->function($m,$q{
-			return $m->ref('xShop/OrderDetails')->sum('shipping_charge');
+		$this->addExpression('shipping_charge')->set(function($m,$q){
+			return $m->refSQL('xShop/OrderDetails')->sum('shipping_charge');
 		});
 
 		$this->add('dynamic_model/Controller_AutoCreator');
@@ -311,7 +311,6 @@ class Model_Order extends \Model_Document{
 			$this['net_amount'] = $total_amount;
 			$this->save();
 			// echo "placeOrderFromCart";
-			
 			// $discountvoucher->processDiscountVoucherUsed($this['discount_voucher']);
 			$this->createInvoice('approved');
 			return $this;
@@ -344,7 +343,7 @@ class Model_Order extends \Model_Document{
 			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
 			$this['gross_amount'] = $this['gross_amount'] + $oi['texted_amount'];
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
-			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'];
+			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'] + $this['shipping_charge'];
 			
 			//For Order Item String Manupulation
 			$order_items_info .= $oi['name']." ".
