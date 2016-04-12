@@ -47,6 +47,11 @@ class Model_Invoice extends \Model_Document{
 		
 		$this->hasMany('xShop/InvoiceItem','invoice_id');
 		$this->setOrder('updated_at','desc');
+
+		$this->addExpression('shipping_charge')->function($m,$q{
+			return $m->ref('xShop/InvoiceItem')->sum('shipping_charge');
+		});
+
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 	
@@ -161,7 +166,7 @@ class Model_Invoice extends \Model_Document{
 		return $this;
 	}
 
-	function addItem($item,$qty,$rate,$amount,$unit,$narration,$custom_fields,$apply_tax=0,$tax_id=0){
+	function addItem($item,$qty,$rate,$amount,$unit,$narration,$custom_fields,$apply_tax=0,$tax_id=0,$shipping_charge=0){
 		$in_item = $this->ref('xShop/InvoiceItem');
 		$in_item['item_id'] = $item->id;
 		$in_item['qty'] = $qty;
@@ -172,6 +177,7 @@ class Model_Invoice extends \Model_Document{
 		$in_item['custom_fields'] = $custom_fields;
 		$in_item['apply_tax'] = $apply_tax;
 		$in_item['tax_id'] = $tax_id;
+		$in_item['shipping_charge'] = $shipping_charge;
 		$in_item->save();
 	}
 	

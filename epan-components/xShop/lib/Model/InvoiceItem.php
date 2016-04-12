@@ -30,6 +30,7 @@ class Model_InvoiceItem extends \Model_Document{
 		$this->addField('narration')->type('text')->system(false);
 		$this->addField('custom_fields')->type('text')->system(false);
 		$this->addField('apply_tax')->type('boolean');//->defaultValue(true);
+		$this->addField('shipping_charge')->type('money')->defaultValue(0);
 
 		$this->addExpression('tax_per_sum')->set(function($m,$q){
 			$tax_assos = $m->add('xShop/Model_Tax');

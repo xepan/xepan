@@ -120,6 +120,11 @@ class Model_Order extends \Model_Document{
 		$this->addHook('afterSave',$this);
 		$this->addHook('beforeDelete',$this);
 		$this->setOrder('id','desc');
+
+		$this->addExpression('shipping_charge')->function($m,$q{
+			return $m->ref('xShop/OrderDetails')->sum('shipping_charge');
+		});
+
 		$this->add('dynamic_model/Controller_AutoCreator');
 	}
 
@@ -268,6 +273,7 @@ class Model_Order extends \Model_Document{
 				$order_details['amount']=round($cart_items['qty'] * $cart_items['rateperitem'],2);
 				$order_details['custom_fields']= $item_model->customFieldsRedableToId(json_encode($cart_items['custom_fields']));//json_encode($cart_items['custom_fields']);				
 				$order_details['apply_tax'] = true;
+				$order_details['shipping_charge'] = $cart_items['shipping_charge'];
 
 				$tax_id = 0;
 				$t = $item_model->applyTaxs()->setLimit(1);
@@ -549,7 +555,8 @@ class Model_Order extends \Model_Document{
 						$oi['narration'],
 						$oi['custom_fields'],
 						$oi['apply_tax'],
-						$oi['tax_id']
+						$oi['tax_id'],
+						$oi['shipping_charge']
 					);					
 				$invoice->updateAmounts();
 				$oi->invoice($invoice);	
