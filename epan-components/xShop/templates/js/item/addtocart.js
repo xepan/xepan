@@ -223,7 +223,7 @@ jQuery.widget("ui.xepan_xshop_addtocart",{
 	populateAddToCartButton: function(){
 		var self= this;		
 
-		agree_tnc = $('<div class="approved-my-design"><input id="approved-my-design" type="checkbox" name="vehicle" /><label for="approved-my-design">&nbsp; I have approved my design</label></div>').appendTo(self.element);
+		agree_tnc = $('<div class="approved-my-design xshop-item-custom-field"><input id="approved-my-design" type="checkbox" name="vehicle" /><label for="approved-my-design">&nbsp; I have approved my design</label></div>').appendTo(self.element);
 
 		add_to_cart_btn = $('<button class="xshop-item-add-to-cart-btn btn btn-default">Add To Cart</button>').appendTo(self.element);
 		$(add_to_cart_btn).click(function(event){
