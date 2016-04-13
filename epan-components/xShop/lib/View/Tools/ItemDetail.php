@@ -285,7 +285,7 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 				$multi_upload_field = $up_form->addField('Upload','upload',"")
 						->allowMultiple($images_count)
 						->setFormatFilesTemplate('view/xepan_file_upload');
-
+				$multi_upload_field->setAttr('accept','.jpeg,.png,.jpg');
 				$multi_upload_field->setModel('filestore/Image');
 
 				$up_form->addSubmit('Next');
