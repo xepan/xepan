@@ -65,7 +65,7 @@ class Model_OrderDetails extends \Model_Document{
 			$tpa = $m->add('xShop/Model_OrderDetails',array('table_alias'=>'txdamt'));
 			$tpa->addCondition('id',$q->getField('id'));
 
-			return "((".$q->getField('amount').") + ( IFNULL((". $tpa->_dsql()->del('fields')->field('tax_amount')->render()."),0) ))";
+			return "((".$q->getField('amount').") + ( IFNULL((". $tpa->_dsql()->del('fields')->field('tax_amount')->render()."),0) +".$q->getField('shipping_charge')." ))";
 		})->type('money');
 
 

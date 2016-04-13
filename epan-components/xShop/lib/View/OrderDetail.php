@@ -41,6 +41,7 @@ class View_OrderDetail extends \CompleteLister{
 			// $order= $model->ref('priority_id');
 			// $this->template->set('gross_amount',$order['amount']);
 			$this->template->set('total_amount',$order['gross_amount']);
+			$this->template->set('shipping_charge',$order['shipping_charge']);
 			//$this->template->set('delivery_date',$order['delivery_date']);
 			// $this->template->set('discount_voucher',$order['discount_voucher']);
 			if($order['discount_voucher_amount'])

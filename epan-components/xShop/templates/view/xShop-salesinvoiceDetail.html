@@ -4,23 +4,24 @@
 	<tbody class='table-striped'>
 		<thead>
 			<th align="left" width="5%" >Sno</th>
-			<th align="left" width="45%" >Item</th>
+			<th align="left" width="35%" >Item</th>
 			<th align="right" class="text-right" width="10%" >Qty</th>
 			{order_amount_section}
 			<th align="right" class="text-right" width="10%">Rate</th>
 			<th align="right" class="text-right" width="10%">Total</th>
 			<th align="right" class="text-right" width="5%">Tax</th>
+			<th align="right" class="text-right" width="10%">Shipping<br/>Charge</th>
 			<th align="right" class="text-right" width="15%">Amount</th>
 			{/order_amount_section}
 		</thead>
 	<tr>
-		<td colspan="7" style="height:300px;" valign="top">
+		<td colspan="8" style="height:300px;" valign="top">
 		{$detail_height_start}
 	{rows}
 	{row}
 		<tr valign="top" style="font-size: 12px;" >
 			<td align="left" valign="top" width="5%">{$sno}</td>
-			<td align="left" width="45%">
+			<td align="left" width="35%">
 				<p>{$item_name}<br><small>{$departments}{$item_narration}</small></p>
 			</td>		
 			<td align="right" width="10%">{$qty}&nbsp;{$unit}</td>
@@ -28,6 +29,7 @@
 				<td align="right" width="10%">{$rate}</td>
 				<td align="right" width="10%">{$sub_total}</td>
 				<td align="right" width="5%">{$tax_amount}<br/>@ {$tax_type} </td>
+				<td align="right" width="10%">{$shipping_charge}</td>
 				<!-- {tax_per_sum}{/tax_per_sum}% -->
 				<td align="right" width="15%">{$texted_amount}</td>
 			{/order_amount_section}
@@ -41,11 +43,16 @@
 
 		{order_amount_section}
 		<tr>
-			<td colspan="7"><hr/></td>
+			<td colspan="8"><hr/></td>
 		</tr>
 		<tr>
-			<td colspan="2">
+			<td colspan="3">
 				Amount in Words: {$net_amount_in_words} / {$currency}
+				{shipping_charge_section}
+					<div >
+						Total Shipping Charge: {$currency} {shipping_charge}{/shipping_charge}
+					</div>
+					{/shipping_charge_section}
 			</td>
 			<td  colspan="5">
 				<table style="width:100%;">
@@ -65,12 +72,6 @@
 							<td ><b>{$currency} {round_amount}0{/round_amount}</b> </td>
 						</tr>
 					{/round_amount_section}
-					{shipping_charge_section}
-					<tr align="right">
-						<td >Shipping Charge</td>
-						<td ><b>{$currency} {shipping_charge}{/shipping_charge} </b> </td>
-					</tr>
-					{/shipping_charge_section}
 					<tr align="right">
 						<td >Net Amount</td>
 						<td ><b>{$currency} {$net_amount} </b> </td>
