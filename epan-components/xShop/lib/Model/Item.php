@@ -124,7 +124,8 @@ class Model_Item extends \Model_Document{
 		
 		//Blog
 		$this->addField('is_blog')->type('boolean');
-		$this->addField('upload_file_lable')->type('text');
+		$this->addField('upload_file_lable')->type('text')->hint('comma separated multiple file name');
+		$this->addField('item_specific_upload_hint')->type('text');
 
 		$this->hasMany('xShop/CategoryItem','item_id');
 		$this->hasMany('xShop/ItemAffiliateAssociation','item_id');
