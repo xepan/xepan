@@ -76,7 +76,7 @@ class page_xShop_page_owner_item_qtyandprice extends page_xShop_page_owner_main{
 	function page_upload(){
 		$item_id = $this->api->stickyGET('item_id');
 		$form = $this->add('Form');
-		$form->addField('line','custom_fields')->setFieldHint('Enter comma separated custom fields');
+		$form->addField('line','custom_fields')->setFieldHint('Enter comma separated custom fields, Qty,Price,ShippingCharge');
 		$form->addSubmit('Generate Sample File');
 		
 		if($_GET[$this->name]){
@@ -134,7 +134,7 @@ class page_xShop_page_owner_item_qtyandprice extends page_xShop_page_owner_main{
 				}
 
 				$importer = new CSVImporter($_FILES['csv_qty_set_file']['tmp_name'],true,',');
-				$data = $importer->get(); 
+				$data = $importer->get();
 				$item = $this->add('xShop/Model_Item')->load($_GET['item_id']);
 
 				if($_POST['remove_old']){
@@ -155,6 +155,7 @@ class page_xShop_page_owner_item_qtyandprice extends page_xShop_page_owner_main{
 					$qs['item_id'] = $item->id;
 					$qs['qty'] = $row['Qty'];
 					$qs['price'] = $row['Price'];
+					$qs['shipping_charge'] = $row['ShippingCharge'];
 					$qs->save();
 					unset($row['Qty']);
 					unset($row['Price']);
