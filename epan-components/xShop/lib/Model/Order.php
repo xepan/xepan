@@ -288,13 +288,16 @@ class Model_Order extends \Model_Document{
 
 				if($cart_items['file_upload_id']){
 
-					$atts = $this->add('xShop/Model_SalesOrderDetailAttachment');
-					$atts->addCondition('related_root_document_name','xShop\OrderDetail');
-					$atts->addCondition('related_document_id',$order_details->id);
-					$atts->tryLoadAny();
-					
-					$atts['attachment_url_id'] = $cart_items['file_upload_id'];
-					$atts->save();
+					$uploaded_images = explode(",", $cart_items['file_upload_id']);
+
+					foreach ($uploaded_images as $file_id) {
+						// echo "$file_id<br/>";
+						$atts = $this->add('xShop/Model_SalesOrderDetailAttachment');
+						$atts->addCondition('related_root_document_name','xShop\OrderDetail');
+						$atts->addCondition('related_document_id',$order_details->id);
+						$atts['attachment_url_id'] = $file_id;
+						$atts->saveAndUnload();
+					}
 				}
 			}
 
