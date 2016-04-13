@@ -222,8 +222,16 @@ jQuery.widget("ui.xepan_xshop_addtocart",{
 
 	populateAddToCartButton: function(){
 		var self= this;
+		agree_tnc = $('<div class="approved-my-design"><input id="approved-my-design" type="checkbox" name="vehicle" />I have approved my design</div>').appendTo(self.element);
+
 		add_to_cart_btn = $('<button class="xshop-item-add-to-cart-btn btn btn-default">Add To Cart</button>').appendTo(self.element);
 		$(add_to_cart_btn).click(function(event){
+			// if(add_to_cart_btn).val();
+			if(!$(agree_tnc).find('#approved-my-design').is(':checked')){
+				alert('approved your design first');
+				return;
+			}
+
 			var all_custom_fields_selected = true;
 			var missed_custom_fields = [];
 			$.each(self.options.custom_fields, function(custom_field, custom_field_details){
