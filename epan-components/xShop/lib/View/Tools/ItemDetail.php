@@ -264,8 +264,6 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
       			return;
       		}
 
-		    $image_model = $this->add('xShop/Model_MemberImages');
-		    $image_model->addCondition('member_id',$member->id);
 
 			$member_image=$this->add('xShop/Model_MemberImages');
 			$images_count = 1;
@@ -274,23 +272,36 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 				$images_count = count($upload_array);
 			}
 
+			$up_tab->add('View')->setElement('h2')->setHtml($item['item_specific_upload_hint']);
 			$up_form=$up_tab->add('Form');
-			
+
 			$up_form->addField('Upload','upload',"")
-					->allowMultiple($images_count)
+					->allowMultiple($images_count)->validateNotNull()
 					->setModel('filestore/File');
 
 			$up_form->addSubmit('Upload');
 
 			$v = $up_tab->add('View');
 			if($_GET['show_cart']){
-				$v->add('View')->set('Cart Tool');
-				$v->add('xShop/View_Item_AddToCart',array('name'=>'cust_'.$this->model->id,'item_model'=>$this->model,'show_custom_fields'=>1,'show_price'=>true, 'show_qty_selection'=>1,'file_upload_id'=>$_GET['file_upload_id']));
+				// $v->add('View')->set('Cart Tool')
+				$v->add('xShop/View_Item_AddToCart',array('name'=>'cust_'.$this->model->id,'item_model'=>$this->model,'show_custom_fields'=>1,'show_price'=>true, 'show_qty_selection'=>1,'file_upload_id'=>$_GET['file_upload_ids']));
 			}
 
 			if($up_form->isSubmitted()){
+				//check for the image count
+				$upload_images_array = explode(",",$up_form['upload']);
 
-				$up_form->js(null,$v->js()->reload(array('show_cart'=>1,'file_upload_id'=>$up_form['image_id'])))->execute();
+				if($images_count != count($upload_images_array))
+					$up_form->error('upload','upload all images');
+
+				foreach ($upload_images_array as $file_id) {
+				    $image_model = $this->add('xShop/Model_MemberImages');
+				    $image_model->addCondition('member_id',$member->id);
+					$image_model['image_id'] = $file_id;
+					$image_model->saveAndUnload();
+				}
+
+				$up_form->js(null,$v->js()->reload(array('show_cart'=>1,'file_upload_ids'=>$up_form['upload'])))->execute();
 			}
 			
 		}
