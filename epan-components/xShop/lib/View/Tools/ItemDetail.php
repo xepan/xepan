@@ -268,26 +268,27 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 		    $image_model->addCondition('member_id',$member->id);
 
 			$member_image=$this->add('xShop/Model_MemberImages');
-			$upload_array=explode(',', $item['upload_file_lable']);
+			$images_count = 1;
+			if($item['upload_file_lable']){
+				$upload_array=explode(',', $item['upload_file_lable']);
+				$images_count = count($upload_array);
+			}
 
 			$up_form=$up_tab->add('Form');
 			
-			foreach ($upload_array as $key => $up) {
-				$up_form->addField('Upload','upload_'.$key ,$up)
-						->setModel($image_model);
-			}
-			$up_form->addSubmit('Upload1');
+			$up_form->addField('Upload','upload',"")
+					->allowMultiple($images_count)
+					->setModel('filestore/File');
+
+			$up_form->addSubmit('Upload');
 
 			$v = $up_tab->add('View');
-			if($_GET['show_cart']){				
+			if($_GET['show_cart']){
 				$v->add('View')->set('Cart Tool');
 				$v->add('xShop/View_Item_AddToCart',array('name'=>'cust_'.$this->model->id,'item_model'=>$this->model,'show_custom_fields'=>1,'show_price'=>true, 'show_qty_selection'=>1,'file_upload_id'=>$_GET['file_upload_id']));
 			}
 
 			if($up_form->isSubmitted()){
-				// foreach ($up_form['upload_'.$key] as $up) {
-				// 	$up_form->save();
-				// }
 
 				$up_form->js(null,$v->js()->reload(array('show_cart'=>1,'file_upload_id'=>$up_form['image_id'])))->execute();
 			}

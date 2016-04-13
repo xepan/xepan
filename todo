@@ -1,86 +1,59 @@
-Application Todos:
- ☐ xEnquiry n subscription captcha mandatory
- ☐ cron jobs and data grabbing with social posts
- ☐ Move newsletters between applications
- ☐ owner.php page elfinder.gull js to elfinder.min file conversion
- ☐ smlite to gitemplate
- ☐ filestore for images in xShop and others
- ☐ Email settings : Form stacked
+primescan:
+  ✔ Qyantity set and Condition sort name wise  @done (16-02-25 15:50)
+  ✔ Category tool all Design Count display wrong count @done (16-02-27 18:22)
+  ✔ Cart Detail PlaceOrder Button Color changed @done (16-02-27 18:22)
+  ✔ when payment complete redirect to payment success page @done (16-03-11 14:12)
+  ✔ normal search not found then redirect to 404 page or display related /new/ products @done (16-03-11 14:12)
+  ✔ upload your design test again @done (16-03-11 14:12)
+  ✔ reorder management customer wise and specific design of customer @done (16-03-11 14:12)
+  ✔ Designer Tool Next pe hide the designer tool and show the cart @done (16-03-11 14:13)
+  ☐ jobcard report @erp
+  ☐ invoice report format @erp
+
+  urgent website:
+  ✔ Qty Set pe label qty to ne show @done (16-02-26 15:25)
+  ✔ drop down width must be small @done (16-02-26 17:20)
+  ✔ Qty rate not proper display @done (16-02-26 17:20)
+  ✔ at cart detail show all stock effectable custom field @done (16-02-26 17:26)
+  ✔ show only qty set at cart detail @done (16-02-26 18:1layout set page @done (16-03-08 13:24)1)
+  ✔ tax not applicable at cart detail @done (16-02-26 19:15)
+  ✔ hightlight steps @done (16-02-26 19:48)
+  ✔ remove orange line and height @done (16-02-27 18:21)
+  ✔ category count according to item published and displayed on site @done (16-02-27 18:22)
+  ✔ payment gateway give error @done (16-03-11 13:49)
+  ✔ layout is not working @prerna @done (16-03-11 13:49)
+  ✔ calendar horizontal and verical height issue @done (16-03-11 14:13)
+  
+  ✔ Item hasOne to_customer_id / website display off  @done (16-03-11 13:49)
+  ✔ define in member is_organization @done (16-03-11 13:49)
+  ✔ member tool show only organization templates @done (16-03-11 13:50)
+  ✔ on order add reorder button @done (16-03-11 14:13)
+  ☐ 
+    urgent website:
+  ✔ layout set page @done (16-03-08 13:24)
+  ✔ delete only one design from member accoount @done (16-03-08 10:08)
+  ✔ user name and password removed form welcome email @done (16-03-08 10:08)
+  ✔ cart update with amount removed update button @done (16-03-08 12:32)
+  ✔ offline amount calculation of online order @done (16-03-08 15:45)
+  ✔ remove watermark when printing @done (16-03-08 16:09)
+  ✔ sucessfull message after payment successfull @done (16-03-08 16:50)
+  ✔ order history at my account tool @done (16-03-08 16:29)
+  ✔ membder design image after de @done (16-03-08 16:29)
+  ✔ item name hide @done (16-03-08 17:35)
+  ✔ text/image close button  @done (16-03-11 14:57)
+  ✔ final payment invoice to be email @done (16-03-11 15:40)
+  ✔ cart icon at admin on all online order @done (16-03-11 16:52)
+  ☐ fedex order tracking code at dispatch time from backend
+  ☐ change label pdf to proof
+  ☐ Item/Template/Offline Tab add at backend
+  ☐ item count at categrory according to filter
+
+  ✔ design for you @done (16-03-08 17:57)
+  ✔ personalize at  bottom of list @done (16-03-11 16:51)
+  ✔ job crad sequence  @done (16-03-08 17:00)
+
+ ✔ item background-color  #ededed; @done (16-03-11 16:51)
 
 
-   ATK:
- ☐ quicksearch if paginator page is set and records are less than it.. should go to last page
+file upload with order sequence
 
-
- Order .. approx delivery date, priority ....
- Dispatch as last dept ... addItem looks wrong ... cannot forward to dispatch ... 
- Quotation View as per Sales Order ... 
- and terms and condition add in template ... 
-
- all action must have comment or message on click ... (_page type of functions)
-
-
-Dispatch .. Out Source check
-
-
-
-order no direct show on jobcard
-
-
-24 march:
-1)when appove order if selected store...
-2)job card k grid pr oder no b show krna h
-3.) material request ka view name k click pr lana h abhi grid k random click  pr aa rha h 
-
-8 April:
-1) Quotation Rate Amount Calculation
-2) Team Assignment
-3) Quotation view like Order View 
-4) JobCard Editing Facility
-5)
-
-
-5 Jun:
-Narration sab jagah jodna he
- ☐Purchase Order
- ☐Purchase Invoice
- ☐Quotation
- ☐Sale Order
- ☐Sale Invoice
-Amount in words print or send via mail par jodna he
- ☐ Dispatch to direct invoice tax amount nahi aa rha he
-Custome Fields View Beautify krna he
-created date invoice, order, jobcard par jodni he 
-All name ka Tab Sab Jagah dena he
-Account Statement rates shi nh aa rhi he
-Discount in Acount Department dekhna he
-REPORT CREATE KRNI HE :
-
-
-
-//xMLM Updatetion
-Booking form only checking date
-
---------Done-----------
-At approve hotel confirmation separate field and contact number of hotel
-and confirmation number in email and hotel contact number
-
-Joining kit  change to Packages
-
-Upload Proof
-Upload Distributors sign up Form
-Show geenration income
-//add level plan and income in next version
-hide repurchase menu
-indroduction income change to Direct selling income
-check for booking if done for a year entry ...
-Credit manage with multiple email id
-freelook -1 days
-logout jump to main website
-KYC and address proof in backend admin ...
---------Done-----------
-
-
-Booking approve tab 1add filter for today approval and other
-
-Config emails templates of various locations ... 

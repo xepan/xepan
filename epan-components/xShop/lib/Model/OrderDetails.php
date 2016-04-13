@@ -32,7 +32,7 @@ class Model_OrderDetails extends \Model_Document{
 		$this->addField('narration')->type('text')->system(false);
 		$this->addField('custom_fields')->type('text')->system(false);
 		$this->addField('apply_tax')->type('boolean')->defaultValue(true);
-		$this->addField('shipping_charge')->type('money');
+		$this->addField('shipping_charge')->type('money')->defaultValue(0);
 
 		$this->addExpression('name')->set(function($m,$q){
 			return $m->refSQL('item_id')->fieldQuery('name');
