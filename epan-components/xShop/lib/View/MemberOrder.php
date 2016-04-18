@@ -9,7 +9,7 @@ class View_MemberOrder extends \View{
 		parent::init();
 
 		if($_GET['print']){
-			$this->js()->univ()->newWindow($this->api->url("xShop/page_printorder",array('order_id'=>$_GET['print'],'cut_page'=>1,'subpage'=>'xshop-junk')),null,'height=689,width=1246,scrollbar=1')->execute();
+			$this->js()->univ()->newWindow($this->api->url("xShop_page_owner_printsaleorder",array('saleorder_id'=>$_GET['print'],'cut_page'=>1,'subpage'=>'xshop-junk','sale_performa'=>1)),null,'height=689,width=1246,scrollbar=1')->execute();
 		}  
 		
 		$m = $this->add('xShop/Model_MemberDetails');
