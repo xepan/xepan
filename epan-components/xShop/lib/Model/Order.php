@@ -346,7 +346,7 @@ class Model_Order extends \Model_Document{
 			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
 			$this['gross_amount'] = $this['gross_amount'] + $oi['texted_amount'];
 			$this['tax'] = $this['tax'] + $oi['tax_amount'];
-			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'] + $this['shipping_charge'];
+			$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount_voucher_amount'] + ($this['shipping_charge']?$this['shipping_charge']:0);
 			
 			//For Order Item String Manupulation
 			$order_items_info .= $oi['name']." ".

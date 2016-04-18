@@ -77,6 +77,8 @@ class Model_Invoice extends \Model_Document{
 	
 	function updateAmounts(){
 		
+		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
+
 		$this['total_amount']=0;
 		$this['gross_amount']=0;
 		$this['tax']=0;
@@ -85,9 +87,8 @@ class Model_Invoice extends \Model_Document{
 		$invoice_items_info = "";
 		foreach ($this->itemrows() as $oi) {
 			$this['total_amount'] = $this['total_amount'] + $oi['amount'];
-			$this['gross_amount'] = $this['gross_amount'] + $oi['texted_amount'];
-			$this['tax'] = $this['tax'] + $oi['tax_amount'];
-
+			$this['gross_amount'] = $this['gross_amount'] + ($oi['texted_amount']?:0);
+			$this['tax'] = $this['tax'] + $oi['tax_amount'];					
 			$invoice_items_info .= 	$oi->item()->get('name')." ".
 									$oi['amount']." ".
 									$oi['qty']." ".
@@ -95,13 +96,13 @@ class Model_Invoice extends \Model_Document{
 									$oi->item()->get('item_name');
 		}	
 		
-		$this['net_amount'] = $this['gross_amount']  - $this['discount'];
+		$this['net_amount'] = $this['total_amount'] + $this['tax'] - $this['discount'] + ($this['shipping_charge']?$this['shipping_charge']:0);
 		//xShop Configuration model must be loaded in Api
 		$shop_config = $this->add('xShop/Model_Configuration')->tryLoadAny();
 		if($shop_config['is_round_amount_calculation']){
 			$this['net_amount'] = round($this['net_amount'],0);
 		}
-
+		
 		//Updating Search String		
 		$str = 	$this['name']." ".
 				$this['type']. " ".
