@@ -53,7 +53,9 @@ class Model_InvoiceItem extends \Model_Document{
 			$tpa = $m->add('xShop/Model_InvoiceItem',array('table_alias'=>'txdamt'));
 			$tpa->addCondition('id',$q->getField('id'));
 
-			return "((".$q->getField('amount').") + ( IFNULL((". $tpa->_dsql()->del('fields')->field('tax_amount')->render()."),0) +".$q->getField('shipping_charge')."))";
+			return $q->expr('([0] + IFNULL([1],0) + IFNULL([2],0))',[$q->getField('amount'), $m->getElement('tax_amount'),$m->getElement('shipping_charge')]);
+			// return "((".$q->getField('amount').") + ( IFNULL((". $tpa->_dsql()->del('fields')->field('tax_amount')->render()."),0) + IFNUll(0,0) ))";
+
 		})->type('money');
 
 		$this->addExpression('unit')->set(function($m,$q){
