@@ -66,7 +66,7 @@ class page_xShop_page_designer_save extends Page {
 			$target->updateFirstImageFromDesign();			
 
 
-			echo "true";
+			echo $target['id'];
 			exit;
 			
 		}elseif(isset($target) and ($_POST['designer_mode']=='false' OR !isset($_POST['designer_mode'])) and /* Made by me only --> */ $target['member_id'] == $designer->id ){

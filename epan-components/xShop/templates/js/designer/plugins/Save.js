@@ -10,6 +10,21 @@ Save_Component = function (params){
 	this.initExisting = function(params){
 
 	}
+	
+	this.getUrlParameter = function(params) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+	    for (i = 0; i < sURLVariables.length; i++) {
+	        sParameterName = sURLVariables[i].split('=');
+
+	        if (sParameterName[0] === params) {
+	            return sParameterName[1] === undefined ? true : sParameterName[1];
+	        }
+    	}
+	}
 
 	this.renderTool = function(parent){
 		var self = this;
@@ -64,21 +79,28 @@ Save_Component = function (params){
 						},
 				})
 				.done(function(ret) {
-					if(ret==='true'){
-						$.univ().successMessage('Saved Successfully');
-						console.log('Item Design Saved Successfully');
+					if($.isNumeric(ret)){
+						self.designer_tool.options.item_member_design_id = ret;
+						page = self.getUrlParameter('subpage_page');
+						if(!self.getUrlParameter('item_member_design_id')){
+							old_url = window.location.href;
+							new_url = old_url.split( '&' )[0];
+							$.univ().successMessage('loading your saved design');
+							$.univ.location(old_url+'&item_member_design_id='+ret);
+						}else
+							$.univ().successMessage('Saved Successfully');
 					}
 					else if(ret.indexOf('false')===0){
 						$.univ().errorMessage('Not Saved, some thing wrong');
 					}else{
 						if(!isNaN(+ret)){
 							self.designer_tool.options.item_member_design_id = ret;
-							if(self.designer_tool.cart != undefined || self.designer_tool.cart != '0'){
-								self.designer_tool.cart.xepan_xshop_addtocart('option','item_member_design_id',ret);
-								// console.log(self.designer_tool.cart.options);
-							}
-							// window.history.pushState('page', 'saved_page', 'replace url');
-							$.univ().successMessage('Saved Successfully');
+							// if(self.designer_tool.cart != undefined || self.designer_tool.cart != '0'){
+							// 	self.designer_tool.cart.xepan_xshop_addtocart('option','item_member_design_id',ret);
+							// 	// console.log(self.designer_tool.cart.options);
+							// }
+							// // window.history.pushState('page', 'saved_page', 'replace url');
+							// $.univ().successMessage('Saved Successfully');
 						}else{
 							eval(ret);
 						}
