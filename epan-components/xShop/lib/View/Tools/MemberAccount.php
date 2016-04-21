@@ -52,6 +52,7 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 		//Left Menu bar Buttons		
 		$left->add('View')->setElement('button')->addClass('list-group-item atk-swatch-yellow')->set('My Account')->setAttr('data-type','myaccount')->setStyle('padding','10px !important');
 		$left->add('View')->setElement('button')->addClass('list-group-item ')->set('Order History')->setAttr('data-type','order')->setStyle('padding','10px !important');
+		$left->add('View')->setElement('button')->addClass('list-group-item ')->set('My Templates')->setAttr('data-type','template')->setStyle('padding','10px !important');
 		$left->add('View')->setElement('button')->addClass('list-group-item ')->set('My Designs')->setAttr('data-type','mydesign')->setStyle('padding','10px !important');
 		$left->add('View')->setElement('button')->addClass('list-group-item ')->set('Settings')->setAttr('data-type','setting')->setStyle('padding','10px !important');
 
@@ -108,6 +109,11 @@ class View_Tools_MemberAccount extends \componentBase\View_Component{
 		}elseif($selected_menu == "setting"){
 			$right->add('H2','heading')->set('Settings')->setStyle(array('border-bottom'=>'2px solid #f2f2f2','padding-bottom'=>'10px'));
 			$right->add('xShop/View_MemberAccountInfo');
+
+		}elseif($selected_menu == "template"){
+			$right->add('H2','heading')->set('My Templates')->setStyle(array('border-bottom'=>'2px solid #f2f2f2','padding-bottom'=>'10px'));
+			$right->add('xShop/View_MemberTemplate',array('designer_page'=>$this->html_attributes['xsnb-desinger-page']));
+
 		}
 
 		$right->add('View')->set($_GET['type1']);
