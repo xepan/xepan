@@ -294,8 +294,8 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 					//check for the image count
 					$upload_images_array = explode(",",$up_form['upload']);
 
-					if($images_count != count($upload_images_array))
-						$up_form->error('upload','upload all images');
+					// if($images_count != count($upload_images_array))
+					// 	$up_form->error('upload','upload all images');
 
 					foreach ($upload_images_array as $file_id) {
 					    $image_model = $this->add('xShop/Model_MemberImages');
