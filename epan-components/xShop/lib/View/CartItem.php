@@ -57,7 +57,7 @@ class View_CartItem extends \View{
 														'xsnb_design_item_id'=>'not-available',
 														'xsnb_design_template'=>'false',
 														'item_member_design_id'=>$model['item_member_design_id']
-														)).'> Edit </a>';
+														)).'> Edit Design </a>';
 				//Temporary Off
 				// $name.= '<a href="'.$img_url.'" target="_blank"> Preview </a>';
 			}
