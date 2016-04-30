@@ -44,11 +44,13 @@ class View_Login extends \View{
 				// throw new \Exception($_GET['redirect'], 1);
 				
 				//Check for the checkout page
-				if($this->api->recall('next_url')){
+				// throw new \Exception($this->app->recall('next_url'), 1);
+				
+				if($this->app->recall('next_url')){
 					$redirect_url = array('subpage'=>$this->api->recall('next_url'));
 				}
-					// $this->api->forget('next_url');
 
+					// $this->api->forget('next_url');
 				if($form->isSubmitted()){
 					// throw new \Exception(print_r($redirect_url));
 					
@@ -65,8 +67,11 @@ class View_Login extends \View{
 					// $this->app->auth->addEncryptionHook($user_model);
 					$this->api->auth->login($form['username']);
 					// if reload page
-					
-					$this->api->redirect($this->api->url(null,$redirect_url))->execute();
+
+					if($this->app->recall('next_url') And $this->app->recall('next_url_parameters')){
+						$redirect_url=array('subpage'=>$this->api->recall('next_url'),'xsnb_item_id'=>$this->app->recall('next_url_parameters'));
+					}
+						$this->api->redirect($this->api->url(null,$redirect_url))->execute();
 					// else
 						$this->js()->reload()->execute();
 				}
