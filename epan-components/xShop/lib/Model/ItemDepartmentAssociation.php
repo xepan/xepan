@@ -25,12 +25,13 @@ class Model_ItemDepartmentAssociation extends \Model_Table{
 		return $this['can_redefine_items'];
 	}
 
-	function duplicate($item_id){
-		$asso_model = $this->add('xShop/Model_ItemDepartmentAssociation')->addCondition('item_id',$item_id);
+	function duplicate($new_item_id,$from_item_id){
+
+		$asso_model = $this->add('xShop/Model_ItemDepartmentAssociation')->addCondition('item_id',$from_item_id)->addCondition('is_active',true);
 		foreach ($asso_model as $association) {
 			$m = $this->add('xShop/Model_ItemDepartmentAssociation');
 			$m['department_id'] = $association['department_id'];
-			$m['item_id'] = $association['item_id'];
+			$m['item_id'] = $new_item_id;
 			$m['is_active'] = $association['is_active'];
 			$m->saveAndUnload();
 		}

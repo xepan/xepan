@@ -959,8 +959,8 @@ class Model_Item extends \Model_Document{
 		$new_asso = $old_specification->duplicate($duplicate_template['id']);
 
 		//Item Department Association
-		$old_dept_asso = $this->add('xShop/Model_ItemDepartmentAssociation')->addCondition('item_id',$this->id);
-		$new_asso = $old_dept_asso->duplicate($duplicate_template['id']);
+		$old_dept_asso = $this->add('xShop/Model_ItemDepartmentAssociation');
+		$new_asso = $old_dept_asso->duplicate($duplicate_template['id'],$from_item_id);
 		 
 		//Custom and value Field Duplicate
 		$old_asso = $this->add('xShop/Model_ItemCustomFieldAssos')->addCondition('item_id',$this->id);
