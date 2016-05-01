@@ -54,7 +54,8 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		
 		$step =isset($_GET['step'])? $_GET['step']:1;
 		try{
-			call_user_method("step$step", $this);
+			$func= "step$step";
+			$this->$func();
 		}catch(Exception $e){
 			// remove all database tables if exists or connetion available
 			// remove config-default.php if exists
@@ -198,7 +199,7 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 		$total_field->set($this->order->get('net_amount'));
 		$net_amount_field->set($this->order->get('net_amount'));
 	
-		$form->addSubmit('Next');
+		$form->addSubmit('Next')->addClass('pull-right');
 		
 		if($form->isSubmitted()){
 			//Save Data
@@ -220,22 +221,22 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 
 		$personal_form->setModel($member,array('address','landmark','city','state','country','pincode','mobile_number'));
 
-		$b_a=$personal_form->getElement('address');
-		$s_a=$personal_form->addField('text','shipping_address')->validateNotNull(true)->set($order['billing_address']?:$member['address']);
-		$b_l=$personal_form->getElement('landmark');
-		$s_l=$personal_form->addField('line','s_landmark','Landmark')->validateNotNull(true);
-		$b_c=$personal_form->getElement('city');
-		$s_c=$personal_form->addField('line','s_city','City')->validateNotNull(true);
-		$b_s=$personal_form->getElement('state');
-		$s_s=$personal_form->addField('line','s_state','State')->validateNotNull(true);
-		$b_country=$personal_form->getElement('country');
-		$s_country=$personal_form->addField('line','s_country','Country')->validateNotNull(true);
-		$b_p=$personal_form->getElement('pincode');
-		$s_p=$personal_form->addField('Number','s_pincode','Pincode')->validateNotNull(true);
-		$b_t= $personal_form->getElement('mobile_number');
-		$s_t=$personal_form->addField('line','s_mobile_number','Mobile Number')->validateNotNull(true);
-		$b_e= $personal_form->addField('line','email');
-		$s_e=$personal_form->addField('line','s_email','Email')->validateNotNull(true);
+		$b_a=$personal_form->getElement('address')->setAttr('tabindex',1)->validateNotNull(true);
+		$s_a=$personal_form->addField('text','shipping_address')->validateNotNull(true)->set($order['billing_address']?:$member['address'])->setAttr('tabindex',9)->validateNotNull(true);
+		$b_l=$personal_form->getElement('landmark')->setAttr('tabindex',2)->validateNotNull(true);
+		$s_l=$personal_form->addField('line','s_landmark','Landmark')->validateNotNull(true)->setAttr('tabindex',10);
+		$b_c=$personal_form->getElement('city')->setAttr('tabindex',3)->validateNotNull(true);
+		$s_c=$personal_form->addField('line','s_city','City')->validateNotNull(true)->setAttr('tabindex',11);
+		$b_s=$personal_form->getElement('state')->setAttr('tabindex',4)->validateNotNull(true);
+		$s_s=$personal_form->addField('line','s_state','State')->validateNotNull(true)->setAttr('tabindex',12);
+		$b_country=$personal_form->getElement('country')->setAttr('tabindex',5)->validateNotNull(true);
+		$s_country=$personal_form->addField('line','s_country','Country')->validateNotNull(true)->setAttr('tabindex',13);
+		$b_p=$personal_form->getElement('pincode')->setAttr('tabindex',6)->validateNotNull(true);
+		$s_p=$personal_form->addField('Number','s_pincode','Pincode')->validateNotNull(true)->setAttr('tabindex',13);
+		$b_t= $personal_form->getElement('mobile_number')->setAttr('tabindex',7)->validateNotNull(true);
+		$s_t=$personal_form->addField('line','s_mobile_number','Mobile Number')->validateNotNull(true)->setAttr('tabindex',15);
+		$b_e= $personal_form->addField('line','email')->setAttr('tabindex',8)->validateNotNull(true);
+		$s_e=$personal_form->addField('line','s_email','Email')->validateNotNull(true)->setAttr('tabindex',15)->validateNotNull(true);
 		
 		
 		$personal_form->addField('Checkbox','i_read','<a target="_blank" href="index.php?subpage='.$this->html_attributes['xshop_checkout_tnc_subpage'].'">I have Read All trems & Conditions<a/>')->validateNotNull()->js(true)->closest('div.atk-form-row');
@@ -254,6 +255,19 @@ class View_Tools_Checkout extends \componentBase\View_Component{
 			return;					
 		}
 		if($personal_form->isSubmitted()){
+
+			if(strlen(trim($personal_form['mobile_number'])) != 10)
+				$personal_form->displayError('mobile_number','Mobile Number Must be 10 Digits');
+			
+			if(strlen(trim($personal_form['s_mobile_number'])) != 10)
+				$personal_form->displayError('s_mobile_number','Mobile Number Must be 10 Digits');
+			
+			if(filter_var($personal_form['email'], FILTER_VALIDATE_EMAIL) === false)
+				$personal_form->displayError('email','Email Id is not valid');
+			
+			if(filter_var($personal_form['s_email'], FILTER_VALIDATE_EMAIL) === false)
+				$personal_form->displayError('s_email','Email Id is not valid');
+			
 
 			if(!$personal_form['i_read'])
 				$personal_form->displayError('i_read','It is Must');

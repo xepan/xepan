@@ -258,11 +258,14 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 				$upload_header = '<div class="xshop-item-detail-title xshop-item-upload-label">'.$upload_label.'</div>';
 			}
 
-			$member = $this->add('xShop/Model_MemberDetails');
-      		if(!$member->loadLoggedIn()){
-      			$up_tab->add('View_Error')->set('Login First');
-      			return;
-      		}
+			if(!$this->api->auth->model->loaded()){
+				$this->app->memorize('next_url',$_GET['subpage']);
+				$this->app->memorize('next_url_parameters',$_GET['xsnb_item_id']);
+				$this->api->redirect($this->api->url(null,array('subpage'=>'login','user_selected_form'=>'login')));
+				
+				$this->template->tryDel('auth');
+				return;
+			}	
 
 			$member_image=$this->add('xShop/Model_MemberImages');
 			$images_count = 1;
