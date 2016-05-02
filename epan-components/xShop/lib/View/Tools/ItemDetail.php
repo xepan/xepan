@@ -300,6 +300,7 @@ class View_Tools_ItemDetail extends \componentBase\View_Component{
 					// if($images_count != count($upload_images_array))
 					// 	$up_form->error('upload','upload all images');
 
+					$member = $this->api->auth->model->member();
 					foreach ($upload_images_array as $file_id) {
 					    $image_model = $this->add('xShop/Model_MemberImages');
 					    $image_model->addCondition('member_id',$member->id);
