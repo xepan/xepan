@@ -926,6 +926,7 @@ class Model_Item extends \Model_Document{
 	//Duplicate the Item
 	//$create_default_design_also Means when Freelancer duplicate the Item(is_template true) and also create new design in CustomerDesign Table
 	function duplicate($create_default_design_also=true){
+		$from_item_id = $this->id;
 		$duplicate_template = $this->add('xShop/Model_Item');
 		$fields=$this->getActualFields();
 		$fields = array_diff($fields,array('id','sku','designer_id','created_at'));
